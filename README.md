@@ -1,4 +1,4 @@
-# giu [![npm version](https://img.shields.io/npm/v/boilerplate.svg)](https://www.npmjs.com/package/boilerplate)
+# giu [![npm version](https://img.shields.io/npm/v/giu.svg)](https://www.npmjs.com/package/giu)
 
 ## What?
 
