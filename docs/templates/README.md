@@ -43,7 +43,7 @@ HOCs also work fine with functional React components.
 [[[./src/hocs/hoverable.js]]]
 
 
-## [What's changed since version X?](https://github.com/guigrpa/mady/blob/master/CHANGELOG.md)
+## [What's changed since version X?](https://github.com/guigrpa/giu/blob/master/CHANGELOG.md)
 
 
 ## Shall I? — The MIT license
