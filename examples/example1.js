@@ -1,7 +1,8 @@
 import React                from 'react';
 import ReactDOM             from 'react-dom';
 import {
-  Select, Input, Checkbox,
+  Select, Input, Textarea, Checkbox,
+  Button,
   Icon, LargeMessage,
   hoverable,
   flexItem,
@@ -59,7 +60,7 @@ const Form = () => (
       <Select
         value={null}
         options={SELECT_OPTIONS}
-        fAllowNull
+        allowNull
         onChange={(_, value) => console.log(value)}
       />
       <Input
@@ -77,7 +78,11 @@ const Form = () => (
       />
       <Checkbox id="myCheck" value />
       <label htmlFor="myCheck">Label</label>
+      <Button>Button</Button>
+      <Button plain>Text button</Button>
     </div>
+    <br />
+    <Textarea value="En un lugar de la Mancha..." />
   </div>
 );
 

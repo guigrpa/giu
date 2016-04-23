@@ -7,12 +7,12 @@ import { omit }             from 'lodash';
 // ==========================================
 class Button extends React.Component {
   static propTypes = {
-    fText:                  React.PropTypes.bool,
+    plain:                  React.PropTypes.bool,
     children:               React.PropTypes.any,
     // all other props are passed through
   };
   static defaultProps = {
-    fText:                  false,
+    plain:                  false,
   };
 
   constructor(props) {
@@ -24,16 +24,16 @@ class Button extends React.Component {
   // Render
   // ==========================================
   render() {
-    const { fText, onClick } = this.props;
+    const { plain, children } = this.props;
     const otherProps = omit(this.props, PROP_KEYS);
     let out;
-    if (fText) {
+    if (plain) {
       out = (
         <span
           {...otherProps}
           style={style.outer}
         >
-          {this.props.children}
+          {children}
         </span>
       );
     } else {
@@ -42,7 +42,7 @@ class Button extends React.Component {
           {...otherProps}
           style={style.outer}
         >
-          {this.props.children}
+          {children}
         </button>
       );
     }

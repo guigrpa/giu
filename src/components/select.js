@@ -15,9 +15,8 @@ class Select extends React.Component {
     value:                  React.PropTypes.string,
     errors:                 React.PropTypes.array,
     onChange:               React.PropTypes.func,
-
     options:                React.PropTypes.array.isRequired,
-    fAllowNull:             React.PropTypes.bool,
+    allowNull:              React.PropTypes.bool,
   };
   static defaultProps = {
     errors:                 [],
@@ -45,8 +44,8 @@ class Select extends React.Component {
   // Render
   // ==========================================
   render() {
-    const { options, fAllowNull } = this.props;
-    const finalOptions = fAllowNull
+    const { options, allowNull } = this.props;
+    const finalOptions = allowNull
       ? addFirst(options, { value: NULL_VALUE, label: '' })
       : options;
     const otherProps = omit(this.props, PROP_KEYS);

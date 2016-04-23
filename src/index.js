@@ -1,6 +1,9 @@
+require('./index.sass');
+
 // Components
 export Select           from './components/select';
 export Input            from './components/input';
+export Textarea         from './components/textarea';
 export Checkbox         from './components/checkbox';
 export Button           from './components/button';
 
