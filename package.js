@@ -47,10 +47,9 @@ const specs = {
     // Top-level
     start:                      'babel-node examples/server',
     compile:                    runMultiple([
-                                  'rm -rf ./lib',
-                                  'mkdir lib',
+                                  'rm -rf ./lib ./libEs6 ./libEs6_flow',
                                   'babel -d lib src',
-                                  // 'babel --no-babelrc --plugins transform-flow-strip-types -d libEs6 src',
+                                  // 'babel --no-babelrc --presets stage-0,react --plugins transform-flow-strip-types -d libEs6 src',
                                   // 'cp -r src libEs6_flow'
                                 ]),
     docs:                       'extract-docs --template docs/templates/README.md --output README.md',
