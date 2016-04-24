@@ -107,13 +107,15 @@ const specs = {
   },
 
   peerDependencies: {
-    'react': '>=0.14.0',
+    react: '>=0.14.0',
     'react-addons-pure-render-mixin': '>=0.14.0',
   },
 
   dependencies: {
     timm: '^0.6.1',
     'font-awesome': '4.6.1',
+    redux: '3.5.2',
+    'redux-thunk': '2.0.1',
   },
 
   devDependencies: {
@@ -123,7 +125,7 @@ const specs = {
     'flow-bin': '^0.22.1',
 
     // React
-    'react': '>=0.14.0',
+    react: '>=0.14.0',
     'react-dom': '>=0.14.0',
     'react-addons-pure-render-mixin': '>=0.14.0',
 

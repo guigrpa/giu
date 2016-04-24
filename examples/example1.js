@@ -4,6 +4,7 @@ import {
   Select, Input, Textarea, Checkbox,
   Button,
   Icon, LargeMessage,
+  Modals, showModal,
   hoverable,
   flexItem,
   flexContainer,
@@ -15,6 +16,7 @@ import {
 // -----------------------------------------------
 const App = () => (
   <div>
+    <Modals />
     <Message />
     <Icons />
     <Form />
@@ -50,6 +52,8 @@ const SELECT_OPTIONS = [
   { label: 'B', value: 'b' },
   { label: 'C', value: 'c' },
 ];
+let cntModal = 1;
+
 const Form = () => (
   <div style={style.example}>
     <div>
@@ -78,7 +82,9 @@ const Form = () => (
       />
       <Checkbox id="myCheck" value />
       <label htmlFor="myCheck">Label</label>
-      <Button>Button</Button>
+      <Button onClick={() => showModal({ title: `Modal ${cntModal++}` })}>
+        Add modal
+      </Button>
       <Button plain>Text button</Button>
     </div>
     <br />

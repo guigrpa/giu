@@ -7,6 +7,11 @@ export Textarea         from './components/textarea';
 export Checkbox         from './components/checkbox';
 export Button           from './components/button';
 
+export {
+  showModal,
+  Modals,
+}                       from './components/modal';
+
 export Icon             from './components/icon';
 export LargeMessage     from './components/largeMessage';
 
