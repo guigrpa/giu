@@ -76,13 +76,11 @@ class FormExample extends React.Component {
             onChange={(_, value) => console.log(value)}
           />
           <TextInput
-            type="text"
             value="a"
             placeholder="text"
             onChange={(_, value) => console.log(value)}
           />
           <NumberInput
-            type="number"
             step="0.1"
             value={null}
             placeholder="number"
@@ -112,23 +110,42 @@ class FormExample extends React.Component {
     const buttons = [
       {
         label: 'Got it!',
-        onClick: close,
+        onClick: () => {
+          alert(this._refInput.getValue());
+          close();
+        },
       },
     ];
     return (
-      <Modal 
+      <Modal
         title="Embedded modal"
         buttons={buttons}
         onClickBackdrop={close}
-      />
+      >
+        What's your name?
+        <TextInput ref={o => { this._refInput = o; }} />
+      </Modal>
     );
   }
 
   addModal() {
+    const title = 'Hello, what\'s your name?';
+    const children = <TextInput ref={o => { this._refName = o; }} />;
     pushModal({
-      title: `Modal ${cntModal++}`,
+      title,
+      children,
       buttons: [
-        { label: 'Push another one!', onClick: this.addModal.bind(this) },
+        { label: 'Hello!', onClick: this.addModal2.bind(this) },
+        { label: 'Close', onClick: popModal },
+      ],
+    });
+  }
+
+  addModal2() {
+    const children = <span>Nice to meet you, {this._refName.getValue()}!</span>;
+    pushModal({
+      children,
+      buttons: [
         { label: 'Close', onClick: popModal },
       ],
     });

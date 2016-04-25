@@ -22,7 +22,7 @@
   },
   "scripts": {
     "start": "babel-node examples/server",
-    "compile": "rm -rf ./lib ./libEs6 ./libEs6_flow && babel -d lib src",
+    "compile": "rm -rf ./lib ./libEs6 ./libEs6_flow && babel -d lib src && cp src/index.sass lib",
     "docs": "extract-docs --template docs/templates/README.md --output README.md",
     "build": "npm run lint && npm run compile && npm run docs",
     "travis": "npm run compile",

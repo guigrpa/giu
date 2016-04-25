@@ -1,3 +1,4 @@
+/* eslint-disable strict, indent, max-len, quote-props */
 'use strict';
 
 // ===============================================
@@ -49,6 +50,7 @@ const specs = {
     compile:                    runMultiple([
                                   'rm -rf ./lib ./libEs6 ./libEs6_flow',
                                   'babel -d lib src',
+                                  'cp src/index.sass lib',
                                   // 'babel --no-babelrc --presets stage-0,react --plugins transform-flow-strip-types -d libEs6 src',
                                   // 'cp -r src libEs6_flow'
                                 ]),
@@ -188,3 +190,5 @@ specs.dependencies = _sortDeps(specs.dependencies);
 specs.devDependencies = _sortDeps(specs.devDependencies);
 const packageJson = `${JSON.stringify(specs, null, '  ')}\n`;
 require('fs').writeFileSync('package.json', packageJson);
+
+/* eslint-enable strict, indent, max-len, quote-props */
