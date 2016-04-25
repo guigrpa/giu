@@ -1,113 +1,112 @@
 import React                from 'react';
 import PureRenderMixin      from 'react-addons-pure-render-mixin';
-import {
-  createStore,
-  applyMiddleware,
-}                           from 'redux';
-import thunk                from 'redux-thunk';
-import {
-  addLast,
-  removeAt,
-  updateIn,
-  set as timmSet,
-}                           from 'timm';
-import { bindAll }          from '../gral/helpers';
+// import { bindAll }          from '../gral/helpers';
+import { COLORS }           from '../gral/constants';
 import Button               from './button';
 
 // ==========================================
-// Store, reducer
+// Component
 // ==========================================
-let store = null;
-const INITIAL_STATE = {
-  shown: [],
-};
-function initStore() {
-  const storeEnhancers = applyMiddleware(thunk);
-  store = createStore(reducer, storeEnhancers);
-}
-function reducer(state0 = INITIAL_STATE, action) {
-  let state;
-  switch (action.type) {
-    case 'PUSH':
-      state = updateIn(state0, ['shown'], shown => addLast(shown, action.pars));
-      break;
-    case 'POP':
-      state = updateIn(state0, ['shown'], shown => removeAt(shown, shown.length - 1));
-      break;
-    default:
-      state = state0;
-      break;
-  }
-  return state;
-}
-
-// ==========================================
-// Action creators
-// ==========================================
-let cntId = 0;
-function showModal(pars) {
-  const finalPars = timmSet(pars, 'id', cntId++);
-  store.dispatch({ type: 'PUSH', pars: finalPars });
-}
-
-function closeModal() { store.dispatch({ type: 'POP' }); }
-
-// ==========================================
-// Modals component
-// ==========================================
-class Modals extends React.Component {
+class Modal extends React.Component {
   static propTypes = {
-    lang:                   React.PropTypes.string,
+    title:                  React.PropTypes.string,
+    children:               React.PropTypes.any,
+    buttons:                React.PropTypes.array,
+
+    onClickBackdrop:        React.PropTypes.func,
   };
 
   constructor(props) {
     super(props);
     this.shouldComponentUpdate = PureRenderMixin.shouldComponentUpdate.bind(this);
-    bindAll(this, ['onChangeStore']);
-    if (!store) initStore();
-    this.storeUnsubscribe = store.subscribe(this.onChangeStore);
+    /*bindAll(this, [
+      'renderButton'
+    ]);*/
   }
 
-  componentWillUnmount() { this.storeUnsubscribe(); }
-
-  onChangeStore() { this.forceUpdate(); }
-
   render() {
-    const { shown } = store.getState();
     return (
-      <div>
-        {shown.map(props => <Modal key={props.id} {...props} />)}
+      <div style={style.outer}>
+        { this.renderBackdrop() }
+        { this.renderModal() }
       </div>
     );
   }
-}
 
-// ==========================================
-// Modal component
-// ==========================================
-class Modal extends React.Component {
-  static propTypes = {
-    id:                     React.PropTypes.string.isRequired,
-    title:                  React.PropTypes.string,
-  };
+  renderBackdrop() {
+    const { onClickBackdrop } = this.props;
+    return <div onClick={onClickBackdrop} style={style.backdrop} />
+  }
 
-  render() {
-    const { title } = this.props;
+  renderModal() {
+    const { title, children, buttons } = this.props;
     return (
-      <div>
-        {title}
-        <Button onClick={closeModal}>Close</Button>
+      <div style={style.modal}>
+        { title && this.renderTitle(title) }
+        { children }
+        { buttons && this.renderButtons(buttons) }
       </div>
     );
   }
+
+  renderTitle(title) {
+    return <div>{title}</div>;
+  }
+
+  renderButtons(buttons) {
+    return <div style={style.buttons}>{ buttons.map(this.renderButton) }</div>;
+  }
+
+  renderButton(btn, idx) {
+    const { label, onClick } = btn;
+    return <Button key={idx} onClick={onClick}>{label}</Button>;
+  }
 }
 
+
+// ==========================================
+// Styles
+// ==========================================
+const style = {
+  outer: {
+    position: 'fixed',
+    top: 0,
+    left: 0,
+    width: '100vw',
+    height: '100vh',
+    zIndex: 10000,
+  },
+  backdrop: {
+    position: 'fixed',
+    top: 0,
+    left: 0,
+    width: '100vw',
+    height: '100vh',
+    backgroundColor: 'white',
+    opacity: 0.7,
+  },
+  modal: {
+    position: 'fixed',
+    top: '5vh',
+    left: '2.5vw',
+    right: '2.5vw',
+    maxHeight: '90vh',
+    overflowY: 'auto',
+    zIndex: 10000,
+    backgroundColor: 'white',
+    padding: 20,
+    boxShadow: '0 3px 6px rgba(0,0,0,0.16), 0 3px 6px rgba(0,0,0,0.23)',
+    borderRadius: 2,
+  },
+  buttons: {
+    marginTop: 10,
+    borderTop: `1px solid ${COLORS.line}`,
+    paddingTop: 10,
+  },
+};
 
 // ==========================================
 // Public API
 // ==========================================
-export {
-  showModal,
-  Modals,
-};
+export default Modal;
 
