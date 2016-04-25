@@ -19,9 +19,6 @@ class Modal extends React.Component {
   constructor(props) {
     super(props);
     this.shouldComponentUpdate = PureRenderMixin.shouldComponentUpdate.bind(this);
-    /*bindAll(this, [
-      'renderButton'
-    ]);*/
   }
 
   render() {
@@ -35,7 +32,7 @@ class Modal extends React.Component {
 
   renderBackdrop() {
     const { onClickBackdrop } = this.props;
-    return <div onClick={onClickBackdrop} style={style.backdrop} />
+    return <div onClick={onClickBackdrop} style={style.backdrop} />;
   }
 
   renderModal() {
@@ -109,4 +106,3 @@ const style = {
 // Public API
 // ==========================================
 export default Modal;
-

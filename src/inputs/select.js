@@ -11,9 +11,8 @@ function toExternalValue(val) { return val !== NULL_VALUE ? val : null; }
 // ==========================================
 class Select extends React.Component {
   static propTypes = {
-    curValue:               React.PropTypes.string,
-    errors:                 React.PropTypes.array,
-    onChange:               React.PropTypes.func,
+    curValue:               React.PropTypes.string.isRequired,
+    errors:                 React.PropTypes.array.isRequired,
     options:                React.PropTypes.array.isRequired,
     allowNull:              React.PropTypes.bool,
     // all others are passed through unchanged
@@ -29,7 +28,7 @@ class Select extends React.Component {
   // Render
   // ==========================================
   render() {
-    const { curValue, onChange, options, allowNull } = this.props;
+    const { curValue, options, allowNull } = this.props;
     const finalOptions = allowNull
       ? addFirst(options, { value: NULL_VALUE, label: '' })
       : options;
@@ -37,7 +36,6 @@ class Select extends React.Component {
     return (
       <select ref={c => { this._refInput = c; }}
         value={curValue}
-        onChange={onChange}
         {...otherProps}
       >
         {finalOptions.map(o => (

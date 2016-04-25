@@ -8,7 +8,6 @@ import thunk                from 'redux-thunk';
 import {
   addLast,
   removeAt,
-  updateIn,
   set as timmSet,
 }                           from 'timm';
 import { bindAll }          from '../gral/helpers';
@@ -18,9 +17,7 @@ import Modal                from './modal';
 // Store, reducer
 // ==========================================
 let store = null;
-const INITIAL_STATE = {
-  shown: [],
-};
+const INITIAL_STATE = [];
 function initStore() {
   const storeEnhancers = applyMiddleware(thunk);
   store = createStore(reducer, storeEnhancers);
@@ -29,10 +26,10 @@ function reducer(state0 = INITIAL_STATE, action) {
   let state;
   switch (action.type) {
     case 'PUSH':
-      state = updateIn(state0, ['shown'], shown => addLast(shown, action.pars));
+      state = addLast(state0, action.pars);
       break;
     case 'POP':
-      state = updateIn(state0, ['shown'], shown => removeAt(shown, shown.length - 1));
+      state = removeAt(state0, state0.length - 1);
       break;
     default:
       state = state0;
@@ -73,10 +70,10 @@ class Modals extends React.Component {
   onChangeStore() { this.forceUpdate(); }
 
   render() {
-    const { shown } = store.getState();
+    const modals = store.getState();
     return (
       <div>
-        {shown.map(props => <Modal key={props.id} {...props} />)}
+        {modals.map(props => <Modal key={props.id} {...props} />)}
       </div>
     );
   }
@@ -87,7 +84,7 @@ class Modals extends React.Component {
 // ==========================================
 const pushModal = pars => store.dispatch(_pushModal(pars));
 const popModal = () => store.dispatch(_popModal());
-const isModalActive = () => store.getState().shown.length > 0;
+const isModalActive = () => store.getState().length > 0;
 
 export {
   Modals,

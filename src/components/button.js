@@ -26,27 +26,31 @@ class Button extends React.Component {
   render() {
     const { plain, children } = this.props;
     const otherProps = omit(this.props, PROP_KEYS);
-    let out;
-    if (plain) {
-      out = (
-        <span
-          {...otherProps}
-          style={style.outer}
-        >
-          {children}
-        </span>
-      );
-    } else {
-      out = (
-        <button
-          {...otherProps}
-          style={style.outer}
-        >
-          {children}
-        </button>
-      );
-    }
-    return out;
+    return plain
+      ? this.renderPlain(otherProps, children)
+      : this.renderButton(otherProps, children);
+  }
+
+  renderPlain(props, children) {
+    return (
+      <span
+        {...props}
+        style={style.outer}
+      >
+        {children}
+      </span>
+    );
+  }
+
+  renderButton(props, children) {
+    return (
+      <button
+        {...props}
+        style={style.outer}
+      >
+        {children}
+      </button>
+    );
   }
 }
 

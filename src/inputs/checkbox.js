@@ -10,9 +10,8 @@ function toExternalValue(val) { return val; }
 // ==========================================
 class Checkbox extends React.Component {
   static propTypes = {
-    curValue:               React.PropTypes.bool,
-    errors:                 React.PropTypes.array,
-    onChange:               React.PropTypes.func,
+    curValue:               React.PropTypes.bool.isRequired,
+    errors:                 React.PropTypes.array.isRequired,
     // all others are passed through unchanged
   };
 
@@ -26,13 +25,12 @@ class Checkbox extends React.Component {
   // Render
   // ==========================================
   render() {
-    const { curValue, onChange } = this.props;
+    const { curValue } = this.props;
     const otherProps = omit(this.props, PROP_KEYS);
     return (
       <input ref={c => { this._refInput = c; }}
         type="checkbox"
         checked={curValue}
-        onChange={onChange}
         {...otherProps}
       />
     );

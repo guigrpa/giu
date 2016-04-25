@@ -1,15 +1,15 @@
 require('./index.sass');
 
 // Components
-export Select           from './components/select';
-export Input            from './components/input';
-export Textarea         from './components/textarea';
-export Checkbox         from './components/checkbox';
-export Button           from './components/button';
+export Select           from './inputs/select';
+export *                from './inputs/inputTextNumber';
+export Textarea         from './inputs/textarea';
+export Checkbox         from './inputs/checkbox';
 
 export *                from './components/modals';
 export Modal            from './components/modal';
 
+export Button           from './components/button';
 export Icon             from './components/icon';
 export LargeMessage     from './components/largeMessage';
 

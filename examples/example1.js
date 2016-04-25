@@ -1,7 +1,7 @@
 import React                from 'react';
 import ReactDOM             from 'react-dom';
 import {
-  Select, Input, Textarea, Checkbox,
+  Select, TextInput, NumberInput, Textarea, Checkbox,
   Button,
   Icon, LargeMessage,
   Modals, pushModal, popModal,
@@ -75,13 +75,13 @@ class FormExample extends React.Component {
             allowNull
             onChange={(_, value) => console.log(value)}
           />
-          <Input
+          <TextInput
             type="text"
             value="a"
             placeholder="text"
             onChange={(_, value) => console.log(value)}
           />
-          <Input
+          <NumberInput
             type="number"
             step="0.1"
             value={null}
