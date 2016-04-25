@@ -1,6 +1,6 @@
 import React                from 'react';
 import PureRenderMixin      from 'react-addons-pure-render-mixin';
-import { omit }             from 'timm';
+import { omit, merge }      from 'timm';
 import { bindAll }          from '../gral/helpers';
 
 const NULL_VALUE = '';
@@ -17,6 +17,7 @@ class Textarea extends React.Component {
     onChange:               React.PropTypes.func,
     onFocus:                React.PropTypes.func,
     onBlur:                 React.PropTypes.func,
+    style:                  React.PropTypes.object,
   };
   static defaultProps = {
     errors:                 [],
@@ -33,6 +34,7 @@ class Textarea extends React.Component {
       'onChange',
       'onFocus',
       'onBlur',
+      'resize',
     ]);
   }
 
@@ -43,21 +45,35 @@ class Textarea extends React.Component {
     }
   }
 
-  componentDidMount() { this.resizeTextarea(); }
-  componentDidUpdate() { this.resizeTextarea(); }
+  componentDidMount() {
+    this.resize();
+    window.addEventListener('resize', this.resize);
+  }
+  componentDidUpdate() { this.resize(); }
+  componentWillUnmount() {
+    window.removeEventListener('resize', this.resize);
+  }
 
+  // ==========================================
+  // Imperative API
+  // ==========================================
   getValue() { return toExternalValue(this.state.curValue); }
+  setValue(val, cb) { this.setState({ curValue: toInternalValue(val) }, cb); }
+  revert(cb) { this.setState({ curValue: toInternalValue(this.props.value) }, cb); }
+  focus() { this._refTaInput.focus(); }
+  blur() { this._refTaInput.blur(); }
 
   // ==========================================
   // Render
   // ==========================================
   render() {
+    const { style: baseStyle } = this.props;
     const { curValue } = this.state;
     const otherProps = omit(this.props, PROP_KEYS);
     return (
       <div style={style.taWrapper}>
         <div ref={c => { this._refTaPlaceholder = c; }}
-          style={style.taPlaceholder}
+          style={merge(style.taPlaceholder, baseStyle)}
         >
           {curValue || 'x'}
         </div>
@@ -66,7 +82,7 @@ class Textarea extends React.Component {
           onChange={this.onChange}
           onFocus={this.onFocus}
           onBlur={this.onBlur}
-          style={style.taInput}
+          style={merge(style.taInput, baseStyle)}
           {...otherProps}
         />
       </div>
@@ -92,9 +108,8 @@ class Textarea extends React.Component {
     if (this.props.onBlur) this.props.onBlur(ev);
   }
 
-  resizeTextarea() {
+  resize() {
     const height = this._refTaPlaceholder.offsetHeight;
-    // if (this.state.fFocused) height += 4;
     this._refTaInput.style.height = `${height}px`;
   }
 }
