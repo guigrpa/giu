@@ -7,6 +7,8 @@ const PROP_TYPES = {
   value:                  React.PropTypes.any,
   errors:                 React.PropTypes.array,
   onChange:               React.PropTypes.func,
+  onFocus:                React.PropTypes.func,
+  onBlur:                 React.PropTypes.func,
   // all others are passed through unchanged
 };
 const PROP_KEYS = Object.keys(PROP_TYPES);
@@ -28,8 +30,13 @@ function input(ComposedComponent, {
       this.shouldComponentUpdate = PureRenderMixin.shouldComponentUpdate.bind(this);
       this.state = {
         curValue: toInternalValue(props.value),
+        fFocused: false,
       };
-      bindAll(this, ['onChange']);
+      bindAll(this, [
+        'onChange',
+        'onFocus',
+        'onBlur',
+      ]);
     }
 
     componentWillReceiveProps(nextProps) {
@@ -56,9 +63,12 @@ function input(ComposedComponent, {
       return (
         <ComposedComponent ref={c => { this._refInput = c; }}
           {...otherProps}
-          errors={this.props.errors}
           curValue={this.state.curValue}
+          errors={this.props.errors}
           onChange={this.onChange}
+          onFocus={this.onFocus}
+          onBlur={this.onBlur}
+          fFocused={this.state.fFocused}
         />
       );
     }
@@ -71,6 +81,16 @@ function input(ComposedComponent, {
       this.setState({ curValue });
       const { onChange } = this.props;
       if (onChange) onChange(ev, toExternalValue(curValue));
+    }
+
+    onFocus(ev) {
+      this.setState({ fFocused: true });
+      if (this.props.onFocus) this.props.onFocus(ev);
+    }
+
+    onBlur(ev) {
+      this.setState({ fFocused: false });
+      if (this.props.onBlur) this.props.onBlur(ev);
     }
   };
 }

@@ -12,23 +12,15 @@ function toExternalValue(val) { return val !== NULL_VALUE ? val : null; }
 // ==========================================
 class Textarea extends React.Component {
   static propTypes = {
-    curValue:               React.PropTypes.any,
-    errors:                 React.PropTypes.array,
-    onChange:               React.PropTypes.func,
-    onFocus:                React.PropTypes.func,
-    onBlur:                 React.PropTypes.func,
+    curValue:               React.PropTypes.any.isRequired,
+    errors:                 React.PropTypes.array.isRequired,
     style:                  React.PropTypes.object,
     // all others are passed through unchanged
   };
 
   constructor(props) {
     super(props);
-    this.state = { fFocused: false };
-    bindAll(this, [
-      'onFocus',
-      'onBlur',
-      'resize',
-    ]);
+    bindAll(this, ['resize']);
   }
 
   componentDidMount() {
@@ -50,7 +42,7 @@ class Textarea extends React.Component {
   // Render
   // ==========================================
   render() {
-    const { curValue, onChange, style: baseStyle } = this.props;
+    const { curValue, style: baseStyle } = this.props;
     const otherProps = omit(this.props, PROP_KEYS);
     return (
       <div style={style.taWrapper}>
@@ -61,9 +53,6 @@ class Textarea extends React.Component {
         </div>
         <textarea ref={c => { this._refInput = c; }}
           value={curValue}
-          onChange={onChange}
-          onFocus={this.onFocus}
-          onBlur={this.onBlur}
           style={merge(style.taInput, baseStyle)}
           {...otherProps}
         />
@@ -74,15 +63,6 @@ class Textarea extends React.Component {
   // ==========================================
   // Handlers
   // ==========================================
-  onFocus(ev) {
-    this.setState({ fFocused: true });
-    if (this.props.onFocus) this.props.onFocus(ev);
-  }
-  onBlur(ev) {
-    this.setState({ fFocused: false });
-    if (this.props.onBlur) this.props.onBlur(ev);
-  }
-
   resize() {
     const height = this._refTaPlaceholder.offsetHeight;
     this._refInput.style.height = `${height}px`;
