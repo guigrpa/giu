@@ -1,3 +1,4 @@
 # Roadmap
 
-- Copy imperative API from textarea to other inputs
+- [ ] Split input in TextInput and NumberInput and use the input HOC
+- [ ] Refactor focus/blur state to input HOC

@@ -45,7 +45,14 @@ class Input extends React.Component {
     }
   }
 
+  // ==========================================
+  // Imperative API
+  // ==========================================
   getValue() { return converters[this.props.type].toExternalValue(this.state.curValue); }
+  setValue(val, cb) { this.setState({ curValue: converters[this.props.type].toInternalValue(val) }, cb); }
+  revert(cb) { this.setState({ curValue: converters[this.props.type].toInternalValue(this.props.value) }, cb); }
+  focus() { this._refInput.focus(); }
+  blur() { this._refInput.blur(); }
 
   // ==========================================
   // Render
@@ -54,7 +61,7 @@ class Input extends React.Component {
     const { type } = this.props;
     const otherProps = omit(this.props, PROP_KEYS);
     return (
-      <input
+      <input ref={c => { this._refInput = c; }}
         type={type}
         value={this.state.curValue}
         onChange={this.onChange}

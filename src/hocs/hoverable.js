@@ -32,6 +32,7 @@ import { bindAll }          from '../gral/helpers';
 // --   your target DOM elements
 function hoverable(ComposedComponent) {
   return class extends React.Component {
+    static displayName = `Hoverable(${ComposedComponent.name})`;
     static propTypes = {
       onHoverStart:           React.PropTypes.func,
       onHoverStop:            React.PropTypes.func,
