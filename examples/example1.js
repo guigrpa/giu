@@ -4,7 +4,8 @@ import {
   Select, Input, Textarea, Checkbox,
   Button,
   Icon, LargeMessage,
-  Modals, showModal,
+  Modals, pushModal, popModal,
+  Modal,
   hoverable,
   flexItem,
   flexContainer,
@@ -17,10 +18,10 @@ import {
 const App = () => (
   <div>
     <Modals />
-    <Message />
-    <Icons />
-    <Form />
-    <Hoverable />
+    <MessageExample />
+    <IconExample />
+    <FormExample />
+    <HoverableExample />
     <FlexRow>
       <span>Left</span>
       <FlexSpacer />
@@ -29,13 +30,13 @@ const App = () => (
   </div>
 );
 
-const Message = () => (
+const MessageExample = () => (
   <div style={style.example}>
     <LargeMessage>Hello there!</LargeMessage>
   </div>
 );
 
-const Icons = () => (
+const IconExample = () => (
   <div style={style.example}>
     <Icon icon="heart" id="a" />
     {' '}
@@ -54,45 +55,87 @@ const SELECT_OPTIONS = [
 ];
 let cntModal = 1;
 
-const Form = () => (
-  <div style={style.example}>
-    <div>
-      <Select
-        value="a"
-        options={SELECT_OPTIONS}
-      />
-      <Select
-        value={null}
-        options={SELECT_OPTIONS}
-        allowNull
-        onChange={(_, value) => console.log(value)}
-      />
-      <Input
-        type="text"
-        value="a"
-        placeholder="text"
-        onChange={(_, value) => console.log(value)}
-      />
-      <Input
-        type="number"
-        step="0.1"
-        value={null}
-        placeholder="number"
-        onChange={(_, value) => console.log(value)}
-      />
-      <Checkbox id="myCheck" value />
-      <label htmlFor="myCheck">Label</label>
-      <Button onClick={() => showModal({ title: `Modal ${cntModal++}` })}>
-        Add modal
-      </Button>
-      <Button plain>Text button</Button>
-    </div>
-    <br />
-    <Textarea value="En un lugar de la Mancha..." />
-  </div>
-);
+class FormExample extends React.Component {
+  constructor(props) {
+    super(props);
+    this.state = { fEmbeddedModal: false };
+  }
 
-const Hoverable = hoverable(({ hovering, onHoverStart, onHoverStop }) => (
+  render() {
+    return (
+      <div style={style.example}>
+        <div>
+          <Select
+            value="a"
+            options={SELECT_OPTIONS}
+          />
+          <Select
+            value={null}
+            options={SELECT_OPTIONS}
+            allowNull
+            onChange={(_, value) => console.log(value)}
+          />
+          <Input
+            type="text"
+            value="a"
+            placeholder="text"
+            onChange={(_, value) => console.log(value)}
+          />
+          <Input
+            type="number"
+            step="0.1"
+            value={null}
+            placeholder="number"
+            onChange={(_, value) => console.log(value)}
+          />
+          <Checkbox id="myCheck" value />
+          <label htmlFor="myCheck">Label</label>
+          <Button onClick={this.addModal.bind(this)}>
+            Add modal
+          </Button>
+          <Button 
+            plain
+            onClick={() => this.setState({ fEmbeddedModal: true })}
+          >
+            Embed modal
+          </Button>
+          { this.state.fEmbeddedModal && this.renderEmbeddedModal() }
+        </div>
+        <br />
+        <Textarea value="En un lugar de la Mancha..." />
+      </div>
+    );
+  }
+
+  renderEmbeddedModal() {
+    const close = () => this.setState({ fEmbeddedModal: false });
+    const buttons = [
+      {
+        label: 'Got it!',
+        onClick: close,
+      },
+    ];
+    return (
+      <Modal 
+        title="Embedded modal"
+        buttons={buttons}
+        onClickBackdrop={close}
+      />
+    );
+  }
+
+  addModal() {
+    pushModal({
+      title: `Modal ${cntModal++}`,
+      buttons: [
+        { label: 'Push another one!', onClick: this.addModal.bind(this) },
+        { label: 'Close', onClick: popModal },
+      ],
+    });
+  }
+}
+
+const HoverableExample = hoverable(({ hovering, onHoverStart, onHoverStop }) => (
   <div
     onMouseEnter={onHoverStart}
     onMouseLeave={onHoverStop}

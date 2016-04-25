@@ -7,10 +7,8 @@ export Textarea         from './components/textarea';
 export Checkbox         from './components/checkbox';
 export Button           from './components/button';
 
-export {
-  showModal,
-  Modals,
-}                       from './components/modal';
+export *                from './components/modals';
+export Modal            from './components/modal';
 
 export Icon             from './components/icon';
 export LargeMessage     from './components/largeMessage';
@@ -21,3 +19,6 @@ export * from './gral/constants';
 
 // HOCs
 export hoverable        from './hocs/hoverable';
+
+// Other
+export * from './gral/helpers';
