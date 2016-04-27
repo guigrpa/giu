@@ -1,38 +1,30 @@
 import React                from 'react';
 import PureRenderMixin      from 'react-addons-pure-render-mixin';
-import {
-  createStore,
-  applyMiddleware,
-}                           from 'redux';
-import thunk                from 'redux-thunk';
+import { createStore }      from 'redux';
 import {
   addLast,
   removeAt,
   set as timmSet,
 }                           from 'timm';
-import { bindAll }          from '../gral/helpers';
 import Modal                from './modal';
 
 // ==========================================
 // Store, reducer
 // ==========================================
 let store = null;
+function initStore() { store = createStore(reducer); }
+
 const INITIAL_STATE = [];
-function initStore() {
-  const storeEnhancers = applyMiddleware(thunk);
-  store = createStore(reducer, storeEnhancers);
-}
 function reducer(state0 = INITIAL_STATE, action) {
-  let state;
+  let state = state0;
   switch (action.type) {
-    case 'PUSH':
-      state = addLast(state0, action.pars);
+    case 'MODAL_PUSH':
+      state = addLast(state, action.pars);
       break;
-    case 'POP':
-      state = removeAt(state0, state0.length - 1);
+    case 'MODAL_POP':
+      state = removeAt(state, state.length - 1);
       break;
     default:
-      state = state0;
       break;
   }
   return state;
@@ -42,38 +34,63 @@ function reducer(state0 = INITIAL_STATE, action) {
 // Action creators
 // ==========================================
 let cntId = 0;
-function _pushModal(pars) {
-  const finalPars = timmSet(pars, 'id', cntId++);
-  return { type: 'PUSH', pars: finalPars };
-}
+const actions = {
+  modalPush: pars => ({
+    type: 'MODAL_PUSH',
+    pars: timmSet(pars, 'id', `modal_${cntId++}`),
+  }),
+  modalPop: () => ({ type: 'MODAL_POP' }),
+};
 
-function _popModal() { return { type: 'POP' }; }
+// Imperative dispatching
+const modalPush = pars => {
+  const action = actions.modalPush(pars);
+  store.dispatch(action);
+  return action.id;
+}
+const modalPop = () => store.dispatch(actions.modalPop());
 
 // ==========================================
 // Modals component
 // ==========================================
 class Modals extends React.Component {
   static propTypes = {
-    lang:                   React.PropTypes.string,
+    modals:                 React.PropTypes.array,
   };
 
   constructor(props) {
     super(props);
     this.shouldComponentUpdate = PureRenderMixin.shouldComponentUpdate.bind(this);
-    bindAll(this, ['onChangeStore']);
-    if (!store) initStore();
-    this.storeUnsubscribe = store.subscribe(this.onChangeStore);
+    this.refModals = [];
+    this.prevModals = [];
+    if (props.modals == null) {
+      if (!store) initStore();
+      this.storeUnsubscribe = store.subscribe(this.forceUpdate.bind(this));
+    }
   }
 
-  componentWillUnmount() { this.storeUnsubscribe(); }
+  // After popping a modal, focus on the top-most one
+  componentDidUpdate(prevProps) {
+    if (this.fPopped) {
+      const len = this.prevModals.length;
+      if (len) this.refModals[len-1].focus();
+    }
+  }
 
-  onChangeStore() { this.forceUpdate(); }
+  componentWillUnmount() { if (this.storeUnsubscribe) this.storeUnsubscribe(); }
 
+  // ==========================================
   render() {
-    const modals = store.getState();
+    const modals = this.props.modals != null ? this.props.modals : store.getState();
+    this.fPopped = (modals.length < this.prevModals.length);
+    this.prevModals = modals;
     return (
-      <div>
-        {modals.map(props => <Modal key={props.id} {...props} />)}
+      <div className="giu-modals">
+        {modals.map((props, idx) =>
+          <Modal key={props.id} ref={c => { this.refModals[idx] = c; }}
+            {...props}
+          />
+        )}
       </div>
     );
   }
@@ -82,12 +99,11 @@ class Modals extends React.Component {
 // ==========================================
 // Public API
 // ==========================================
-const pushModal = pars => store.dispatch(_pushModal(pars));
-const popModal = () => store.dispatch(_popModal());
 const isModalActive = () => store.getState().length > 0;
 
 export {
   Modals,
-  pushModal, popModal,
-  isModalActive,
+  reducer,
+  actions,
+  modalPush, modalPop, isModalActive,
 };

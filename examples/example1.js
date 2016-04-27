@@ -3,21 +3,29 @@ import ReactDOM             from 'react-dom';
 import {
   Select, TextInput, NumberInput, Textarea, Checkbox,
   Button,
-  Icon, LargeMessage,
-  Modals, pushModal, popModal,
-  Modal,
+  Icon, Spinner, LargeMessage,
+  Floats,
+  Modals, Modal, modalPush, modalPop,
+  Notifications, Notification, notify,
   hoverable,
   flexItem,
   flexContainer,
   merge,
 }                           from '../src';
 
+const { floor, random } = Math;
+const randomInt = (min, max) => min + floor(random()*(max-min+1));
+const sample = (arr) => arr[randomInt(0, arr.length - 1)];
+
 // -----------------------------------------------
 // Examples
 // -----------------------------------------------
 const App = () => (
   <div>
+    <Floats />
     <Modals />
+    <Notifications />
+    <NotificationExample />
     <MessageExample />
     <IconExample />
     <FormExample />
@@ -30,23 +38,40 @@ const App = () => (
   </div>
 );
 
-const MessageExample = () => (
+const NotificationExample = () =>
+  <Notification
+    icon="cog" iconSpin
+    title="Wow!"
+    msg="Standalone notification"
+    style={style.example}
+    noStyleShadow noStylePosition
+  />;
+
+const MessageExample = () =>
   <div style={style.example}>
     <LargeMessage>Hello there!</LargeMessage>
-  </div>
-);
+  </div>;
 
-const IconExample = () => (
+let cntNotif = 1;
+const IconExample = () =>
   <div style={style.example}>
     <Icon icon="heart" id="a" />
     {' '}
-    <Icon icon="circle-o-notch" />
+    <Spinner />
     {' '}
     <Icon icon="spinner" spin />
     {' '}
     <Icon icon="arrow-left" id="a" />
-  </div>
-);
+    {' '}
+    <Icon
+      icon="arrow-right"
+      onClick={() => notify({ 
+        msg: `Notification #${cntNotif++}`,
+        type: sample(['info', 'success', 'warn', 'error']),
+        icon: sample(['arrow-left', 'arrow-right', 'arrow-up', 'arrow-down']),
+      })}
+    />
+  </div>;
 
 const SELECT_OPTIONS = [
   { label: 'A', value: 'a' },
@@ -69,28 +94,34 @@ class FormExample extends React.Component {
             value="a"
             options={SELECT_OPTIONS}
           />
+          {' '}
           <Select
             value={null}
             options={SELECT_OPTIONS}
             allowNull
             onChange={(_, value) => console.log(value)}
           />
+          {' '}
           <TextInput
             value="a"
             placeholder="text"
             onChange={(_, value) => console.log(value)}
           />
+          {' '}
           <NumberInput
             step="0.1"
             value={null}
             placeholder="number"
             onChange={(_, value) => console.log(value)}
           />
+          {' '}
           <Checkbox id="myCheck" value />
           <label htmlFor="myCheck">Label</label>
+          {' '}
           <Button onClick={this.addModal.bind(this)}>
             Add modal
           </Button>
+          {' '}
           <Button 
             plain
             onClick={() => this.setState({ fEmbeddedModal: true })}
@@ -108,12 +139,14 @@ class FormExample extends React.Component {
   renderEmbeddedModal() {
     const close = () => this.setState({ fEmbeddedModal: false });
     const buttons = [
+      { label: 'Close', onClick: close },
       {
-        label: 'Got it!',
+        label: 'Introduce me',
         onClick: () => {
-          alert(this._refInput.getValue());
+          alert(this.refInput.getValue());
           close();
         },
+        defaultButton: true,
       },
     ];
     return (
@@ -121,33 +154,40 @@ class FormExample extends React.Component {
         title="Embedded modal"
         buttons={buttons}
         onClickBackdrop={close}
+        onEsc={close}
+        style={{width: 500}}
       >
-        What's your name?
-        <TextInput ref={o => { this._refInput = o; }} />
+        What's your name?{' '}
+        <TextInput ref={o => { this.refInput = o; }} autoFocus />
+        <Textarea />
       </Modal>
     );
   }
 
   addModal() {
     const title = 'Hello, what\'s your name?';
-    const children = <TextInput ref={o => { this._refName = o; }} />;
-    pushModal({
+    const children = <TextInput ref={o => { this._refName = o; }} autoFocus />;
+    modalPush({
       title,
       children,
       buttons: [
-        { label: 'Hello!', onClick: this.addModal2.bind(this) },
-        { label: 'Close', onClick: popModal },
+        { label: 'Hello!', onClick: this.addModal2.bind(this), defaultButton: true },
+        { label: 'Back', onClick: modalPop, left: true },
       ],
+      onEsc: modalPop,
     });
   }
 
   addModal2() {
+    const title = 'Introduction';
     const children = <span>Nice to meet you, {this._refName.getValue()}!</span>;
-    pushModal({
+    modalPush({
+      title,
       children,
       buttons: [
-        { label: 'Close', onClick: popModal },
+        { label: 'Back', onClick: modalPop, defaultButton: true },
       ],
+      onEsc: modalPop,
     });
   }
 }

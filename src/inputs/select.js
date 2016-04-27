@@ -35,6 +35,7 @@ class Select extends React.Component {
     const otherProps = omit(this.props, PROP_KEYS);
     return (
       <select ref={c => { this._refInput = c; }}
+        className="giu-select"
         value={curValue}
         {...otherProps}
       >

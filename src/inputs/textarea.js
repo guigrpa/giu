@@ -1,11 +1,20 @@
 import React                from 'react';
 import { omit, merge }      from 'timm';
 import { bindAll }          from '../gral/helpers';
+import { KEYS }             from '../gral/constants';
 import input                from '../hocs/input';
 
 const NULL_VALUE = '';
 function toInternalValue(val) { return val != null ? val : NULL_VALUE; }
 function toExternalValue(val) { return val !== NULL_VALUE ? val : null; }
+
+function getPlaceHolderText(val) {
+  const lines = val.split('\n');
+  const out = !lines[lines.length-1].length
+    ? `${val}x`
+    : val;
+  return out;
+}
 
 // ==========================================
 // Component
@@ -14,13 +23,17 @@ class Textarea extends React.Component {
   static propTypes = {
     curValue:               React.PropTypes.any.isRequired,
     errors:                 React.PropTypes.array.isRequired,
+    onKeyUp:                React.PropTypes.func,
     style:                  React.PropTypes.object,
     // all others are passed through unchanged
   };
 
   constructor(props) {
     super(props);
-    bindAll(this, ['resize']);
+    bindAll(this, [
+      'resize',
+      'onKeyUp',
+    ]);
   }
 
   componentDidMount() {
@@ -45,14 +58,18 @@ class Textarea extends React.Component {
     const { curValue, style: baseStyle } = this.props;
     const otherProps = omit(this.props, PROP_KEYS);
     return (
-      <div style={style.taWrapper}>
+      <div 
+        className="giu-textarea"
+        style={style.taWrapper}
+      >
         <div ref={c => { this._refTaPlaceholder = c; }}
           style={merge(style.taPlaceholder, baseStyle)}
         >
-          {curValue || 'x'}
+          {getPlaceHolderText(curValue)}
         </div>
         <textarea ref={c => { this._refInput = c; }}
           value={curValue}
+          onKeyUp={this.onKeyUp}
           style={merge(style.taInput, baseStyle)}
           {...otherProps}
         />
@@ -66,6 +83,14 @@ class Textarea extends React.Component {
   resize() {
     const height = this._refTaPlaceholder.offsetHeight;
     this._refInput.style.height = `${height}px`;
+  }
+
+  onKeyUp(ev) {
+    if (ev.which === KEYS.return) {
+      ev.stopPropagation();
+    } else {
+      if (this.props.onKeyUp) this.props.onKeyUp(ev);
+    }
   }
 }
 
@@ -96,6 +121,7 @@ const style = {
     border: '1px solid red',
     color: 'red',
     cursor: 'beam',
+    whiteSpace: 'pre-wrap',
     zIndex: -50,
   },
 };

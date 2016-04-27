@@ -17,7 +17,10 @@ class LargeMessage extends React.Component {
 
   render() {
     return (
-      <div style={style.outer}>
+      <div
+        className="giu-large-message"
+        style={style.outer}
+      >
         {this.props.children}
       </div>
     );

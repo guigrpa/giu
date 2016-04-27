@@ -1,6 +1,6 @@
 import React                from 'react';
 import PureRenderMixin      from 'react-addons-pure-render-mixin';
-import { omit }             from 'lodash';
+import { omit, merge }      from 'timm';
 
 // ==========================================
 // Component
@@ -9,6 +9,7 @@ class Button extends React.Component {
   static propTypes = {
     plain:                  React.PropTypes.bool,
     children:               React.PropTypes.any,
+    style:                  React.PropTypes.object,
     // all other props are passed through
   };
   static defaultProps = {
@@ -31,22 +32,24 @@ class Button extends React.Component {
       : this.renderButton(otherProps, children);
   }
 
-  renderPlain(props, children) {
+  renderPlain(otherProps, children) {
     return (
       <span
-        {...props}
-        style={style.outer}
+        className="giu-button"
+        {...otherProps}
+        style={merge(style.button, this.props.style)}
       >
         {children}
       </span>
     );
   }
 
-  renderButton(props, children) {
+  renderButton(otherProps, children) {
     return (
       <button
-        {...props}
-        style={style.outer}
+        className="giu-button"
+        {...otherProps}
+        style={merge(style.button, this.props.style)}
       >
         {children}
       </button>
@@ -58,7 +61,7 @@ class Button extends React.Component {
 // Styles
 // ==========================================
 const style = {
-  outer: {
+  button: {
     cursor: 'pointer',
   },
 };

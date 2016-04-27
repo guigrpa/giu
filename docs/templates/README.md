@@ -7,8 +7,22 @@ A collection of React components and utilities.
 
 ## Why?
 
-TBW
-
+- Flexibility:
+    + If you use the ES6 sources and Webpack 2, you can bundle only the components you need, nothing more. For example, if you `import Modal`, you will not embed Redux, which you will if you `import Modals`.
+    + If you need a simple confirmation modal, use `Modal` directly. If you need stacked modals and more state control, include a `Modals` component at the top of your app and use the provided API. If you need even more control, use the exported `modalReducer` and `modalActions` (action creators) with your own application's Redux store. Same for `Notifications`and `Floats`.
+    + In form components (`TextInput`, `Select`, `Textarea`...), choose whether you want giu to handle state for you (and then retrieve the component's value when e.g. the user clicks on Submit) or you want full control from outside.
+    + Styles: lightweight styles are included for some components, but you can always customise the appearance including your own `style` attributes.
+- Nice touches:
+    + Textarea with auto-resize
+    + Keyboard shortcuts, autofocus, default buttons on Modals
+    + Sticky/retainable notifications
+- Completeness:
+    + Basic components: Button, Icon, Spinner, LargeMessage...
+    + Form components: TextInput, NumberInput, Select, Textarea, Checkbox...
+    + Not-so-basic ones: Modal(s), Notification(s)...
+    + Higher-order components: Hoverable
+    + Style helpers: ...
+    + Other helpers: ...
 
 ## How?
 

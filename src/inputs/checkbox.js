@@ -29,6 +29,7 @@ class Checkbox extends React.Component {
     const otherProps = omit(this.props, PROP_KEYS);
     return (
       <input ref={c => { this._refInput = c; }}
+        className="giu-checkbox"
         type="checkbox"
         checked={curValue}
         {...otherProps}

@@ -43,6 +43,7 @@ function createClass(name, inputType) {
       const otherProps = omit(this.props, PROP_KEYS);
       return (
         <input ref={c => { this._refInput = c; }}
+          className="giu-input"
           type={inputType}
           value={curValue}
           {...otherProps}

@@ -118,6 +118,7 @@ const specs = {
     'font-awesome': '4.6.1',
     redux: '3.5.2',
     'redux-thunk': '2.0.1',
+    'tinycolor2': '1.3.0',
   },
 
   devDependencies: {

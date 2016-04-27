@@ -27,7 +27,7 @@ class Icon extends React.Component {
     const { icon, size, fixedWidth, spin, disabled } = this.props;
     const otherProps = omit(this.props, PROP_KEYS);
     if (disabled) otherProps.onClick = undefined;
-    let className = `fa fa-${icon}`;
+    let className = `giu-icon fa fa-${icon}`;
     if (size != null) className += ` fa-${size}`;
     if (fixedWidth) className += ' fa-fw';
     if (icon === 'circle-o-notch' || spin) className += ' fa-spin';

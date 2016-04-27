@@ -6,6 +6,11 @@ const COLORS = {
   line: '#ccc',
 };
 
+const KEYS = {
+  esc: 27,
+  return: 13,
+};
+
 // ==========================================
 // Scrollbar width
 // ==========================================
@@ -32,6 +37,6 @@ try {
 // Public API
 // ==========================================
 export {
-  COLORS,
+  COLORS, KEYS,
   getScrollbarWidth,
 };
