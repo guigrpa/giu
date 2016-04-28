@@ -9,7 +9,6 @@ import {
   updateIn,
   addLast,
   removeAt,
-  set as timmSet,
   addDefaults,
 }                           from 'timm';
 import { bindAll }          from '../gral/helpers';
@@ -38,7 +37,7 @@ function reducer(state0 = INITIAL_STATE, action) {
       id = action.id;
       idx = state.findIndex(o => o.id === id);
       if (idx >= 0) {
-        state = updateIn(state, [idx, 'retained'], o => true);
+        state = updateIn(state, [idx, 'retained'], () => true);
       }
       break;
     case 'NOTIF_DELETE':
@@ -87,18 +86,18 @@ const actions = {
         dispatch({ type: 'NOTIF_DELETE', id, fAuto: true });
       }, pars.timeOut);
     }
+    return pars;
   },
   notifRetain: id => ({ type: 'NOTIF_RETAIN', id }),
   notifDelete: id => ({ type: 'NOTIF_DELETE', id }),
   notifDeleteByName: name => ({ type: 'NOTIF_DELETE_BY_NAME', name }),
-}
+};
 
 // Imperative dispatching
-const notify = pars => {
-  const action = actions.notify(pars);
-  store.dispatch(action);
-  return action.id;
-}
+const notify = initialPars => {
+  const pars = store.dispatch(actions.notify(initialPars));
+  return pars.id;
+};
 const notifRetain = id => store.dispatch(actions.notifRetain(id));
 const notifDelete = id => store.dispatch(actions.notifDelete(id));
 const notifDeleteByName = name => store.dispatch(actions.notifDeleteByName(name));
@@ -130,7 +129,7 @@ class Notifications extends React.Component {
   render() {
     const notifs = this.props.notifs != null ? this.props.notifs : store.getState();
     return (
-      <div 
+      <div
         className="giu-notifications"
         style={style.outer}
       >

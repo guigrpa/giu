@@ -1,22 +1,27 @@
 import React                from 'react';
-import { addFirst, omit }   from 'timm';
+import { omit }             from 'timm';
+import {
+  floatAdd,
+  floatDelete,
+}                           from '../components/floats'
 import input                from '../hocs/input';
 
-const NULL_VALUE = '__NULL__';
+const NULL_VALUE = '';
 function toInternalValue(val) { return val != null ? val : NULL_VALUE; }
 function toExternalValue(val) { return val !== NULL_VALUE ? val : null; }
 
 // ==========================================
 // Component
 // ==========================================
-class Select extends React.Component {
+class DateInput extends React.Component {
   static propTypes = {
     curValue:               React.PropTypes.string.isRequired,
     errors:                 React.PropTypes.array.isRequired,
-    options:                React.PropTypes.array.isRequired,
-    allowNull:              React.PropTypes.bool,
     // all others are passed through unchanged
   };
+
+  componentDidMount() { this.mountFloat(); }
+  componentWillUnmount() { this.unmountFloat(); }
 
   // ==========================================
   // Imperative API
@@ -28,36 +33,46 @@ class Select extends React.Component {
   // Render
   // ==========================================
   render() {
-    const { curValue, options, allowNull } = this.props;
-    const finalOptions = allowNull
-      ? addFirst(options, { value: NULL_VALUE, label: '' })
-      : options;
+    const { curValue } = this.props;
     const otherProps = omit(this.props, PROP_KEYS);
     return (
-      <select ref={c => { this.refInput = c; }}
-        className="giu-select"
-        value={curValue}
-        {...otherProps}
-      >
-        {finalOptions.map(o => (
-          <option key={o.value} id={String(o.value)} value={o.value}>{o.label}</option>
-        ))}
-      </select>
+      <div style={style.poc}>
+        <input ref={c => { this.refInput = c; }}
+          className="giu-date-input"
+          type="text"
+          value={curValue}
+          {...otherProps}
+        />
+      </div>
     );
   }
+
+  mountFloat() {
+    this.floatId = floatAdd({
+      position: 'below',
+      getBoundingClientRect: () => this.refInput && this.refInput.getBoundingClientRect(),
+      children: <div>Example float</div>,
+    });
+  }
+
+  unmountFloat() { floatDelete(this.floatId); }
 }
 
 // ==========================================
 // Styles
 // ==========================================
-// const style = {};
+const style = {
+  poc: {
+    transform: 'translateZ(0)',
+  },
+};
 
 // ==========================================
 // Miscellaneous
 // ==========================================
-const PROP_KEYS = Object.keys(Select.propTypes);
+const PROP_KEYS = Object.keys(DateInput.propTypes);
 
 // ==========================================
 // Public API
 // ==========================================
-export default input(Select, { toInternalValue, toExternalValue });
+export default input(DateInput, { toInternalValue, toExternalValue });

@@ -4,8 +4,12 @@ import { createStore }      from 'redux';
 import {
   addLast,
   removeAt,
+  merge,
   set as timmSet,
 }                           from 'timm';
+import {
+  boxWithShadow,
+}                           from '../gral/styles';
 
 // ==========================================
 // Store, reducer
@@ -17,6 +21,7 @@ const INITIAL_STATE = [];
 function reducer(state0 = INITIAL_STATE, action) {
   let state = state0;
   let idx;
+  let id;
   switch (action.type) {
     case 'FLOAT_ADD':
       state = addLast(state, action.pars);
@@ -50,13 +55,16 @@ const actions = {
 const floatAdd = pars => {
   const action = actions.floatAdd(pars);
   store.dispatch(action);
-  return action.id;
-}
-const floatDelete = () => store.dispatch(actions.floatDelete());
+  return action.pars.id;
+};
+const floatDelete = (id) => store.dispatch(actions.floatDelete(id));
 
 // ==========================================
 // Floats component
 // ==========================================
+let fFloatsMounted = false;
+const isFloatsMounted = () => fFloatsMounted;
+
 class Floats extends React.Component {
   static propTypes = {
     floats:                 React.PropTypes.array,
@@ -71,24 +79,31 @@ class Floats extends React.Component {
     }
   }
 
-  componentWillUnmount() { if (this.storeUnsubscribe) this.storeUnsubscribe(); }
+  componentWillMount() {
+    fFloatsMounted = true;
+  }
+
+  componentWillUnmount() {
+    fFloatsMounted = false;
+    if (this.storeUnsubscribe) this.storeUnsubscribe();
+  }
 
   // ==========================================
   render() {
     const floats = this.props.floats != null ? this.props.floats : store.getState();
     return (
-      <div 
+      <div
         className="giu-floats"
         style={style.outer}
       >
-        <div>Hello</div>
         {floats.map(props =>
           <div key={props.id}
             {...props}
+            style={style.float(props)}
           />
         )}
       </div>
-              // TODO: zIndex will depend on whether the float 
+              // TODO: zIndex will depend on whether the float
               // should appear on top of a modal, etc.
 
               // Rethink zIndexes!
@@ -108,6 +123,21 @@ const style = {
     width: 0,
     height: 0,
   },
+  float: ({
+    getBoundingClientRect,
+    style: baseStyle, noStyleShadow,
+  }) => {
+    const bcr = getBoundingClientRect();
+    let out = {
+      position: 'fixed',
+      left: bcr.left,
+      top: bcr.bottom,
+      zIndex: 1,
+    };
+    if (!noStyleShadow) out = boxWithShadow(out);
+    if (baseStyle) out = merge(out, baseStyle);
+    return out;
+  },
 };
 
 // ==========================================
@@ -115,6 +145,7 @@ const style = {
 // ==========================================
 export {
   Floats,
+  isFloatsMounted,
   reducer,
   actions,
   floatAdd, floatDelete,

@@ -99,7 +99,7 @@ const style = {
     }
     if (hovering && onClick) bgColor = tinycolor(bgColor).darken(10).toHexString();
     const fgColor = tinycolor(bgColor).getLuminance() < 0.6 ? 'white' : 'black';
-    let style = flexContainer('row', {
+    let out = flexContainer('row', {
       alignItems: 'center',
       WebkitAlignItems: 'center',
       overflow: 'hidden',
@@ -108,15 +108,17 @@ const style = {
       backgroundColor: bgColor,
       color: fgColor,
     });
-    if (!noStyleShadow) style = boxWithShadow(style);
-    if (!noStylePosition) style = merge(style, {
-      position: 'fixed',
-      bottom: 20,
-      right: 20,
-      maxWidth: 350,
-    });
-    if (baseStyle) style = merge(style, baseStyle);
-    return style;
+    if (!noStyleShadow) out = boxWithShadow(out);
+    if (!noStylePosition) {
+      out = merge(out, {
+        position: 'fixed',
+        bottom: 20,
+        right: 20,
+        maxWidth: 350,
+      });
+    }
+    if (baseStyle) out = merge(out, baseStyle);
+    return out;
   },
   icon: flexItem('0 1 auto', {
     paddingRight: 20,

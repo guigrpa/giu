@@ -46,8 +46,8 @@ const actions = {
 const modalPush = pars => {
   const action = actions.modalPush(pars);
   store.dispatch(action);
-  return action.id;
-}
+  return action.pars.id;
+};
 const modalPop = () => store.dispatch(actions.modalPop());
 
 // ==========================================

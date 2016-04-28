@@ -48,8 +48,8 @@ class Textarea extends React.Component {
   // ==========================================
   // Imperative API
   // ==========================================
-  focus() { this._refInput.focus(); }
-  blur() { this._refInput.blur(); }
+  focus() { this.refInput.focus(); }
+  blur() { this.refInput.blur(); }
 
   // ==========================================
   // Render
@@ -58,16 +58,16 @@ class Textarea extends React.Component {
     const { curValue, style: baseStyle } = this.props;
     const otherProps = omit(this.props, PROP_KEYS);
     return (
-      <div 
+      <div
         className="giu-textarea"
         style={style.taWrapper}
       >
-        <div ref={c => { this._refTaPlaceholder = c; }}
+        <div ref={c => { this.refTaPlaceholder = c; }}
           style={merge(style.taPlaceholder, baseStyle)}
         >
           {getPlaceHolderText(curValue)}
         </div>
-        <textarea ref={c => { this._refInput = c; }}
+        <textarea ref={c => { this.refInput = c; }}
           value={curValue}
           onKeyUp={this.onKeyUp}
           style={merge(style.taInput, baseStyle)}
@@ -81,8 +81,8 @@ class Textarea extends React.Component {
   // Handlers
   // ==========================================
   resize() {
-    const height = this._refTaPlaceholder.offsetHeight;
-    this._refInput.style.height = `${height}px`;
+    const height = this.refTaPlaceholder.offsetHeight;
+    this.refInput.style.height = `${height}px`;
   }
 
   onKeyUp(ev) {

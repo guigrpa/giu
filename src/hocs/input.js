@@ -52,8 +52,8 @@ function input(ComposedComponent, {
     getValue() { return toExternalValue(this.state.curValue); }
     setValue(val, cb) { this.setState({ curValue: toInternalValue(val) }, cb); }
     revert(cb) { this.setState({ curValue: toInternalValue(this.props.value) }, cb); }
-    focus() { this._refInput.focus(); }
-    blur() { this._refInput.blur(); }
+    focus() { this.refInput.focus(); }
+    blur() { this.refInput.blur(); }
 
     // ==========================================
     // Render
@@ -61,7 +61,7 @@ function input(ComposedComponent, {
     render() {
       const otherProps = omit(this.props, PROP_KEYS);
       return (
-        <ComposedComponent ref={c => { this._refInput = c; }}
+        <ComposedComponent ref={c => { this.refInput = c; }}
           {...otherProps}
           curValue={this.state.curValue}
           errors={this.props.errors}

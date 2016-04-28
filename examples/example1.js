@@ -1,7 +1,7 @@
 import React                from 'react';
 import ReactDOM             from 'react-dom';
 import {
-  Select, TextInput, NumberInput, Textarea, Checkbox,
+  Select, TextInput, NumberInput, DateInput, Textarea, Checkbox,
   Button,
   Icon, Spinner, LargeMessage,
   Floats,
@@ -83,7 +83,10 @@ let cntModal = 1;
 class FormExample extends React.Component {
   constructor(props) {
     super(props);
-    this.state = { fEmbeddedModal: false };
+    this.state = {
+      fEmbeddedModal: false,
+      fShowDateInput: true,
+    };
   }
 
   render() {
@@ -132,6 +135,14 @@ class FormExample extends React.Component {
         </div>
         <br />
         <Textarea value="En un lugar de la Mancha..." />
+        <div>
+          {
+            this.state.fShowDateInput && <DateInput placeholder="date" />
+          }
+          <Button onClick={() => this.setState({ fShowDateInput: !this.state.fShowDateInput })}>
+            Toggle date input
+          </Button>
+        </div>
       </div>
     );
   }
@@ -166,7 +177,7 @@ class FormExample extends React.Component {
 
   addModal() {
     const title = 'Hello, what\'s your name?';
-    const children = <TextInput ref={o => { this._refName = o; }} autoFocus />;
+    const children = <TextInput ref={o => { this.refName = o; }} autoFocus />;
     modalPush({
       title,
       children,
@@ -180,7 +191,7 @@ class FormExample extends React.Component {
 
   addModal2() {
     const title = 'Introduction';
-    const children = <span>Nice to meet you, {this._refName.getValue()}!</span>;
+    const children = <span>Nice to meet you, {this.refName.getValue()}!</span>;
     modalPush({
       title,
       children,

@@ -2,7 +2,8 @@ require('./index.sass');
 
 // Components
 export Select           from './inputs/select';
-export *                from './inputs/inputTextNumber';
+export *                from './inputs/textNumberInput';
+export DateInput        from './inputs/dateInput';
 export Textarea         from './inputs/textarea';
 export Checkbox         from './inputs/checkbox';
 

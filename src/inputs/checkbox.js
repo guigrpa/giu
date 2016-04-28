@@ -18,8 +18,8 @@ class Checkbox extends React.Component {
   // ==========================================
   // Imperative API
   // ==========================================
-  focus() { this._refInput.focus(); }
-  blur() { this._refInput.blur(); }
+  focus() { this.refInput.focus(); }
+  blur() { this.refInput.blur(); }
 
   // ==========================================
   // Render
@@ -28,7 +28,7 @@ class Checkbox extends React.Component {
     const { curValue } = this.props;
     const otherProps = omit(this.props, PROP_KEYS);
     return (
-      <input ref={c => { this._refInput = c; }}
+      <input ref={c => { this.refInput = c; }}
         className="giu-checkbox"
         type="checkbox"
         checked={curValue}
