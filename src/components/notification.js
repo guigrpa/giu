@@ -7,7 +7,6 @@ import {
   flexItem,
   boxWithShadow,
 }                           from '../gral/styles';
-import { bindAll }          from '../gral/helpers';
 import hoverable            from '../hocs/hoverable';
 import Icon                 from './icon';
 
@@ -46,7 +45,6 @@ class Notification extends React.Component {
       id,
       icon, iconSpin, title, msg,
       onClick, onHoverStart, onHoverStop,
-      style: baseStyle,
     } = this.props;
     return (
       <div

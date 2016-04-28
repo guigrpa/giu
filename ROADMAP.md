@@ -12,7 +12,7 @@
 - [ ] What should be the zIndex for floats coming from a modal?
 - [ ] Floats (same approach as Modals) -- pushed on componentDidMount/Update (when the anchor position is known).
     + [ ] What happens during scrolls?
-        * [ ] Floats: install a listener on body scroll
+        * [x] Floats: install a listener on body scroll
         * [ ] Other scrolling divs that may contain elements driving float positions should do the same
         * [ ] That listener should dispatch a FLOAT_SCROLL, which should trigger a `repositionOrClose()` function in each float. Function is missing? Then remove it from the store state.
     + [ ] How do we close a float?

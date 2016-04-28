@@ -7,6 +7,7 @@ import {
   merge,
   set as timmSet,
 }                           from 'timm';
+import { bindAll }          from '../gral/helpers';
 import {
   boxWithShadow,
 }                           from '../gral/styles';
@@ -73,18 +74,21 @@ class Floats extends React.Component {
   constructor(props) {
     super(props);
     this.shouldComponentUpdate = PureRenderMixin.shouldComponentUpdate.bind(this);
+    bindAll(this, ['forceUpdate']);
     if (props.floats == null) {
       if (!store) initStore();
-      this.storeUnsubscribe = store.subscribe(this.forceUpdate.bind(this));
+      this.storeUnsubscribe = store.subscribe(this.forceUpdate);
     }
   }
 
   componentWillMount() {
     fFloatsMounted = true;
+    window.addEventListener('scroll', this.forceUpdate);
   }
 
   componentWillUnmount() {
     fFloatsMounted = false;
+    window.removeEventListener('scroll', this.forceUpdate);
     if (this.storeUnsubscribe) this.storeUnsubscribe();
   }
 
