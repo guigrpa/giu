@@ -10,6 +10,7 @@ function toExternalValue(val) { return val; }
 // ==========================================
 class Checkbox extends React.Component {
   static propTypes = {
+    // Input HOC
     curValue:               React.PropTypes.bool.isRequired,
     errors:                 React.PropTypes.array.isRequired,
     // all others are passed through unchanged

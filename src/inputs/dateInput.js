@@ -6,7 +6,7 @@ import {
   floatAdd,
   floatDelete,
   isFloatsMounted,
-}                           from '../components/floats'
+}                           from '../components/floats';
 
 const NULL_VALUE = '';
 function toInternalValue(val) { return val != null ? val : NULL_VALUE; }
@@ -21,12 +21,12 @@ included in your application. It will not work properly otherwise.`;
 // ==========================================
 class DateInput extends React.Component {
   static propTypes = {
-    curValue:               React.PropTypes.string.isRequired,
-    errors:                 React.PropTypes.array.isRequired,
     floatPosition:          React.PropTypes.string,
     floatAlign:             React.PropTypes.string,
     floatZ:                 React.PropTypes.number,
     // From input HOC
+    curValue:               React.PropTypes.string.isRequired,
+    errors:                 React.PropTypes.array.isRequired,
     fFocused:               React.PropTypes.bool.isRequired,
     onFocus:                React.PropTypes.func.isRequired,
     onBlur:                 React.PropTypes.func.isRequired,
@@ -49,7 +49,9 @@ class DateInput extends React.Component {
   componentDidMount() {
     if (!fCheckedFloats) {
       fCheckedFloats = true;
+      /* eslint-disable no-console */
       if (!isFloatsMounted()) console.warn(floatsWarning(this.constructor.name));
+      /* eslint-enable no-console */
     }
   }
 
@@ -81,7 +83,7 @@ class DateInput extends React.Component {
 
   renderPicker() {
     return (
-      <div 
+      <div
         className="giu-date-picker"
         style={style.float}
       >
@@ -135,7 +137,7 @@ class DateInput extends React.Component {
 // ==========================================
 const style = {
   float: {
-    padding: "4px 10px",
+    padding: '4px 10px',
   },
 };
 

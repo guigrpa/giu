@@ -1,5 +1,5 @@
 import {
-  getScrollbarWidth
+  getScrollbarWidth,
 }                           from '../gral/constants';
 
 function bindAll(_this, fnNames) {
@@ -16,19 +16,23 @@ function cancelEvent(ev) {
 }
 
 function windowBottomScrollbarHeight() {
+  let out;
   if (document.body.scrollWidth > window.innerWidth) {
-    return getScrollbarWidth();
+    out = getScrollbarWidth();
   } else {
-    return 0;
+    out = 0;
   }
+  return out;
 }
 
 function windowRightScrollbarWidth() {
+  let out;
   if (document.body.scrollHeight > window.innerHeight) {
-    return getScrollbarWidth();
+    out = getScrollbarWidth();
   } else {
-    return 0;
+    out = 0;
   }
+  return out;
 }
 
 export {

@@ -6,6 +6,7 @@ export *                from './inputs/textNumberInput';
 export DateInput        from './inputs/dateInput';
 export Textarea         from './inputs/textarea';
 export Checkbox         from './inputs/checkbox';
+export SimpleList       from './inputs/simpleList';
 
 export {
   Modals,

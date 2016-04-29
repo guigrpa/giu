@@ -21,10 +21,11 @@ function getPlaceHolderText(val) {
 // ==========================================
 class Textarea extends React.Component {
   static propTypes = {
-    curValue:               React.PropTypes.any.isRequired,
-    errors:                 React.PropTypes.array.isRequired,
     onKeyUp:                React.PropTypes.func,
     style:                  React.PropTypes.object,
+    // Input HOC
+    curValue:               React.PropTypes.any.isRequired,
+    errors:                 React.PropTypes.array.isRequired,
     // all others are passed through unchanged
   };
 

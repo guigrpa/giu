@@ -2,7 +2,7 @@ import React                from 'react';
 import ReactDOM             from 'react-dom';
 require('babel-polyfill');
 import {
-  Select, TextInput, NumberInput, DateInput, Textarea, Checkbox,
+  Select, SimpleList, TextInput, NumberInput, DateInput, Textarea, Checkbox,
   Button,
   Icon, Spinner, LargeMessage,
   Floats, floatReposition,
@@ -15,7 +15,7 @@ import {
 }                           from '../src';
 
 const { floor, random } = Math;
-const randomInt = (min, max) => min + floor(random()*(max-min+1));
+const randomInt = (min, max) => min + floor(random() * (max - min + 1));
 const sample = (arr) => arr[randomInt(0, arr.length - 1)];
 
 // -----------------------------------------------
@@ -31,6 +31,7 @@ const App = () => (
     <IconExample />
     <ScrollingExample />
     <FormExample />
+    <SimpleListExample />
     <HoverableExample />
     <FlexRow>
       <span>Left</span>
@@ -67,7 +68,7 @@ const IconExample = () =>
     {' '}
     <Icon
       icon="arrow-right"
-      onClick={() => notify({ 
+      onClick={() => notify({
         msg: `Notification #${cntNotif++}`,
         type: sample(['info', 'success', 'warn', 'error']),
         icon: sample(['arrow-left', 'arrow-right', 'arrow-up', 'arrow-down']),
@@ -77,10 +78,11 @@ const IconExample = () =>
 
 const SELECT_OPTIONS = [
   { label: 'A', value: 'a' },
+  { label: '2', value: 2 },
   { label: 'B', value: 'b' },
+  { label: 'true', value: true },
   { label: 'C', value: 'c' },
 ];
-let cntModal = 1;
 
 class FormExample extends React.Component {
   constructor(props) {
@@ -104,7 +106,7 @@ class FormExample extends React.Component {
             value={null}
             options={SELECT_OPTIONS}
             allowNull
-            onChange={(_, value) => console.log(value)}
+            onChange={(_, value) => console.log(JSON.stringify(value))}
           />
           {' '}
           <TextInput
@@ -127,7 +129,7 @@ class FormExample extends React.Component {
             Add modal
           </Button>
           {' '}
-          <Button 
+          <Button
             plain
             onClick={() => this.setState({ fEmbeddedModal: true })}
           >
@@ -138,7 +140,7 @@ class FormExample extends React.Component {
         <br />
         <div>
           {
-            this.state.fShowDateInput && 
+            this.state.fShowDateInput &&
             <DateInput placeholder="date" />
           }
           <Button onClick={() => this.setState({ fShowDateInput: !this.state.fShowDateInput })}>
@@ -169,12 +171,12 @@ class FormExample extends React.Component {
         buttons={buttons}
         onClickBackdrop={close}
         onEsc={close}
-        style={{width: 500}}
+        style={{ width: 500 }}
       >
         What's your name?{' '}
         <TextInput ref={o => { this.refInput = o; }} autoFocus />
         <DateInput placeholder="date" floatZ={55} />
-        <Textarea placeholder="Write something..." style={{maxHeight: 100}} />
+        <Textarea placeholder="Write something..." style={{ maxHeight: 100 }} />
       </Modal>
     );
   }
@@ -212,10 +214,23 @@ class FormExample extends React.Component {
   }
 }
 
+class SimpleListExample extends React.Component {
+  render() {
+    return (
+      <SimpleList
+        items={SELECT_OPTIONS}
+        onChange={(_, value) => console.log(JSON.stringify(value))}
+        style={style.example}
+        twoStageStyle
+      />
+    );
+  }
+}
+
 class ScrollingExample extends React.Component {
   render() {
     return (
-      <div 
+      <div
         onScroll={floatReposition}
         style={merge(style.example, style.scrolling)}
       >
@@ -265,6 +280,7 @@ const FlexSpacer = ({ children }) => <div style={flexItem('1')}>{children}</div>
 // -----------------------------------------------
 const style = {
   example: {
+    marginLeft: 5,
     marginBottom: 5,
     width: 700,
     border: '1px solid #ccc',

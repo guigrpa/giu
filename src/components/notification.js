@@ -40,6 +40,9 @@ class Notification extends React.Component {
     this.shouldComponentUpdate = PureRenderMixin.shouldComponentUpdate.bind(this);
   }
 
+  // ==========================================
+  // Render
+  // ==========================================
   render() {
     const {
       id,

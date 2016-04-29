@@ -3,18 +3,19 @@ import { addFirst, omit }   from 'timm';
 import input                from '../hocs/input';
 
 const NULL_VALUE = '__NULL__';
-function toInternalValue(val) { return val != null ? val : NULL_VALUE; }
-function toExternalValue(val) { return val !== NULL_VALUE ? val : null; }
+function toInternalValue(val) { return val != null ? JSON.stringify(val) : NULL_VALUE; }
+function toExternalValue(val) { return val !== NULL_VALUE ? JSON.parse(val) : null; }
 
 // ==========================================
 // Component
 // ==========================================
 class Select extends React.Component {
   static propTypes = {
-    curValue:               React.PropTypes.string.isRequired,
-    errors:                 React.PropTypes.array.isRequired,
     options:                React.PropTypes.array.isRequired,
     allowNull:              React.PropTypes.bool,
+    // Input HOC
+    curValue:               React.PropTypes.string.isRequired,
+    errors:                 React.PropTypes.array.isRequired,
     // all others are passed through unchanged
   };
 
@@ -39,9 +40,10 @@ class Select extends React.Component {
         value={curValue}
         {...otherProps}
       >
-        {finalOptions.map(o => (
-          <option key={o.value} id={String(o.value)} value={o.value}>{o.label}</option>
-        ))}
+        {finalOptions.map(o => {
+          const value = toInternalValue(o.value);
+          return <option key={value} id={value} value={value}>{o.label}</option>;
+        })}
       </select>
     );
   }

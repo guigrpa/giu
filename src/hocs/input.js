@@ -14,10 +14,10 @@ const PROP_TYPES = {
 const PROP_KEYS = Object.keys(PROP_TYPES);
 
 function input(ComposedComponent, {
-  toInternalValue,
-  toExternalValue,
+  toInternalValue = (o => o),
+  toExternalValue = (o => o),
   valueAttr = 'value',
-}) {
+} = {}) {
   return class extends React.Component {
     static displayName = `Input(${ComposedComponent.name})`;
     static propTypes = PROP_TYPES;

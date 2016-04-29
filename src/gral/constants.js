@@ -2,13 +2,36 @@
 // Miscellaneous
 // ==========================================
 const COLORS = {
-  dim: '#999',
-  line: '#ccc',
+  dim: '#999999',
+  line: '#cccccc',
+  accent: '#6600cc',
+  textOnAccent: '#ffffff',
 };
 
 const KEYS = {
-  esc: 27,
+  backspace: 8,
+  tab: 9,
   return: 13,
+  enter: 13,
+  esc: 27,
+  space: 32,
+  pageup: 33,
+  pagedown: 34,
+  end: 35,
+  home: 36,
+  left: 37,
+  up: 38,
+  right: 39,
+  down: 40,
+  del: 46,
+};
+
+// For more: http://www.fileformat.info/info/unicode/char/search.html
+const UNICODE = {
+  shift: '\u21E7',
+  nbsp: '\u00A0',
+  ellipsis: '\u2026',
+  heart: '\u2764\uFE0F',
 };
 
 // ==========================================
@@ -42,6 +65,6 @@ try {
 // Public API
 // ==========================================
 export {
-  COLORS, KEYS,
+  COLORS, KEYS, UNICODE,
   getScrollbarWidth,
 };

@@ -15,6 +15,7 @@ const converters = {
 };
 
 const PROP_TYPES = {
+  // Input HOC
   curValue:               React.PropTypes.any.isRequired,
   errors:                 React.PropTypes.array.isRequired,
   // all others are passed through unchanged

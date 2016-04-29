@@ -10,6 +10,7 @@
 - [x] Notifications (same approach as Modals)
 - [x] Notification (same approach as Modal)
 - [x] Rethink zIndex: Textarea (maybe inside a modal), Float (maybe inside a modal), Notifications, etc. etc.
+- [ ] Include SVG font?
 - [ ] Floats (same approach as Modals) -- pushed on componentDidMount/Update (when the anchor position is known).
     + [x] Get them to work on IE!!
     + [ ] Floats at the bottom of the page and going down are cut off; each float owner should manage how it copes with this...
@@ -26,7 +27,11 @@
         * [x] Use isFloatsMounted()
         * [ ] Use `dispatch` if passed, otherwise the imperative floats api
         * [ ] Build the real float, once SimpleList and AnalogTime are there
-    + [ ] SimpleList
+    + [ ] SimpleList -- pending:
+        * [ ] Keys
+        * [ ] Scroll into view
+        * [ ] Example and test
+        * [ ] Allow customisation of accent color; make text on accent white or dark, depending on the case...
     + [ ] AnalogTime
     + [ ] FileInput
     + [ ] DropDownMenu
