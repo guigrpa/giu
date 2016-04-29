@@ -78,8 +78,7 @@ const DEFAULT_NOTIF_PARS = {
 const actions = {
   notify: initialPars => dispatch => {
     const id = `notif_${cntId++}`;
-    let pars = initialPars;
-    pars = addDefaults(pars, DEFAULT_NOTIF_PARS, { id });
+    const pars = addDefaults(initialPars, DEFAULT_NOTIF_PARS, { id });
     dispatch({ type: 'NOTIFY', pars });
     if (!pars.sticky) {
       setTimeout(() => {
@@ -127,7 +126,7 @@ class Notifications extends React.Component {
 
   // ==========================================
   render() {
-    const notifs = this.props.notifs != null ? this.props.notifs : store.getState();
+    const notifs = this.props.notifs || store.getState();
     return (
       <div
         className="giu-notifications"

@@ -111,6 +111,8 @@ const style = {
     resize: 'none',
     padding: 2,
   },
+
+  // hidden placeholder
   taPlaceholder: {
     position: 'absolute',
     top: 0,
@@ -123,6 +125,10 @@ const style = {
     cursor: 'beam',
     whiteSpace: 'pre-wrap',
     zIndex: -50,
+
+    // If the user specifies a `maxHeight`, we don't want
+    // the (hidden) text to overflow vertically
+    overflowY: 'hidden',
   },
 };
 

@@ -25,7 +25,7 @@ export {
   Floats,
   reducer as floatReducer,
   actions as floatActions,
-  floatAdd, floatDelete,
+  floatAdd, floatDelete, floatReposition,
 }                       from './components/floats';
 
 export Button           from './components/button';

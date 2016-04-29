@@ -2,7 +2,7 @@ import path                 from 'path';
 import webpack              from 'webpack';
 
 const _entry = (entry) => [
-  'webpack-hot-middleware/client?reload=true',
+  // 'webpack-hot-middleware/client?reload=true',
   entry,
 ];
 
@@ -38,7 +38,7 @@ export default {
   },
 
   plugins: [
-    new webpack.HotModuleReplacementPlugin(),
+    // new webpack.HotModuleReplacementPlugin(),
     new webpack.NoErrorsPlugin(),
   ],
 

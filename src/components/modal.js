@@ -29,7 +29,11 @@ class Modal extends React.Component {
     onKeyUp:                React.PropTypes.func,
     onEsc:                  React.PropTypes.func,
     style:                  React.PropTypes.object,
+    zIndex:                 React.PropTypes.number,
   };
+  static defaultProps = {
+    zIndex:                 50,
+  }
 
   constructor(props) {
     super(props);
@@ -55,7 +59,7 @@ class Modal extends React.Component {
         id={this.props.id}
         onKeyUp={this.onKeyUp}
         onClick={this.onClickOuter}
-        style={style.outer}
+        style={style.outer(this.props.zIndex)}
       >
         { this.renderBackdrop() }
         { this.renderModal() }
@@ -154,14 +158,14 @@ class Modal extends React.Component {
 // Styles
 // ==========================================
 const style = {
-  outer: {
+  outer: (zIndex) => ({
     position: 'fixed',
     top: 0,
     left: 0,
     width: '100vw',
     height: '100vh',
-    zIndex: 10000,
-  },
+    zIndex,
+  }),
   modalWrapper: flexContainer('row', {
     position: 'fixed',
     top: '5vh',
@@ -171,7 +175,7 @@ const style = {
   modal: boxWithShadow({
     maxHeight: '90vh',
     overflowY: 'auto',
-    zIndex: 10000,
+    // zIndex: 50,
     padding: 20,
   }),
   autoFocusCapture: {

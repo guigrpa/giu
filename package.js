@@ -135,6 +135,7 @@ const specs = {
     // Babel (except babel-eslint)
     'babel-cli': '^6.6.5',
     'babel-core': '^6.7.2',
+    'babel-polyfill': '^6.7.2',
     'babel-plugin-transform-flow-strip-types': '^6.7.0',
     'babel-preset-es2015': '^6.6.0',
     'babel-preset-stage-0': '^6.5.0',

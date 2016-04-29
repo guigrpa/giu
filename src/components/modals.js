@@ -81,13 +81,14 @@ class Modals extends React.Component {
 
   // ==========================================
   render() {
-    const modals = this.props.modals != null ? this.props.modals : store.getState();
+    const modals = this.props.modals || store.getState();
     this.fPopped = (modals.length < this.prevModals.length);
     this.prevModals = modals;
     return (
       <div className="giu-modals">
         {modals.map((props, idx) =>
           <Modal key={props.id} ref={c => { this.refModals[idx] = c; }}
+            zIndex={50 + idx * 10}
             {...props}
           />
         )}
