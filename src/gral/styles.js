@@ -1,3 +1,4 @@
+import tinycolor            from 'tinycolor2';
 import {
   merge,
   addDefaults,
@@ -20,8 +21,14 @@ const boxWithShadow = style => merge({
   boxShadow: '0 3px 6px rgba(0,0,0,0.16), 0 3px 6px rgba(0,0,0,0.23)',
 }, style);
 
+const isDark = color => tinycolor(color).getLuminance() < 0.6;
+const isLight = color => !isDark(color);
+const darken = (color, percentage) => tinycolor(color).darken(percentage).toHexString();
+const lighten = (color, percentage) => tinycolor(color).lighten(percentage).toHexString();
+
 export {
   merge, addDefaults,
   flexContainer, flexItem,
   boxWithShadow,
+  isLight, isDark, lighten, darken,
 };

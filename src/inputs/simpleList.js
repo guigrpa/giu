@@ -11,6 +11,7 @@ import {
   bindAll,
   cancelEvent,
 }                           from '../gral/helpers';
+import { isDark }           from '../gral/styles';
 import input                from '../hocs/input';
 import hoverable            from '../hocs/hoverable';
 
@@ -24,13 +25,14 @@ function toExternalValue(val) { return val !== NULL_VALUE ? JSON.parse(val) : nu
 class SimpleList extends React.Component {
   static propTypes = {
     items:                  React.PropTypes.array.isRequired,
+    focusable:              React.PropTypes.bool,
     emptyText:              React.PropTypes.string,
     onClickItem:            React.PropTypes.func,
-    onKeyDownReturn:        React.PropTypes.func,
-    onKeyDownEsc:           React.PropTypes.func,
+    onKeyDown:              React.PropTypes.func,
     style:                  React.PropTypes.object,
     styleItem:              React.PropTypes.object,
     twoStageStyle:          React.PropTypes.bool,
+    accentColor:            React.PropTypes.string,
     // Hoverable HOC
     hovering:               React.PropTypes.any,
     onHoverStart:           React.PropTypes.func.isRequired,
@@ -38,10 +40,14 @@ class SimpleList extends React.Component {
     // Input HOC
     curValue:               React.PropTypes.string.isRequired,
     onChange:               React.PropTypes.func.isRequired,
+    onFocus:                React.PropTypes.func.isRequired,
+    onBlur:                 React.PropTypes.func.isRequired,
   };
   static defaultProps = {
+    focusable:              true,
     emptyText:              'Ø',
     twoStageStyle:          false,
+    accentColor:            COLORS.accent,
   };
 
   constructor(props) {
@@ -49,29 +55,56 @@ class SimpleList extends React.Component {
     this.shouldComponentUpdate = PureRenderMixin.shouldComponentUpdate.bind(this);
     bindAll(this, [
       'renderItem',
+      'onMouseDown',
       'onClickItem',
+      'onKeyDown',
     ]);
   }
+
+  // ==========================================
+  // Imperative API
+  // ==========================================
+  focus() { this.refFocusCapture.focus(); }
+  blur() { this.refFocusCapture.blur(); }
 
   // ==========================================
   // Render
   // ==========================================
   render() {
-    const { items, style: baseStyle } = this.props;
-    if (!items.length ||
-        (items.length === 1 && items[0].value === '' && items[0].label === '')) {
-      const styleEmpty = merge(style.outer, style.empty, baseStyle);
-      return <div style={styleEmpty}>{this.props.emptyText}</div>;
-    }
+    const { style: baseStyle } = this.props;
     return (
       <div
         className="giu-simple-list"
         style={merge(style.outer, baseStyle)}
-        onMouseDown={cancelEvent}
+        onMouseDown={this.onMouseDown}
       >
-        {items.map(this.renderItem)}
+        {this.renderFocusCapture()}
+        {this.renderContents()}
       </div>
     );
+  }
+
+  renderFocusCapture() {
+    const { focusable, onFocus, onBlur } = this.props;
+    if (!focusable) return null;
+    return (
+      <input ref={c => { this.refFocusCapture = c; }}
+        autoFocus
+        style={style.autoFocusCapture}
+        onFocus={onFocus}
+        onBlur={onBlur}
+        onKeyDown={this.onKeyDown}
+      />
+    );
+  }
+
+  renderContents() {
+    const { items } = this.props;
+    if (!items.length ||
+        (items.length === 1 && items[0].value === '' && items[0].label === '')) {
+      return <div style={style.empty}>{this.props.emptyText}</div>;
+    }
+    return items.map(this.renderItem);
   }
 
   renderItem(item) {
@@ -83,6 +116,7 @@ class SimpleList extends React.Component {
       onHoverStop,
       styleItem,
       twoStageStyle,
+      accentColor,
     } = this.props;
     const id = toInternalValue(itemValue);
     const styleProps = {
@@ -90,6 +124,7 @@ class SimpleList extends React.Component {
       fHovered: hovering === id,
       fSelected: curValue === id,
       twoStageStyle,
+      accentColor,
     };
     return (
       <div key={id}
@@ -107,11 +142,39 @@ class SimpleList extends React.Component {
   // ==========================================
   // Event handlers
   // ==========================================
+  onMouseDown(ev) {
+    cancelEvent(ev);
+    if (this.props.focusable) this.focus();
+  }
+
   onClickItem(ev) {
     const { onClickItem, onChange } = this.props;
     onChange(ev);
     if (onClickItem) onClickItem(ev);
   }
+
+  onKeyDown(ev) {
+    switch (ev.which) {
+      case KEYS.down:   this.selectMoveBy(ev, +1); break;
+      case KEYS.up:     this.selectMoveBy(ev, -1); break;
+      case KEYS.home:   this.selectMoveTo(ev, 0); break;
+      case KEYS.end:    this.selectMoveTo(ev, this.props.items.length - 1); break;
+      case KEYS.space:  this.selectHovered(ev); break;
+      default:
+        if (this.props.onKeyDown) this.props.onKeyDown(ev);
+        break;
+    }
+  }
+
+  selectMoveBy(ev, delta) {}
+
+  selectMoveTo(ev, idx) {
+    cancelEvent(ev);
+    const curValue = toInternalValue(this.props.items[idx].value);
+    this.props.onChange(ev, curValue);
+  }
+
+  selectHovered(ev) {}
 }
 
 // ==========================================
@@ -124,24 +187,27 @@ const style = {
     overflowY: 'auto',
   },
   empty: {
-    fontStyle: 'italic',
+    paddingTop: 3,
+    paddingBottom: 3,
     color: COLORS.dim,
     paddingRight: 10 + getScrollbarWidth(),
     paddingLeft: 10,
     cursor: 'not-allowed',
   },
-  item: ({ hovering, fHovered, fSelected, twoStageStyle }) => {
+  item: ({ hovering, fHovered, fSelected, twoStageStyle, accentColor }) => {
     let border;
     let backgroundColor;
-    let color;
     if (twoStageStyle) {
-      border = `1px solid ${fHovered || fSelected ? COLORS.accent : 'transparent'}`;
-      backgroundColor = fSelected ? COLORS.accent : 'transparent';
-      color = fSelected ? COLORS.textOnAccent : undefined;
+      border = `1px solid ${fHovered || fSelected ? accentColor : 'transparent'}`;
+      backgroundColor = fSelected ? accentColor : 'transparent';
     } else {
       const fHighlighted = fHovered || (fSelected && hovering == null);
-      backgroundColor = fHighlighted ? COLORS.accent : 'transparent';
-      color = fHighlighted ? COLORS.textOnAccent : undefined;
+      border = '1px solid transparent';
+      backgroundColor = fHighlighted ? accentColor : 'transparent';
+    }
+    let color;
+    if (backgroundColor !== 'transparent') {
+      color = COLORS[isDark(backgroundColor) ? 'lightText' : 'darkText'];
     }
     return {
       backgroundColor, color, border,
@@ -149,6 +215,16 @@ const style = {
       whiteSpace: 'nowrap',
       padding: `3px ${10 + getScrollbarWidth()}px 3px 10px`,
     };
+  },
+  autoFocusCapture: {
+    position: 'absolute',
+    opacity: 0, 
+    opacity: 1, border: '2px solid black',
+    width: 1,
+    height: 1,
+    padding: 0,
+    cursor: 'default',
+    pointerEvents: 'none',
   },
 };
 

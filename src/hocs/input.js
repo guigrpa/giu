@@ -76,8 +76,11 @@ function input(ComposedComponent, {
     // ==========================================
     // Handlers
     // ==========================================
-    onChange(ev) {
-      const curValue = ev.currentTarget[valueAttr];
+    onChange(ev, providedValue) {
+      let curValue = providedValue;
+      if (providedValue == null) {
+        curValue = ev.currentTarget[valueAttr];
+      }
       this.setState({ curValue });
       const { onChange } = this.props;
       if (onChange) onChange(ev, toExternalValue(curValue));

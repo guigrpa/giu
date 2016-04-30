@@ -183,7 +183,11 @@ const style = {
     top: 0,
     left: 0,
     opacity: 0,
-    width: 10,
+    width: 1,
+    height: 1,
+    padding: 0,
+    cursor: 'default',
+    pointerEvents: 'none',
   },
   buttons: flexContainer('row', {
     marginTop: 10,

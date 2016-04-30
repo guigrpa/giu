@@ -9,8 +9,7 @@ import {
   Modals, Modal, modalPush, modalPop,
   Notifications, Notification, notify,
   hoverable,
-  flexItem,
-  flexContainer,
+  flexContainer, flexItem,
   merge,
 }                           from '../src';
 
@@ -217,12 +216,23 @@ class FormExample extends React.Component {
 class SimpleListExample extends React.Component {
   render() {
     return (
-      <SimpleList
-        items={SELECT_OPTIONS}
-        onChange={(_, value) => console.log(JSON.stringify(value))}
-        style={style.example}
-        twoStageStyle
-      />
+      <div style={flexContainer('row', style.example)}>
+        <SimpleList
+          items={SELECT_OPTIONS}
+          onChange={(_, value) => console.log(JSON.stringify(value))}
+          style={flexItem(1)} accentColor="gray"
+        />
+        <SimpleList
+          items={SELECT_OPTIONS}
+          onChange={(_, value) => console.log(JSON.stringify(value))}
+          twoStageStyle style={flexItem(1)} accentColor="lightGray"
+        />
+        <SimpleList
+          items={[]}
+          onChange={(_, value) => console.log(JSON.stringify(value))}
+          style={flexItem(1)}
+        />
+      </div>
     );
   }
 }

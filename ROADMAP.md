@@ -28,10 +28,11 @@
         * [ ] Use `dispatch` if passed, otherwise the imperative floats api
         * [ ] Build the real float, once SimpleList and AnalogTime are there
     + [ ] SimpleList -- pending:
+        * [ ] Make focusable true by default (configurable)
         * [ ] Keys
         * [ ] Scroll into view
         * [ ] Example and test
-        * [ ] Allow customisation of accent color; make text on accent white or dark, depending on the case...
+        * [x] Allow customisation of accent color; make text on accent white or dark, depending on the case...
     + [ ] AnalogTime
     + [ ] FileInput
     + [ ] DropDownMenu

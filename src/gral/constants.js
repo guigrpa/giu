@@ -2,10 +2,14 @@
 // Miscellaneous
 // ==========================================
 const COLORS = {
+  // Text
   dim: '#999999',
+  darkText: 'black',
+  lightText: 'white',
+
+  // Others
   line: '#cccccc',
   accent: '#6600cc',
-  textOnAccent: '#ffffff',
 };
 
 const KEYS = {
@@ -15,8 +19,8 @@ const KEYS = {
   enter: 13,
   esc: 27,
   space: 32,
-  pageup: 33,
-  pagedown: 34,
+  pageUp: 33,
+  pageDown: 34,
   end: 35,
   home: 36,
   left: 37,

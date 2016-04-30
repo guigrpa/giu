@@ -1,12 +1,12 @@
 import React                from 'react';
 import PureRenderMixin      from 'react-addons-pure-render-mixin';
 import { merge }            from 'timm';
-import tinycolor            from 'tinycolor2';
 import {
-  flexContainer,
-  flexItem,
+  flexContainer, flexItem,
   boxWithShadow,
+  isDark, darken,
 }                           from '../gral/styles';
+import { COLORS }           from '../gral/constants';
 import hoverable            from '../hocs/hoverable';
 import Icon                 from './icon';
 
@@ -98,8 +98,8 @@ const style = {
         bgColor = 'white';
         break;
     }
-    if (hovering && onClick) bgColor = tinycolor(bgColor).darken(10).toHexString();
-    const fgColor = tinycolor(bgColor).getLuminance() < 0.6 ? 'white' : 'black';
+    if (hovering && onClick) bgColor = darken(bgColor, 10);
+    const fgColor = COLORS[isDark(bgColor) ? 'lightText' : 'darkText'];
     let out = flexContainer('row', {
       alignItems: 'center',
       WebkitAlignItems: 'center',
