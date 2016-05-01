@@ -82,6 +82,13 @@ const SELECT_OPTIONS = [
   { label: 'true', value: true },
   { label: 'C', value: 'c' },
 ];
+const LONG_SELECT_OPTIONS = [];
+for (let i = 0; i < 50; i++) {
+  LONG_SELECT_OPTIONS.push({
+    label: `Option ${i}`,
+    value: i,
+  });
+}
 
 class FormExample extends React.Component {
   constructor(props) {
@@ -223,9 +230,9 @@ class SimpleListExample extends React.Component {
           style={flexItem(1)} accentColor="gray"
         />
         <SimpleList
-          items={SELECT_OPTIONS}
+          items={LONG_SELECT_OPTIONS}
           onChange={(_, value) => console.log(JSON.stringify(value))}
-          twoStageStyle style={flexItem(1)} accentColor="lightGray"
+          twoStageStyle style={flexItem(1, { maxHeight: 118 })} accentColor="lightGray"
         />
         <SimpleList
           items={[]}

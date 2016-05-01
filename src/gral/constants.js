@@ -9,6 +9,8 @@ const COLORS = {
 
   // Others
   line: '#cccccc',
+  focus: 'rgba(81, 203, 238, 1)',
+  focusGlow: '0 0 5px rgba(81, 203, 238, 1)',
   accent: '#6600cc',
 };
 

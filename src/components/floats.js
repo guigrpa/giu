@@ -10,8 +10,8 @@ import {
 }                           from 'timm';
 import {
   bindAll,
-  windowBottomScrollbarHeight,
-  windowRightScrollbarWidth,
+  windowHeightWithoutScrollbar, windowWidthWithoutScrollbar,
+  isVisible,
 }                           from '../gral/helpers';
 import {
   boxWithShadow,
@@ -84,7 +84,7 @@ const floatReposition = () => store.dispatch(actions.floatReposition());
 
 // Reposition all floats upon window scroll or resize
 // (This does *not* cover div scrolling, of course -- for that,
-// you need to explicitly attach the `floatReposition` dispatcher 
+// you need to explicitly attach the `floatReposition` dispatcher
 // as a listener to the corresponding `scroll` event)
 try {
   window.addEventListener('scroll', floatReposition);
@@ -94,41 +94,21 @@ try {
 // ==========================================
 // Position and visibility calculation
 // ==========================================
-function isVisible(bcr, node) {
-  if (!node || !node.getBoundingClientRect) return true;
-
-  // If we reach a `Modal` ancestor, it is the same as if we'd
-  // reached `window`
-  if (node.className.indexOf('giu-modal') >= 0) return true;
-
-  const nodeBcr = node.getBoundingClientRect();
-  if (bcr.top < nodeBcr.top ||
-      bcr.bottom > nodeBcr.bottom ||
-      bcr.left < nodeBcr.left ||
-      bcr.right > nodeBcr.right ) {
-    return false;
-  }
-  return isVisible(bcr, node.parentNode);
-}
-
 function calcPosition({ getAnchorNode, position, align }) {
   const anchorNode = getAnchorNode();
   const bcr = anchorNode && anchorNode.getBoundingClientRect();
   if (!bcr) return null;
-  const parentNode = anchorNode.parentNode;
-  if (!isVisible(bcr, parentNode)) return null;
+  if (!isVisible(anchorNode, bcr)) return null;
   const out = {};
   if (position === 'below') {
     out.top = bcr.bottom;
   } else {
-    const wh = window.innerHeight - windowBottomScrollbarHeight();
-    out.bottom = wh - bcr.top;
+    out.bottom = windowHeightWithoutScrollbar() - bcr.top;
   }
   if (align === 'left') {
     out.left = bcr.left;
   } else {
-    const ww = window.innerWidth - windowRightScrollbarWidth();
-    out.right = ww - bcr.right;
+    out.right = windowWidthWithoutScrollbar() - bcr.right;
   }
   return out;
 }

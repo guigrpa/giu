@@ -10,6 +10,7 @@ import {
 import {
   bindAll,
   cancelEvent,
+  scrollIntoView,
 }                           from '../gral/helpers';
 import { isDark }           from '../gral/styles';
 import input                from '../hocs/input';
@@ -40,6 +41,7 @@ class SimpleList extends React.Component {
     // Input HOC
     curValue:               React.PropTypes.string.isRequired,
     onChange:               React.PropTypes.func.isRequired,
+    fFocused:               React.PropTypes.bool.isRequired,
     onFocus:                React.PropTypes.func.isRequired,
     onBlur:                 React.PropTypes.func.isRequired,
   };
@@ -75,7 +77,7 @@ class SimpleList extends React.Component {
     return (
       <div
         className="giu-simple-list"
-        style={merge(style.outer, baseStyle)}
+        style={merge(style.outer(this.props), baseStyle)}
         onMouseDown={this.onMouseDown}
       >
         {this.renderFocusCapture()}
@@ -107,7 +109,7 @@ class SimpleList extends React.Component {
     return items.map(this.renderItem);
   }
 
-  renderItem(item) {
+  renderItem(item, idx) {
     const { value: itemValue, label } = item;
     const {
       curValue,
@@ -126,8 +128,9 @@ class SimpleList extends React.Component {
       twoStageStyle,
       accentColor,
     };
+    this.refItems = [];
     return (
-      <div key={id}
+      <div key={id} ref={c => { this.refItems[idx] = c; }}
         id={id}
         onMouseEnter={onHoverStart}
         onMouseLeave={onHoverStop}
@@ -159,32 +162,53 @@ class SimpleList extends React.Component {
       case KEYS.up:     this.selectMoveBy(ev, -1); break;
       case KEYS.home:   this.selectMoveTo(ev, 0); break;
       case KEYS.end:    this.selectMoveTo(ev, this.props.items.length - 1); break;
-      case KEYS.space:  this.selectHovered(ev); break;
       default:
         if (this.props.onKeyDown) this.props.onKeyDown(ev);
         break;
     }
   }
 
-  selectMoveBy(ev, delta) {}
-
-  selectMoveTo(ev, idx) {
-    cancelEvent(ev);
-    const curValue = toInternalValue(this.props.items[idx].value);
-    this.props.onChange(ev, curValue);
+  selectMoveBy(ev, delta) {
+    const { curValue, items } = this.props;
+    const len = items.length;
+    let idx = items.findIndex(item => toInternalValue(item.value) === curValue);
+    if (idx < 0) {
+      if (!len) return;
+      idx = delta >= 0 ? 0 : len - 1;
+    } else {
+      idx += delta;
+      idx = Math.max(idx, 0);
+      idx = Math.min(idx, len - 1);
+    }
+    this.selectMoveTo(ev, idx);
   }
 
-  selectHovered(ev) {}
+  selectMoveTo(ev, idx) {
+    const { items } = this.props;
+    if (!items.length) return;
+    cancelEvent(ev);
+    const curValue = toInternalValue(items[idx].value);
+    this.props.onChange(ev, curValue);
+    scrollIntoView(this.refItems[idx]);
+  }
 }
 
 // ==========================================
 // Styles
 // ==========================================
 const style = {
-  outer: {
-    paddingTop: 3,
-    paddingBottom: 3,
-    overflowY: 'auto',
+  outer: ({ fFocused }) => {
+    const out = {
+      paddingTop: 3,
+      paddingBottom: 3,
+      overflowY: 'auto',
+      border: `1px solid ${COLORS.line}`,
+    };
+    if (fFocused) {
+      out.boxShadow = COLORS.focusGlow;
+      out.border = `1px solid ${COLORS.focus}`;
+    }
+    return out;
   },
   empty: {
     paddingTop: 3,
@@ -219,7 +243,6 @@ const style = {
   autoFocusCapture: {
     position: 'absolute',
     opacity: 0, 
-    opacity: 1, border: '2px solid black',
     width: 1,
     height: 1,
     padding: 0,
