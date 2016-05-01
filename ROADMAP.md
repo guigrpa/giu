@@ -32,6 +32,7 @@
         * [x] Keys
         * [ ] Pagedown, pageup?
         * [x] Scroll into view
+        * [ ] Scroll into view *bug in Chrome*: each time SimpleList receives focus, it scrolls down 1px
         * [ ] Example and test
         * [x] Allow customisation of accent color; make text on accent white or dark, depending on the case...
     + [ ] AnalogTime
