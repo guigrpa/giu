@@ -15,6 +15,9 @@ function cancelEvent(ev) {
   ev.stopPropagation();
 }
 
+// -----------------------------------------------
+// Widths, heights...
+// -----------------------------------------------
 function windowBottomScrollbarHeight() {
   let out;
   if (document.body.scrollWidth > window.innerWidth) {
@@ -80,48 +83,51 @@ function getCroppingAncestor(node) {
   return _getCroppingAncestor(bcr, node.parentNode);
 }
 
+function _scrollIntoView(node, fHoriz) {
+  const bcr = node.getBoundingClientRect();
+  const ancestor = _getCroppingAncestor(bcr, node.parentNode);
+  if (!ancestor) return false;
+  const fWindowLevel = ancestor === window;
+  const node1 = bcr[fHoriz ? 'left' : 'top'];
+  const node2 = bcr[fHoriz ? 'right' : 'bottom'];
+  let ancestor1;
+  let ancestor2;
+  if (fWindowLevel) {
+    ancestor1 = 0;
+    ancestor2 = fHoriz ? windowWidthWithoutScrollbar() : windowHeightWithoutScrollbar();
+  } else {
+    const bcr2 = ancestor.getBoundingClientRect();
+    ancestor1 = bcr2[fHoriz ? 'left' : 'top'];
+    ancestor2 = bcr2[fHoriz ? 'right' : 'bottom'];
+  }
 
-/*
-  scrollIntoView: (refItem, refScroller, options = {}) ->
-    return if not refItem?
-    return if refItem is @_prevRefItem
-    @_prevRefItem = refItem
-    itemNode = @refs[refItem]
-    return if not itemNode?
-    scrollerNode = @refs[refScroller]?
-    return if not scrollerNode?
-    scrollerLevelsUp = options.scrollerLevelsUp ? 0
-    for i in [0...scrollerLevelsUp]
-      scrollerNode = scrollerNode.parentNode
-      return if not scrollerNode?
-    itemY1 = itemNode.offsetTop - scrollerNode.offsetTop
-    itemH  = itemNode.offsetHeight
-    itemY2 = itemY1 + itemH
-    shownY1 = scrollerNode.scrollTop
-    shownH  = scrollerNode.clientHeight
-    shownY2 = shownY1 + shownH
-    if itemY2 > shownY2
-      if itemH > shownH
-        scrollerNode.scrollTop = itemY1
-      else
-        scrollerNode.scrollTop += (itemY2 - shownY2)
-    if itemY1 < shownY1
-      scrollerNode.scrollTop = itemY1
-*/
+  // Align left (up) if `node` is above or larger than the cropping `ancestor`.
+  // Align right (bottom) otherwise.
+  let delta;
+  if (node2 - node1 > ancestor2 - ancestor1 || node1 < ancestor1) {
+    delta = node1 - ancestor1;
+  } else {
+    delta = node2 - ancestor2;
+  }
+
+  if (fWindowLevel) {
+    const deltaX = fHoriz ? delta : 0;
+    const deltaY = fHoriz ? 0 : delta;
+    window.scrollBy(deltaX, deltaY);
+  } else {
+    ancestor[fHoriz ? 'scrollLeft' : 'scrollTop'] += delta;
+  }
+  return true;
+}
 
 function scrollIntoView(node) {
   if (!node) return;
-  const bcr = node.getBoundingClientRect();
-  let croppingAncestor;
   let idx = 0;
-  while ((croppingAncestor = _getCroppingAncestor(bcr, node.parentNode))) {
-
-    if (croppingAncestor === window) {
-
-    } else {
-
-    }
-
+  while (true) {
+    // Scroll vertically
+    if (!_scrollIntoView(node, false)) return;
+    // Scroll horizontally
+    if (!_scrollIntoView(node, true)) return;
     // Avoid infinite loops!
     if (idx++ > 100) break;
   }
