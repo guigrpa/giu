@@ -76,7 +76,7 @@ const floatAdd = pars => {
   return action.pars.id;
 };
 const floatDelete = (id) => store.dispatch(actions.floatDelete(id));
-const floatReposition = () => store.dispatch(actions.floatReposition());
+const floatReposition = () => store && store.dispatch(actions.floatReposition());
 
 // ==========================================
 // Inits
