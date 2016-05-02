@@ -5,7 +5,7 @@ import { bindAll }          from '../gral/helpers';
 import {
   floatAdd,
   floatDelete,
-  isFloatsMounted,
+  warnFloats,
 }                           from '../components/floats';
 
 const NULL_VALUE = '';
@@ -27,6 +27,7 @@ class DateInput extends React.Component {
     // From input HOC
     curValue:               React.PropTypes.string.isRequired,
     errors:                 React.PropTypes.array.isRequired,
+    registerFocusableRef:   React.PropTypes.func.isRequired,
     fFocused:               React.PropTypes.bool.isRequired,
     onFocus:                React.PropTypes.func.isRequired,
     onBlur:                 React.PropTypes.func.isRequired,
@@ -41,27 +42,14 @@ class DateInput extends React.Component {
   constructor(props) {
     super(props);
     bindAll(this, [
+      'registerInputRef',
       'onFocus',
       'onBlur',
     ]);
   }
 
-  componentDidMount() {
-    if (!fCheckedFloats) {
-      fCheckedFloats = true;
-      /* eslint-disable no-console */
-      if (!isFloatsMounted()) console.warn(floatsWarning(this.constructor.name));
-      /* eslint-enable no-console */
-    }
-  }
-
+  componentDidMount() { warnFloats(this.constructor.name); }
   componentWillUnmount() { this.unmountFloat(); }
-
-  // ==========================================
-  // Imperative API
-  // ==========================================
-  focus() { this.refInput.focus(); }
-  blur() { this.refInput.blur(); }
 
   // ==========================================
   // Render
@@ -70,7 +58,7 @@ class DateInput extends React.Component {
     const { curValue } = this.props;
     const otherProps = omit(this.props, PROP_KEYS);
     return (
-      <input ref={c => { this.refInput = c; }}
+      <input ref={this.registerInputRef}
         className="giu-date-input"
         type="text"
         value={curValue}
@@ -81,7 +69,7 @@ class DateInput extends React.Component {
     );
   }
 
-  renderPicker() {
+  renderFloat() {
     return (
       <div
         className="giu-date-picker"
@@ -104,6 +92,11 @@ class DateInput extends React.Component {
   // ==========================================
   // Handlers
   // ==========================================
+  registerInputRef(c) {
+    this.refInput = c;
+    this.props.registerFocusableRef(c);
+  }
+
   onFocus(ev) {
     this.mountFloat();
     this.props.onFocus(ev);
@@ -116,12 +109,13 @@ class DateInput extends React.Component {
 
   mountFloat() {
     if (this.floatId != null) return;
+    const { floatPosition, floatAlign, floatZ } = this.props;
     this.floatId = floatAdd({
-      position: this.props.floatPosition,
-      align: this.props.floatAlign,
-      zIndex: this.props.floatZ,
+      position: floatPosition,
+      align: floatAlign,
+      zIndex: floatZ,
       getAnchorNode: () => this.refInput,
-      children: this.renderPicker(),
+      children: this.renderFloat(),
     });
   }
 

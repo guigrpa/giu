@@ -11,8 +11,8 @@ import {
 import {
   bindAll,
   windowHeightWithoutScrollbar, windowWidthWithoutScrollbar,
-  isVisible,
 }                           from '../gral/helpers';
+import { isVisible }        from '../gral/visibility';
 import {
   boxWithShadow,
 }                           from '../gral/styles';
@@ -182,7 +182,6 @@ class Floats extends React.Component {
   }
 }
 
-
 // ==========================================
 // Styles
 // ==========================================
@@ -219,12 +218,28 @@ const style = {
 };
 
 // ==========================================
+// Warnings
+// ==========================================
+let fCheckedFloats = false;
+const floatsWarning = name => `<${name}> requires a <Floats> component to be \
+included in your application. It will not work properly otherwise.`;
+
+function warnFloats(componentName) {
+  if (fCheckedFloats) return;
+  fCheckedFloats = true;
+  /* eslint-disable no-console */
+  if (!isFloatsMounted()) console.warn(floatsWarning(componentName));
+  /* eslint-enable no-console */
+}
+
+
+// ==========================================
 // Public API
 // ==========================================
 export {
   Floats,
-  isFloatsMounted,
   reducer,
   actions,
   floatAdd, floatDelete, floatReposition,
+  warnFloats,
 };

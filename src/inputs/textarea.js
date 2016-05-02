@@ -26,12 +26,14 @@ class Textarea extends React.Component {
     // Input HOC
     curValue:               React.PropTypes.any.isRequired,
     errors:                 React.PropTypes.array.isRequired,
+    registerFocusableRef:   React.PropTypes.func.isRequired,
     // all others are passed through unchanged
   };
 
   constructor(props) {
     super(props);
     bindAll(this, [
+      'registerInputRef',
       'resize',
       'onKeyUp',
     ]);
@@ -45,12 +47,6 @@ class Textarea extends React.Component {
   componentWillUnmount() {
     window.removeEventListener('resize', this.resize);
   }
-
-  // ==========================================
-  // Imperative API
-  // ==========================================
-  focus() { this.refInput.focus(); }
-  blur() { this.refInput.blur(); }
 
   // ==========================================
   // Render
@@ -68,7 +64,7 @@ class Textarea extends React.Component {
         >
           {getPlaceHolderText(curValue)}
         </div>
-        <textarea ref={c => { this.refInput = c; }}
+        <textarea ref={this.registerInputRef}
           value={curValue}
           onKeyUp={this.onKeyUp}
           style={merge(style.taInput, baseStyle)}
@@ -81,6 +77,11 @@ class Textarea extends React.Component {
   // ==========================================
   // Handlers
   // ==========================================
+  registerInputRef(c) {
+    this.refInput = c;
+    this.props.registerFocusableRef(c);
+  }
+
   resize() {
     const height = this.refTaPlaceholder.offsetHeight;
     this.refInput.style.height = `${height}px`;

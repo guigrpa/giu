@@ -16,26 +16,21 @@ class Select extends React.Component {
     // Input HOC
     curValue:               React.PropTypes.string.isRequired,
     errors:                 React.PropTypes.array.isRequired,
+    registerFocusableRef:   React.PropTypes.func.isRequired,
     // all others are passed through unchanged
   };
-
-  // ==========================================
-  // Imperative API
-  // ==========================================
-  focus() { this.refInput.focus(); }
-  blur() { this.refInput.blur(); }
 
   // ==========================================
   // Render
   // ==========================================
   render() {
-    const { curValue, options, allowNull } = this.props;
+    const { curValue, options, allowNull, registerFocusableRef } = this.props;
     const finalOptions = allowNull
       ? addFirst(options, { value: NULL_VALUE, label: '' })
       : options;
     const otherProps = omit(this.props, PROP_KEYS);
     return (
-      <select ref={c => { this.refInput = c; }}
+      <select ref={registerFocusableRef}
         className="giu-select"
         value={curValue}
         {...otherProps}

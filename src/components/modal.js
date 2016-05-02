@@ -13,6 +13,7 @@ import {
 }                           from '../gral/styles';
 import Button               from './button';
 import Backdrop             from './backdrop';
+import FocusCapture         from './focusCapture';
 
 const FOCUSABLE = ['input', 'textarea', 'select'];
 
@@ -77,9 +78,9 @@ class Modal extends React.Component {
       <div style={style.modalWrapper}>
         {this.renderSpacer()}
         <div style={merge(style.modal, baseStyle)}>
-          <input ref={c => { this.refFocusCapture = c; }}
+          <FocusCapture
+            registerRef={c => { this.refFocusCapture = c; }}
             autoFocus
-            style={style.autoFocusCapture}
           />
           { title && this.renderTitle(title) }
           { children }
@@ -178,17 +179,6 @@ const style = {
     // zIndex: 50,
     padding: 20,
   }),
-  autoFocusCapture: {
-    position: 'absolute',
-    top: 0,
-    left: 0,
-    opacity: 0,
-    width: 1,
-    height: 1,
-    padding: 0,
-    cursor: 'default',
-    pointerEvents: 'none',
-  },
   buttons: flexContainer('row', {
     marginTop: 10,
     borderTop: `1px solid ${COLORS.line}`,

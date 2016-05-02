@@ -13,6 +13,8 @@ const PROP_TYPES = {
 };
 const PROP_KEYS = Object.keys(PROP_TYPES);
 
+// **IMPORTANT**: must be the outermost HOC (i.e. closest to the
+// user), for the imperative API to work.
 function input(ComposedComponent, {
   toInternalValue = (o => o),
   toExternalValue = (o => o),
@@ -52,8 +54,8 @@ function input(ComposedComponent, {
     getValue() { return toExternalValue(this.state.curValue); }
     setValue(val, cb) { this.setState({ curValue: toInternalValue(val) }, cb); }
     revert(cb) { this.setState({ curValue: toInternalValue(this.props.value) }, cb); }
-    focus() { this.refInput.focus(); }
-    blur() { this.refInput.blur(); }
+    focus() { if (this.refFocusable && this.refFocusable.focus) this.refFocusable.focus(); }
+    blur() { if (this.refFocusable && this.refFocusable.blur) this.refFocusable.blur(); }
 
     // ==========================================
     // Render
@@ -61,7 +63,8 @@ function input(ComposedComponent, {
     render() {
       const otherProps = omit(this.props, PROP_KEYS);
       return (
-        <ComposedComponent ref={c => { this.refInput = c; }}
+        <ComposedComponent
+          registerFocusableRef={c => { this.refFocusable = c; }}
           {...otherProps}
           curValue={this.state.curValue}
           errors={this.props.errors}

@@ -18,6 +18,7 @@ const PROP_TYPES = {
   // Input HOC
   curValue:               React.PropTypes.any.isRequired,
   errors:                 React.PropTypes.array.isRequired,
+  registerFocusableRef:   React.PropTypes.func.isRequired,
   // all others are passed through unchanged
 };
 const PROP_KEYS = Object.keys(PROP_TYPES);
@@ -31,19 +32,13 @@ function createClass(name, inputType) {
     static propTypes = PROP_TYPES;
 
     // ==========================================
-    // Imperative API
-    // ==========================================
-    focus() { this.refInput.focus(); }
-    blur() { this.refInput.blur(); }
-
-    // ==========================================
     // Render
     // ==========================================
     render() {
-      const { curValue } = this.props;
+      const { curValue, registerFocusableRef } = this.props;
       const otherProps = omit(this.props, PROP_KEYS);
       return (
-        <input ref={c => { this.refInput = c; }}
+        <input ref={registerFocusableRef}
           className="giu-input"
           type={inputType}
           value={curValue}

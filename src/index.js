@@ -6,7 +6,7 @@ export *                from './inputs/textNumberInput';
 export DateInput        from './inputs/dateInput';
 export Textarea         from './inputs/textarea';
 export Checkbox         from './inputs/checkbox';
-export SimpleList       from './inputs/simpleList';
+export ListInput        from './inputs/listInput';
 
 export {
   Modals,
@@ -29,6 +29,7 @@ export {
   floatAdd, floatDelete, floatReposition,
 }                       from './components/floats';
 
+export DropDownMenu     from './components/dropDownMenu';
 export Button           from './components/button';
 export Icon             from './components/icon';
 export Spinner          from './components/spinner';
@@ -43,3 +44,4 @@ export hoverable        from './hocs/hoverable';
 
 // Other
 export * from './gral/helpers';
+export * from './gral/visibility';

@@ -2,7 +2,8 @@ import React                from 'react';
 import ReactDOM             from 'react-dom';
 require('babel-polyfill');
 import {
-  Select, SimpleList, TextInput, NumberInput, DateInput, Textarea, Checkbox,
+  Select, ListInput, TextInput, NumberInput, DateInput, Textarea, Checkbox,
+  DropDownMenu,
   Button,
   Icon, Spinner, LargeMessage,
   Floats, floatReposition,
@@ -30,7 +31,7 @@ const App = () => (
     <IconExample />
     <ScrollingExample />
     <FormExample />
-    <SimpleListExample />
+    <ListInputExample />
     <HoverableExample />
     <FlexRow>
       <span>Left</span>
@@ -149,6 +150,9 @@ class FormExample extends React.Component {
             this.state.fShowDateInput &&
             <DateInput placeholder="date" />
           }
+          <DropDownMenu>
+            Menu
+          </DropDownMenu>
           <Button onClick={() => this.setState({ fShowDateInput: !this.state.fShowDateInput })}>
             Toggle date input
           </Button>
@@ -220,21 +224,21 @@ class FormExample extends React.Component {
   }
 }
 
-class SimpleListExample extends React.Component {
+class ListInputExample extends React.Component {
   render() {
     return (
       <div style={flexContainer('row', style.example)}>
-        <SimpleList
+        <ListInput
           items={SELECT_OPTIONS}
           onChange={(_, value) => console.log(JSON.stringify(value))}
           style={flexItem(1)} accentColor="gray"
         />
-        <SimpleList
+        <ListInput
           items={LONG_SELECT_OPTIONS}
           onChange={(_, value) => console.log(JSON.stringify(value))}
           twoStageStyle style={flexItem(1, { maxHeight: 118 })} accentColor="lightGray"
         />
-        <SimpleList
+        <ListInput
           items={[]}
           onChange={(_, value) => console.log(JSON.stringify(value))}
           style={flexItem(1)}
