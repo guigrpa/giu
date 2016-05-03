@@ -1,11 +1,7 @@
 import {
-  getScrollbarWidth,
-}                           from '../gral/constants';
-import {
   windowHeightWithoutScrollbar, windowWidthWithoutScrollbar,
 }                           from '../gral/helpers';
-
-const SCROLL_INTO_VIEW_WINDOW_BREATHE = 5;
+import { MISC }             from '../gral/constants';
 
 // -----------------------------------------------
 // Get-cropping-ancestor algorithm (recursive)
@@ -17,12 +13,6 @@ function isVisible(node, bcr0) {
   const bcr = bcr0 || node.getBoundingClientRect();
   const croppingAncestor = _getCroppingAncestor(bcr, node.parentNode);
   return !croppingAncestor;
-}
-
-function getCroppingAncestor(node) {
-  if (!node) return false;
-  const bcr = node.getBoundingClientRect();
-  return _getCroppingAncestor(bcr, node.parentNode);
 }
 
 function _getCroppingAncestor(refBcr, ancestor, fHoriz = null) {
@@ -95,7 +85,7 @@ function _scrollIntoView(node, fHoriz) {
     // Align left (up) if `node` is above or larger than the cropping `ancestor`.
     // Align right (bottom) otherwise.
     let delta;
-    let breathe = fWindowLevel ? SCROLL_INTO_VIEW_WINDOW_BREATHE : 0;
+    let breathe = fWindowLevel ? MISC.windowBorderBreathe : 0;
     if (nodeD > ancestorD) breathe = 0;
     if (node1 < ancestor1 || nodeD > ancestorD) {
       delta = node1 - ancestor1 - breathe;
@@ -128,6 +118,6 @@ function _isOverflowVisible(overflow) {
 // Public API
 // -----------------------------------------------
 export {
-  isVisible, 
+  isVisible,
   scrollIntoView,
 };

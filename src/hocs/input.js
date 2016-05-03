@@ -9,6 +9,7 @@ const PROP_TYPES = {
   onChange:               React.PropTypes.func,
   onFocus:                React.PropTypes.func,
   onBlur:                 React.PropTypes.func,
+  cmds:                   React.PropTypes.array,
   // all others are passed through unchanged
 };
 const PROP_KEYS = Object.keys(PROP_TYPES);
@@ -48,24 +49,57 @@ function input(ComposedComponent, {
       }
     }
 
+    componentDidUpdate(prevProps) {
+      const { cmds } = this.props;
+      if (cmds !== prevProps.cmds) {
+        for (const cmd of cmds) {
+          switch (cmd.type) {
+            case 'SET_VALUE':
+              this.setState({ curValue: toInternalValue(cmd.value) });
+              break;
+            case 'REVERT':
+              this.setState({ curValue: toInternalValue(this.props.value) });
+              break;
+            case 'FOCUS':
+              if (this.refFocusable && this.refFocusable.focus) this.refFocusable.focus();
+              break;
+            case 'BLUR':
+              if (this.refFocusable && this.refFocusable.blur) this.refFocusable.blur();
+              break;
+            default: 
+              break;
+          }
+        }
+      }
+    }
+
     // ==========================================
     // Imperative API
     // ==========================================
+    // Alternative to using the `onChange` prop (e.g. if we want to delegate
+    // state handling to the input and only want to retrieve the value when submitting a form)
     getValue() { return toExternalValue(this.state.curValue); }
-    setValue(val, cb) { this.setState({ curValue: toInternalValue(val) }, cb); }
-    revert(cb) { this.setState({ curValue: toInternalValue(this.props.value) }, cb); }
-    focus() { if (this.refFocusable && this.refFocusable.focus) this.refFocusable.focus(); }
-    blur() { if (this.refFocusable && this.refFocusable.blur) this.refFocusable.blur(); }
+
+    // e.g. user clicks a button that replaces the temporary value being edited
+    // setValue(val, cb) { this.setState({ curValue: toInternalValue(val) }, cb); }
+
+    // e.g. user clicks a button that reverts all changes to the input
+    // revert(cb) { this.setState({ curValue: toInternalValue(this.props.value) }, cb); }
+    // focus() { if (this.refFocusable && this.refFocusable.focus) this.refFocusable.focus(); }
+    // blur() { if (this.refFocusable && this.refFocusable.blur) this.refFocusable.blur(); }
+
 
     // ==========================================
     // Render
     // ==========================================
     render() {
       const otherProps = omit(this.props, PROP_KEYS);
+      // `cmds` are both used by this HOC and passed through
       return (
         <ComposedComponent
           registerFocusableRef={c => { this.refFocusable = c; }}
           {...otherProps}
+          cmds={this.props.cmds}
           curValue={this.state.curValue}
           errors={this.props.errors}
           onChange={this.onChange}

@@ -2,9 +2,11 @@ import React                from 'react';
 import ReactDOM             from 'react-dom';
 require('babel-polyfill');
 import {
-  Select, ListInput, TextInput, NumberInput, DateInput, Textarea, Checkbox,
+  Select, TextInput, NumberInput, DateInput, Textarea, Checkbox,
+  ListInput, LIST_SEPARATOR,
   DropDownMenu,
   Button,
+  Progress,
   Icon, Spinner, LargeMessage,
   Floats, floatReposition,
   Modals, Modal, modalPush, modalPop,
@@ -12,52 +14,76 @@ import {
   hoverable,
   flexContainer, flexItem,
   merge,
+  cancelEvent,
 }                           from '../src';
 
 const { floor, random } = Math;
 const randomInt = (min, max) => min + floor(random() * (max - min + 1));
 const sample = (arr) => arr[randomInt(0, arr.length - 1)];
 
+const NORMAL_OPTIONS = [
+  { label: 'A', value: 'a', onClick: () => console.log('Custom click A') },
+  { label: '2', value: 2 },
+  LIST_SEPARATOR,
+  { label: 'B', value: 'b' },
+  { label: 'true', value: true },
+  { label: 'C', value: 'c' },
+];
+const TALL_OPTIONS = [];
+for (let i = 0; i < 50; i++) {
+  TALL_OPTIONS.push({
+    label: `Option ${i}`,
+    value: i,
+  });
+}
+
 // -----------------------------------------------
 // Examples
 // -----------------------------------------------
 const App = () => (
-  <div>
+  <div style={flexContainer('row')}>
     <Modals />
     <Floats />
     <Notifications />
-    <NotificationExample />
-    <MessageExample />
-    <IconExample />
-    <ScrollingExample />
-    <FormExample />
-    <ListInputExample />
-    <HoverableExample />
-    <FlexRow>
-      <span>Left</span>
-      <FlexSpacer />
-      <span>Right</span>
-    </FlexRow>
+    <div style={flexItem(1)}>
+      <NotificationExample />
+      <MessageExample />
+      <IconExample />
+      <ButtonExample />
+      <ProgressExample />
+      <HoverableExample />
+      <FlexExample />
+      <DropDownExample />
+      <ModalExample />
+    </div>
+    <div style={flexItem(1)}>
+      <ScrollingExample />
+      <FormExample />
+    </div>
   </div>
 );
 
 const NotificationExample = () =>
-  <Notification
-    icon="cog" iconSpin
-    title="Title"
-    msg="Notification message"
-    style={style.example}
-    noStyleShadow noStylePosition
-  />;
+  <div style={style.example}>
+    <ExampleLabel>Notification (embedded)</ExampleLabel>
+    <Notification
+      icon="cog" iconSpin
+      title="Title"
+      msg="Notification message"
+      noStylePosition
+    />
+  </div>;
 
 const MessageExample = () =>
   <div style={style.example}>
+    <ExampleLabel>LargeMessage</ExampleLabel>
     <LargeMessage>Sample</LargeMessage>
   </div>;
 
 let cntNotif = 1;
 const IconExample = () =>
   <div style={style.example}>
+    <ExampleLabel>Icon</ExampleLabel>
     <Icon icon="heart" id="a" />
     {' '}
     <Spinner />
@@ -76,88 +102,99 @@ const IconExample = () =>
     />
   </div>;
 
-const SELECT_OPTIONS = [
-  { label: 'A', value: 'a' },
-  { label: '2', value: 2 },
-  { label: 'B', value: 'b' },
-  { label: 'true', value: true },
-  { label: 'C', value: 'c' },
-];
-const LONG_SELECT_OPTIONS = [];
-for (let i = 0; i < 50; i++) {
-  LONG_SELECT_OPTIONS.push({
-    label: `Option ${i}`,
-    value: i,
-  });
-}
+const ButtonExample = () =>
+  <div style={style.example}>
+    <ExampleLabel>Button</ExampleLabel>
+    <Button>Normal</Button>{' '}
+    <Button plain>Plain</Button>
+  </div>;
 
-class FormExample extends React.Component {
+class ProgressExample extends React.Component {
   constructor(props) {
     super(props);
-    this.state = {
-      fEmbeddedModal: false,
-      fShowDateInput: true,
-    };
+    this.state = { value: 0.3 };
+    setInterval(() => { this.setState({ value: Math.random() }); }, 2000);
+  }
+  render() {
+    return (
+      <div style={style.example}>
+        <ExampleLabel>Progress</ExampleLabel>
+        <Progress value={this.state.value} />
+        <Progress />
+      </div>
+    );
+  }
+}
+
+const HoverableExample = hoverable(({ hovering, onHoverStart, onHoverStop }) => (
+  <div
+    onMouseEnter={onHoverStart}
+    onMouseLeave={onHoverStop}
+    style={merge(style.example, style.hoverable(hovering))}
+  >
+    <ExampleLabel>Hoverable (HOC)</ExampleLabel>
+  </div>
+));
+
+const FlexExample = ({ children }) =>
+  <div style={style.example}>
+    <ExampleLabel>Flex utilities</ExampleLabel>
+    <div style={flexContainer('row')}>
+      <span>Left</span>
+      <FlexSpacer />
+      <span>Right</span>
+    </div>
+    <div style={flexContainer('row')}>
+      <span>Left</span>
+      <FlexSpacer />
+      <span>Center</span>
+      <FlexSpacer />
+      <span>Right</span>
+    </div>
+  </div>;
+
+const FlexSpacer = ({ children }) => <div style={flexItem('1')}>{children}</div>;
+
+const DropDownExample = () =>
+  <div style={style.example}>
+    <ExampleLabel>DropDownMenu (focusable, keyboard-controlled, embedded ListInput)</ExampleLabel>
+    <DropDownMenu
+      items={NORMAL_OPTIONS}
+      onClickItem={(ev, value) => console.log(value)}
+    >
+      <Icon icon="bars" /> Menu
+    </DropDownMenu>
+    &nbsp;&nbsp;&nbsp;&nbsp;
+    <DropDownMenu
+      items={TALL_OPTIONS}
+      onClickItem={(ev, value) => console.log(value)}
+    >
+      <Icon icon="bolt" /> Long menu
+    </DropDownMenu>
+  </div>
+
+class ModalExample extends React.Component {
+  constructor(props) {
+    super(props);
+    this.state = { fEmbeddedModal: false };
   }
 
   render() {
     return (
       <div style={style.example}>
-        <div>
-          <Select
-            value="a"
-            options={SELECT_OPTIONS}
-          />
-          {' '}
-          <Select
-            value={null}
-            options={SELECT_OPTIONS}
-            allowNull
-            onChange={(_, value) => console.log(JSON.stringify(value))}
-          />
-          {' '}
-          <TextInput
-            value="a"
-            placeholder="text"
-            onChange={(_, value) => console.log(value)}
-          />
-          {' '}
-          <NumberInput
-            step="0.1"
-            value={null}
-            placeholder="number"
-            onChange={(_, value) => console.log(value)}
-          />
-          {' '}
-          <Checkbox id="myCheck" value />
-          <label htmlFor="myCheck">Label</label>
-          {' '}
-          <Button onClick={this.addModal.bind(this)}>
-            Add modal
-          </Button>
-          {' '}
-          <Button
-            plain
-            onClick={() => this.setState({ fEmbeddedModal: true })}
-          >
-            Embed modal
-          </Button>
-          { this.state.fEmbeddedModal && this.renderEmbeddedModal() }
-        </div>
-        <br />
-        <div>
-          {
-            this.state.fShowDateInput &&
-            <DateInput placeholder="date" />
-          }
-          <DropDownMenu>
-            Menu
-          </DropDownMenu>
-          <Button onClick={() => this.setState({ fShowDateInput: !this.state.fShowDateInput })}>
-            Toggle date input
-          </Button>
-        </div>
-        <Textarea value="En un lugar de la Mancha..." />
+        <ExampleLabel>
+          Modals (stackable) and Modal (embedded): focusable, keyboard-controlled
+        </ExampleLabel>
+        <Button onClick={this.addModal.bind(this)}>
+          Add modal
+        </Button>
+        {' '}
+        <Button
+          onClick={() => this.setState({ fEmbeddedModal: true })}
+        >
+          Embed modal
+        </Button>
+        { this.state.fEmbeddedModal && this.renderEmbeddedModal() }
       </div>
     );
   }
@@ -196,7 +233,7 @@ class FormExample extends React.Component {
     const children = (
       <div>
         <TextInput ref={o => { this.refName = o; }} autoFocus />{' '}
-        <DateInput placeholder="date" floatPosition="above" floatZ={55} />
+        <DateInput placeholder="date" floatZ={55} />
       </div>
     );
     modalPush({
@@ -224,77 +261,219 @@ class FormExample extends React.Component {
   }
 }
 
-class ListInputExample extends React.Component {
+const ScrollingExample = () =>
+  <div style={style.example}>
+    <ExampleLabel>Scrollable with floats</ExampleLabel>
+    <div
+      onScroll={floatReposition}
+      style={style.scrolling}
+    >
+      <DateInput placeholder="date" />
+      <br />
+      Lorem ipsum dolor sit amet, consectetur adipiscing elit. Proin
+      mi tortor, sagittis in ultricies ullamcorper, feugiat quis
+      mauris. Nam dapibus velit nec dictum vulputate. Morbi tincidunt
+      diam eu velit gravida, vel consequat ante luctus. Integer ut
+      consequat sem, dictum eleifend nunc. Quisque elit massa,
+      gravida non tortor sed, condimentum pulvinar lorem. Duis
+      ullamcorper placerat mi sed tempor. Praesent sed justo ut leo
+      congue pharetra sed sit amet libero. Suspendisse odio velit, mattis
+      non pulvinar non, posuere sit amet quam. Etiam lacinia lobortis
+      tincidunt.
+      <br />
+      Lorem ipsum dolor sit amet, consectetur adipiscing elit. Proin
+      mi tortor, sagittis in ultricies ullamcorper, feugiat quis
+      mauris. Nam dapibus velit nec dictum vulputate. Morbi tincidunt
+      diam eu velit gravida, vel consequat ante luctus. Integer ut
+      consequat sem, dictum eleifend nunc. Quisque elit massa,
+      gravida non tortor sed, condimentum pulvinar lorem. Duis
+      ullamcorper placerat mi sed tempor. Praesent sed justo ut leo
+      congue pharetra sed sit amet libero. Suspendisse odio velit, mattis
+      non pulvinar non, posuere sit amet quam. Etiam lacinia lobortis
+      tincidunt.
+      <br />
+      Lorem ipsum dolor sit amet, consectetur adipiscing elit. Proin
+      mi tortor, sagittis in ultricies ullamcorper, feugiat quis
+      mauris. Nam dapibus velit nec dictum vulputate. Morbi tincidunt
+      diam eu velit gravida, vel consequat ante luctus. Integer ut
+      consequat sem, dictum eleifend nunc. Quisque elit massa,
+      gravida non tortor sed, condimentum pulvinar lorem. Duis
+      ullamcorper placerat mi sed tempor. Praesent sed justo ut leo
+      congue pharetra sed sit amet libero. Suspendisse odio velit, mattis
+      non pulvinar non, posuere sit amet quam. Etiam lacinia lobortis
+      tincidunt.
+      <br />
+      <DateInput placeholder="date" />
+      <br />
+      Lorem ipsum dolor sit amet, consectetur adipiscing elit. Proin
+      mi tortor, sagittis in ultricies ullamcorper, feugiat quis
+      mauris. Nam dapibus velit nec dictum vulputate. Morbi tincidunt
+      diam eu velit gravida, vel consequat ante luctus. Integer ut
+      consequat sem, dictum eleifend nunc. Quisque elit massa,
+      gravida non tortor sed, condimentum pulvinar lorem. Duis
+      ullamcorper placerat mi sed tempor. Praesent sed justo ut leo
+      congue pharetra sed sit amet libero. Suspendisse odio velit, mattis
+      non pulvinar non, posuere sit amet quam. Etiam lacinia lobortis
+      tincidunt.
+      <br />
+      Lorem ipsum dolor sit amet, consectetur adipiscing elit. Proin
+      mi tortor, sagittis in ultricies ullamcorper, feugiat quis
+      mauris. Nam dapibus velit nec dictum vulputate. Morbi tincidunt
+      diam eu velit gravida, vel consequat ante luctus. Integer ut
+      consequat sem, dictum eleifend nunc. Quisque elit massa,
+      gravida non tortor sed, condimentum pulvinar lorem. Duis
+      ullamcorper placerat mi sed tempor. Praesent sed justo ut leo
+      congue pharetra sed sit amet libero. Suspendisse odio velit, mattis
+      non pulvinar non, posuere sit amet quam. Etiam lacinia lobortis
+      tincidunt.
+      <br />
+      Lorem ipsum dolor sit amet, consectetur adipiscing elit. Proin
+      mi tortor, sagittis in ultricies ullamcorper, feugiat quis
+      mauris. Nam dapibus velit nec dictum vulputate. Morbi tincidunt
+      diam eu velit gravida, vel consequat ante luctus. Integer ut
+      consequat sem, dictum eleifend nunc. Quisque elit massa,
+      gravida non tortor sed, condimentum pulvinar lorem. Duis
+      ullamcorper placerat mi sed tempor. Praesent sed justo ut leo
+      congue pharetra sed sit amet libero. Suspendisse odio velit, mattis
+      non pulvinar non, posuere sit amet quam. Etiam lacinia lobortis
+      tincidunt.
+      <br />
+      Lorem ipsum dolor sit amet, consectetur adipiscing elit. Proin
+      mi tortor, sagittis in ultricies ullamcorper, feugiat quis
+      mauris. Nam dapibus velit nec dictum vulputate. Morbi tincidunt
+      diam eu velit gravida, vel consequat ante luctus. Integer ut
+      consequat sem, dictum eleifend nunc. Quisque elit massa,
+      gravida non tortor sed, condimentum pulvinar lorem. Duis
+      ullamcorper placerat mi sed tempor. Praesent sed justo ut leo
+      congue pharetra sed sit amet libero. Suspendisse odio velit, mattis
+      non pulvinar non, posuere sit amet quam. Etiam lacinia lobortis
+      tincidunt.
+      <DateInput placeholder="date" />
+    </div>
+  </div>;
+
+class FormExample extends React.Component {
+  constructor(props) {
+    super(props);
+    this.state = { fShowDateInput: true };
+  }
+
   render() {
     return (
-      <div style={flexContainer('row', style.example)}>
-        <ListInput
-          items={SELECT_OPTIONS}
-          onChange={(_, value) => console.log(JSON.stringify(value))}
-          style={flexItem(1)} accentColor="gray"
-        />
-        <ListInput
-          items={LONG_SELECT_OPTIONS}
-          onChange={(_, value) => console.log(JSON.stringify(value))}
-          twoStageStyle style={flexItem(1, { maxHeight: 118 })} accentColor="lightGray"
-        />
-        <ListInput
-          items={[]}
-          onChange={(_, value) => console.log(JSON.stringify(value))}
-          style={flexItem(1)}
-        />
+      <div style={style.example}>
+        <div>
+          <ExampleLabel>Inputs</ExampleLabel>
+          <Select
+            value="a"
+            options={NORMAL_OPTIONS}
+          />
+          {' '}
+          <Select
+            value={null}
+            options={NORMAL_OPTIONS}
+            allowNull
+            onChange={(_, value) => console.log(JSON.stringify(value))}
+          />
+          {' '}
+          <TextInput
+            value="a"
+            placeholder="text"
+            onChange={(_, value) => console.log(value)}
+          />
+          {' '}
+          <NumberInput
+            step="0.1"
+            value={null}
+            placeholder="number"
+            onChange={(_, value) => console.log(value)}
+          />
+          {' '}
+          <Checkbox id="myCheck" value />
+          <label htmlFor="myCheck">checkbox</label>
+        </div>
+        <div>
+          {
+            this.state.fShowDateInput &&
+            <DateInput placeholder="date" />
+          }
+          {' '}
+          <Button onClick={() => this.setState({ fShowDateInput: !this.state.fShowDateInput })}>
+            Toggle date input
+          </Button>
+        </div>
+        <br />
+        <div>
+          <ExampleLabel>Textarea (with auto-resize)</ExampleLabel>
+          <Textarea value="En un lugar de la Mancha..." />
+        </div>
+        <br />
+        <div>
+          <ExampleLabel>ListInput (focusable, keyboard-controlled, one/two-stage, autoscroll)</ExampleLabel>
+          <div style={flexContainer('row', { height: 150 })}>
+            <ListInput
+              items={NORMAL_OPTIONS}
+              onChange={(_, value) => console.log(JSON.stringify(value))}
+              style={flexItem(1, { marginRight: 4 })} accentColor="gray"
+            />
+            <ListInput
+              items={TALL_OPTIONS}
+              onChange={(_, value) => console.log(JSON.stringify(value))}
+              twoStageStyle 
+              style={flexItem(1, { marginRight: 4 })} 
+              accentColor="lightGray"
+            />
+            <ListInput
+              items={[]}
+              onChange={(_, value) => console.log(JSON.stringify(value))}
+              style={flexItem(1)}
+            />
+          </div>
+        </div>
+        <br />
+        <div>
+          <ExampleLabel>Imperative example</ExampleLabel>
+          <TextInput 
+            value="Initial value"
+            cmds={this.cmds}
+            onFocus={() => console.log('focus')}
+            onBlur={() => console.log('blur')}
+          />
+          {' '}
+          <Button 
+            onMouseDown={cancelEvent}
+            onClick={() => {
+              this.cmds = [
+                { type: 'SET_VALUE', value: 'Different value' },
+                { type: 'FOCUS' },
+              ];
+              this.forceUpdate();
+            }}
+          >
+            Change & focus
+          </Button>
+          {' '}
+          <Button 
+            onMouseDown={cancelEvent}
+            onClick={() => {
+              this.cmds = [
+                { type: 'REVERT' },
+                { type: 'BLUR' },
+              ];
+              this.forceUpdate();
+            }}
+          >
+            Revert & blur
+          </Button>
+        </div>
       </div>
     );
   }
 }
 
-class ScrollingExample extends React.Component {
-  render() {
-    return (
-      <div
-        onScroll={floatReposition}
-        style={merge(style.example, style.scrolling)}
-      >
-        <DateInput placeholder="date" floatPosition="above" floatAlign="right" />
-        <br />
-        Lorem ipsum dolor sit amet, consectetur adipiscing elit. Proin mi tortor, sagittis in ultricies ullamcorper, feugiat quis mauris. Nam dapibus velit nec dictum vulputate. Morbi tincidunt diam eu velit gravida, vel consequat ante luctus. Integer ut consequat sem, dictum eleifend nunc. Quisque elit massa, gravida non tortor sed, condimentum pulvinar lorem. Duis ullamcorper placerat mi sed tempor. Praesent sed justo ut leo congue pharetra sed sit amet libero. Suspendisse odio velit, mattis non pulvinar non, posuere sit amet quam. Etiam lacinia lobortis tincidunt.
-        <br />
-        Vivamus porta odio sed ex accumsan tincidunt. Pellentesque nec nisl condimentum, pulvinar erat non, facilisis lectus. Ut vel ultricies dui. Sed eu massa a dui fringilla varius vel sit amet lectus. Nulla ultrices tincidunt orci, non egestas nunc lacinia tempor. Cum sociis natoque penatibus et magnis dis parturient montes, nascetur ridiculus mus. Praesent tristique elementum sapien, vel scelerisque augue placerat et. Suspendisse rhoncus tortor odio, tincidunt fringilla sapien pulvinar eget. Ut posuere nunc eu magna placerat, nec tristique quam laoreet. In molestie iaculis eros at maximus. Maecenas eget tortor luctus, aliquam nibh in, egestas turpis.
-        <br />
-        Etiam nulla lacus, porta at nunc nec, efficitur ultricies nisi. Vestibulum vel pulvinar erat. Vestibulum eget dapibus leo. Duis viverra id eros vel commodo. Integer pellentesque iaculis sapien. Nullam pellentesque sodales eros, vitae semper nunc placerat a. Vestibulum ante ipsum primis in faucibus orci luctus et ultrices posuere cubilia Curae; In sollicitudin urna augue, eget pharetra lectus molestie vel. Pellentesque malesuada est hendrerit, mattis dui nec, cursus ipsum.
-        <br />
-        <DateInput placeholder="date" />
-        <br />
-        Etiam nulla lacus, porta at nunc nec, efficitur ultricies nisi. Vestibulum vel pulvinar erat. Vestibulum eget dapibus leo. Duis viverra id eros vel commodo. Integer pellentesque iaculis sapien. Nullam pellentesque sodales eros, vitae semper nunc placerat a. Vestibulum ante ipsum primis in faucibus orci luctus et ultrices posuere cubilia Curae; In sollicitudin urna augue, eget pharetra lectus molestie vel. Pellentesque malesuada est hendrerit, mattis dui nec, cursus ipsum.
-        <br />
-        Lorem ipsum dolor sit amet, consectetur adipiscing elit. Proin mi tortor, sagittis in ultricies ullamcorper, feugiat quis mauris. Nam dapibus velit nec dictum vulputate. Morbi tincidunt diam eu velit gravida, vel consequat ante luctus. Integer ut consequat sem, dictum eleifend nunc. Quisque elit massa, gravida non tortor sed, condimentum pulvinar lorem. Duis ullamcorper placerat mi sed tempor. Praesent sed justo ut leo congue pharetra sed sit amet libero. Suspendisse odio velit, mattis non pulvinar non, posuere sit amet quam. Etiam lacinia lobortis tincidunt.
-        <br />
-        Vivamus porta odio sed ex accumsan tincidunt. Pellentesque nec nisl condimentum, pulvinar erat non, facilisis lectus. Ut vel ultricies dui. Sed eu massa a dui fringilla varius vel sit amet lectus. Nulla ultrices tincidunt orci, non egestas nunc lacinia tempor. Cum sociis natoque penatibus et magnis dis parturient montes, nascetur ridiculus mus. Praesent tristique elementum sapien, vel scelerisque augue placerat et. Suspendisse rhoncus tortor odio, tincidunt fringilla sapien pulvinar eget. Ut posuere nunc eu magna placerat, nec tristique quam laoreet. In molestie iaculis eros at maximus. Maecenas eget tortor luctus, aliquam nibh in, egestas turpis.
-        <br />
-        Nam feugiat lobortis libero, sit amet posuere ex ultrices id. Aliquam in felis vel ante semper tincidunt et nec turpis. In sed velit at mi placerat bibendum. Maecenas at consectetur turpis. Quisque dictum, augue sit amet ornare facilisis, orci magna ultrices lectus, a finibus urna elit id lorem. Duis condimentum sapien ac dolor vulputate fermentum. Aliquam blandit, dolor a fringilla rutrum, dolor orci finibus eros, in hendrerit diam metus et dolor. Vestibulum id erat vitae dolor malesuada blandit. Quisque accumsan feugiat mi non bibendum. Cras in diam gravida, hendrerit turpis at, eleifend mauris. Ut nec dolor id odio euismod venenatis. Quisque condimentum consequat imperdiet. Nunc ex risus, ornare ut sollicitudin quis, euismod nec leo. Suspendisse sit amet mauris congue, tempor mi id, rutrum lorem. Vestibulum eget odio suscipit, aliquet nunc et, malesuada orci.
-        <DateInput placeholder="date" />
-      </div>
-    );
-  }
-}
-
-const HoverableExample = hoverable(({ hovering, onHoverStart, onHoverStop }) => (
-  <div
-    onMouseEnter={onHoverStart}
-    onMouseLeave={onHoverStop}
-    style={merge(style.example, style.hoverable(hovering))}
-  >
-    Hoverable
-  </div>
-));
-
-const FlexRow = ({ children }) => (
-  <div style={merge(style.example, flexContainer('row'))}>
-    {children}
-  </div>
-);
-
-const FlexSpacer = ({ children }) => <div style={flexItem('1')}>{children}</div>;
+// -----------------------------------------------
+// Helpers
+// -----------------------------------------------
+const ExampleLabel = ({ children }) => <div style={style.label}>{children}</div>
 
 // -----------------------------------------------
 // Styles
@@ -302,10 +481,11 @@ const FlexSpacer = ({ children }) => <div style={flexItem('1')}>{children}</div>
 const style = {
   example: {
     marginLeft: 5,
+    marginTop: 5,
     marginBottom: 5,
-    width: 700,
     border: '1px solid #ccc',
-    padding: 5,
+    padding: 10,
+    minWidth: 400,
   },
   scrolling: {
     maxHeight: 120,
@@ -314,6 +494,10 @@ const style = {
   hoverable: hovering => ({
     backgroundColor: hovering ? '#ccc' : undefined,
   }),
+  label: {
+    fontWeight: 'bold',
+    color: 'darkblue',
+  }
 };
 
 // -----------------------------------------------

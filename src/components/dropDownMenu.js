@@ -10,20 +10,24 @@ import hoverable            from '../hocs/hoverable';
 import {
   floatAdd,
   floatDelete,
+  floatUpdate,
   warnFloats,
 }                           from '../components/floats';
 import FocusCapture         from '../components/focusCapture';
+import { ListInput }        from '../inputs/listInput';
 
 // ==========================================
 // Component
 // ==========================================
 class DropDownMenu extends React.Component {
   static propTypes = {
-    children:               React.PropTypes.any,
+    children:               React.PropTypes.any.isRequired,
+    items:                  React.PropTypes.array.isRequired,
     floatPosition:          React.PropTypes.string,
     floatAlign:             React.PropTypes.string,
     floatZ:                 React.PropTypes.number,
     accentColor:            React.PropTypes.string,
+    onClickItem:            React.PropTypes.func,
     // Hoverable HOC
     hovering:               React.PropTypes.any,
     onHoverStart:           React.PropTypes.func.isRequired,
@@ -37,6 +41,7 @@ class DropDownMenu extends React.Component {
     super(props);
     this.shouldComponentUpdate = PureRenderMixin.shouldComponentUpdate.bind(this);
     this.state = { fOpen: false };
+    this.cmdsToListInput = null;
     bindAll(this, [
       'registerFocusCaptureRef',
       'registerTitleRef',
@@ -44,6 +49,7 @@ class DropDownMenu extends React.Component {
       'onFocus',
       'onBlur',
       'onKeyDown',
+      'onClickItem',
     ]);
   }
 
@@ -94,16 +100,12 @@ class DropDownMenu extends React.Component {
 
   renderFloat() {
     return (
-      <div
-        className="giu-drop-down-menu-float"
-        onMouseDown={cancelEvent}
-        style={style.float}
-      >
-        Menu option menu option<br />
-        Menu option menu option<br />
-        Menu option menu option<br />
-        Menu option menu option
-      </div>
+      <ListInput
+        items={this.props.items}
+        onClickItem={this.onClickItem}
+        focusable={false}
+        cmds={this.cmdsToListInput}
+      />
     );
   }
 
@@ -115,7 +117,7 @@ class DropDownMenu extends React.Component {
 
   onFocus(ev) {
     this.setState({ fOpen: true });
-    this.mountFloat();
+    this.mountOrUpdateFloat();
   }
 
   onBlur(ev) {
@@ -131,30 +133,44 @@ class DropDownMenu extends React.Component {
 
   onKeyDown(ev) {
     switch (ev.which) {
-      // case KEYS.down:   this.selectMoveBy(ev, +1); break;
-      // case KEYS.up:     this.selectMoveBy(ev, -1); break;
-      // case KEYS.home:   this.selectMoveTo(ev, 0); break;
-      // case KEYS.end:    this.selectMoveTo(ev, this.props.items.length - 1); break;
       case KEYS.esc:
         cancelEvent(ev);
         ev.target.blur();
         break;
       default:
+        this.cmdsToListInput = [{ type: 'KEY_DOWN', which: ev.which }];
+        this.mountOrUpdateFloat();
         if (this.props.onKeyDown) this.props.onKeyDown(ev);
         break;
     }
   }
 
-  mountFloat() {
-    if (this.floatId != null) return;
+  onClickItem(ev, value) {
+    const { items, onClickItem } = this.props;
+    for (const item of items) {
+      if (item.value === value) {
+        if (item.onClick) item.onClick(ev);
+        break;
+      }
+    }
+    if (onClickItem) onClickItem(ev, value);
+    this.refFocusCapture.blur();
+  }
+
+  mountOrUpdateFloat() {
     const { floatPosition, floatAlign, floatZ } = this.props;
-    this.floatId = floatAdd({
+    const floatOptions = {
       position: floatPosition,
       align: floatAlign,
       zIndex: floatZ,
       getAnchorNode: () => this.refTitle,
       children: this.renderFloat(),
-    });
+    };
+    if (this.floatId == null) {
+      this.floatId = floatAdd(floatOptions);
+    } else {
+      floatUpdate(this.floatId, floatOptions);
+    }
   }
 
   unmountFloat() {
@@ -179,15 +195,10 @@ const style = {
     }
     return {
       display: 'inline-block',
-      marginLeft: 8,
-      marginRight: 8,
       cursor: 'pointer',
       backgroundColor,
       color,
     };
-  },
-  float: {
-
   },
 };
 

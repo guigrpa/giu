@@ -21,10 +21,16 @@ const NULL_VALUE = '__NULL__';
 function toInternalValue(val) { return val != null ? JSON.stringify(val) : NULL_VALUE; }
 function toExternalValue(val) { return val !== NULL_VALUE ? JSON.parse(val) : null; }
 
+const LIST_SEPARATOR_KEY = '__SEPARATOR__';
+const LIST_SEPARATOR = {
+  value: LIST_SEPARATOR_KEY,
+  label: LIST_SEPARATOR_KEY,
+};
+
 // ==========================================
 // Component
 // ==========================================
-class ListInput extends React.Component {
+class BaseListInput extends React.Component {
   static propTypes = {
     items:                  React.PropTypes.array.isRequired,
     focusable:              React.PropTypes.bool,
@@ -35,6 +41,7 @@ class ListInput extends React.Component {
     styleItem:              React.PropTypes.object,
     twoStageStyle:          React.PropTypes.bool,
     accentColor:            React.PropTypes.string,
+    cmds:                   React.PropTypes.array,
     // Hoverable HOC
     hovering:               React.PropTypes.any,
     onHoverStart:           React.PropTypes.func.isRequired,
@@ -65,6 +72,21 @@ class ListInput extends React.Component {
       'onKeyDown',
       'onFocus',
     ]);
+  }
+
+  componentDidUpdate(prevProps) {
+    const { cmds } = this.props;
+    if (cmds !== prevProps.cmds) {
+      for (const cmd of cmds) {
+        switch (cmd.type) {
+          case 'KEY_DOWN':
+            this.doKeyDown(null, cmd.which);
+            break;
+          default: 
+            break;
+        }
+      }
+    }
   }
 
   // ==========================================
@@ -103,11 +125,19 @@ class ListInput extends React.Component {
         (items.length === 1 && items[0].value === '' && items[0].label === '')) {
       return <div style={style.empty}>{this.props.emptyText}</div>;
     }
+    this.refItems = [];
     return items.map(this.renderItem);
   }
 
   renderItem(item, idx) {
     const { value: itemValue, label } = item;
+    if (label === LIST_SEPARATOR_KEY) {
+      return (
+        <div key={`separator_${idx}`} ref={c => { this.refItems[idx] = c; }}
+          style={style.separator}
+        />
+      );
+    }
     const {
       curValue,
       hovering,
@@ -125,7 +155,6 @@ class ListInput extends React.Component {
       twoStageStyle,
       accentColor,
     };
-    this.refItems = [];
     return (
       <div key={id} ref={c => { this.refItems[idx] = c; }}
         id={id}
@@ -160,34 +189,34 @@ class ListInput extends React.Component {
   onClickItem(ev) {
     const { onClickItem, onChange } = this.props;
     onChange(ev);
-    if (onClickItem) onClickItem(ev);
+    if (onClickItem) onClickItem(ev, toExternalValue(ev.target.id));
   }
 
-  onKeyDown(ev) {
-    switch (ev.which) {
+  onKeyDown(ev) { this.doKeyDown(ev, ev.which); }
+  doKeyDown(ev, which) {
+    switch (which) {
       case KEYS.down:   this.selectMoveBy(ev, +1); break;
       case KEYS.up:     this.selectMoveBy(ev, -1); break;
-      case KEYS.home:   this.selectMoveTo(ev, 0); break;
-      case KEYS.end:    this.selectMoveTo(ev, this.props.items.length - 1); break;
+      case KEYS.home:   this.selectMoveBy(ev, +1, -1); break;
+      case KEYS.end:    this.selectMoveTo(ev, -1, this.props.items.length); break;
       default:
         if (this.props.onKeyDown) this.props.onKeyDown(ev);
         break;
     }
   }
 
-  selectMoveBy(ev, delta) {
-    const { curValue, items } = this.props;
+  selectMoveBy(ev, delta, idx0) {
+    const { items } = this.props;
     const len = items.length;
-    let idx = items.findIndex(item => toInternalValue(item.value) === curValue);
-    if (idx < 0) {
-      if (!len) return;
-      idx = delta >= 0 ? 0 : len - 1;
-    } else {
+    let idx = idx0 != null ? idx0 : this.getCurIdx();
+    if (idx < 0) idx = delta >= 0 ? -1 : len;
+    let fFound = false;
+    while (!fFound) {
       idx += delta;
-      idx = Math.max(idx, 0);
-      idx = Math.min(idx, len - 1);
+      if (idx < 0 || idx > len - 1) break;
+      fFound = (items[idx].label !== LIST_SEPARATOR_KEY);
     }
-    this.selectMoveTo(ev, idx);
+    if (fFound) this.selectMoveTo(ev, idx);
   }
 
   selectMoveTo(ev, idx) {
@@ -197,6 +226,11 @@ class ListInput extends React.Component {
     const curValue = toInternalValue(items[idx].value);
     this.props.onChange(ev, curValue);
     scrollIntoView(this.refItems[idx]);
+  }
+
+  getCurIdx() {
+    const { curValue, items } = this.props;
+    return items.findIndex(item => toInternalValue(item.value) === curValue);
   }
 }
 
@@ -247,13 +281,25 @@ const style = {
       padding: `3px ${10 + getScrollbarWidth()}px 3px 10px`,
     };
   },
+  separator: {
+    borderTop: `1px solid ${COLORS.line}`,
+    height: 1,
+    marginTop: 3,
+    marginBottom: 3,
+    cursor: 'default',
+  },
 };
 
 // ==========================================
 // Public API
 // ==========================================
-export default input(hoverable(ListInput), {
+const ListInput = input(hoverable(BaseListInput), {
   toInternalValue,
   toExternalValue,
   valueAttr: 'id',
 });
+
+export {
+  ListInput,
+  LIST_SEPARATOR,
+};

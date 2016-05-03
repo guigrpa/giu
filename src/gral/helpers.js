@@ -11,6 +11,7 @@ function bindAll(_this, fnNames) {
 }
 
 function cancelEvent(ev) {
+  if (!ev) return;
   ev.preventDefault();
   ev.stopPropagation();
 }

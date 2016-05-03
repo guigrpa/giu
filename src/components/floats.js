@@ -2,17 +2,19 @@ import React                from 'react';
 import PureRenderMixin      from 'react-addons-pure-render-mixin';
 import { createStore }      from 'redux';
 import {
-  addDefaults,
   addLast,
   removeAt,
-  merge,
   set as timmSet,
+  merge,
+  mergeIn,
+  addDefaults,
 }                           from 'timm';
 import {
   bindAll,
   windowHeightWithoutScrollbar, windowWidthWithoutScrollbar,
 }                           from '../gral/helpers';
 import { isVisible }        from '../gral/visibility';
+import { MISC }             from '../gral/constants';
 import {
   boxWithShadow,
 }                           from '../gral/styles';
@@ -42,6 +44,13 @@ function reducer(state0 = INITIAL_STATE, action) {
         state = timmSet(state, 'floats', removeAt(state.floats, idx));
       }
       break;
+    case 'FLOAT_UPDATE':
+      id = action.id;
+      idx = state.floats.findIndex(o => o.id === id);
+      if (idx >= 0) {
+        state = mergeIn(state, ['floats', idx], action.pars);
+      }
+      break;
     case 'FLOAT_REPOSITION':
       state = timmSet(state, 'cntReposition', state.cntReposition + 1);
       break;
@@ -55,10 +64,7 @@ function reducer(state0 = INITIAL_STATE, action) {
 // Action creators
 // ==========================================
 let cntId = 0;
-const DEFAULT_FLOAT_PARS = {
-  position: 'below',
-  align: 'left',
-};
+const DEFAULT_FLOAT_PARS = null;
 const actions = {
   floatAdd: initialPars => {
     const id = `float_${cntId++}`;
@@ -66,6 +72,7 @@ const actions = {
     return { type: 'FLOAT_ADD', pars };
   },
   floatDelete: id => ({ type: 'FLOAT_DELETE', id }),
+  floatUpdate: (id, pars) => ({ type: 'FLOAT_UPDATE', id, pars }),
   floatReposition: () => ({ type: 'FLOAT_REPOSITION' }),
 };
 
@@ -76,6 +83,7 @@ const floatAdd = pars => {
   return action.pars.id;
 };
 const floatDelete = (id) => store.dispatch(actions.floatDelete(id));
+const floatUpdate = (id, pars) => store.dispatch(actions.floatUpdate(id, pars));
 const floatReposition = () => store && store.dispatch(actions.floatReposition());
 
 // ==========================================
@@ -94,23 +102,10 @@ try {
 // ==========================================
 // Position and visibility calculation
 // ==========================================
-function calcPosition({ getAnchorNode, position, align }) {
+function isAnchorVisible({ getAnchorNode }) {
   const anchorNode = getAnchorNode();
-  const bcr = anchorNode && anchorNode.getBoundingClientRect();
-  if (!bcr) return null;
-  if (!isVisible(anchorNode, bcr)) return null;
-  const out = {};
-  if (position === 'below') {
-    out.top = bcr.bottom;
-  } else {
-    out.bottom = windowHeightWithoutScrollbar() - bcr.top;
-  }
-  if (align === 'left') {
-    out.left = bcr.left;
-  } else {
-    out.right = windowWidthWithoutScrollbar() - bcr.right;
-  }
-  return out;
+  if (!anchorNode) return null;
+  return isVisible(anchorNode);
 }
 
 // ==========================================
@@ -140,6 +135,7 @@ class Floats extends React.Component {
 
   componentWillMount() {
     fFloatsMounted = true;
+    this.refFloats = [];
   }
 
   componentWillUnmount() {
@@ -147,38 +143,116 @@ class Floats extends React.Component {
     if (this.storeUnsubscribe) this.storeUnsubscribe();
   }
 
+  componentDidMount() { this.repositionFloats(); }
+  componentDidUpdate() { this.repositionFloats(); }
+
   // ==========================================
   render() {
-    const floats = this.props.floats || store.getState().floats;
+    this.floats = this.props.floats || store.getState().floats;
     return (
       <div
         className="giu-floats"
         style={style.outer}
       >
-        {floats.map(this.renderFloat)}
+        {this.floats.map(this.renderFloat)}
       </div>
-              // TODO: zIndex will depend on whether the float
-              // should appear on top of a modal, etc.
-
-              // Rethink zIndexes!
     );
   }
 
-  renderFloat(props) {
-    const pos = calcPosition(props);
-    if (!pos) return null;
+  renderFloat(props, idx) {
+    if (!isAnchorVisible(props)) return null;
     const { id, zIndex = 5 } = props;
     return (
       <div key={id}
         className="giu-float"
         style={style.wrapper(zIndex)}
       >
-        <div
+        <div ref={c => { this.refFloats[idx] = c; }}
           {...props}
-          style={style.float(pos, props)}
+          style={style.floatInitial(props)}
         />
       </div>
     );
+  }
+
+  // ==========================================
+  repositionFloats() {
+    const floats = this.floats;
+    for (let idx = 0; idx < floats.length; idx++) {
+      this.repositionFloat(floats[idx], idx);
+    }
+  }
+
+  repositionFloat(float, idx) {
+    const ref = this.refFloats[idx];
+    if (!ref) return;
+
+    // Hide and move to top-left for measuring
+    let { position, align } = float;
+    ref.style.opacity = '0.5';
+    ref.style.top = '0px';
+    ref.style.left = '0px';
+    ref.style.bottom = null;
+    ref.style.right = null;
+    ref.style.overflowX = 'visible';
+    ref.style.overflowY = 'visible';
+    const wFloat = ref.offsetWidth;
+    const hFloat = ref.offsetHeight;
+
+    // Preparations
+    const anchorNode = float.getAnchorNode();
+    const bcr = anchorNode && anchorNode.getBoundingClientRect();
+    if (!bcr) return;
+    const styleAttrs = {};
+    const hWin = windowHeightWithoutScrollbar();
+    const wWin = windowWidthWithoutScrollbar();
+    const breathe = MISC.windowBorderBreathe;
+
+    // Position vertically
+    if (!position) {
+      const freeBelow = hWin - bcr.bottom;
+      if (freeBelow >= hFloat) {
+        position = 'below';
+      } else {
+        position = freeBelow > bcr.top ? 'below' : 'above';
+      }
+    }
+    if (position === 'below') {
+      styleAttrs.top = `${bcr.bottom}px`;
+      styleAttrs.bottom = null;
+      styleAttrs.maxHeight = `${hWin - bcr.bottom - breathe}px`;
+    } else {
+      styleAttrs.top = null;
+      styleAttrs.bottom = `${windowHeightWithoutScrollbar() - bcr.top}px`;
+      styleAttrs.maxHeight = `${bcr.top - breathe}px`;
+    }
+    styleAttrs.overflowY = 'auto';
+
+    // Position horizontally
+    if (!align) {
+      const freeRight = wWin - bcr.left;
+      if (freeRight >= wFloat) {
+        align = 'left';
+      } else {
+        align = freeRight > bcr.right ? 'left' : 'right';
+      }
+    }
+    if (align === 'left') {
+      styleAttrs.left = `${bcr.left}px`;
+      styleAttrs.right = null;
+      styleAttrs.maxWidth = `${wWin - bcr.right - breathe}px`;
+    } else {
+      styleAttrs.left = null;
+      styleAttrs.right = `${windowWidthWithoutScrollbar() - bcr.right}px`;
+      styleAttrs.maxWidth = `${bcr.left - breathe}px`;
+    }
+    styleAttrs.overflowX = 'auto';
+
+    // Apply style
+    Object.keys(styleAttrs).forEach(attr => {
+      ref.style[attr] = styleAttrs[attr];
+    });
+    ref.style.opacity = 1;
   }
 }
 
@@ -190,27 +264,24 @@ const style = {
     position: 'absolute',
     top: 0,
     left: 0,
-    width: 0, // '100vw',
-    height: 0, // '100vh',
-    // pointerEvents: 'none',
-    // zIndex: 80,
+    width: 0,
+    height: 0,
   },
   wrapper: zIndex => ({
     position: 'fixed',
     top: 0,
     left: 0,
-    width: 0, // '100vw',
-    height: 0, // '100vh',
+    width: 0,
+    height: 0,
     zIndex,
   }),
-  float: (pos, {
-    style: baseStyle, noStyleShadow,
-  }) => {
-    let out = merge(pos, {
+  floatInitial: ({ style: baseStyle, noStyleShadow }) => {
+    let out = {
       position: 'fixed',
-      // pointerEvents: 'auto',
-      // zIndex: 80,
-    });
+      top: 0,
+      left: 0,
+      opacity: 0.5,
+    };
     if (!noStyleShadow) out = boxWithShadow(out);
     if (baseStyle) out = merge(out, baseStyle);
     return out;
@@ -240,6 +311,6 @@ export {
   Floats,
   reducer,
   actions,
-  floatAdd, floatDelete, floatReposition,
+  floatAdd, floatDelete, floatUpdate, floatReposition,
   warnFloats,
 };

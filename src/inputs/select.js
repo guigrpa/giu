@@ -1,6 +1,7 @@
 import React                from 'react';
-import { addFirst, omit }   from 'timm';
+import { omit }             from 'timm';
 import input                from '../hocs/input';
+import { LIST_SEPARATOR }   from '../inputs/listInput';
 
 const NULL_VALUE = '__NULL__';
 function toInternalValue(val) { return val != null ? JSON.stringify(val) : NULL_VALUE; }
@@ -25,9 +26,11 @@ class Select extends React.Component {
   // ==========================================
   render() {
     const { curValue, options, allowNull, registerFocusableRef } = this.props;
-    const finalOptions = allowNull
-      ? addFirst(options, { value: NULL_VALUE, label: '' })
-      : options;
+    const finalOptions = [];
+    if (allowNull) finalOptions.push({ value: NULL_VALUE, label: '' });
+    for (const option of options) {
+      if (option.label !== LIST_SEPARATOR.label) finalOptions.push(option);
+    }
     const otherProps = omit(this.props, PROP_KEYS);
     return (
       <select ref={registerFocusableRef}
@@ -36,7 +39,7 @@ class Select extends React.Component {
         {...otherProps}
       >
         {finalOptions.map(o => {
-          const value = toInternalValue(o.value);
+          const value = o.value === NULL_VALUE ? o.value : toInternalValue(o.value);
           return <option key={value} id={value} value={value}>{o.label}</option>;
         })}
       </select>

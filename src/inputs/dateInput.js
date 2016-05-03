@@ -12,10 +12,6 @@ const NULL_VALUE = '';
 function toInternalValue(val) { return val != null ? val : NULL_VALUE; }
 function toExternalValue(val) { return val !== NULL_VALUE ? val : null; }
 
-let fCheckedFloats = false;
-const floatsWarning = name => `<${name}> requires a <Floats> component to be \
-included in your application. It will not work properly otherwise.`;
-
 // ==========================================
 // Component
 // ==========================================
@@ -33,11 +29,6 @@ class DateInput extends React.Component {
     onBlur:                 React.PropTypes.func.isRequired,
     // all others are passed through unchanged
   };
-  static defaultProps = {
-    floatPosition:          'below',
-    floatAlign:             'left',
-    floatZ:                 undefined,
-  }
 
   constructor(props) {
     super(props);
@@ -76,7 +67,6 @@ class DateInput extends React.Component {
         style={style.float}
       >
         Date picker<br />
-        Very long, very long, very long, very long, very long, very long, line
         Date picker<br />
         Date picker<br />
         <button onClick={window.alert}>hello</button><br />

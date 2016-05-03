@@ -2,11 +2,18 @@ require('./index.sass');
 
 // Components
 export Select           from './inputs/select';
-export *                from './inputs/textNumberInput';
+export {
+  TextInput,
+  NumberInput,
+}                       from './inputs/textNumberInput';
 export DateInput        from './inputs/dateInput';
 export Textarea         from './inputs/textarea';
 export Checkbox         from './inputs/checkbox';
-export ListInput        from './inputs/listInput';
+export {
+  ListInput,
+  LIST_SEPARATOR,
+}                       from './inputs/listInput';
+export DatePicker       from './inputs/datePicker';
 
 export {
   Modals,
@@ -26,7 +33,7 @@ export {
   Floats,
   reducer as floatReducer,
   actions as floatActions,
-  floatAdd, floatDelete, floatReposition,
+  floatAdd, floatDelete, floatUpdate, floatReposition,
 }                       from './components/floats';
 
 export DropDownMenu     from './components/dropDownMenu';
@@ -34,6 +41,7 @@ export Button           from './components/button';
 export Icon             from './components/icon';
 export Spinner          from './components/spinner';
 export LargeMessage     from './components/largeMessage';
+export Progress         from './components/progress';
 
 // Styles
 export * from './gral/styles';

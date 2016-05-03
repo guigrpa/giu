@@ -1,6 +1,3 @@
-// ==========================================
-// Miscellaneous
-// ==========================================
 const COLORS = {
   // Text
   dim: '#999999',
@@ -40,6 +37,10 @@ const UNICODE = {
   heart: '\u2764\uFE0F',
 };
 
+const MISC = {
+  windowBorderBreathe: 5,
+};
+
 // ==========================================
 // Scrollbar width
 // ==========================================
@@ -71,6 +72,6 @@ try {
 // Public API
 // ==========================================
 export {
-  COLORS, KEYS, UNICODE,
+  COLORS, KEYS, UNICODE, MISC,
   getScrollbarWidth,
 };
