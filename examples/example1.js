@@ -36,6 +36,14 @@ for (let i = 0; i < 50; i++) {
     value: i,
   });
 }
+const WIDE_OPTIONS = [
+  { label: 'A long, really long, very very long option', value: 'a' },
+  { label: 'Another long, really long, very very long option', value: 2 },
+  LIST_SEPARATOR,
+  { label: 'B', value: 'b' },
+  { label: 'true', value: true },
+  { label: 'C', value: 'c' },
+];
 
 // -----------------------------------------------
 // Examples
@@ -168,10 +176,19 @@ const DropDownExample = () =>
     <DropDownMenu
       items={TALL_OPTIONS}
       onClickItem={(ev, value) => console.log(value)}
+      accentColor="darkgreen"
     >
       <Icon icon="bolt" /> Long menu
     </DropDownMenu>
-  </div>
+    &nbsp;&nbsp;&nbsp;&nbsp;
+    <DropDownMenu
+      items={WIDE_OPTIONS}
+      floatAlign="right"
+      accentColor="darkblue"
+    >
+      <Icon icon="bug" /> Menu to the left
+    </DropDownMenu>
+  </div>;
 
 class ModalExample extends React.Component {
   constructor(props) {

@@ -240,11 +240,11 @@ class Floats extends React.Component {
     if (align === 'left') {
       styleAttrs.left = `${bcr.left}px`;
       styleAttrs.right = null;
-      styleAttrs.maxWidth = `${wWin - bcr.right - breathe}px`;
+      styleAttrs.maxWidth = `${wWin - bcr.left - breathe}px`;
     } else {
       styleAttrs.left = null;
       styleAttrs.right = `${windowWidthWithoutScrollbar() - bcr.right}px`;
-      styleAttrs.maxWidth = `${bcr.left - breathe}px`;
+      styleAttrs.maxWidth = `${bcr.right - breathe}px`;
     }
     styleAttrs.overflowX = 'auto';
 

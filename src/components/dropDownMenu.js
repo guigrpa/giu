@@ -88,7 +88,7 @@ class DropDownMenu extends React.Component {
     const styleProps = {
       fOpen: this.state.fOpen,
       accentColor,
-    }
+    };
     return (
       <div ref={this.registerTitleRef}
         style={style.title(styleProps)}
@@ -99,12 +99,14 @@ class DropDownMenu extends React.Component {
   }
 
   renderFloat() {
+    const { items, accentColor } = this.props;
     return (
       <ListInput
-        items={this.props.items}
+        items={items}
         onClickItem={this.onClickItem}
         focusable={false}
         cmds={this.cmdsToListInput}
+        accentColor={accentColor}
       />
     );
   }

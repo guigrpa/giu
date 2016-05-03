@@ -20,8 +20,9 @@
 - [x] ListInput
 - [x] DropDownMenu
 - [x] Floats: open down or up, right or left, depending on anchor position, by default. Limit size
-- [ ] Use ListInput for Selects (optional)
+- [ ] Show errors on inputs
 - [ ] DatePicker (both analog and digital!)
+- [ ] Use ListInput for Selects (optional)
 - DateInput
     + [x] Basic POC
     + [x] Use isFloatsMounted()
