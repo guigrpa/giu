@@ -82,7 +82,7 @@ class BaseListInput extends React.Component {
           case 'KEY_DOWN':
             this.doKeyDown(null, cmd.which);
             break;
-          default: 
+          default:
             break;
         }
       }
@@ -110,7 +110,7 @@ class BaseListInput extends React.Component {
     const { focusable, onBlur } = this.props;
     if (!focusable) return null;
     return (
-      <FocusCapture 
+      <FocusCapture
         registerRef={this.registerInputRef}
         onFocus={this.onFocus}
         onBlur={onBlur}
@@ -198,7 +198,7 @@ class BaseListInput extends React.Component {
       case KEYS.down:   this.selectMoveBy(ev, +1); break;
       case KEYS.up:     this.selectMoveBy(ev, -1); break;
       case KEYS.home:   this.selectMoveBy(ev, +1, -1); break;
-      case KEYS.end:    this.selectMoveTo(ev, -1, this.props.items.length); break;
+      case KEYS.end:    this.selectMoveBy(ev, -1, this.props.items.length); break;
       default:
         if (this.props.onKeyDown) this.props.onKeyDown(ev);
         break;
