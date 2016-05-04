@@ -57,12 +57,10 @@ class DatePicker extends React.Component {
   componentWillReceiveProps(nextProps) { this.calcRefMoments(nextProps); }
 
   calcRefMoments(props) {
-    const { curValue, utc, lang } = props;
-    this.withMomentLang(lang, () => {
-      const refMoment = curValue != null ? curValue.clone() : startOfToday(utc);
-      const shownMonthStart = refMoment.startOf('month');
-      this.setState({ shownMonthStart });
-    });
+    const { curValue, utc } = props;
+    const refMoment = curValue != null ? curValue.clone() : startOfToday(utc);
+    const shownMonthStart = refMoment.startOf('month');
+    this.setState({ shownMonthStart });
   }
 
   componentDidUpdate(prevProps) {
@@ -85,20 +83,17 @@ class DatePicker extends React.Component {
   // Render
   // ==========================================
   render() {
-    const {
-      curValue, utc,
-      lang,
-    } = this.props;
+    const { curValue, lang } = this.props;
     let out;
     this.withMomentLang(lang, () => {
-      this.startOfToday = startOfToday(utc);
       this.startOfCurValue = curValue != null ? curValue.clone().startOf('day') : null;
       this.shownMonthNumber = this.state.shownMonthStart.month();
+      const shownMonthStart = moment(this.state.shownMonthStart.valueOf());
       out = (
         <div style={style.outer}>
-          {this.renderMonth()}
+          {this.renderMonth(shownMonthStart)}
           {this.renderDayNames()}
-          {this.renderWeeks()}
+          {this.renderWeeks(shownMonthStart)}
           {this.renderToday()}
         </div>
       );
@@ -106,14 +101,14 @@ class DatePicker extends React.Component {
     return out;
   }
 
-  renderMonth() {
+  renderMonth(shownMonthStart) {
     return (
       <div style={style.monthRow}>
         <div style={style.monthChange}>
           <Icon icon="arrow-left" onClick={this.onClickPrevMonth} />
         </div>
         <Button onClick={this.onClickMonthName} plain>
-          {this.state.shownMonthStart.format('MMMM YYYY')}
+          {shownMonthStart.format('MMMM YYYY')}
         </Button>
         <div style={style.monthChange}>
           <Icon icon="arrow-right" onClick={this.onClickNextMonth} />
@@ -137,8 +132,8 @@ class DatePicker extends React.Component {
     return <div style={style.dayNamesRow}>{els}</div>;
   }
 
-  renderWeeks() {
-    const curDate = moment(this.state.shownMonthStart);
+  renderWeeks(shownMonthStart) {
+    const curDate = shownMonthStart.clone();
     const endDate = moment(curDate).add(1, 'month');
     curDate.subtract(curDate.weekday(), 'days');
     const weeks = [];

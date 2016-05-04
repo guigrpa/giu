@@ -449,7 +449,10 @@ class FormExample extends React.Component {
         </div>
         <br />
         <div>
-          <ExampleLabel>DateTimePicker (focusable, keyboard-controlled, local for date+time, UTC otherwise)</ExampleLabel>
+          <ExampleLabel>
+            DateTimePicker (focusable, keyboard-controlled, local
+            for date+time, UTC otherwise)
+          </ExampleLabel>
           <div style={flexContainer('row')}>
             <DateTimePicker
               onChange={(ev, d) => console.log(d)}

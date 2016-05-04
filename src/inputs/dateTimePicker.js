@@ -16,6 +16,7 @@ import input                from '../hocs/input';
 import FocusCapture         from '../components/focusCapture';
 import DatePicker           from '../inputs/datePicker';
 import TimePickerDigital    from '../inputs/timePickerDigital';
+import TimePickerAnalog     from '../inputs/timePickerAnalog';
 
 const TRAPPED_KEYS = [
   KEYS.home, KEYS.end,
@@ -156,7 +157,7 @@ class DateTimePicker extends React.Component {
     const {
       curValue,
       focusable,
-      time, analogTime,
+      time, analogTime, seconds,
       accentColor,
     } = this.props;
     if (!time) return null;
@@ -164,21 +165,17 @@ class DateTimePicker extends React.Component {
     if (this.state.cmdRouting === 'time') {
       cmds = focusable ? this.cmdsToPickers : this.props.cmds;
     }
-    let out;
-    if (analogTime) {
-      out = null;
-    } else {
-      out = (
-        <TimePickerDigital
-          curValue={curValue}
-          onChange={this.onChange('time')}
-          utc={this.utc}
-          cmds={cmds}
-          accentColor={accentColor}
-        />
-      );
-    }
-    return out;
+    const Component = analogTime ? TimePickerAnalog : TimePickerDigital;
+    return (
+      <Component
+        curValue={curValue}
+        onChange={this.onChange('time')}
+        utc={this.utc}
+        seconds={seconds}
+        cmds={cmds}
+        accentColor={accentColor}
+      />
+    );
   }
 
   // ==========================================

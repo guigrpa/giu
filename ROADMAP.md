@@ -28,6 +28,7 @@
 - [ ] DateTimePicker:
     + [x] DatePicker
     + [x] TimePickerDigital
+    + [ ] TAB + focus on date/time
     + [ ] Include as dropdown in DateInput!
     + [ ] TimePickerAnalogue
 - [ ] Use ListPicker for Selects (optional)
