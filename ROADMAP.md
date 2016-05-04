@@ -13,21 +13,32 @@
 - [x] ScrollIntoView
 - [x] Floats
 - [x] Replace imperative API with `cmds` prop
-- [x] ListInput separators
+- [x] ListPicker separators
 - [x] Spinner
 - [x] ProgressBar
 - [x] Backdrop (extracted from Modal)
-- [x] ListInput
+- [x] ListPicker
 - [x] DropDownMenu
 - [x] Floats: open down or up, right or left, depending on anchor position, by default. Limit size
+- ListPicker:
+    + [ ] [m] Make separators span the whole horiz. extension
+    + [x] Automatically show item
+    + [ ] Show keyboard shortcuts (cmd-X, etc.)
 - [ ] Show errors on inputs
-- [ ] DatePicker (both analog and digital!)
-- [ ] Use ListInput for Selects (optional)
+- [ ] DateTimePicker:
+    + [ ] DatePicker:
+        * [x] Basic
+        * [x] Keys
+        * [ ] Lang (clean up!)
+    + [x] TimePickerDigital
+    + [ ] Include as dropdown in DateInput!
+    + [ ] TimePickerAnalogue
+- [ ] Use ListPicker for Selects (optional)
 - DateInput
     + [x] Basic POC
     + [x] Use isFloatsMounted()
     + [ ] Use `dispatch` if passed, otherwise the imperative floats api
-    + [ ] Build the real float, once ListInput and DatePicker are there
+    + [ ] Build the real float, once ListPicker and DatePicker are there
 - [ ] FileInput
 - [ ] Hints
 - [ ] Multiple-selection list (ctrl-click?)

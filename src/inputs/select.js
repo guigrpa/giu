@@ -1,7 +1,7 @@
 import React                from 'react';
 import { omit }             from 'timm';
 import input                from '../hocs/input';
-import { LIST_SEPARATOR }   from '../inputs/listInput';
+import { LIST_SEPARATOR }   from '../inputs/listPicker';
 
 const NULL_VALUE = '__NULL__';
 function toInternalValue(val) { return val != null ? JSON.stringify(val) : NULL_VALUE; }

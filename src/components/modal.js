@@ -149,7 +149,8 @@ class Modal extends React.Component {
 
   // Except when clicking on an embedded focusable node, refocus on this modal
   onClickOuter(ev) {
-    if (FOCUSABLE.indexOf(ev.target.tagName.toLowerCase()) >= 0) return;
+    const { tagName, disabled } = ev.target;
+    if (FOCUSABLE.indexOf(tagName.toLowerCase()) >= 0 && !disabled) return;
     this.focus();
   }
 }

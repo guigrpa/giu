@@ -3,7 +3,8 @@ import ReactDOM             from 'react-dom';
 require('babel-polyfill');
 import {
   Select, TextInput, NumberInput, DateInput, Textarea, Checkbox,
-  ListInput, LIST_SEPARATOR,
+  ListPicker, LIST_SEPARATOR,
+  DateTimePicker,
   DropDownMenu,
   Button,
   Progress,
@@ -54,11 +55,11 @@ const App = () => (
     <Floats />
     <Notifications />
     <div style={flexItem(1)}>
+      <ProgressExample />
       <NotificationExample />
       <MessageExample />
       <IconExample />
       <ButtonExample />
-      <ProgressExample />
       <HoverableExample />
       <FlexExample />
       <DropDownExample />
@@ -70,6 +71,23 @@ const App = () => (
     </div>
   </div>
 );
+
+class ProgressExample extends React.Component {
+  constructor(props) {
+    super(props);
+    this.state = { value: 0.3 };
+    setInterval(() => { this.setState({ value: Math.random() }); }, 2000);
+  }
+  render() {
+    return (
+      <div style={style.example}>
+        <ExampleLabel>Progress</ExampleLabel>
+        <Progress value={this.state.value} />
+        <Progress />
+      </div>
+    );
+  }
+}
 
 const NotificationExample = () =>
   <div style={style.example}>
@@ -117,23 +135,6 @@ const ButtonExample = () =>
     <Button plain>Plain</Button>
   </div>;
 
-class ProgressExample extends React.Component {
-  constructor(props) {
-    super(props);
-    this.state = { value: 0.3 };
-    setInterval(() => { this.setState({ value: Math.random() }); }, 2000);
-  }
-  render() {
-    return (
-      <div style={style.example}>
-        <ExampleLabel>Progress</ExampleLabel>
-        <Progress value={this.state.value} />
-        <Progress />
-      </div>
-    );
-  }
-}
-
 const HoverableExample = hoverable(({ hovering, onHoverStart, onHoverStop }) => (
   <div
     onMouseEnter={onHoverStart}
@@ -165,7 +166,7 @@ const FlexSpacer = ({ children }) => <div style={flexItem('1')}>{children}</div>
 
 const DropDownExample = () =>
   <div style={style.example}>
-    <ExampleLabel>DropDownMenu (focusable, keyboard-controlled, embedded ListInput)</ExampleLabel>
+    <ExampleLabel>DropDownMenu (focusable, keyboard-controlled, embedded ListPicker)</ExampleLabel>
     <DropDownMenu
       items={NORMAL_OPTIONS}
       onClickItem={(ev, value) => console.log(value)}
@@ -240,7 +241,7 @@ class ModalExample extends React.Component {
         What's your name?{' '}
         <TextInput ref={o => { this.refInput = o; }} autoFocus />
         <DateInput placeholder="date" floatZ={55} />
-        <Textarea placeholder="Write something..." style={{ maxHeight: 100 }} />
+        <Textarea disabled placeholder="Write something..." style={{ maxHeight: 100 }} />
       </Modal>
     );
   }
@@ -425,21 +426,21 @@ class FormExample extends React.Component {
         </div>
         <br />
         <div>
-          <ExampleLabel>ListInput (focusable, keyboard-controlled, one/two-stage, autoscroll)</ExampleLabel>
+          <ExampleLabel>ListPicker (focusable, keyboard-controlled, one/two-stage, autoscroll)</ExampleLabel>
           <div style={flexContainer('row', { height: 150 })}>
-            <ListInput
+            <ListPicker
               items={NORMAL_OPTIONS}
               onChange={(_, value) => console.log(JSON.stringify(value))}
               style={flexItem(1, { marginRight: 4 })} accentColor="gray"
             />
-            <ListInput
+            <ListPicker
               items={TALL_OPTIONS}
               onChange={(_, value) => console.log(JSON.stringify(value))}
               twoStageStyle 
               style={flexItem(1, { marginRight: 4 })} 
               accentColor="lightGray"
             />
-            <ListInput
+            <ListPicker
               items={[]}
               onChange={(_, value) => console.log(JSON.stringify(value))}
               style={flexItem(1)}
@@ -448,15 +449,45 @@ class FormExample extends React.Component {
         </div>
         <br />
         <div>
+          <ExampleLabel>DateTimePicker (focusable, keyboard-controlled, local for date+time, UTC otherwise)</ExampleLabel>
+          <div style={flexContainer('row')}>
+            <DateTimePicker
+              onChange={(ev, d) => console.log(d)}
+              time analogTime={false}
+              lang="es"
+              accentColor="lightgray"
+            />
+            &nbsp;&nbsp;
+            <DateTimePicker
+              value={new Date()}
+              onChange={(ev, d) => console.log(d)}
+              accentColor="darkblue"
+            />
+            &nbsp;&nbsp;
+            <DateTimePicker
+              value={new Date()}
+              onChange={(ev, d) => console.log(d)}
+              accentColor="darkgreen"
+            />
+            &nbsp;&nbsp;
+            <DateTimePicker
+              onChange={(ev, d) => console.log(d)}
+              date={false} time analogTime={false}
+              accentColor="turquoise"
+            />
+          </div>
+        </div>
+        <br />
+        <div>
           <ExampleLabel>Imperative example</ExampleLabel>
-          <TextInput 
+          <TextInput
             value="Initial value"
             cmds={this.cmds}
             onFocus={() => console.log('focus')}
             onBlur={() => console.log('blur')}
           />
           {' '}
-          <Button 
+          <Button
             onMouseDown={cancelEvent}
             onClick={() => {
               this.cmds = [
@@ -469,7 +500,7 @@ class FormExample extends React.Component {
             Change & focus
           </Button>
           {' '}
-          <Button 
+          <Button
             onMouseDown={cancelEvent}
             onClick={() => {
               this.cmds = [

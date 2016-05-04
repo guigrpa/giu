@@ -14,7 +14,7 @@ import {
   warnFloats,
 }                           from '../components/floats';
 import FocusCapture         from '../components/focusCapture';
-import { ListInput }        from '../inputs/listInput';
+import { ListPicker }        from '../inputs/listPicker';
 
 // ==========================================
 // Component
@@ -41,7 +41,7 @@ class DropDownMenu extends React.Component {
     super(props);
     this.shouldComponentUpdate = PureRenderMixin.shouldComponentUpdate.bind(this);
     this.state = { fOpen: false };
-    this.cmdsToListInput = null;
+    this.cmdsToListPicker = null;
     bindAll(this, [
       'registerFocusCaptureRef',
       'registerTitleRef',
@@ -74,7 +74,7 @@ class DropDownMenu extends React.Component {
 
   renderFocusCapture() {
     return (
-      <FocusCapture 
+      <FocusCapture
         registerRef={this.registerFocusCaptureRef}
         onFocus={this.onFocus}
         onBlur={this.onBlur}
@@ -101,11 +101,11 @@ class DropDownMenu extends React.Component {
   renderFloat() {
     const { items, accentColor } = this.props;
     return (
-      <ListInput
+      <ListPicker
         items={items}
         onClickItem={this.onClickItem}
         focusable={false}
-        cmds={this.cmdsToListInput}
+        cmds={this.cmdsToListPicker}
         accentColor={accentColor}
       />
     );
@@ -140,7 +140,7 @@ class DropDownMenu extends React.Component {
         ev.target.blur();
         break;
       default:
-        this.cmdsToListInput = [{ type: 'KEY_DOWN', which: ev.which }];
+        this.cmdsToListPicker = [{ type: 'KEY_DOWN', which: ev.which }];
         this.mountOrUpdateFloat();
         if (this.props.onKeyDown) this.props.onKeyDown(ev);
         break;

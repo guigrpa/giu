@@ -1,3 +1,4 @@
+import { set as timmSet }   from 'timm';
 import {
   windowHeightWithoutScrollbar, windowWidthWithoutScrollbar,
 }                           from '../gral/helpers';
@@ -15,7 +16,8 @@ function isVisible(node, bcr0) {
   return !croppingAncestor;
 }
 
-function _getCroppingAncestor(refBcr, ancestor, fHoriz = null) {
+function _getCroppingAncestor(refBcr, ancestor, options = {}) {
+  const { fHoriz, topAncestor } = options;
   if (!ancestor || !ancestor.getBoundingClientRect) {
     let fCropped = false;
     if (fHoriz == null || fHoriz === false) {
@@ -48,7 +50,9 @@ function _getCroppingAncestor(refBcr, ancestor, fHoriz = null) {
       fCropped = true;
     }
   }
-  return fCropped ? ancestor : _getCroppingAncestor(refBcr, ancestor.parentNode, fHoriz);
+  if (fCropped) return ancestor;
+  if (ancestor === topAncestor) return null;
+  return _getCroppingAncestor(refBcr, ancestor.parentNode, options);
 }
 
 // -----------------------------------------------
@@ -56,15 +60,16 @@ function _getCroppingAncestor(refBcr, ancestor, fHoriz = null) {
 // -----------------------------------------------
 
 // Scroll vertically, then horizontally
-function scrollIntoView(node) {
+function scrollIntoView(node, options = {}) {
   if (!node) return;
-  _scrollIntoView(node, false);
-  _scrollIntoView(node, true);
+  _scrollIntoView(node, timmSet(options, 'fHoriz', false));
+  _scrollIntoView(node, timmSet(options, 'fHoriz', true));
 }
 
-function _scrollIntoView(node, fHoriz) {
+function _scrollIntoView(node, options) {
   let bcr = node.getBoundingClientRect();
-  let ancestor = _getCroppingAncestor(bcr, node.parentNode, fHoriz);
+  const { fHoriz, topAncestor } = options;
+  let ancestor = _getCroppingAncestor(bcr, node.parentNode, options);
   while (ancestor) {
     const fWindowLevel = ancestor === window;
     const node1 = bcr[fHoriz ? 'left' : 'top'];
@@ -103,7 +108,9 @@ function _scrollIntoView(node, fHoriz) {
 
     // Update before iterating: BCR may have changed, and we may still not be visible
     bcr = node.getBoundingClientRect();
-    ancestor = fWindowLevel ? null : _getCroppingAncestor(bcr, ancestor.parentNode);
+    if (fWindowLevel) break;
+    if (ancestor === topAncestor) break;
+    ancestor = _getCroppingAncestor(bcr, ancestor.parentNode, options);
   }
 }
 

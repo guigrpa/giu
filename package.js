@@ -119,6 +119,7 @@ const specs = {
     redux: '3.5.2',
     'redux-thunk': '2.0.1',
     'tinycolor2': '1.3.0',
+    moment: '2.13.0',
   },
 
   devDependencies: {

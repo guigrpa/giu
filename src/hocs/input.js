@@ -6,10 +6,11 @@ import { bindAll }          from '../gral/helpers';
 const PROP_TYPES = {
   value:                  React.PropTypes.any,
   errors:                 React.PropTypes.array,
+  cmds:                   React.PropTypes.array,
   onChange:               React.PropTypes.func,
   onFocus:                React.PropTypes.func,
   onBlur:                 React.PropTypes.func,
-  cmds:                   React.PropTypes.array,
+  disabled:               React.PropTypes.bool,
   // all others are passed through unchanged
 };
 const PROP_KEYS = Object.keys(PROP_TYPES);
@@ -51,6 +52,7 @@ function input(ComposedComponent, {
 
     componentDidUpdate(prevProps) {
       const { cmds } = this.props;
+      if (!cmds) return;
       if (cmds !== prevProps.cmds) {
         for (const cmd of cmds) {
           switch (cmd.type) {
@@ -60,12 +62,8 @@ function input(ComposedComponent, {
             case 'REVERT':
               this.setState({ curValue: toInternalValue(this.props.value) });
               break;
-            case 'FOCUS':
-              if (this.refFocusable && this.refFocusable.focus) this.refFocusable.focus();
-              break;
-            case 'BLUR':
-              if (this.refFocusable && this.refFocusable.blur) this.refFocusable.blur();
-              break;
+            case 'FOCUS': this._focus(); break;
+            case 'BLUR':  this._blur();  break;
             default: 
               break;
           }
@@ -100,6 +98,7 @@ function input(ComposedComponent, {
           registerFocusableRef={c => { this.refFocusable = c; }}
           {...otherProps}
           cmds={this.props.cmds}
+          disabled={this.props.disabled}
           curValue={this.state.curValue}
           errors={this.props.errors}
           onChange={this.onChange}
@@ -114,23 +113,42 @@ function input(ComposedComponent, {
     // Handlers
     // ==========================================
     onChange(ev, providedValue) {
+      const { onChange, disabled } = this.props;
+      if (disabled) return;
       let curValue = providedValue;
-      if (providedValue == null) {
+      if (providedValue === undefined) {
         curValue = ev.currentTarget[valueAttr];
       }
       this.setState({ curValue });
-      const { onChange } = this.props;
       if (onChange) onChange(ev, toExternalValue(curValue));
+      if (!this.state.fFocused) this._focus();
     }
 
     onFocus(ev) {
+      const { onFocus, disabled } = this.props;
+      if (disabled) {
+        this._blur();
+        return;
+      }
       this.setState({ fFocused: true });
-      if (this.props.onFocus) this.props.onFocus(ev);
+      if (onFocus) onFocus(ev);
     }
 
     onBlur(ev) {
+      const { onBlur } = this.props;
       this.setState({ fFocused: false });
-      if (this.props.onBlur) this.props.onBlur(ev);
+      if (onBlur) onBlur(ev);
+    }
+
+    // ==========================================
+    // Helpers
+    // ==========================================
+    _focus() {
+      if (this.refFocusable && this.refFocusable.focus) this.refFocusable.focus();
+    }
+
+    _blur() {
+      if (this.refFocusable && this.refFocusable.blur) this.refFocusable.blur();
     }
   };
 }

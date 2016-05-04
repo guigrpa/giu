@@ -34,8 +34,8 @@ const style = {
     cursor: 'default',
     pointerEvents: 'none',
     zIndex: -80,
-    top: 0,
-    left: 0,
+    top: 8,
+    left: 8,
   }
 };
 
