@@ -58,16 +58,11 @@ class DatePicker extends React.Component {
 
   calcRefMoments(props) {
     const { curValue, utc, lang } = props;
-
-    const prevLang = moment.locale();
-    const fChangeLang = lang !== MOMENT_DEFAULT_LANG;
-    if (fChangeLang) moment.locale(lang);
-
-    const refMoment = curValue != null ? curValue.clone() : startOfToday(utc);
-    const shownMonthStart = refMoment.startOf('month');
-    this.setState({ shownMonthStart });
-
-    if (fChangeLang) moment.locale(prevLang);
+    this.withMomentLang(lang, () => {
+      const refMoment = curValue != null ? curValue.clone() : startOfToday(utc);
+      const shownMonthStart = refMoment.startOf('month');
+      this.setState({ shownMonthStart });
+    });
   }
 
   componentDidUpdate(prevProps) {
@@ -94,21 +89,20 @@ class DatePicker extends React.Component {
       curValue, utc,
       lang,
     } = this.props;
-    const prevLang = moment.locale();
-    const fChangeLang = lang !== MOMENT_DEFAULT_LANG;
-    if (fChangeLang) moment.locale(lang);
-    this.startOfToday = startOfToday(utc);
-    this.startOfCurValue = curValue != null ? curValue.clone().startOf('day') : null;
-    this.shownMonthNumber = this.state.shownMonthStart.month();
-    const out = (
-      <div style={style.outer}>
-        {this.renderMonth()}
-        {this.renderDayNames()}
-        {this.renderWeeks()}
-        {this.renderToday()}
-      </div>
-    );
-    if (fChangeLang) moment.locale(prevLang);
+    let out;
+    this.withMomentLang(lang, () => {
+      this.startOfToday = startOfToday(utc);
+      this.startOfCurValue = curValue != null ? curValue.clone().startOf('day') : null;
+      this.shownMonthNumber = this.state.shownMonthStart.month();
+      out = (
+        <div style={style.outer}>
+          {this.renderMonth()}
+          {this.renderDayNames()}
+          {this.renderWeeks()}
+          {this.renderToday()}
+        </div>
+      );
+    });
     return out;
   }
 
@@ -249,6 +243,14 @@ class DatePicker extends React.Component {
   // ==========================================
   // Helpers
   // ==========================================
+  withMomentLang(lang, cb) {
+    const prevLang = moment.locale();
+    const fChangeLang = lang !== MOMENT_DEFAULT_LANG;
+    if (fChangeLang) moment.locale(lang);
+    cb();
+    if (fChangeLang) moment.locale(prevLang);
+  }
+
   goToStartEndOfMonth(op) {
     const startOfDay = this.state.shownMonthStart.clone();
     if (op === 'end') startOfDay.add(1, 'month').subtract(1, 'day');

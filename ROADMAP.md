@@ -26,10 +26,7 @@
     + [ ] Show keyboard shortcuts (cmd-X, etc.)
 - [ ] Show errors on inputs
 - [ ] DateTimePicker:
-    + [ ] DatePicker:
-        * [x] Basic
-        * [x] Keys
-        * [ ] Lang (clean up!)
+    + [x] DatePicker
     + [x] TimePickerDigital
     + [ ] Include as dropdown in DateInput!
     + [ ] TimePickerAnalogue

@@ -111,6 +111,7 @@ const specs = {
   peerDependencies: {
     react: '>=0.14.0',
     'react-addons-pure-render-mixin': '>=0.14.0',
+    moment: '^2.0.0',
   },
 
   dependencies: {
@@ -119,7 +120,6 @@ const specs = {
     redux: '3.5.2',
     'redux-thunk': '2.0.1',
     'tinycolor2': '1.3.0',
-    moment: '2.13.0',
   },
 
   devDependencies: {
@@ -127,6 +127,8 @@ const specs = {
     'extract-docs': '^1.0.0',
     'cross-env': '^1.0.7',
     'flow-bin': '^0.22.1',
+
+    moment: '^2.0.0',
 
     // React
     react: '>=0.14.0',
