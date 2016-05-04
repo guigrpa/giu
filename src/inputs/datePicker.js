@@ -53,11 +53,8 @@ class DatePicker extends React.Component {
     ]);
   }
 
-  componentWillMount() { this.calcRefMoments(this.props); }
-  componentWillReceiveProps(nextProps) { this.calcRefMoments(nextProps); }
-
-  calcRefMoments(props) {
-    const { curValue, utc } = props;
+  componentWillMount() {
+    const { curValue, utc } = this.props;
     const refMoment = curValue != null ? curValue.clone() : startOfToday(utc);
     const shownMonthStart = refMoment.startOf('month');
     this.setState({ shownMonthStart });
@@ -90,7 +87,7 @@ class DatePicker extends React.Component {
       this.shownMonthNumber = this.state.shownMonthStart.month();
       const shownMonthStart = moment(this.state.shownMonthStart.valueOf());
       out = (
-        <div style={style.outer}>
+        <div className="giu-date-picker" style={style.outer}>
           {this.renderMonth(shownMonthStart)}
           {this.renderDayNames()}
           {this.renderWeeks(shownMonthStart)}

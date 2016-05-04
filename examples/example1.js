@@ -373,7 +373,14 @@ const ScrollingExample = () =>
 class FormExample extends React.Component {
   constructor(props) {
     super(props);
-    this.state = { fShowDateInput: true };
+    this.state = {
+      fShowDateInput: true,
+      fixedDate: new Date(),
+      curDate: new Date(),
+    };
+    setInterval(() => {
+      this.setState({ curDate: new Date() });
+    }, 300);
   }
 
   render() {
@@ -462,13 +469,13 @@ class FormExample extends React.Component {
             />
             &nbsp;&nbsp;
             <DateTimePicker
-              value={new Date()}
+              value={this.state.fixedDate}
               onChange={(ev, d) => console.log(d)}
               accentColor="darkblue"
             />
             &nbsp;&nbsp;
             <DateTimePicker
-              value={new Date()}
+              value={this.state.fixedDate}
               onChange={(ev, d) => console.log(d)}
               accentColor="darkgreen"
             />
@@ -477,6 +484,18 @@ class FormExample extends React.Component {
               onChange={(ev, d) => console.log(d)}
               date={false} time analogTime={false}
               accentColor="turquoise"
+            />
+          </div>
+          <div style={flexContainer('row', { marginTop: 5 })}>
+            <DateTimePicker
+              value={this.state.curDate}
+              utc={false}
+              date={false} time seconds
+            />
+            &nbsp;&nbsp;
+            <DateTimePicker
+              value={this.state.fixedDate}
+              date time
             />
           </div>
         </div>

@@ -1,8 +1,6 @@
 import React                from 'react';
 import moment               from 'moment';
-import {
-  bindAll,
-}                           from '../gral/helpers';
+import { bindAll }          from '../gral/helpers';
 import {
   startOfToday,
   getTimeInSecs,
@@ -43,11 +41,7 @@ class TimePickerDigital extends React.Component {
   // Render
   // ==========================================
   render() {
-    const {
-      curValue, utc,
-      cmds,
-      accentColor,
-    } = this.props;
+    const { cmds, accentColor } = this.props;
     return (
       <ListPicker
         items={this.timeItems}
@@ -79,16 +73,6 @@ class TimePickerDigital extends React.Component {
       nextValue = startOfToday(utc);
     }
     nextValue.add(moment.duration(secs, 'seconds'));
-    onChange(ev, nextValue);
-  }
-
-  changeDate(ev, startOfDay) {
-    const { curValue, onChange } = this.props;
-    const nextValue = startOfDay.clone();
-    if (curValue != null) {
-      const secs = getTimeInSecs(curValue);
-      nextValue.add(moment.duration(secs, 'seconds'));
-    }
     onChange(ev, nextValue);
   }
 
