@@ -49,6 +49,7 @@ class BaseListPicker extends React.Component {
     // Input HOC
     curValue:               React.PropTypes.string.isRequired,
     onChange:               React.PropTypes.func.isRequired,
+    registerOuterRef:       React.PropTypes.func.isRequired,
     registerFocusableRef:   React.PropTypes.func.isRequired,
     fFocused:               React.PropTypes.bool.isRequired,
     onFocus:                React.PropTypes.func.isRequired,
@@ -65,7 +66,8 @@ class BaseListPicker extends React.Component {
     super(props);
     this.shouldComponentUpdate = PureRenderMixin.shouldComponentUpdate.bind(this);
     bindAll(this, [
-      'registerInputRef',
+      'registerOuterRef',
+      'registerFocusableRef',
       'renderItem',
       'onMouseDown',
       'onClickItem',
@@ -98,7 +100,7 @@ class BaseListPicker extends React.Component {
   render() {
     const { style: baseStyle } = this.props;
     return (
-      <div ref={c => { this.refOuter = c; }}
+      <div ref={this.registerOuterRef}
         className="giu-list-picker"
         style={merge(style.outer(this.props), baseStyle)}
         onMouseDown={this.onMouseDown}
@@ -114,7 +116,7 @@ class BaseListPicker extends React.Component {
     if (!focusable) return null;
     return (
       <FocusCapture
-        registerRef={this.registerInputRef}
+        registerRef={this.registerFocusableRef}
         onFocus={this.onFocus}
         onBlur={onBlur}
         onKeyDown={this.onKeyDown}
@@ -169,14 +171,19 @@ class BaseListPicker extends React.Component {
   // ==========================================
   // Event handlers
   // ==========================================
-  registerInputRef(c) {
-    this.refInput = c;
+  registerOuterRef(c) {
+    this.refOuter = c;
+    this.props.registerOuterRef(c);
+  }
+
+  registerFocusableRef(c) {
+    this.refFocus = c;
     this.props.registerFocusableRef(c);
   }
 
   onMouseDown(ev) {
     cancelEvent(ev);
-    if (this.props.focusable && this.refInput) this.refInput.focus();
+    if (this.props.focusable && this.refFocus) this.refFocus.focus();
   }
 
   onFocus(ev) {

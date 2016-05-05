@@ -145,7 +145,7 @@ const HoverableExample = hoverable(({ hovering, onHoverStart, onHoverStop }) => 
   </div>
 ));
 
-const FlexExample = ({ children }) =>
+const FlexExample = () =>
   <div style={style.example}>
     <ExampleLabel>Flex utilities</ExampleLabel>
     <div style={flexContainer('row')}>
@@ -239,9 +239,22 @@ class ModalExample extends React.Component {
         style={{ width: 500 }}
       >
         What's your name?{' '}
-        <TextInput ref={o => { this.refInput = o; }} autoFocus />
-        <DateInput placeholder="date" floatZ={55} />
-        <Textarea disabled placeholder="Write something..." style={{ maxHeight: 100 }} />
+        <TextInput ref={o => { this.refInput = o; }}
+          autoFocus
+          errors={["Must be non-null"]}
+          errorZ={52}
+        />
+        <DateInput
+          placeholder="date"
+          floatZ={55}
+          errors={["Must be non-null"]}
+        />
+        <Textarea 
+          placeholder="Write something..." 
+          errors={["Must write something in the textarea"]}
+          errorZ={52}
+          style={{ maxHeight: 100 }}
+        />
       </Modal>
     );
   }
@@ -250,8 +263,16 @@ class ModalExample extends React.Component {
     const title = 'Hello, what\'s your name?';
     const children = (
       <div>
-        <TextInput ref={o => { this.refName = o; }} autoFocus />{' '}
-        <DateInput placeholder="date" floatZ={55} />
+        <TextInput ref={o => { this.refName = o; }}
+          autoFocus
+          errors={["Must be non-null"]}
+          errorZ={52}
+        />{' '}
+        <DateInput
+          placeholder="date"
+          floatZ={55}
+          errors={["Must be non-null"]}
+        />
       </div>
     );
     modalPush({
@@ -376,11 +397,7 @@ class FormExample extends React.Component {
     this.state = {
       fShowDateInput: true,
       fixedDate: new Date(),
-      curDate: new Date(),
     };
-    setInterval(() => {
-      this.setState({ curDate: new Date() });
-    }, 300);
   }
 
   render() {
@@ -404,6 +421,8 @@ class FormExample extends React.Component {
             value="a"
             placeholder="text"
             onChange={(_, value) => console.log(value)}
+            errors={["Must be numeric"]}
+            errorPosition="above" errorAlign="right"
           />
           {' '}
           <NumberInput
@@ -413,7 +432,11 @@ class FormExample extends React.Component {
             onChange={(_, value) => console.log(value)}
           />
           {' '}
-          <Checkbox id="myCheck" value />
+          <Checkbox
+            id="myCheck"
+            value
+            errors={["Must not be null"]}
+          />
           <label htmlFor="myCheck">checkbox</label>
         </div>
         <div>
@@ -429,7 +452,9 @@ class FormExample extends React.Component {
         <br />
         <div>
           <ExampleLabel>Textarea (with auto-resize)</ExampleLabel>
-          <Textarea value="En un lugar de la Mancha..." />
+          <Textarea
+            value="En un lugar de la Mancha..."
+          />
         </div>
         <br />
         <div>
@@ -487,14 +512,10 @@ class FormExample extends React.Component {
             />
           </div>
           <div style={flexContainer('row', { marginTop: 5 })}>
-            <DateTimePicker
-              value={this.state.curDate}
-              utc={false}
-              date={false} time seconds
-            />
+            <TimePickerNow />
             &nbsp;&nbsp;
             <DateTimePicker
-              value={this.state.fixedDate}
+              onChange={(ev, d) => console.log(d)}
               date time
             />
           </div>
@@ -536,6 +557,27 @@ class FormExample extends React.Component {
           </Button>
         </div>
       </div>
+    );
+  }
+}
+
+class TimePickerNow extends React.Component {
+  constructor(props) {
+    super(props);
+    this.state = {
+      curDate: new Date(),
+    };
+    setInterval(() => {
+      this.setState({ curDate: new Date() });
+    }, 1000);
+  }
+
+  render() {
+    return (
+      <DateTimePicker
+        value={this.state.curDate}
+        time seconds disabled
+      />
     );
   }
 }

@@ -13,6 +13,7 @@ class Checkbox extends React.Component {
     // Input HOC
     curValue:               React.PropTypes.bool.isRequired,
     errors:                 React.PropTypes.array.isRequired,
+    registerOuterRef:       React.PropTypes.func.isRequired,
     registerFocusableRef:   React.PropTypes.func.isRequired,
     // all others are passed through unchanged
   };

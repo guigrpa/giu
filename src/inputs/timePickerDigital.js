@@ -17,6 +17,7 @@ const ROW_HEIGHT = '1.3em';
 // ==========================================
 class TimePickerDigital extends React.Component {
   static propTypes = {
+    disabled:               React.PropTypes.bool.isRequired,
     curValue:               React.PropTypes.object,  // moment object, not start of day
     onChange:               React.PropTypes.func.isRequired,
     utc:                    React.PropTypes.bool.isRequired,

@@ -1,7 +1,11 @@
 import React                from 'react';
 import PureRenderMixin      from 'react-addons-pure-render-mixin';
 import { merge }            from 'timm';
-import { COLORS, KEYS }     from '../gral/constants';
+import {
+  COLORS,
+  KEYS,
+  MISC,
+}                           from '../gral/constants';
 import {
   bindAll,
   cancelEvent,
@@ -33,7 +37,7 @@ class Modal extends React.Component {
     zIndex:                 React.PropTypes.number,
   };
   static defaultProps = {
-    zIndex:                 50,
+    zIndex:                 MISC.zModalBase,
   }
 
   constructor(props) {
@@ -177,7 +181,6 @@ const style = {
   modal: boxWithShadow({
     maxHeight: '90vh',
     overflowY: 'auto',
-    // zIndex: 50,
     padding: 20,
   }),
   buttons: flexContainer('row', {

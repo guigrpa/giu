@@ -10,6 +10,14 @@ const COLORS = {
   focus: 'rgba(81, 203, 238, 1)',
   focusGlow: '0 0 5px rgba(81, 203, 238, 1)',
   accent: '#6600cc',
+
+  // Notifications and errors
+  notifs: {
+    info: 'white',
+    success: '#51a351',
+    warn: '#f89406',
+    error: '#bd362f',
+  },
 };
 
 const KEYS = {
@@ -40,6 +48,10 @@ const UNICODE = {
 
 const MISC = {
   windowBorderBreathe: 5,
+  zModalBase: 50,
+  zModalStep: 10,
+  zMainFloatDelta: 5,
+  zErrorFloatDelta: 2,
 };
 
 // ==========================================

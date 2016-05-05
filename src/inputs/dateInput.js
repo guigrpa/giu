@@ -23,6 +23,7 @@ class DateInput extends React.Component {
     // From input HOC
     curValue:               React.PropTypes.string.isRequired,
     errors:                 React.PropTypes.array.isRequired,
+    registerOuterRef:       React.PropTypes.func.isRequired,
     registerFocusableRef:   React.PropTypes.func.isRequired,
     fFocused:               React.PropTypes.bool.isRequired,
     onFocus:                React.PropTypes.func.isRequired,
@@ -84,6 +85,7 @@ class DateInput extends React.Component {
   // ==========================================
   registerInputRef(c) {
     this.refInput = c;
+    this.props.registerOuterRef(c);
     this.props.registerFocusableRef(c);
   }
 

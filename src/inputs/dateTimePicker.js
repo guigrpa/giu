@@ -51,12 +51,14 @@ class DateTimePicker extends React.Component {
     // Input HOC
     curValue:               React.PropTypes.object,   // a moment object
     onChange:               React.PropTypes.func.isRequired,
+    registerOuterRef:       React.PropTypes.func.isRequired,
     registerFocusableRef:   React.PropTypes.func.isRequired,
     fFocused:               React.PropTypes.bool.isRequired,
     onFocus:                React.PropTypes.func.isRequired,
     onBlur:                 React.PropTypes.func.isRequired,
   };
   static defaultProps = {
+    disabled:               false,
     focusable:              true,
     date:                   true,
     time:                   false,
@@ -73,7 +75,8 @@ class DateTimePicker extends React.Component {
       cmdRouting: props.date ? 'date' : 'time',
     };
     bindAll(this, [
-      'registerInputRef',
+      'registerOuterRef',
+      'registerFocusableRef',
       'onMouseDown',
       'onKeyDown',
       'onFocus',
@@ -94,7 +97,7 @@ class DateTimePicker extends React.Component {
     const { curValue, style: baseStyle } = this.props;
     if (curValue != null && this.utc) curValue.utc();
     return (
-      <div ref={c => { this.refOuter = c; }}
+      <div ref={this.registerOuterRef}
         className="giu-date-time-picker"
         style={merge(style.outer(this.props), baseStyle)}
         onMouseDown={this.onMouseDown}
@@ -112,7 +115,7 @@ class DateTimePicker extends React.Component {
     if (!focusable) return null;
     return (
       <FocusCapture
-        registerRef={this.registerInputRef}
+        registerRef={this.registerFocusableRef}
         onFocus={this.onFocus}
         onBlur={onBlur}
         onKeyDown={this.onKeyDown}
@@ -123,7 +126,7 @@ class DateTimePicker extends React.Component {
   renderDate() {
     const {
       curValue,
-      focusable,
+      disabled, focusable,
       date,
       lang,
       todayName,
@@ -131,11 +134,12 @@ class DateTimePicker extends React.Component {
     } = this.props;
     if (!date) return null;
     let cmds;
-    if (this.state.cmdRouting === 'date') {
+    if (!disabled && this.state.cmdRouting === 'date') {
       cmds = focusable ? this.cmdsToPickers : this.props.cmds;
     }
     return (
       <DatePicker
+        disabled={disabled}
         curValue={curValue}
         onChange={this.onChange('date')}
         utc={this.utc}
@@ -156,18 +160,19 @@ class DateTimePicker extends React.Component {
   renderTime() {
     const {
       curValue,
-      focusable,
+      disabled, focusable,
       time, analogTime, seconds,
       accentColor,
     } = this.props;
     if (!time) return null;
     let cmds;
-    if (this.state.cmdRouting === 'time') {
+    if (!disabled && this.state.cmdRouting === 'time') {
       cmds = focusable ? this.cmdsToPickers : this.props.cmds;
     }
     const Component = analogTime ? TimePickerAnalog : TimePickerDigital;
     return (
       <Component
+        disabled={disabled}
         curValue={curValue}
         onChange={this.onChange('time')}
         utc={this.utc}
@@ -181,14 +186,20 @@ class DateTimePicker extends React.Component {
   // ==========================================
   // Event handlers
   // ==========================================
-  registerInputRef(c) {
-    this.refInput = c;
+  registerOuterRef(c) {
+    this.refOuter = c;
+    this.props.registerOuterRef(c);
+  }
+
+  registerFocusableRef(c) {
+    this.refFocus = c;
     this.props.registerFocusableRef(c);
   }
 
   onMouseDown(ev) {
+    const { disabled, focusable } = this.props;
     cancelEvent(ev);
-    if (this.props.focusable && this.refInput) this.refInput.focus();
+    if (!disabled && focusable && this.refFocus) this.refFocus.focus();
   }
 
   onFocus(ev) {

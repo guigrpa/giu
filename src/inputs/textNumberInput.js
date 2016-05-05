@@ -18,6 +18,7 @@ const PROP_TYPES = {
   // Input HOC
   curValue:               React.PropTypes.any.isRequired,
   errors:                 React.PropTypes.array.isRequired,
+  registerOuterRef:       React.PropTypes.func.isRequired,
   registerFocusableRef:   React.PropTypes.func.isRequired,
   // all others are passed through unchanged
 };

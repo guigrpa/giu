@@ -25,6 +25,7 @@ const MOMENT_DEFAULT_LANG = 'en';
 // ==========================================
 class DatePicker extends React.Component {
   static propTypes = {
+    disabled:               React.PropTypes.bool.isRequired,
     curValue:               React.PropTypes.object,  // moment object, not start of day
     onChange:               React.PropTypes.func.isRequired,
     utc:                    React.PropTypes.bool.isRequired,
@@ -55,6 +56,8 @@ class DatePicker extends React.Component {
 
   componentWillMount() {
     const { curValue, utc } = this.props;
+
+    // Initial month to be shown
     const refMoment = curValue != null ? curValue.clone() : startOfToday(utc);
     const shownMonthStart = refMoment.startOf('month');
     this.setState({ shownMonthStart });
@@ -85,6 +88,8 @@ class DatePicker extends React.Component {
     this.withMomentLang(lang, () => {
       this.startOfCurValue = curValue != null ? curValue.clone().startOf('day') : null;
       this.shownMonthNumber = this.state.shownMonthStart.month();
+
+      // Clone the `shownMonthStart` moment this way, so that it gets the correct locales
       const shownMonthStart = moment(this.state.shownMonthStart.valueOf());
       out = (
         <div className="giu-date-picker" style={style.outer}>
@@ -308,8 +313,9 @@ const style = {
     justifyContent: 'space-between',
     height: ROW_HEIGHT,
   }),
-  day: (fSelected, fHovered, fInShownMonth, { accentColor }) => {
-    const border = `1px solid ${fHovered || fSelected ? accentColor : 'transparent'}`;
+  day: (fSelected, fHovered, fInShownMonth, { disabled, accentColor }) => {
+    const fHighlightBorder = fSelected || (!disabled && fHovered);
+    const border = `1px solid ${fHighlightBorder ? accentColor : 'transparent'}`;
     const backgroundColor = fSelected ? accentColor : undefined;
     let color;
     if (!fInShownMonth) {
@@ -322,7 +328,7 @@ const style = {
       backgroundColor,
       color,
       textAlign: 'center',
-      cursor: 'pointer',
+      cursor: !disabled ? 'pointer' : undefined,
       width: DAY_WIDTH,
       textAlign: 'center',
     };

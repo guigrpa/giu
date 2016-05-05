@@ -64,7 +64,9 @@ function reducer(state0 = INITIAL_STATE, action) {
 // Action creators
 // ==========================================
 let cntId = 0;
-const DEFAULT_FLOAT_PARS = null;
+const DEFAULT_FLOAT_PARS = {
+  zIndex: MISC.zMainFloatDelta,
+};
 const actions = {
   floatAdd: initialPars => {
     const id = `float_${cntId++}`;
@@ -161,7 +163,7 @@ class Floats extends React.Component {
 
   renderFloat(props, idx) {
     if (!isAnchorVisible(props)) return null;
-    const { id, zIndex = 5 } = props;
+    const { id, zIndex } = props;
     return (
       <div key={id}
         className="giu-float"
@@ -177,10 +179,17 @@ class Floats extends React.Component {
 
   // ==========================================
   repositionFloats() {
-    const floats = this.floats;
-    for (let idx = 0; idx < floats.length; idx++) {
-      this.repositionFloat(floats[idx], idx);
-    }
+    // Make it asynchronous, so that we are not in the middle
+    // of React's update cycle (which may cause some refs to be
+    // dettached and floats not to be positioned properly).
+    // We use a promise here, since it triggers a microtask
+    // (faster than a task)
+    Promise.resolve().then(() => {
+      const floats = this.floats;
+      for (let idx = 0; idx < floats.length; idx++) {
+        this.repositionFloat(floats[idx], idx);
+      }
+    });
   }
 
   repositionFloat(float, idx) {

@@ -6,6 +6,7 @@ import {
   removeAt,
   set as timmSet,
 }                           from 'timm';
+import { MISC }             from '../gral/constants';
 import Modal                from './modal';
 
 // ==========================================
@@ -70,10 +71,10 @@ class Modals extends React.Component {
   }
 
   // After popping a modal, focus on the top-most one
-  componentDidUpdate(prevProps) {
+  componentDidUpdate() {
     if (this.fPopped) {
       const len = this.prevModals.length;
-      if (len) this.refModals[len-1].focus();
+      if (len) this.refModals[len - 1].focus();
     }
   }
 
@@ -88,7 +89,7 @@ class Modals extends React.Component {
       <div className="giu-modals">
         {modals.map((props, idx) =>
           <Modal key={props.id} ref={c => { this.refModals[idx] = c; }}
-            zIndex={50 + idx * 10}
+            zIndex={MISC.zModalBase + idx * MISC.zModalStep}
             {...props}
           />
         )}

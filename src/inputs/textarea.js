@@ -26,7 +26,9 @@ class Textarea extends React.Component {
     // Input HOC
     curValue:               React.PropTypes.any.isRequired,
     errors:                 React.PropTypes.array.isRequired,
+    registerOuterRef:       React.PropTypes.func.isRequired,
     registerFocusableRef:   React.PropTypes.func.isRequired,
+    onResizeOuter:          React.PropTypes.func.isRequired,
     // all others are passed through unchanged
   };
 
@@ -52,10 +54,14 @@ class Textarea extends React.Component {
   // Render
   // ==========================================
   render() {
-    const { curValue, style: baseStyle } = this.props;
+    const {
+      curValue,
+      registerOuterRef,
+      style: baseStyle,
+    } = this.props;
     const otherProps = omit(this.props, PROP_KEYS);
     return (
-      <div
+      <div ref={registerOuterRef}
         className="giu-textarea"
         style={style.taWrapper}
       >
@@ -85,6 +91,7 @@ class Textarea extends React.Component {
   resize() {
     const height = this.refTaPlaceholder.offsetHeight;
     this.refInput.style.height = `${height}px`;
+    if (this.props.onResizeOuter) this.props.onResizeOuter();
   }
 
   onKeyUp(ev) {

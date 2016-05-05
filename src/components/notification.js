@@ -80,24 +80,7 @@ const style = {
     onClick,
     style: baseStyle, noStylePosition, noStyleShadow,
   }) => {
-    let bgColor;
-    switch (type) {
-      case 'info':
-        bgColor = 'white';
-        break;
-      case 'success':
-        bgColor = '#51a351';
-        break;
-      case 'warn':
-        bgColor = '#f89406';
-        break;
-      case 'error':
-        bgColor = '#bd362f';
-        break;
-      default:
-        bgColor = 'white';
-        break;
-    }
+    let bgColor = COLORS.notifs[type] || COLORS.notifs.info;
     if (hovering && onClick) bgColor = darken(bgColor, 10);
     const fgColor = COLORS[isDark(bgColor) ? 'lightText' : 'darkText'];
     let out = flexContainer('row', {

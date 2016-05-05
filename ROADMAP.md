@@ -20,23 +20,27 @@
 - [x] ListPicker
 - [x] DropDownMenu
 - [x] Floats: open down or up, right or left, depending on anchor position, by default. Limit size
+- [ ] Show errors on inputs -- **test more extensively**
+- [ ] Change error color to yellow when changed
+- [ ] Test embedded modal in a div with translateZ(0)
 - ListPicker:
     + [ ] [m] Make separators span the whole horiz. extension
     + [x] Automatically show item
     + [ ] Show keyboard shortcuts (cmd-X, etc.)
-- [ ] Show errors on inputs
+- [ ] Design customisation strategy for theme constants (context? constant modification?) -- reduce to the minimum the style-related props (one color), so that we don't need to handle that!
 - [ ] DateTimePicker:
     + [x] DatePicker
     + [x] TimePickerDigital
+    + [ ] TimePickerAnalogue:
+        * [ ] Performance?
     + [ ] TAB + focus on date/time
-    + [ ] Include as dropdown in DateInput!
-    + [ ] TimePickerAnalogue
+- [ ] ListPicker: when there are many elements, consider using translateZ(0), or even not painting all elements...
 - [ ] Use ListPicker for Selects (optional)
 - DateInput
     + [x] Basic POC
     + [x] Use isFloatsMounted()
+    + [ ] Build the real float, using DateTimePicker
     + [ ] Use `dispatch` if passed, otherwise the imperative floats api
-    + [ ] Build the real float, once ListPicker and DatePicker are there
 - [ ] FileInput
 - [ ] Hints
 - [ ] Multiple-selection list (ctrl-click?)
