@@ -9,11 +9,14 @@ export {
 export DateInput        from './inputs/dateInput';
 export Textarea         from './inputs/textarea';
 export Checkbox         from './inputs/checkbox';
+export FileInput        from './inputs/fileInput';
 export {
   ListPicker,
   LIST_SEPARATOR,
 }                       from './inputs/listPicker';
-export { DateTimePicker } from './inputs/dateTimePicker';
+export {
+  DateTimePicker,
+}                       from './inputs/dateTimePicker';
 
 export {
   Modals,
@@ -43,12 +46,13 @@ export Spinner          from './components/spinner';
 export LargeMessage     from './components/largeMessage';
 export Progress         from './components/progress';
 
+// HOCs
+export hoverable        from './hocs/hoverable';
+export input            from './hocs/input';
+
 // Styles
 export * from './gral/styles';
 export * from './gral/constants';
-
-// HOCs
-export hoverable        from './hocs/hoverable';
 
 // Other
 export * from './gral/helpers';
