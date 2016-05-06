@@ -41,7 +41,7 @@ class DropDownMenu extends React.Component {
     super(props);
     this.shouldComponentUpdate = PureRenderMixin.shouldComponentUpdate.bind(this);
     this.state = { fOpen: false };
-    this.cmdsToListPicker = null;
+    this.cmdsToPicker = null;
     bindAll(this, [
       'registerFocusCaptureRef',
       'registerTitleRef',
@@ -54,7 +54,8 @@ class DropDownMenu extends React.Component {
   }
 
   componentDidMount() { warnFloats(this.constructor.name); }
-  componentWillUnmount() { this.unmountFloat(); }
+  componentDidUpdate() { this.renderFloat(); }
+  componentWillUnmount() { floatDelete(this.floatId); }
 
   // ==========================================
   // Render
@@ -99,13 +100,42 @@ class DropDownMenu extends React.Component {
   }
 
   renderFloat() {
+    const { fOpen } = this.state;
+
+    // Remove float
+    if (!fOpen && this.floatId != null) {
+      floatDelete(this.floatId);
+      this.floatId = null;
+      return;
+    }
+
+    // Create or update float
+    if (fOpen) {
+      const { floatZ, floatPosition, floatAlign } = this.props;
+      const floatOptions = {
+        position: floatPosition,
+        align: floatAlign,
+        zIndex: floatZ,
+        limitSize: true,
+        getAnchorNode: () => this.refTitle,
+        children: this.renderMenu(),
+      };
+      if (this.floatId == null) {
+        this.floatId = floatAdd(floatOptions);
+      } else {
+        floatUpdate(this.floatId, floatOptions);
+      }
+    }
+  }
+
+  renderMenu() {
     const { items, accentColor } = this.props;
     return (
       <ListPicker
         items={items}
         onClickItem={this.onClickItem}
         focusable={false}
-        cmds={this.cmdsToListPicker}
+        cmds={this.cmdsToPicker}
         accentColor={accentColor}
       />
     );
@@ -117,15 +147,8 @@ class DropDownMenu extends React.Component {
   registerFocusCaptureRef(c) { this.refFocusCapture = c; }
   registerTitleRef(c) { this.refTitle = c; }
 
-  onFocus(ev) {
-    this.setState({ fOpen: true });
-    this.mountOrUpdateFloat();
-  }
-
-  onBlur(ev) {
-    this.setState({ fOpen: false });
-    this.unmountFloat();
-  }
+  onFocus() { this.setState({ fOpen: true }); }
+  onBlur() { this.setState({ fOpen: false }); }
 
   onMouseDownTitle(ev) {
     cancelEvent(ev);
@@ -140,9 +163,8 @@ class DropDownMenu extends React.Component {
         ev.target.blur();
         break;
       default:
-        this.cmdsToListPicker = [{ type: 'KEY_DOWN', which: ev.which }];
-        this.mountOrUpdateFloat();
-        if (this.props.onKeyDown) this.props.onKeyDown(ev);
+        this.cmdsToPicker = [{ type: 'KEY_DOWN', which: ev.which }];
+        this.forceUpdate();
         break;
     }
   }
@@ -157,28 +179,6 @@ class DropDownMenu extends React.Component {
     }
     if (onClickItem) onClickItem(ev, value);
     this.refFocusCapture.blur();
-  }
-
-  mountOrUpdateFloat() {
-    const { floatPosition, floatAlign, floatZ } = this.props;
-    const floatOptions = {
-      position: floatPosition,
-      align: floatAlign,
-      zIndex: floatZ,
-      getAnchorNode: () => this.refTitle,
-      children: this.renderFloat(),
-    };
-    if (this.floatId == null) {
-      this.floatId = floatAdd(floatOptions);
-    } else {
-      floatUpdate(this.floatId, floatOptions);
-    }
-  }
-
-  unmountFloat() {
-    if (this.floatId == null) return;
-    floatDelete(this.floatId);
-    this.floatId = null;
   }
 }
 

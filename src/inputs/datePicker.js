@@ -18,7 +18,6 @@ import Icon                 from '../components/icon';
 
 const ROW_HEIGHT = '1.3em';
 const DAY_WIDTH = '2em';
-const MOMENT_DEFAULT_LANG = 'en';
 
 // ==========================================
 // Component
@@ -31,15 +30,11 @@ class DatePicker extends React.Component {
     utc:                    React.PropTypes.bool.isRequired,
     todayName:              React.PropTypes.string.isRequired,
     cmds:                   React.PropTypes.array,
-    lang:                   React.PropTypes.string, // bcp47
     accentColor:            React.PropTypes.string.isRequired,
     // Hoverable HOC
     hovering:               React.PropTypes.any,
     onHoverStart:           React.PropTypes.func.isRequired,
     onHoverStop:            React.PropTypes.func.isRequired,
-  };
-  static defaultProps = {
-    lang:                   MOMENT_DEFAULT_LANG,
   };
 
   constructor(props) {
@@ -54,10 +49,18 @@ class DatePicker extends React.Component {
     ]);
   }
 
-  componentWillMount() {
-    const { curValue, utc } = this.props;
+  componentWillMount() { this.updateShownMonth(this.props); }
+  componentWillReceiveProps(nextProps) {
+    const prevValue = this.props.curValue;
+    const nextValue = nextProps.curValue;
+    if (prevValue == null && nextValue == null) return;
+    if (prevValue == null || nextValue == null || !prevValue.isSame(nextValue)) {
+      this.updateShownMonth(nextProps);
+    }
+  }
 
-    // Initial month to be shown
+  updateShownMonth(props) {
+    const { curValue, utc } = props;
     const refMoment = curValue != null ? curValue.clone() : startOfToday(utc);
     const shownMonthStart = refMoment.startOf('month');
     this.setState({ shownMonthStart });
@@ -83,24 +86,22 @@ class DatePicker extends React.Component {
   // Render
   // ==========================================
   render() {
-    const { curValue, lang } = this.props;
-    let out;
-    this.withMomentLang(lang, () => {
-      this.startOfCurValue = curValue != null ? curValue.clone().startOf('day') : null;
-      this.shownMonthNumber = this.state.shownMonthStart.month();
+    const { curValue, utc } = this.props;
+    this.startOfCurValue = curValue != null ? curValue.clone().startOf('day') : null;
+    this.shownMonthNumber = this.state.shownMonthStart.month();
 
-      // Clone the `shownMonthStart` moment this way, so that it gets the correct locales
-      const shownMonthStart = moment(this.state.shownMonthStart.valueOf());
-      out = (
-        <div className="giu-date-picker" style={style.outer}>
-          {this.renderMonth(shownMonthStart)}
-          {this.renderDayNames()}
-          {this.renderWeeks(shownMonthStart)}
-          {this.renderToday()}
-        </div>
-      );
-    });
-    return out;
+    // Clone the `shownMonthStart` moment this way, so that it gets the correct locales
+    // in case moment changes!
+    const shownMonthStart = moment(this.state.shownMonthStart.valueOf());
+    if (utc) shownMonthStart.utc();
+    return (
+      <div className="giu-date-picker" style={style.outer}>
+        {this.renderMonth(shownMonthStart)}
+        {this.renderDayNames()}
+        {this.renderWeeks(shownMonthStart)}
+        {this.renderToday()}
+      </div>
+    );
   }
 
   renderMonth(shownMonthStart) {
@@ -240,14 +241,6 @@ class DatePicker extends React.Component {
   // ==========================================
   // Helpers
   // ==========================================
-  withMomentLang(lang, cb) {
-    const prevLang = moment.locale();
-    const fChangeLang = lang !== MOMENT_DEFAULT_LANG;
-    if (fChangeLang) moment.locale(lang);
-    cb();
-    if (fChangeLang) moment.locale(prevLang);
-  }
-
   goToStartEndOfMonth(op) {
     const startOfDay = this.state.shownMonthStart.clone();
     if (op === 'end') startOfDay.add(1, 'month').subtract(1, 'day');
@@ -277,8 +270,9 @@ class DatePicker extends React.Component {
 
   doChange(ev, nextValue) {
     this.props.onChange(ev, nextValue);
-    const shownMonthStart = nextValue.clone().startOf('month');
-    this.setState({ shownMonthStart });
+    // Not needed
+    // const shownMonthStart = nextValue.clone().startOf('month');
+    // this.setState({ shownMonthStart });
   }
 }
 

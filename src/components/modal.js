@@ -24,6 +24,10 @@ const FOCUSABLE = ['input', 'textarea', 'select'];
 // ==========================================
 // Component
 // ==========================================
+// **Warning**: an embedded `Modal` in a component
+// with `translateZ(0)` or similar (which creates a stacking context and
+// a containing block) will not be properly positioned and may even be cropped.
+// In such a case, use `Modals` instead.
 class Modal extends React.Component {
   static propTypes = {
     id:                     React.PropTypes.string,

@@ -13,7 +13,7 @@ export {
   ListPicker,
   LIST_SEPARATOR,
 }                       from './inputs/listPicker';
-export DateTimePicker   from './inputs/dateTimePicker';
+export { DateTimePicker } from './inputs/dateTimePicker';
 
 export {
   Modals,

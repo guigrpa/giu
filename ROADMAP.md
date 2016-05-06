@@ -20,31 +20,30 @@
 - [x] ListPicker
 - [x] DropDownMenu
 - [x] Floats: open down or up, right or left, depending on anchor position, by default. Limit size
-- [ ] Show errors on inputs -- **test more extensively**
-- [ ] Change error color to yellow when changed
-- [ ] Test embedded modal in a div with translateZ(0)
+- [x] Change error color to yellow when changed
+- [x] Show errors on inputs
+- [x] DateTimePicker: DatePicker, TimePickerDigital, TimePickerAnalogue
 - ListPicker:
     + [ ] [m] Make separators span the whole horiz. extension
     + [x] Automatically show item
     + [ ] Show keyboard shortcuts (cmd-X, etc.)
 - [ ] Design customisation strategy for theme constants (context? constant modification?) -- reduce to the minimum the style-related props (one color), so that we don't need to handle that!
-- [ ] DateTimePicker:
-    + [x] DatePicker
-    + [x] TimePickerDigital
-    + [ ] TimePickerAnalogue:
-        * [ ] Performance?
-    + [ ] TAB + focus on date/time
-- [ ] ListPicker: when there are many elements, consider using translateZ(0), or even not painting all elements...
 - [ ] Use ListPicker for Selects (optional)
 - DateInput
     + [x] Basic POC
     + [x] Use isFloatsMounted()
-    + [ ] Build the real float, using DateTimePicker
-    + [ ] Use `dispatch` if passed, otherwise the imperative floats api
+    + [x] Add text date parser
+    + [x] Add DateTimePicker
+    + [x] When user modifies input, make sure shown month in float updates too (e.g. month changes)
+    + [x] Keys (esc)
 - [ ] FileInput
 - [ ] Hints
 - [ ] Multiple-selection list (ctrl-click?)
 - [ ] Add alternative style to inputs (no borders, etc.) or make it simple to wrap the provided components and customise
+- [ ] Focusable HOC??
+    + [ ] Extract from input HOC
+    + [ ] Include FocusCapture element
+    + [ ] Use it for DropDownMenu
 - [ ] Drag and drop
 - [ ] Include SVG font?
 - [ ] DOCS!

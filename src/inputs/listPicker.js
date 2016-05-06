@@ -72,7 +72,6 @@ class BaseListPicker extends React.Component {
       'onMouseDown',
       'onClickItem',
       'onKeyDown',
-      'onFocus',
     ]);
   }
 
@@ -112,12 +111,12 @@ class BaseListPicker extends React.Component {
   }
 
   renderFocusCapture() {
-    const { focusable, onBlur } = this.props;
+    const { focusable, onFocus, onBlur } = this.props;
     if (!focusable) return null;
     return (
       <FocusCapture
         registerRef={this.registerFocusableRef}
-        onFocus={this.onFocus}
+        onFocus={onFocus}
         onBlur={onBlur}
         onKeyDown={this.onKeyDown}
       />
@@ -184,11 +183,6 @@ class BaseListPicker extends React.Component {
   onMouseDown(ev) {
     cancelEvent(ev);
     if (this.props.focusable && this.refFocus) this.refFocus.focus();
-  }
-
-  onFocus(ev) {
-    scrollIntoView(this.refOuter);
-    this.props.onFocus(ev);
   }
 
   onClickItem(ev) {

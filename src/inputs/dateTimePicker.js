@@ -1,16 +1,18 @@
 import React                from 'react';
-import PureRenderMixin      from 'react-addons-pure-render-mixin';
 import { merge }            from 'timm';
 import moment               from 'moment';
 import {
   bindAll,
   cancelEvent,
 }                           from '../gral/helpers';
-import { getTimeInSecs }    from '../gral/dates';
+import {
+  getTimeInSecs,
+  getUtcFlag,
+  startOfDefaultDay,
+}                           from '../gral/dates';
 import {
   flexContainer,
 }                           from '../gral/styles';
-import { scrollIntoView }   from '../gral/visibility';
 import { COLORS, KEYS }     from '../gral/constants';
 import input                from '../hocs/input';
 import FocusCapture         from '../components/focusCapture';
@@ -25,15 +27,15 @@ const TRAPPED_KEYS = [
   KEYS.backspace, KEYS.del,
 ];
 
-const DEFAULT_DAY = moment('1977-11-02T00:00:00Z');
-
+// External value: `Date?`
+// Internal value: `Moment?` (used by DateTimePicker and all its picker-descendants)
 function toInternalValue(val) { return val != null ? moment(val) : null; }
 function toExternalValue(val) { return val != null ? val.clone().toDate() : null; }
 
 // ==========================================
 // Component
 // ==========================================
-class DateTimePicker extends React.Component {
+class BaseDateTimePicker extends React.Component {
   static propTypes = {
     disabled:               React.PropTypes.bool,
     focusable:              React.PropTypes.bool,
@@ -42,7 +44,6 @@ class DateTimePicker extends React.Component {
     analogTime:             React.PropTypes.bool,
     seconds:                React.PropTypes.bool,
     utc:                    React.PropTypes.bool,
-    lang:                   React.PropTypes.string, // bcp47
     todayName:              React.PropTypes.string,
     onKeyDown:              React.PropTypes.func,
     cmds:                   React.PropTypes.array,
@@ -70,31 +71,28 @@ class DateTimePicker extends React.Component {
 
   constructor(props) {
     super(props);
-    this.shouldComponentUpdate = PureRenderMixin.shouldComponentUpdate.bind(this);
     this.state = {
       cmdRouting: props.date ? 'date' : 'time',
     };
+    this.cmdsToPickers = [];
     bindAll(this, [
       'registerOuterRef',
       'registerFocusableRef',
       'onMouseDown',
       'onKeyDown',
-      'onFocus',
       'onChange',
     ]);
-  }
-
-  componentWillMount() {
-    const { utc, date, time } = this.props;
-    this.utc = utc != null ? utc : !(date && time);
-    this.cmdsToPickers = [];
   }
 
   // ==========================================
   // Render
   // ==========================================
   render() {
-    const { curValue, style: baseStyle } = this.props;
+    const {
+      curValue, style: baseStyle,
+      date, time, utc,
+    } = this.props;
+    this.utc = getUtcFlag(date, time, utc);
     if (curValue != null && this.utc) curValue.utc();
     return (
       <div ref={this.registerOuterRef}
@@ -111,12 +109,12 @@ class DateTimePicker extends React.Component {
   }
 
   renderFocusCapture() {
-    const { focusable, onBlur } = this.props;
+    const { focusable, onFocus, onBlur } = this.props;
     if (!focusable) return null;
     return (
       <FocusCapture
         registerRef={this.registerFocusableRef}
-        onFocus={this.onFocus}
+        onFocus={onFocus}
         onBlur={onBlur}
         onKeyDown={this.onKeyDown}
       />
@@ -128,7 +126,6 @@ class DateTimePicker extends React.Component {
       curValue,
       disabled, focusable,
       date,
-      lang,
       todayName,
       accentColor,
     } = this.props;
@@ -143,7 +140,6 @@ class DateTimePicker extends React.Component {
         curValue={curValue}
         onChange={this.onChange('date')}
         utc={this.utc}
-        lang={lang}
         todayName={todayName}
         cmds={cmds}
         accentColor={accentColor}
@@ -202,11 +198,6 @@ class DateTimePicker extends React.Component {
     if (!disabled && focusable && this.refFocus) this.refFocus.focus();
   }
 
-  onFocus(ev) {
-    scrollIntoView(this.refOuter);
-    this.props.onFocus(ev);
-  }
-
   // Keystrokes from FocusCapture
   onKeyDown(ev) {
     if (TRAPPED_KEYS.indexOf(ev.which) >= 0) {
@@ -225,8 +216,7 @@ class DateTimePicker extends React.Component {
           nextValue = nextValue.clone().startOf('day');
         }
         if (!date) {
-          nextValue = DEFAULT_DAY.clone();
-          if (this.utc) nextValue.utc();
+          nextValue = startOfDefaultDay(this.utc);
           nextValue.add(moment.duration(getTimeInSecs(nextValue0), 'seconds'));
         }
       }
@@ -270,4 +260,9 @@ const style = {
 // ==========================================
 // Public API
 // ==========================================
-export default input(DateTimePicker, { toInternalValue, toExternalValue });
+const DateTimePicker = input(BaseDateTimePicker, { toInternalValue, toExternalValue });
+
+export {
+  DateTimePicker,
+  TRAPPED_KEYS,
+}

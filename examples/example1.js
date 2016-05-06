@@ -49,28 +49,73 @@ const WIDE_OPTIONS = [
 // -----------------------------------------------
 // Examples
 // -----------------------------------------------
-const App = () => (
-  <div style={flexContainer('row')}>
-    <Modals />
-    <Floats />
-    <Notifications />
-    <div style={flexItem(1)}>
-      <ProgressExample />
-      <NotificationExample />
-      <MessageExample />
-      <IconExample />
-      <ButtonExample />
-      <HoverableExample />
-      <FlexExample />
-      <DropDownExample />
-      <ModalExample />
-    </div>
-    <div style={flexItem(1)}>
-      <ScrollingExample />
-      <FormExample />
-    </div>
-  </div>
-);
+const TEST = 2;
+const onChange = (ev, o) => console.log(o);
+const App = () => {
+  let out;
+  switch (TEST) {
+    case 1:
+      out = (
+        <div>
+          <Floats />
+          Test<br />Test<br />Test<br />Test<br />Test<br />Test<br />Test<br />Test<br />Test<br />
+          Test<br />Test<br />Test<br />Test<br />Test<br />Test<br />Test<br />Test<br />Test<br />
+          Test<br />Test<br />Test<br />Test<br />Test<br />Test<br />Test<br />Test<br />Test<br />
+          Test<br />Test<br />Test<br />Test<br />Test<br />Test<br />Test<br />Test<br />Test<br />
+          Test<br />Test<br />Test<br />Test<br />Test<br />Test<br />Test<br />Test<br />Test<br />
+          <TextInput
+            onChange={(ev, o) => console.log(o)}
+            errors={['Must be numeric']}
+            errorPosition="above" errorAlign="right"
+          /><br />
+          Test<br />Test<br />Test<br />Test<br />Test<br />Test<br />Test<br />Test<br />Test<br />
+          Test<br />Test<br />Test<br />Test<br />Test<br />Test<br />Test<br />Test<br />Test<br />
+          Test<br />Test<br />Test<br />Test<br />Test<br />Test<br />Test<br />Test<br />Test<br />
+          Test<br />Test<br />Test<br />Test<br />Test<br />Test<br />Test<br />Test<br />Test<br />
+          Test<br />Test<br />Test<br />Test<br />Test<br />Test<br />Test<br />Test<br />Test<br />
+        </div>
+      );
+      break;
+    case 2:
+      out = (
+        <div style={{padding: 5}}>
+          <Floats />
+          Date (UTC midnight - default): <DateInput onChange={onChange} /><br />
+          Date (local midnight): <DateInput onChange={onChange} utc={false} /><br />
+          Date-time (UTC midnight): <DateInput onChange={onChange} time utc value={new Date()} /><br />
+          Date-time (local midnight - default): <DateInput onChange={onChange} time value={new Date()} /><br />
+          Time (UTC midnight - default): <DateInput onChange={onChange} date={false} time value={new Date()} /><br />
+          Time (local midnight): <DateInput onChange={onChange} date={false} time utc={false} value={new Date()} /><br />
+        </div>
+      );
+      break;
+    default:
+      out = (
+        <div style={flexContainer('row')}>
+          <Modals />
+          <Floats />
+          <Notifications />
+          <div style={flexItem(1)}>
+            <ProgressExample />
+            <NotificationExample />
+            <MessageExample />
+            <IconExample />
+            <ButtonExample />
+            <HoverableExample />
+            <FlexExample />
+            <DropDownExample />
+            <ModalExample />
+          </div>
+          <div style={flexItem(1)}>
+            <ScrollingExample />
+            <FormExample />
+          </div>
+        </div>
+      );
+      break;
+  }
+  return out;
+};
 
 class ProgressExample extends React.Component {
   constructor(props) {
@@ -307,7 +352,7 @@ const ScrollingExample = () =>
       onScroll={floatReposition}
       style={style.scrolling}
     >
-      <DateInput placeholder="date" />
+      <DateInput placeholder="date" date time />
       <br />
       Lorem ipsum dolor sit amet, consectetur adipiscing elit. Proin
       mi tortor, sagittis in ultricies ullamcorper, feugiat quis
@@ -387,6 +432,7 @@ const ScrollingExample = () =>
       congue pharetra sed sit amet libero. Suspendisse odio velit, mattis
       non pulvinar non, posuere sit amet quam. Etiam lacinia lobortis
       tincidunt.
+      <br />
       <DateInput placeholder="date" />
     </div>
   </div>;
@@ -521,6 +567,17 @@ class FormExample extends React.Component {
           </div>
         </div>
         <br />
+        <div>
+          <ExampleLabel>
+            DateInput (focusable, keyboard-controlled, local
+            for date+time, UTC otherwise)
+          </ExampleLabel>
+          <DateInput />&nbsp;&nbsp;
+          <DateInput date time />&nbsp;&nbsp;
+          <DateInput date={false} time />
+          <DateInput date={false} time seconds analogTime={false} />
+        </div>
+        <br />        
         <div>
           <ExampleLabel>Imperative example</ExampleLabel>
           <TextInput

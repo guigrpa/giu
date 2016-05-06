@@ -3,6 +3,7 @@ import PureRenderMixin      from 'react-addons-pure-render-mixin';
 import { omit }             from 'timm';
 import { bindAll }          from '../gral/helpers';
 import { COLORS, MISC }     from '../gral/constants';
+import { scrollIntoView }   from '../gral/visibility';
 import { isDark }           from '../gral/styles';
 import {
   floatAdd,
@@ -46,33 +47,36 @@ function input(ComposedComponent, {
       super(props);
       this.shouldComponentUpdate = PureRenderMixin.shouldComponentUpdate.bind(this);
       this.state = {
-        curValue: toInternalValue(props.value),
+        curValue: toInternalValue(props.value, props),
         fFocused: false,
       };
       bindAll(this, [
         'onChange',
         'onFocus',
         'onBlur',
-        'renderFloat',
+        'renderErrorFloat',
       ]);
     }
 
     componentWillReceiveProps(nextProps) {
       const { value } = nextProps;
-      if (value !== this.props.value) {
-        this.setState({ curValue: toInternalValue(value) });
-      }
+      this.setState({ curValue: toInternalValue(value, nextProps) });
     }
 
     componentDidMount() {
       warnFloats(this.constructor.name);
-      this.renderFloat();
+      this.renderErrorFloat();
     }
 
-    componentDidUpdate(prevProps) {
-      const { cmds, errors } = this.props;
+    componentDidUpdate(prevProps, prevState) {
+      const { cmds, errors, value } = this.props;
+      const { curValue } = this.state;
       if (cmds && cmds !== prevProps.cmds) this.processCmds(cmds);
-      if (errors !== prevProps.errors) this.renderFloat();
+      if (errors !== prevProps.errors ||
+          value !== prevProps.value ||
+          curValue !== prevState.curValue ) {
+        this.renderErrorFloat();
+      }
     }
 
     componentWillUnmount() { floatDelete(this.errorFloatId); }
@@ -84,10 +88,10 @@ function input(ComposedComponent, {
       for (const cmd of cmds) {
         switch (cmd.type) {
           case 'SET_VALUE':
-            this.setState({ curValue: toInternalValue(cmd.value) });
+            this.setState({ curValue: toInternalValue(cmd.value, this.props) });
             break;
           case 'REVERT':
-            this.setState({ curValue: toInternalValue(this.props.value) });
+            this.setState({ curValue: toInternalValue(this.props.value, this.props) });
             break;
           case 'FOCUS': this._focus(); break;
           case 'BLUR':  this._blur();  break;
@@ -99,13 +103,13 @@ function input(ComposedComponent, {
 
     // Alternative to using the `onChange` prop (e.g. if we want to delegate
     // state handling to the input and only want to retrieve the value when submitting a form)
-    getValue() { return toExternalValue(this.state.curValue); }
+    getValue() { return toExternalValue(this.state.curValue, this.props); }
 
     // e.g. user clicks a button that replaces the temporary value being edited
-    // setValue(val, cb) { this.setState({ curValue: toInternalValue(val) }, cb); }
+    // setValue(val, cb) { this.setState({ curValue: toInternalValue(val, this.props) }, cb); }
 
     // e.g. user clicks a button that reverts all changes to the input
-    // revert(cb) { this.setState({ curValue: toInternalValue(this.props.value) }, cb); }
+    // revert(cb) { this.setState({ curValue: toInternalValue(this.props.value, this.props) }, cb); }
     // focus() { if (this.refFocusable && this.refFocusable.focus) this.refFocusable.focus(); }
     // blur() { if (this.refFocusable && this.refFocusable.blur) this.refFocusable.blur(); }
 
@@ -130,24 +134,27 @@ function input(ComposedComponent, {
           onChange={this.onChange}
           onFocus={this.onFocus}
           onBlur={this.onBlur}
-          onResizeOuter={this.renderFloat}
+          onResizeOuter={this.renderErrorFloat}
           fFocused={this.state.fFocused}
         />
       );
     }
 
-    renderFloat() {
+    renderErrorFloat() {
       const { errors } = this.props;
-      const { errorFloatId } = this;
 
       // Remove float
-      if (!errors.length && errorFloatId != null) {
-        floatDelete(errorFloatId);
+      if (!errors.length && this.errorFloatId != null) {
+        floatDelete(this.errorFloatId);
         this.errorFloatId = null;
         return;
       }
 
       // Create or update float
+      // (if the `errorX` props are not set, spy on the pass-through `floatX` props for
+      // hints on how to properly position the error float; e.g. if another float
+      // will open `below`, position the error float `above`; also adjust `z-index`
+      // to be below another float's level, so that it doesn't obscure the main float).
       if (errors.length) {
         const {
           floatZ, floatPosition,
@@ -177,8 +184,11 @@ function input(ComposedComponent, {
     }
 
     renderErrors(errors) {
+      const { value } = this.props;
+      const extCurValue = toExternalValue(this.state.curValue, this.props);
+      const fModified = value != null ? (extCurValue !== value) : (extCurValue != null);
       return (
-        <div style={style.errors}>
+        <div style={style.errors(fModified)}>
           {errors.join(' | ')}
         </div>
       );
@@ -187,15 +197,18 @@ function input(ComposedComponent, {
     // ==========================================
     // Handlers
     // ==========================================
-    onChange(ev, providedValue) {
+    onChange(ev, providedValue, providedProps) {
       const { onChange, disabled } = this.props;
       if (disabled) return;
       let curValue = providedValue;
-      if (providedValue === undefined) {
+      if (curValue === undefined) {
         curValue = ev.currentTarget[valueAttr];
       }
       this.setState({ curValue });
-      if (onChange) onChange(ev, toExternalValue(curValue));
+      if (onChange) {
+        const propsForConverter = providedProps || this.props;
+        onChange(ev, toExternalValue(curValue, propsForConverter));
+      }
       if (!this.state.fFocused) this._focus();
     }
 
@@ -205,8 +218,8 @@ function input(ComposedComponent, {
         this._blur();
         return;
       }
+      if (this.refInputOuter) scrollIntoView(this.refInputOuter);
       this.setState({ fFocused: true });
-      this.renderFloat();
       if (onFocus) onFocus(ev);
     }
 
@@ -232,14 +245,16 @@ function input(ComposedComponent, {
 // ==========================================
 // Styles
 // ==========================================
-const errorBgColor = COLORS.notifs.error;
-const errorFgColor = COLORS[isDark(errorBgColor) ? 'lightText' : 'darkText'];
+const errorBgColorBase = COLORS.notifs.error;
+const errorFgColorBase = COLORS[isDark(errorBgColorBase) ? 'lightText' : 'darkText'];
+const errorBgColorModified = COLORS.notifs.warn;
+const errorFgColorModified = COLORS[isDark(errorBgColorModified) ? 'lightText' : 'darkText'];
 const style = {
-  errors: {
-    backgroundColor: errorBgColor,
-    color: errorFgColor,
+  errors: fModified => ({
+    backgroundColor: fModified ? errorBgColorModified : errorBgColorBase,
+    color: fModified ? errorFgColorModified : errorFgColorBase,
     padding: "1px 3px",
-  },
+  }),
 };
 
 // ==========================================

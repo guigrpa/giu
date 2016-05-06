@@ -10,7 +10,7 @@ function toExternalValue(val) { return val !== NULL_VALUE ? val : null; }
 
 function getPlaceHolderText(val) {
   const lines = val.split('\n');
-  const out = !lines[lines.length-1].length
+  const out = !lines[lines.length - 1].length
     ? `${val}x`
     : val;
   return out;

@@ -66,6 +66,7 @@ function reducer(state0 = INITIAL_STATE, action) {
 let cntId = 0;
 const DEFAULT_FLOAT_PARS = {
   zIndex: MISC.zMainFloatDelta,
+  limitSize: false,
 };
 const actions = {
   floatAdd: initialPars => {
@@ -185,6 +186,7 @@ class Floats extends React.Component {
     // We use a promise here, since it triggers a microtask
     // (faster than a task)
     Promise.resolve().then(() => {
+    // setTimeout(() => {
       const floats = this.floats;
       for (let idx = 0; idx < floats.length; idx++) {
         this.repositionFloat(floats[idx], idx);
@@ -198,13 +200,18 @@ class Floats extends React.Component {
 
     // Hide and move to top-left for measuring
     let { position, align } = float;
-    ref.style.opacity = '0.5';
-    ref.style.top = '0px';
+    const { limitSize } = float;
+    ref.style.opacity = '0.01';
     ref.style.left = '0px';
-    ref.style.bottom = null;
     ref.style.right = null;
-    ref.style.overflowX = 'visible';
-    ref.style.overflowY = 'visible';
+    ref.style.top = '0px';
+    ref.style.bottom = null;
+    if (limitSize) {
+      ref.style.overflowX = 'visible';
+      ref.style.overflowY = 'visible';
+      ref.style.maxWidth = null;
+      ref.style.maxHeight = null;
+    }
     const wFloat = ref.offsetWidth;
     const hFloat = ref.offsetHeight;
 
@@ -226,16 +233,17 @@ class Floats extends React.Component {
         position = freeBelow > bcr.top ? 'below' : 'above';
       }
     }
+    let maxHeight;
     if (position === 'below') {
       styleAttrs.top = `${bcr.bottom}px`;
       styleAttrs.bottom = null;
-      styleAttrs.maxHeight = `${hWin - bcr.bottom - breathe}px`;
+      maxHeight = Math.max(0, hWin - bcr.bottom - breathe);
     } else {
       styleAttrs.top = null;
       styleAttrs.bottom = `${windowHeightWithoutScrollbar() - bcr.top}px`;
-      styleAttrs.maxHeight = `${bcr.top - breathe}px`;
+      maxHeight = Math.max(0, bcr.top - breathe);
     }
-    styleAttrs.overflowY = 'auto';
+    if (limitSize) styleAttrs.overflowY = 'auto';
 
     // Position horizontally
     if (!align) {
@@ -246,16 +254,24 @@ class Floats extends React.Component {
         align = freeRight > bcr.right ? 'left' : 'right';
       }
     }
+    let maxWidth;
     if (align === 'left') {
       styleAttrs.left = `${bcr.left}px`;
       styleAttrs.right = null;
-      styleAttrs.maxWidth = `${wWin - bcr.left - breathe}px`;
+      maxWidth = Math.max(0, wWin - bcr.left - breathe);
     } else {
       styleAttrs.left = null;
       styleAttrs.right = `${windowWidthWithoutScrollbar() - bcr.right}px`;
-      styleAttrs.maxWidth = `${bcr.right - breathe}px`;
+      maxWidth = Math.max(0, bcr.right - breathe);
     }
-    styleAttrs.overflowX = 'auto';
+    if (limitSize) styleAttrs.overflowX = 'auto';
+
+    // Limit size. This must be at the end, so that the changes are also
+    // applied at the end
+    if (limitSize) {
+      styleAttrs.maxHeight = hFloat > maxHeight ? `${maxHeight}px` : null;
+      styleAttrs.maxWidth = wFloat > maxWidth ? `${maxWidth}px` : null;
+    }
 
     // Apply style
     Object.keys(styleAttrs).forEach(attr => {
