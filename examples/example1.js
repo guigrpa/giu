@@ -3,6 +3,7 @@ import ReactDOM             from 'react-dom';
 require('babel-polyfill');
 import {
   Select, TextInput, NumberInput, DateInput, Textarea, Checkbox,
+  FileInput,
   ListPicker, LIST_SEPARATOR,
   DateTimePicker,
   DropDownMenu,
@@ -480,10 +481,11 @@ class FormExample extends React.Component {
           {' '}
           <Checkbox
             id="myCheck"
-            value
+            value={true}
             errors={["Must not be null"]}
           />
           <label htmlFor="myCheck">checkbox</label>
+          <FileInput />
         </div>
         <div>
           {

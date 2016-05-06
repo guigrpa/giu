@@ -24,7 +24,9 @@
 - [x] Show errors on inputs
 - [x] DateTimePicker: DatePicker, TimePickerDigital, TimePickerAnalogue
 - [x] DateInput
-- [ ] FileInput
+- [x] FileInput
+- [ ] ColorInput + ColorPicker
+- [ ] RadioButton
 - [ ] Hints
 - ListPicker:
     + [ ] [m] Make separators span the whole horiz. extension

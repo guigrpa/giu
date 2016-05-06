@@ -79,17 +79,9 @@ class BaseListPicker extends React.Component {
 
   componentDidUpdate(prevProps) {
     const { cmds } = this.props;
-    if (!cmds) return;
-    if (cmds !== prevProps.cmds) {
-      for (const cmd of cmds) {
-        switch (cmd.type) {
-          case 'KEY_DOWN':
-            this.doKeyDown(null, cmd.which);
-            break;
-          default:
-            break;
-        }
-      }
+    if (!cmds || cmds === prevProps.cmds) return;
+    for (const cmd of cmds) {
+      if (cmd.type === 'KEY_DOWN') this.doKeyDown(null, cmd.which);
     }
   }
 
