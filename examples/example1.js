@@ -105,9 +105,9 @@ const App = () => {
             <FlexExample />
             <DropDownExample />
             <ModalExample />
+            <ScrollingExample />
           </div>
           <div style={flexItem(1)}>
-            <ScrollingExample />
             <FormExample />
           </div>
         </div>

@@ -23,22 +23,16 @@
 - [x] Change error color to yellow when changed
 - [x] Show errors on inputs
 - [x] DateTimePicker: DatePicker, TimePickerDigital, TimePickerAnalogue
+- [x] DateInput
+- [ ] FileInput
+- [ ] Hints
 - ListPicker:
     + [ ] [m] Make separators span the whole horiz. extension
     + [x] Automatically show item
     + [ ] Show keyboard shortcuts (cmd-X, etc.)
-- [ ] Design customisation strategy for theme constants (context? constant modification?) -- reduce to the minimum the style-related props (one color), so that we don't need to handle that!
+    + [ ] Multiple-selection
 - [ ] Use ListPicker for Selects (optional)
-- DateInput
-    + [x] Basic POC
-    + [x] Use isFloatsMounted()
-    + [x] Add text date parser
-    + [x] Add DateTimePicker
-    + [x] When user modifies input, make sure shown month in float updates too (e.g. month changes)
-    + [x] Keys (esc)
-- [ ] FileInput
-- [ ] Hints
-- [ ] Multiple-selection list (ctrl-click?)
+- [ ] Design customisation strategy for theme constants (context? constant modification?) -- reduce to the minimum the style-related props (one color), so that we don't need to handle that!
 - [ ] Add alternative style to inputs (no borders, etc.) or make it simple to wrap the provided components and customise
 - [ ] Focusable HOC??
     + [ ] Extract from input HOC
