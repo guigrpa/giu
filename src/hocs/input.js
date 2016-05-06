@@ -74,7 +74,7 @@ function input(ComposedComponent, {
       if (cmds && cmds !== prevProps.cmds) this.processCmds(cmds);
       if (errors !== prevProps.errors ||
           value !== prevProps.value ||
-          curValue !== prevState.curValue ) {
+          curValue !== prevState.curValue) {
         this.renderErrorFloat();
       }
     }
@@ -109,7 +109,9 @@ function input(ComposedComponent, {
     // setValue(val, cb) { this.setState({ curValue: toInternalValue(val, this.props) }, cb); }
 
     // e.g. user clicks a button that reverts all changes to the input
-    // revert(cb) { this.setState({ curValue: toInternalValue(this.props.value, this.props) }, cb); }
+    // revert(cb) {
+    //   this.setState({ curValue: toInternalValue(this.props.value, this.props) }, cb);
+    // }
     // focus() { if (this.refFocusable && this.refFocusable.focus) this.refFocusable.focus(); }
     // blur() { if (this.refFocusable && this.refFocusable.blur) this.refFocusable.blur(); }
 
@@ -253,7 +255,7 @@ const style = {
   errors: fModified => ({
     backgroundColor: fModified ? errorBgColorModified : errorBgColorBase,
     color: fModified ? errorFgColorModified : errorFgColorBase,
-    padding: "1px 3px",
+    padding: '1px 3px',
   }),
 };
 

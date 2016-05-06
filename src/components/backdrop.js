@@ -1,9 +1,16 @@
 import React                from 'react';
+import PureRenderMixin      from 'react-addons-pure-render-mixin';
 
 // ==========================================
 // Component
 // ==========================================
 class Backdrop extends React.Component {
+
+  constructor(props) {
+    super(props);
+    this.shouldComponentUpdate = PureRenderMixin.shouldComponentUpdate.bind(this);
+  }
+
   // All props are forwarded to the child `<div>`
   render() {
     return (
@@ -14,7 +21,7 @@ class Backdrop extends React.Component {
       />
     );
   }
-};
+}
 
 // ==========================================
 // Styles

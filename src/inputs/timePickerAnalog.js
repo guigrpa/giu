@@ -1,14 +1,10 @@
 import React                from 'react';
-import moment               from 'moment';
 import { merge }            from 'timm';
 import {
   bindAll,
   cancelEvent,
 }                           from '../gral/helpers';
-import {
-  startOfToday,
-  getTimeInSecs,
-}                           from '../gral/dates';
+import { startOfToday }     from '../gral/dates';
 import { COLORS, KEYS }     from '../gral/constants';
 import hoverable            from '../hocs/hoverable';
 
@@ -17,7 +13,6 @@ const PI2 = Math.PI * 2;
 const cos = Math.cos;
 const sin = Math.sin;
 const atan2 = Math.atan2;
-const floor = Math.floor;
 const round = Math.round;
 const sign = Math.sign || (o => {
   if (o > 0) return 1;
@@ -44,6 +39,7 @@ class TimePickerAnalog extends React.Component {
     disabled:               React.PropTypes.bool.isRequired,
     curValue:               React.PropTypes.object,  // moment object, not start of day
     onChange:               React.PropTypes.func.isRequired,
+    seconds:                React.PropTypes.bool,
     utc:                    React.PropTypes.bool.isRequired,
     cmds:                   React.PropTypes.array,
     accentColor:            React.PropTypes.string.isRequired,
@@ -142,7 +138,7 @@ class TimePickerAnalog extends React.Component {
       idx++;
       phi += PI2 / 60;
     }
-    return <g>{ticks}</g>
+    return <g>{ticks}</g>;
   }
 
   renderHands() {
@@ -185,12 +181,12 @@ class TimePickerAnalog extends React.Component {
         />
       );
     }
-    return <g>{hands}</g>
+    return <g>{hands}</g>;
   }
 
   renderCenter() {
     return (
-      <circle 
+      <circle
         cx={0} cy={0}
         r={this.radius * 0.06}
         style={style.centerCircle}
@@ -216,6 +212,7 @@ class TimePickerAnalog extends React.Component {
   onClickBackground(ev) {
     if (this.props.disabled || this.hours != null) return;
     const phi = this.getPhiFromMousePosition(ev);
+    if (phi == null) return;
     let hours = positiveRemainder(
       round((phi + PI / 2) / (PI2 / 12)),
       12);
@@ -239,8 +236,9 @@ class TimePickerAnalog extends React.Component {
 
   onMouseMoveHand(ev) {
     cancelEvent(ev);
-    const { dragUnits, dragDeltaPhi, dragSteps} = this;
+    const { dragUnits, dragDeltaPhi, dragSteps } = this;
     const phi = this.getPhiFromMousePosition(ev) - dragDeltaPhi;
+    if (phi == null) return;
     let val = positiveRemainder(
       round((phi + PI / 2) / (PI2 / dragSteps)),
       dragSteps);
@@ -327,7 +325,7 @@ class TimePickerAnalog extends React.Component {
 
   getPhiFromMousePosition(ev) {
     const refSvg = this.refSvg;
-    if (!refSvg) return;
+    if (!refSvg) return null;
     const bcr = refSvg.getBoundingClientRect();
     const x = ev.clientX - bcr.left - refSvg.clientLeft - this.translate;
     const y = ev.clientY - bcr.top  - refSvg.clientTop  - this.translate;

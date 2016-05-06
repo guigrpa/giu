@@ -49,7 +49,7 @@ const WIDE_OPTIONS = [
 // -----------------------------------------------
 // Examples
 // -----------------------------------------------
-const TEST = 2;
+const TEST = 0;
 const onChange = (ev, o) => console.log(o);
 const App = () => {
   let out;

@@ -104,7 +104,7 @@ class Modal extends React.Component {
   }
 
   renderSpacer() {
-    return <div style={flexItem(1)} onClick={this.props.onClickBackdrop} />
+    return <div style={flexItem(1)} onClick={this.props.onClickBackdrop} />;
   }
 
   renderButtons(buttons) {
@@ -134,13 +134,14 @@ class Modal extends React.Component {
   // ==========================================
   onKeyUp(ev) {
     const { which } = ev;
+    let buttons;
     switch (which) {
       case KEYS.esc:
         if (this.props.onEsc) this.props.onEsc(ev);
         break;
       case KEYS.return:
-        const { buttons } = this.props;
-        for (let i = 0; i < buttons.length; i++ ) {
+        buttons = this.props.buttons;
+        for (let i = 0; i < buttons.length; i++) {
           const button = buttons[i];
           if (button.defaultButton && button.onClick) {
             button.onClick(ev);

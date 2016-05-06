@@ -324,7 +324,6 @@ const style = {
       textAlign: 'center',
       cursor: !disabled ? 'pointer' : undefined,
       width: DAY_WIDTH,
-      textAlign: 'center',
     };
   },
   today: {

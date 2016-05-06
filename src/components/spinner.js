@@ -1,6 +1,5 @@
 import React                from 'react';
 import PureRenderMixin      from 'react-addons-pure-render-mixin';
-import { omit }             from 'timm';
 import Icon                 from './icon';
 
 // ==========================================

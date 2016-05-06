@@ -265,4 +265,4 @@ const DateTimePicker = input(BaseDateTimePicker, { toInternalValue, toExternalVa
 export {
   DateTimePicker,
   TRAPPED_KEYS,
-}
+};

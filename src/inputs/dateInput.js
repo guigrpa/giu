@@ -115,7 +115,7 @@ class DateInput extends React.Component {
   render() {
     const {
       curValue, placeholder,
-      date, time, seconds
+      date, time, seconds,
     } = this.props;
     const finalPlaceholder = placeholder || dateTimeFormat(date, time, seconds);
     const otherProps = omit(this.props, PROP_KEYS);
