@@ -90,6 +90,20 @@ const App = () => {
         </div>
       );
       break;
+    case 3:
+      out = (
+        <div>
+          <Floats />
+          <DropDownMenu
+            items={NORMAL_OPTIONS}
+            onClickItem={(ev, value) => console.log(value)}
+          >
+            <Icon icon="bars" /> Menu
+          </DropDownMenu>
+        </div>
+      );
+      break;
+      break;
     default:
       out = (
         <div style={flexContainer('row')}>

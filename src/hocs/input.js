@@ -60,7 +60,9 @@ function input(ComposedComponent, {
 
     componentWillReceiveProps(nextProps) {
       const { value } = nextProps;
-      this.setState({ curValue: toInternalValue(value, nextProps) });
+      if (value !== this.props.value) {
+        this.setState({ curValue: toInternalValue(value, nextProps) });
+      }
     }
 
     componentDidMount() {
