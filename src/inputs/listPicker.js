@@ -199,7 +199,7 @@ class BaseListPicker extends React.Component {
   onClickItem(ev) {
     const { onClickItem, onChange } = this.props;
     onChange(ev);
-    if (onClickItem) onClickItem(ev, toExternalValue(ev.target.id));
+    if (onClickItem) onClickItem(ev, toExternalValue(ev.currentTarget.id));
   }
 
   onKeyDown(ev) { this.doKeyDown(ev, ev.which); }
@@ -213,7 +213,7 @@ class BaseListPicker extends React.Component {
       case KEYS.return:
         if (this.props.onClickItem) {
           idx = this.getCurIdx();
-          if (idx >= 0) this.props.onClickItem(ev, toExternalValue(this.props.items[idx].value));
+          if (idx >= 0) this.props.onClickItem(ev, this.props.items[idx].value);
         }
         break;
       case KEYS.del:
