@@ -12,8 +12,8 @@ function bindAll(_this, fnNames) {
 
 function cancelEvent(ev) {
   if (!ev) return;
-  ev.preventDefault();
-  ev.stopPropagation();
+  ev.preventDefault && ev.preventDefault();
+  ev.stopPropagation && ev.stopPropagation();
 }
 
 // -----------------------------------------------

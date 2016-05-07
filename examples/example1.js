@@ -24,10 +24,10 @@ const randomInt = (min, max) => min + floor(random() * (max - min + 1));
 const sample = (arr) => arr[randomInt(0, arr.length - 1)];
 
 const NORMAL_OPTIONS = [
-  { label: 'A', value: 'a', onClick: () => console.log('Custom click A') },
+  { label: 'A', value: 'a', keys: 'mod+a', onClick: () => console.log('Custom click A') },
   { label: '2', value: 2, keys: 'mod+2' },
   LIST_SEPARATOR,
-  { label: 'B', value: 'b', keys: 'shift+b' },
+  { label: 'B', value: 'b', keys: ['shift+b', 'shift+c'] },
   { label: 'true', value: true, keys: 'alt+backspace' },
   { label: 'C', value: 'c', keys: 'shift+up' },
 ];

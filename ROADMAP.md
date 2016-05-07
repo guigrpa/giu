@@ -25,17 +25,25 @@
 - [x] DateTimePicker: DatePicker, TimePickerDigital, TimePickerAnalogue
 - [x] DateInput
 - [x] FileInput
+- [ ] Use ListPicker for Selects (optional) ... +:
+- [ ] Make input styles more homogeneous, minimal:
+    + [ ] Disabled means no border (not dimmed), no reaction to clicks, no `pointer` cursor, obviously not focusable
+    + [ ] Input borders, font family, font size, padding, etc.
+- [ ] Pressing enter on button opening a modal also dismisses the modal!
+- [ ] Add alternative style to inputs (no borders, etc.) or make it simple to wrap the provided components and customise
 - [ ] RadioButton
 - [ ] Hints
+- [ ] DateInput:
+    + [ ] Types: `onlyField`, `onlyPicker` (hidden field, no float), `dropDownPicker` (default)
+    + [ ] `DateTimePicker`: remove focusability
+    + [ ] `DateTimePicker`: remove `input` HOC
 - ListPicker:
     + [ ] [m] Make separators span the whole horiz. extension
     + [x] Automatically show item
-    + [ ] Show keyboard shortcuts (cmd-X, etc.)
+    + [x] Show keyboard shortcuts (cmd-X, etc.)
     + [ ] Multiple-selection
-- [ ] Use ListPicker for Selects (optional)
 - [ ] ColorInput + ColorPicker
 - [ ] Design customisation strategy for theme constants (context? constant modification?) -- reduce to the minimum the style-related props (one color), so that we don't need to handle that!
-- [ ] Add alternative style to inputs (no borders, etc.) or make it simple to wrap the provided components and customise
 - [ ] Focusable HOC??
     + [ ] Extract from input HOC
     + [ ] Include FocusCapture element

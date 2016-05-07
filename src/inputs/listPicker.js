@@ -1,7 +1,6 @@
 import React                from 'react';
 import PureRenderMixin      from 'react-addons-pure-render-mixin';
 import { merge }            from 'timm';
-import keycode              from 'keycode';
 import {
   COLORS,
   UNICODE,
@@ -18,6 +17,10 @@ import {
   flexContainer,
   flexItem,
 }                           from '../gral/styles';
+import {
+  registerShortcut,
+  unregisterShortcut,
+}                           from '../gral/keys';
 import input                from '../hocs/input';
 import hoverable            from '../hocs/hoverable';
 import FocusCapture         from '../components/focusCapture';
@@ -31,7 +34,6 @@ const LIST_SEPARATOR = {
   value: LIST_SEPARATOR_KEY,
   label: LIST_SEPARATOR_KEY,
 };
-const IS_MAC = /Mac|iPod|iPhone|iPad/.test(navigator.platform);
 
 // ==========================================
 // Component
@@ -76,6 +78,7 @@ class BaseListPicker extends React.Component {
       'renderItem',
       'onMouseDown',
       'onClickItem',
+      'clickItemByIndex',
       'onKeyDown',
     ]);
   }
@@ -91,9 +94,11 @@ class BaseListPicker extends React.Component {
     const { cmds } = this.props;
     if (!cmds || cmds === prevProps.cmds) return;
     for (const cmd of cmds) {
-      if (cmd.type === 'KEY_DOWN') this.doKeyDown(null, cmd.which);
+      if (cmd.type === 'KEY_DOWN') this.doKeyDown(null, cmd);
     }
   }
+
+  componentWillUnmount() { this.unregisterShortcuts(); }
 
   // ==========================================
   // Render
@@ -173,9 +178,9 @@ class BaseListPicker extends React.Component {
   }
 
   renderKeys(idx) {
-    const shortcut = this.keyShortcuts[idx][0];
-    if (!shortcut) return null;
-    return <span style={style.shortcut}>{shortcut.description}</span>;
+    const shortcuts = this.keyShortcuts[idx].map(o => o.description).join(', ');
+    if (!shortcuts) return null;
+    return <span style={style.shortcut}>{shortcuts}</span>;
   }
 
   // ==========================================
@@ -202,8 +207,16 @@ class BaseListPicker extends React.Component {
     if (onClickItem) onClickItem(ev, toExternalValue(ev.currentTarget.id));
   }
 
-  onKeyDown(ev) { this.doKeyDown(ev, ev.which); }
-  doKeyDown(ev, which) {
+  clickItemByIndex(idx) {
+    const { items, onClickItem, onChange } = this.props;
+    const value = items[idx].value;
+    onChange(null, toInternalValue(value));
+    if (onClickItem) onClickItem(null, value);
+  }
+
+  onKeyDown(ev) { this.doKeyDown(ev, ev); }
+  doKeyDown(ev, { which, shiftKey, ctrlKey, altKey, metaKey }) {
+    if (shiftKey || ctrlKey || altKey || metaKey) return;
     let idx;
     switch (which) {
       case KEYS.down:   this.selectMoveBy(ev, +1); break;
@@ -263,39 +276,18 @@ class BaseListPicker extends React.Component {
   }
 
   processKeyShortcuts(props) {
-    this.keyShortcuts = props.items.map(item => {
+    this.keyShortcuts = props.items.map((item, idx) => {
       let keys = item.keys || [];
       if (!Array.isArray(keys)) keys = [keys];
-      return keys.map(this.processKeyShortcut);
+      return keys.map(shortcut => registerShortcut(shortcut, () => {
+        this.clickItemByIndex(idx);
+      }));
     });
   }
 
-  processKeyShortcut(shortcut) {
-    const out = {};
-    out.keyCodes = shortcut.split('+').map(extName0 => {
-      let extName = extName0;
-      if (extName === 'mod') extName = IS_MAC ? 'cmd' : 'ctrl';
-      return keycode(extName);
-    });
-    out.keyNames = out.keyCodes.map(keyCode => keycode(keyCode));
-    out.description = out.keyNames.map(keyName => {
-      let c;
-      switch (keyName) {
-        case 'alt':       c = IS_MAC ? UNICODE.altKey : 'Alt-'; break;
-        case 'command':   c = UNICODE.cmdKey;        break;
-        case 'ctrl':      c = UNICODE.ctrlKey;       break;
-        case 'shift':     c = UNICODE.shiftKey;      break;
-        case 'left':      c = UNICODE.leftKey;       break;
-        case 'up':        c = UNICODE.upKey;         break;
-        case 'right':     c = UNICODE.rightKey;      break;
-        case 'down':      c = UNICODE.downKey;       break;
-        case 'enter':     c = UNICODE.returnKey;     break;
-        case 'backspace': c = UNICODE.backspaceKey;  break;
-        default:          c = keyName.toUpperCase(); break;
-      }
-      return c;
-    }).join('');
-    return out;
+  unregisterShortcuts() {
+    this.keyShortcuts.forEach(itemShortcuts =>
+      itemShortcuts.forEach(unregisterShortcut));
   }
 }
 
