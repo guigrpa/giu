@@ -25,7 +25,6 @@
 - [x] DateTimePicker: DatePicker, TimePickerDigital, TimePickerAnalogue
 - [x] DateInput
 - [x] FileInput
-- [ ] ColorInput + ColorPicker
 - [ ] RadioButton
 - [ ] Hints
 - ListPicker:
@@ -34,6 +33,7 @@
     + [ ] Show keyboard shortcuts (cmd-X, etc.)
     + [ ] Multiple-selection
 - [ ] Use ListPicker for Selects (optional)
+- [ ] ColorInput + ColorPicker
 - [ ] Design customisation strategy for theme constants (context? constant modification?) -- reduce to the minimum the style-related props (one color), so that we don't need to handle that!
 - [ ] Add alternative style to inputs (no borders, etc.) or make it simple to wrap the provided components and customise
 - [ ] Focusable HOC??

@@ -25,11 +25,11 @@ const sample = (arr) => arr[randomInt(0, arr.length - 1)];
 
 const NORMAL_OPTIONS = [
   { label: 'A', value: 'a', onClick: () => console.log('Custom click A') },
-  { label: '2', value: 2 },
+  { label: '2', value: 2, keys: 'mod+2' },
   LIST_SEPARATOR,
-  { label: 'B', value: 'b' },
-  { label: 'true', value: true },
-  { label: 'C', value: 'c' },
+  { label: 'B', value: 'b', keys: 'shift+b' },
+  { label: 'true', value: true, keys: 'alt+backspace' },
+  { label: 'C', value: 'c', keys: 'shift+up' },
 ];
 const TALL_OPTIONS = [];
 for (let i = 0; i < 50; i++) {

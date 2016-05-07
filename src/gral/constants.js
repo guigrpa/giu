@@ -40,7 +40,16 @@ const KEYS = {
 
 // For more: http://www.fileformat.info/info/unicode/char/search.html
 const UNICODE = {
-  shift: '\u21E7',
+  shiftKey: '\u21E7',
+  cmdKey: '\u2318',
+  ctrlKey: '\u2303',
+  altKey: '\u2325',
+  leftArrow: '\u2190',
+  upArrow: '\u2191',
+  rightArrow: '\u2192',
+  downArrow: '\u2193',
+  returnKey: '\u23CE',
+  backspaceKey: '\u232B',
   nbsp: '\u00A0',
   ellipsis: '\u2026',
   heart: '\u2764\uFE0F',

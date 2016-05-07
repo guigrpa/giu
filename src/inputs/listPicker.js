@@ -1,6 +1,7 @@
 import React                from 'react';
 import PureRenderMixin      from 'react-addons-pure-render-mixin';
 import { merge }            from 'timm';
+import keycode              from 'keycode';
 import {
   COLORS,
   UNICODE,
@@ -12,7 +13,11 @@ import {
   cancelEvent,
 }                           from '../gral/helpers';
 import { scrollIntoView }   from '../gral/visibility';
-import { isDark }           from '../gral/styles';
+import {
+  isDark,
+  flexContainer,
+  flexItem,
+}                           from '../gral/styles';
 import input                from '../hocs/input';
 import hoverable            from '../hocs/hoverable';
 import FocusCapture         from '../components/focusCapture';
@@ -26,6 +31,7 @@ const LIST_SEPARATOR = {
   value: LIST_SEPARATOR_KEY,
   label: LIST_SEPARATOR_KEY,
 };
+const IS_MAC = /Mac|iPod|iPhone|iPad/.test(navigator.platform);
 
 // ==========================================
 // Component
@@ -36,7 +42,6 @@ class BaseListPicker extends React.Component {
     focusable:              React.PropTypes.bool,
     emptyText:              React.PropTypes.string,
     onClickItem:            React.PropTypes.func,
-    onKeyDown:              React.PropTypes.func,
     cmds:                   React.PropTypes.array,
     style:                  React.PropTypes.object,
     styleItem:              React.PropTypes.object,
@@ -73,6 +78,11 @@ class BaseListPicker extends React.Component {
       'onClickItem',
       'onKeyDown',
     ]);
+  }
+
+  componentWillMount() { this.processKeyShortcuts(this.props); }
+  componentWillReceiveProps(nextProps) {
+    if (nextProps.items !== this.props.items) this.processKeyShortcuts(nextProps);
   }
 
   componentDidMount() { this.scrollSelectedIntoView(); }
@@ -146,6 +156,7 @@ class BaseListPicker extends React.Component {
       fSelected: curValue === id,
       twoStageStyle, accentColor,
     };
+    const keyEl = this.renderKeys(idx);
     return (
       <div key={id} ref={c => { this.refItems[idx] = c; }}
         id={id}
@@ -155,8 +166,16 @@ class BaseListPicker extends React.Component {
         style={merge(style.item(styleProps), styleItem)}
       >
         {label || UNICODE.nbsp}
+        {keyEl ? <div style={flexItem(1)} /> : undefined}
+        {keyEl}
       </div>
     );
+  }
+
+  renderKeys(idx) {
+    const shortcut = this.keyShortcuts[idx][0];
+    if (!shortcut) return null;
+    return <span style={style.shortcut}>{shortcut.description}</span>;
   }
 
   // ==========================================
@@ -202,7 +221,6 @@ class BaseListPicker extends React.Component {
         this.props.onChange(null, NULL_VALUE);
         break;
       default:
-        if (this.props.onKeyDown) this.props.onKeyDown(ev);
         break;
     }
   }
@@ -242,6 +260,42 @@ class BaseListPicker extends React.Component {
     const idx = this.getCurIdx();
     if (idx < 0) return;
     scrollIntoView(this.refItems[idx], { topAncestor: this.refOuter });
+  }
+
+  processKeyShortcuts(props) {
+    this.keyShortcuts = props.items.map(item => {
+      let keys = item.keys || [];
+      if (!Array.isArray(keys)) keys = [keys];
+      return keys.map(this.processKeyShortcut);
+    });
+  }
+
+  processKeyShortcut(shortcut) {
+    const out = {};
+    out.keyCodes = shortcut.split('+').map(extName0 => {
+      let extName = extName0;
+      if (extName === 'mod') extName = IS_MAC ? 'cmd' : 'ctrl';
+      return keycode(extName);
+    });
+    out.keyNames = out.keyCodes.map(keyCode => keycode(keyCode));
+    out.description = out.keyNames.map(keyName => {
+      let c;
+      switch (keyName) {
+        case 'alt':       c = IS_MAC ? UNICODE.altKey : 'Alt-'; break;
+        case 'command':   c = UNICODE.cmdKey;        break;
+        case 'ctrl':      c = UNICODE.ctrlKey;       break;
+        case 'shift':     c = UNICODE.shiftKey;      break;
+        case 'left':      c = UNICODE.leftKey;       break;
+        case 'up':        c = UNICODE.upKey;         break;
+        case 'right':     c = UNICODE.rightKey;      break;
+        case 'down':      c = UNICODE.downKey;       break;
+        case 'enter':     c = UNICODE.returnKey;     break;
+        case 'backspace': c = UNICODE.backspaceKey;  break;
+        default:          c = keyName.toUpperCase(); break;
+      }
+      return c;
+    }).join('');
+    return out;
   }
 }
 
@@ -285,12 +339,12 @@ const style = {
     if (backgroundColor) {
       color = COLORS[isDark(backgroundColor) ? 'lightText' : 'darkText'];
     }
-    return {
+    return flexContainer('row', {
       backgroundColor, color, border,
       cursor: 'default',
       whiteSpace: 'nowrap',
       padding: `3px ${10 + getScrollbarWidth()}px 3px 10px`,
-    };
+    });
   },
   separator: {
     borderTop: `1px solid ${COLORS.line}`,
@@ -298,6 +352,9 @@ const style = {
     marginTop: 3,
     marginBottom: 3,
     cursor: 'default',
+  },
+  shortcut: {
+    marginLeft: 20,
   },
 };
 

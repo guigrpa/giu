@@ -163,7 +163,15 @@ class DropDownMenu extends React.Component {
         ev.target.blur();
         break;
       default:
-        this.cmdsToPicker = [{ type: 'KEY_DOWN', which: ev.which }];
+        this.cmdsToPicker = [{
+          type: 'KEY_DOWN',
+          which: ev.which,
+          keyCode: ev.keyCode,
+          metaKey: ev.metaKey,
+          shiftKey: ev.shiftKey,
+          altKey: ev.altKey,
+          ctrlKey: ev.ctrlKey,
+        }];
         this.forceUpdate();
         break;
     }
