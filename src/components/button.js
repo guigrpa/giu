@@ -1,6 +1,7 @@
 import React                from 'react';
 import PureRenderMixin      from 'react-addons-pure-render-mixin';
 import { omit, merge }      from 'timm';
+import { COLORS }           from '../gral/constants';
 
 // ==========================================
 // Component
@@ -37,7 +38,7 @@ class Button extends React.Component {
       <span
         className="giu-button"
         {...otherProps}
-        style={merge(style.button, this.props.style)}
+        style={merge(style.plain, this.props.style)}
       >
         {children}
       </span>
@@ -46,13 +47,13 @@ class Button extends React.Component {
 
   renderButton(otherProps, children) {
     return (
-      <button
+      <span
         className="giu-button"
         {...otherProps}
         style={merge(style.button, this.props.style)}
       >
         {children}
-      </button>
+      </span>
     );
   }
 }
@@ -61,8 +62,17 @@ class Button extends React.Component {
 // Styles
 // ==========================================
 const style = {
-  button: {
+  plain: {
     cursor: 'pointer',
+  },
+  button: {
+    display: 'inline-block',
+    cursor: 'pointer',
+    border: `1px solid ${COLORS.line}`,
+    borderRadius: 5,
+    padding: '1px 5px',
+    userSelect: 'none',
+    WebkitUserSelect: 'none',
   },
 };
 
