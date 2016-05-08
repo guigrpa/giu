@@ -25,6 +25,7 @@
 - [x] DateTimePicker: DatePicker, TimePickerDigital, TimePickerAnalogue
 - [x] DateInput
 - [x] FileInput
+- [ ] Add validation hook to inputs; return an error or an array of errors
 - [ ] Make input styles more homogeneous, minimal:
     + [ ] Disabled means no border (not dimmed), no reaction to clicks, no `pointer` cursor, obviously not focusable
     + [x] Input borders, font family, font size, padding, etc.

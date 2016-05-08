@@ -466,18 +466,6 @@ class FormExample extends React.Component {
       <div style={style.example}>
         <div>
           <ExampleLabel>Inputs</ExampleLabel>
-          <Select
-            value="a"
-            options={NORMAL_OPTIONS}
-          />
-          {' '}
-          <Select
-            value={null}
-            options={NORMAL_OPTIONS}
-            allowNull
-            onChange={(_, value) => console.log(JSON.stringify(value))}
-          />
-          {' '}
           <TextInput
             value="a"
             placeholder="text"
@@ -517,6 +505,31 @@ class FormExample extends React.Component {
           <Textarea
             value="En un lugar de la Mancha..."
           />
+        </div>
+        <br />
+        <div>
+          <ExampleLabel>
+            Select: native, or with inline/dropdown ListPicker
+            (keyboard-controlled, shortcuts, one/two-stage, autoscroll)
+          </ExampleLabel>
+          <div style={flexContainer('row')}>
+            <Select
+              value="a"
+              items={NORMAL_OPTIONS}
+            />
+            &nbsp;&nbsp;
+            <Select
+              value={null}
+              items={NORMAL_OPTIONS} allowNull
+              onChange={(_, value) => console.log(JSON.stringify(value))}
+            />
+            &nbsp;&nbsp;
+            <Select type="inlinePicker"
+              value={null}
+              items={NORMAL_OPTIONS} allowNull
+              onChange={(_, value) => console.log(JSON.stringify(value))}
+            />
+          </div>
         </div>
         <br />
         <div>
@@ -682,7 +695,7 @@ const style = {
   label: {
     fontWeight: 'bold',
     color: 'darkblue',
-  }
+  },
 };
 
 // -----------------------------------------------
