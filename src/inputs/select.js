@@ -38,6 +38,7 @@ class Select extends React.Component {
         className="giu-select"
         value={curValue}
         {...otherProps}
+        style={style.native}
       >
         {finalOptions.map(o => {
           const value = o.value === NULL_VALUE ? o.value : toInternalValue(o.value);
@@ -51,7 +52,13 @@ class Select extends React.Component {
 // ==========================================
 // Styles
 // ==========================================
-// const style = {};
+const style = {
+  native: {
+    fontFamily: 'inherit',
+    fontSize: 'inherit',
+    fontWeight: 'inherit',
+  },
+};
 
 // ==========================================
 // Miscellaneous

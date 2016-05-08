@@ -496,9 +496,9 @@ class FormExample extends React.Component {
           <Checkbox
             id="myCheck"
             value={true}
+            label="checkbox"
             errors={["Must not be null"]}
           />
-          <label htmlFor="myCheck">checkbox</label>
           <FileInput />
         </div>
         <div>

@@ -1,7 +1,7 @@
 import React                from 'react';
 import { omit, merge }      from 'timm';
 import { bindAll }          from '../gral/helpers';
-import { KEYS }             from '../gral/constants';
+import { KEYS, COLORS }     from '../gral/constants';
 import input                from '../hocs/input';
 
 const NULL_VALUE = '';
@@ -22,7 +22,7 @@ function getPlaceHolderText(val) {
 class Textarea extends React.Component {
   static propTypes = {
     onKeyUp:                React.PropTypes.func,
-    style:                  React.PropTypes.object,
+    fieldStyle:             React.PropTypes.object,
     // Input HOC
     curValue:               React.PropTypes.any.isRequired,
     errors:                 React.PropTypes.array.isRequired,
@@ -57,7 +57,7 @@ class Textarea extends React.Component {
     const {
       curValue,
       registerOuterRef,
-      style: baseStyle,
+      fieldStyle,
     } = this.props;
     const otherProps = omit(this.props, PROP_KEYS);
     return (
@@ -66,14 +66,14 @@ class Textarea extends React.Component {
         style={style.taWrapper}
       >
         <div ref={c => { this.refTaPlaceholder = c; }}
-          style={merge(style.taPlaceholder, baseStyle)}
+          style={merge(style.hiddenPlaceholder, fieldStyle)}
         >
           {getPlaceHolderText(curValue)}
         </div>
         <textarea ref={this.registerInputRef}
           value={curValue}
           onKeyUp={this.onKeyUp}
-          style={merge(style.taInput, baseStyle)}
+          style={merge(style.field, fieldStyle)}
           {...otherProps}
         />
       </div>
@@ -110,19 +110,21 @@ const style = {
   taWrapper: {
     position: 'relative',
   },
-  taInput: {
+  field: {
+    border: `1px solid ${COLORS.line}`,
     width: '100%',
     overflow: 'hidden',
     cursor: 'beam',
     fontFamily: 'inherit',
     fontSize: 'inherit',
+    fontWeight: 'inherit',
     background: 'transparent',
     resize: 'none',
     padding: 2,
   },
 
   // hidden placeholder
-  taPlaceholder: {
+  hiddenPlaceholder: {
     position: 'absolute',
     top: 0,
     left: 0,

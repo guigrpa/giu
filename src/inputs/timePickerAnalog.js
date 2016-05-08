@@ -19,7 +19,7 @@ const sign = Math.sign || (o => {
   if (o < 0) return -1;
   return 0;
 });
-const DEFAULT_SIZE = 150;
+const DEFAULT_SIZE = 120;
 const UP_DOWN_STEP = 5;       // [min]
 const HAND_NAMES = ['seconds', 'minutes', 'hours'];
 const positiveRemainder = (val, q) => (val + q) % q;

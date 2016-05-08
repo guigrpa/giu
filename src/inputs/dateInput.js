@@ -1,5 +1,5 @@
 import React                from 'react';
-import { omit }             from 'timm';
+import { omit, merge }      from 'timm';
 import moment               from 'moment';
 import {
   bindAll,
@@ -70,6 +70,7 @@ class DateInput extends React.Component {
     floatPosition:          React.PropTypes.string,
     floatAlign:             React.PropTypes.string,
     floatZ:                 React.PropTypes.number,
+    fieldStyle:             React.PropTypes.object,
     accentColor:            React.PropTypes.string,
     onKeyDown:              React.PropTypes.func,
     // From input HOC
@@ -116,6 +117,7 @@ class DateInput extends React.Component {
     const {
       curValue, placeholder,
       date, time, seconds,
+      fieldStyle,
     } = this.props;
     const finalPlaceholder = placeholder || dateTimeFormat(date, time, seconds);
     const otherProps = omit(this.props, PROP_KEYS);
@@ -125,6 +127,7 @@ class DateInput extends React.Component {
         type="text"
         value={curValue}
         {...otherProps}
+        style={merge(style.field, fieldStyle)}
         placeholder={finalPlaceholder}
         onFocus={this.onFocus}
         onBlur={this.onBlur}
@@ -225,7 +228,14 @@ class DateInput extends React.Component {
 // ==========================================
 // Styles
 // ==========================================
-// const style = {};
+const style = {
+  field: {
+    fontFamily: 'inherit',
+    fontSize: 'inherit',
+    fontWeight: 'inherit',
+    border: `1px solid ${COLORS.line}`,
+  },
+};
 
 // ==========================================
 // Miscellaneous

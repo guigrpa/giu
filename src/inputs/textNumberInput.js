@@ -1,5 +1,6 @@
 import React                from 'react';
-import { omit }             from 'timm';
+import { omit, merge }      from 'timm';
+import { COLORS }           from '../gral/constants';
 import input                from '../hocs/input';
 
 const NULL_VALUE = '';
@@ -15,6 +16,7 @@ const converters = {
 };
 
 const PROP_TYPES = {
+  fieldStyle:             React.PropTypes.object,
   // Input HOC
   curValue:               React.PropTypes.any.isRequired,
   errors:                 React.PropTypes.array.isRequired,
@@ -36,14 +38,18 @@ function createClass(name, inputType) {
     // Render
     // ==========================================
     render() {
-      const { curValue, registerFocusableRef } = this.props;
+      const {
+        curValue, registerFocusableRef,
+        fieldStyle,
+      } = this.props;
       const otherProps = omit(this.props, PROP_KEYS);
       return (
         <input ref={registerFocusableRef}
-          className="giu-input"
+          className={`giu-${inputType}-input`}
           type={inputType}
           value={curValue}
           {...otherProps}
+          style={merge(style.field, fieldStyle)}
         />
       );
     }
@@ -55,7 +61,14 @@ function createClass(name, inputType) {
 // ==========================================
 // Styles
 // ==========================================
-// const style = {};
+const style = {
+  field: {
+    fontFamily: 'inherit',
+    fontSize: 'inherit',
+    fontWeight: 'inherit',
+    border: `1px solid ${COLORS.line}`,
+  },
+};
 
 // ==========================================
 // Public API

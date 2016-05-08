@@ -25,14 +25,18 @@
 - [x] DateTimePicker: DatePicker, TimePickerDigital, TimePickerAnalogue
 - [x] DateInput
 - [x] FileInput
-- [ ] Use ListPicker for Selects (optional) ... +:
 - [ ] Make input styles more homogeneous, minimal:
     + [ ] Disabled means no border (not dimmed), no reaction to clicks, no `pointer` cursor, obviously not focusable
-    + [ ] Input borders, font family, font size, padding, etc.
+    + [x] Input borders, font family, font size, padding, etc.
+- [ ] Dropdown menu: should keep its keys registered, no matter whether the listpicker is open or not (add `keepRegistered` prop to ListPicker, default to `false` and set to `true` by DropDownMenu)
 - [ ] Pressing enter on button opening a modal also dismisses the modal!
 - [ ] Add alternative style to inputs (no borders, etc.) or make it simple to wrap the provided components and customise
 - [ ] RadioButton
 - [ ] Hints
+- [ ] Select:
+    + [ ] Types: `native` (default), `onlyPicker`, `dropDownPicker`
+    + [ ] `listPicker`: remove focusability 
+    + [ ] `listPicker`: remove `input` HOC 
 - [ ] DateInput:
     + [ ] Types: `onlyField`, `onlyPicker` (hidden field, no float), `dropDownPicker` (default)
     + [ ] `DateTimePicker`: remove focusability
