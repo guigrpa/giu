@@ -7,6 +7,7 @@ import {
 }                           from '../gral/dates';
 import {
   getScrollbarWidth,
+  NULL_STRING,
 }                           from '../gral/constants';
 import { ListPicker }       from '../inputs/listPicker';
 
@@ -21,7 +22,7 @@ class TimePickerDigital extends React.Component {
     curValue:               React.PropTypes.object,  // moment object, not start of day
     onChange:               React.PropTypes.func.isRequired,
     utc:                    React.PropTypes.bool.isRequired,
-    cmds:                   React.PropTypes.array,
+    keyDown:                React.PropTypes.object,
     stepMinutes:            React.PropTypes.number,
     accentColor:            React.PropTypes.string.isRequired,
   };
@@ -42,14 +43,13 @@ class TimePickerDigital extends React.Component {
   // Render
   // ==========================================
   render() {
-    const { cmds, accentColor } = this.props;
+    const { keyDown, accentColor } = this.props;
     return (
       <ListPicker
         items={this.timeItems}
-        value={this.getSeconds()}
+        curValue={this.getSeconds()}
         onChange={this.onChange}
-        focusable={false}
-        cmds={cmds}
+        keyDown={keyDown}
         style={style.outer} twoStageStyle
         styleItem={style.item}
         accentColor={accentColor}
@@ -61,12 +61,13 @@ class TimePickerDigital extends React.Component {
   // ==========================================
   // Event handlers
   // ==========================================
-  onChange(ev, secs) {
+  onChange(ev, secsStr) {
     const { curValue, utc, onChange } = this.props;
-    if (secs == null) {
+    if (secsStr === NULL_STRING) {
       onChange(ev, null);
       return;
     }
+    const secs = Number(secsStr);
     let nextValue;
     if (curValue != null) {
       nextValue = curValue.clone().startOf('day');
@@ -87,7 +88,7 @@ class TimePickerDigital extends React.Component {
     const endTime = moment(curTime).add(1, 'day');
     while (curTime < endTime) {
       const label = curTime.format('HH:mm');
-      const value = getTimeInSecs(curTime);
+      const value = String(getTimeInSecs(curTime));
       this.timeItems.push({ label, value });
       curTime.add(stepMinutes, 'minutes');
     }
@@ -96,11 +97,10 @@ class TimePickerDigital extends React.Component {
   getSeconds() {
     const { curValue, stepMinutes } = this.props;
     let secs = getTimeInSecs(curValue);
-    if (secs != null) {
-      secs = Math.round(secs / 60 / stepMinutes) * stepMinutes * 60;
-      if (secs === 24 * 3600) secs = secs - stepMinutes * 60;
-    }
-    return secs;
+    if (secs == null) return NULL_STRING;
+    secs = Math.round(secs / 60 / stepMinutes) * stepMinutes * 60;
+    if (secs === 24 * 3600) secs = secs - stepMinutes * 60;
+    return String(secs);
   }
 }
 

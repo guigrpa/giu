@@ -35,9 +35,10 @@
 - [ ] RadioButton
 - [ ] Hints
 - [ ] Select:
-    + [ ] Types: `native` (default), `onlyPicker`, `dropDownPicker`
-    + [ ] `listPicker`: remove focusability 
-    + [ ] `listPicker`: remove `input` HOC 
+    + [x] Types: `native` (default), `inlinePicker`, `dropDownPicker`
+    + [ ] Use `inlinePicker` option
+    + [x] `listPicker`: remove focusability 
+    + [x] `listPicker`: remove `input` HOC 
 - [ ] DateInput:
     + [ ] Types: `onlyField`, `onlyPicker` (hidden field, no float), `dropDownPicker` (default)
     + [ ] `DateTimePicker`: remove focusability
@@ -51,7 +52,7 @@
 - [ ] Design customisation strategy for theme constants (context? constant modification?) -- reduce to the minimum the style-related props (one color), so that we don't need to handle that!
 - [ ] Focusable HOC??
     + [ ] Extract from input HOC
-    + [ ] Include FocusCapture element
+    + [x] Include FocusCapture element
     + [ ] Use it for DropDownMenu
 - [ ] Drag and drop
 - [ ] Include SVG font?

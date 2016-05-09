@@ -46,7 +46,7 @@ class BaseDateTimePicker extends React.Component {
     utc:                    React.PropTypes.bool,
     todayName:              React.PropTypes.string,
     onKeyDown:              React.PropTypes.func,
-    cmds:                   React.PropTypes.array,
+    keyDown:                React.PropTypes.object,
     style:                  React.PropTypes.object,
     accentColor:            React.PropTypes.string,
     // Input HOC
@@ -161,9 +161,9 @@ class BaseDateTimePicker extends React.Component {
       accentColor,
     } = this.props;
     if (!time) return null;
-    let cmds;
+    let keyDown;
     if (!disabled && this.state.cmdRouting === 'time') {
-      cmds = focusable ? this.cmdsToPickers : this.props.cmds;
+      keyDown = this.props.keyDown;
     }
     const Component = analogTime ? TimePickerAnalog : TimePickerDigital;
     return (
@@ -173,7 +173,7 @@ class BaseDateTimePicker extends React.Component {
         onChange={this.onChange('time')}
         utc={this.utc}
         seconds={seconds}
-        cmds={cmds}
+        keyDown={keyDown}
         accentColor={accentColor}
       />
     );

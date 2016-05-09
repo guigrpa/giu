@@ -63,6 +63,8 @@ const MISC = {
   zErrorFloatDelta: 2,
 };
 
+const NULL_STRING = '__NULL__';
+
 // ==========================================
 // Scrollbar width
 // ==========================================
@@ -95,5 +97,6 @@ try {
 // ==========================================
 export {
   COLORS, KEYS, UNICODE, MISC,
+  NULL_STRING,
   getScrollbarWidth,
 };

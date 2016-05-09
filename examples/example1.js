@@ -512,45 +512,46 @@ class FormExample extends React.Component {
             Select: native, or with inline/dropdown ListPicker
             (keyboard-controlled, shortcuts, one/two-stage, autoscroll)
           </ExampleLabel>
+          <Select
+            value="a"
+            items={NORMAL_OPTIONS}
+          />
+          &nbsp;&nbsp;
+          <Select
+            value={null}
+            items={NORMAL_OPTIONS} allowNull
+            onChange={(_, value) => console.log(JSON.stringify(value))}
+          />
+          &nbsp;&nbsp;
+          <Select type="dropDownPicker"
+            value={null}
+            items={NORMAL_OPTIONS} allowNull
+            onChange={(_, value) => console.log(JSON.stringify(value))}
+          >
+            Example title
+          </Select>
           <div style={flexContainer('row')}>
-            <Select
-              value="a"
-              items={NORMAL_OPTIONS}
-            />
-            &nbsp;&nbsp;
-            <Select
-              value={null}
-              items={NORMAL_OPTIONS} allowNull
-              onChange={(_, value) => console.log(JSON.stringify(value))}
-            />
-            &nbsp;&nbsp;
             <Select type="inlinePicker"
-              value={null}
-              items={NORMAL_OPTIONS} allowNull
-              onChange={(_, value) => console.log(JSON.stringify(value))}
-            />
-          </div>
-        </div>
-        <br />
-        <div>
-          <ExampleLabel>ListPicker (focusable, keyboard-controlled, one/two-stage, autoscroll)</ExampleLabel>
-          <div style={flexContainer('row', { height: 150 })}>
-            <ListPicker
               items={NORMAL_OPTIONS}
               onChange={(_, value) => console.log(JSON.stringify(value))}
-              style={flexItem(1, { marginRight: 4 })} accentColor="gray"
+              styleOuter={flexItem(1, { marginRight: 4 })}
+              styleList={{height: 150}}
+              accentColor="gray"
             />
-            <ListPicker
+            <Select type="inlinePicker"
               items={TALL_OPTIONS}
+              value={33}
               onChange={(_, value) => console.log(JSON.stringify(value))}
               twoStageStyle 
-              style={flexItem(1, { marginRight: 4 })} 
+              styleOuter={flexItem(1, { marginRight: 4 })}
+              styleList={{height: 150}}
               accentColor="lightGray"
             />
-            <ListPicker
+            <Select type="inlinePicker"
               items={[]}
               onChange={(_, value) => console.log(JSON.stringify(value))}
-              style={flexItem(1)}
+              styleOuter={flexItem(1)}
+              styleList={{height: 150}}
             />
           </div>
         </div>

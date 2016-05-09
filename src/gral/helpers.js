@@ -3,11 +3,11 @@ import {
 }                           from '../gral/constants';
 
 function bindAll(_this, fnNames) {
-  for (const name of fnNames) {
+  fnNames.forEach(name => {
     /* eslint-disable no-param-reassign */
     _this[name] = _this[name].bind(_this);
     /* eslint-enable no-param-reassign */
-  }
+  });
 }
 
 function cancelEvent(ev) {
