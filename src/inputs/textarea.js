@@ -22,7 +22,7 @@ function getPlaceHolderText(val) {
 class Textarea extends React.Component {
   static propTypes = {
     onKeyUp:                React.PropTypes.func,
-    fieldStyle:             React.PropTypes.object,
+    styleField:             React.PropTypes.object,
     // Input HOC
     curValue:               React.PropTypes.any.isRequired,
     errors:                 React.PropTypes.array.isRequired,
@@ -57,7 +57,7 @@ class Textarea extends React.Component {
     const {
       curValue,
       registerOuterRef,
-      fieldStyle,
+      styleField,
     } = this.props;
     const otherProps = omit(this.props, PROP_KEYS);
     return (
@@ -66,14 +66,14 @@ class Textarea extends React.Component {
         style={style.taWrapper}
       >
         <div ref={c => { this.refTaPlaceholder = c; }}
-          style={merge(style.hiddenPlaceholder, fieldStyle)}
+          style={merge(style.hiddenPlaceholder, styleField)}
         >
           {getPlaceHolderText(curValue)}
         </div>
         <textarea ref={this.registerInputRef}
           value={curValue}
           onKeyUp={this.onKeyUp}
-          style={merge(style.field, fieldStyle)}
+          style={merge(style.field, styleField)}
           {...otherProps}
         />
       </div>

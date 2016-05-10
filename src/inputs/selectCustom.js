@@ -38,7 +38,7 @@ function toExternalValue(val) { return val !== NULL_STRING ? JSON.parse(val) : n
 // ==========================================
 // Component
 // ==========================================
-class Select extends React.Component {
+class SelectCustomBase extends React.Component {
   static propTypes = {
     disabled:               React.PropTypes.bool,
     items:                  React.PropTypes.array.isRequired,
@@ -79,7 +79,9 @@ class Select extends React.Component {
   }
 
   componentDidMount() {
-    warnFloats(this.constructor.name);
+    if (!this.props.inlinePicker) {
+      warnFloats(this.constructor.name);
+    }
     this.registerShortcuts();
   }
 
@@ -318,7 +320,7 @@ const style = {
 // ==========================================
 // Public API
 // ==========================================
-const SelectCustom = input(Select, {
+const SelectCustom = input(SelectCustomBase, {
   toInternalValue, toExternalValue,
   fIncludeFocusCapture: true,
   trappedKeys: [

@@ -16,7 +16,7 @@ const converters = {
 };
 
 const PROP_TYPES = {
-  fieldStyle:             React.PropTypes.object,
+  styleField:             React.PropTypes.object,
   // Input HOC
   curValue:               React.PropTypes.any.isRequired,
   errors:                 React.PropTypes.array.isRequired,
@@ -40,7 +40,7 @@ function createClass(name, inputType) {
     render() {
       const {
         curValue, registerFocusableRef,
-        fieldStyle,
+        styleField,
       } = this.props;
       const otherProps = omit(this.props, PROP_KEYS);
       return (
@@ -49,7 +49,7 @@ function createClass(name, inputType) {
           type={inputType}
           value={curValue}
           {...otherProps}
-          style={merge(style.field, fieldStyle)}
+          style={merge(style.field, styleField)}
         />
       );
     }
