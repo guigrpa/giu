@@ -34,13 +34,11 @@
 - [ ] Add alternative style to inputs (no borders, etc.) or make it simple to wrap the provided components and customise
 - [ ] RadioButton
 - [ ] Hints
-- [ ] Select:
-    + [x] Types: `native` (default), `inlinePicker`, `dropDownPicker`
-    + [ ] Use `inlinePicker` option
-    + [x] `listPicker`: remove focusability 
-    + [x] `listPicker`: remove `input` HOC 
+- [x] Select: `native`, `inlinePicker`, `dropDownPicker`
+- [ ] Select: scrollIntoView when opening float
 - [ ] DateInput:
-    + [ ] Types: `onlyField`, `onlyPicker` (hidden field, no float), `dropDownPicker` (default)
+    + [ ] Types: `onlyField`, `inlinePicker` (hidden field, no float), `dropDownPicker` (default) [they all have an input field]
+    + [ ] **With dropdown: not working**
     + [ ] `DateTimePicker`: remove focusability
     + [ ] `DateTimePicker`: remove `input` HOC
 - ListPicker:
@@ -50,10 +48,6 @@
     + [ ] Multiple-selection
 - [ ] ColorInput + ColorPicker
 - [ ] Design customisation strategy for theme constants (context? constant modification?) -- reduce to the minimum the style-related props (one color), so that we don't need to handle that!
-- [ ] Focusable HOC??
-    + [ ] Extract from input HOC
-    + [x] Include FocusCapture element
-    + [ ] Use it for DropDownMenu
 - [ ] Drag and drop
 - [ ] Include SVG font?
 - [ ] DOCS!

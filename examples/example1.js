@@ -50,7 +50,8 @@ const WIDE_OPTIONS = [
 // -----------------------------------------------
 // Examples
 // -----------------------------------------------
-const TEST = 0;
+const TEST = null;
+const EVERYTHING = true;
 const onChange = (ev, o) => console.log(o);
 const App = () => {
   let out;
@@ -111,19 +112,19 @@ const App = () => {
           <Floats />
           <Notifications />
           <div style={flexItem(1)}>
-            <ProgressExample />
-            <NotificationExample />
-            <MessageExample />
-            <IconExample />
-            <ButtonExample />
-            <HoverableExample />
-            <FlexExample />
-            <DropDownExample />
-            <ModalExample />
-            <ScrollingExample />
+            {EVERYTHING && <ProgressExample />}
+            {EVERYTHING && <NotificationExample />}
+            {EVERYTHING && <MessageExample />}
+            {EVERYTHING && <IconExample />}
+            {EVERYTHING && <ButtonExample />}
+            {EVERYTHING && <HoverableExample />}
+            {EVERYTHING && <FlexExample />}
+            {EVERYTHING && <DropDownExample />}
+            {EVERYTHING && <ModalExample />}
+            {EVERYTHING && <ScrollingExample />}
           </div>
           <div style={flexItem(1)}>
-            <FormExample />
+            {EVERYTHING && <FormExample />}
           </div>
         </div>
       );
@@ -191,8 +192,8 @@ const IconExample = () =>
 const ButtonExample = () =>
   <div style={style.example}>
     <ExampleLabel>Button</ExampleLabel>
-    <Button>Normal</Button>{' '}
-    <Button plain>Plain</Button>
+    <Button onClick={ () => alert('Clicked') }>Normal</Button>{' '}
+    <Button onClick={ () => alert('Clicked') } plain>Plain</Button>
   </div>;
 
 const HoverableExample = hoverable(({ hovering, onHoverStart, onHoverStop }) => (
@@ -527,9 +528,17 @@ class FormExample extends React.Component {
             value={null}
             items={NORMAL_OPTIONS} allowNull
             onChange={(_, value) => console.log(JSON.stringify(value))}
-          >
-            Example title
-          </Select>
+          />
+          <Select type="dropDownPicker"
+            value="a"
+            items={NORMAL_OPTIONS} allowNull
+            onChange={(_, value) => console.log(JSON.stringify(value))}
+          />
+          <Select type="dropDownPicker"
+            value={null}
+            items={TALL_OPTIONS} allowNull
+            onChange={(_, value) => console.log(JSON.stringify(value))}
+          />
           <div style={flexContainer('row')}>
             <Select type="inlinePicker"
               items={NORMAL_OPTIONS}

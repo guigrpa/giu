@@ -1,7 +1,10 @@
 import React                from 'react';
 import PureRenderMixin      from 'react-addons-pure-render-mixin';
 import { omit }             from 'timm';
-import { bindAll }          from '../gral/helpers';
+import {
+  bindAll,
+  cancelEvent,
+}                           from '../gral/helpers';
 import { COLORS, MISC }     from '../gral/constants';
 import { scrollIntoView }   from '../gral/visibility';
 import { isDark }           from '../gral/styles';
@@ -11,20 +14,22 @@ import {
   floatUpdate,
   warnFloats,
 }                           from '../components/floats';
+import FocusCapture         from '../components/focusCapture';
 
 const PROP_TYPES = {
   value:                  React.PropTypes.any,
-  errors:                 React.PropTypes.array,
-  cmds:                   React.PropTypes.array,
-  onChange:               React.PropTypes.func,
-  onFocus:                React.PropTypes.func,
-  onBlur:                 React.PropTypes.func,
-  disabled:               React.PropTypes.bool,
-  floatZ:                 React.PropTypes.number,
-  floatPosition:          React.PropTypes.string,
+  errors:                 React.PropTypes.array,  // also passed through
+  cmds:                   React.PropTypes.array,  // also passed through
+  disabled:               React.PropTypes.bool,   // also passed through
+  floatZ:                 React.PropTypes.number, // also passed through
+  floatPosition:          React.PropTypes.string, // also passed through
   errorZ:                 React.PropTypes.number,
   errorPosition:          React.PropTypes.string,
   errorAlign:             React.PropTypes.string,
+  onChange:               React.PropTypes.func,
+  onFocus:                React.PropTypes.func,
+  onBlur:                 React.PropTypes.func,
+  styleOuter:             React.PropTypes.object,
   // all others are passed through unchanged
 };
 const PROP_KEYS = Object.keys(PROP_TYPES);
@@ -35,6 +40,9 @@ function input(ComposedComponent, {
   toInternalValue = (o => o),
   toExternalValue = (o => o),
   valueAttr = 'value',
+  fIncludeFocusCapture = false,
+  trappedKeys = [],
+  className,
 } = {}) {
   return class extends React.Component {
     static displayName = `Input(${ComposedComponent.name})`;
@@ -49,20 +57,26 @@ function input(ComposedComponent, {
       this.state = {
         curValue: toInternalValue(props.value, props),
         fFocused: false,
+        keyDown: null,
       };
       bindAll(this, [
+        'registerOuterRef',
+        'registerFocusableRef',
+        'renderErrorFloat',
         'onChange',
         'onFocus',
         'onBlur',
-        'renderErrorFloat',
+        'onMouseDownWrapper',
+        'onKeyDown',
       ]);
     }
 
     componentWillReceiveProps(nextProps) {
-      const { value } = nextProps;
+      const { value, cmds } = nextProps;
       if (value !== this.props.value) {
         this.setState({ curValue: toInternalValue(value, nextProps) });
       }
+      if (cmds !== this.props.cmds) this.processCmds(cmds);
     }
 
     componentDidMount() {
@@ -73,11 +87,14 @@ function input(ComposedComponent, {
     componentDidUpdate(prevProps, prevState) {
       const { cmds, errors, value } = this.props;
       const { curValue } = this.state;
-      if (cmds && cmds !== prevProps.cmds) this.processCmds(cmds);
       if (errors !== prevProps.errors ||
           value !== prevProps.value ||
           curValue !== prevState.curValue) {
         this.renderErrorFloat();
+      }
+      if (this.pendingFocusBlur) {
+        this[this.pendingFocusBlur]();
+        this.pendingFocusBlur = null;
       }
     }
 
@@ -87,7 +104,8 @@ function input(ComposedComponent, {
     // Imperative API (via props or directly)
     // ==========================================
     processCmds(cmds) {
-      for (const cmd of cmds) {
+      if (cmds == null) return;
+      cmds.forEach(cmd => {
         switch (cmd.type) {
           case 'SET_VALUE':
             this.setState({ curValue: toInternalValue(cmd.value, this.props) });
@@ -95,12 +113,16 @@ function input(ComposedComponent, {
           case 'REVERT':
             this.setState({ curValue: toInternalValue(this.props.value, this.props) });
             break;
-          case 'FOCUS': this._focus(); break;
-          case 'BLUR':  this._blur();  break;
+          case 'FOCUS':
+            this.pendingFocusBlur = '_focus';
+            break;
+          case 'BLUR':
+            this.pendingFocusBlur = '_blur';
+            break;
           default:
             break;
         }
-      }
+      });
     }
 
     // Alternative to using the `onChange` prop (e.g. if we want to delegate
@@ -124,24 +146,52 @@ function input(ComposedComponent, {
     render() {
       const otherProps = omit(this.props, PROP_KEYS);
       // `cmds` are both used by this HOC and passed through
-      return (
+      let registerFocusableRef;
+      let onFocus;
+      let onBlur;
+      if (!fIncludeFocusCapture) {
+        registerFocusableRef = this.registerFocusableRef;
+        onFocus = this.onFocus;
+        onBlur = this.onBlur;
+      }
+      const el = (
         <ComposedComponent
-          registerOuterRef={c => { this.refInputOuter = c; }}
-          registerFocusableRef={c => { this.refFocusable = c; }}
+          registerOuterRef={this.registerOuterRef}
+          registerFocusableRef={registerFocusableRef}
           {...otherProps}
-          cmds={this.props.cmds}
-          disabled={this.props.disabled}
-          floatZ={this.props.floatZ}
-          floatPosition={this.props.floatPosition}
           curValue={this.state.curValue}
           errors={this.props.errors}
-          onChange={this.onChange}
-          onFocus={this.onFocus}
-          onBlur={this.onBlur}
-          onResizeOuter={this.renderErrorFloat}
+          cmds={this.props.cmds}
+          keyDown={this.state.keyDown}
+          disabled={this.props.disabled}
           fFocused={this.state.fFocused}
+          floatZ={this.props.floatZ}
+          floatPosition={this.props.floatPosition}
+          onChange={this.onChange}
+          onFocus={onFocus}
+          onBlur={onBlur}
+          onResizeOuter={this.renderErrorFloat}
         />
       );
+      if (fIncludeFocusCapture) {
+        const { styleOuter } = this.props;
+        return (
+          <span
+            className={className}
+            onMouseDown={this.onMouseDownWrapper}
+            style={styleOuter}
+          >
+            <FocusCapture
+              registerRef={this.registerFocusableRef}
+              onFocus={this.onFocus} onBlur={this.onBlur}
+              onKeyDown={this.onKeyDown}
+            />
+            {el}
+          </span>
+        );
+      } else {
+        return el;
+      }
     }
 
     renderErrorFloat() {
@@ -176,7 +226,7 @@ function input(ComposedComponent, {
           position,
           align: errorAlign,
           zIndex,
-          getAnchorNode: () => this.refInputOuter || this.refFocusable,
+          getAnchorNode: () => this.refOuter || this.refFocusable,
           children: this.renderErrors(errors),
         };
         if (this.errorFloatId == null) {
@@ -201,6 +251,9 @@ function input(ComposedComponent, {
     // ==========================================
     // Handlers
     // ==========================================
+    registerOuterRef(c) { this.refOuter = c; }
+    registerFocusableRef(c) { this.refFocusable = c; }
+
     onChange(ev, providedValue, providedProps) {
       const { onChange, disabled } = this.props;
       if (disabled) return;
@@ -222,7 +275,7 @@ function input(ComposedComponent, {
         this._blur();
         return;
       }
-      if (this.refInputOuter) scrollIntoView(this.refInputOuter);
+      if (this.refOuter) scrollIntoView(this.refOuter);
       this.setState({ fFocused: true });
       if (onFocus) onFocus(ev);
     }
@@ -232,6 +285,24 @@ function input(ComposedComponent, {
       this.setState({ fFocused: false });
       if (onBlur) onBlur(ev);
     }
+
+    onMouseDownWrapper(ev) {
+
+      // Always cancel mousedowns: they blur the component. If they are interesting,
+      // capture them at a lower level
+      cancelEvent(ev);
+
+      // If not focused, a mouse-down should focus the component and cancel the event
+      if (this.state.fFocused) return;
+      this._focus();
+    }
+
+    onKeyDown(ev) {
+      const { which, keyCode, metaKey, shiftKey, altKey, ctrlKey } = ev;
+      if (trappedKeys.indexOf(which) < 0) return;
+      this.setState({ keyDown: { which, keyCode, metaKey, shiftKey, altKey, ctrlKey } });
+    }
+
 
     // ==========================================
     // Helpers

@@ -1,6 +1,7 @@
 import React                from 'react';
 import {
   omit,
+  merge,
   set as timmSet,
 }                           from 'timm';
 import {
@@ -9,10 +10,13 @@ import {
 }                           from '../gral/helpers';
 import {
   COLORS, KEYS,
+  UNICODE,
   NULL_STRING,
 }                           from '../gral/constants';
+import {
+  flexContainer, flexItem,
+}                           from '../gral/styles';
 import input                from '../hocs/input';
-import focusCapture         from '../hocs/focusCapture';
 import {
   ListPicker,
   LIST_SEPARATOR,
@@ -23,6 +27,7 @@ import {
   floatUpdate,
   warnFloats,
 }                           from '../components/floats';
+import Icon                 from '../components/icon';
 
 function toInternalValue(val) { return val != null ? JSON.stringify(val) : NULL_STRING; }
 function toExternalValue(val) { return val !== NULL_STRING ? JSON.parse(val) : null; }
@@ -36,15 +41,20 @@ class Select extends React.Component {
     items:                  React.PropTypes.array.isRequired,
     allowNull:              React.PropTypes.bool,
     inlinePicker:           React.PropTypes.bool,
-    children:               React.PropTypes.object,
+    children:               React.PropTypes.any,
+    onClickItem:            React.PropTypes.func,
+    onCloseFloat:           React.PropTypes.func,
+    floatPosition:          React.PropTypes.string,
+    floatAlign:             React.PropTypes.string,
+    floatZ:                 React.PropTypes.number,
     styleList:              React.PropTypes.object,
     twoStageStyle:          React.PropTypes.bool,
     accentColor:            React.PropTypes.string,
     // Input HOC
     curValue:               React.PropTypes.string.isRequired,
+    onChange:               React.PropTypes.func.isRequired,
     registerOuterRef:       React.PropTypes.func.isRequired,
     fFocused:               React.PropTypes.bool.isRequired,
-    // FocusCapture HOC
     keyDown:                React.PropTypes.object,
   };
   static defaultProps = {
@@ -56,6 +66,8 @@ class Select extends React.Component {
     this.state = { fFloat: false };
     bindAll(this, [
       'registerTitleRef',
+      'onMouseDownTitle',
+      'onClickItem',
     ]);
   }
 
@@ -84,44 +96,47 @@ class Select extends React.Component {
   // ==========================================
   render() {
     if (this.props.inlinePicker) {
-      return this.renderInline();
+      return this.renderPicker();
+    } else if (this.props.children) {
+      return this.renderProvidedTitle();
     } else {
-      return this.renderTitle();
+      return this.renderDefaultTitle();
     }
   }
 
-  renderTitle() {
-    const {
-      children,
-    } = this.props;
+  renderProvidedTitle() {
     return (
-      <div ref={this.registerTitleRef}>
-        {children}
-      </div>
+      <span ref={this.registerTitleRef}
+        className="giu-select-drop-down-picker"
+      >
+        {this.props.children}
+      </span>
     );
   }
 
-  renderInline() {
-    const {
-      registerOuterRef,
-      curValue, onChange,
-      disabled, fFocused,
-      styleList,
-      twoStageStyle, accentColor,
-    } = this.props;
+  renderDefaultTitle() {
+    const { items, curValue } = this.props;
+    const value = curValue === NULL_STRING ? UNICODE.nbsp : curValue;
+    let label = UNICODE.nbsp;
+    if (curValue !== NULL_STRING) {
+      for (let i = 0; i < this.items.length; i++) {
+        if (this.items[i].value === curValue) {
+          label = this.items[i].label;
+          break;
+        }
+      }
+    }
+    const caretIcon = this.state.fFloat ? 'caret-up' : 'caret-down';
     return (
-      <ListPicker
-        registerOuterRef={registerOuterRef}
-        items={this.items}
-        curValue={curValue}
-        onChange={onChange}
-        keyDown={this.keyDown}
-        disabled={disabled}
-        fFocused={fFocused}
-        style={styleList}
-        twoStageStyle={twoStageStyle}
-        accentColor={accentColor}
-      />
+      <span ref={this.registerTitleRef}
+        className="giu-select-drop-down-picker"
+        onMouseDown={this.onMouseDownTitle}
+        style={style.title(this.props)}
+      >
+        {label}
+        <span style={flexItem(1)} />
+        <Icon icon={caretIcon} style={style.caret} />
+      </span>
     );
   }
 
@@ -133,6 +148,7 @@ class Select extends React.Component {
     if (!fFloat && this.floatId != null) {
       floatDelete(this.floatId);
       this.floatId = null;
+      this.props.onCloseFloat && this.props.onCloseFloat();
       return;
     }
 
@@ -157,18 +173,23 @@ class Select extends React.Component {
 
   renderPicker() {
     const {
+      inlinePicker,
+      registerOuterRef,
       curValue, onChange,
-      disabled,
+      disabled, fFocused,
       styleList,
       twoStageStyle, accentColor,
     } = this.props;
     return (
       <ListPicker
+        registerOuterRef={inlinePicker ? registerOuterRef : undefined}
         items={this.items}
         curValue={curValue}
         onChange={onChange}
+        onClickItem={this.onClickItem}
         keyDown={this.keyDown}
         disabled={disabled}
+        fFocused={inlinePicker && fFocused}
         style={styleList}
         twoStageStyle={twoStageStyle}
         accentColor={accentColor}
@@ -177,9 +198,25 @@ class Select extends React.Component {
   }
 
   // ==========================================
-  // Handlers
+  // Event handlers
   // ==========================================
-  registerTitleRef(c) { this.refTitle = c; }
+  registerTitleRef(c) {
+    this.refTitle = c;
+    this.props.registerOuterRef(c);
+  }
+
+  // If the menu is not focused, ignore it: it will be handled by the `input` HOC.
+  // ...but if it is focused, we want to toggle it
+  onMouseDownTitle(ev) {
+    if (!this.props.fFocused) return;
+    this.setState({ fFloat: !this.state.fFloat });
+  }
+
+  onClickItem(ev, nextValue) {
+    const { inlinePicker } = this.props;
+    if (!inlinePicker) this.setState({ fFloat: false });
+    this.props.onClickItem && this.props.onClickItem(ev, nextValue);
+  }
 
   // ==========================================
   // Helpers
@@ -211,13 +248,37 @@ class Select extends React.Component {
 // ==========================================
 // Styles
 // ==========================================
-// const style = {};
+const style = {
+  titleBase: flexContainer('row', {
+    display: 'inline-flex',
+    border: `1px solid ${COLORS.line}`,
+    padding: '1px 2px',
+    minWidth: 40,
+    cursor: 'pointer',
+  }),
+  title: ({ fFocused }) => {
+    let out = style.titleBase;
+    if (fFocused) {
+      out = merge(out, {
+        boxShadow: COLORS.focusGlow,
+        border: `1px solid ${COLORS.focus}`,
+      });
+    }
+    return out;
+  },
+  caret: {
+    marginLeft: 15,
+    marginRight: 3,
+    marginTop: 1,
+  },
+};
 
 // ==========================================
 // Public API
 // ==========================================
-const SelectWithFocusCapture = focusCapture(Select, {
-  className: 'giu-select-custom',
+export default input(Select, {
+  toInternalValue, toExternalValue,
+  fIncludeFocusCapture: true,
   trappedKeys: [
     KEYS.esc,
     // For ListPicker
@@ -225,7 +286,5 @@ const SelectWithFocusCapture = focusCapture(Select, {
     KEYS.home, KEYS.end,
     KEYS.return, KEYS.del, KEYS.backspace,
   ],
-});
-export default input(SelectWithFocusCapture, {
-  toInternalValue, toExternalValue,
+  className: 'giu-select-custom',
 });

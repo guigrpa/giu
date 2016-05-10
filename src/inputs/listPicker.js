@@ -72,12 +72,7 @@ class BaseListPicker extends React.Component {
   componentWillReceiveProps(nextProps) {
     const { items, keyDown } = nextProps;
     if (items !== this.props.items) this.processKeyShortcuts(nextProps);
-    if (keyDown && keyDown !== this.props.keyDown) {
-      this.doKeyDown(keyDown);
-      this.fScrollSelectedIntoView = true;
-    } else {
-      this.fScrollSelectedIntoView = false;
-    }
+    if (keyDown && keyDown !== this.props.keyDown) this.doKeyDown(keyDown);
   }
 
   componentDidMount() {
@@ -85,8 +80,8 @@ class BaseListPicker extends React.Component {
   }
 
   componentDidUpdate(prevProps) {
-    if (this.fScrollSelectedIntoView) {
-      this.fScrollSelectedIntoView = false;
+    const { curValue } = this.props;
+    if (curValue != null && curValue !== prevProps.curValue) {
       this.scrollSelectedIntoView();
     }
   }
@@ -144,6 +139,7 @@ class BaseListPicker extends React.Component {
         id={itemValue}
         onMouseEnter={onHoverStart}
         onMouseLeave={onHoverStop}
+        onMouseDown={cancelEvent}
         onMouseUp={this.onClickItem}
         style={merge(style.item(styleProps), styleItem)}
       >
@@ -224,8 +220,8 @@ class BaseListPicker extends React.Component {
   selectMoveTo(idx) {
     const { items } = this.props;
     if (!items.length) return;
-    const curValue = items[idx].value;
-    this.props.onChange(null, curValue);
+    const nextValue = items[idx].value;
+    this.props.onChange(null, nextValue);
   }
 
   getCurIdx() {
@@ -296,6 +292,7 @@ const style = {
       color = COLORS[isDark(backgroundColor) ? 'lightText' : 'darkText'];
     }
     return flexContainer('row', {
+      alignItems: 'baseline',
       backgroundColor, color, border,
       cursor: 'default',
       whiteSpace: 'nowrap',

@@ -29,14 +29,16 @@ import {
 // Internal value: `String` (introduced by the user, copied & pasted, via dropdown...)
 // External<->internal conversion uses props, since there are a number of cases
 const NULL_VALUE = '';
-function toInternalValue(extDate, { date = true, time, seconds, utc }) {
+function toInternalValue(extDate, props) {
   if (extDate == null) return NULL_VALUE;
+  const { date, time, seconds, utc } = merge(props, DEFAULT_PROPS);
   const mom = moment(extDate);
   if (getUtcFlag(date, time, utc)) mom.utc();
   return mom.format(dateTimeFormat(date, time, seconds));
 }
-function toExternalValue(str, { date = true, time, utc }) {
+function toExternalValue(str, props) {
   if (str === NULL_VALUE) return null;
+  const { date, time, utc } = merge(props, DEFAULT_PROPS);
   const fUtc = getUtcFlag(date, time, utc);
   let mom;
   if (!date) {
@@ -54,11 +56,26 @@ function toExternalValue(str, { date = true, time, utc }) {
   return mom.isValid() ? mom.toDate() : null;
 }
 
+const DEFAULT_PROPS = {
+  type:                   'dropDownPicker',
+  date:                   true,
+  time:                   false,
+  analogTime:             true,
+  seconds:                false,
+  todayName:              'Today',
+  accentColor:            COLORS.accent,
+};
+
 // ==========================================
 // Component
 // ==========================================
 class DateInput extends React.Component {
   static propTypes = {
+    type:                   React.PropTypes.oneOf([
+      'onlyField',
+      'inlinePicker',
+      'dropDownPicker',
+    ]),
     disabled:               React.PropTypes.bool,
     placeholder:            React.PropTypes.string,
     date:                   React.PropTypes.bool,
@@ -84,14 +101,7 @@ class DateInput extends React.Component {
     onChange:               React.PropTypes.func.isRequired,
     // all others are passed through unchanged
   };
-  static defaultProps = {
-    date:                   true,
-    time:                   false,
-    analogTime:             true,
-    seconds:                false,
-    todayName:              'Today',
-    accentColor:            COLORS.accent,
-  };
+  static defaultProps = DEFAULT_PROPS;
 
   constructor(props) {
     super(props);
