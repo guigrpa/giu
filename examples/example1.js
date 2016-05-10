@@ -363,7 +363,7 @@ class ModalExample extends React.Component {
 
 const ScrollingExample = () =>
   <div style={style.example}>
-    <ExampleLabel>Scrollable with floats</ExampleLabel>
+    <ExampleLabel>Scrollable (with translateZ(0)) with floats</ExampleLabel>
     <div
       onScroll={floatReposition}
       style={style.scrolling}
@@ -698,6 +698,7 @@ const style = {
   scrolling: {
     maxHeight: 120,
     overflow: 'auto',
+    transform: 'translateZ(0)'
   },
   hoverable: hovering => ({
     backgroundColor: hovering ? '#ccc' : undefined,
