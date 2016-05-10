@@ -43,6 +43,7 @@ class BaseListPicker extends React.Component {
     onChange:               React.PropTypes.func.isRequired,
     onClickItem:            React.PropTypes.func,
     fFocused:               React.PropTypes.bool,
+    fFloating:              React.PropTypes.bool,
     style:                  React.PropTypes.object,
     styleItem:              React.PropTypes.object,
     twoStageStyle:          React.PropTypes.bool,
@@ -75,8 +76,14 @@ class BaseListPicker extends React.Component {
     if (keyDown && keyDown !== this.props.keyDown) this.doKeyDown(keyDown);
   }
 
+  // For floating pickers, we need to wait until the float update cycle has finished.
   componentDidMount() {
-    this.scrollSelectedIntoView({ topAncestor: this.refOuter });
+    const fnScroll = () => this.scrollSelectedIntoView({ topAncestor: this.refOuter });
+    if (this.props.fFloating) {
+      setTimeout(fnScroll);
+    } else {
+      fnScroll();
+    }
   }
 
   componentDidUpdate(prevProps) {
@@ -159,7 +166,7 @@ class BaseListPicker extends React.Component {
   // ==========================================
   // Event handlers
   // ==========================================
-  registerOuterRef(c) { 
+  registerOuterRef(c) {
     this.refOuter = c;
     this.props.registerOuterRef && this.props.registerOuterRef(c);
   }
@@ -259,6 +266,7 @@ const style = {
     const out = {
       paddingTop: 3,
       paddingBottom: 3,
+      maxHeight: 'inherit',
       overflowY: 'auto',
       border: `1px solid ${COLORS.line}`,
     };

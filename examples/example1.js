@@ -535,7 +535,7 @@ class FormExample extends React.Component {
             onChange={(_, value) => console.log(JSON.stringify(value))}
           />
           <Select type="dropDownPicker"
-            value={null}
+            value={28}
             items={TALL_OPTIONS} allowNull
             onChange={(_, value) => console.log(JSON.stringify(value))}
           />

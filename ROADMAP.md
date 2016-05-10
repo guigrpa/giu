@@ -35,7 +35,6 @@
 - [ ] RadioButton
 - [ ] Hints
 - [x] Select: `native`, `inlinePicker`, `dropDownPicker`
-- [ ] Select: scrollIntoView when opening float
 - [ ] DateInput:
     + [ ] Types: `onlyField`, `inlinePicker` (hidden field, no float), `dropDownPicker` (default) [they all have an input field]
     + [ ] **With dropdown: not working**

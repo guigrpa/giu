@@ -36,6 +36,7 @@ function reducer(state0 = INITIAL_STATE, action) {
   switch (action.type) {
     case 'FLOAT_ADD':
       state = timmSet(state, 'floats', addLast(state.floats, action.pars));
+      state = timmSet(state, 'cntReposition', state.cntReposition + 1);
       break;
     case 'FLOAT_DELETE':
       id = action.id;
@@ -118,10 +119,6 @@ let fFloatsMounted = false;
 const isFloatsMounted = () => fFloatsMounted;
 
 class Floats extends React.Component {
-  static propTypes = {
-    floats:                 React.PropTypes.array,
-    cntReposition:          React.PropTypes.number,
-  };
 
   constructor(props) {
     super(props);
@@ -130,10 +127,8 @@ class Floats extends React.Component {
       'forceUpdate',
       'renderFloat',
     ]);
-    if (props.floats == null) {
-      if (!store) initStore();
-      this.storeUnsubscribe = store.subscribe(this.forceUpdate);
-    }
+    if (!store) initStore();
+    this.storeUnsubscribe = store.subscribe(this.forceUpdate);
   }
 
   componentWillMount() {
@@ -146,12 +141,18 @@ class Floats extends React.Component {
     if (this.storeUnsubscribe) this.storeUnsubscribe();
   }
 
-  componentDidMount() { this.repositionFloats(); }
-  componentDidUpdate() { this.repositionFloats(); }
+  componentDidUpdate() {
+    const { curState, prevState } = this;
+    if (curState.cntReposition !== prevState.cntReposition) {
+      this.repositionFloats();
+    }
+  }
 
   // ==========================================
   render() {
-    this.floats = this.props.floats || store.getState().floats;
+    this.prevState = this.curState;
+    this.curState = store.getState();
+    this.floats = this.curState.floats;
     return (
       <div
         className="giu-floats"

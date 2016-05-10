@@ -1,13 +1,9 @@
 import React                from 'react';
 import {
-  omit,
   merge,
   set as timmSet,
 }                           from 'timm';
-import {
-  bindAll,
-  cancelEvent,
-}                           from '../gral/helpers';
+import { bindAll }          from '../gral/helpers';
 import {
   COLORS, KEYS,
   UNICODE,
@@ -95,13 +91,15 @@ class Select extends React.Component {
   // Render
   // ==========================================
   render() {
+    let out;
     if (this.props.inlinePicker) {
-      return this.renderPicker();
+      out = this.renderPicker();
     } else if (this.props.children) {
-      return this.renderProvidedTitle();
+      out = this.renderProvidedTitle();
     } else {
-      return this.renderDefaultTitle();
+      out = this.renderDefaultTitle();
     }
+    return out;
   }
 
   renderProvidedTitle() {
@@ -115,8 +113,7 @@ class Select extends React.Component {
   }
 
   renderDefaultTitle() {
-    const { items, curValue } = this.props;
-    const value = curValue === NULL_STRING ? UNICODE.nbsp : curValue;
+    const { curValue } = this.props;
     let label = UNICODE.nbsp;
     if (curValue !== NULL_STRING) {
       for (let i = 0; i < this.items.length; i++) {
@@ -190,6 +187,7 @@ class Select extends React.Component {
         keyDown={this.keyDown}
         disabled={disabled}
         fFocused={inlinePicker && fFocused}
+        fFloating={!inlinePicker}
         style={styleList}
         twoStageStyle={twoStageStyle}
         accentColor={accentColor}
@@ -207,7 +205,7 @@ class Select extends React.Component {
 
   // If the menu is not focused, ignore it: it will be handled by the `input` HOC.
   // ...but if it is focused, we want to toggle it
-  onMouseDownTitle(ev) {
+  onMouseDownTitle() {
     if (!this.props.fFocused) return;
     this.setState({ fFloat: !this.state.fFloat });
   }

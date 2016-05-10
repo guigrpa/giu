@@ -28,7 +28,7 @@ class DropDownMenu extends React.Component {
     this.state = {
       fFocused: false,
       cmds: null,
-    }
+    };
     bindAll(this, [
       'onMouseDownTitle',
       'onClickItem',
@@ -44,7 +44,7 @@ class DropDownMenu extends React.Component {
   render() {
     const props = omit(this.props, PROP_KEYS);
     return (
-      <Select 
+      <Select
         type="dropDownPicker"
         cmds={this.state.cmds}
         onClickItem={this.onClickItem}
@@ -64,7 +64,7 @@ class DropDownMenu extends React.Component {
     const { fFocused } = this.state;
     const styleProps = { fFocused, accentColor };
     return (
-      <div 
+      <div
         onMouseDown={this.onMouseDownTitle}
         style={style.title(styleProps)}
       >
@@ -78,7 +78,7 @@ class DropDownMenu extends React.Component {
   // ==========================================
   // If the menu is not focused, ignore it: it will be handled by the `input` HOC.
   // ...but if it is focused, we want it to close
-  onMouseDownTitle(ev) {
+  onMouseDownTitle() {
     if (!this.state.fFocused) return;
     this.closeMenu();
   }
@@ -94,10 +94,10 @@ class DropDownMenu extends React.Component {
     this.closeMenu();
   }
 
-  onFocus(ev) { this.setState({ fFocused: true }); }
+  onFocus() { this.setState({ fFocused: true }); }
 
   // On blur, remove the stored value from the select
-  onBlur(ev) {
+  onBlur() {
     this.setState({
       fFocused: false,
       cmds: [{ type: 'REVERT' }],
