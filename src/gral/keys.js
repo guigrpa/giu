@@ -6,28 +6,28 @@ const IS_MAC = /Mac|iPod|iPhone|iPad/.test(navigator.platform);
 
 const shortcuts = {};
 
-function getKey({ keyCode, altKey, metaKey, ctrlKey, shiftKey }) {
+function getHash({ keyCode, altKey, metaKey, ctrlKey, shiftKey }) {
   return `${keyCode},alt=${!!altKey},meta=${!!metaKey},ctrl=${!!ctrlKey},shift=${!!shiftKey}`;
 }
 
-function registerShortcut(shortcut, cb) {
-  const entry = {};
-  entry.keyCodes = shortcut.split('+').map(extName0 => {
+function createShortcut(keySpec) {
+  const shortcut = {};
+  shortcut.keyCodes = keySpec.split('+').map(extName0 => {
     let extName = extName0;
     if (extName === 'mod') extName = IS_MAC ? 'cmd' : 'ctrl';
     return keycode(extName);
   });
-  entry.keyNames = entry.keyCodes.map(keyCode => keycode(keyCode));
-  for (const keyName of entry.keyNames) {
+  shortcut.keyNames = shortcut.keyCodes.map(keyCode => keycode(keyCode));
+  for (const keyName of shortcut.keyNames) {
     switch (keyName) {
-      case 'alt':       entry.altKey = true;  break;
-      case 'command':   entry.metaKey = true; break;
-      case 'ctrl':      entry.ctrlKey = true; break;
-      case 'shift':     entry.shiftKey = true; break;
-      default:          entry.keyCode = keycode(keyName); break;
+      case 'alt':       shortcut.altKey = true;  break;
+      case 'command':   shortcut.metaKey = true; break;
+      case 'ctrl':      shortcut.ctrlKey = true; break;
+      case 'shift':     shortcut.shiftKey = true; break;
+      default:          shortcut.keyCode = keycode(keyName); break;
     }
   }
-  entry.description = entry.keyNames.map(keyName => {
+  shortcut.description = shortcut.keyNames.map(keyName => {
     let c;
     switch (keyName) {
       case 'alt':       c = IS_MAC ? UNICODE.altKey : 'Alt-'; break;
@@ -44,20 +44,22 @@ function registerShortcut(shortcut, cb) {
     }
     return c;
   }).join('');
-  entry.cb = cb;
-  entry.key = getKey(entry);
-  shortcuts[entry.key] = entry;
-  return entry;
+  shortcut.hash = getHash(shortcut);
+  return shortcut;
 }
 
-function unregisterShortcut(shortcut) { delete shortcuts[shortcut.key]; }
+function registerShortcut(shortcut, cb) {
+  shortcuts[shortcut.hash] = cb;
+}
+
+function unregisterShortcut(shortcut) { delete shortcuts[shortcut.hash]; }
 
 function onKeyDown(ev) {
-  const key = getKey(ev);
-  const shortcut = shortcuts[key];
+  const hash = getHash(ev);
+  const shortcut = shortcuts[hash];
   if (!shortcut) return;
   cancelEvent(ev);
-  shortcut.cb && shortcut.cb();
+  shortcut(ev);
 }
 
 try {
@@ -65,6 +67,7 @@ try {
 } catch (err) { /* ignore */ }
 
 export {
+  createShortcut,
   registerShortcut,
   unregisterShortcut,
 };

@@ -4,7 +4,7 @@ require('babel-polyfill');
 import {
   Select, TextInput, NumberInput, DateInput, Textarea, Checkbox,
   FileInput,
-  ListPicker, LIST_SEPARATOR,
+  LIST_SEPARATOR,
   DateTimePicker,
   DropDownMenu,
   Button,
@@ -50,7 +50,7 @@ const WIDE_OPTIONS = [
 // -----------------------------------------------
 // Examples
 // -----------------------------------------------
-const TEST = null;
+const TEST = 0;
 const EVERYTHING = true;
 const onChange = (ev, o) => console.log(o);
 const App = () => {

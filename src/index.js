@@ -10,10 +10,8 @@ export DateInput        from './inputs/dateInput';
 export Textarea         from './inputs/textarea';
 export Checkbox         from './inputs/checkbox';
 export FileInput        from './inputs/fileInput';
-export {
-  ListPicker,
-  LIST_SEPARATOR,
-}                       from './inputs/listPicker';
+export { LIST_SEPARATOR } from './inputs/selectCustom';
+// REMOVE!!!
 export {
   DateTimePicker,
 }                       from './inputs/dateTimePicker';

@@ -19,17 +19,9 @@ import {
   flexContainer,
   flexItem,
 }                           from '../gral/styles';
-import {
-  registerShortcut,
-  unregisterShortcut,
-}                           from '../gral/keys';
 import hoverable            from '../hocs/hoverable';
 
 const LIST_SEPARATOR_KEY = '__SEPARATOR__';
-const LIST_SEPARATOR = {
-  value: LIST_SEPARATOR_KEY,
-  label: LIST_SEPARATOR_KEY,
-};
 
 // ==========================================
 // Component
@@ -71,10 +63,8 @@ class BaseListPicker extends React.Component {
     ]);
   }
 
-  componentWillMount() { this.processKeyShortcuts(this.props); }
   componentWillReceiveProps(nextProps) {
-    const { items, keyDown } = nextProps;
-    if (items !== this.props.items) this.processKeyShortcuts(nextProps);
+    const { keyDown } = nextProps;
     if (keyDown && keyDown !== this.props.keyDown) this.doKeyDown(keyDown);
   }
 
@@ -94,8 +84,6 @@ class BaseListPicker extends React.Component {
       this.scrollSelectedIntoView();
     }
   }
-
-  componentWillUnmount() { this.unregisterShortcuts(); }
 
   // ==========================================
   // Render
@@ -124,7 +112,7 @@ class BaseListPicker extends React.Component {
   }
 
   renderItem(item, idx) {
-    const { value: itemValue, label } = item;
+    const { value: itemValue, label, shortcuts } = item;
     if (label === LIST_SEPARATOR_KEY) {
       return (
         <div key={`separator_${idx}`} ref={c => { this.refItems[idx] = c; }}
@@ -143,7 +131,7 @@ class BaseListPicker extends React.Component {
       fSelected: curValue === itemValue,
       twoStageStyle, accentColor,
     };
-    const keyEl = this.renderKeys(idx);
+    const keyEl = this.renderKeys(shortcuts);
     return (
       <div key={itemValue} ref={c => { this.refItems[idx] = c; }}
         id={itemValue}
@@ -160,10 +148,11 @@ class BaseListPicker extends React.Component {
     );
   }
 
-  renderKeys(idx) {
-    const shortcuts = this.keyShortcuts[idx].map(o => o.description).join(', ');
+  renderKeys(shortcuts) {
     if (!shortcuts) return null;
-    return <span style={style.shortcut}>{shortcuts}</span>;
+    const desc = shortcuts.map(o => o.description).join(', ');
+    if (!desc) return null;
+    return <span style={style.shortcut}>{desc}</span>;
   }
 
   // ==========================================
@@ -254,6 +243,7 @@ class BaseListPicker extends React.Component {
     scrollIntoView(this.refItems[idx], options);
   }
 
+  /*
   processKeyShortcuts(props) {
     this.keyShortcuts = props.items.map((item, idx) => {
       let keys = item.keys || [];
@@ -263,11 +253,7 @@ class BaseListPicker extends React.Component {
       }));
     });
   }
-
-  unregisterShortcuts() {
-    this.keyShortcuts.forEach(itemShortcuts =>
-      itemShortcuts.forEach(unregisterShortcut));
-  }
+  */
 }
 
 // ==========================================
@@ -338,5 +324,5 @@ const ListPicker = hoverable(BaseListPicker);
 
 export {
   ListPicker,
-  LIST_SEPARATOR,
+  LIST_SEPARATOR_KEY,
 };

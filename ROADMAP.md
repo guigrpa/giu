@@ -25,27 +25,24 @@
 - [x] DateTimePicker: DatePicker, TimePickerDigital, TimePickerAnalogue
 - [x] DateInput
 - [x] FileInput
+- [x] Select: `native`, `inlinePicker`, `dropDownPicker`
+- [x] Dropdown menu: should register its keys
+- [ ] 
+- [ ] DateInput:
+    + [ ] Types: `onlyField`, `inlinePicker` (hidden field, no float), `dropDownPicker` (default) [they all have an input field]
+    + [ ] `DateTimePicker`: remove focusability
+    + [ ] `DateTimePicker`: remove `input` HOC
 - [ ] Add validation hook to inputs; return an error or an array of errors
 - [ ] Make input styles more homogeneous, minimal:
     + [ ] Disabled means no border (not dimmed), no reaction to clicks, no `pointer` cursor, obviously not focusable
     + [x] Input borders, font family, font size, padding, etc.
-- [ ] Dropdown menu: should keep its keys registered, no matter whether the listpicker is open or not (add `keepRegistered` prop to ListPicker, default to `false` and set to `true` by DropDownMenu)
+- [ ] RadioButton
+
+- [ ] ColorInput + ColorPicker
+- [ ] Hints
 - [ ] Pressing enter on button opening a modal also dismisses the modal!
 - [ ] Add alternative style to inputs (no borders, etc.) or make it simple to wrap the provided components and customise
-- [ ] RadioButton
-- [ ] Hints
-- [x] Select: `native`, `inlinePicker`, `dropDownPicker`
-- [ ] DateInput:
-    + [ ] Types: `onlyField`, `inlinePicker` (hidden field, no float), `dropDownPicker` (default) [they all have an input field]
-    + [ ] **With dropdown: not working**
-    + [ ] `DateTimePicker`: remove focusability
-    + [ ] `DateTimePicker`: remove `input` HOC
-- ListPicker:
-    + [ ] [m] Make separators span the whole horiz. extension
-    + [x] Automatically show item
-    + [x] Show keyboard shortcuts (cmd-X, etc.)
-    + [ ] Multiple-selection
-- [ ] ColorInput + ColorPicker
+- [ ] Multi-selection ListPicker:
 - [ ] Design customisation strategy for theme constants (context? constant modification?) -- reduce to the minimum the style-related props (one color), so that we don't need to handle that!
 - [ ] Drag and drop
 - [ ] Include SVG font?

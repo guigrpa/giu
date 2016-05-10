@@ -1,8 +1,5 @@
 import React                from 'react';
-import {
-  merge,
-  set as timmSet,
-}                           from 'timm';
+import { merge }            from 'timm';
 import { bindAll }          from '../gral/helpers';
 import {
   COLORS, KEYS,
@@ -12,10 +9,15 @@ import {
 import {
   flexContainer, flexItem,
 }                           from '../gral/styles';
+import {
+  createShortcut,
+  registerShortcut,
+  unregisterShortcut,
+}                           from '../gral/keys';
 import input                from '../hocs/input';
 import {
   ListPicker,
-  LIST_SEPARATOR,
+  LIST_SEPARATOR_KEY,
 }                           from '../inputs/listPicker';
 import {
   floatAdd,
@@ -24,6 +26,11 @@ import {
   warnFloats,
 }                           from '../components/floats';
 import Icon                 from '../components/icon';
+
+const LIST_SEPARATOR = {
+  value: LIST_SEPARATOR_KEY,
+  label: LIST_SEPARATOR_KEY,
+};
 
 function toInternalValue(val) { return val != null ? JSON.stringify(val) : NULL_STRING; }
 function toExternalValue(val) { return val !== NULL_STRING ? JSON.parse(val) : null; }
@@ -71,12 +78,16 @@ class Select extends React.Component {
     this.prepareItems(this.props.items, this.props.allowNull);
   }
 
-  componentDidMount() { warnFloats(this.constructor.name); }
+  componentDidMount() {
+    warnFloats(this.constructor.name);
+    this.registerShortcuts();
+  }
 
   componentWillReceiveProps(nextProps) {
     const { keyDown, items, allowNull, fFocused } = nextProps;
     if (keyDown !== this.props.keyDown) this.processKeyDown(keyDown);
     if (items !== this.props.items || allowNull !== this.props.allowNull) {
+      this.unregisterShortcuts();
       this.prepareItems(items, allowNull);
     }
     if (fFocused !== this.props.fFocused) {
@@ -84,8 +95,14 @@ class Select extends React.Component {
     }
   }
 
-  componentDidUpdate() { this.renderFloat(); }
-  componentWillUnmount() { floatDelete(this.floatId); }
+  componentDidUpdate() {
+    this.renderFloat();
+  }
+
+  componentWillUnmount() {
+    floatDelete(this.floatId);
+    this.unregisterShortcuts();
+  }
 
   // ==========================================
   // Render
@@ -228,18 +245,45 @@ class Select extends React.Component {
     this.keyDown = keyDown;
   }
 
-  prepareItems(items, allowNull) {
+  prepareItems(rawItems, allowNull) {
     this.items = [];
-    if (allowNull) this.items.push({ value: NULL_STRING, label: '' });
-    items.forEach(item => {
+    if (allowNull) {
+      this.items.push({
+        value: NULL_STRING,
+        label: '',
+        shortcuts: [],
+      });
+    }
+    rawItems.forEach(item => {
       const { value } = item;
-      if (value === LIST_SEPARATOR.value) {
-        this.items.push(item);
+      if (value === LIST_SEPARATOR_KEY) {
+        this.items.push({
+          value: LIST_SEPARATOR_KEY,
+          label: LIST_SEPARATOR_KEY,
+          shortcuts: [],
+        });
         return;
       }
-      const newItem = timmSet(item, 'value', toInternalValue(value));
-      this.items.push(newItem);
+      let keys = item.keys || [];
+      if (!Array.isArray(keys)) keys = [keys];
+      this.items.push(merge(item, {
+        value: toInternalValue(value),
+        shortcuts: keys.map(createShortcut),
+      }));
     });
+  }
+
+  registerShortcuts() {
+    this.items.forEach(item => item.shortcuts.forEach(shortcut => {
+      registerShortcut(shortcut, ev => {
+        this.props.onChange(ev, item.value);
+        this.onClickItem(ev, item.value);
+      });
+    }));
+  }
+
+  unregisterShortcuts() {
+    this.items.forEach(item => item.shortcuts.forEach(unregisterShortcut));
   }
 }
 
@@ -274,7 +318,7 @@ const style = {
 // ==========================================
 // Public API
 // ==========================================
-export default input(Select, {
+const SelectCustom = input(Select, {
   toInternalValue, toExternalValue,
   fIncludeFocusCapture: true,
   trappedKeys: [
@@ -286,3 +330,8 @@ export default input(Select, {
   ],
   className: 'giu-select-custom',
 });
+
+export {
+  SelectCustom,
+  LIST_SEPARATOR,
+};

@@ -2,7 +2,7 @@ import React                from 'react';
 import { omit }             from 'timm';
 import { bindAll }          from '../gral/helpers';
 import SelectNative         from '../inputs/selectNative';
-import SelectCustom         from '../inputs/selectCustom';
+import { SelectCustom }     from '../inputs/selectCustom';
 
 // ==========================================
 // Component

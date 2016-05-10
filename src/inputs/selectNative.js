@@ -2,7 +2,7 @@ import React                from 'react';
 import { omit }             from 'timm';
 import { NULL_STRING }      from '../gral/constants';
 import input                from '../hocs/input';
-import { LIST_SEPARATOR }   from '../inputs/listPicker';
+import { LIST_SEPARATOR_KEY } from '../inputs/listPicker';
 
 function toInternalValue(val) { return val != null ? JSON.stringify(val) : NULL_STRING; }
 function toExternalValue(val) { return val !== NULL_STRING ? JSON.parse(val) : null; }
@@ -28,7 +28,7 @@ class SelectNative extends React.Component {
     const finalItems = [];
     if (allowNull) finalItems.push({ value: NULL_STRING, label: '' });
     for (const option of items) {
-      if (option.label !== LIST_SEPARATOR.label) finalItems.push(option);
+      if (option.label !== LIST_SEPARATOR_KEY) finalItems.push(option);
     }
     const otherProps = omit(this.props, PROP_KEYS);
     return (

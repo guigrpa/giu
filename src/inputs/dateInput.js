@@ -1,5 +1,9 @@
 import React                from 'react';
-import { omit, merge }      from 'timm';
+import {
+  omit,
+  merge,
+  addDefaults,
+}                           from 'timm';
 import moment               from 'moment';
 import {
   bindAll,
@@ -31,14 +35,14 @@ import {
 const NULL_VALUE = '';
 function toInternalValue(extDate, props) {
   if (extDate == null) return NULL_VALUE;
-  const { date, time, seconds, utc } = merge(props, DEFAULT_PROPS);
+  const { date, time, seconds, utc } = addDefaults(props, DEFAULT_PROPS);
   const mom = moment(extDate);
   if (getUtcFlag(date, time, utc)) mom.utc();
   return mom.format(dateTimeFormat(date, time, seconds));
 }
 function toExternalValue(str, props) {
   if (str === NULL_VALUE) return null;
-  const { date, time, utc } = merge(props, DEFAULT_PROPS);
+  const { date, time, utc } = addDefaults(props, DEFAULT_PROPS);
   const fUtc = getUtcFlag(date, time, utc);
   let mom;
   if (!date) {
