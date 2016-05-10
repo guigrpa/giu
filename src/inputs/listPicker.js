@@ -1,4 +1,5 @@
 import React                from 'react';
+import ReactDOM             from 'react-dom';
 import PureRenderMixin      from 'react-addons-pure-render-mixin';
 import { merge }            from 'timm';
 import {
@@ -64,6 +65,7 @@ class BaseListPicker extends React.Component {
     bindAll(this, [
       'registerOuterRef',
       'renderItem',
+      'onWheel',
       'onClickItem',
       'doClickItemByIndex',
     ]);
@@ -103,6 +105,7 @@ class BaseListPicker extends React.Component {
     return (
       <div ref={this.registerOuterRef}
         className="giu-list-picker"
+        onWheel={this.onWheel}
         style={merge(style.outer(this.props), baseStyle)}
       >
         {this.renderContents()}
@@ -169,6 +172,15 @@ class BaseListPicker extends React.Component {
   registerOuterRef(c) {
     this.refOuter = c;
     this.props.registerOuterRef && this.props.registerOuterRef(c);
+  }
+
+  onWheel(ev) {
+    const el = ReactDOM.findDOMNode(this);
+    if (ev.nativeEvent.deltaY <= 0) {
+      if (el.scrollTop <= 0) cancelEvent(ev);
+    } else {
+      if (el.scrollTop + el.clientHeight >= el.scrollHeight) cancelEvent(ev);
+    }
   }
 
   onClickItem(ev) {
