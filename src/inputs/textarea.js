@@ -1,7 +1,7 @@
 import React                from 'react';
 import { omit, merge }      from 'timm';
 import { bindAll }          from '../gral/helpers';
-import { KEYS, COLORS }     from '../gral/constants';
+import { KEYS }             from '../gral/constants';
 import {
   inputReset, INPUT_DISABLED,
 }                           from '../gral/styles';

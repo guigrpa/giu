@@ -63,7 +63,7 @@ const style = {
     let out = style.fieldBase;
     if (disabled) out = merge(out, INPUT_DISABLED);
     return out;
-  }
+  },
 };
 
 // ==========================================

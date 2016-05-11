@@ -28,11 +28,7 @@ class Button extends React.Component {
   // Render
   // ==========================================
   render() {
-    const {
-      plain, children,
-      disabled,
-      onClick,
-    } = this.props;
+    const { children, disabled, onClick } = this.props;
     const otherProps = omit(this.props, PROP_KEYS);
     return (
       <span
@@ -74,7 +70,7 @@ const style = {
     }
     out = merge(out, baseStyle);
     return out;
-  }
+  },
 };
 
 // ==========================================

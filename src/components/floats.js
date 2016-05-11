@@ -337,8 +337,6 @@ function warnFloats(componentName) {
 // ==========================================
 export {
   Floats,
-  reducer,
-  actions,
   floatAdd, floatDelete, floatUpdate, floatReposition,
   warnFloats,
 };

@@ -159,8 +159,7 @@ class TimePickerAnalog extends React.Component {
         const val = this.getNormalisedUnits(name);
         hands.push(this.renderHand(name, val, fHovered, fDragged, false));
         hands.push(this.renderHand(name, val, fHovered, fDragged, true));
-      }
-      else if (this.state.hint != null) {
+      } else if (this.state.hint != null) {
         const val = this.getNormalisedUnits(name, { fHint: true });
         hands.push(this.renderHand(name, val, false, false, false, true));
       }
@@ -237,7 +236,7 @@ class TimePickerAnalog extends React.Component {
     if (this.props.curValue) return;
     const phi = this.getPhiFromMousePosition(ev);
     if (phi == null) return;
-    let hours = positiveRemainder(
+    const hours = positiveRemainder(
       round((phi + PI / 2) / (PI2 / 12)),
       12);
     this.setState({
@@ -376,6 +375,7 @@ class TimePickerAnalog extends React.Component {
 // ==========================================
 // WatchFace
 // ==========================================
+/* eslint-disable react/no-multi-comp */
 class WatchFace extends React.Component {
   static propTypes = {
     radius:                 React.PropTypes.number.isRequired,

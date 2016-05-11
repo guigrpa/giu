@@ -67,7 +67,7 @@ class FileInput extends React.Component {
           onChange={this.onChange}
           {...otherProps}
         />
-        <Button 
+        <Button
           disabled={disabled}
           onClick={this.onClickButton}
         >

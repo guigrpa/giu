@@ -28,8 +28,6 @@ export {
 export Notification     from './components/notification';
 export {
   Floats,
-  reducer as floatReducer,
-  actions as floatActions,
   floatAdd, floatDelete, floatUpdate, floatReposition,
 }                       from './components/floats';
 
