@@ -159,6 +159,7 @@ const style = {
     bottom: 20,
     right: 20,
     maxWidth: 350,
+    zIndex: 1, // show it above GPU-accel'd layers, e.g. svg components
   },
 };
 
