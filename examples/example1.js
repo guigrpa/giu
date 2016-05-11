@@ -5,14 +5,13 @@ import {
   Select, TextInput, NumberInput, DateInput, Textarea, Checkbox,
   FileInput,
   LIST_SEPARATOR,
-  DateTimePicker,
   DropDownMenu,
   Button,
   Progress,
   Icon, Spinner, LargeMessage,
   Floats, floatReposition,
   Modals, Modal, modalPush, modalPop,
-  Notifications, Notification, notify,
+  Notifications, Notification, notify as createNotif,
   hoverable,
   flexContainer, flexItem,
   merge,
@@ -22,6 +21,8 @@ import {
 const { floor, random } = Math;
 const randomInt = (min, max) => min + floor(random() * (max - min + 1));
 const sample = (arr) => arr[randomInt(0, arr.length - 1)];
+const onChange = (ev, o) => console.log(o);
+const onChangeJson = (ev, o) => console.log(JSON.stringify(o));
 
 const NORMAL_OPTIONS = [
   { label: 'A', value: 'a', keys: 'mod+a', onClick: () => console.log('Custom click A') },
@@ -47,13 +48,18 @@ const WIDE_OPTIONS = [
   { label: 'C', value: 'c' },
 ];
 
+let cntNotif = 1;
+const notify = (msg) => createNotif({
+  msg: msg || `Notification #${cntNotif++}`,
+  type: sample(['info', 'success', 'warn', 'error']),
+  icon: sample(['arrow-left', 'arrow-right', 'arrow-up', 'arrow-down']),
+});
+
 // -----------------------------------------------
 // Examples
 // -----------------------------------------------
 const TEST = 0;
 const EVERYTHING = true;
-const onChange = (ev, o) => console.log(o);
-const onChangeJson = (ev, o) => console.log(JSON.stringify(o));
 const App = () => {
   let out;
   switch (TEST) {
@@ -175,7 +181,6 @@ const MessageExample = () =>
     <LargeMessage>Sample</LargeMessage>
   </div>;
 
-let cntNotif = 1;
 const IconExample = () =>
   <div style={style.example}>
     <ExampleLabel>Icon</ExampleLabel>
@@ -189,19 +194,15 @@ const IconExample = () =>
     {' '}
     <Icon
       icon="arrow-right"
-      onClick={() => notify({
-        msg: `Notification #${cntNotif++}`,
-        type: sample(['info', 'success', 'warn', 'error']),
-        icon: sample(['arrow-left', 'arrow-right', 'arrow-up', 'arrow-down']),
-      })}
+      onClick={() => notify()}
     />
   </div>;
 
 const ButtonExample = () =>
   <div style={style.example}>
     <ExampleLabel>Button</ExampleLabel>
-    <Button onClick={ () => alert('Clicked') }>Normal</Button>{' '}
-    <Button onClick={ () => alert('Clicked') } plain>Plain</Button>
+    <Button onClick={() => notify('Normal button pressed')}>Notify me!</Button>{' '}
+    <Button onClick={() => notify('Plain button pressed')} plain>Notify me!</Button>
   </div>;
 
 const HoverableExample = hoverable(({ hovering, onHoverStart, onHoverStop }) => (
@@ -619,7 +620,7 @@ class FormExample extends React.Component {
               accentColor="darkblue"
             />
             &nbsp;&nbsp;
-            <DateInput type="inlinePicker"
+            <DateInput type="inlinePicker" date={false} time seconds
               value={this.state.fixedDate}
               onChange={onChange}
               accentColor="darkgreen"
