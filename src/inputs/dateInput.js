@@ -128,6 +128,7 @@ class DateInput extends React.Component {
     this.keyDown = undefined;
     bindAll(this, [
       'registerInputRef',
+      'onMouseDown',
       'onFocus',
       'onBlur',
       'onKeyDown',
@@ -151,8 +152,8 @@ class DateInput extends React.Component {
     let out;
     if (this.props.type === 'inlinePicker') {
       out = (
-        <span 
-          className='giu-date-input giu-date-input-inline-picker'
+        <span
+          className="giu-date-input giu-date-input-inline-picker"
           style={this.props.styleOuter}
         >
           {this.renderField(true)}
@@ -167,7 +168,6 @@ class DateInput extends React.Component {
 
   renderField(fHidden) {
     const {
-      type,
       curValue, placeholder,
       date, time, seconds,
     } = this.props;
@@ -227,7 +227,7 @@ class DateInput extends React.Component {
       type,
       curValue,
       disabled, fFocused,
-      date, time, analogTime, seconds, utc, 
+      date, time, analogTime, seconds, utc,
       todayName,
       accentColor,
     } = this.props;
@@ -241,6 +241,7 @@ class DateInput extends React.Component {
         disabled={disabled}
         fFocused={fInline && fFocused}
         curValue={mom}
+        onMouseDown={this.onMouseDown}
         onChange={this.onChangePicker}
         date={date}
         time={time}
@@ -261,6 +262,11 @@ class DateInput extends React.Component {
   registerInputRef(c) {
     this.refInput = c;
     this.props.registerFocusableRef(c);
+  }
+
+  onMouseDown(ev) {
+    cancelEvent(ev);
+    if (!this.props.fFocused) this.refInput.focus();
   }
 
   onFocus(ev) {
@@ -288,7 +294,7 @@ class DateInput extends React.Component {
     if ((fFloat || type === 'inlinePicker') &&
         TRAPPED_KEYS.indexOf(which) >= 0) {
       cancelEvent(ev);
-      const { which, keyCode, metaKey, shiftKey, altKey, ctrlKey } = ev;
+      const { keyCode, metaKey, shiftKey, altKey, ctrlKey } = ev;
       this.keyDown = { which, keyCode, metaKey, shiftKey, altKey, ctrlKey };
       this.forceUpdate();
     }

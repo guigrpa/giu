@@ -85,7 +85,7 @@ function input(ComposedComponent, {
     }
 
     componentDidUpdate(prevProps, prevState) {
-      const { cmds, errors, value } = this.props;
+      const { errors, value } = this.props;
       const { curValue } = this.state;
       if (errors !== prevProps.errors ||
           value !== prevProps.value ||
@@ -174,9 +174,10 @@ function input(ComposedComponent, {
           styleOuter={fIncludeFocusCapture ? undefined : this.props.styleOuter}
         />
       );
+      let out;
       if (fIncludeFocusCapture) {
         const { styleOuter } = this.props;
-        return (
+        out = (
           <span
             className={className}
             onMouseDown={this.onMouseDownWrapper}
@@ -191,8 +192,9 @@ function input(ComposedComponent, {
           </span>
         );
       } else {
-        return el;
+        out = el;
       }
+      return out;
     }
 
     renderErrorFloat() {
@@ -288,7 +290,6 @@ function input(ComposedComponent, {
     }
 
     onMouseDownWrapper(ev) {
-
       // Always cancel mousedowns: they blur the component. If they are interesting,
       // capture them at a lower level
       cancelEvent(ev);

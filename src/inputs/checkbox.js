@@ -33,7 +33,10 @@ class Checkbox extends React.Component {
   renderWithLabel() {
     const { id, label, registerOuterRef, styleLabel } = this.props;
     return (
-      <span ref={registerOuterRef} className="giu-checkbox">
+      <span ref={registerOuterRef}
+        className="giu-checkbox"
+        style={style.wrapper}
+      >
         {this.renderInput()}
         <label htmlFor={id} style={styleLabel}>{label}</label>
       </span>
@@ -53,6 +56,15 @@ class Checkbox extends React.Component {
     );
   }
 }
+
+// ==========================================
+// Styles
+// ==========================================
+const style = {
+  wrapper: {
+    whiteSpace: 'nowrap',
+  },
+};
 
 // ==========================================
 // Miscellaneous

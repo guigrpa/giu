@@ -1,10 +1,7 @@
 import React                from 'react';
 import { merge }            from 'timm';
 import moment               from 'moment';
-import {
-  bindAll,
-  cancelEvent,
-}                           from '../gral/helpers';
+import { bindAll }          from '../gral/helpers';
 import {
   getTimeInSecs,
   getUtcFlag,
@@ -12,10 +9,10 @@ import {
 }                           from '../gral/dates';
 import {
   flexContainer,
+  inputReset, INPUT_DISABLED,
   GLOW,
 }                           from '../gral/styles';
 import { COLORS, KEYS }     from '../gral/constants';
-import input                from '../hocs/input';
 import DatePicker           from '../inputs/datePicker';
 import TimePickerDigital    from '../inputs/timePickerDigital';
 import TimePickerAnalog     from '../inputs/timePickerAnalog';
@@ -42,6 +39,7 @@ class DateTimePicker extends React.Component {
     seconds:                React.PropTypes.bool,
     utc:                    React.PropTypes.bool,
     todayName:              React.PropTypes.string,
+    onMouseDown:            React.PropTypes.func,
     onChange:               React.PropTypes.func.isRequired,
     fFocused:               React.PropTypes.bool,
     style:                  React.PropTypes.object,
@@ -65,14 +63,13 @@ class DateTimePicker extends React.Component {
     this.keyDown = null;
     bindAll(this, [
       'registerOuterRef',
-      'onMouseDown',
       'onChange',
     ]);
   }
 
   // In order to route the `keyDown` to the DatePicker or
   // the TimePicker, depending on the last user action,
-  // we keep a local variable with the value that will be passed 
+  // we keep a local variable with the value that will be passed
   // down. When the subpicker focus changes, we set this value to null.
   // When the owner component updates this prop, we update this value.
   componentWillReceiveProps(nextProps) {
@@ -89,14 +86,15 @@ class DateTimePicker extends React.Component {
     const {
       curValue, style: baseStyle,
       date, time, utc,
+      onMouseDown,
     } = this.props;
     this.utc = getUtcFlag(date, time, utc);
     if (curValue != null && this.utc) curValue.utc();
     return (
       <div ref={this.registerOuterRef}
         className="giu-date-time-picker"
+        onMouseDown={onMouseDown}
         style={merge(style.outer(this.props), baseStyle)}
-        onMouseDown={this.onMouseDown}
       >
         {this.renderDate()}
         {this.renderSeparator()}
@@ -139,7 +137,7 @@ class DateTimePicker extends React.Component {
   renderTime() {
     const {
       curValue,
-      disabled, focusable,
+      disabled,
       time, analogTime, seconds,
       accentColor,
     } = this.props;
@@ -168,12 +166,6 @@ class DateTimePicker extends React.Component {
   registerOuterRef(c) {
     this.refOuter = c;
     this.props.registerOuterRef && this.props.registerOuterRef(c);
-  }
-
-  onMouseDown(ev) {
-    const { disabled, focusable } = this.props;
-    cancelEvent(ev);
-    if (!disabled && focusable && this.refFocus) this.refFocus.focus();
   }
 
   onChange(focusedSubpicker) {
@@ -205,13 +197,14 @@ class DateTimePicker extends React.Component {
 // Styles
 // ==========================================
 const style = {
-  outer: ({ fFocused }) => {
-    let out = flexContainer('row', {
-      paddingTop: 3,
-      paddingBottom: 3,
-      overflowY: 'auto',
-      border: `1px solid ${COLORS.line}`,
-    });
+  outerBase: inputReset(flexContainer('row', {
+    paddingTop: 3,
+    paddingBottom: 3,
+    overflowY: 'auto',
+  })),
+  outer: ({ disabled, fFocused }) => {
+    let out = style.outerBase;
+    if (disabled) out = merge(out, style.outerDisabled);
     if (fFocused) out = merge(out, GLOW);
     return out;
   },
@@ -222,6 +215,9 @@ const style = {
     borderRight: `1px solid ${COLORS.line}`,
   },
 };
+style.outerDisabled = merge(INPUT_DISABLED, {
+  border: style.outerBase.border,
+});
 
 // ==========================================
 // Public API

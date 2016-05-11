@@ -11,6 +11,7 @@ import {
 }                           from 'timm';
 import {
   bindAll,
+  cancelEvent,
   windowHeightWithoutScrollbar, windowWidthWithoutScrollbar,
 }                           from '../gral/helpers';
 import { isVisible }        from '../gral/visibility';
@@ -169,6 +170,7 @@ class Floats extends React.Component {
     return (
       <div key={id}
         className="giu-float"
+        onMouseDown={cancelEvent}
         style={style.wrapper(zIndex)}
       >
         <div ref={c => { this.refFloats[idx] = c; }}

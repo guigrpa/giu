@@ -37,7 +37,7 @@ const inputReset = style => merge({
 }, style);
 
 const INPUT_DISABLED = {
-  border: `1px solid transparent`,
+  border: '1px solid transparent',
   backgroundColor: 'transparent',
   cursor: 'default',
   pointerEvents: 'none',
@@ -59,7 +59,7 @@ const HIDDEN_FOCUS_CAPTURE = {
 const GLOW = {
   boxShadow: '0 0 5px rgba(81, 203, 238, 1)',
   border: '1px solid rgba(81, 203, 238, 1)',
-}
+};
 
 export {
   merge, addDefaults,

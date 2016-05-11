@@ -28,9 +28,7 @@
 - [x] Select: `native`, `inlinePicker`, `dropDownPicker`
 - [x] Dropdown menu: should register its keys
 - [x] DateInput
-- [ ] Make input styles more homogeneous, minimal:
-    + [ ] Disabled means no border (not dimmed), no reaction to clicks, no `pointer` cursor, obviously not focusable. Missing: inline pickers
-    + [x] Input borders, font family, font size, padding, etc.
+- [x] Homogeneous styles: background, focusability, etc.
 - [ ] Add validation hook to inputs; return an error or an array of errors
 - [ ] RadioButton
 

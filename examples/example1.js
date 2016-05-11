@@ -105,7 +105,6 @@ const App = () => {
         </div>
       );
       break;
-      break;
     case 4:
       out = (
         <div>
@@ -476,7 +475,6 @@ class FormExample extends React.Component {
       <div style={style.example}>
         <div>
           <ExampleLabel>Inputs</ExampleLabel>
-          <br /><br /><br /><br /><br />
           <TextInput
             value="a" onChange={onChange}
             placeholder="text"
@@ -496,7 +494,7 @@ class FormExample extends React.Component {
             value={true} onChange={onChange}
             label="checkbox"
             errors={["Must not be null"]}
-          />
+          />&nbsp;
           <Checkbox disabled value={true} label="checkbox"/>
           &nbsp;&nbsp;
           <FileInput />
@@ -568,8 +566,15 @@ class FormExample extends React.Component {
             <Select type="inlinePicker"
               items={[]}
               onChange={onChangeJson}
+              styleOuter={flexItem(1, { marginRight: 4 })}
+              styleList={{height: 150}}
+            />
+            <Select type="inlinePicker" disabled
+              items={TALL_OPTIONS}
+              value={33} onChange={onChangeJson}
               styleOuter={flexItem(1)}
               styleList={{height: 150}}
+              accentColor="lightGray"
             />
           </div>
         </div>

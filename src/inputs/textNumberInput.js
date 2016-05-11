@@ -1,6 +1,5 @@
 import React                from 'react';
 import { omit, merge }      from 'timm';
-import { COLORS }           from '../gral/constants';
 import {
   inputReset, INPUT_DISABLED,
 }                           from '../gral/styles';

@@ -17,6 +17,7 @@ import { scrollIntoView }   from '../gral/visibility';
 import {
   isDark,
   flexContainer, flexItem,
+  inputReset, INPUT_DISABLED,
   GLOW,
 }                           from '../gral/styles';
 import hoverable            from '../hocs/hoverable';
@@ -35,6 +36,7 @@ class BaseListPicker extends React.Component {
     emptyText:              React.PropTypes.string,
     onChange:               React.PropTypes.func.isRequired,
     onClickItem:            React.PropTypes.func,
+    disabled:               React.PropTypes.bool,
     fFocused:               React.PropTypes.bool,
     fFloating:              React.PropTypes.bool,
     style:                  React.PropTypes.object,
@@ -89,7 +91,9 @@ class BaseListPicker extends React.Component {
   // Render
   // ==========================================
   render() {
-    const { style: baseStyle } = this.props;
+    const {
+      style: baseStyle,
+    } = this.props;
     return (
       <div ref={this.registerOuterRef}
         className="giu-list-picker"
@@ -123,6 +127,7 @@ class BaseListPicker extends React.Component {
     const {
       curValue,
       hovering, onHoverStart, onHoverStop,
+      disabled,
       styleItem, twoStageStyle, accentColor,
     } = this.props;
     const styleProps = {
@@ -135,8 +140,8 @@ class BaseListPicker extends React.Component {
     return (
       <div key={itemValue} ref={c => { this.refItems[idx] = c; }}
         id={itemValue}
-        onMouseEnter={onHoverStart}
-        onMouseLeave={onHoverStop}
+        onMouseEnter={!disabled && onHoverStart}
+        onMouseLeave={!disabled && onHoverStop}
         onMouseDown={cancelEvent}
         onMouseUp={this.onClickItem}
         style={merge(style.item(styleProps), styleItem)}
@@ -242,32 +247,21 @@ class BaseListPicker extends React.Component {
     if (idx < 0) return;
     scrollIntoView(this.refItems[idx], options);
   }
-
-  /*
-  processKeyShortcuts(props) {
-    this.keyShortcuts = props.items.map((item, idx) => {
-      let keys = item.keys || [];
-      if (!Array.isArray(keys)) keys = [keys];
-      return keys.map(shortcut => registerShortcut(shortcut, () => {
-        this.doClickItemByIndex(idx);
-      }));
-    });
-  }
-  */
 }
 
 // ==========================================
 // Styles
 // ==========================================
 const style = {
-  outer: ({ fFocused }) => {
-    let out = {
-      paddingTop: 3,
-      paddingBottom: 3,
-      maxHeight: 'inherit',
-      overflowY: 'auto',
-      border: `1px solid ${COLORS.line}`,
-    };
+  outerBase: inputReset({
+    paddingTop: 3,
+    paddingBottom: 3,
+    maxHeight: 'inherit',
+    overflowY: 'auto',
+  }),
+  outer: ({ disabled, fFocused }) => {
+    let out = style.outerBase;
+    if (disabled) out = merge(out, style.outerDisabled);
     if (fFocused) out = merge(out, GLOW);
     return out;
   },
@@ -313,6 +307,11 @@ const style = {
     marginLeft: 20,
   },
 };
+style.outerDisabled = merge(INPUT_DISABLED, {
+  border: style.outerBase.border,
+  pointerEvents: null,
+});
+
 
 // ==========================================
 // Public API
