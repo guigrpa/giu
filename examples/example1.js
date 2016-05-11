@@ -121,24 +121,32 @@ const App = () => {
       break;
     default:
       out = (
-        <div style={flexContainer('row')}>
-          <Modals />
-          <Floats />
-          <Notifications />
-          <div style={flexItem(1)}>
-            {EVERYTHING && <ProgressExample />}
-            {EVERYTHING && <NotificationExample />}
-            {EVERYTHING && <MessageExample />}
-            {EVERYTHING && <IconExample />}
-            {EVERYTHING && <ButtonExample />}
-            {EVERYTHING && <HoverableExample />}
-            {EVERYTHING && <StyleUtilsExample />}
-            {EVERYTHING && <DropDownExample />}
-            {EVERYTHING && <ModalExample />}
-            {EVERYTHING && <ScrollingExample />}
+        <div>
+          <div style={{padding: 10, fontSize: '1.8em', fontWeight: 'bold'}}>
+            <a target="_blank" href="http://github.com/guigrpa/giu">Giu</a> demo page
           </div>
-          <div style={flexItem(1)}>
-            {EVERYTHING && <FormExample />}
+          <div style={flexContainer('row')}>
+            <Modals />
+            <Floats />
+            <Notifications />
+            <div style={flexItem(1)}>
+              {EVERYTHING && <ProgressExample />}
+              {EVERYTHING && <NotificationExample />}
+              {EVERYTHING && <MessageExample />}
+              {EVERYTHING && <IconExample />}
+              {EVERYTHING && <ButtonExample />}
+              {EVERYTHING && <HoverableExample />}
+              {EVERYTHING && <StyleUtilsExample />}
+              {EVERYTHING && <DropDownExample />}
+              {EVERYTHING && <ModalExample />}
+              {EVERYTHING && <ScrollingExample />}
+            </div>
+            <div style={flexItem(1)}>
+              {EVERYTHING && <FormExample />}
+            </div>
+          </div>
+          <div style={{textAlign: 'right', padding: 10, fontSize: '1.2em'}}>
+            by <a target="_blank" href="http://github.com/guigrpa">Guillermo Grau Panea</a> 2016
           </div>
         </div>
       );
@@ -178,7 +186,7 @@ const NotificationExample = () =>
 const MessageExample = () =>
   <div style={style.example}>
     <ExampleLabel>LargeMessage</ExampleLabel>
-    <LargeMessage>Sample</LargeMessage>
+    <LargeMessage>No items found.</LargeMessage>
   </div>;
 
 const IconExample = () =>
@@ -591,22 +599,34 @@ class FormExample extends React.Component {
           <div>
             <DateInput />&nbsp;&nbsp;
             <DateInput date time onChange={onChange} />&nbsp;&nbsp;
-            <DateInput date={false} time onChange={onChange} />
-            <DateInput date={false} time seconds analogTime={false} onChange={onChange} />
+            <DateInput date={false} time onChange={onChange}
+              styleField={{width: 60}}
+            />
+            <DateInput date={false} time seconds analogTime={false} onChange={onChange}
+              styleField={{width: 80}}
+            />
             &nbsp;dropDownPicker (default)
           </div>
           <div>
             <DateInput type="onlyField" onChange={onChange} />&nbsp;&nbsp;
             <DateInput type="onlyField" date time onChange={onChange} />&nbsp;&nbsp;
-            <DateInput type="onlyField" date={false} time onChange={onChange} />
-            <DateInput type="onlyField" date={false} time seconds analogTime={false} onChange={onChange} />
+            <DateInput type="onlyField" date={false} time onChange={onChange}
+              styleField={{width: 60}}
+            />
+            <DateInput type="onlyField" date={false} time seconds analogTime={false} onChange={onChange}
+              styleField={{width: 80}}
+            />
             &nbsp;onlyField
           </div>
           <div>
             <DateInput disabled value={new Date()} type="onlyField" />&nbsp;&nbsp;
             <DateInput disabled value={new Date()} type="onlyField" date time />&nbsp;&nbsp;
-            <DateInput disabled value={new Date()} type="onlyField" date={false} time />
-            <DateInput disabled value={new Date()} type="onlyField" date={false} time seconds analogTime={false} />
+            <DateInput disabled value={new Date()} type="onlyField" date={false} time
+              styleField={{width: 60}}
+            />
+            <DateInput disabled value={new Date()} type="onlyField" date={false} time seconds analogTime={false}
+              styleField={{width: 80}}
+            />
             &nbsp;disabled
           </div>
           <div style={flexContainer('row')}>
