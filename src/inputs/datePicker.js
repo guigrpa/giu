@@ -99,7 +99,7 @@ class DatePicker extends React.Component {
             <Icon icon="arrow-left" onClick={this.onClickPrevMonth} />
           }
         </div>
-        <Button onClick={this.onClickMonthName} plain>
+        <Button onClick={this.onClickMonthName} plain style={style.monthName}>
           {shownMonthStart.format('MMMM YYYY')}
         </Button>
         <div style={style.monthChange}>
@@ -283,7 +283,7 @@ const style = {
     textAlign: 'center',
   },
   monthName: {
-    cursor: 'pointer',
+    fontWeight: 'bold',
   },
   dayNamesRow: flexContainer('row', {
     justifyContent: 'space-between',
@@ -320,6 +320,7 @@ const style = {
     textAlign: 'center',
     cursor: 'pointer',
     height: ROW_HEIGHT,
+    fontWeight: 'bold',
   },
 };
 

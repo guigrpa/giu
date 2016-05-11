@@ -13,7 +13,7 @@ import {
   Modals, Modal, modalPush, modalPop,
   Notifications, Notification, notify as createNotif,
   hoverable,
-  flexContainer, flexItem,
+  flexContainer, flexItem, boxWithShadow,
   merge,
   cancelEvent,
 }                           from '../src';
@@ -132,7 +132,7 @@ const App = () => {
             {EVERYTHING && <IconExample />}
             {EVERYTHING && <ButtonExample />}
             {EVERYTHING && <HoverableExample />}
-            {EVERYTHING && <FlexExample />}
+            {EVERYTHING && <StyleUtilsExample />}
             {EVERYTHING && <DropDownExample />}
             {EVERYTHING && <ModalExample />}
             {EVERYTHING && <ScrollingExample />}
@@ -215,13 +215,13 @@ const HoverableExample = hoverable(({ hovering, onHoverStart, onHoverStop }) => 
   </div>
 ));
 
-const FlexExample = () =>
+const StyleUtilsExample = () =>
   <div style={style.example}>
-    <ExampleLabel>Flex utilities</ExampleLabel>
+    <ExampleLabel>Style utilities</ExampleLabel>
     <div style={flexContainer('row')}>
-      <span>Left</span>
+      <span>Flex left</span>
       <FlexSpacer />
-      <span>Right</span>
+      <span>Flex right</span>
     </div>
     <div style={flexContainer('row')}>
       <span>Left</span>
@@ -229,6 +229,9 @@ const FlexExample = () =>
       <span>Center</span>
       <FlexSpacer />
       <span>Right</span>
+    </div>
+    <div style={boxWithShadow({padding: 3})}>
+      A box with a shadow
     </div>
   </div>;
 
