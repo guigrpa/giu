@@ -11,10 +11,6 @@ export Textarea         from './inputs/textarea';
 export Checkbox         from './inputs/checkbox';
 export FileInput        from './inputs/fileInput';
 export { LIST_SEPARATOR } from './inputs/selectCustom';
-// REMOVE!!!
-export {
-  DateTimePicker,
-}                       from './inputs/dateTimePicker';
 
 export {
   Modals,
