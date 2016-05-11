@@ -11,6 +11,7 @@ import {
   removeAt,
   addDefaults,
 }                           from 'timm';
+import { MISC }             from '../gral/constants';
 import { bindAll }          from '../gral/helpers';
 import Notification         from './notification';
 
@@ -159,7 +160,7 @@ const style = {
     bottom: 20,
     right: 20,
     maxWidth: 350,
-    zIndex: 1, // show it above GPU-accel'd layers, e.g. svg components
+    zIndex: MISC.zNotif,
   },
 };
 

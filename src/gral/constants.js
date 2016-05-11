@@ -60,6 +60,7 @@ const MISC = {
   zModalStep: 10,
   zMainFloatDelta: 5,
   zErrorFloatDelta: 2,
+  zNotif: 9000,
 };
 
 const NULL_STRING = '__NULL__';
