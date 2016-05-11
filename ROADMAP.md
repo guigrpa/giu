@@ -27,15 +27,11 @@
 - [x] FileInput
 - [x] Select: `native`, `inlinePicker`, `dropDownPicker`
 - [x] Dropdown menu: should register its keys
-- [ ] 
-- [ ] DateInput:
-    + [ ] Types: `onlyField`, `inlinePicker` (hidden field, no float), `dropDownPicker` (default) [they all have an input field]
-    + [ ] `DateTimePicker`: remove focusability
-    + [ ] `DateTimePicker`: remove `input` HOC
-- [ ] Add validation hook to inputs; return an error or an array of errors
+- [x] DateInput
 - [ ] Make input styles more homogeneous, minimal:
-    + [ ] Disabled means no border (not dimmed), no reaction to clicks, no `pointer` cursor, obviously not focusable
+    + [ ] Disabled means no border (not dimmed), no reaction to clicks, no `pointer` cursor, obviously not focusable. Missing: inline pickers
     + [x] Input borders, font family, font size, padding, etc.
+- [ ] Add validation hook to inputs; return an error or an array of errors
 - [ ] RadioButton
 
 - [ ] ColorInput + ColorPicker

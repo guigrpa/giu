@@ -11,6 +11,10 @@ import {
 }                           from '../gral/helpers';
 import { COLORS, KEYS }     from '../gral/constants';
 import {
+  HIDDEN_FOCUS_CAPTURE,
+  inputReset, INPUT_DISABLED,
+}                           from '../gral/styles';
+import {
   dateTimeFormat,
   dateFormat,
   timeFormat,
@@ -41,6 +45,16 @@ function toInternalValue(extDate, props) {
   return mom.format(dateTimeFormat(date, time, seconds));
 }
 function toExternalValue(str, props) {
+  const mom = displayToMoment(str, props);
+  return mom !== null ? mom.toDate() : null;
+}
+
+function momentToDisplay(mom, props) {
+  if (mom == null) return NULL_VALUE;
+  const { date, time, seconds } = addDefaults(props, DEFAULT_PROPS);
+  return mom.format(dateTimeFormat(date, time, seconds));
+}
+function displayToMoment(str, props) {
   if (str === NULL_VALUE) return null;
   const { date, time, utc } = addDefaults(props, DEFAULT_PROPS);
   const fUtc = getUtcFlag(date, time, utc);
@@ -57,7 +71,7 @@ function toExternalValue(str, props) {
     const fnMoment = fUtc ? moment.utc : moment;
     mom = fnMoment(str, fmt);
   }
-  return mom.isValid() ? mom.toDate() : null;
+  return mom.isValid() ? mom : null;
 }
 
 const DEFAULT_PROPS = {
@@ -92,8 +106,8 @@ class DateInput extends React.Component {
     floatAlign:             React.PropTypes.string,
     floatZ:                 React.PropTypes.number,
     styleField:             React.PropTypes.object,
+    styleOuter:             React.PropTypes.object,
     accentColor:            React.PropTypes.string,
-    onKeyDown:              React.PropTypes.func,
     // From input HOC
     curValue:               React.PropTypes.string.isRequired,
     errors:                 React.PropTypes.array.isRequired,
@@ -111,6 +125,7 @@ class DateInput extends React.Component {
     super(props);
     this.state = { fFloat: false };
     this.cmdsToPicker = null;
+    this.keyDown = undefined;
     bindAll(this, [
       'registerInputRef',
       'onFocus',
@@ -133,20 +148,42 @@ class DateInput extends React.Component {
   // Render
   // ==========================================
   render() {
+    let out;
+    if (this.props.type === 'inlinePicker') {
+      out = (
+        <span 
+          className='giu-date-input giu-date-input-inline-picker'
+          style={this.props.styleOuter}
+        >
+          {this.renderField(true)}
+          {this.renderPicker(true)}
+        </span>
+      );
+    } else {
+      out = this.renderField();
+    }
+    return out;
+  }
+
+  renderField(fHidden) {
     const {
+      type,
       curValue, placeholder,
       date, time, seconds,
-      styleField,
     } = this.props;
+    const className = fHidden ? undefined : 'giu-date-input';
     const finalPlaceholder = placeholder || dateTimeFormat(date, time, seconds);
     const otherProps = omit(this.props, PROP_KEYS);
+    const styleField = fHidden
+      ? style.fieldHidden
+      : style.field(this.props);
     return (
       <input ref={this.registerInputRef}
-        className="giu-date-input"
+        className={className}
         type="text"
         value={curValue}
         {...otherProps}
-        style={merge(style.field, styleField)}
+        style={styleField}
         placeholder={finalPlaceholder}
         onFocus={this.onFocus}
         onBlur={this.onBlur}
@@ -157,6 +194,7 @@ class DateInput extends React.Component {
   }
 
   renderFloat() {
+    if (this.props.type !== 'dropDownPicker') return;
     const { fFloat } = this.state;
 
     // Remove float
@@ -184,22 +222,35 @@ class DateInput extends React.Component {
     }
   }
 
-  renderPicker() {
-    const value = toExternalValue(this.props.curValue, this.props);
+  renderPicker(fInline) {
+    const {
+      type,
+      curValue,
+      disabled, fFocused,
+      date, time, analogTime, seconds, utc, 
+      todayName,
+      accentColor,
+    } = this.props;
+    const mom = displayToMoment(curValue, this.props);
+    const registerOuterRef = type === 'inlinePicker'
+      ? this.props.registerOuterRef
+      : undefined;
     return (
       <DateTimePicker
-        disabled={this.props.disabled}
-        focusable={false}
-        value={value}
+        registerOuterRef={registerOuterRef}
+        disabled={disabled}
+        fFocused={fInline && fFocused}
+        curValue={mom}
         onChange={this.onChangePicker}
-        date={this.props.date}
-        time={this.props.time}
-        analogTime={this.props.analogTime}
-        seconds={this.props.seconds}
-        utc={this.props.utc}
-        todayName={this.props.todayName}
+        date={date}
+        time={time}
+        analogTime={analogTime}
+        seconds={seconds}
+        utc={utc}
+        todayName={todayName}
         cmds={this.cmdsToPicker}
-        accentColor={this.props.accentColor}
+        keyDown={this.keyDown}
+        accentColor={accentColor}
       />
     );
   }
@@ -209,7 +260,6 @@ class DateInput extends React.Component {
   // ==========================================
   registerInputRef(c) {
     this.refInput = c;
-    this.props.registerOuterRef(c);
     this.props.registerFocusableRef(c);
   }
 
@@ -224,23 +274,28 @@ class DateInput extends React.Component {
   }
 
   onKeyDown(ev) {
+    const { type } = this.props;
+    if (type === 'onlyField') return;
     const { which } = ev;
     const { fFloat } = this.state;
     if (which === KEYS.esc) {
       cancelEvent(ev);
       this.setState({ fFloat: !fFloat });
+      this.keyDown = undefined;
       return;
     }
-    if (fFloat && TRAPPED_KEYS.indexOf(which) >= 0) {
+
+    if ((fFloat || type === 'inlinePicker') &&
+        TRAPPED_KEYS.indexOf(which) >= 0) {
       cancelEvent(ev);
-      this.cmdsToPicker = [{ type: 'KEY_DOWN', which }];
+      const { which, keyCode, metaKey, shiftKey, altKey, ctrlKey } = ev;
+      this.keyDown = { which, keyCode, metaKey, shiftKey, altKey, ctrlKey };
       this.forceUpdate();
-      if (this.props.onKeyDown) this.props.onKeyDown(ev);
     }
   }
 
   onChangePicker(ev, nextValue) {
-    this.props.onChange(ev, toInternalValue(nextValue, this.props));
+    this.props.onChange(ev, momentToDisplay(nextValue, this.props));
   }
 }
 
@@ -248,12 +303,15 @@ class DateInput extends React.Component {
 // Styles
 // ==========================================
 const style = {
-  field: {
-    fontFamily: 'inherit',
-    fontSize: 'inherit',
-    fontWeight: 'inherit',
-    border: `1px solid ${COLORS.line}`,
+  outerInline: undefined,
+  fieldBase: inputReset(),
+  field: ({ styleField, disabled }) => {
+    let out = style.fieldBase;
+    if (disabled) out = merge(out, INPUT_DISABLED);
+    out = merge(out, styleField);
+    return out;
   },
+  fieldHidden: HIDDEN_FOCUS_CAPTURE,
 };
 
 // ==========================================

@@ -1,6 +1,9 @@
 import React                from 'react';
-import { omit }             from 'timm';
+import { omit, merge }      from 'timm';
 import { NULL_STRING }      from '../gral/constants';
+import {
+  inputReset, INPUT_DISABLED,
+}                           from '../gral/styles';
 import input                from '../hocs/input';
 import { LIST_SEPARATOR_KEY } from '../inputs/listPicker';
 
@@ -14,6 +17,7 @@ class SelectNative extends React.Component {
   static propTypes = {
     items:                  React.PropTypes.array.isRequired,
     allowNull:              React.PropTypes.bool,
+    disabled:               React.PropTypes.bool,
     // Input HOC
     curValue:               React.PropTypes.string.isRequired,
     registerFocusableRef:   React.PropTypes.func.isRequired,
@@ -36,7 +40,7 @@ class SelectNative extends React.Component {
         className="giu-select-native"
         value={curValue}
         {...otherProps}
-        style={style.native}
+        style={style.field(this.props)}
       >
         {finalItems.map(o => {
           const value = o.value === NULL_STRING ? o.value : toInternalValue(o.value);
@@ -51,11 +55,15 @@ class SelectNative extends React.Component {
 // Styles
 // ==========================================
 const style = {
-  native: {
-    fontFamily: 'inherit',
-    fontSize: 'inherit',
-    fontWeight: 'inherit',
-  },
+  fieldBase: inputReset({
+    backgroundColor: 'default',
+    border: 'default',
+  }),
+  field: ({ disabled }) => {
+    let out = style.fieldBase;
+    if (disabled) out = merge(out, INPUT_DISABLED);
+    return out;
+  }
 };
 
 // ==========================================

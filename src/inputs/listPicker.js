@@ -16,8 +16,8 @@ import {
 import { scrollIntoView }   from '../gral/visibility';
 import {
   isDark,
-  flexContainer,
-  flexItem,
+  flexContainer, flexItem,
+  GLOW,
 }                           from '../gral/styles';
 import hoverable            from '../hocs/hoverable';
 
@@ -261,17 +261,14 @@ class BaseListPicker extends React.Component {
 // ==========================================
 const style = {
   outer: ({ fFocused }) => {
-    const out = {
+    let out = {
       paddingTop: 3,
       paddingBottom: 3,
       maxHeight: 'inherit',
       overflowY: 'auto',
       border: `1px solid ${COLORS.line}`,
     };
-    if (fFocused) {
-      out.boxShadow = COLORS.focusGlow;
-      out.border = `1px solid ${COLORS.focus}`;
-    }
+    if (fFocused) out = merge(out, GLOW);
     return out;
   },
   empty: {

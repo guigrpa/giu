@@ -8,6 +8,8 @@ import {
 }                           from '../gral/constants';
 import {
   flexContainer, flexItem,
+  GLOW,
+  inputReset, INPUT_DISABLED,
 }                           from '../gral/styles';
 import {
   createShortcut,
@@ -67,6 +69,7 @@ class SelectCustomBase extends React.Component {
   constructor(props) {
     super(props);
     this.state = { fFloat: false };
+    this.keyDown = undefined;
     bindAll(this, [
       'registerTitleRef',
       'onMouseDownTitle',
@@ -124,7 +127,7 @@ class SelectCustomBase extends React.Component {
   renderProvidedTitle() {
     return (
       <span ref={this.registerTitleRef}
-        className="giu-select-drop-down-picker"
+        className="giu-select-custom"
       >
         {this.props.children}
       </span>
@@ -145,7 +148,7 @@ class SelectCustomBase extends React.Component {
     const caretIcon = this.state.fFloat ? 'caret-up' : 'caret-down';
     return (
       <span ref={this.registerTitleRef}
-        className="giu-select-drop-down-picker"
+        className="giu-select-custom"
         onMouseDown={this.onMouseDownTitle}
         style={style.title(this.props)}
       >
@@ -293,21 +296,16 @@ class SelectCustomBase extends React.Component {
 // Styles
 // ==========================================
 const style = {
-  titleBase: flexContainer('row', {
+  titleBase: flexContainer('row', inputReset({
     display: 'inline-flex',
-    border: `1px solid ${COLORS.line}`,
     padding: '1px 2px',
     minWidth: 40,
     cursor: 'pointer',
-  }),
-  title: ({ fFocused }) => {
+  })),
+  title: ({ disabled, fFocused }) => {
     let out = style.titleBase;
-    if (fFocused) {
-      out = merge(out, {
-        boxShadow: COLORS.focusGlow,
-        border: `1px solid ${COLORS.focus}`,
-      });
-    }
+    if (disabled) out = merge(out, INPUT_DISABLED);
+    if (fFocused) out = merge(out, GLOW);
     return out;
   },
   caret: {

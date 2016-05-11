@@ -1,6 +1,9 @@
 import React                from 'react';
 import { omit, merge }      from 'timm';
 import { COLORS }           from '../gral/constants';
+import {
+  inputReset, INPUT_DISABLED,
+}                           from '../gral/styles';
 import input                from '../hocs/input';
 
 const NULL_VALUE = '';
@@ -16,6 +19,7 @@ const converters = {
 };
 
 const PROP_TYPES = {
+  disabled:               React.PropTypes.bool,
   styleField:             React.PropTypes.object,
   // Input HOC
   curValue:               React.PropTypes.any.isRequired,
@@ -38,10 +42,7 @@ function createClass(name, inputType) {
     // Render
     // ==========================================
     render() {
-      const {
-        curValue, registerFocusableRef,
-        styleField,
-      } = this.props;
+      const { curValue, registerFocusableRef } = this.props;
       const otherProps = omit(this.props, PROP_KEYS);
       return (
         <input ref={registerFocusableRef}
@@ -49,7 +50,7 @@ function createClass(name, inputType) {
           type={inputType}
           value={curValue}
           {...otherProps}
-          style={merge(style.field, styleField)}
+          style={style.field(this.props)}
         />
       );
     }
@@ -62,11 +63,12 @@ function createClass(name, inputType) {
 // Styles
 // ==========================================
 const style = {
-  field: {
-    fontFamily: 'inherit',
-    fontSize: 'inherit',
-    fontWeight: 'inherit',
-    border: `1px solid ${COLORS.line}`,
+  fieldBase: inputReset(),
+  field: ({ styleField, disabled }) => {
+    let out = style.fieldBase;
+    if (disabled) out = merge(out, INPUT_DISABLED);
+    out = merge(out, styleField);
+    return out;
   },
 };
 

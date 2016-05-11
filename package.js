@@ -136,6 +136,7 @@ const specs = {
     react: '>=0.14.0',
     'react-dom': '>=0.14.0',
     'react-addons-pure-render-mixin': '>=0.14.0',
+    'react-addons-perf': '>=0.14.0',
 
     // Babel (except babel-eslint)
     'babel-cli': '^6.6.5',

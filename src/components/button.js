@@ -10,6 +10,8 @@ class Button extends React.Component {
   static propTypes = {
     plain:                  React.PropTypes.bool,
     children:               React.PropTypes.any,
+    onClick:                React.PropTypes.func,
+    disabled:               React.PropTypes.bool,
     style:                  React.PropTypes.object,
     // all other props are passed through
   };
@@ -26,31 +28,18 @@ class Button extends React.Component {
   // Render
   // ==========================================
   render() {
-    const { plain, children } = this.props;
+    const {
+      plain, children,
+      disabled,
+      onClick,
+    } = this.props;
     const otherProps = omit(this.props, PROP_KEYS);
-    return plain
-      ? this.renderPlain(otherProps, children)
-      : this.renderButton(otherProps, children);
-  }
-
-  renderPlain(otherProps, children) {
     return (
       <span
         className="giu-button"
+        onClick={!disabled && onClick}
         {...otherProps}
-        style={merge(style.plain, this.props.style)}
-      >
-        {children}
-      </span>
-    );
-  }
-
-  renderButton(otherProps, children) {
-    return (
-      <span
-        className="giu-button"
-        {...otherProps}
-        style={merge(style.button, this.props.style)}
+        style={style.button(this.props)}
       >
         {children}
       </span>
@@ -62,10 +51,10 @@ class Button extends React.Component {
 // Styles
 // ==========================================
 const style = {
-  plain: {
+  plainBase: {
     cursor: 'pointer',
   },
-  button: {
+  buttonBase: {
     display: 'inline-block',
     cursor: 'pointer',
     border: `1px solid ${COLORS.line}`,
@@ -74,6 +63,18 @@ const style = {
     userSelect: 'none',
     WebkitUserSelect: 'none',
   },
+  button: ({ plain, disabled, style: baseStyle }) => {
+    let out = plain ? style.plainBase : style.buttonBase;
+    if (disabled) {
+      out = merge(out, {
+        color: COLORS.dim,
+        cursor: 'default',
+        pointerEvents: 'none',
+      });
+    }
+    out = merge(out, baseStyle);
+    return out;
+  }
 };
 
 // ==========================================

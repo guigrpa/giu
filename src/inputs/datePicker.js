@@ -27,7 +27,7 @@ class DatePicker extends React.Component {
     onChange:               React.PropTypes.func.isRequired,
     utc:                    React.PropTypes.bool.isRequired,
     todayName:              React.PropTypes.string.isRequired,
-    cmds:                   React.PropTypes.array,
+    keyDown:                React.PropTypes.object,
     accentColor:            React.PropTypes.string.isRequired,
     // Hoverable HOC
     hovering:               React.PropTypes.any,
@@ -51,10 +51,13 @@ class DatePicker extends React.Component {
   componentWillReceiveProps(nextProps) {
     const prevValue = this.props.curValue;
     const nextValue = nextProps.curValue;
-    if (prevValue == null && nextValue == null) return;
-    if (prevValue == null || nextValue == null || !prevValue.isSame(nextValue)) {
-      this.updateShownMonth(nextProps);
+    if (prevValue != null || nextValue != null) {
+      if (prevValue == null || nextValue == null || !prevValue.isSame(nextValue)) {
+        this.updateShownMonth(nextProps);
+      }
     }
+    const { keyDown } = nextProps;
+    if (keyDown && keyDown !== this.props.keyDown) this.doKeyDown(keyDown);
   }
 
   updateShownMonth(props) {
@@ -62,14 +65,6 @@ class DatePicker extends React.Component {
     const refMoment = curValue != null ? curValue.clone() : startOfToday(utc);
     const shownMonthStart = refMoment.startOf('month');
     this.setState({ shownMonthStart });
-  }
-
-  componentDidUpdate(prevProps) {
-    const { cmds } = this.props;
-    if (!cmds || cmds === prevProps.cmds) return;
-    for (const cmd of cmds) {
-      if (cmd.type === 'KEY_DOWN') this.doKeyDown(cmd.which);
-    }
   }
 
   // ==========================================
@@ -210,7 +205,8 @@ class DatePicker extends React.Component {
     this.changeDateTo(ev, startOfDay);
   }
 
-  doKeyDown(which) {
+  doKeyDown({ which, shiftKey, ctrlKey, altKey, metaKey }) {
+    if (shiftKey || ctrlKey || altKey || metaKey) return;
     switch (which) {
       case KEYS.pageUp:   this.onClickPrevMonth();           break;
       case KEYS.pageDown: this.onClickNextMonth();           break;
@@ -260,9 +256,6 @@ class DatePicker extends React.Component {
 
   doChange(ev, nextValue) {
     this.props.onChange(ev, nextValue);
-    // Not needed
-    // const shownMonthStart = nextValue.clone().startOf('month');
-    // this.setState({ shownMonthStart });
   }
 }
 

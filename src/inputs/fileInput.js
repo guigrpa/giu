@@ -1,7 +1,11 @@
 import React                from 'react';
-import { omit }             from 'timm';
+import { omit, merge }      from 'timm';
 import filesize             from 'filesize';
 import { bindAll }          from '../gral/helpers';
+import {
+  GLOW,
+  HIDDEN_FOCUS_CAPTURE,
+}                           from '../gral/styles';
 import input                from '../hocs/input';
 import Button               from '../components/button';
 import Icon                 from '../components/icon';
@@ -13,13 +17,15 @@ class FileInput extends React.Component {
   static propTypes = {
     children:               React.PropTypes.any,
     cmds:                   React.PropTypes.array,
+    disabled:               React.PropTypes.bool,
     style:                  React.PropTypes.object,
     // Input HOC
+    registerOuterRef:       React.PropTypes.func.isRequired,
+    registerFocusableRef:   React.PropTypes.func.isRequired,
     curValue:               React.PropTypes.object,
     onChange:               React.PropTypes.func.isRequired,
     errors:                 React.PropTypes.array.isRequired,
-    registerOuterRef:       React.PropTypes.func.isRequired,
-    registerFocusableRef:   React.PropTypes.func.isRequired,
+    fFocused:               React.PropTypes.bool.isRequired,
   };
 
   constructor(props) {
@@ -35,9 +41,9 @@ class FileInput extends React.Component {
   componentDidUpdate(prevProps) {
     const { cmds } = this.props;
     if (!cmds || cmds === prevProps.cmds) return;
-    for (const cmd of cmds) {
+    cmds.forEach(cmd => {
       if (cmd.type === 'CLICK') this.onClickButton();
-    }
+    });
   }
 
   // ==========================================
@@ -47,13 +53,13 @@ class FileInput extends React.Component {
     const {
       children,
       registerOuterRef,
-      style: baseStyle,
+      disabled,
     } = this.props;
     const otherProps = omit(this.props, PROP_KEYS);
     return (
-      <div ref={registerOuterRef}
+      <span ref={registerOuterRef}
         className="giu-file-input"
-        style={baseStyle}
+        style={style.outer(this.props)}
       >
         <input ref={this.registerInputRef}
           type="file"
@@ -61,12 +67,15 @@ class FileInput extends React.Component {
           onChange={this.onChange}
           {...otherProps}
         />
-        <Button onClick={this.onClickButton}>
+        <Button 
+          disabled={disabled}
+          onClick={this.onClickButton}
+        >
           {children || 'Choose a file…'}
         </Button>
         &nbsp;
         {this.renderFileName()}
-      </div>
+      </span>
     );
   }
 
@@ -106,18 +115,13 @@ class FileInput extends React.Component {
 // Styles
 // ==========================================
 const style = {
-  input: {
-    position: 'fixed',
-    opacity: 0,
-    width: 10,
-    height: 10,
-    padding: 0,
-    cursor: 'default',
-    pointerEvents: 'none',
-    zIndex: -80,
-    top: 8,
-    left: 8,
+  outer: ({ fFocused, style: baseStyle }) => {
+    let out = { border: '1px solid transparent' };
+    if (fFocused) out = merge(out, GLOW);
+    out = merge(out, baseStyle);
+    return out;
   },
+  input: HIDDEN_FOCUS_CAPTURE,
 };
 
 // ==========================================

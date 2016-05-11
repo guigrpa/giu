@@ -1,5 +1,9 @@
 import React                from 'react';
-import { merge }            from 'timm';
+import PureRenderMixin      from 'react-addons-pure-render-mixin';
+import {
+  merge,
+  set as timmSet,
+}                           from 'timm';
 import {
   bindAll,
   cancelEvent,
@@ -7,6 +11,9 @@ import {
 import { startOfToday }     from '../gral/dates';
 import { COLORS, KEYS }     from '../gral/constants';
 import hoverable            from '../hocs/hoverable';
+
+import ReactPerf from 'react-addons-perf';
+window.ReactPerf = ReactPerf;
 
 const PI = Math.PI;
 const PI2 = Math.PI * 2;
@@ -41,7 +48,7 @@ class TimePickerAnalog extends React.Component {
     onChange:               React.PropTypes.func.isRequired,
     seconds:                React.PropTypes.bool,
     utc:                    React.PropTypes.bool.isRequired,
-    cmds:                   React.PropTypes.array,
+    keyDown:                React.PropTypes.object,
     accentColor:            React.PropTypes.string.isRequired,
     size:                   React.PropTypes.number,
     // Hoverable HOC
@@ -55,9 +62,14 @@ class TimePickerAnalog extends React.Component {
 
   constructor(props) {
     super(props);
-    this.state = { dragging: null };
+    this.state = {
+      dragging: null,
+      hint: null,
+    };
     bindAll(this, [
       'onClickBackground',
+      'onMouseLeaveBackground',
+      'onMouseMoveBackground',
       'onMouseDownHand',
       'onMouseMoveHand',
       'onMouseUpHand',
@@ -70,12 +82,9 @@ class TimePickerAnalog extends React.Component {
     window.removeEventListener('mouseup', this.onMouseUpHand);
   }
 
-  componentDidUpdate(prevProps) {
-    const { cmds } = this.props;
-    if (!cmds || cmds === prevProps.cmds) return;
-    for (const cmd of cmds) {
-      if (cmd.type === 'KEY_DOWN') this.doKeyDown(cmd.which);
-    }
+  componentWillReceiveProps(nextProps) {
+    const { keyDown } = nextProps;
+    if (keyDown && keyDown !== this.props.keyDown) this.doKeyDown(keyDown);
   }
 
   // ==========================================
@@ -96,10 +105,12 @@ class TimePickerAnalog extends React.Component {
       <div className="giu-time-picker-analog" style={style.outer}>
         <svg ref={c => { this.refSvg = c; }}
           onClick={this.onClickBackground}
+          onMouseMove={this.onMouseMoveBackground}
+          onMouseLeave={this.onMouseLeaveBackground}
           style={style.svg(size)}
         >
           <g transform={`translate(${this.translate},${this.translate})`}>
-            {this.renderWatch()}
+            <WatchFace radius={this.radius} />
             {this.renderHands()}
             {this.renderCenter()}
           </g>
@@ -136,33 +147,49 @@ class TimePickerAnalog extends React.Component {
   renderHands() {
     const {
       curValue, seconds,
-      hovering, onHoverStart, onHoverStop,
+      hovering,
     } = this.props;
     const { dragging } = this.state;
-    if (!curValue) return null;
     const hands = [];
-    for (const name of HAND_NAMES) {
-      if (name === 'seconds' && !seconds) continue;
-      const fHovered = hovering === name && !dragging;
-      const fDragged = dragging === name;
-      const val = this.getNormalisedUnits(name);
-      const phi = PI2 * val - (PI / 2);
-      const r = name === 'hours' ? 0.6 * this.radius : 0.83 * this.radius;
-      const props = {
-        id: name,
-        x1: 0,
-        y1: 0,
-        x2: r * cos(phi),
-        y2: r * sin(phi),
-      };
-      hands.push(
+    HAND_NAMES.forEach(name => {
+      if (name === 'seconds' && !seconds) return;
+      if (curValue) {
+        const fHovered = hovering === name && !dragging;
+        const fDragged = dragging === name;
+        const val = this.getNormalisedUnits(name);
+        hands.push(this.renderHand(name, val, fHovered, fDragged, false));
+        hands.push(this.renderHand(name, val, fHovered, fDragged, true));
+      }
+      else if (this.state.hint != null) {
+        const val = this.getNormalisedUnits(name, { fHint: true });
+        hands.push(this.renderHand(name, val, false, false, false, true));
+      }
+    });
+    return <g>{hands}</g>;
+  }
+
+  renderHand(name, val, fHovered, fDragged, fDragHandle, fHint) {
+    const phi = PI2 * val - (PI / 2);
+    const r = name === 'hours' ? 0.6 * this.radius : 0.83 * this.radius;
+    const props = {
+      id: name,
+      x1: 0,
+      y1: 0,
+      x2: r * cos(phi),
+      y2: r * sin(phi),
+    };
+    let out;
+    if (!fDragHandle) {
+      out = (
         <line key={`hand-${name}`}
           {...props}
-          style={style.hand(name, fHovered, fDragged, this.props)}
+          style={style.hand(name, fHovered, fDragged, fHint, this.props)}
         />
       );
+    } else {
       // Wider targets for dragging
-      hands.push(
+      const { onHoverStart, onHoverStop } = this.props;
+      out = (
         <line key={`hand-transparent-${name}`}
           id={name}
           {...props}
@@ -173,7 +200,7 @@ class TimePickerAnalog extends React.Component {
         />
       );
     }
-    return <g>{hands}</g>;
+    return out;
   }
 
   renderCenter() {
@@ -201,6 +228,23 @@ class TimePickerAnalog extends React.Component {
   // ==========================================
   // Event handlers
   // ==========================================
+  onMouseLeaveBackground() {
+    if (!this.state.hint) return;
+    this.setState({ hint: null });
+  }
+
+  onMouseMoveBackground(ev) {
+    if (this.props.curValue) return;
+    const phi = this.getPhiFromMousePosition(ev);
+    if (phi == null) return;
+    let hours = positiveRemainder(
+      round((phi + PI / 2) / (PI2 / 12)),
+      12);
+    this.setState({
+      hint: { hours, minutes: 0, seconds: 0 },
+    });
+  }
+
   onClickBackground(ev) {
     if (this.props.disabled || this.hours != null) return;
     const phi = this.getPhiFromMousePosition(ev);
@@ -251,7 +295,8 @@ class TimePickerAnalog extends React.Component {
     this.setUnits(ev, nextHours, 'hours');
   }
 
-  doKeyDown(which) {
+  doKeyDown({ which, shiftKey, ctrlKey, altKey, metaKey }) {
+    if (shiftKey || ctrlKey || altKey || metaKey) return;
     switch (which) {
       case KEYS.pageDown: this.changeTimeByMins(+60);           break;
       case KEYS.pageUp:   this.changeTimeByMins(-60);           break;
@@ -282,25 +327,26 @@ class TimePickerAnalog extends React.Component {
     this.setUnits(null, this.minutes + mins, 'minutes');
   }
 
-  getNormalisedUnits(units) {
-    let val = this.getUnits(units);
+  getNormalisedUnits(units, options) {
+    let val = this.getUnits(units, options);
     val /= units === 'hours' ? 12 : 60;
     return val;
   }
 
-  getUnits(units) {
+  getUnits(units, { fHint } = {}) {
     let out;
+    const base = fHint ? this.state.hint : this;
     switch (units) {
       case 'hours':
-        out = this.hours + this.minutes / 60 + this.seconds / 3600;
+        out = base.hours + base.minutes / 60 + base.seconds / 3600;
         out = positiveRemainder(out, 12);
         break;
       case 'minutes' :
-        out = this.minutes + this.seconds / 60;
+        out = base.minutes + base.seconds / 60;
         out = positiveRemainder(out, 60);
         break;
       case 'seconds' :
-        out = positiveRemainder(this.seconds, 60);
+        out = positiveRemainder(base.seconds, 60);
         break;
       default:
         break;
@@ -326,6 +372,45 @@ class TimePickerAnalog extends React.Component {
     return phi;
   }
 }
+
+// ==========================================
+// WatchFace
+// ==========================================
+class WatchFace extends React.Component {
+  static propTypes = {
+    radius:                 React.PropTypes.number.isRequired,
+  };
+
+  constructor(props) {
+    super(props);
+    this.shouldComponentUpdate = PureRenderMixin.shouldComponentUpdate.bind(this);
+  }
+
+  render() {
+    const { radius: r } = this.props;
+    const ticks = [];
+    let idx = 0;
+    let phi = 0;
+    while (phi < PI2) {
+      const props = { x1: r * cos(phi), y1: r * sin(phi) };
+      let factor;
+      if (idx % 5) {
+        props.style = style.tickMinor;
+        factor = 0.97;
+      } else {
+        props.style = style.tickMajor;
+        factor = 0.93;
+      }
+      props.x2 = props.x1 * factor;
+      props.y2 = props.y1 * factor;
+      ticks.push(<line key={`tick-${phi}`} {...props} />);
+      idx++;
+      phi += PI2 / 60;
+    }
+    return <g>{ticks}</g>;
+  }
+}
+
 
 // ==========================================
 // Styles
@@ -365,7 +450,7 @@ const style = {
     }),
     seconds: lineStyle,
   },
-  hand: (name, fHovered, fDragged, { accentColor, disabled }) => {
+  hand: (name, fHovered, fDragged, fHint, { accentColor, disabled }) => {
     let out = style.handBase[name];
     if (!disabled && (fHovered || fDragged)) {
       out = merge(out, {
@@ -373,6 +458,7 @@ const style = {
         strokeWidth: 4,
       });
     }
+    if (fHint) out = timmSet(out, 'stroke', COLORS.dim);
     return out;
   },
   transparentHandBase: {

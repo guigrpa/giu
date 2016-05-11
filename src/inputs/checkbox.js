@@ -12,7 +12,8 @@ class Checkbox extends React.Component {
   static propTypes = {
     id:                     React.PropTypes.string,
     label:                  React.PropTypes.string,
-    labelStyle:             React.PropTypes.object,
+    disabled:               React.PropTypes.bool,
+    styleLabel:             React.PropTypes.object,
     // Input HOC
     curValue:               React.PropTypes.bool.isRequired,
     registerOuterRef:       React.PropTypes.func.isRequired,
@@ -30,11 +31,11 @@ class Checkbox extends React.Component {
   }
 
   renderWithLabel() {
-    const { id, label, registerOuterRef, labelStyle } = this.props;
+    const { id, label, registerOuterRef, styleLabel } = this.props;
     return (
       <span ref={registerOuterRef} className="giu-checkbox">
         {this.renderInput()}
-        <label htmlFor={id} style={labelStyle}>{label}</label>
+        <label htmlFor={id} style={styleLabel}>{label}</label>
       </span>
     );
   }

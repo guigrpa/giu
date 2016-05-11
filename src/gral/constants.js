@@ -5,10 +5,9 @@ const COLORS = {
   lightText: 'white',
 
   // Others
-  line: '#cccccc',
+  line: '#999999',
   darkLine: 'black',
-  focus: 'rgba(81, 203, 238, 1)',
-  focusGlow: '0 0 5px rgba(81, 203, 238, 1)',
+  bgInput: 'white',
   accent: '#6600cc',
 
   // Notifications and errors

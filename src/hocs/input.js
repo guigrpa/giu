@@ -171,6 +171,7 @@ function input(ComposedComponent, {
           onFocus={onFocus}
           onBlur={onBlur}
           onResizeOuter={this.renderErrorFloat}
+          styleOuter={fIncludeFocusCapture ? undefined : this.props.styleOuter}
         />
       );
       if (fIncludeFocusCapture) {

@@ -2,6 +2,9 @@ import React                from 'react';
 import { omit, merge }      from 'timm';
 import { bindAll }          from '../gral/helpers';
 import { KEYS, COLORS }     from '../gral/constants';
+import {
+  inputReset, INPUT_DISABLED,
+}                           from '../gral/styles';
 import input                from '../hocs/input';
 
 const NULL_VALUE = '';
@@ -73,7 +76,7 @@ class Textarea extends React.Component {
         <textarea ref={this.registerInputRef}
           value={curValue}
           onKeyUp={this.onKeyUp}
-          style={merge(style.field, styleField)}
+          style={style.field(this.props)}
           {...otherProps}
         />
       </div>
@@ -110,17 +113,18 @@ const style = {
   taWrapper: {
     position: 'relative',
   },
-  field: {
-    border: `1px solid ${COLORS.line}`,
+  fieldBase: inputReset({
     width: '100%',
     overflow: 'hidden',
     cursor: 'beam',
-    fontFamily: 'inherit',
-    fontSize: 'inherit',
-    fontWeight: 'inherit',
-    background: 'transparent',
     resize: 'none',
     padding: 2,
+  }),
+  field: ({ disabled, styleField }) => {
+    let out = style.fieldBase;
+    if (disabled) out = merge(out, INPUT_DISABLED);
+    out = merge(out, styleField);
+    return out;
   },
 
   // hidden placeholder

@@ -12,10 +12,10 @@ import {
 }                           from '../gral/dates';
 import {
   flexContainer,
+  GLOW,
 }                           from '../gral/styles';
 import { COLORS, KEYS }     from '../gral/constants';
 import input                from '../hocs/input';
-import FocusCapture         from '../components/focusCapture';
 import DatePicker           from '../inputs/datePicker';
 import TimePickerDigital    from '../inputs/timePickerDigital';
 import TimePickerAnalog     from '../inputs/timePickerAnalog';
@@ -27,40 +27,28 @@ const TRAPPED_KEYS = [
   KEYS.backspace, KEYS.del,
 ];
 
-// External value: `Date?`
-// Internal value: `Moment?` (used by DateTimePicker and all its picker-descendants)
-function toInternalValue(val) { return val != null ? moment(val) : null; }
-function toExternalValue(val) { return val != null ? val.clone().toDate() : null; }
-
 // ==========================================
 // Component
 // ==========================================
-class BaseDateTimePicker extends React.Component {
+class DateTimePicker extends React.Component {
   static propTypes = {
+    registerOuterRef:       React.PropTypes.func,
+    curValue:               React.PropTypes.object,   // a moment object
+    keyDown:                React.PropTypes.object,
     disabled:               React.PropTypes.bool,
-    focusable:              React.PropTypes.bool,
     date:                   React.PropTypes.bool,
     time:                   React.PropTypes.bool,
     analogTime:             React.PropTypes.bool,
     seconds:                React.PropTypes.bool,
     utc:                    React.PropTypes.bool,
     todayName:              React.PropTypes.string,
-    onKeyDown:              React.PropTypes.func,
-    keyDown:                React.PropTypes.object,
+    onChange:               React.PropTypes.func.isRequired,
+    fFocused:               React.PropTypes.bool,
     style:                  React.PropTypes.object,
     accentColor:            React.PropTypes.string,
-    // Input HOC
-    curValue:               React.PropTypes.object,   // a moment object
-    onChange:               React.PropTypes.func.isRequired,
-    registerOuterRef:       React.PropTypes.func.isRequired,
-    registerFocusableRef:   React.PropTypes.func.isRequired,
-    fFocused:               React.PropTypes.bool.isRequired,
-    onFocus:                React.PropTypes.func.isRequired,
-    onBlur:                 React.PropTypes.func.isRequired,
   };
   static defaultProps = {
     disabled:               false,
-    focusable:              true,
     date:                   true,
     time:                   false,
     analogTime:             true,
@@ -72,16 +60,26 @@ class BaseDateTimePicker extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
-      cmdRouting: props.date ? 'date' : 'time',
+      focusedSubpicker: props.date ? 'date' : 'time',
     };
-    this.cmdsToPickers = [];
+    this.keyDown = null;
     bindAll(this, [
       'registerOuterRef',
-      'registerFocusableRef',
       'onMouseDown',
-      'onKeyDown',
       'onChange',
     ]);
+  }
+
+  // In order to route the `keyDown` to the DatePicker or
+  // the TimePicker, depending on the last user action,
+  // we keep a local variable with the value that will be passed 
+  // down. When the subpicker focus changes, we set this value to null.
+  // When the owner component updates this prop, we update this value.
+  componentWillReceiveProps(nextProps) {
+    const { keyDown } = nextProps;
+    if (keyDown !== this.props.keyDown) {
+      this.keyDown = keyDown;
+    }
   }
 
   // ==========================================
@@ -100,7 +98,6 @@ class BaseDateTimePicker extends React.Component {
         style={merge(style.outer(this.props), baseStyle)}
         onMouseDown={this.onMouseDown}
       >
-        {this.renderFocusCapture()}
         {this.renderDate()}
         {this.renderSeparator()}
         {this.renderTime()}
@@ -108,31 +105,17 @@ class BaseDateTimePicker extends React.Component {
     );
   }
 
-  renderFocusCapture() {
-    const { focusable, onFocus, onBlur } = this.props;
-    if (!focusable) return null;
-    return (
-      <FocusCapture
-        registerRef={this.registerFocusableRef}
-        onFocus={onFocus}
-        onBlur={onBlur}
-        onKeyDown={this.onKeyDown}
-      />
-    );
-  }
-
   renderDate() {
+    if (!this.props.date) return null;
     const {
       curValue,
-      disabled, focusable,
-      date,
+      disabled,
       todayName,
       accentColor,
     } = this.props;
-    if (!date) return null;
-    let cmds;
-    if (!disabled && this.state.cmdRouting === 'date') {
-      cmds = focusable ? this.cmdsToPickers : this.props.cmds;
+    let keyDown;
+    if (!disabled && this.state.focusedSubpicker === 'date') {
+      keyDown = this.keyDown;
     }
     return (
       <DatePicker
@@ -141,7 +124,7 @@ class BaseDateTimePicker extends React.Component {
         onChange={this.onChange('date')}
         utc={this.utc}
         todayName={todayName}
-        cmds={cmds}
+        keyDown={keyDown}
         accentColor={accentColor}
       />
     );
@@ -162,8 +145,8 @@ class BaseDateTimePicker extends React.Component {
     } = this.props;
     if (!time) return null;
     let keyDown;
-    if (!disabled && this.state.cmdRouting === 'time') {
-      keyDown = this.props.keyDown;
+    if (!disabled && this.state.focusedSubpicker === 'time') {
+      keyDown = this.keyDown;
     }
     const Component = analogTime ? TimePickerAnalog : TimePickerDigital;
     return (
@@ -184,12 +167,7 @@ class BaseDateTimePicker extends React.Component {
   // ==========================================
   registerOuterRef(c) {
     this.refOuter = c;
-    this.props.registerOuterRef(c);
-  }
-
-  registerFocusableRef(c) {
-    this.refFocus = c;
-    this.props.registerFocusableRef(c);
+    this.props.registerOuterRef && this.props.registerOuterRef(c);
   }
 
   onMouseDown(ev) {
@@ -198,16 +176,7 @@ class BaseDateTimePicker extends React.Component {
     if (!disabled && focusable && this.refFocus) this.refFocus.focus();
   }
 
-  // Keystrokes from FocusCapture
-  onKeyDown(ev) {
-    if (TRAPPED_KEYS.indexOf(ev.which) >= 0) {
-      cancelEvent(ev);
-      this.cmdsToPickers = [{ type: 'KEY_DOWN', which: ev.which }];
-      this.forceUpdate();
-    }
-  }
-
-  onChange(cmdRouting) {
+  onChange(focusedSubpicker) {
     return (ev, nextValue0) => {
       const { date, time } = this.props;
       let nextValue = nextValue0;
@@ -221,14 +190,14 @@ class BaseDateTimePicker extends React.Component {
         }
       }
       this.props.onChange(ev, nextValue);
-      this.redirectCommands(cmdRouting);
+      this.changeFocusedSubpicker(focusedSubpicker);
     };
   }
 
-  redirectCommands(cmdRouting) {
-    if (cmdRouting === this.state.cmdRouting) return;
-    this.cmdsToPickers = [];
-    this.setState({ cmdRouting });
+  changeFocusedSubpicker(focusedSubpicker) {
+    if (focusedSubpicker === this.state.focusedSubpicker) return;
+    this.keyDown = null;
+    this.setState({ focusedSubpicker });
   }
 }
 
@@ -237,16 +206,13 @@ class BaseDateTimePicker extends React.Component {
 // ==========================================
 const style = {
   outer: ({ fFocused }) => {
-    const out = flexContainer('row', {
+    let out = flexContainer('row', {
       paddingTop: 3,
       paddingBottom: 3,
       overflowY: 'auto',
       border: `1px solid ${COLORS.line}`,
     });
-    if (fFocused) {
-      out.boxShadow = COLORS.focusGlow;
-      out.border = `1px solid ${COLORS.focus}`;
-    }
+    if (fFocused) out = merge(out, GLOW);
     return out;
   },
   separator: {
@@ -260,8 +226,6 @@ const style = {
 // ==========================================
 // Public API
 // ==========================================
-const DateTimePicker = input(BaseDateTimePicker, { toInternalValue, toExternalValue });
-
 export {
   DateTimePicker,
   TRAPPED_KEYS,

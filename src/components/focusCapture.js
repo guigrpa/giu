@@ -1,5 +1,6 @@
 import React                from 'react';
 import { omit }             from 'timm';
+import { HIDDEN_FOCUS_CAPTURE } from '../gral/styles';
 
 // ==========================================
 // Component
@@ -25,18 +26,7 @@ class FocusCapture extends React.Component {
 // Styles
 // ==========================================
 const style = {
-  outer: {
-    position: 'fixed',
-    opacity: 0,
-    width: 10,
-    height: 10,
-    padding: 0,
-    cursor: 'default',
-    pointerEvents: 'none',
-    zIndex: -80,
-    top: 8,
-    left: 8,
-  },
+  outer: HIDDEN_FOCUS_CAPTURE,
 };
 
 // ==========================================

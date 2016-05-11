@@ -53,6 +53,7 @@ const WIDE_OPTIONS = [
 const TEST = 0;
 const EVERYTHING = true;
 const onChange = (ev, o) => console.log(o);
+const onChangeJson = (ev, o) => console.log(JSON.stringify(o));
 const App = () => {
   let out;
   switch (TEST) {
@@ -66,7 +67,7 @@ const App = () => {
           Test<br />Test<br />Test<br />Test<br />Test<br />Test<br />Test<br />Test<br />Test<br />
           Test<br />Test<br />Test<br />Test<br />Test<br />Test<br />Test<br />Test<br />Test<br />
           <TextInput
-            onChange={(ev, o) => console.log(o)}
+            onChange={onChange}
             errors={['Must be numeric']}
             errorPosition="above" errorAlign="right"
           /><br />
@@ -97,13 +98,21 @@ const App = () => {
           <Floats />
           <DropDownMenu
             items={NORMAL_OPTIONS}
-            onClickItem={(ev, value) => console.log(value)}
+            onClickItem={onChange}
           >
             <Icon icon="bars" /> Menu
           </DropDownMenu>
         </div>
       );
       break;
+      break;
+    case 4:
+      out = (
+        <div>
+          <Floats />
+          <DateInput date={false} time onChange={onChange} type="inlinePicker" />
+        </div>
+      );
       break;
     default:
       out = (
@@ -230,14 +239,14 @@ const DropDownExample = () =>
     <ExampleLabel>DropDownMenu (focusable, keyboard-controlled, embedded ListPicker)</ExampleLabel>
     <DropDownMenu
       items={NORMAL_OPTIONS}
-      onClickItem={(ev, value) => console.log(value)}
+      onClickItem={onChange}
     >
       <Icon icon="bars" /> Menu
     </DropDownMenu>
     &nbsp;&nbsp;&nbsp;&nbsp;
     <DropDownMenu
       items={TALL_OPTIONS}
-      onClickItem={(ev, value) => console.log(value)}
+      onClickItem={onChange}
       accentColor="darkgreen"
     >
       <Icon icon="bolt" /> Long menu
@@ -467,28 +476,31 @@ class FormExample extends React.Component {
       <div style={style.example}>
         <div>
           <ExampleLabel>Inputs</ExampleLabel>
+          <br /><br /><br /><br /><br />
           <TextInput
-            value="a"
+            value="a" onChange={onChange}
             placeholder="text"
-            onChange={(_, value) => console.log(value)}
             errors={["Must be numeric"]}
             errorPosition="above" errorAlign="right"
           />
-          {' '}
+          <TextInput disabled value="Disabled" />
+          &nbsp;&nbsp;
           <NumberInput
             step="0.1"
-            value={null}
+            value={null} onChange={onChange}
             placeholder="number"
-            onChange={(_, value) => console.log(value)}
           />
-          {' '}
+          <NumberInput disabled value={6.5} />
+          &nbsp;&nbsp;
           <Checkbox
-            id="myCheck"
-            value={true}
+            value={true} onChange={onChange}
             label="checkbox"
             errors={["Must not be null"]}
           />
+          <Checkbox disabled value={true} label="checkbox"/>
+          &nbsp;&nbsp;
           <FileInput />
+          <FileInput disabled />
         </div>
         <div>
           {
@@ -503,9 +515,8 @@ class FormExample extends React.Component {
         <br />
         <div>
           <ExampleLabel>Textarea (with auto-resize)</ExampleLabel>
-          <Textarea
-            value="En un lugar de la Mancha..."
-          />
+          <Textarea value="En un lugar de la Mancha..." />
+          <Textarea disabled value="En un lugar de la Mancha..." />
         </div>
         <br />
         <div>
@@ -513,44 +524,42 @@ class FormExample extends React.Component {
             Select: native, or with inline/dropdown ListPicker
             (keyboard-controlled, shortcuts, one/two-stage, autoscroll)
           </ExampleLabel>
-          <Select
-            value="a"
-            items={NORMAL_OPTIONS}
-          />
-          &nbsp;&nbsp;
-          <Select
-            value={null}
-            items={NORMAL_OPTIONS} allowNull
-            onChange={(_, value) => console.log(JSON.stringify(value))}
-          />
-          &nbsp;&nbsp;
-          <Select type="dropDownPicker"
-            value={null}
-            items={NORMAL_OPTIONS} allowNull
-            onChange={(_, value) => console.log(JSON.stringify(value))}
-          />
-          <Select type="dropDownPicker"
-            value="a"
-            items={NORMAL_OPTIONS} allowNull
-            onChange={(_, value) => console.log(JSON.stringify(value))}
-          />
-          <Select type="dropDownPicker"
-            value={28}
-            items={TALL_OPTIONS} allowNull
-            onChange={(_, value) => console.log(JSON.stringify(value))}
-          />
+          <div>
+            <Select
+              value="a"
+              items={NORMAL_OPTIONS}
+            />
+            <Select
+              value={null} onChange={onChangeJson}
+              items={NORMAL_OPTIONS} allowNull
+            />
+            <Select disabled value="a" items={NORMAL_OPTIONS} />
+            &nbsp;&nbsp;
+            <Select type="dropDownPicker"
+              value={null} onChange={onChangeJson}
+              items={NORMAL_OPTIONS} allowNull
+            />
+            <Select type="dropDownPicker"
+              value="a" onChange={onChangeJson}
+              items={NORMAL_OPTIONS} allowNull
+            />
+            <Select type="dropDownPicker"
+              value={28} onChange={onChangeJson}
+              items={TALL_OPTIONS} allowNull
+            />
+            <Select disabled type="dropDownPicker" value={28} items={TALL_OPTIONS}/>
+          </div>
           <div style={flexContainer('row')}>
             <Select type="inlinePicker"
               items={NORMAL_OPTIONS}
-              onChange={(_, value) => console.log(JSON.stringify(value))}
+              onChange={onChangeJson}
               styleOuter={flexItem(1, { marginRight: 4 })}
               styleList={{height: 150}}
               accentColor="gray"
             />
             <Select type="inlinePicker"
               items={TALL_OPTIONS}
-              value={33}
-              onChange={(_, value) => console.log(JSON.stringify(value))}
+              value={33} onChange={onChangeJson}
               twoStageStyle 
               styleOuter={flexItem(1, { marginRight: 4 })}
               styleList={{height: 150}}
@@ -558,7 +567,7 @@ class FormExample extends React.Component {
             />
             <Select type="inlinePicker"
               items={[]}
-              onChange={(_, value) => console.log(JSON.stringify(value))}
+              onChange={onChangeJson}
               styleOuter={flexItem(1)}
               styleList={{height: 150}}
             />
@@ -567,31 +576,52 @@ class FormExample extends React.Component {
         <br />
         <div>
           <ExampleLabel>
-            DateTimePicker (focusable, keyboard-controlled, local
-            for date+time, UTC otherwise)
+            DateInput: field-only, or with inline/dropdown DateTimePicker
+            (keyboard-controlled, local for date+time, UTC otherwise)
           </ExampleLabel>
+          <div>
+            <DateInput />&nbsp;&nbsp;
+            <DateInput date time onChange={onChange} />&nbsp;&nbsp;
+            <DateInput date={false} time onChange={onChange} />
+            <DateInput date={false} time seconds analogTime={false} onChange={onChange} />
+            &nbsp;dropDownPicker (default)
+          </div>
+          <div>
+            <DateInput type="onlyField" onChange={onChange} />&nbsp;&nbsp;
+            <DateInput type="onlyField" date time onChange={onChange} />&nbsp;&nbsp;
+            <DateInput type="onlyField" date={false} time onChange={onChange} />
+            <DateInput type="onlyField" date={false} time seconds analogTime={false} onChange={onChange} />
+            &nbsp;onlyField
+          </div>
+          <div>
+            <DateInput disabled value={new Date()} type="onlyField" />&nbsp;&nbsp;
+            <DateInput disabled value={new Date()} type="onlyField" date time />&nbsp;&nbsp;
+            <DateInput disabled value={new Date()} type="onlyField" date={false} time />
+            <DateInput disabled value={new Date()} type="onlyField" date={false} time seconds analogTime={false} />
+            &nbsp;disabled
+          </div>
           <div style={flexContainer('row')}>
-            <DateTimePicker
-              onChange={(ev, d) => console.log(d)}
+            <DateInput type="inlinePicker"
+              onChange={onChange}
               time analogTime={false}
               lang="es"
               accentColor="lightgray"
             />
             &nbsp;&nbsp;
-            <DateTimePicker
+            <DateInput type="inlinePicker"
               value={this.state.fixedDate}
-              onChange={(ev, d) => console.log(d)}
+              onChange={onChange}
               accentColor="darkblue"
             />
             &nbsp;&nbsp;
-            <DateTimePicker
+            <DateInput type="inlinePicker"
               value={this.state.fixedDate}
-              onChange={(ev, d) => console.log(d)}
+              onChange={onChange}
               accentColor="darkgreen"
             />
             &nbsp;&nbsp;
-            <DateTimePicker
-              onChange={(ev, d) => console.log(d)}
+            <DateInput type="inlinePicker"
+              onChange={onChange}
               date={false} time analogTime={false}
               accentColor="turquoise"
             />
@@ -599,24 +629,13 @@ class FormExample extends React.Component {
           <div style={flexContainer('row', { marginTop: 5 })}>
             <TimePickerNow />
             &nbsp;&nbsp;
-            <DateTimePicker
-              onChange={(ev, d) => console.log(d)}
+            <DateInput type="inlinePicker"
+              onChange={onChange}
               date time
             />
           </div>
         </div>
         <br />
-        <div>
-          <ExampleLabel>
-            DateInput (focusable, keyboard-controlled, local
-            for date+time, UTC otherwise)
-          </ExampleLabel>
-          <DateInput />&nbsp;&nbsp;
-          <DateInput date time />&nbsp;&nbsp;
-          <DateInput date={false} time />
-          <DateInput date={false} time seconds analogTime={false} />
-        </div>
-        <br />        
         <div>
           <ExampleLabel>Imperative example</ExampleLabel>
           <TextInput
@@ -670,7 +689,7 @@ class TimePickerNow extends React.Component {
 
   render() {
     return (
-      <DateTimePicker
+      <DateInput type="inlinePicker"
         value={this.state.curDate}
         time seconds disabled
       />
