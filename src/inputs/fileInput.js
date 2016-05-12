@@ -10,6 +10,8 @@ import input                from '../hocs/input';
 import Button               from '../components/button';
 import Icon                 from '../components/icon';
 
+function isNull(val) { return val == null; }
+
 // ==========================================
 // Component
 // ==========================================
@@ -132,4 +134,4 @@ const PROP_KEYS = Object.keys(FileInput.propTypes);
 // ==========================================
 // Public API
 // ==========================================
-export default input(FileInput, { valueAttr: 'files' });
+export default input(FileInput, { isNull, valueAttr: 'files' });

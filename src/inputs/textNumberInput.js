@@ -6,14 +6,16 @@ import {
 import input                from '../hocs/input';
 
 const NULL_VALUE = '';
-const converters = {
+const classOptions = {
   text: {
     toInternalValue: val => (val != null ? val : NULL_VALUE),
     toExternalValue: val => (val !== NULL_VALUE ? val : null),
+    isNull: val => val === NULL_VALUE,
   },
   number: {
     toInternalValue: val => (val != null ? String(val) : NULL_VALUE),
     toExternalValue: val => (val !== NULL_VALUE ? Number(val) : null),
+    isNull: val => val === NULL_VALUE,
   },
 };
 
@@ -55,7 +57,7 @@ function createClass(name, inputType) {
     }
   };
 
-  return input(Klass, converters[inputType]);
+  return input(Klass, classOptions[inputType]);
 }
 
 // ==========================================

@@ -47,5 +47,6 @@ export * from './gral/styles';
 export * from './gral/constants';
 
 // Other
+export * from './gral/validators';
 export * from './gral/helpers';
 export * from './gral/visibility';

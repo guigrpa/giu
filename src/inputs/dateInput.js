@@ -21,6 +21,7 @@ import {
   getUtcFlag,
   startOfDefaultDay,
 }                           from '../gral/dates';
+import { isDate }           from '../gral/validators';
 import input                from '../hocs/input';
 import {
   floatAdd,
@@ -48,6 +49,7 @@ function toExternalValue(str, props) {
   const mom = displayToMoment(str, props);
   return mom !== null ? mom.toDate() : null;
 }
+function isNull(val) { return val === NULL_VALUE; }
 
 function momentToDisplay(mom, props) {
   if (mom == null) return NULL_VALUE;
@@ -328,4 +330,18 @@ const PROP_KEYS = Object.keys(DateInput.propTypes);
 // ==========================================
 // Public API
 // ==========================================
-export default input(DateInput, { toInternalValue, toExternalValue });
+export default input(DateInput, {
+  toInternalValue, toExternalValue, isNull,
+  defaultValidators: { isDate: isDate() },
+  validatorHelpers: {
+    isDate: props => val => {
+      const mom = displayToMoment(val, props);
+      if (mom != null) return undefined;
+      const propsWithDefaults = addDefaults(props, DEFAULT_PROPS);
+      const { date, time, seconds } = propsWithDefaults;
+      debugger;
+      const fmt = dateTimeFormat(date, time, seconds);
+      return { props: propsWithDefaults, fmt };
+    },
+  },
+});

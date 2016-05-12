@@ -9,6 +9,7 @@ import { LIST_SEPARATOR_KEY } from '../inputs/listPicker';
 
 function toInternalValue(val) { return val != null ? JSON.stringify(val) : NULL_STRING; }
 function toExternalValue(val) { return val !== NULL_STRING ? JSON.parse(val) : null; }
+function isNull(val) { return val === NULL_STRING; }
 
 // ==========================================
 // Component
@@ -74,4 +75,4 @@ const PROP_KEYS = Object.keys(SelectNative.propTypes);
 // ==========================================
 // Public API
 // ==========================================
-export default input(SelectNative, { toInternalValue, toExternalValue });
+export default input(SelectNative, { toInternalValue, toExternalValue, isNull });

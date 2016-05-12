@@ -1,6 +1,10 @@
 import React                from 'react';
 import PureRenderMixin      from 'react-addons-pure-render-mixin';
-import { omit }             from 'timm';
+import {
+  omit,
+  merge,
+  set as timmSet,
+}                           from 'timm';
 import {
   bindAll,
   cancelEvent,
@@ -8,6 +12,7 @@ import {
 import { COLORS, MISC }     from '../gral/constants';
 import { scrollIntoView }   from '../gral/visibility';
 import { isDark }           from '../gral/styles';
+import { isRequired }       from '../gral/validators';
 import {
   floatAdd,
   floatDelete,
@@ -18,7 +23,9 @@ import FocusCapture         from '../components/focusCapture';
 
 const PROP_TYPES = {
   value:                  React.PropTypes.any,
-  errors:                 React.PropTypes.array,  // also passed through
+  errors:                 React.PropTypes.array,
+  required:               React.PropTypes.bool,
+  validators:             React.PropTypes.array,
   cmds:                   React.PropTypes.array,  // also passed through
   disabled:               React.PropTypes.bool,   // also passed through
   floatZ:                 React.PropTypes.number, // also passed through
@@ -41,23 +48,36 @@ function input(ComposedComponent, {
   toExternalValue = (o => o),
   valueAttr = 'value',
   fIncludeFocusCapture = false,
+  defaultValidators = {},
+  isNull,
+  // Input-specific helper functions for validation,
+  // Helpers will receive the input value (internal or external,
+  // depending on the case) plus the current props
+  validatorHelpers = {},
   trappedKeys = [],
   className,
 } = {}) {
+
   return class extends React.Component {
     static displayName = `Input(${ComposedComponent.name})`;
     static propTypes = PROP_TYPES;
     static defaultProps = {
       errors:                 [],
+      validators:             [],
     };
 
     constructor(props) {
       super(props);
       this.shouldComponentUpdate = PureRenderMixin.shouldComponentUpdate.bind(this);
+
+      // NOTE: this.errors = this.props.errors + this.state.validationErrors
+      this.errors = props.errors;
+      this.prevErrors = this.errors;
       this.state = {
         curValue: toInternalValue(props.value, props),
         fFocused: false,
         keyDown: null,
+        validationErrors: [],
       };
       bindAll(this, [
         'registerOuterRef',
@@ -71,6 +91,11 @@ function input(ComposedComponent, {
       ]);
     }
 
+    componentDidMount() {
+      warnFloats(this.constructor.name);
+      this.renderErrorFloat();
+    }
+
     componentWillReceiveProps(nextProps) {
       const { value, cmds } = nextProps;
       if (value !== this.props.value) {
@@ -79,15 +104,19 @@ function input(ComposedComponent, {
       if (cmds !== this.props.cmds) this.processCmds(cmds);
     }
 
-    componentDidMount() {
-      warnFloats(this.constructor.name);
-      this.renderErrorFloat();
+    componentWillUpdate(nextProps, nextState) {
+      const { errors } = nextProps;
+      const { validationErrors } = nextState;
+      if (errors !== this.props.errors || 
+          validationErrors !== this.state.validationErrors) {
+        this.errors = errors.concat(validationErrors);
+      }
     }
 
     componentDidUpdate(prevProps, prevState) {
-      const { errors, value } = this.props;
+      const { value } = this.props;
       const { curValue } = this.state;
-      if (errors !== prevProps.errors ||
+      if (this.errors !== this.prevErrors ||
           value !== prevProps.value ||
           curValue !== prevState.curValue) {
         this.renderErrorFloat();
@@ -113,6 +142,9 @@ function input(ComposedComponent, {
           case 'REVERT':
             this.setState({ curValue: toInternalValue(this.props.value, this.props) });
             break;
+          case 'VALIDATE':
+            this.validate();
+            break;
           case 'FOCUS':
             this.pendingFocusBlur = '_focus';
             break;
@@ -128,17 +160,7 @@ function input(ComposedComponent, {
     // Alternative to using the `onChange` prop (e.g. if we want to delegate
     // state handling to the input and only want to retrieve the value when submitting a form)
     getValue() { return toExternalValue(this.state.curValue, this.props); }
-
-    // e.g. user clicks a button that replaces the temporary value being edited
-    // setValue(val, cb) { this.setState({ curValue: toInternalValue(val, this.props) }, cb); }
-
-    // e.g. user clicks a button that reverts all changes to the input
-    // revert(cb) {
-    //   this.setState({ curValue: toInternalValue(this.props.value, this.props) }, cb);
-    // }
-    // focus() { if (this.refFocusable && this.refFocusable.focus) this.refFocusable.focus(); }
-    // blur() { if (this.refFocusable && this.refFocusable.blur) this.refFocusable.blur(); }
-
+    getErrors() { return this.errors; }
 
     // ==========================================
     // Render
@@ -160,7 +182,7 @@ function input(ComposedComponent, {
           registerFocusableRef={registerFocusableRef}
           {...otherProps}
           curValue={this.state.curValue}
-          errors={this.props.errors}
+          errors={this.errors}
           cmds={this.props.cmds}
           keyDown={this.state.keyDown}
           disabled={this.props.disabled}
@@ -198,7 +220,7 @@ function input(ComposedComponent, {
     }
 
     renderErrorFloat() {
-      const { errors } = this.props;
+      const { errors } = this;
 
       // Remove float
       if (!errors.length && this.errorFloatId != null) {
@@ -257,7 +279,7 @@ function input(ComposedComponent, {
     registerOuterRef(c) { this.refOuter = c; }
     registerFocusableRef(c) { this.refFocusable = c; }
 
-    onChange(ev, providedValue, providedProps) {
+    onChange(ev, providedValue) {
       const { onChange, disabled } = this.props;
       if (disabled) return;
       let curValue = providedValue;
@@ -265,10 +287,7 @@ function input(ComposedComponent, {
         curValue = ev.currentTarget[valueAttr];
       }
       this.setState({ curValue });
-      if (onChange) {
-        const propsForConverter = providedProps || this.props;
-        onChange(ev, toExternalValue(curValue, propsForConverter));
-      }
+      if (onChange) onChange(ev, toExternalValue(curValue, this.props));
       if (!this.state.fFocused) this._focus();
     }
 
@@ -285,6 +304,7 @@ function input(ComposedComponent, {
 
     onBlur(ev) {
       const { onBlur } = this.props;
+      this._validate();
       this.setState({ fFocused: false });
       if (onBlur) onBlur(ev);
     }
@@ -315,6 +335,45 @@ function input(ComposedComponent, {
 
     _blur() {
       if (this.refFocusable && this.refFocusable.blur) this.refFocusable.blur();
+    }
+
+    _validate() {
+      let cnt = 0;
+      let validators = defaultValidators;
+      this.props.validators.forEach(validator => {
+        const name = validator.name || `anon_${cnt++}`;
+        validators = timmSet(validators, name, validator);
+      });
+      const { curValue: internalValue } = this.state;
+      const externalValue = toExternalValue(internalValue, this.props);
+      let fRequired = this.props.required || validators.isRequired != null;
+      const fIsNull = isNull(internalValue);
+      let validationErrors;
+
+      // If `null` is allowed and input is `null`, bail out
+      if (!fRequired && fIsNull) {
+        validationErrors = [];
+
+      // If input is null (unallowed), get the corresponding message and bail out
+      } else if (fIsNull) {
+        const validator = validators.isRequired || isRequired();
+        validationErrors = [validator.getErrorMessage(internalValue)];
+
+      // Otherwise, collect all validator errors (skipping `isRequired`)
+      } else {
+        validationErrors = [];
+        Object.keys(validators).forEach(name => {
+          if (name === 'isRequired') return;
+          const validator = validators[name];
+          const value = validator.fInternal ? internalValue : externalValue;
+          let helper;
+          if (validatorHelpers[name]) helper = validatorHelpers[name](this.props);
+          const error = validator.validate(value, helper);
+          if (error != null) validationErrors.push(error);
+        });
+      }
+
+      this.setState({ validationErrors });
     }
   };
 }

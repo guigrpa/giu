@@ -10,6 +10,7 @@ import input                from '../hocs/input';
 const NULL_VALUE = '';
 function toInternalValue(val) { return val != null ? val : NULL_VALUE; }
 function toExternalValue(val) { return val !== NULL_VALUE ? val : null; }
+function isNull(val) { return val === NULL_VALUE; }
 
 function getPlaceHolderText(val) {
   const lines = val.split('\n');
@@ -155,4 +156,4 @@ const PROP_KEYS = Object.keys(Textarea.propTypes);
 // ==========================================
 // Public API
 // ==========================================
-export default input(Textarea, { toInternalValue, toExternalValue });
+export default input(Textarea, { toInternalValue, toExternalValue, isNull });

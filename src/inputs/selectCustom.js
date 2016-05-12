@@ -36,6 +36,7 @@ const LIST_SEPARATOR = {
 
 function toInternalValue(val) { return val != null ? JSON.stringify(val) : NULL_STRING; }
 function toExternalValue(val) { return val !== NULL_STRING ? JSON.parse(val) : null; }
+function isNull(val) { return val === NULL_STRING; }
 
 // ==========================================
 // Component
@@ -319,7 +320,7 @@ const style = {
 // Public API
 // ==========================================
 const SelectCustom = input(SelectCustomBase, {
-  toInternalValue, toExternalValue,
+  toInternalValue, toExternalValue, isNull,
   fIncludeFocusCapture: true,
   trappedKeys: [
     KEYS.esc,

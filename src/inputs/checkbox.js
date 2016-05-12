@@ -4,6 +4,7 @@ import input                from '../hocs/input';
 
 function toInternalValue(val) { return val != null ? val : false; }
 function toExternalValue(val) { return val; }
+function isNull(val) { return val == null; }
 
 // ==========================================
 // Component
@@ -75,6 +76,6 @@ const PROP_KEYS = Object.keys(Checkbox.propTypes);
 // Public API
 // ==========================================
 export default input(Checkbox, {
-  toInternalValue, toExternalValue,
+  toInternalValue, toExternalValue, isNull,
   valueAttr: 'checked',
 });

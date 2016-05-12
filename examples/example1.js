@@ -16,6 +16,7 @@ import {
   flexContainer, flexItem, boxWithShadow,
   merge,
   cancelEvent,
+  isRequired, isEmail, isOneOf,
 }                           from '../src';
 
 const { floor, random } = Math;
@@ -130,7 +131,6 @@ const App = () => {
             <Floats />
             <Notifications />
             <div style={flexItem(1)}>
-              {EVERYTHING && <ProgressExample />}
               {EVERYTHING && <NotificationExample />}
               {EVERYTHING && <MessageExample />}
               {EVERYTHING && <IconExample />}
@@ -140,6 +140,7 @@ const App = () => {
               {EVERYTHING && <DropDownExample />}
               {EVERYTHING && <ModalExample />}
               {EVERYTHING && <ScrollingExample />}
+              {EVERYTHING && <ProgressExample />}
             </div>
             <div style={flexItem(1)}>
               {EVERYTHING && <FormExample />}
@@ -154,23 +155,6 @@ const App = () => {
   }
   return out;
 };
-
-class ProgressExample extends React.Component {
-  constructor(props) {
-    super(props);
-    this.state = { value: 0.3 };
-    setInterval(() => { this.setState({ value: Math.random() }); }, 2000);
-  }
-  render() {
-    return (
-      <div style={style.example}>
-        <ExampleLabel>Progress</ExampleLabel>
-        <Progress value={this.state.value} />
-        <Progress />
-      </div>
-    );
-  }
-}
 
 const NotificationExample = () =>
   <div style={style.example}>
@@ -473,6 +457,23 @@ const ScrollingExample = () =>
     </div>
   </div>;
 
+class ProgressExample extends React.Component {
+  constructor(props) {
+    super(props);
+    this.state = { value: 0.3 };
+    setInterval(() => { this.setState({ value: Math.random() }); }, 2000);
+  }
+  render() {
+    return (
+      <div style={style.example}>
+        <ExampleLabel>Progress</ExampleLabel>
+        <Progress value={this.state.value} />
+        <Progress />
+      </div>
+    );
+  }
+}
+
 class FormExample extends React.Component {
   constructor(props) {
     super(props);
@@ -521,6 +522,23 @@ class FormExample extends React.Component {
           <Button onClick={() => this.setState({ fShowDateInput: !this.state.fShowDateInput })}>
             Toggle date input
           </Button>
+        </div>
+        <br />
+        <div>
+          <ExampleLabel>Input validation</ExampleLabel>
+          <TextInput placeholder="no validation" />
+          <TextInput placeholder="required (shortcut)"
+            required />
+          <TextInput placeholder="isRequired"
+            validators={[isRequired()]} />
+          <TextInput placeholder="isEmail"
+            required validators={[isEmail()]} />
+          <TextInput placeholder="isEmail (custom msg)"
+            required validators={[isEmail('please write your e-mail!')]} />
+          <TextInput placeholder="isEmail (custom msg 2)"
+            required validators={[isEmail((_, val) => `'${val}' is not an email!`)]} />
+          <DateInput type="onlyField" placeholder="MM/DD/YYYY" />
+          <DateInput type="onlyField" date={false} time seconds placeholder="HH:MM:ss" />
         </div>
         <br />
         <div>
@@ -597,7 +615,7 @@ class FormExample extends React.Component {
             (keyboard-controlled, local for date+time, UTC otherwise)
           </ExampleLabel>
           <div>
-            <DateInput />&nbsp;&nbsp;
+            <DateInput onChange={onChange} />&nbsp;&nbsp;
             <DateInput date time onChange={onChange} />&nbsp;&nbsp;
             <DateInput date={false} time onChange={onChange}
               styleField={{width: 60}}

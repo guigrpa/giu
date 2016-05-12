@@ -29,7 +29,41 @@
 - [x] Dropdown menu: should register its keys
 - [x] DateInput
 - [x] Homogeneous styles: background, focusability, etc.
-- [ ] Add validation hook to inputs; return an error or an array of errors
+- [ ] Select: use `required` instead of `allowNull` (inverse)
+- [ ] Input validation:
+    + [ ] POC:
+        * [x] Basic
+        * [ ] Make it async!
+        * [ ] Customising existing validators
+        * [ ] With custom validators
+    + [ ] Add validators
+    + By default (`required` prop is `false` or `isRequired` is not included in the `validate` prop), an input can be left blank. In this case, validations are only run if the input is *not blank*.
+        * Detecting that an input is blank is input-dependent, but typically should use the internal value (e.g. for dates, the internal string)
+    + If an input is `required`:
+        * We first determine whether the user has left the input blank (as above): if blank, the `isRequired` validator is the only one run
+        * If not blank, all other validators are run
+    + User validator functions:
+        (value, ...) => undefined | error message
+    + 
+
+    + Default validators for a given type input; may depend on props (e.g. date format, numbers):
+        * Dates must respect the format
+        * Numbers must be correct numbers and within the range (if specified)
+    + Validation is applied by default whenever the user blurs an input (or via `cmds`)
+    + User-facing API must:
+        * Be simple
+        * Allow extra, higher-level user validations
+        * Allow i18n
+        * Allow extra errors to be added via props
+        <TextInput />
+            = [no validations]
+        <TextInput required />
+            = `isRequired`
+        <NumberInput required />
+            = apply first the `isNumber` validator
+            = ...
+        * Only processed upon componentWillMount
+
 - [ ] RadioButton
 
 - [ ] ColorInput + ColorPicker
