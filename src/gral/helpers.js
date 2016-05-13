@@ -16,6 +16,11 @@ function cancelEvent(ev) {
   ev.stopPropagation && ev.stopPropagation();
 }
 
+function preventDefault(ev) {
+  if (!ev) return;
+  ev.preventDefault && ev.preventDefault();
+}
+
 // -----------------------------------------------
 // Widths, heights...
 // -----------------------------------------------
@@ -52,7 +57,7 @@ function windowWidthWithoutScrollbar() {
 // -----------------------------------------------
 export {
   bindAll,
-  cancelEvent,
+  cancelEvent, preventDefault,
   windowBottomScrollbarHeight, windowRightScrollbarWidth,
   windowHeightWithoutScrollbar, windowWidthWithoutScrollbar,
 };

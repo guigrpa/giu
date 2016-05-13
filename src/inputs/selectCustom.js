@@ -45,7 +45,7 @@ class SelectCustomBase extends React.Component {
   static propTypes = {
     disabled:               React.PropTypes.bool,
     items:                  React.PropTypes.array.isRequired,
-    allowNull:              React.PropTypes.bool,
+    required:               React.PropTypes.bool,
     inlinePicker:           React.PropTypes.bool,
     children:               React.PropTypes.any,
     onClickItem:            React.PropTypes.func,
@@ -79,7 +79,7 @@ class SelectCustomBase extends React.Component {
   }
 
   componentWillMount() {
-    this.prepareItems(this.props.items, this.props.allowNull);
+    this.prepareItems(this.props.items, this.props.required);
   }
 
   componentDidMount() {
@@ -90,11 +90,11 @@ class SelectCustomBase extends React.Component {
   }
 
   componentWillReceiveProps(nextProps) {
-    const { keyDown, items, allowNull, fFocused } = nextProps;
+    const { keyDown, items, required, fFocused } = nextProps;
     if (keyDown !== this.props.keyDown) this.processKeyDown(keyDown);
-    if (items !== this.props.items || allowNull !== this.props.allowNull) {
+    if (items !== this.props.items || required !== this.props.required) {
       this.unregisterShortcuts();
-      this.prepareItems(items, allowNull);
+      this.prepareItems(items, required);
     }
     if (fFocused !== this.props.fFocused) {
       this.setState({ fFloat: fFocused });
@@ -251,9 +251,9 @@ class SelectCustomBase extends React.Component {
     this.keyDown = keyDown;
   }
 
-  prepareItems(rawItems, allowNull) {
+  prepareItems(rawItems, required) {
     this.items = [];
-    if (allowNull) {
+    if (!required && rawItems.length) {
       this.items.push({
         value: NULL_STRING,
         label: '',

@@ -26,7 +26,7 @@ function getPlaceHolderText(val) {
 class Textarea extends React.Component {
   static propTypes = {
     onKeyUp:                React.PropTypes.func,
-    styleField:             React.PropTypes.object,
+    style:                  React.PropTypes.object,
     // Input HOC
     curValue:               React.PropTypes.any.isRequired,
     errors:                 React.PropTypes.array.isRequired,
@@ -59,9 +59,9 @@ class Textarea extends React.Component {
   // ==========================================
   render() {
     const {
-      curValue,
+      curValue, disabled,
       registerOuterRef,
-      styleField,
+      style: styleField,
     } = this.props;
     const otherProps = omit(this.props, PROP_KEYS);
     return (
@@ -78,6 +78,7 @@ class Textarea extends React.Component {
           value={curValue}
           onKeyUp={this.onKeyUp}
           style={style.field(this.props)}
+          tabIndex={disabled ? -1 : undefined}
           {...otherProps}
         />
       </div>
@@ -121,7 +122,7 @@ const style = {
     resize: 'none',
     padding: 2,
   }),
-  field: ({ disabled, styleField }) => {
+  field: ({ disabled, style: styleField }) => {
     let out = style.fieldBase;
     if (disabled) out = merge(out, INPUT_DISABLED);
     out = merge(out, styleField);

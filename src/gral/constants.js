@@ -6,6 +6,7 @@ const COLORS = {
 
   // Others
   line: '#999999',
+  lineDim: '#cccccc',
   darkLine: 'black',
   bgInput: 'white',
   accent: '#6600cc',

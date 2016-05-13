@@ -17,7 +17,7 @@ function isNull(val) { return val === NULL_STRING; }
 class SelectNative extends React.Component {
   static propTypes = {
     items:                  React.PropTypes.array.isRequired,
-    allowNull:              React.PropTypes.bool,
+    required:               React.PropTypes.bool,
     disabled:               React.PropTypes.bool,
     // Input HOC
     curValue:               React.PropTypes.string.isRequired,
@@ -29,18 +29,23 @@ class SelectNative extends React.Component {
   // Render
   // ==========================================
   render() {
-    const { curValue, items, allowNull, registerFocusableRef } = this.props;
+    const {
+      curValue, items,
+      required, disabled,
+      registerFocusableRef,
+    } = this.props;
     const finalItems = [];
-    if (allowNull) finalItems.push({ value: NULL_STRING, label: '' });
-    for (const option of items) {
+    if (!required) finalItems.push({ value: NULL_STRING, label: '' });
+    items.forEach(option => {
       if (option.label !== LIST_SEPARATOR_KEY) finalItems.push(option);
-    }
+    });
     const otherProps = omit(this.props, PROP_KEYS);
     return (
       <select ref={registerFocusableRef}
         className="giu-select-native"
         value={curValue}
         {...otherProps}
+        tabIndex={disabled ? -1 : undefined}
         style={style.field(this.props)}
       >
         {finalItems.map(o => {

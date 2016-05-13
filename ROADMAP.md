@@ -29,14 +29,8 @@
 - [x] Dropdown menu: should register its keys
 - [x] DateInput
 - [x] Homogeneous styles: background, focusability, etc.
-- [ ] Select: use `required` instead of `allowNull` (inverse)
-- [ ] Input validation:
-    + [ ] POC:
-        * [x] Basic
-        * [ ] Make it async!
-        * [ ] Customising existing validators
-        * [ ] With custom validators
-    + [ ] Add validators
+- [x] Select: use `required` instead of `allowNull` (inverse)
+- [x] Input validation
     + By default (`required` prop is `false` or `isRequired` is not included in the `validate` prop), an input can be left blank. In this case, validations are only run if the input is *not blank*.
         * Detecting that an input is blank is input-dependent, but typically should use the internal value (e.g. for dates, the internal string)
     + If an input is `required`:
@@ -44,7 +38,6 @@
         * If not blank, all other validators are run
     + User validator functions:
         (value, ...) => undefined | error message
-    + 
 
     + Default validators for a given type input; may depend on props (e.g. date format, numbers):
         * Dates must respect the format
@@ -63,11 +56,14 @@
             = apply first the `isNumber` validator
             = ...
         * Only processed upon componentWillMount
-
-- [ ] RadioButton
-
+- [x] Fix tabIndex for disabled comps
+- [x] RadioButton
 - [ ] ColorInput + ColorPicker
+    + [ ] Cannot put inputfields within radio group!!!
+- [ ] Slider?
 - [ ] Hints
+
+- [ ] Include native components for mobile? (e.g. `input type="date"`)
 - [ ] Pressing enter on button opening a modal also dismisses the modal!
 - [ ] Add alternative style to inputs (no borders, etc.) or make it simple to wrap the provided components and customise
 - [ ] Multi-selection ListPicker:

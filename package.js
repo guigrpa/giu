@@ -109,8 +109,8 @@ const specs = {
   },
 
   peerDependencies: {
-    react: '>=0.14.0',
-    'react-addons-pure-render-mixin': '>=0.14.0',
+    react: '^0.14.0 || ^15.0.0',
+    'react-addons-pure-render-mixin': '^0.14.0 || ^15.0.0',
     moment: '^2.0.0',
   },
 
@@ -122,6 +122,9 @@ const specs = {
     tinycolor2: '1.3.0',
     filesize: '3.3.0',
     keycode: '2.1.1',
+    // 'react-colorpickr': '4.1.2',
+    'colr-convert': '^1.0.4',
+    clamp: '^1.0.1',
   },
 
   devDependencies: {
@@ -133,10 +136,10 @@ const specs = {
     moment: '^2.0.0',
 
     // React
-    react: '>=0.14.0',
-    'react-dom': '>=0.14.0',
-    'react-addons-pure-render-mixin': '>=0.14.0',
-    'react-addons-perf': '>=0.14.0',
+    react: '^15.0.0',
+    'react-dom': '^15.0.0',
+    'react-addons-pure-render-mixin': '^15.0.0',
+    'react-addons-perf': '^15.0.0',
 
     // Babel (except babel-eslint)
     'babel-cli': '^6.6.5',

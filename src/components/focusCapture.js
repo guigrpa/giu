@@ -7,15 +7,17 @@ import { HIDDEN_FOCUS_CAPTURE } from '../gral/styles';
 // ==========================================
 class FocusCapture extends React.Component {
   static propTypes = {
+    disabled:               React.PropTypes.bool,
     registerRef:            React.PropTypes.func,
   };
 
   render() {
-    const { registerRef } = this.props;
+    const { registerRef, disabled } = this.props;
     const otherProps = omit(this.props, PROP_KEYS);
     return (
       <input ref={registerRef}
         style={style.outer}
+        tabIndex={disabled ? -1 : undefined}
         {...otherProps}
       />
     );

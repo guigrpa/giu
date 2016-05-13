@@ -6,6 +6,8 @@ function toInternalValue(val) { return val != null ? val : false; }
 function toExternalValue(val) { return val; }
 function isNull(val) { return val == null; }
 
+let cntId = 0;
+
 // ==========================================
 // Component
 // ==========================================
@@ -22,6 +24,11 @@ class Checkbox extends React.Component {
     // all others are passed through to the `input` unchanged
   };
 
+  constructor(props) {
+    super(props);
+    this.labelId = this.props.id || `giu-checkbox_${cntId++}`;
+  }
+
   // ==========================================
   // Render
   // ==========================================
@@ -32,26 +39,27 @@ class Checkbox extends React.Component {
   }
 
   renderWithLabel() {
-    const { id, label, registerOuterRef, styleLabel } = this.props;
+    const { label, registerOuterRef, styleLabel } = this.props;
     return (
       <span ref={registerOuterRef}
         className="giu-checkbox"
         style={style.wrapper}
       >
         {this.renderInput()}
-        <label htmlFor={id} style={styleLabel}>{label}</label>
+        <label htmlFor={this.labelId} style={styleLabel}>{label}</label>
       </span>
     );
   }
 
   renderInput(className) {
-    const { id, curValue, registerFocusableRef } = this.props;
+    const { curValue, disabled, registerFocusableRef } = this.props;
     const inputProps = omit(this.props, PROP_KEYS);
     return (
       <input ref={registerFocusableRef}
-        id={id} className={className}
+        id={this.labelId} className={className}
         type="checkbox"
         checked={curValue}
+        tabIndex={disabled ? -1 : undefined}
         {...inputProps}
       />
     );

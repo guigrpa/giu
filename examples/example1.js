@@ -3,7 +3,7 @@ import ReactDOM             from 'react-dom';
 require('babel-polyfill');
 import {
   Select, TextInput, NumberInput, DateInput, Textarea, Checkbox,
-  FileInput,
+  FileInput, RadioGroup, ColorInput,
   LIST_SEPARATOR,
   DropDownMenu,
   Button,
@@ -16,7 +16,7 @@ import {
   flexContainer, flexItem, boxWithShadow,
   merge,
   cancelEvent,
-  isRequired, isEmail, isOneOf,
+  isRequired, isEmail, isOneOf, isDate,
 }                           from '../src';
 
 const { floor, random } = Math;
@@ -488,40 +488,47 @@ class FormExample extends React.Component {
       <div style={style.example}>
         <div>
           <ExampleLabel>Inputs</ExampleLabel>
-          <TextInput
-            value="a" onChange={onChange}
-            placeholder="text"
-            errors={["Must be numeric"]}
-            errorPosition="above" errorAlign="right"
-          />
-          <TextInput disabled value="Disabled" />
-          &nbsp;&nbsp;
           <NumberInput
             step="0.1"
             value={null} onChange={onChange}
-            placeholder="number"
+            placeholder="number" style={{width: 80}}
           />
-          <NumberInput disabled value={6.5} />
+          <NumberInput disabled value={6.5} style={{width: 80}} />
+          &nbsp;&nbsp;
+          <TextInput
+            value="a" onChange={onChange}
+            placeholder="text"
+            errors={["Example error above"]}
+            errorPosition="above" errorAlign="right"
+            style={{width: 80}}
+          />
+          <TextInput disabled value="Disabled" style={{width: 80}} />
           &nbsp;&nbsp;
           <Checkbox
             value={true} onChange={onChange}
             label="checkbox"
-            errors={["Must not be null"]}
+            errors={["Example error below"]}
           />&nbsp;
           <Checkbox disabled value={true} label="checkbox"/>
-          &nbsp;&nbsp;
+        </div>
+        <div>
           <FileInput />
           <FileInput disabled />
         </div>
-        <div>
-          {
-            this.state.fShowDateInput &&
-            <DateInput placeholder="date" />
-          }
-          {' '}
-          <Button onClick={() => this.setState({ fShowDateInput: !this.state.fShowDateInput })}>
-            Toggle date input
-          </Button>
+        <div style={flexContainer('row')}>
+          <RadioGroup items={NORMAL_OPTIONS} required onChange={onChange} />
+          <RadioGroup items={NORMAL_OPTIONS} value="a" disabled />
+          <RadioGroup 
+            items={[
+              { value: 1, label: "A simple text label" },
+              { value: 2, label: <span>A label with <i>some</i> <b>formatting</b></span> },
+              { value: 3, label: <span>A multiline label</span>, 
+                labelExtra: <div>because yes, we can <Icon icon="smile-o" /></div>
+              },
+              { value: 4, label: "Another normal label" },
+              { value: 5, label: <span>A label with a <Button onClick={() => console.log('hi!')}>button</Button></span> },
+            ]}
+          />
         </div>
         <br />
         <div>
@@ -536,9 +543,25 @@ class FormExample extends React.Component {
           <TextInput placeholder="isEmail (custom msg)"
             required validators={[isEmail('please write your e-mail!')]} />
           <TextInput placeholder="isEmail (custom msg 2)"
-            required validators={[isEmail((_, val) => `'${val}' is not an email!`)]} />
+            required validators={[isEmail((msg, val) => `'${val}' is not an email!`)]} />
+          <TextInput placeholder="custom sync validator"
+            required validators={[
+              o => o.toLowerCase() === 'unicorn' ? undefined : 'must be \'unicorn\''
+            ]} />
+          <TextInput placeholder="custom promise validator"
+            required validators={[
+              o => new Promise((resolve, reject) =>
+                setTimeout(() => 
+                  o.toLowerCase() === 'unicorn' ? resolve(undefined) : resolve('checked the database; you must be a \'unicorn\'')
+                , 1000)
+              )
+            ]} />
           <DateInput type="onlyField" placeholder="MM/DD/YYYY" />
           <DateInput type="onlyField" date={false} time seconds placeholder="HH:MM:ss" />
+          <DateInput type="onlyField" date={false} time seconds placeholder="HH:MM:ss"
+            required validators={[isDate((msg, val, { fmt }) => 
+              `ha de ser una hora correcta: ${fmt}`
+            )]} />
         </div>
         <br />
         <div>
@@ -555,30 +578,30 @@ class FormExample extends React.Component {
           <div>
             <Select
               value="a"
-              items={NORMAL_OPTIONS}
+              items={NORMAL_OPTIONS} required
             />
             <Select
               value={null} onChange={onChangeJson}
-              items={NORMAL_OPTIONS} allowNull
+              items={NORMAL_OPTIONS}
             />
             <Select disabled value="a" items={NORMAL_OPTIONS} />
             &nbsp;&nbsp;
-            <Select type="dropDownPicker"
-              value={null} onChange={onChangeJson}
-              items={NORMAL_OPTIONS} allowNull
+            <Select type="dropDownPicker" required
+              value="a" onChange={onChangeJson}
+              items={NORMAL_OPTIONS}
             />
             <Select type="dropDownPicker"
-              value="a" onChange={onChangeJson}
-              items={NORMAL_OPTIONS} allowNull
+              value={null} onChange={onChangeJson}
+              items={NORMAL_OPTIONS}
             />
             <Select type="dropDownPicker"
               value={28} onChange={onChangeJson}
-              items={TALL_OPTIONS} allowNull
+              items={TALL_OPTIONS}
             />
             <Select disabled type="dropDownPicker" value={28} items={TALL_OPTIONS}/>
           </div>
           <div style={flexContainer('row')}>
-            <Select type="inlinePicker"
+            <Select type="inlinePicker" required
               items={NORMAL_OPTIONS}
               onChange={onChangeJson}
               styleOuter={flexItem(1, { marginRight: 4 })}
@@ -618,10 +641,10 @@ class FormExample extends React.Component {
             <DateInput onChange={onChange} />&nbsp;&nbsp;
             <DateInput date time onChange={onChange} />&nbsp;&nbsp;
             <DateInput date={false} time onChange={onChange}
-              styleField={{width: 60}}
+              style={{width: 60}}
             />
             <DateInput date={false} time seconds analogTime={false} onChange={onChange}
-              styleField={{width: 80}}
+              style={{width: 80}}
             />
             &nbsp;dropDownPicker (default)
           </div>
@@ -629,10 +652,10 @@ class FormExample extends React.Component {
             <DateInput type="onlyField" onChange={onChange} />&nbsp;&nbsp;
             <DateInput type="onlyField" date time onChange={onChange} />&nbsp;&nbsp;
             <DateInput type="onlyField" date={false} time onChange={onChange}
-              styleField={{width: 60}}
+              style={{width: 60}}
             />
             <DateInput type="onlyField" date={false} time seconds analogTime={false} onChange={onChange}
-              styleField={{width: 80}}
+              style={{width: 80}}
             />
             &nbsp;onlyField
           </div>
@@ -640,10 +663,10 @@ class FormExample extends React.Component {
             <DateInput disabled value={new Date()} type="onlyField" />&nbsp;&nbsp;
             <DateInput disabled value={new Date()} type="onlyField" date time />&nbsp;&nbsp;
             <DateInput disabled value={new Date()} type="onlyField" date={false} time
-              styleField={{width: 60}}
+              style={{width: 60}}
             />
             <DateInput disabled value={new Date()} type="onlyField" date={false} time seconds analogTime={false}
-              styleField={{width: 80}}
+              style={{width: 80}}
             />
             &nbsp;disabled
           </div>
@@ -680,6 +703,23 @@ class FormExample extends React.Component {
               onChange={onChange}
               date time
             />
+          </div>
+        </div>
+        <br />
+        <div>
+          <ExampleLabel>
+            ColorInput: with inline/dropdown ColorPicker
+          </ExampleLabel>
+          <div>
+            <ColorInput value="dc5400" accentColor="darkGreen" />
+            <ColorInput value="dc5400" disabled />
+          </div>
+          <div style={flexContainer('row')}>
+            <ColorInput inlinePicker value="cca500" accentColor="lightGray" />
+          </div>
+          <div style={flexContainer('row')}>
+            <ColorInput inlinePicker old value="cca500" />
+            <ColorInput inlinePicker old value="408200" disabled />
           </div>
         </div>
         <br />

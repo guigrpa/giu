@@ -3,7 +3,7 @@ import PureRenderMixin      from 'react-addons-pure-render-mixin';
 import {
   omit,
   merge,
-  set as timmSet,
+  addDefaults,
 }                           from 'timm';
 import {
   bindAll,
@@ -24,7 +24,7 @@ import FocusCapture         from '../components/focusCapture';
 const PROP_TYPES = {
   value:                  React.PropTypes.any,
   errors:                 React.PropTypes.array,
-  required:               React.PropTypes.bool,
+  required:               React.PropTypes.bool,   // also passed through
   validators:             React.PropTypes.array,
   cmds:                   React.PropTypes.array,  // also passed through
   disabled:               React.PropTypes.bool,   // also passed through
@@ -46,18 +46,15 @@ const PROP_KEYS = Object.keys(PROP_TYPES);
 function input(ComposedComponent, {
   toInternalValue = (o => o),
   toExternalValue = (o => o),
+  isNull,
+  defaultProps,
   valueAttr = 'value',
   fIncludeFocusCapture = false,
   defaultValidators = {},
-  isNull,
-  // Input-specific helper functions for validation,
-  // Helpers will receive the input value (internal or external,
-  // depending on the case) plus the current props
-  validatorHelpers = {},
+  validatorContext,
   trappedKeys = [],
   className,
 } = {}) {
-
   return class extends React.Component {
     static displayName = `Input(${ComposedComponent.name})`;
     static propTypes = PROP_TYPES;
@@ -73,8 +70,12 @@ function input(ComposedComponent, {
       // NOTE: this.errors = this.props.errors + this.state.validationErrors
       this.errors = props.errors;
       this.prevErrors = this.errors;
+      this.toInternalValue = (value, props0) =>
+        toInternalValue(value, addDefaults(props0, defaultProps));
+      this.toExternalValue = (value, props0) =>
+        toExternalValue(value, addDefaults(props0, defaultProps));
       this.state = {
-        curValue: toInternalValue(props.value, props),
+        curValue: this.toInternalValue(props.value, props),
         fFocused: false,
         keyDown: null,
         validationErrors: [],
@@ -99,7 +100,7 @@ function input(ComposedComponent, {
     componentWillReceiveProps(nextProps) {
       const { value, cmds } = nextProps;
       if (value !== this.props.value) {
-        this.setState({ curValue: toInternalValue(value, nextProps) });
+        this.setState({ curValue: this.toInternalValue(value, nextProps) });
       }
       if (cmds !== this.props.cmds) this.processCmds(cmds);
     }
@@ -107,7 +108,7 @@ function input(ComposedComponent, {
     componentWillUpdate(nextProps, nextState) {
       const { errors } = nextProps;
       const { validationErrors } = nextState;
-      if (errors !== this.props.errors || 
+      if (errors !== this.props.errors ||
           validationErrors !== this.state.validationErrors) {
         this.errors = errors.concat(validationErrors);
       }
@@ -137,10 +138,10 @@ function input(ComposedComponent, {
       cmds.forEach(cmd => {
         switch (cmd.type) {
           case 'SET_VALUE':
-            this.setState({ curValue: toInternalValue(cmd.value, this.props) });
+            this.setState({ curValue: this.toInternalValue(cmd.value, this.props) });
             break;
           case 'REVERT':
-            this.setState({ curValue: toInternalValue(this.props.value, this.props) });
+            this.setState({ curValue: this.toInternalValue(this.props.value, this.props) });
             break;
           case 'VALIDATE':
             this.validate();
@@ -159,7 +160,7 @@ function input(ComposedComponent, {
 
     // Alternative to using the `onChange` prop (e.g. if we want to delegate
     // state handling to the input and only want to retrieve the value when submitting a form)
-    getValue() { return toExternalValue(this.state.curValue, this.props); }
+    getValue() { return this.toExternalValue(this.state.curValue, this.props); }
     getErrors() { return this.errors; }
 
     // ==========================================
@@ -183,6 +184,7 @@ function input(ComposedComponent, {
           {...otherProps}
           curValue={this.state.curValue}
           errors={this.errors}
+          required={this.props.required}
           cmds={this.props.cmds}
           keyDown={this.state.keyDown}
           disabled={this.props.disabled}
@@ -198,7 +200,7 @@ function input(ComposedComponent, {
       );
       let out;
       if (fIncludeFocusCapture) {
-        const { styleOuter } = this.props;
+        const { disabled, styleOuter } = this.props;
         out = (
           <span
             className={className}
@@ -207,6 +209,7 @@ function input(ComposedComponent, {
           >
             <FocusCapture
               registerRef={this.registerFocusableRef}
+              disabled={disabled}
               onFocus={this.onFocus} onBlur={this.onBlur}
               onKeyDown={this.onKeyDown}
             />
@@ -264,7 +267,7 @@ function input(ComposedComponent, {
 
     renderErrors(errors) {
       const { value } = this.props;
-      const extCurValue = toExternalValue(this.state.curValue, this.props);
+      const extCurValue = this.toExternalValue(this.state.curValue, this.props);
       const fModified = value != null ? (extCurValue !== value) : (extCurValue != null);
       return (
         <div style={style.errors(fModified)}>
@@ -287,7 +290,7 @@ function input(ComposedComponent, {
         curValue = ev.currentTarget[valueAttr];
       }
       this.setState({ curValue });
-      if (onChange) onChange(ev, toExternalValue(curValue, this.props));
+      if (onChange) onChange(ev, this.toExternalValue(curValue, this.props));
       if (!this.state.fFocused) this._focus();
     }
 
@@ -338,42 +341,49 @@ function input(ComposedComponent, {
     }
 
     _validate() {
-      let cnt = 0;
-      let validators = defaultValidators;
-      this.props.validators.forEach(validator => {
-        const name = validator.name || `anon_${cnt++}`;
-        validators = timmSet(validators, name, validator);
-      });
+      let validators;
+      if (this.props.validators.length) {
+        validators = merge({}, defaultValidators);
+        let cnt = 0;
+        this.props.validators.forEach(validator => {
+          validators[validator.id || `anon_${cnt++}`] = validator;
+        });
+      } else {
+        validators = defaultValidators;
+      }
       const { curValue: internalValue } = this.state;
-      const externalValue = toExternalValue(internalValue, this.props);
-      let fRequired = this.props.required || validators.isRequired != null;
+      const externalValue = this.toExternalValue(internalValue, this.props);
+      const fRequired = this.props.required || validators.isRequired != null;
       const fIsNull = isNull(internalValue);
-      let validationErrors;
+      let pErrors; // promised errors
 
       // If `null` is allowed and input is `null`, bail out
       if (!fRequired && fIsNull) {
-        validationErrors = [];
+        pErrors = [];
 
       // If input is null (unallowed), get the corresponding message and bail out
       } else if (fIsNull) {
         const validator = validators.isRequired || isRequired();
-        validationErrors = [validator.getErrorMessage(internalValue)];
+        pErrors = [validator.getErrorMessage(internalValue)];
 
       // Otherwise, collect all validator errors (skipping `isRequired`)
       } else {
-        validationErrors = [];
-        Object.keys(validators).forEach(name => {
-          if (name === 'isRequired') return;
-          const validator = validators[name];
+        pErrors = [];
+        Object.keys(validators).forEach(id => {
+          if (id === 'isRequired') return;
+          const validator = validators[id];
+          const validate = validator.validate || validator;
           const value = validator.fInternal ? internalValue : externalValue;
-          let helper;
-          if (validatorHelpers[name]) helper = validatorHelpers[name](this.props);
-          const error = validator.validate(value, helper);
-          if (error != null) validationErrors.push(error);
+          const props = addDefaults(this.props, defaultProps);
+          const pError = validate(value, props, validatorContext);
+          if (pError != null) pErrors.push(pError);
         });
       }
 
-      this.setState({ validationErrors });
+      // When all promises have resolved, changed the current state
+      Promise.all(pErrors).then(validationErrors => {
+        this && this.setState && this.setState({ validationErrors });
+      });
     }
   };
 }

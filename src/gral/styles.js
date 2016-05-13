@@ -37,7 +37,7 @@ const inputReset = style => merge({
 }, style);
 
 const INPUT_DISABLED = {
-  border: '1px solid transparent',
+  border: `1px solid ${COLORS.lineDim}`,
   backgroundColor: 'transparent',
   cursor: 'default',
   pointerEvents: 'none',

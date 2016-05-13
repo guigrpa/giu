@@ -1,46 +1,48 @@
 require('./index.sass');
 
 // Components
-export Select           from './inputs/select';
+export Select             from './inputs/select';
+export { LIST_SEPARATOR } from './inputs/selectCustom';
 export {
   TextInput,
   NumberInput,
-}                       from './inputs/textNumberInput';
-export DateInput        from './inputs/dateInput';
-export Textarea         from './inputs/textarea';
-export Checkbox         from './inputs/checkbox';
-export FileInput        from './inputs/fileInput';
-export { LIST_SEPARATOR } from './inputs/selectCustom';
+}                         from './inputs/textNumberInput';
+export DateInput          from './inputs/dateInput';
+export Textarea           from './inputs/textarea';
+export Checkbox           from './inputs/checkbox';
+export FileInput          from './inputs/fileInput';
+export RadioGroup         from './inputs/radioGroup';
+export ColorInput         from './inputs/colorInput';
 
 export {
   Modals,
   reducer as modalReducer,
   actions as modalActions,
   modalPush, modalPop, isModalActive,
-}                       from './components/modals';
-export Modal            from './components/modal';
+}                         from './components/modals';
+export Modal              from './components/modal';
 export {
   Notifications,
   reducer as notifReducer,
   actions as notifActions,
   notify, notifRetain, notifDelete, notifDeleteByName,
-}                       from './components/notifications';
-export Notification     from './components/notification';
+}                         from './components/notifications';
+export Notification       from './components/notification';
 export {
   Floats,
   floatAdd, floatDelete, floatUpdate, floatReposition,
-}                       from './components/floats';
+}                         from './components/floats';
 
-export DropDownMenu     from './components/dropDownMenu';
-export Button           from './components/button';
-export Icon             from './components/icon';
-export Spinner          from './components/spinner';
-export LargeMessage     from './components/largeMessage';
-export Progress         from './components/progress';
+export DropDownMenu       from './components/dropDownMenu';
+export Button             from './components/button';
+export Icon               from './components/icon';
+export Spinner            from './components/spinner';
+export LargeMessage       from './components/largeMessage';
+export Progress           from './components/progress';
 
 // HOCs
-export hoverable        from './hocs/hoverable';
-export input            from './hocs/input';
+export hoverable          from './hocs/hoverable';
+export input              from './hocs/input';
 
 // Styles
 export * from './gral/styles';

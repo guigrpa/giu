@@ -1,9 +1,5 @@
 import React                from 'react';
-import {
-  omit,
-  merge,
-  addDefaults,
-}                           from 'timm';
+import { omit, merge }      from 'timm';
 import moment               from 'moment';
 import {
   bindAll,
@@ -40,7 +36,7 @@ import {
 const NULL_VALUE = '';
 function toInternalValue(extDate, props) {
   if (extDate == null) return NULL_VALUE;
-  const { date, time, seconds, utc } = addDefaults(props, DEFAULT_PROPS);
+  const { date, time, seconds, utc } = props;
   const mom = moment(extDate);
   if (getUtcFlag(date, time, utc)) mom.utc();
   return mom.format(dateTimeFormat(date, time, seconds));
@@ -53,12 +49,12 @@ function isNull(val) { return val === NULL_VALUE; }
 
 function momentToDisplay(mom, props) {
   if (mom == null) return NULL_VALUE;
-  const { date, time, seconds } = addDefaults(props, DEFAULT_PROPS);
+  const { date, time, seconds } = props;
   return mom.format(dateTimeFormat(date, time, seconds));
 }
 function displayToMoment(str, props) {
   if (str === NULL_VALUE) return null;
-  const { date, time, utc } = addDefaults(props, DEFAULT_PROPS);
+  const { date, time, utc } = props;
   const fUtc = getUtcFlag(date, time, utc);
   let mom;
   if (!date) {
@@ -107,7 +103,7 @@ class DateInput extends React.Component {
     floatPosition:          React.PropTypes.string,
     floatAlign:             React.PropTypes.string,
     floatZ:                 React.PropTypes.number,
-    styleField:             React.PropTypes.object,
+    style:                  React.PropTypes.object,
     styleOuter:             React.PropTypes.object,
     accentColor:            React.PropTypes.string,
     // From input HOC
@@ -172,6 +168,7 @@ class DateInput extends React.Component {
     const {
       curValue, placeholder,
       date, time, seconds,
+      disabled,
     } = this.props;
     const className = fHidden ? undefined : 'giu-date-input';
     const finalPlaceholder = placeholder || dateTimeFormat(date, time, seconds);
@@ -185,12 +182,13 @@ class DateInput extends React.Component {
         type="text"
         value={curValue}
         {...otherProps}
-        style={styleField}
         placeholder={finalPlaceholder}
         onFocus={this.onFocus}
         onBlur={this.onBlur}
         onChange={this.props.onChange}
         onKeyDown={this.onKeyDown}
+        tabIndex={disabled ? -1 : undefined}
+        style={styleField}
       />
     );
   }
@@ -313,7 +311,7 @@ class DateInput extends React.Component {
 const style = {
   outerInline: undefined,
   fieldBase: inputReset(),
-  field: ({ styleField, disabled }) => {
+  field: ({ style: styleField, disabled }) => {
     let out = style.fieldBase;
     if (disabled) out = merge(out, INPUT_DISABLED);
     out = merge(out, styleField);
@@ -332,16 +330,7 @@ const PROP_KEYS = Object.keys(DateInput.propTypes);
 // ==========================================
 export default input(DateInput, {
   toInternalValue, toExternalValue, isNull,
+  defaultProps: DEFAULT_PROPS,
   defaultValidators: { isDate: isDate() },
-  validatorHelpers: {
-    isDate: props => val => {
-      const mom = displayToMoment(val, props);
-      if (mom != null) return undefined;
-      const propsWithDefaults = addDefaults(props, DEFAULT_PROPS);
-      const { date, time, seconds } = propsWithDefaults;
-      debugger;
-      const fmt = dateTimeFormat(date, time, seconds);
-      return { props: propsWithDefaults, fmt };
-    },
-  },
+  validatorContext: { moment },
 });

@@ -67,6 +67,7 @@ class FileInput extends React.Component {
           type="file"
           style={style.input}
           onChange={this.onChange}
+          tabIndex={disabled ? -1 : undefined}
           {...otherProps}
         />
         <Button

@@ -308,7 +308,6 @@ const style = {
   },
 };
 style.outerDisabled = merge(INPUT_DISABLED, {
-  border: style.outerBase.border,
   pointerEvents: null,
 });
 

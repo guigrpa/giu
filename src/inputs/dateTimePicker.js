@@ -202,6 +202,7 @@ const style = {
     paddingBottom: 3,
     overflowY: 'auto',
   })),
+  outerDisabled: INPUT_DISABLED,
   outer: ({ disabled, fFocused }) => {
     let out = style.outerBase;
     if (disabled) out = merge(out, style.outerDisabled);
@@ -215,9 +216,6 @@ const style = {
     borderRight: `1px solid ${COLORS.line}`,
   },
 };
-style.outerDisabled = merge(INPUT_DISABLED, {
-  border: style.outerBase.border,
-});
 
 // ==========================================
 // Public API
