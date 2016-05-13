@@ -59,7 +59,6 @@
 - [x] Fix tabIndex for disabled comps
 - [x] RadioButton
 - [ ] ColorInput + ColorPicker
-    + [ ] Cannot put inputfields within radio group!!!
 - [ ] Slider?
 - [ ] Hints
 

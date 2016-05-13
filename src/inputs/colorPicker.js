@@ -1,5 +1,6 @@
 import React                from 'react';
 import PureRenderMixin      from 'react-addons-pure-render-mixin';
+import tinycolor            from 'tinycolor2';
 import { merge }            from 'timm';
 import {
   COLORS,
@@ -21,11 +22,17 @@ import hoverable            from '../hocs/hoverable';
 import RadioGroup           from '../inputs/radioGroup';
 import { NumberInput }      from '../inputs/textNumberInput';
 
+const hueBg = h => tinycolor({ h, s: 100, v: 100 }).toHexString();
+
 const GRADIENTS = {
+  /* eslint-disable max-len */
   h: 'linear-gradient(to bottom, #ff0000 0%, #ff0099 10%, #cd00ff 20%, #3200ff 30%, #0066ff 40%, #00fffd 50%, #00ff66 60%, #35ff00 70%, #cdff00 80%, #ff9900 90%, #ff0000 100%)',
+  /* eslint-enable max-len */
   r: 'linear-gradient(to bottom, #ff0000 0%, #000000 100%)',
   g: 'linear-gradient(to bottom, #00ff00 0%, #000000 100%)',
   b: 'linear-gradient(to bottom, #0000ff 0%, #000000 100%)',
+  v: h => `linear-gradient(to bottom, ${hueBg(h)} 0%, #000 100%)`,
+  s: h => `linear-gradient(to bottom, ${hueBg(h)} 0%, #bbb 100%)`,
 };
 
 // ==========================================
@@ -61,7 +68,10 @@ class ColorPicker extends React.Component {
   // Render
   // ==========================================
   render() {
-    const { registerOuterRef } = this.props;
+    const { registerOuterRef, curValue } = this.props;
+    const col = tinycolor(curValue);
+    this.rgb = col.toRgb();
+    this.hsv = col.toHsv();
     return (
       <div ref={registerOuterRef}
         className="giu-color-picker"
@@ -85,7 +95,7 @@ class ColorPicker extends React.Component {
   renderGradient() {
     return (
       <div
-        style={style.activeAttrSlider(this.state)}
+        style={style.activeAttrSlider(this.state, this.hsv)}
       />
     );
   }
@@ -157,11 +167,14 @@ const style = {
     if (fFocused) out = merge(out, GLOW);
     return out;
   },
-  activeAttrSlider: ({ activeAttr }) => {
-    const background = GRADIENTS[activeAttr];
+  activeAttrSlider: ({ activeAttr }, hsv) => {
+    let background = GRADIENTS[activeAttr];
+    if (typeof background === 'function') background = background(hsv.h);
     return {
       background,
       width: 10,
+      height: 150,
+      marginRight: 3,
     };
   },
   modeButton: (fSelected, { accentColor }) => {
@@ -176,7 +189,7 @@ const style = {
   },
   colorAttrs: ({ accentColor }) => ({
     marginTop: 5,
-    border: `1px solid ${accentColor}`
+    border: `1px solid ${accentColor}`,
   }),
   colorAttr: (fSelected, { accentColor }) => {
     const out = {
