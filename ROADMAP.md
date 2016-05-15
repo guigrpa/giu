@@ -59,7 +59,8 @@
 - [x] Fix tabIndex for disabled comps
 - [x] RadioButton
 - [ ] ColorInput + ColorPicker
-- [ ] Slider?
+- [ ] Don't require webpack: just add the little sass we have manually to the page.
+- [ ] Input range
 - [ ] Hints
 
 - [ ] Include native components for mobile? (e.g. `input type="date"`)
