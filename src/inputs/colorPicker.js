@@ -23,27 +23,59 @@ require('./colorPicker.css');
 const SIZE = 190;
 const SLIDER_WIDTH = 6;
 const SWATCH_RADIUS = 6;
+
 const hueBg = h => tinycolor({ h, s: 1, v: 1 }).toHexString();
 const clamp = (x, min, max) => Math.min(Math.max(x, min), max);
+
 const normalize = (x, attr) => {
   let out;
   if ('rgb'.indexOf(attr) >= 0) {
     out = x / 255;
   } else if (attr === 'h') {
-    out = x / 360;
+    out = x / 359;
   } else {
     out = x;
   }
   return out;
 };
+
 const denormalize = (x, attr) => {
   let out;
   if ('rgb'.indexOf(attr) >= 0) {
     out = x * 255;
   } else if (attr === 'h') {
-    out = x * 360;
+    out = x * 359;
   } else {
     out = x;
+  }
+  return out;
+};
+
+const colToXy = (activeAttr, rgbhsva) => {
+  let xNorm;
+  let yNorm;
+  if ('rgb'.indexOf(activeAttr) >= 0) {
+    xNorm = activeAttr === 'b' ? rgbhsva.r / 255 : rgbhsva.b / 255;
+    yNorm = activeAttr === 'g' ? 1 - rgbhsva.r / 255 : 1 - rgbhsva.g / 255;
+  } else {
+    xNorm = activeAttr === 'h' ? rgbhsva.s : rgbhsva.h / 359;
+    yNorm = activeAttr === 'v' ? 1 - rgbhsva.s : 1 - rgbhsva.v;
+  }
+  return { xNorm, yNorm };
+};
+
+const xyToCol = (activeAttr, xNorm, yNorm) => {
+  const out = {};
+  if ('rgb'.indexOf(activeAttr) >= 0) {
+    out[activeAttr === 'b' ? 'r' : 'b'] = xNorm * 255;
+    out[activeAttr === 'g' ? 'r' : 'g'] = (1 - yNorm) * 255;
+  } else {
+    if (activeAttr === 'h') {
+      out.s = xNorm;
+    } else {
+      out.h = xNorm * 359;
+    }
+    out[activeAttr === 'v' ? 's' : 'v'] = 1 - yNorm;
   }
   return out;
 };
@@ -132,20 +164,21 @@ class ColorPicker extends React.Component {
 
   renderColorSelector() {
     const { activeAttr } = this.state;
-    let out;
+    let gradients;
     if (this.fRgb) {
-      out = this.renderRGBSelector(activeAttr);
+      gradients = this.renderRGBSelector(activeAttr);
     } else if (activeAttr === 'h') {
-      out = this.renderHSelector();
+      gradients = this.renderHSelector();
     } else {
-      out = this.renderSVSelector(activeAttr);
+      gradients = this.renderSVSelector(activeAttr);
     }
     return (
       <div ref={c => { this.refColorSelector = c; }}
         onMouseDown={this.onMouseDownColorSelector}
         style={style.colorSelector}
       >
-        {out}
+        {gradients}
+        {this.renderSelectorValue()}
       </div>
     );
   }
@@ -175,6 +208,16 @@ class ColorPicker extends React.Component {
     ];
   }
 
+  renderSelectorValue() {
+    if (!this.props.curValue) return null;
+    const { xNorm, yNorm } = colToXy(this.state.activeAttr, this.rgbhsva);
+    return (
+      <div style={style.circleControl(xNorm, yNorm)}>
+        <div style={style.circleControl2} />
+      </div>
+    );
+  }
+
   renderActiveAttrSlider() {
     return (
       <div ref={c => { this.refAttrSlider = c; }}
@@ -191,15 +234,14 @@ class ColorPicker extends React.Component {
     const attr = this.state.activeAttr;
     const attrNorm = normalize(this.rgbhsva[attr], attr);
     return (
-      <div style={style.activeAttrSliderValue(SLIDER_WIDTH / 2, 1 - attrNorm)}>
-        <div style={style.activeAttrSliderValue2} />
+      <div style={style.circleControl(SLIDER_WIDTH / 2 / SIZE, 1 - attrNorm)}>
+        <div style={style.circleControl2} />
       </div>
     );
   }
 
   renderControls() {
     const { mode, activeAttr } = this.state;
-    const { curValue } = this.props;
     const colorAttrs = mode.split('').map(colorAttr => {
       const fSelected = activeAttr === colorAttr;
       return (
@@ -223,9 +265,7 @@ class ColorPicker extends React.Component {
         <div style={style.colorAttrs(this.props)}>
           {colorAttrs}
         </div>
-        <div style={style.hexValue}>
-          {curValue && `#${curValue}`}
-        </div>
+        {this.renderSamples()}
       </div>
     );
   }
@@ -240,8 +280,18 @@ class ColorPicker extends React.Component {
       >
         {mode.toUpperCase()}
       </div>
-
     );
+  }
+
+  renderSamples() {
+    const { curValue } = this.props;
+    if (curValue == null) return null;
+    const col = tinycolor(curValue);
+    return [
+      <div key="sample1" style={style.sample1(col)}>{col.toHexString()}</div>,
+      // <div key="sample2" style={style.sample2(col, 'white')}>Sample</div>,
+      // <div key="sample3" style={style.sample2(col, 'black')}>Sample</div>,
+    ];
   }
 
   // ==========================================
@@ -268,16 +318,18 @@ class ColorPicker extends React.Component {
     window.removeEventListener('mouseup', this.onMouseUpAttrSlider);
   }
 
-  onMouseDownColorSelector() {
+  onMouseDownColorSelector(ev) {
     window.addEventListener('mousemove', this.onMouseMoveColorSelector);
     window.addEventListener('mouseup', this.onMouseUpColorSelector);
+    this.onMouseMoveColorSelector(ev);
   }
 
   onMouseMoveColorSelector(ev) {
     const bcr = this.refColorSelector.getBoundingClientRect();
     const xNorm = clamp((ev.clientX - bcr.left) / SIZE, 0, 1);
     const yNorm = clamp((ev.clientY - bcr.top) / SIZE, 0, 1);
-    console.log(xNorm, yNorm)
+    const attrs = xyToCol(this.state.activeAttr, xNorm, yNorm);
+    this.onChange(ev, attrs);
   }
 
   onMouseUpColorSelector() {
@@ -287,10 +339,9 @@ class ColorPicker extends React.Component {
 
   onChange(ev, attrs) {
     const prevColor = this.fRgb ? this.rgba : this.hsva;
-    const hex8 = tinycolor(merge(prevColor, attrs)).toHex8();
+    const hex8 = tinycolor(merge({}, prevColor, attrs)).toHex8();
     this.props.onChange(ev, hex8);
   }
-
 }
 
 // ==========================================
@@ -310,6 +361,7 @@ const style = {
     width: SIZE,
     height: SIZE,
     position: 'relative',
+    cursor: 'pointer',
   },
   selectorBase: {
     position: 'absolute',
@@ -351,21 +403,22 @@ const style = {
       position: 'relative',
       width: SLIDER_WIDTH,
       height: SIZE,
-      marginRight: 3,
+      marginLeft: 5,
+      marginRight: 5,
       cursor: 'pointer',
     };
   },
-  activeAttrSliderValue: (x, y) => ({
+  circleControl: (x, y) => ({
     pointerEvents: 'none',
     position: 'absolute',
     top: y * SIZE - SWATCH_RADIUS,
-    left: x - SWATCH_RADIUS,
+    left: x * SIZE - SWATCH_RADIUS,
     height: 2 * SWATCH_RADIUS,
     width: 2 * SWATCH_RADIUS,
     borderRadius: SWATCH_RADIUS,
     border: '3px solid white',
   }),
-  activeAttrSliderValue2: {
+  circleControl2: {
     position: 'absolute',
     top: -2,
     left: -2,
@@ -401,9 +454,25 @@ const style = {
     width: 40,
     pointerEvents: 'none',
   },
-  hexValue: {
-    marginTop: 5,
-    textAlign: 'center',
+  sample1: (col) => {
+    const backgroundColor = col.toHexString();
+    const color = COLORS[isDark(backgroundColor) ? 'lightText' : 'darkText'];
+    return {
+      marginTop: 5,
+      padding: '3px 0px',
+      textAlign: 'center',
+      backgroundColor, color,
+    };
+  },
+  sample2: (col, backgroundColor) => {
+    const color = col.toHexString();
+    return {
+      marginTop: 5,
+      padding: '3px 0px',
+      textAlign: 'center',
+      fontWeight: 'bold',
+      backgroundColor, color,
+    };
   },
 };
 
