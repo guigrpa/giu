@@ -21,7 +21,32 @@ import hoverable            from '../hocs/hoverable';
 require('./colorPicker.css');
 
 const SIZE = 190;
-const hueBg = h => tinycolor({ h, s: 100, v: 100 }).toHexString();
+const SLIDER_WIDTH = 6;
+const SWATCH_RADIUS = 6;
+const hueBg = h => tinycolor({ h, s: 1, v: 1 }).toHexString();
+const clamp = (x, min, max) => Math.min(Math.max(x, min), max);
+const normalize = (x, attr) => {
+  let out;
+  if ('rgb'.indexOf(attr) >= 0) {
+    out = x / 255;
+  } else if (attr === 'h') {
+    out = x / 360;
+  } else {
+    out = x;
+  }
+  return out;
+};
+const denormalize = (x, attr) => {
+  let out;
+  if ('rgb'.indexOf(attr) >= 0) {
+    out = x * 255;
+  } else if (attr === 'h') {
+    out = x * 360;
+  } else {
+    out = x;
+  }
+  return out;
+};
 
 /* eslint-disable max-len */
 const MANY_COLORS = '#ff0000 0%, #ff0099 10%, #cd00ff 20%, #3200ff 30%, #0066ff 40%, #00fffd 50%, #00ff66 60%, #35ff00 70%, #cdff00 80%, #ff9900 90%, #ff0000 100%';
@@ -47,7 +72,7 @@ const GRADIENTS = {
 class ColorPicker extends React.Component {
   static propTypes = {
     registerOuterRef:       React.PropTypes.func,
-    curValue:               React.PropTypes.string.isRequired,
+    curValue:               React.PropTypes.string,
     onChange:               React.PropTypes.func.isRequired,
     disabled:               React.PropTypes.bool,
     fFocused:               React.PropTypes.bool,
@@ -66,8 +91,21 @@ class ColorPicker extends React.Component {
     };
     bindAll(this, [
       'onMouseDownMode',
-      'onMouseDownComponent',
+      'onMouseDownAttrSelector',
+      'onMouseDownAttrSlider',
+      'onMouseMoveAttrSlider',
+      'onMouseUpAttrSlider',
+      'onMouseDownColorSelector',
+      'onMouseMoveColorSelector',
+      'onMouseUpColorSelector',
     ]);
+  }
+
+  componentWillUnmount() {
+    window.removeEventListener('mousemove', this.onMouseMoveAttrSlider);
+    window.removeEventListener('mouseup', this.onMouseUpAttrSlider);
+    window.removeEventListener('mousemove', this.onMouseMoveColorSelector);
+    window.removeEventListener('mouseup', this.onMouseUpColorSelector);
   }
 
   // ==========================================
@@ -76,8 +114,10 @@ class ColorPicker extends React.Component {
   render() {
     const { registerOuterRef, curValue } = this.props;
     const col = tinycolor(curValue);
-    this.rgb = col.toRgb();
-    this.hsv = col.toHsv();
+    this.rgba = col.toRgb();
+    this.hsva = col.toHsv();
+    this.rgbhsva = merge(this.rgba, this.hsva);
+    this.fRgb = 'rgb'.indexOf(this.state.activeAttr) >= 0;
     return (
       <div ref={registerOuterRef}
         className="giu-color-picker"
@@ -93,74 +133,79 @@ class ColorPicker extends React.Component {
   renderColorSelector() {
     const { activeAttr } = this.state;
     let out;
-    switch (activeAttr) {
-      case 'r':
-      case 'g':
-      case 'b':
-        out = this.renderRGBSelector(activeAttr);
-        break;
-      case 'h':
-        out = this.renderHSelector();
-        break;
-      case 's':
-      case 'v':
-        out = this.renderSVSelector(activeAttr);
-        break;
-      default:
-        out = null;
-        break;
+    if (this.fRgb) {
+      out = this.renderRGBSelector(activeAttr);
+    } else if (activeAttr === 'h') {
+      out = this.renderHSelector();
+    } else {
+      out = this.renderSVSelector(activeAttr);
     }
-    return out;
+    return (
+      <div ref={c => { this.refColorSelector = c; }}
+        onMouseDown={this.onMouseDownColorSelector}
+        style={style.colorSelector}
+      >
+        {out}
+      </div>
+    );
   }
 
   renderRGBSelector(attr) {
-    const val = this.rgb[attr] / 255;
-    return (
-      <div style={style.colorSelector}>
-        <div className="giu-rgb-selector" style={style.rgbSelector(attr, val, true)} />
-        <div className="giu-rgb-selector" style={style.rgbSelector(attr, val, false)} />
-      </div>
-    );
+    const val = normalize(this.rgba[attr], attr);
+    return [
+      <div key="rgb1" className="giu-rgb-selector" style={style.rgbSelector(attr, val, true)} />,
+      <div key="rgb2" className="giu-rgb-selector" style={style.rgbSelector(attr, val, false)} />,
+    ];
   }
 
   renderHSelector() {
-    const h = this.hsv.h;
-    return (
-      <div style={style.colorSelector}>
-        <div style={merge(style.selectorBase, style.hSelectorBackground(h))} />
-        <div style={merge(style.selectorBase, style.hSelectorLightLeft)} />
-        <div style={merge(style.selectorBase, style.hSelectorDarkBottom)} />
-      </div>
-    );
+    return [
+      <div key="h1" style={merge(style.selectorBase, style.hSelectorBackground(this.hsva.h))} />,
+      <div key="h2" style={merge(style.selectorBase, style.hSelectorLightLeft)} />,
+      <div key="h3" style={merge(style.selectorBase, style.hSelectorDarkBottom)} />,
+    ];
   }
 
   renderSVSelector(attr) {
-    const val = this.hsv[attr];
-    return (
-      <div style={style.colorSelector}>
-        <div style={style.svSelector(attr, val, true)} />
-        <div style={style.svSelector(attr, val, false)} />
-        <div style={merge(style.selectorBase, style.hSelectorDarkBottom)} />
-      </div>
-    );
+    const val = normalize(this.hsva[attr], attr);
+    return [
+      <div key="sv1" style={style.svSelector(attr, val, true)} />,
+      <div key="sv2" style={style.svSelector(attr, val, false)} />,
+      <div key="sv3" style={merge(style.selectorBase, style.hSelectorDarkBottom)} />,
+    ];
   }
 
   renderActiveAttrSlider() {
     return (
-      <div
-        style={style.activeAttrSlider(this.state, this.hsv)}
-      />
+      <div ref={c => { this.refAttrSlider = c; }}
+        onMouseDown={this.onMouseDownAttrSlider}
+        style={style.activeAttrSlider(this.state, this.hsva)}
+      >
+        {this.renderActiveAttrSliderValue()}
+      </div>
+    );
+  }
+
+  renderActiveAttrSliderValue() {
+    if (!this.props.curValue) return null;
+    const attr = this.state.activeAttr;
+    const attrNorm = normalize(this.rgbhsva[attr], attr);
+    return (
+      <div style={style.activeAttrSliderValue(SLIDER_WIDTH / 2, 1 - attrNorm)}>
+        <div style={style.activeAttrSliderValue2} />
+      </div>
     );
   }
 
   renderControls() {
     const { mode, activeAttr } = this.state;
+    const { curValue } = this.props;
     const colorAttrs = mode.split('').map(colorAttr => {
       const fSelected = activeAttr === colorAttr;
       return (
         <div key={colorAttr}
           id={colorAttr}
-          onMouseDown={this.onMouseDownComponent}
+          onMouseDown={this.onMouseDownAttrSelector}
           style={style.colorAttr(fSelected, this.props)}
         >
           <span style={style.colorAttrName}>
@@ -177,6 +222,9 @@ class ColorPicker extends React.Component {
         </div>
         <div style={style.colorAttrs(this.props)}>
           {colorAttrs}
+        </div>
+        <div style={style.hexValue}>
+          {curValue && `#${curValue}`}
         </div>
       </div>
     );
@@ -200,7 +248,49 @@ class ColorPicker extends React.Component {
   // Event handlers
   // ==========================================
   onMouseDownMode(ev) { this.setState({ mode: ev.target.id }); }
-  onMouseDownComponent(ev) { this.setState({ activeAttr: ev.target.id }); }
+  onMouseDownAttrSelector(ev) { this.setState({ activeAttr: ev.target.id }); }
+
+  onMouseDownAttrSlider(ev) {
+    window.addEventListener('mousemove', this.onMouseMoveAttrSlider);
+    window.addEventListener('mouseup', this.onMouseUpAttrSlider);
+    this.onMouseMoveAttrSlider(ev);
+  }
+
+  onMouseMoveAttrSlider(ev) {
+    const bcr = this.refAttrSlider.getBoundingClientRect();
+    const attrNorm = 1 - clamp((ev.clientY - bcr.top) / SIZE, 0, 1);
+    const attr = this.state.activeAttr;
+    this.onChange(ev, { [attr]: denormalize(attrNorm, attr) });
+  }
+
+  onMouseUpAttrSlider() {
+    window.removeEventListener('mousemove', this.onMouseMoveAttrSlider);
+    window.removeEventListener('mouseup', this.onMouseUpAttrSlider);
+  }
+
+  onMouseDownColorSelector() {
+    window.addEventListener('mousemove', this.onMouseMoveColorSelector);
+    window.addEventListener('mouseup', this.onMouseUpColorSelector);
+  }
+
+  onMouseMoveColorSelector(ev) {
+    const bcr = this.refColorSelector.getBoundingClientRect();
+    const xNorm = clamp((ev.clientX - bcr.left) / SIZE, 0, 1);
+    const yNorm = clamp((ev.clientY - bcr.top) / SIZE, 0, 1);
+    console.log(xNorm, yNorm)
+  }
+
+  onMouseUpColorSelector() {
+    window.removeEventListener('mousemove', this.onMouseMoveColorSelector);
+    window.removeEventListener('mouseup', this.onMouseUpColorSelector);
+  }
+
+  onChange(ev, attrs) {
+    const prevColor = this.fRgb ? this.rgba : this.hsva;
+    const hex8 = tinycolor(merge(prevColor, attrs)).toHex8();
+    this.props.onChange(ev, hex8);
+  }
+
 }
 
 // ==========================================
@@ -208,7 +298,7 @@ class ColorPicker extends React.Component {
 // ==========================================
 const style = {
   outerBase: inputReset(flexContainer('row', {
-    padding: 3,
+    padding: 5,
   })),
   outer: ({ disabled, fFocused }) => {
     let out = style.outerBase;
@@ -228,20 +318,20 @@ const style = {
     bottom: 0,
     left: 0,
   },
-  rgbSelector: (attr, attrValue, fHigh) => {
+  rgbSelector: (attr, normAttr, fHigh) => {
     let pos = 'rgb'.indexOf(attr) * (-SIZE) * 2;
     if (!fHigh) pos -= SIZE;
     return merge(style.selectorBase, {
       backgroundImage: GRADIENTS.rgb,
       backgroundRepeat: 'no-repeat',
       backgroundPosition: `${pos}px 0`,
-      opacity: fHigh ? attrValue : 1 - attrValue,
+      opacity: fHigh ? normAttr : 1 - normAttr,
     });
   },
   hSelectorBackground: h => ({ background: hueBg(h) }),
   hSelectorLightLeft: { background: GRADIENTS.lightLeft },
   hSelectorDarkBottom: { background: GRADIENTS.darkBottom },
-  svSelector: (attr, attrValue, fHigh) => {
+  svSelector: (attr, normAttr, fHigh) => {
     let background;
     if (fHigh) {
       background = GRADIENTS.hues;
@@ -250,7 +340,7 @@ const style = {
     }
     return merge(style.selectorBase, {
       background,
-      opacity: fHigh ? attrValue : 1 - attrValue,
+      opacity: fHigh ? normAttr : 1 - normAttr,
     });
   },
   activeAttrSlider: ({ activeAttr }, hsv) => {
@@ -258,10 +348,31 @@ const style = {
     if (typeof background === 'function') background = background(hsv.h);
     return {
       background,
-      width: 10,
+      position: 'relative',
+      width: SLIDER_WIDTH,
       height: SIZE,
       marginRight: 3,
+      cursor: 'pointer',
     };
+  },
+  activeAttrSliderValue: (x, y) => ({
+    pointerEvents: 'none',
+    position: 'absolute',
+    top: y * SIZE - SWATCH_RADIUS,
+    left: x - SWATCH_RADIUS,
+    height: 2 * SWATCH_RADIUS,
+    width: 2 * SWATCH_RADIUS,
+    borderRadius: SWATCH_RADIUS,
+    border: '3px solid white',
+  }),
+  activeAttrSliderValue2: {
+    position: 'absolute',
+    top: -2,
+    left: -2,
+    height: (SWATCH_RADIUS - 1) * 2,
+    width: (SWATCH_RADIUS - 1) * 2,
+    borderRadius: SWATCH_RADIUS - 1,
+    border: '1px solid black',
   },
   modeButton: (fSelected, { accentColor }) => {
     const out = {
@@ -289,6 +400,10 @@ const style = {
   colorAttrName: {
     width: 40,
     pointerEvents: 'none',
+  },
+  hexValue: {
+    marginTop: 5,
+    textAlign: 'center',
   },
 };
 

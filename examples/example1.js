@@ -716,6 +716,7 @@ class FormExample extends React.Component {
           </div>
           <div style={flexContainer('row')}>
             <ColorInput inlinePicker value="cca500" accentColor="lightGray" />
+            <ColorInput inlinePicker value="cca500" disabled accentColor="lightGray" />
           </div>
           <div style={flexContainer('row')}>
             <ColorInput inlinePicker old value="cca500" />

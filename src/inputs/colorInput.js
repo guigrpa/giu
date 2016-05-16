@@ -128,7 +128,7 @@ class ColorInput extends React.Component {
     const {
       inlinePicker,
       registerOuterRef,
-      curValue,
+      curValue, onChange,
       accentColor,
       disabled, fFocused,
       old,
@@ -137,7 +137,7 @@ class ColorInput extends React.Component {
       <ColorPicker
         registerOuterRef={inlinePicker ? registerOuterRef : undefined}
         curValue={curValue}
-        onChange={this.onChange}
+        onChange={onChange}
         disabled={disabled}
         fFocused={inlinePicker && fFocused}
         accentColor={accentColor}
