@@ -1,5 +1,8 @@
 import React                from 'react';
-import { omit, merge }      from 'timm';
+import {
+  omit, merge,
+  set as timmSet,
+}                           from 'timm';
 import {
   inputReset, INPUT_DISABLED,
 }                           from '../gral/styles';
@@ -19,11 +22,17 @@ const classOptions = {
     isNull: val => val === NULL_VALUE,
     defaultValidators: { isNumber: isNumber() },
   },
+  range: {
+    toInternalValue: val => (val != null ? String(val) : NULL_VALUE),
+    toExternalValue: val => (val !== NULL_VALUE ? Number(val) : null),
+    isNull: val => val === NULL_VALUE,
+  },
 };
 
 const PROP_TYPES = {
   disabled:               React.PropTypes.bool,
   style:                  React.PropTypes.object,
+  vertical:               React.PropTypes.bool,
   // Input HOC
   curValue:               React.PropTypes.any.isRequired,
   errors:                 React.PropTypes.array.isRequired,
@@ -45,7 +54,12 @@ function createClass(name, inputType) {
     // Render
     // ==========================================
     render() {
-      const { curValue, disabled, registerFocusableRef } = this.props;
+      const {
+        curValue, disabled,
+        registerFocusableRef,
+        // For ranges
+        vertical,
+      } = this.props;
       const otherProps = omit(this.props, PROP_KEYS);
       return (
         <input ref={registerFocusableRef}
@@ -53,6 +67,7 @@ function createClass(name, inputType) {
           type={inputType}
           value={curValue}
           {...otherProps}
+          orient={vertical ? 'vertical' : undefined}
           tabIndex={disabled ? -1 : undefined}
           style={style.field(this.props)}
         />
@@ -68,10 +83,11 @@ function createClass(name, inputType) {
 // ==========================================
 const style = {
   fieldBase: inputReset(),
-  field: ({ style: styleField, disabled }) => {
+  field: ({ style: styleField, disabled, vertical }) => {
     let out = style.fieldBase;
     if (disabled) out = merge(out, INPUT_DISABLED);
     out = merge(out, styleField);
+    if (vertical) out = timmSet(out, 'WebkitAppearance', 'slider-vertical');
     return out;
   },
 };
@@ -81,7 +97,8 @@ const style = {
 // ==========================================
 const TextInput = createClass('TextInput', 'text');
 const NumberInput = createClass('NumberInput', 'number');
+const RangeInput = createClass('RangeInput', 'range');
 
 export {
-  TextInput, NumberInput,
+  TextInput, NumberInput, RangeInput,
 };

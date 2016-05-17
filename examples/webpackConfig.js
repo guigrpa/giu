@@ -12,7 +12,7 @@ export default {
   // Input (entry point)
   // -------------------------------------------------
   entry: {
-    example1: _entry('./examples/example1.js'),
+    examples: _entry('./examples/examples.js'),
   },
 
   // -------------------------------------------------
@@ -53,15 +53,6 @@ export default {
     }, {
       test: /\.css$/,
       loader: 'style!css',
-    }, {
-      test: /\.sass$/,
-      loader: 'style!css!sass?indentedSyntax',
-    }, {
-      test: /\.png$/,
-      loader: 'file',
-    }, {
-      test: /\.json$/,
-      loader: 'json',
     }],
   },
 };

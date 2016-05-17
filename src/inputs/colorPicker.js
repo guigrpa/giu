@@ -2,26 +2,19 @@ import React                from 'react';
 import PureRenderMixin      from 'react-addons-pure-render-mixin';
 import tinycolor            from 'tinycolor2';
 import { merge }            from 'timm';
-import {
-  COLORS,
-  UNICODE,
-  KEYS,
-}                           from '../gral/constants';
-import {
-  bindAll,
-  cancelEvent,
-}                           from '../gral/helpers';
+import { COLORS }           from '../gral/constants';
+import { bindAll }          from '../gral/helpers';
 import {
   isDark,
   flexContainer, flexItem,
   inputReset, INPUT_DISABLED,
   GLOW,
 }                           from '../gral/styles';
-import hoverable            from '../hocs/hoverable';
 require('./colorPicker.css');
 
 const SIZE = 190;
-const SLIDER_WIDTH = 6;
+const ALPHA_SLIDER_SIZE = 100;
+const SLIDER_WIDTH = 10;
 const SWATCH_RADIUS = 6;
 
 const hueBg = h => tinycolor({ h, s: 1, v: 1 }).toHexString();
@@ -56,10 +49,10 @@ const colToXy = (activeAttr, rgbhsva) => {
   let yNorm;
   if ('rgb'.indexOf(activeAttr) >= 0) {
     xNorm = activeAttr === 'b' ? rgbhsva.r / 255 : rgbhsva.b / 255;
-    yNorm = activeAttr === 'g' ? 1 - rgbhsva.r / 255 : 1 - rgbhsva.g / 255;
+    yNorm = activeAttr === 'g' ? rgbhsva.r / 255 : rgbhsva.g / 255;
   } else {
     xNorm = activeAttr === 'h' ? rgbhsva.s : rgbhsva.h / 359;
-    yNorm = activeAttr === 'v' ? 1 - rgbhsva.s : 1 - rgbhsva.v;
+    yNorm = activeAttr === 'v' ? rgbhsva.s : rgbhsva.v;
   }
   return { xNorm, yNorm };
 };
@@ -68,14 +61,14 @@ const xyToCol = (activeAttr, xNorm, yNorm) => {
   const out = {};
   if ('rgb'.indexOf(activeAttr) >= 0) {
     out[activeAttr === 'b' ? 'r' : 'b'] = xNorm * 255;
-    out[activeAttr === 'g' ? 'r' : 'g'] = (1 - yNorm) * 255;
+    out[activeAttr === 'g' ? 'r' : 'g'] = yNorm * 255;
   } else {
     if (activeAttr === 'h') {
       out.s = xNorm;
     } else {
       out.h = xNorm * 359;
     }
-    out[activeAttr === 'v' ? 's' : 'v'] = 1 - yNorm;
+    out[activeAttr === 'v' ? 's' : 'v'] = yNorm;
   }
   return out;
 };
@@ -96,6 +89,8 @@ const GRADIENTS = {
   b: 'linear-gradient(to bottom, #0000ff 0%, #000000 100%)',
   v: h => `linear-gradient(to bottom, ${hueBg(h)} 0%, #000 100%)`,
   s: h => `linear-gradient(to bottom, ${hueBg(h)} 0%, #bbb 100%)`,
+  alpha: ({ r, g, b }) =>
+    `linear-gradient(to right, rgba(${r}, ${g}, ${b}, 0), rgb(${r}, ${g}, ${b}))`,
 };
 
 // ==========================================
@@ -124,20 +119,28 @@ class ColorPicker extends React.Component {
     bindAll(this, [
       'onMouseDownMode',
       'onMouseDownAttrSelector',
-      'onMouseDownAttrSlider',
-      'onMouseMoveAttrSlider',
-      'onMouseUpAttrSlider',
+
       'onMouseDownColorSelector',
       'onMouseMoveColorSelector',
       'onMouseUpColorSelector',
+
+      'onMouseDownAttrSlider',
+      'onMouseMoveAttrSlider',
+      'onMouseUpAttrSlider',
+
+      'onMouseDownAlphaSlider',
+      'onMouseMoveAlphaSlider',
+      'onMouseUpAlphaSlider',
     ]);
   }
 
   componentWillUnmount() {
-    window.removeEventListener('mousemove', this.onMouseMoveAttrSlider);
-    window.removeEventListener('mouseup', this.onMouseUpAttrSlider);
     window.removeEventListener('mousemove', this.onMouseMoveColorSelector);
     window.removeEventListener('mouseup', this.onMouseUpColorSelector);
+    window.removeEventListener('mousemove', this.onMouseMoveAttrSlider);
+    window.removeEventListener('mouseup', this.onMouseUpAttrSlider);
+    window.removeEventListener('mousemove', this.onMouseMoveAlphaSlider);
+    window.removeEventListener('mouseup', this.onMouseUpAlphaSlider);
   }
 
   // ==========================================
@@ -146,8 +149,12 @@ class ColorPicker extends React.Component {
   render() {
     const { registerOuterRef, curValue } = this.props;
     const col = tinycolor(curValue);
-    this.rgba = col.toRgb();
-    this.hsva = col.toHsv();
+    const rgba = col.toRgb();
+    if (!this.rgba ||
+        rgba.r !== this.rgba.r || rgba.g !== this.rgba.g || rgba.b !== this.rgba.b) {
+      this.rgba = rgba;
+      this.hsva = col.toHsv();
+    }
     this.rgbhsva = merge(this.rgba, this.hsva);
     this.fRgb = 'rgb'.indexOf(this.state.activeAttr) >= 0;
     return (
@@ -234,7 +241,7 @@ class ColorPicker extends React.Component {
     const attr = this.state.activeAttr;
     const attrNorm = normalize(this.rgbhsva[attr], attr);
     return (
-      <div style={style.circleControl(SLIDER_WIDTH / 2 / SIZE, 1 - attrNorm)}>
+      <div style={style.circleControl(0.5, attrNorm, SLIDER_WIDTH, SIZE)}>
         <div style={style.circleControl2} />
       </div>
     );
@@ -257,14 +264,15 @@ class ColorPicker extends React.Component {
       );
     });
     return (
-      <div>
-        <div style={flexContainer('row')}>
+      <div style={style.controlColumn}>
+        <div style={style.modeButtons(this.props)}>
           {this.renderModeButton('rgb')}
           {this.renderModeButton('hsv')}
         </div>
         <div style={style.colorAttrs(this.props)}>
           {colorAttrs}
         </div>
+        {this.renderAlphaSlider()}
         {this.renderSamples()}
       </div>
     );
@@ -283,63 +291,121 @@ class ColorPicker extends React.Component {
     );
   }
 
+  renderAlphaSlider() {
+    return (
+      <div ref={c => { this.refAlphaSlider = c; }}
+        onMouseDown={this.onMouseDownAlphaSlider}
+        style={style.alphaSlider}
+      >
+        <div className="giu-transparency-tiles" style={style.fillWithTiles} />
+        <div style={style.alphaSliderGradient(this.rgba)} />
+        {this.renderAlphaSliderValue()}
+      </div>
+    );
+  }
+
+  renderAlphaSliderValue() {
+    if (!this.props.curValue) return null;
+    return (
+      <div style={style.circleControl(this.rgba.a, 0.5, ALPHA_SLIDER_SIZE, SLIDER_WIDTH)}>
+        <div style={style.circleControl2} />
+      </div>
+    );
+  }
+
   renderSamples() {
     const { curValue } = this.props;
     if (curValue == null) return null;
-    const col = tinycolor(curValue);
+    const hex6 = tinycolor(curValue).toHexString();
+    const rgbaStr = tinycolor(curValue).toRgbString();
     return [
-      <div key="sample1" style={style.sample1(col)}>{col.toHexString()}</div>,
-      // <div key="sample2" style={style.sample2(col, 'white')}>Sample</div>,
-      // <div key="sample3" style={style.sample2(col, 'black')}>Sample</div>,
+      <div key="sample1" style={style.sample1(hex6)}>#{tinycolor(curValue).toHex8()}</div>,
+      <div key="sample2" style={style.sample2}>
+        &nbsp;
+        <div className="giu-transparency-tiles" style={style.fillWithTiles} />
+        <div style={style.sample2Swatch(rgbaStr)} />
+      </div>,
     ];
   }
 
   // ==========================================
   // Event handlers
   // ==========================================
-  onMouseDownMode(ev) { this.setState({ mode: ev.target.id }); }
+  onMouseDownMode(ev) {
+    const mode = ev.target.id;
+    if (mode === this.state.mode) return;
+    const activeAttr = mode[0];
+    this.setState({ mode, activeAttr });
+  }
   onMouseDownAttrSelector(ev) { this.setState({ activeAttr: ev.target.id }); }
-
-  onMouseDownAttrSlider(ev) {
-    window.addEventListener('mousemove', this.onMouseMoveAttrSlider);
-    window.addEventListener('mouseup', this.onMouseUpAttrSlider);
-    this.onMouseMoveAttrSlider(ev);
-  }
-
-  onMouseMoveAttrSlider(ev) {
-    const bcr = this.refAttrSlider.getBoundingClientRect();
-    const attrNorm = 1 - clamp((ev.clientY - bcr.top) / SIZE, 0, 1);
-    const attr = this.state.activeAttr;
-    this.onChange(ev, { [attr]: denormalize(attrNorm, attr) });
-  }
-
-  onMouseUpAttrSlider() {
-    window.removeEventListener('mousemove', this.onMouseMoveAttrSlider);
-    window.removeEventListener('mouseup', this.onMouseUpAttrSlider);
-  }
 
   onMouseDownColorSelector(ev) {
     window.addEventListener('mousemove', this.onMouseMoveColorSelector);
     window.addEventListener('mouseup', this.onMouseUpColorSelector);
     this.onMouseMoveColorSelector(ev);
   }
-
   onMouseMoveColorSelector(ev) {
     const bcr = this.refColorSelector.getBoundingClientRect();
     const xNorm = clamp((ev.clientX - bcr.left) / SIZE, 0, 1);
-    const yNorm = clamp((ev.clientY - bcr.top) / SIZE, 0, 1);
+    const yNorm = 1 - clamp((ev.clientY - bcr.top) / SIZE, 0, 1);
     const attrs = xyToCol(this.state.activeAttr, xNorm, yNorm);
     this.onChange(ev, attrs);
   }
-
   onMouseUpColorSelector() {
     window.removeEventListener('mousemove', this.onMouseMoveColorSelector);
     window.removeEventListener('mouseup', this.onMouseUpColorSelector);
   }
 
+  onMouseDownAttrSlider(ev) {
+    window.addEventListener('mousemove', this.onMouseMoveAttrSlider);
+    window.addEventListener('mouseup', this.onMouseUpAttrSlider);
+    this.onMouseMoveAttrSlider(ev);
+  }
+  onMouseMoveAttrSlider(ev) {
+    const bcr = this.refAttrSlider.getBoundingClientRect();
+    const attrNorm = 1 - clamp((ev.clientY - bcr.top) / SIZE, 0, 1);
+    const attr = this.state.activeAttr;
+    this.onChange(ev, { [attr]: denormalize(attrNorm, attr) });
+  }
+  onMouseUpAttrSlider() {
+    window.removeEventListener('mousemove', this.onMouseMoveAttrSlider);
+    window.removeEventListener('mouseup', this.onMouseUpAttrSlider);
+  }
+
+  onMouseDownAlphaSlider(ev) {
+    window.addEventListener('mousemove', this.onMouseMoveAlphaSlider);
+    window.addEventListener('mouseup', this.onMouseUpAlphaSlider);
+    this.onMouseMoveAlphaSlider(ev);
+  }
+  onMouseMoveAlphaSlider(ev) {
+    const bcr = this.refAlphaSlider.getBoundingClientRect();
+    const attrNorm = clamp((ev.clientX - bcr.left) / ALPHA_SLIDER_SIZE, 0, 1);
+    this.onChange(ev, { a: attrNorm });
+  }
+  onMouseUpAlphaSlider() {
+    window.removeEventListener('mousemove', this.onMouseMoveAlphaSlider);
+    window.removeEventListener('mouseup', this.onMouseUpAlphaSlider);
+  }
+
   onChange(ev, attrs) {
-    const prevColor = this.fRgb ? this.rgba : this.hsva;
-    const hex8 = tinycolor(merge({}, prevColor, attrs)).toHex8();
+    let hex8;
+    if (this.fRgb) {
+      hex8 = tinycolor(merge({}, this.rgba, attrs)).toHex8();
+
+    // In HSV mode, we need to avoid singularities (e.g. at v = 0).
+    // We keep the HSV values chosen by the user in `this.hsva` and
+    // don't modify them when the RGB value doesn't change (see `render()`).
+    // If `hex8` doesn't change, we trigger a forceUpdate() here, so that
+    // the control reflects the updated value (no owner element will trigger
+    // this refresh, since the control's `value` has not changed).
+    } else {
+      const prevHex8 = tinycolor(merge({}, this.hsva)).toHex8();
+      this.hsva = merge(this.hsva, attrs);
+      const col = tinycolor(merge({}, this.hsva, attrs));
+      this.rgba = col.toRgb();
+      hex8 = col.toHex8();
+      if (hex8 === prevHex8) this.forceUpdate();
+    }
     this.props.onChange(ev, hex8);
   }
 }
@@ -349,7 +415,7 @@ class ColorPicker extends React.Component {
 // ==========================================
 const style = {
   outerBase: inputReset(flexContainer('row', {
-    padding: 5,
+    padding: 6,
   })),
   outer: ({ disabled, fFocused }) => {
     let out = style.outerBase;
@@ -357,6 +423,8 @@ const style = {
     if (fFocused) out = merge(out, GLOW);
     return out;
   },
+
+  // Color selector
   colorSelector: {
     width: SIZE,
     height: SIZE,
@@ -365,10 +433,7 @@ const style = {
   },
   selectorBase: {
     position: 'absolute',
-    top: 0,
-    right: 0,
-    bottom: 0,
-    left: 0,
+    top: 0, right: 0, bottom: 0, left: 0,
   },
   rgbSelector: (attr, normAttr, fHigh) => {
     let pos = 'rgb'.indexOf(attr) * (-SIZE) * 2;
@@ -395,6 +460,8 @@ const style = {
       opacity: fHigh ? normAttr : 1 - normAttr,
     });
   },
+
+  // Active attr slider
   activeAttrSlider: ({ activeAttr }, hsv) => {
     let background = GRADIENTS[activeAttr];
     if (typeof background === 'function') background = background(hsv.h);
@@ -408,11 +475,87 @@ const style = {
       cursor: 'pointer',
     };
   },
-  circleControl: (x, y) => ({
+
+  // Control column
+  controlColumn: flexContainer('column'),
+  modeButtons: ({ accentColor }) => flexContainer('row', {
+    border: `1px solid ${accentColor}`,
+  }),
+  modeButton: (fSelected, { accentColor }) => {
+    const out = flexItem(1, {
+      padding: 3,
+      textAlign: 'center',
+      cursor: 'pointer',
+    });
+    out.backgroundColor = fSelected ? accentColor : undefined;
+    if (fSelected) out.color = COLORS[isDark(out.backgroundColor) ? 'lightText' : 'darkText'];
+    return out;
+  },
+  colorAttrs: ({ accentColor }) => flexContainer('row', {
+    marginTop: 5,
+    border: `1px solid ${accentColor}`,
+  }),
+  colorAttr: (fSelected, { accentColor }) => {
+    const out = flexItem(1, {
+      padding: 3,
+      textAlign: 'center',
+      cursor: 'pointer',
+    });
+    out.backgroundColor = fSelected ? accentColor : undefined;
+    if (fSelected) out.color = COLORS[isDark(out.backgroundColor) ? 'lightText' : 'darkText'];
+    return out;
+  },
+  colorAttrName: {
+    width: 40,
+    pointerEvents: 'none',
+  },
+  alphaSlider: {
+    marginTop: 5,
+    position: 'relative',
+    height: SLIDER_WIDTH,
+    width: ALPHA_SLIDER_SIZE,
+    cursor: 'pointer',
+  },
+  alphaSliderGradient: rgba => ({
+    position: 'absolute',
+    top: 0, right: 0, bottom: 0, left: 0,
+    background: GRADIENTS.alpha(rgba),
+  }),
+  sample1: (hex6) => {
+    const backgroundColor = hex6;
+    const color = COLORS[isDark(backgroundColor) ? 'lightText' : 'darkText'];
+    return {
+      marginTop: 5,
+      padding: '3px 0px',
+      textAlign: 'center',
+      backgroundColor, color,
+    };
+  },
+  sample2: flexItem(1, {
+    marginTop: 5,
+    position: 'relative',
+    padding: '3px 0px',
+    textAlign: 'center',
+    fontWeight: 'bold',
+  }),
+  sample2Swatch: (rgbaStr) => ({
+    position: 'absolute',
+    top: 0, right: 0, bottom: 0, left: 0,
+    backgroundColor: rgbaStr,
+    borderRadius: 2,
+  }),
+
+  // General
+  fillWithTiles: {
+    position: 'absolute',
+    top: 0, right: 0, bottom: 0, left: 0,
+    borderRadius: 2,
+  },
+  circleControl: (x, y, width = SIZE, height = SIZE) => ({
     pointerEvents: 'none',
     position: 'absolute',
-    top: y * SIZE - SWATCH_RADIUS,
-    left: x * SIZE - SWATCH_RADIUS,
+    top: (1 - y) * height - SWATCH_RADIUS,
+    left: x * width - SWATCH_RADIUS,
     height: 2 * SWATCH_RADIUS,
     width: 2 * SWATCH_RADIUS,
     borderRadius: SWATCH_RADIUS,
@@ -426,53 +569,6 @@ const style = {
     width: (SWATCH_RADIUS - 1) * 2,
     borderRadius: SWATCH_RADIUS - 1,
     border: '1px solid black',
-  },
-  modeButton: (fSelected, { accentColor }) => {
-    const out = {
-      padding: '3px 10px',
-      cursor: 'pointer',
-      border: `1px solid ${accentColor}`,
-    };
-    out.backgroundColor = fSelected ? accentColor : undefined;
-    if (fSelected) out.color = COLORS[isDark(out.backgroundColor) ? 'lightText' : 'darkText'];
-    return out;
-  },
-  colorAttrs: ({ accentColor }) => ({
-    marginTop: 5,
-    border: `1px solid ${accentColor}`,
-  }),
-  colorAttr: (fSelected, { accentColor }) => {
-    const out = {
-      padding: '3px 10px',
-      cursor: 'pointer',
-    };
-    out.backgroundColor = fSelected ? accentColor : undefined;
-    if (fSelected) out.color = COLORS[isDark(out.backgroundColor) ? 'lightText' : 'darkText'];
-    return out;
-  },
-  colorAttrName: {
-    width: 40,
-    pointerEvents: 'none',
-  },
-  sample1: (col) => {
-    const backgroundColor = col.toHexString();
-    const color = COLORS[isDark(backgroundColor) ? 'lightText' : 'darkText'];
-    return {
-      marginTop: 5,
-      padding: '3px 0px',
-      textAlign: 'center',
-      backgroundColor, color,
-    };
-  },
-  sample2: (col, backgroundColor) => {
-    const color = col.toHexString();
-    return {
-      marginTop: 5,
-      padding: '3px 0px',
-      textAlign: 'center',
-      fontWeight: 'bold',
-      backgroundColor, color,
-    };
   },
 };
 

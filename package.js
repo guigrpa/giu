@@ -48,16 +48,13 @@ const specs = {
     // Top-level
     start:                      'babel-node examples/server',
     compile:                    runMultiple([
-                                  'rm -rf ./lib ./libEs6 ./libEs6_flow',
+                                  'rm -rf ./lib ./libEs6',
                                   'babel -d lib src',
-                                  'cp src/index.sass lib',
-                                  // 'babel --no-babelrc --presets stage-0,react --plugins transform-flow-strip-types -d libEs6 src',
-                                  // 'cp -r src libEs6_flow'
+                                  // 'cp -r src libEs6'
                                 ]),
     docs:                       'extract-docs --template docs/templates/README.md --output README.md',
     build:                      runMultiple([
                                   'npm run lint',
-                                  // 'npm run flow',
                                   'npm run compile',
                                   // 'npm run test',
                                   'npm run docs',
@@ -69,8 +66,6 @@ const specs = {
 
     // Static analysis
     lint:                       'eslint src',
-    flow:                       'flow && test $? -eq 0 -o $? -eq 2',
-    flowStop:                   'flow stop',
 
     // Testing - general
     test:                       'npm run testCovFull',
@@ -122,16 +117,12 @@ const specs = {
     tinycolor2: '1.3.0',
     filesize: '3.3.0',
     keycode: '2.1.1',
-    // 'react-colorpickr': '4.1.2',
-    'colr-convert': '^1.0.4',
-    clamp: '^1.0.1',
   },
 
   devDependencies: {
     storyboard: '^1.0.0',
     'extract-docs': '^1.0.0',
     'cross-env': '^1.0.7',
-    'flow-bin': '^0.22.1',
 
     moment: '^2.0.0',
 
@@ -145,7 +136,6 @@ const specs = {
     'babel-cli': '^6.6.5',
     'babel-core': '^6.7.2',
     'babel-polyfill': '^6.7.2',
-    'babel-plugin-transform-flow-strip-types': '^6.7.0',
     'babel-preset-es2015': '^6.6.0',
     'babel-preset-stage-0': '^6.5.0',
     'babel-preset-react': '^6.5.0',
@@ -158,16 +148,11 @@ const specs = {
     'file-loader': '0.8.5',
     'css-loader': '0.23.1',
     'style-loader': '0.13.1',
-    'json-loader': '0.5.4',
-    'bundle-loader': '0.5.4',
-    'sass-loader': '3.2.0',
-    'node-sass': '3.4.2',
     'extract-text-webpack-plugin': '1.0.1',
 
     // Linting
     'eslint': '^2.4.0',
     'eslint-config-airbnb': '^6.2.0',
-    'eslint-plugin-flowtype': '^2.2.2',
     'eslint-plugin-react': '^4.2.3',
     'babel-eslint': '^6.0.0',
 

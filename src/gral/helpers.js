@@ -1,6 +1,7 @@
 import {
   getScrollbarWidth,
 }                           from '../gral/constants';
+import ReactDOM             from 'react-dom';
 
 function bindAll(_this, fnNames) {
   fnNames.forEach(name => {
@@ -19,6 +20,15 @@ function cancelEvent(ev) {
 function preventDefault(ev) {
   if (!ev) return;
   ev.preventDefault && ev.preventDefault();
+}
+
+function cancelBodyScrolling(ev, el) {
+  if (!el) return;
+  if (ev.nativeEvent.deltaY <= 0) {
+    if (el.scrollTop <= 0) cancelEvent(ev);
+  } else {
+    if (el.scrollTop + el.clientHeight + 0.5 >= el.scrollHeight) cancelEvent(ev);
+  }
 }
 
 // -----------------------------------------------
@@ -58,6 +68,7 @@ function windowWidthWithoutScrollbar() {
 export {
   bindAll,
   cancelEvent, preventDefault,
+  cancelBodyScrolling,
   windowBottomScrollbarHeight, windowRightScrollbarWidth,
   windowHeightWithoutScrollbar, windowWidthWithoutScrollbar,
 };

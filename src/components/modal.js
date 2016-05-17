@@ -9,6 +9,7 @@ import {
 import {
   bindAll,
   cancelEvent,
+  cancelBodyScrolling,
 }                           from '../gral/helpers';
 import {
   flexContainer,
@@ -48,6 +49,7 @@ class Modal extends React.Component {
     super(props);
     this.shouldComponentUpdate = PureRenderMixin.shouldComponentUpdate.bind(this);
     bindAll(this, [
+      'onWheel',
       'onKeyUp',
       'onClickOuter',
     ]);
@@ -85,7 +87,10 @@ class Modal extends React.Component {
     return (
       <div style={style.modalWrapper}>
         {this.renderSpacer()}
-        <div style={merge(style.modal, baseStyle)}>
+        <div ref={c => { this.refModalScroller = c; }}
+          onWheel={this.onWheel}
+          style={merge(style.modal, baseStyle)}
+        >
           <FocusCapture
             registerRef={c => { this.refFocusCapture = c; }}
             autoFocus
@@ -104,7 +109,13 @@ class Modal extends React.Component {
   }
 
   renderSpacer() {
-    return <div style={flexItem(1)} onClick={this.props.onClickBackdrop} />;
+    return (
+      <div 
+        onClick={this.props.onClickBackdrop}
+        onWheel={cancelEvent}
+        style={flexItem(1)}
+      />
+    );
   }
 
   renderButtons(buttons) {
@@ -132,6 +143,8 @@ class Modal extends React.Component {
   // ==========================================
   // Handlers
   // ==========================================
+  onWheel(ev) { cancelBodyScrolling(ev, this.refModalScroller); }
+
   onKeyUp(ev) {
     const { which } = ev;
     let buttons;

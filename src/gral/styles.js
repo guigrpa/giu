@@ -61,6 +61,13 @@ const GLOW = {
   border: '1px solid rgba(81, 203, 238, 1)',
 };
 
+function addStylesToPage(styles) {
+  const el = document.createElement('style');
+  el.type = 'text/css';
+  el.innerHTML = styles;
+  document.getElementsByTagName('head')[0].appendChild(el);
+}
+
 export {
   merge, addDefaults,
   flexContainer, flexItem,
@@ -69,4 +76,5 @@ export {
   HIDDEN_FOCUS_CAPTURE,
   GLOW,
   inputReset, INPUT_DISABLED,
+  addStylesToPage,
 };

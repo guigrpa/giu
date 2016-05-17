@@ -1,4 +1,4 @@
-require('./index.sass');
+require('./index.css');
 
 // Components
 export Select             from './inputs/select';
@@ -6,7 +6,8 @@ export { LIST_SEPARATOR } from './inputs/selectCustom';
 export {
   TextInput,
   NumberInput,
-}                         from './inputs/textNumberInput';
+  RangeInput,
+}                         from './inputs/textNumberRangeInput';
 export DateInput          from './inputs/dateInput';
 export Textarea           from './inputs/textarea';
 export Checkbox           from './inputs/checkbox';
@@ -32,6 +33,7 @@ export {
   Floats,
   floatAdd, floatDelete, floatUpdate, floatReposition,
 }                         from './components/floats';
+export HintScreen         from './components/hintScreen';
 
 export DropDownMenu       from './components/dropDownMenu';
 export Button             from './components/button';

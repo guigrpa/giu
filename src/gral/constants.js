@@ -57,6 +57,7 @@ const UNICODE = {
 
 const MISC = {
   windowBorderBreathe: 5,
+  zHintBase: 50,
   zModalBase: 50,
   zModalStep: 10,
   zMainFloatDelta: 5,

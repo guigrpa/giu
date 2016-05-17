@@ -58,18 +58,18 @@
         * Only processed upon componentWillMount
 - [x] Fix tabIndex for disabled comps
 - [x] RadioButton
-- [ ] ColorInput:
-    + [x] Show selector swatch
-    + [x] Allow moving slider
-    + [x] Allow moving selector
-    + [x] Show text on color (white/black depending)
-    + [ ] Avoid singularities! How?
-    + [ ] Transparency control
-- [ ] Don't require webpack: just add the little sass we have manually to the page.
-- [ ] Input range
-- [ ] Focus delegation
-- [ ] Hints
+- [x] ColorInput
+- [x] Input type=range
+- [x] HintScreen (embedded)
+- [ ] Hints:
+    + Support user actions:
+        * Define hint X
+        * Disable all
+        * Show hint X (and disable it afterwards)
+        * Reset (so that they are shown again)
+    + Store shown hints in localStorage and don't show again (unless reset)
 
+- [ ] Focus delegation?
 - [ ] Include native components for mobile? (e.g. `input type="date"`)
 - [ ] Pressing enter on button opening a modal also dismisses the modal!
 - [ ] Add alternative style to inputs (no borders, etc.) or make it simple to wrap the provided components and customise

@@ -1,6 +1,6 @@
 import React                from 'react';
 import { merge }            from 'timm';
-import ColorPickerOld       from 'react-colorpickr';
+import tinycolor            from 'tinycolor2';
 import { bindAll }          from '../gral/helpers';
 import { COLORS, KEYS }     from '../gral/constants';
 import {
@@ -15,11 +15,13 @@ import {
   warnFloats,
 }                           from '../components/floats';
 import ColorPicker          from '../inputs/colorPicker';
-require('./colorPicker/colorpickr.css');
 
 function toInternalValue(val) { return val; }
 function toExternalValue(val) { return val; }
 function isNull(val) { return val == null; }
+
+const SWATCH_WIDTH = 25;
+const SWATCH_HEIGHT = 10;
 
 // ==========================================
 // Component
@@ -48,7 +50,6 @@ class ColorInput extends React.Component {
       'registerTitleRef',
       'onMouseDownTitle',
       'onClick',
-      'onChange',
     ]);
   }
 
@@ -89,6 +90,10 @@ class ColorInput extends React.Component {
         onMouseDown={this.onMouseDownTitle}
         style={style.title(this.props)}
       >
+        <div
+          className="giu-transparency-tiles"
+          style={style.swatchTiles}
+        />
         <div style={style.swatch(this.props)} />
       </div>
     );
@@ -131,9 +136,8 @@ class ColorInput extends React.Component {
       curValue, onChange,
       accentColor,
       disabled, fFocused,
-      old,
     } = this.props;
-    let picker = (
+    return (
       <ColorPicker
         registerOuterRef={inlinePicker ? registerOuterRef : undefined}
         curValue={curValue}
@@ -142,16 +146,6 @@ class ColorInput extends React.Component {
         fFocused={inlinePicker && fFocused}
         accentColor={accentColor}
       />
-    );
-    if (old) picker = <ColorPickerOld value={curValue} onChange={this.onChange} />;
-    if (!old || !inlinePicker) return picker;
-    return (
-      <div
-        registerOuterRef={inlinePicker ? registerOuterRef : undefined}
-        style={style.inlineWrapper(this.props)}
-      >
-        {picker}
-      </div>
     );
   }
 
@@ -175,11 +169,6 @@ class ColorInput extends React.Component {
     if (!inlinePicker) this.setState({ fFloat: false });
   }
 
-  onChange(color) {
-    const { r, g, b, a, hex } = color;
-    this.props.onChange(null, hex);
-  }
-
   // ==========================================
   // Helpers
   // ==========================================
@@ -197,29 +186,34 @@ const style = {
   title: ({ disabled, fFocused }) => {
     let out = inputReset({
       display: 'inline-block',
+      position: 'relative',
       cursor: 'pointer',
       border: `1px solid ${COLORS.line}`,
       padding: 4,
+      height: SWATCH_HEIGHT + 2 * 4 + 2,
+      width: SWATCH_WIDTH + 2 * 4 + 2,
     });
     if (disabled) out = merge(out, INPUT_DISABLED);
     if (fFocused) out = merge(out, GLOW);
     return out;
   },
-  swatch: ({ curValue }) => {
-    const background = curValue != null ? `#${curValue}` : 'transparent';
-    return {
-      background,
-      height: 12,
-      width: 26,
-      borderRadius: 2,
-      color: 'transparent',
-    };
+  swatchTiles: {
+    position: 'absolute',
+    top: 4, right: 4, bottom: 4, left: 4,
+    borderRadius: 2,
   },
-  inlineWrapper: ({ disabled, fFocused }) => {
-    let out = inputReset();
-    if (disabled) out = merge(out, INPUT_DISABLED);
-    if (fFocused) out = merge(out, GLOW);
-    return out;
+  swatch: ({ curValue }) => {
+    const col = tinycolor(curValue).toRgbString();
+    const background = curValue != null ? `${col}` : 'transparent';
+    return {
+      position: 'absolute',
+      top: 4,
+      right: 4,
+      bottom: 4,
+      left: 4,
+      borderRadius: 2,
+      background,
+    };
   },
 };
 

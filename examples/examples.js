@@ -2,7 +2,8 @@ import React                from 'react';
 import ReactDOM             from 'react-dom';
 require('babel-polyfill');
 import {
-  Select, TextInput, NumberInput, DateInput, Textarea, Checkbox,
+  Select, DateInput, Textarea, Checkbox,
+  TextInput, NumberInput, RangeInput,
   FileInput, RadioGroup, ColorInput,
   LIST_SEPARATOR,
   DropDownMenu,
@@ -12,6 +13,7 @@ import {
   Floats, floatReposition,
   Modals, Modal, modalPush, modalPop,
   Notifications, Notification, notify as createNotif,
+  HintScreen,
   hoverable,
   flexContainer, flexItem, boxWithShadow,
   merge,
@@ -48,6 +50,17 @@ const WIDE_OPTIONS = [
   { label: 'true', value: true },
   { label: 'C', value: 'c' },
 ];
+
+const LONG_TEXT = `Lorem ipsum dolor sit amet, consectetur adipiscing elit. Proin
+  mi tortor, sagittis in ultricies ullamcorper, feugiat quis
+  mauris. Nam dapibus velit nec dictum vulputate. Morbi tincidunt
+  diam eu velit gravida, vel consequat ante luctus. Integer ut
+  consequat sem, dictum eleifend nunc. Quisque elit massa,
+  gravida non tortor sed, condimentum pulvinar lorem. Duis
+  ullamcorper placerat mi sed tempor. Praesent sed justo ut leo
+  congue pharetra sed sit amet libero. Suspendisse odio velit, mattis
+  non pulvinar non, posuere sit amet quam. Etiam lacinia lobortis
+  tincidunt.`;
 
 let cntNotif = 1;
 const notify = (msg) => createNotif({
@@ -120,6 +133,15 @@ const App = () => {
         </div>
       );
       break;
+    case 5:
+      out = (
+        <div>
+          <Floats />
+          <RangeInput value="55" min={0} max={100} step={5} onChange={onChange} />
+          <RangeInput disabled value="34" min={0} max={100} step={5} onChange={onChange} />
+        </div>
+      );
+      break;
     default:
       out = (
         <div>
@@ -139,6 +161,7 @@ const App = () => {
               {EVERYTHING && <StyleUtilsExample />}
               {EVERYTHING && <DropDownExample />}
               {EVERYTHING && <ModalExample />}
+              {EVERYTHING && <HintExample />}
               {EVERYTHING && <ScrollingExample />}
               {EVERYTHING && <ProgressExample />}
             </div>
@@ -353,7 +376,17 @@ class ModalExample extends React.Component {
 
   addModal2() {
     const title = 'Introduction';
-    const children = <span>Nice to meet you, {this.refName.getValue()}!</span>;
+    const children = (
+      <div>
+        Nice to meet you, {this.refName.getValue()}!<br />
+        This is some really long text:<br />
+        {LONG_TEXT}<br />
+        {LONG_TEXT}<br />
+        {LONG_TEXT}<br />
+        {LONG_TEXT}<br />
+        {LONG_TEXT}<br />
+      </div>
+    );
     modalPush({
       title,
       children,
@@ -361,8 +394,60 @@ class ModalExample extends React.Component {
         { label: 'Back', onClick: modalPop, defaultButton: true },
       ],
       onEsc: modalPop,
+      style: { width: 500 },
     });
   }
+}
+
+class HintExample extends React.Component {
+  constructor(props) {
+    super(props);
+    this.state = { fEmbeddedHint: false };
+  }
+
+  render() {
+    return (
+      <div style={style.example}>
+        <ExampleLabel>
+          Hint (embedded)
+        </ExampleLabel>
+        <Button
+          onClick={() => this.setState({ fEmbeddedHint: true })}
+        >
+          Embed hint
+        </Button>
+        { this.state.fEmbeddedHint && this.renderEmbeddedHint() }
+      </div>
+    );
+  }
+
+  renderEmbeddedHint() {
+    const close = () => this.setState({ fEmbeddedHint: false });
+    const arrows = [
+      { from: {x: 300, y: 30}, to: {x: 400, y: 60} },
+      { from: {x: 450, y: 120}, to: {x: 700, y: 140}, counterclockwise: true },
+    ];
+    const labels = [
+      { 
+        x: 300, y: 30, align: 'right',
+        children: <span>A right-aligned label with an icon: <Icon icon="ambulance" /></span>
+      }, {
+        x: 400, y: 60, align: 'center',
+        children: <span>A <span style={{color: 'yellow'}}>center-aligned</span> label</span>
+      }, {
+        x: 700, y: 80,
+        children: <span>A very, very, very, very, very, very, very, very long label</span>
+      }
+    ];
+    return (
+      <HintScreen
+        onClose={close}
+        arrows={arrows}
+        labels={labels}
+      />
+    );
+  }
+
 }
 
 const ScrollingExample = () =>
@@ -374,85 +459,15 @@ const ScrollingExample = () =>
     >
       <DateInput placeholder="date" date time />
       <br />
-      Lorem ipsum dolor sit amet, consectetur adipiscing elit. Proin
-      mi tortor, sagittis in ultricies ullamcorper, feugiat quis
-      mauris. Nam dapibus velit nec dictum vulputate. Morbi tincidunt
-      diam eu velit gravida, vel consequat ante luctus. Integer ut
-      consequat sem, dictum eleifend nunc. Quisque elit massa,
-      gravida non tortor sed, condimentum pulvinar lorem. Duis
-      ullamcorper placerat mi sed tempor. Praesent sed justo ut leo
-      congue pharetra sed sit amet libero. Suspendisse odio velit, mattis
-      non pulvinar non, posuere sit amet quam. Etiam lacinia lobortis
-      tincidunt.
-      <br />
-      Lorem ipsum dolor sit amet, consectetur adipiscing elit. Proin
-      mi tortor, sagittis in ultricies ullamcorper, feugiat quis
-      mauris. Nam dapibus velit nec dictum vulputate. Morbi tincidunt
-      diam eu velit gravida, vel consequat ante luctus. Integer ut
-      consequat sem, dictum eleifend nunc. Quisque elit massa,
-      gravida non tortor sed, condimentum pulvinar lorem. Duis
-      ullamcorper placerat mi sed tempor. Praesent sed justo ut leo
-      congue pharetra sed sit amet libero. Suspendisse odio velit, mattis
-      non pulvinar non, posuere sit amet quam. Etiam lacinia lobortis
-      tincidunt.
-      <br />
-      Lorem ipsum dolor sit amet, consectetur adipiscing elit. Proin
-      mi tortor, sagittis in ultricies ullamcorper, feugiat quis
-      mauris. Nam dapibus velit nec dictum vulputate. Morbi tincidunt
-      diam eu velit gravida, vel consequat ante luctus. Integer ut
-      consequat sem, dictum eleifend nunc. Quisque elit massa,
-      gravida non tortor sed, condimentum pulvinar lorem. Duis
-      ullamcorper placerat mi sed tempor. Praesent sed justo ut leo
-      congue pharetra sed sit amet libero. Suspendisse odio velit, mattis
-      non pulvinar non, posuere sit amet quam. Etiam lacinia lobortis
-      tincidunt.
-      <br />
+      {LONG_TEXT}<br />
+      {LONG_TEXT}<br />
+      {LONG_TEXT}<br />
       <DateInput placeholder="date" />
       <br />
-      Lorem ipsum dolor sit amet, consectetur adipiscing elit. Proin
-      mi tortor, sagittis in ultricies ullamcorper, feugiat quis
-      mauris. Nam dapibus velit nec dictum vulputate. Morbi tincidunt
-      diam eu velit gravida, vel consequat ante luctus. Integer ut
-      consequat sem, dictum eleifend nunc. Quisque elit massa,
-      gravida non tortor sed, condimentum pulvinar lorem. Duis
-      ullamcorper placerat mi sed tempor. Praesent sed justo ut leo
-      congue pharetra sed sit amet libero. Suspendisse odio velit, mattis
-      non pulvinar non, posuere sit amet quam. Etiam lacinia lobortis
-      tincidunt.
-      <br />
-      Lorem ipsum dolor sit amet, consectetur adipiscing elit. Proin
-      mi tortor, sagittis in ultricies ullamcorper, feugiat quis
-      mauris. Nam dapibus velit nec dictum vulputate. Morbi tincidunt
-      diam eu velit gravida, vel consequat ante luctus. Integer ut
-      consequat sem, dictum eleifend nunc. Quisque elit massa,
-      gravida non tortor sed, condimentum pulvinar lorem. Duis
-      ullamcorper placerat mi sed tempor. Praesent sed justo ut leo
-      congue pharetra sed sit amet libero. Suspendisse odio velit, mattis
-      non pulvinar non, posuere sit amet quam. Etiam lacinia lobortis
-      tincidunt.
-      <br />
-      Lorem ipsum dolor sit amet, consectetur adipiscing elit. Proin
-      mi tortor, sagittis in ultricies ullamcorper, feugiat quis
-      mauris. Nam dapibus velit nec dictum vulputate. Morbi tincidunt
-      diam eu velit gravida, vel consequat ante luctus. Integer ut
-      consequat sem, dictum eleifend nunc. Quisque elit massa,
-      gravida non tortor sed, condimentum pulvinar lorem. Duis
-      ullamcorper placerat mi sed tempor. Praesent sed justo ut leo
-      congue pharetra sed sit amet libero. Suspendisse odio velit, mattis
-      non pulvinar non, posuere sit amet quam. Etiam lacinia lobortis
-      tincidunt.
-      <br />
-      Lorem ipsum dolor sit amet, consectetur adipiscing elit. Proin
-      mi tortor, sagittis in ultricies ullamcorper, feugiat quis
-      mauris. Nam dapibus velit nec dictum vulputate. Morbi tincidunt
-      diam eu velit gravida, vel consequat ante luctus. Integer ut
-      consequat sem, dictum eleifend nunc. Quisque elit massa,
-      gravida non tortor sed, condimentum pulvinar lorem. Duis
-      ullamcorper placerat mi sed tempor. Praesent sed justo ut leo
-      congue pharetra sed sit amet libero. Suspendisse odio velit, mattis
-      non pulvinar non, posuere sit amet quam. Etiam lacinia lobortis
-      tincidunt.
-      <br />
+      {LONG_TEXT}<br />
+      {LONG_TEXT}<br />
+      {LONG_TEXT}<br />
+      {LONG_TEXT}<br />
       <DateInput placeholder="date" />
     </div>
   </div>;
@@ -528,6 +543,24 @@ class FormExample extends React.Component {
               { value: 4, label: "Another normal label" },
               { value: 5, label: <span>A label with a <Button onClick={() => console.log('hi!')}>button</Button></span> },
             ]}
+          />
+          <div style={{marginLeft: 5}}>
+            <RangeInput
+              value={25} onChange={onChange}
+              min={0} max={100} step={5}
+              style={{display: 'block'}}
+            />
+            <RangeInput disabled
+              value={55} onChange={onChange}
+              min={0} max={100} step={5}
+              style={{display: 'block'}}
+            />
+          </div>
+          <RangeInput
+            value={55} onChange={onChange}
+            min={0} max={100} step={5}
+            vertical
+            style={{marginLeft: 20, height: 100, width: 25}}
           />
         </div>
         <br />
@@ -710,17 +743,12 @@ class FormExample extends React.Component {
           <ExampleLabel>
             ColorInput: with inline/dropdown ColorPicker
           </ExampleLabel>
-          <div>
-            <ColorInput value="dc5400" accentColor="darkGreen" />
-            <ColorInput value="dc5400" disabled />
-          </div>
           <div style={flexContainer('row')}>
-            <ColorInput inlinePicker value="cca500" accentColor="lightGray" />
-            <ColorInput inlinePicker value="cca500" disabled accentColor="lightGray" />
-          </div>
-          <div style={flexContainer('row')}>
-            <ColorInput inlinePicker old value="cca500" />
-            <ColorInput inlinePicker old value="408200" disabled />
+            <ColorInput value="aadc5400" accentColor="darkmagenta" />
+            <ColorInput value="ffdc5400" disabled />
+            <div>&nbsp;</div>
+            <ColorInput inlinePicker value="ffcca500" accentColor="lightGray" />
+            <ColorInput inlinePicker value="ffcca500" disabled accentColor="lightGray" />
           </div>
         </div>
         <br />
