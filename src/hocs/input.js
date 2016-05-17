@@ -88,6 +88,8 @@ function input(ComposedComponent, {
         'onChange',
         'onFocus',
         'onBlur',
+        'onCopyCut',
+        'onPaste',
         'onMouseDownWrapper',
         'onKeyDown',
       ]);
@@ -173,10 +175,14 @@ function input(ComposedComponent, {
       let registerFocusableRef;
       let onFocus;
       let onBlur;
+      let onCopy;
+      let onPaste;
       if (!fIncludeFocusCapture) {
         registerFocusableRef = this.registerFocusableRef;
         onFocus = this.onFocus;
         onBlur = this.onBlur;
+        onCopy = this.onCopyCut;
+        onPaste = this.onPaste;
       }
       const el = (
         <ComposedComponent
@@ -195,6 +201,7 @@ function input(ComposedComponent, {
           onChange={this.onChange}
           onFocus={onFocus}
           onBlur={onBlur}
+          onCopy={onCopy} onCut={onCopy} onPaste={onPaste}
           onResizeOuter={this.renderErrorFloat}
           styleOuter={fIncludeFocusCapture ? undefined : this.props.styleOuter}
         />
@@ -212,6 +219,7 @@ function input(ComposedComponent, {
               registerRef={this.registerFocusableRef}
               disabled={disabled}
               onFocus={this.onFocus} onBlur={this.onBlur}
+              onCopy={this.onCopyCut} onCut={this.onCopyCut} onPaste={this.onPaste}
               onKeyDown={this.onKeyDown}
             />
             {el}
@@ -327,6 +335,15 @@ function input(ComposedComponent, {
       const { which, keyCode, metaKey, shiftKey, altKey, ctrlKey } = ev;
       if (trappedKeys.indexOf(which) < 0) return;
       this.setState({ keyDown: { which, keyCode, metaKey, shiftKey, altKey, ctrlKey } });
+    }
+
+    onCopyCut(ev) {
+      ev.clipboardData.setData('text/plain', this.state.curValue);
+      ev.preventDefault();
+    }
+
+    onPaste(ev) {
+      console.log("Pasted data:", ev.clipboardData.getData('text/plain'))
     }
 
 

@@ -13,7 +13,7 @@ import {
   Floats, floatReposition,
   Modals, Modal, modalPush, modalPop,
   Notifications, Notification, notify as createNotif,
-  HintScreen,
+  Hints, HintScreen, hintDefine, hintShow, hintHide, hintDisableAll, hintReset,
   hoverable,
   flexContainer, flexItem, boxWithShadow,
   merge,
@@ -152,6 +152,7 @@ const App = () => {
             <Modals />
             <Floats />
             <Notifications />
+            <Hints />
             <div style={flexItem(1)}>
               {EVERYTHING && <NotificationExample />}
               {EVERYTHING && <MessageExample />}
@@ -405,15 +406,57 @@ class HintExample extends React.Component {
     this.state = { fEmbeddedHint: false };
   }
 
+  componentWillMount() {
+    hintDefine('hintExample', {
+      labels: () => {
+        const labels = [];
+        const ref = this.refs.refHintA;
+        if (ref) {
+          const bcr = ref.getBoundingClientRect();
+          labels.push({
+            x: bcr.right + 90, y: bcr.top - 80,
+            children: 'Just shows a pre-defined hint (if not already shown)',
+          });
+        }
+        return labels;
+      },
+      arrows: () => {
+        const arrows = [];
+        const ref = this.refs.refHintA;
+        if (ref) {
+          const bcr = ref.getBoundingClientRect();
+          arrows.push({
+            from: { x: bcr.right + 90, y: bcr.top - 80 },
+            to: { x: (bcr.left + bcr.right) / 2, y: bcr.top - 5 },
+            counterclockwise: true,
+          });
+        }
+        return arrows;
+      },
+    });
+  }
+
   render() {
     return (
       <div style={style.example}>
         <ExampleLabel>
           Hint (embedded)
         </ExampleLabel>
-        <Button
-          onClick={() => this.setState({ fEmbeddedHint: true })}
-        >
+        <span ref="refHintA">
+          <Button onClick={() => hintShow('hintExample')}>
+            Show hint (if not already shown)
+          </Button>
+        </span>
+        {' '}
+        <Button onClick={() => { hintReset(); alert('Hints have been reset') }}>
+          Reset hints
+        </Button>
+        {' '}
+        <Button onClick={() => { hintDisableAll(); alert('Hints have been disabled') }}>
+          Disable all
+        </Button>
+        {' '}<br />
+        <Button onClick={() => this.setState({ fEmbeddedHint: true })}>
           Embed hint
         </Button>
         { this.state.fEmbeddedHint && this.renderEmbeddedHint() }

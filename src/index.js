@@ -33,6 +33,12 @@ export {
   Floats,
   floatAdd, floatDelete, floatUpdate, floatReposition,
 }                         from './components/floats';
+export {
+  Hints,
+  reducer,
+  actions,
+  hintDefine, hintDisableAll, hintReset, hintShow, hintHide, isHintShown,
+}                         from './components/hints';
 export HintScreen         from './components/hintScreen';
 
 export DropDownMenu       from './components/dropDownMenu';

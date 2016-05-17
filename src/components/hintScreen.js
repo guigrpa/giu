@@ -25,8 +25,14 @@ const FONT_FAMILY = '"Gloria Hallelujah", cursive';
 // In such a case, use `Hints` instead.
 class HintScreen extends React.Component {
   static propTypes = {
-    arrows:                 React.PropTypes.array,
-    labels:                 React.PropTypes.array,
+    arrows:                 React.PropTypes.oneOfType([
+      React.PropTypes.array,
+      React.PropTypes.func,
+    ]),
+    labels:                 React.PropTypes.oneOfType([
+      React.PropTypes.array,
+      React.PropTypes.func,
+    ]),
     closeLabel:             React.PropTypes.string,
     onClose:                React.PropTypes.func,
     zIndex:                 React.PropTypes.number,
@@ -66,7 +72,8 @@ class HintScreen extends React.Component {
   renderBackdrop() { return <Backdrop style={style.backdrop} />; }
 
   renderArrows() {
-    const { arrows } = this.props;
+    let { arrows } = this.props;
+    if (typeof arrows === 'function') arrows = arrows();
     if (!arrows || !arrows.length) return null;
     return (
       <svg style={style.svg}>
@@ -76,7 +83,8 @@ class HintScreen extends React.Component {
   }
 
   renderLabels() {
-    const { labels } = this.props;
+    let { labels } = this.props;
+    if (typeof labels === 'function') labels = labels();
     if (!labels) return null;
     return labels.map((label, idx) => (
       <HintLabel key={idx}

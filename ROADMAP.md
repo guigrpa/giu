@@ -61,13 +61,15 @@
 - [x] ColorInput
 - [x] Input type=range
 - [x] HintScreen (embedded)
-- [ ] Hints:
+- [x] Hints
     + Support user actions:
         * Define hint X
         * Disable all
         * Show hint X (and disable it afterwards)
         * Reset (so that they are shown again)
     + Store shown hints in localStorage and don't show again (unless reset)
+- [ ] CustomSelect and ColorInput: how can we support copy&paste. Same for inline DateInputs
+- [ ] DOCS!
 
 - [ ] Focus delegation?
 - [ ] Include native components for mobile? (e.g. `input type="date"`)
@@ -77,4 +79,3 @@
 - [ ] Design customisation strategy for theme constants (context? constant modification?) -- reduce to the minimum the style-related props (one color), so that we don't need to handle that!
 - [ ] Drag and drop
 - [ ] Include SVG font?
-- [ ] DOCS!
