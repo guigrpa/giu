@@ -53,6 +53,7 @@ class DropDownMenu extends React.Component {
         onBlur={this.onBlur}
         styleOuter={style.selectOuter}
         {...props}
+        required noErrors
       >
         {this.renderTitle()}
       </Select>

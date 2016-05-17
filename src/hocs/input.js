@@ -25,6 +25,7 @@ const PROP_TYPES = {
   value:                  React.PropTypes.any,
   errors:                 React.PropTypes.array,
   required:               React.PropTypes.bool,   // also passed through
+  noErrors:               React.PropTypes.bool,
   validators:             React.PropTypes.array,
   cmds:                   React.PropTypes.array,  // also passed through
   disabled:               React.PropTypes.bool,   // also passed through
@@ -341,6 +342,8 @@ function input(ComposedComponent, {
     }
 
     _validate() {
+      const { noErrors } = this.props;
+      if (noErrors) return;
       let validators;
       if (this.props.validators.length) {
         validators = merge({}, defaultValidators);
