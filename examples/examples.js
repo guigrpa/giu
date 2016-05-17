@@ -440,7 +440,8 @@ class HintExample extends React.Component {
     return (
       <div style={style.example}>
         <ExampleLabel>
-          Hint (embedded)
+          Hints (show once, disable-all, reset) and Hint (embedded): simple label positioning,
+          even taking into account DOM element positions
         </ExampleLabel>
         <span ref="refHintA">
           <Button onClick={() => hintShow('hintExample')}>

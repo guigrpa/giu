@@ -69,6 +69,7 @@
         * Reset (so that they are shown again)
     + Store shown hints in localStorage and don't show again (unless reset)
 - [ ] CustomSelect and ColorInput: how can we support copy&paste. Same for inline DateInputs
+- [ ] Add style to dropdownmenu title
 - [ ] DOCS!
 
 - [ ] Focus delegation?
