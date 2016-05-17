@@ -169,6 +169,9 @@ class ColorPicker extends React.Component {
     );
   }
 
+  // ------------------------------------------
+  // Color selector
+  // ------------------------------------------
   renderColorSelector() {
     const { activeAttr } = this.state;
     let gradients;
@@ -225,6 +228,9 @@ class ColorPicker extends React.Component {
     );
   }
 
+  // ------------------------------------------
+  // Active attribute slider
+  // ------------------------------------------
   renderActiveAttrSlider() {
     return (
       <div ref={c => { this.refAttrSlider = c; }}
@@ -247,6 +253,9 @@ class ColorPicker extends React.Component {
     );
   }
 
+  // ------------------------------------------
+  // Controls
+  // ------------------------------------------
   renderControls() {
     const { mode, activeAttr } = this.state;
     const colorAttrs = mode.split('').map(colorAttr => {
@@ -313,6 +322,9 @@ class ColorPicker extends React.Component {
     );
   }
 
+  // ------------------------------------------
+  // Samples
+  // ------------------------------------------
   renderSamples() {
     const { curValue } = this.props;
     if (curValue == null) return null;
