@@ -2,7 +2,7 @@ import { dateTimeFormat }   from '../gral/dates';
 
 // -- ```js
 // -- // Generic
-// -- isRequired()
+// -- isRequired() // same as the 'required' attribute, but allowing customization
 // -- isEqualTo(password, 'password')
 // -- isOneOf(['rabbit', 'cow', 'eagle'])
 // --

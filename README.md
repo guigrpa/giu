@@ -1,4 +1,4 @@
-# giu [![npm version](https://img.shields.io/npm/v/giu.svg)](https://www.npmjs.com/package/giu)
+# Giu [![npm version](https://img.shields.io/npm/v/giu.svg)](https://www.npmjs.com/package/giu)
 
 ## What?
 
@@ -10,7 +10,7 @@ A collection of React components and utilities.
 - Flexibility:
     + If you use the ES6 sources and Webpack 2, you can bundle only the components you need, nothing more. For example, if you `import Modal`, you will not embed Redux, which you will if you `import Modals`.
     + If you need a simple confirmation modal, use `Modal` directly. If you need stacked modals and more state control, include a `Modals` component at the top of your app and use the provided API. If you need even more control, use the exported `modalReducer` and `modalActions` (action creators) with your own application's Redux store. Same for `Notifications`and `Floats`.
-    + In form components (`TextInput`, `Select`, `Textarea`...), choose whether you want giu to handle state for you (and then retrieve the component's value when e.g. the user clicks on Submit) or you want full control from outside.
+    + In form components (`TextInput`, `Select`, `Textarea`...), choose whether you want Giu to handle state for you (and then retrieve the component's value when e.g. the user clicks on Submit) or you want full control from outside.
     + Styles: lightweight styles are included for some components, but you can always customise the appearance including your own `style` attributes.
 - Nice touches:
     + Textarea with auto-resize
@@ -28,20 +28,27 @@ A collection of React components and utilities.
 
 ### Installation
 
+Giu is intended to be bundled with [*webpack*](https://webpack.github.io/), so it is recommended to include it in your `devDependencies`:
+
 ```
-$ npm install --save-dev giu
+> npm install --save-dev giu
 ```
 
-Make sure you also install the required `peerDependencies` (`react`, `react-addons-pure-render-mixin` and `moment`). Regarding `moment`, it will not be a part of your production bundle if you don't use the `DateInput` component and set up [*tree shaking*](http://www.2ality.com/2015/12/webpack-tree-shaking.html).
+Make sure you also install the required `peerDependencies` ([*react*](https://github.com/facebook/react), [*react-addons-pure-render-mixin*](https://www.npmjs.com/package/react-addons-pure-render-mixin) and [*moment*](https://github.com/moment/moment)).
 
 Installation notes: 
 
-* It is recommended to include **giu** among your `devDependencies`, since you should bundle it with your application using Webpack.
+* *moment* will not be included in your production bundle if you don't use `DateInput` and set up *webpack*'s' [*tree shaking*](http://www.2ality.com/2015/12/webpack-tree-shaking.html). However, it should be installed since *webpack* will look for it in development mode.
 
-* Why is `moment` part of `peerDependencies` and not `dependencies`? For i18n reasons: we want to make sure the user's `moment` object and the one used by `giu` internally are exactly the same, so that `DateInput`'s strings are shown in the correct language (and the correct start-of-week is used).
+* Why is *moment* part of `peerDependencies` and not `dependencies`? For i18n reasons: we want to make sure the user's `moment` object and the one used internally by Giu are exactly the same, so that `DateInput`'s strings and other locale-specific attributes (e.g. first day of the week) are shown correctly. If the version specified by the user and by Giu were incompatible, we would end up with two different `moment` objects.
 
+### Components
+
+TBW
 
 ### Higher-order components (HOCs)
+
+[HOCs](https://medium.com/@dan_abramov/mixins-are-dead-long-live-higher-order-components-94a0d2f9e750#.v1zqfc63a) are used internally by Giu components and are also provided in the user API. They work fine with all kinds of base components: [ES6 classes](https://facebook.github.io/react/docs/reusable-components.html#es6-classes), [plain-old `createClass`-style components](https://facebook.github.io/react/docs/multiple-components.html#composition-example) and [stateless functions](https://facebook.github.io/react/docs/reusable-components.html#stateless-functions).
 
 Example usage:
 
@@ -55,8 +62,6 @@ class MyReactComponent extends Component {
 
 export default hoverable(MyReactComponent);
 ```
-
-HOCs also work fine with functional React components.
 
 #### Hoverable
 
@@ -86,25 +91,28 @@ Additional props passed to the base component:
 * **onHoverStop** *function*: `onMouseLeave` event handler you can attach to
   your target DOM elements
 
+#### Input
+
+TBW
 
 ### Input validation
 
-Some `giu` components already provide some validation without requiring anything special:
+Some validators are already enabled by default:
 
 ```js
-// Will complain if the provided value is not a correctly formatted date.
-// Will NOT complain if left blank; by default, giu inputs can be left blank.
+// Shows an error if the provided value is an invalid date.
+// Will NOT complain if left blank; by default, Giu inputs can be left blank.
 <DateInput />
 ```
 
-Adding validators to a component is also very simple. Predefined validators are enabled like this:
+Enabling additional validators is also simple:
 
 ```js
-// Will complain if left blank ('is required'),
+// Shows an error if left blank ('is required')
 // OR if the format is not valid ('must be a valid date...').
 <DateInput required />
 
-// Will complain only if a value is specified that is invalid.
+// Shows an error only if a value is specified but it's not valid.
 <TextInput validators={[isEmail()]} />
 <NumberInput validators={[isGte(5), isLte(10)]} />
 ```
@@ -113,7 +121,7 @@ Here is the list of predefined validators, with some examples:
 
 ```js
 // Generic
-isRequired()
+isRequired() // same as the 'required' attribute, but allowing customization
 isEqualTo(password, 'password')
 isOneOf(['rabbit', 'cow', 'eagle'])
 
@@ -135,27 +143,30 @@ isWithinRange(0, 1000)
 isDate()
 ```
 
-Some of these validators are automatically enabled for certain components, e.g. `isDate()` in `DateInput`s and `isNumber()` in `NumberInput`s, so you don't need to include them in the `validators` list (except if you want to customize/translate the error message).
+As we saw above, some of these validators are automatically enabled for certain components, e.g. `isDate()` in `DateInput`s and `isNumber()` in `NumberInput`s. However, you can include them in your `validators` list for customization (e.g. i18n), as you'll see next.
 
-In order to customize a predefined validator, include an additional argument when instantiating it. This argument can be a fixed error message or a function returning the error message based on the following arguments:
+Customize a validator by passing it an additional argument upon instantiation. This argument can be a string or a function returning the desired error message (e.g. for i18n) based on the following arguments:
 
 * Default error message
 * Current (internal) input value
 * Extra context, including the validator arguments (e.g. the `min` and `max` values for `isWithinRange`) and additional information (e.g. the expected format `fmt` for date/time values).
 
-You can use these callback functions to internationalize your error messages. Some examples:
+Some examples:
 
 ```js
 // Override the message for the `isEmail` validator
-<TextInput validators={[isEmail('please leave your email')]} />
-
-// Specify a function to further customize your message
 <TextInput validators={[
-  isEmail((defaultMsg, value) => `are you sure '${value}' is an email?`),
+  isEmail("please write your email address (it's safe with us!)"),
 ]} />
 
 // Override the message for the `required` validator
-<DateInput validators={[isRequired('please specify a date!')]} />
+<TextInput validators={[isRequired('please write your name')]} />
+
+// Specify a function to further customize/translate your message
+import _t from 'mady';  // a translation function
+<TextInput validators={[
+  isEmail((defaultMsg, value) => _t("'{VALUE}' is not a valid email address", { VALUE })),
+]} />
 
 // The error message function may use the extra context parameter:
 <DateInput validators={[
@@ -166,7 +177,8 @@ You can use these callback functions to internationalize your error messages. So
 ]} />
 ```
 
--- custom validators
+-- custom validators, sync and async
+
 -- on blur
 
 
@@ -218,19 +230,23 @@ Darkens or lightens a given color by a given percentage.
 
 **addStylesToPage()**
 
-Creates a new `<style>` component with the provided CSS styles and
+Creates a new `<style>` element containing the provided CSS styles and
 attaches it to the page.
 
 * **styles** *string*: CSS styles to be added to the page
+
+#### DOM element visibility
+
+TBW
 
 #### Miscellaneous
 
 **bindAll()**
 
-Binds a list of object methods to the object with `Function.prototype.bind()`.
-Especially useful for React components with ES6 syntax.
+Binds a list of object methods to the object with `Function#bind()`.
+Especially useful for ES6-style React components.
 
-* **_this** *object*: methods will be bound to this object
+* **self** *object*: methods will be bound to this object
 * **fnNames** *array<string>*: list of method names
 
 **cancelEvent()**
@@ -247,24 +263,24 @@ Calls `preventDefault()` on the provided event.
 
 **cancelBodyScrolling()**
 
-`onWheel` event handler that can be installed on a scroller DOM node,
+`onWheel` event handler that can be attached to a scroller DOM node,
 in order to prevent `wheel` events to cause document scrolling when
 the scroller reaches the top/bottom of its contents.
 
-* **ev** *object*: `wheel` event object
+* **ev** *object*: `wheel` event
 
 **windowHeightWithoutScrollbar()/windowWidthWithoutScrollbar()**
 
-Provides the inner height (width) of the window without
-any scrollbars that may currently be displayed.
+Provides the inner height (width) of the window
+excluding scrollbars (if any).
 
 * **Returns** *number*: inner height (width) in pixels
 
 **getScrollbarWidth()**
 
-Measures and returns the scrollbar width for the current browser.
+Measures and returns the scrollbar width.
 
-The scrollbar width is measured lazily when first requested.
+Measurements are taken lazily when first requested.
 On window `resize`, it is measured again (zooming causes
 the reported widths to change, and the `resize` event is a
 reliable way to detect zooming).
@@ -272,6 +288,7 @@ Note that the returned value might be zero,
 e.g. on OS X with overlaid scrollbars.
 
 * **Returns** *number*: scrollbar width in pixels
+
 
 ## [What's changed since version X?](https://github.com/guigrpa/giu/blob/master/CHANGELOG.md)
 

@@ -97,7 +97,7 @@ const GLOW = {
 
 // -- **addStylesToPage()**
 // --
-// -- Creates a new `<style>` component with the provided CSS styles and
+// -- Creates a new `<style>` element containing the provided CSS styles and
 // -- attaches it to the page.
 // --
 // -- * **styles** *string*: CSS styles to be added to the page

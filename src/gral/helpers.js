@@ -1,19 +1,18 @@
 import {
   getScrollbarWidth,
 }                           from '../gral/constants';
-import ReactDOM             from 'react-dom';
 
 // -- **bindAll()**
 // --
-// -- Binds a list of object methods to the object with `Function.prototype.bind()`.
-// -- Especially useful for React components with ES6 syntax.
+// -- Binds a list of object methods to the object with `Function#bind()`.
+// -- Especially useful for ES6-style React components.
 // --
-// -- * **_this** *object*: methods will be bound to this object
+// -- * **self** *object*: methods will be bound to this object
 // -- * **fnNames** *array<string>*: list of method names
-function bindAll(_this, fnNames) {
+function bindAll(self, fnNames) {
   fnNames.forEach(name => {
     /* eslint-disable no-param-reassign */
-    _this[name] = _this[name].bind(_this);
+    self[name] = self[name].bind(self);
     /* eslint-enable no-param-reassign */
   });
 }
@@ -41,11 +40,11 @@ function preventDefault(ev) {
 
 // -- **cancelBodyScrolling()**
 // --
-// -- `onWheel` event handler that can be installed on a scroller DOM node,
+// -- `onWheel` event handler that can be attached to a scroller DOM node,
 // -- in order to prevent `wheel` events to cause document scrolling when
 // -- the scroller reaches the top/bottom of its contents.
 // --
-// -- * **ev** *object*: `wheel` event object
+// -- * **ev** *object*: `wheel` event
 function cancelBodyScrolling(ev) {
   const el = ev.currentTarget;
   if (ev.nativeEvent.deltaY <= 0) {
@@ -80,8 +79,8 @@ function windowRightScrollbarWidth() {
 
 // -- **windowHeightWithoutScrollbar()/windowWidthWithoutScrollbar()**
 // --
-// -- Provides the inner height (width) of the window without
-// -- any scrollbars that may currently be displayed.
+// -- Provides the inner height (width) of the window
+// -- excluding scrollbars (if any).
 // --
 // -- * **Returns** *number*: inner height (width) in pixels
 function windowHeightWithoutScrollbar() {
