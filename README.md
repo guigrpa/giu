@@ -89,23 +89,24 @@ Additional props passed to the base component:
 
 ### Input validation
 
-In its most basic form, you don't need to do anything to validate some components:
+Some `giu` components already provide some validation without requiring anything special:
 
 ```js
-import { DateInput } from 'giu';
 // Will complain if the provided value is not a correctly formatted date.
-// Will NOT complain if left blank; by default, giu inputs can be left blank
+// Will NOT complain if left blank; by default, giu inputs can be left blank.
 <DateInput />
 ```
 
-It is also very simple to add predefined validators to a component:
+Adding validators to a component is also very simple. Predefined validators are enabled like this:
 
 ```js
-// Will complain ('is required') if left blank.
-// Will also complain ('must be a valid date...') if the format is not valid
+// Will complain if left blank ('is required'),
+// OR if the format is not valid ('must be a valid date...').
 <DateInput required />
-<TextInput required validators={[isEmail()]} />
-<NumberInput required validators={[isGte(5), isLte(10)]} />
+
+// Will complain only if a value is specified that is invalid.
+<TextInput validators={[isEmail()]} />
+<NumberInput validators={[isGte(5), isLte(10)]} />
 ```
 
 Here is the list of predefined validators, with some examples:
@@ -136,21 +137,36 @@ isDate()
 
 Some of these validators are automatically enabled for certain components, e.g. `isDate()` in `DateInput`s and `isNumber()` in `NumberInput`s, so you don't need to include them in the `validators` list (except if you want to customize/translate the error message).
 
-In order to customize a predefined validator, include an additional argument when instantiating it, as in the following examples:
+In order to customize a predefined validator, include an additional argument when instantiating it. This argument can be a fixed error message or a function returning the error message based on the following arguments:
+
+* Default error message
+* Current (internal) input value
+* Extra context, including the validator arguments (e.g. the `min` and `max` values for `isWithinRange`) and additional information (e.g. the expected format `fmt` for date/time values).
+
+You can use these callback functions to internationalize your error messages. Some examples:
 
 ```js
 // Override the message for the `isEmail` validator
 <TextInput validators={[isEmail('please leave your email')]} />
+
 // Specify a function to further customize your message
-<TextInput 
-  validators={[
-    isEmail((defaultMsg, value) => `are you sure '${value}' is an email?`),
-  ]} 
-/>
+<TextInput validators={[
+  isEmail((defaultMsg, value) => `are you sure '${value}' is an email?`),
+]} />
+
 // Override the message for the `required` validator
 <DateInput validators={[isRequired('please specify a date!')]} />
+
+// The error message function may use the extra context parameter:
+<DateInput validators={[
+  isDate((defaultMsg, value, { fmt }) => `follow this format: ${fmt}`),
+]} />
+<NumberInput validators={[
+  isGte(15, (defaultMsg, value, { min }) => `ha de ser >= ${min}`),
+]} />
 ```
 
+-- custom validators
 -- on blur
 
 
