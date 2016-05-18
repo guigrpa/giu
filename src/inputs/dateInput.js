@@ -166,29 +166,28 @@ class DateInput extends React.Component {
 
   renderField(fHidden) {
     const {
-      curValue, placeholder,
+      curValue, onChange, placeholder,
       date, time, seconds,
       disabled,
+      onCopy, onCut, onPaste,
     } = this.props;
-    const className = fHidden ? undefined : 'giu-date-input';
-    const finalPlaceholder = placeholder || dateTimeFormat(date, time, seconds);
     const otherProps = omit(this.props, PROP_KEYS);
-    const styleField = fHidden
-      ? style.fieldHidden
-      : style.field(this.props);
     return (
       <input ref={this.registerInputRef}
-        className={className}
+        className={fHidden ? undefined : 'giu-date-input'}
         type="text"
         value={curValue}
         {...otherProps}
-        placeholder={finalPlaceholder}
+        placeholder={placeholder || dateTimeFormat(date, time, seconds)}
         onFocus={this.onFocus}
         onBlur={this.onBlur}
-        onChange={this.props.onChange}
+        onCopy={fHidden ? onCopy : undefined}
+        onCut={fHidden ? onCut : undefined}
+        onPaste={fHidden ? onPaste : undefined}
+        onChange={onChange}
         onKeyDown={this.onKeyDown}
         tabIndex={disabled ? -1 : undefined}
-        style={styleField}
+        style={fHidden ? style.fieldHidden : style.field(this.props)}
       />
     );
   }
@@ -333,4 +332,5 @@ export default input(DateInput, {
   defaultProps: DEFAULT_PROPS,
   defaultValidators: { isDate: isDate() },
   validatorContext: { moment },
+  fIncludeClipboardProps: true,
 });

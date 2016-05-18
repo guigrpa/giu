@@ -1,31 +1,65 @@
 import tinycolor            from 'tinycolor2';
-import {
-  merge,
-  addDefaults,
-}                           from 'timm';
+import { merge }            from 'timm';
 import { COLORS }           from '../gral/constants';
 
-// * `flexDirection`: `'row'` | `'column'`
-const flexContainer = (flexDirection, style) => merge({
+// -- **flexContainer()**
+// --
+// -- Provides an inline style object for a Flex container.
+// --
+// -- * **flexDirection** *string(`row`|`column`)? = `row`*
+// -- * **style** *object?*: custom style (merged with the Flex style)
+// -- * **Returns** *object*: Flex container style
+const flexContainer = (flexDirection = 'row', style) => merge({
   display: 'flex',
   flexDirection,
 }, style);
 
+// -- **flexItem()**
+// --
+// -- Provides an inline style object for a Flex item.
+// --
+// -- * **flex** *string|number*: value for the CSS `flex`/`-webkit-flex` attribute
+// -- * **style** *object?*: custom style (merged with the Flex style)
+// -- * **Returns** *object*: Flex item style
 const flexItem = (flex, style) => merge({
   flex,
   WebkitFlex: flex,
 }, style);
 
+// -- **boxWithShadow()**
+// --
+// -- Provides an inline style object for a slightly rounded shadowed box.
+// --
+// -- * **style** *object?*: custom style (merged with the base style)
+// -- * **Returns** *object*: inline style
 const boxWithShadow = style => merge({
   backgroundColor: 'white',
   borderRadius: 2,
   boxShadow: '0 3px 6px rgba(0,0,0,0.16), 0 3px 6px rgba(0,0,0,0.23)',
 }, style);
 
+// -- **isDark()/isLight()**
+// --
+// -- Determines whether the provided color is perceived as dark or light.
+// -- Can be used to decide whether text on this background color should be light
+// -- or dark, respectively, for good readability.
+// --
+// -- * **color** *string/Color*: parameter describing the color (anything that
+// --   can be processed by [tinycolor](https://github.com/bgrins/TinyColor))
+// -- * **Returns** *bool*: whether the color is dark (light)
 const isDark = color => tinycolor(color).getLuminance() < 0.6;
 const isLight = color => !isDark(color);
-const darken = (color, percentage) => tinycolor(color).darken(percentage).toHexString();
-const lighten = (color, percentage) => tinycolor(color).lighten(percentage).toHexString();
+
+// -- **darken()/lighten()**
+// --
+// -- Darkens or lightens a given color by a given percentage.
+// --
+// -- * **color** *string/Color*: parameter describing the color (anything that
+// --   can be processed by [tinycolor](https://github.com/bgrins/TinyColor))
+// -- * **percentage** *number? = 10*: percentage by which the color will be modified
+// -- * **Returns** *string*: hex string for the new color, e.g. `#ffaadd`
+const darken = (color, percentage = 10) => tinycolor(color).darken(percentage).toHexString();
+const lighten = (color, percentage = 10) => tinycolor(color).lighten(percentage).toHexString();
 
 const inputReset = style => merge({
   backgroundColor: COLORS.bgInput,
@@ -61,6 +95,12 @@ const GLOW = {
   border: '1px solid rgba(81, 203, 238, 1)',
 };
 
+// -- **addStylesToPage()**
+// --
+// -- Creates a new `<style>` component with the provided CSS styles and
+// -- attaches it to the page.
+// --
+// -- * **styles** *string*: CSS styles to be added to the page
 function addStylesToPage(styles) {
   const el = document.createElement('style');
   el.type = 'text/css';
@@ -69,7 +109,6 @@ function addStylesToPage(styles) {
 }
 
 export {
-  merge, addDefaults,
   flexContainer, flexItem,
   boxWithShadow,
   isLight, isDark, lighten, darken,

@@ -1,5 +1,29 @@
 import { dateTimeFormat }   from '../gral/dates';
 
+// -- ```js
+// -- // Generic
+// -- isRequired()
+// -- isEqualTo(password, 'password')
+// -- isOneOf(['rabbit', 'cow', 'eagle'])
+// --
+// -- // Strings
+// -- hasAtLeastChars(5)
+// -- hasAtMostChars(20)
+// -- hasLengthWithinRange(5, 20)
+// -- isEmail()
+// -- isUrl()
+// -- matchesPattern(/[-+]?[0-9]*\.?[0-9]+/)
+// --
+// -- // Numbers
+// -- isNumber()
+// -- isGreaterThanOrEqual(0) // or: isGte(0)
+// -- isLowerThanOrEqual(1000) // or: isLte(1000)
+// -- isWithinRange(0, 1000)
+// --
+// -- // Dates and times
+// -- isDate()
+// -- ```
+
 // ==========================================
 // Special `isRequired`
 // ==========================================
@@ -9,9 +33,6 @@ const isRequired = (msg) => ({
   getErrorMessage: _val => buildError(msg, 'is required', _val),
 });
 
-// ==========================================
-// Generic
-// ==========================================
 const isEqualTo = (anotherAttrVal, anotherAttrName, msg) => ({
   fInternal: false,
   id: 'isEqualTo',
@@ -19,6 +40,16 @@ const isEqualTo = (anotherAttrVal, anotherAttrName, msg) => ({
     val === anotherAttrVal
       ? undefined
       : buildError(msg, `must be equal to ${anotherAttrName}`, val)
+  ),
+});
+
+const isOneOf = (items, msg) => ({
+  fInternal: false,
+  id: 'isOneOf',
+  validate: val => (
+    items.indexOf(val) >= 0
+      ? undefined
+      : buildError(msg, `must be one of the following: ${items.join(', ')}`, val, items)
   ),
 });
 
@@ -90,7 +121,7 @@ const matchesPattern = (pattern, msg) => ({
   validate: val => (
     val.match(pattern)
       ? undefined
-      : buildError(msg, 'is invalid', pattern, val)
+      : buildError(msg, 'is invalid', pattern, val, { pattern })
   ),
 });
 
@@ -159,19 +190,6 @@ const isDate = (msg) => ({
 });
 
 // ==========================================
-// Array
-// ==========================================
-const isOneOf = (items, msg) => ({
-  fInternal: false,
-  id: 'isOneOf',
-  validate: val => (
-    items.indexOf(val) >= 0
-      ? undefined
-      : buildError(msg, `must be one of the following: ${items.join(', ')}`, val, items)
-  ),
-});
-
-// ==========================================
 // Helpers
 // ==========================================
 const buildError = (msg0, defaultMsg, ...args) => {
@@ -185,6 +203,7 @@ const buildError = (msg0, defaultMsg, ...args) => {
 export {
   isRequired,
   isEqualTo,
+  isOneOf,
 
   hasAtLeastChars, hasAtMostChars,
   hasLengthWithinRange,
@@ -196,6 +215,4 @@ export {
   isWithinRange,
 
   isDate,
-
-  isOneOf,
 };

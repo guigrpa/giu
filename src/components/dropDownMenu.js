@@ -1,6 +1,6 @@
 import React                from 'react';
 import PureRenderMixin      from 'react-addons-pure-render-mixin';
-import { omit }             from 'timm';
+import { omit, merge }      from 'timm';
 import { COLORS }           from '../gral/constants';
 import { bindAll }          from '../gral/helpers';
 import { isDark }           from '../gral/styles';
@@ -13,6 +13,7 @@ import Select               from '../inputs/select';
 class DropDownMenu extends React.Component {
   static propTypes = {
     onClickItem:            React.PropTypes.func,
+    style:                  React.PropTypes.object,
     // Hoverable HOC
     hovering:               React.PropTypes.any,
     onHoverStart:           React.PropTypes.func.isRequired,
@@ -61,15 +62,12 @@ class DropDownMenu extends React.Component {
   }
 
   renderTitle() {
-    const { children, accentColor } = this.props;
-    const { fFocused } = this.state;
-    const styleProps = { fFocused, accentColor };
     return (
       <div
         onMouseDown={this.onMouseDownTitle}
-        style={style.title(styleProps)}
+        style={style.title(this.props, this.state)}
       >
-        {children}
+        {this.props.children}
       </div>
     );
   }
@@ -120,18 +118,19 @@ const style = {
   selectOuter: {
     display: 'inline-block',
   },
-  title: ({ fFocused, accentColor }) => {
+  title: ({ accentColor, style: baseStyle }, { fFocused }) => {
     const backgroundColor = fFocused ? accentColor : undefined;
     let color;
     if (backgroundColor != null) {
       color = COLORS[isDark(backgroundColor) ? 'lightText' : 'darkText'];
     }
-    return {
+    const out = {
       display: 'inline-block',
       cursor: 'pointer',
       backgroundColor,
       color,
     };
+    return merge(out, baseStyle);
   },
 };
 

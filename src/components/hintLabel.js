@@ -42,6 +42,7 @@ const style = {
     top: y,
     left: x,
     width: 0,
+    pointerEvents: 'none',
   }),
   label: ({ align, fontSize, style: baseStyle }) => {
     const width = style.width || 200;

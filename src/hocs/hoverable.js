@@ -11,24 +11,24 @@ import { bindAll }          from '../gral/helpers';
 // -- (works for multiple elements).
 // -- If you attach these handlers to an element with an `id` attribute,
 // -- the provided `hovering`
-// -- prop will contain the ID of the hovered element (or `null`), otherwise
+// -- prop will contain the ID of the hovered element (or `null`); otherwise,
 // -- just `true` (or `null`).
 // --
 // -- Specific props received from the parent (all other props are
-// -- passed down):
+// -- passed through):
 // --
-// -- * *Function* **[onHoverStart]**: relays the original event to
+// -- * **onHoverStart** *function?*: relays the original event to
 // --   the parent component.
-// -- * *Function* **[onHoverStop]**: relays the original event to
+// -- * **onHoverStop** *function?*: relays the original event to
 // --   the parent component.
 // --
 // -- Additional props passed to the base component:
 // --
-// -- * *String|Number|Boolean?* **hovering**: identifies the
+// -- * **hovering** *string|number|boolean?*: identifies the
 // --   element that is hovered (see description above), or `null` if none
-// -- * *Function* **onHoverStart**: `onMouseEnter` event handler you can attach to
+// -- * **onHoverStart** *function*: `onMouseEnter` event handler you can attach to
 // --   your target DOM elements
-// -- * *Function* **onHoverStop**: `onMouseLeave` event handler you can attach to
+// -- * **onHoverStop** *function*: `onMouseLeave` event handler you can attach to
 // --   your target DOM elements
 function hoverable(ComposedComponent) {
   return class extends React.Component {

@@ -49,7 +49,6 @@ class Modal extends React.Component {
     super(props);
     this.shouldComponentUpdate = PureRenderMixin.shouldComponentUpdate.bind(this);
     bindAll(this, [
-      'onWheel',
       'onKeyUp',
       'onClickOuter',
     ]);
@@ -87,8 +86,8 @@ class Modal extends React.Component {
     return (
       <div style={style.modalWrapper}>
         {this.renderSpacer()}
-        <div ref={c => { this.refModalScroller = c; }}
-          onWheel={this.onWheel}
+        <div
+          onWheel={cancelBodyScrolling}
           style={merge(style.modal, baseStyle)}
         >
           <FocusCapture
@@ -143,8 +142,6 @@ class Modal extends React.Component {
   // ==========================================
   // Handlers
   // ==========================================
-  onWheel(ev) { cancelBodyScrolling(ev, this.refModalScroller); }
-
   onKeyUp(ev) {
     const { which } = ev;
     let buttons;

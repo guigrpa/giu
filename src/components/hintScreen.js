@@ -125,6 +125,7 @@ const style = {
     stroke: COLORS.lightText,
     strokeWidth: 2,
     fill: 'transparent',
+    pointerEvents: 'none',
   },
   backdrop: {
     cursor: 'pointer',

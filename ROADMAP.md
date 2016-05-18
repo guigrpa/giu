@@ -68,16 +68,20 @@
         * Show hint X (and disable it afterwards)
         * Reset (so that they are shown again)
     + Store shown hints in localStorage and don't show again (unless reset)
-- [ ] CustomSelect and ColorInput: how can we support copy&paste. Same for inline DateInputs
-- [ ] Add style to dropdownmenu title
-- [ ] Async error leaves empty div when corrected
-- [ ] DOCS!
+- [x] Add clipboard support -- *Unfortunately, native selects and native range/checkbox inputs do not work*
+- [x] Add style to dropdownmenu title
+- [x] Check embedded hint positioning!
+- [ ] PasswordInput!
+- [ ] Documentation:
+    + [ ] Reference
+    + [ ] Long demo with explanations
+- [ ] Test as a user, in particular DateInputs with i18n
+- [ ] Basic tests with enzyme? Floats, modals, etc. are bound to be tricky
 
 - [ ] Focus delegation?
 - [ ] Include native components for mobile? (e.g. `input type="date"`)
 - [ ] Pressing enter on button opening a modal also dismisses the modal!
 - [ ] Add alternative style to inputs (no borders, etc.) or make it simple to wrap the provided components and customise
-- [ ] Multi-selection ListPicker:
-- [ ] Design customisation strategy for theme constants (context? constant modification?) -- reduce to the minimum the style-related props (one color), so that we don't need to handle that!
+- [ ] Multi-selection ListPicker
 - [ ] Drag and drop
 - [ ] Include SVG font?

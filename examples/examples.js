@@ -1,5 +1,6 @@
 import React                from 'react';
 import ReactDOM             from 'react-dom';
+import { merge }            from 'timm';
 require('babel-polyfill');
 import {
   Select, DateInput, Textarea, Checkbox,
@@ -16,7 +17,6 @@ import {
   Hints, HintScreen, hintDefine, hintShow, hintHide, hintDisableAll, hintReset,
   hoverable,
   flexContainer, flexItem, boxWithShadow,
-  merge,
   cancelEvent,
   isRequired, isEmail, isOneOf, isDate,
 }                           from '../src';
@@ -43,7 +43,7 @@ for (let i = 0; i < 50; i++) {
   });
 }
 const WIDE_OPTIONS = [
-  { label: 'A long, really long, very very long option', value: 'a' },
+  { label: 'A long, really long, very very very very very very long option', value: 'a' },
   { label: 'Another long, really long, very very long option', value: 2 },
   LIST_SEPARATOR,
   { label: 'B', value: 'b' },
@@ -259,24 +259,25 @@ const DropDownExample = () =>
     <DropDownMenu
       items={NORMAL_OPTIONS}
       onClickItem={onChange}
+      style={{padding: "3px 8px"}}
     >
       <Icon icon="bars" /> Menu
     </DropDownMenu>
-    &nbsp;&nbsp;&nbsp;&nbsp;
     <DropDownMenu
       items={TALL_OPTIONS}
       onClickItem={onChange}
       accentColor="darkgreen"
+      style={{padding: "3px 8px"}}
     >
-      <Icon icon="bolt" /> Long menu
+      <Icon icon="bullseye" /> Long menu
     </DropDownMenu>
-    &nbsp;&nbsp;&nbsp;&nbsp;
     <DropDownMenu
       items={WIDE_OPTIONS}
       floatAlign="right"
       accentColor="darkblue"
+      style={{padding: "3px 8px"}}
     >
-      <Icon icon="bug" /> Menu to the left
+      <Icon icon="cube" /> Menu to the left
     </DropDownMenu>
   </div>;
 
@@ -409,29 +410,29 @@ class HintExample extends React.Component {
   componentWillMount() {
     hintDefine('hintExample', {
       labels: () => {
-        const labels = [];
-        const ref = this.refs.refHintA;
+        const out = [];
+        const ref = this.refs.buttonShowHint;
         if (ref) {
           const bcr = ref.getBoundingClientRect();
-          labels.push({
+          out.push({
             x: bcr.right + 90, y: bcr.top - 80,
             children: 'Just shows a pre-defined hint (if not already shown)',
           });
         }
-        return labels;
+        return out;
       },
       arrows: () => {
-        const arrows = [];
-        const ref = this.refs.refHintA;
+        const out = [];
+        const ref = this.refs.buttonShowHint;
         if (ref) {
           const bcr = ref.getBoundingClientRect();
-          arrows.push({
+          out.push({
             from: { x: bcr.right + 90, y: bcr.top - 80 },
             to: { x: (bcr.left + bcr.right) / 2, y: bcr.top - 5 },
             counterclockwise: true,
           });
         }
-        return arrows;
+        return out;
       },
     });
   }
@@ -443,7 +444,7 @@ class HintExample extends React.Component {
           Hints (show once, disable-all, reset) and Hint (embedded): simple label positioning,
           even taking into account DOM element positions
         </ExampleLabel>
-        <span ref="refHintA">
+        <span ref="buttonShowHint">
           <Button onClick={() => hintShow('hintExample')}>
             Show hint (if not already shown)
           </Button>
@@ -457,9 +458,11 @@ class HintExample extends React.Component {
           Disable all
         </Button>
         {' '}<br />
-        <Button onClick={() => this.setState({ fEmbeddedHint: true })}>
-          Embed hint
-        </Button>
+        <span ref="buttonEmbedHint">
+          <Button onClick={() => this.setState({ fEmbeddedHint: true })}>
+            Embed hint
+          </Button>
+        </span>
         { this.state.fEmbeddedHint && this.renderEmbeddedHint() }
       </div>
     );
@@ -467,29 +470,47 @@ class HintExample extends React.Component {
 
   renderEmbeddedHint() {
     const close = () => this.setState({ fEmbeddedHint: false });
-    const arrows = [
-      { from: {x: 300, y: 30}, to: {x: 400, y: 60} },
-      { from: {x: 450, y: 120}, to: {x: 700, y: 140}, counterclockwise: true },
-    ];
-    const labels = [
-      { 
-        x: 300, y: 30, align: 'right',
-        children: <span>A right-aligned label with an icon: <Icon icon="ambulance" /></span>
-      }, {
-        x: 400, y: 60, align: 'center',
-        children: <span>A <span style={{color: 'yellow'}}>center-aligned</span> label</span>
-      }, {
-        x: 700, y: 80,
-        children: <span>A very, very, very, very, very, very, very, very long label</span>
+    const arrows = () => {
+      const out = [
+        { from: {x: 300, y: 30}, to: {x: 400, y: 60} },
+        { from: {x: 450, y: 120}, to: {x: 700, y: 140}, counterclockwise: true },
+      ];
+      const ref = this.refs.buttonEmbedHint;
+      if (ref) {
+        const bcr = ref.getBoundingClientRect();
+        const y = (bcr.top + bcr.bottom) / 2;
+        const to = y >= 130
+          ? { x: bcr.right + 10, y }
+          : { x: (bcr.left + bcr.right) / 2, y: bcr.bottom + 10 };
+        const counterclockwise = y >= 130;
+        out.push({ from: { x: 160, y: Math.max(130, y) }, to, counterclockwise });
       }
-    ];
-    return (
-      <HintScreen
-        onClose={close}
-        arrows={arrows}
-        labels={labels}
-      />
-    );
+      return out;
+    };
+    const labels = () => {
+      const out = [
+        { 
+          x: 300, y: 30, align: 'right',
+          children: <span>A right-aligned label with an icon: <Icon icon="ambulance" /></span>
+        }, {
+          x: 400, y: 60, align: 'center',
+          children: <span>A <span style={{color: 'yellow'}}>center-aligned</span> label</span>
+        }, {
+          x: 700, y: 80,
+          children: <span>A very, very, very, very, very, very, very, very long label</span>
+        }
+      ];
+      const ref = this.refs.buttonEmbedHint;
+      if (ref) {
+        const bcr = ref.getBoundingClientRect();
+        out.push({
+          x: 160, y: Math.max(130, (bcr.top + bcr.bottom) / 2),
+          children: <span>This is <i>the</i> button</span>,
+        });
+      }
+      return out;
+    };
+    return <HintScreen onClose={close} arrows={arrows} labels={labels} />;
   }
 
 }
@@ -574,38 +595,49 @@ class FormExample extends React.Component {
           <FileInput />
           <FileInput disabled />
         </div>
+        <br />
         <div style={flexContainer('row')}>
-          <RadioGroup items={NORMAL_OPTIONS} required onChange={onChange} />
-          <RadioGroup items={NORMAL_OPTIONS} value="a" disabled />
-          <RadioGroup 
-            items={[
-              { value: 1, label: "A simple text label" },
-              { value: 2, label: <span>A label with <i>some</i> <b>formatting</b></span> },
-              { value: 3, label: <span>A multiline label</span>, 
-                labelExtra: <div>because yes, we can <Icon icon="smile-o" /></div>
-              },
-              { value: 4, label: "Another normal label" },
-              { value: 5, label: <span>A label with a <Button onClick={() => console.log('hi!')}>button</Button></span> },
-            ]}
-          />
-          <div style={{marginLeft: 5}}>
-            <RangeInput
-              value={25} onChange={onChange}
-              min={0} max={100} step={5}
-              style={{display: 'block'}}
-            />
-            <RangeInput disabled
-              value={55} onChange={onChange}
-              min={0} max={100} step={5}
-              style={{display: 'block'}}
-            />
+          <div>
+            <ExampleLabel>RadioGroup (flexible labels, clipboard)</ExampleLabel>
+            <div style={flexContainer('row')}>
+              <RadioGroup items={NORMAL_OPTIONS} required onChange={onChange} />
+              <RadioGroup items={NORMAL_OPTIONS} value="a" disabled />
+              <RadioGroup 
+                items={[
+                  { value: 1, label: "A simple text label" },
+                  { value: 2, label: <span>A label with <i>some</i> <b>formatting</b></span> },
+                  { value: 3, label: <span>A multiline label</span>, 
+                    labelExtra: <div>because yes, we can <Icon icon="smile-o" /></div>
+                  },
+                  { value: 4, label: "Another normal label" },
+                  { value: 5, label: <span>A label with a <Button onClick={() => console.log('hi!')}>button</Button></span> },
+                ]}
+              />
+            </div>
           </div>
-          <RangeInput
-            value={55} onChange={onChange}
-            min={0} max={100} step={5}
-            vertical
-            style={{marginLeft: 20, height: 100, width: 25}}
-          />
+          <div style={{marginLeft: 10}}>
+            <ExampleLabel>RangeInput (horizontal/vertical)</ExampleLabel>
+            <div style={flexContainer('row')}>
+              <div style={{marginLeft: 5}}>
+                <RangeInput
+                  value={25} onChange={onChange}
+                  min={0} max={100} step={5}
+                  style={{display: 'block'}}
+                />
+                <RangeInput disabled
+                  value={55} onChange={onChange}
+                  min={0} max={100} step={5}
+                  style={{display: 'block'}}
+                />
+              </div>
+              <RangeInput
+                value={55} onChange={onChange}
+                min={0} max={100} step={5}
+                vertical
+                style={{marginLeft: 20, height: 100, width: 25}}
+              />
+            </div>
+          </div>
         </div>
         <br />
         <div>
@@ -613,8 +645,8 @@ class FormExample extends React.Component {
           <TextInput placeholder="no validation" />
           <TextInput placeholder="required (shortcut)"
             required />
-          <TextInput placeholder="isRequired"
-            validators={[isRequired()]} />
+          <TextInput placeholder="isRequired, custom"
+            validators={[isRequired('please write something!')]} />
           <TextInput placeholder="isEmail"
             required validators={[isEmail()]} />
           <TextInput placeholder="isEmail (custom msg)"
@@ -650,7 +682,7 @@ class FormExample extends React.Component {
         <div>
           <ExampleLabel>
             Select: native, or with inline/dropdown ListPicker
-            (keyboard-controlled, shortcuts, one/two-stage, autoscroll)
+            (keyboard-controlled, shortcuts, clipboard, one/two-stage, autoscroll)
           </ExampleLabel>
           <div>
             <Select
@@ -712,7 +744,7 @@ class FormExample extends React.Component {
         <div>
           <ExampleLabel>
             DateInput: field-only, or with inline/dropdown DateTimePicker
-            (keyboard-controlled, local for date+time, UTC otherwise)
+            (keyboard-controlled, clipboard; local for date+time, UTC otherwise)
           </ExampleLabel>
           <div>
             <DateInput onChange={onChange} />&nbsp;&nbsp;
@@ -785,14 +817,14 @@ class FormExample extends React.Component {
         <br />
         <div>
           <ExampleLabel>
-            ColorInput: with inline/dropdown ColorPicker
+            ColorInput: with inline/dropdown ColorPicker (RGB/HSV, alpha, clipboard)
           </ExampleLabel>
           <div style={flexContainer('row')}>
-            <ColorInput value="aadc5400" accentColor="darkmagenta" />
+            <ColorInput value="aadc5400" accentColor="darkmagenta" onChange={onChange} />
             <ColorInput value="ffdc5400" disabled />
             <div>&nbsp;</div>
-            <ColorInput inlinePicker value="ffcca500" accentColor="lightGray" />
-            <ColorInput inlinePicker value="ffcca500" disabled accentColor="lightGray" />
+            <ColorInput inlinePicker value="ffcca500" accentColor="lightGray" onChange={onChange} />
+            <ColorInput inlinePicker value="ffcca500" disabled accentColor="lightGray" onChange={onChange} />
           </div>
         </div>
         <br />

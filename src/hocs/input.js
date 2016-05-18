@@ -55,7 +55,12 @@ function input(ComposedComponent, {
   validatorContext,
   trappedKeys = [],
   className,
+  fIncludeClipboardProps: fIncludeClipboardProps0,
 } = {}) {
+  const fIncludeClipboardProps = fIncludeClipboardProps0 != null
+    ? fIncludeClipboardProps0
+    : fIncludeFocusCapture;
+
   return class extends React.Component {
     static displayName = `Input(${ComposedComponent.name})`;
     static propTypes = PROP_TYPES;
@@ -171,23 +176,10 @@ function input(ComposedComponent, {
     // ==========================================
     render() {
       const otherProps = omit(this.props, PROP_KEYS);
-      // `cmds` are both used by this HOC and passed through
-      let registerFocusableRef;
-      let onFocus;
-      let onBlur;
-      let onCopy;
-      let onPaste;
-      if (!fIncludeFocusCapture) {
-        registerFocusableRef = this.registerFocusableRef;
-        onFocus = this.onFocus;
-        onBlur = this.onBlur;
-        onCopy = this.onCopyCut;
-        onPaste = this.onPaste;
-      }
       const el = (
         <ComposedComponent
           registerOuterRef={this.registerOuterRef}
-          registerFocusableRef={registerFocusableRef}
+          registerFocusableRef={fIncludeFocusCapture ? undefined : this.registerFocusableRef}
           {...otherProps}
           curValue={this.state.curValue}
           errors={this.errors}
@@ -199,9 +191,11 @@ function input(ComposedComponent, {
           floatZ={this.props.floatZ}
           floatPosition={this.props.floatPosition}
           onChange={this.onChange}
-          onFocus={onFocus}
-          onBlur={onBlur}
-          onCopy={onCopy} onCut={onCopy} onPaste={onPaste}
+          onFocus={fIncludeFocusCapture ? undefined : this.onFocus}
+          onBlur={fIncludeFocusCapture ? undefined : this.onBlur}
+          onCopy={fIncludeClipboardProps ? this.onCopyCut : undefined}
+          onCut={fIncludeClipboardProps ? this.onCopyCut : undefined}
+          onPaste={fIncludeClipboardProps ? this.onPaste : undefined}
           onResizeOuter={this.renderErrorFloat}
           styleOuter={fIncludeFocusCapture ? undefined : this.props.styleOuter}
         />
@@ -343,7 +337,9 @@ function input(ComposedComponent, {
     }
 
     onPaste(ev) {
-      console.log("Pasted data:", ev.clipboardData.getData('text/plain'))
+      const nextValue = ev.clipboardData.getData('text/plain');
+      ev.preventDefault();
+      this.onChange(ev, nextValue);
     }
 
 
@@ -401,7 +397,8 @@ function input(ComposedComponent, {
       }
 
       // When all promises have resolved, changed the current state
-      Promise.all(pErrors).then(validationErrors => {
+      Promise.all(pErrors).then(validationErrors0 => {
+        const validationErrors = validationErrors0.filter(o => o != null);
         this && this.setState && this.setState({ validationErrors });
       });
     }

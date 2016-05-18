@@ -59,7 +59,6 @@ class BaseListPicker extends React.Component {
     bindAll(this, [
       'registerOuterRef',
       'renderItem',
-      'onWheel',
       'onClickItem',
       'doClickItemByIndex',
     ]);
@@ -97,7 +96,7 @@ class BaseListPicker extends React.Component {
     return (
       <div ref={this.registerOuterRef}
         className="giu-list-picker"
-        onWheel={this.onWheel}
+        onWheel={cancelBodyScrolling}
         style={merge(style.outer(this.props), baseStyle)}
       >
         {this.renderContents()}
@@ -167,8 +166,6 @@ class BaseListPicker extends React.Component {
     this.refOuter = c;
     this.props.registerOuterRef && this.props.registerOuterRef(c);
   }
-
-  onWheel(ev) { cancelBodyScrolling(ev, this.refOuter); }
 
   onClickItem(ev) {
     const { onClickItem, onChange } = this.props;

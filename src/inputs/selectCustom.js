@@ -126,13 +126,9 @@ class SelectCustomBase extends React.Component {
   }
 
   renderProvidedTitle() {
-    return (
-      <span ref={this.registerTitleRef}
-        className="giu-select-custom"
-      >
-        {this.props.children}
-      </span>
-    );
+    return React.cloneElement(this.props.children, {
+      ref: this.registerTitleRef,
+    });
   }
 
   renderDefaultTitle() {

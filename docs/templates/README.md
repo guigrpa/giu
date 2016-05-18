@@ -32,7 +32,13 @@ A collection of React components and utilities.
 $ npm install --save-dev giu
 ```
 
-It is recommended to include **giu** among your `devDependencies`, since 
+Make sure you also install the required `peerDependencies` (`react`, `react-addons-pure-render-mixin` and `moment`). Regarding `moment`, it will not be a part of your production bundle if you don't use the `DateInput` component and set up [*tree shaking*](http://www.2ality.com/2015/12/webpack-tree-shaking.html).
+
+Installation notes: 
+
+* It is recommended to include **giu** among your `devDependencies`, since you should bundle it with your application using Webpack.
+
+* Why is `moment` part of `peerDependencies` and not `dependencies`? For i18n reasons: we want to make sure the user's `moment` object and the one used by `giu` internally are exactly the same, so that `DateInput`'s strings are shown in the correct language (and the correct start-of-week is used).
 
 
 ### Higher-order components (HOCs)
@@ -56,6 +62,79 @@ HOCs also work fine with functional React components.
 
 [[[./src/hocs/hoverable.js]]]
 
+
+### Input validation
+
+Some `giu` components already provide some validation without requiring anything special:
+
+```js
+// Will complain if the provided value is not a correctly formatted date.
+// Will NOT complain if left blank; by default, giu inputs can be left blank.
+<DateInput />
+```
+
+Adding validators to a component is also very simple. Predefined validators are enabled like this:
+
+```js
+// Will complain if left blank ('is required'),
+// OR if the format is not valid ('must be a valid date...').
+<DateInput required />
+
+// Will complain only if a value is specified that is invalid.
+<TextInput validators={[isEmail()]} />
+<NumberInput validators={[isGte(5), isLte(10)]} />
+```
+
+Here is the list of predefined validators, with some examples:
+
+[[[./src/gral/validators.js]]]
+
+Some of these validators are automatically enabled for certain components, e.g. `isDate()` in `DateInput`s and `isNumber()` in `NumberInput`s, so you don't need to include them in the `validators` list (except if you want to customize/translate the error message).
+
+In order to customize a predefined validator, include an additional argument when instantiating it. This argument can be a fixed error message or a function returning the error message based on the following arguments:
+
+* Default error message
+* Current (internal) input value
+* Extra context, including the validator arguments (e.g. the `min` and `max` values for `isWithinRange`) and additional information (e.g. the expected format `fmt` for date/time values).
+
+You can use these callback functions to internationalize your error messages. Some examples:
+
+```js
+// Override the message for the `isEmail` validator
+<TextInput validators={[isEmail('please leave your email')]} />
+
+// Specify a function to further customize your message
+<TextInput validators={[
+  isEmail((defaultMsg, value) => `are you sure '${value}' is an email?`),
+]} />
+
+// Override the message for the `required` validator
+<DateInput validators={[isRequired('please specify a date!')]} />
+
+// The error message function may use the extra context parameter:
+<DateInput validators={[
+  isDate((defaultMsg, value, { fmt }) => `follow this format: ${fmt}`),
+]} />
+<NumberInput validators={[
+  isGte(15, (defaultMsg, value, { min }) => `ha de ser >= ${min}`),
+]} />
+```
+
+-- custom validators
+-- on blur
+
+
+### Helpers
+
+#### Styles
+
+[[[./src/gral/styles.js]]]
+
+#### Miscellaneous
+
+[[[./src/gral/helpers.js]]]
+
+[[[./src/gral/constants.js]]]
 
 ## [What's changed since version X?](https://github.com/guigrpa/giu/blob/master/CHANGELOG.md)
 

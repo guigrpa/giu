@@ -70,6 +70,18 @@ const NULL_STRING = '__NULL__';
 // ==========================================
 // Scrollbar width
 // ==========================================
+// -- **getScrollbarWidth()**
+// --
+// -- Measures and returns the scrollbar width for the current browser. 
+// --
+// -- The scrollbar width is measured lazily when first requested.
+// -- On window `resize`, it is measured again (zooming causes
+// -- the reported widths to change, and the `resize` event is a
+// -- reliable way to detect zooming).
+// -- Note that the returned value might be zero, 
+// -- e.g. on OS X with overlaid scrollbars.
+// --
+// -- * **Returns** *number*: scrollbar width in pixels
 let scrollbarWidth = null;
 function updateScrollbarWidth() {
   const scrollDiv = document.createElement('div');
