@@ -15,6 +15,9 @@ function isNull(val) { return val == null; }
 // ==========================================
 // Component
 // ==========================================
+// -- * **children** *any? = `Choose file…`*: React elements that
+// --   will be shown inside the button
+// -- * **style** *object?*: will be merged with the outermost `span` element
 class FileInput extends React.Component {
   static propTypes = {
     children:               React.PropTypes.any,

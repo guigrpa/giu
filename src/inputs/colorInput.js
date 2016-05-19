@@ -26,6 +26,10 @@ const SWATCH_HEIGHT = 10;
 // ==========================================
 // Component
 // ==========================================
+// -- * **inlinePicker** *boolean?*: whether the complete color picker
+// --   should be inlined (`true`) or appear as a dropdown when clicked
+// -- * **onCloseFloat** *function?*
+// -- * **accentColor** *string?*: CSS color descriptor (e.g. `darkgray`, `#ccffaa`...)
 class ColorInput extends React.Component {
   static propTypes = {
     disabled:               React.PropTypes.bool,

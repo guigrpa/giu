@@ -6,6 +6,15 @@ import { COLORS }           from '../gral/constants';
 // ==========================================
 // Component
 // ==========================================
+// -- An inconspicuous-looking button-in-a-`span`.
+// --
+// -- * **plain** *boolean?*: removes most button styles
+// -- * **children** *any*: button contents (can include `Icon`
+// --   components, etc.)
+// -- * **onClick** *function?*: `click` handler
+// -- * **disabled** *boolean?*
+// -- * **style** *object?*: merged with the `span` style
+// -- * *All other props are passed through to the `span` element*
 class Button extends React.Component {
   static propTypes = {
     plain:                  React.PropTypes.bool,
@@ -14,9 +23,6 @@ class Button extends React.Component {
     disabled:               React.PropTypes.bool,
     style:                  React.PropTypes.object,
     // all other props are passed through
-  };
-  static defaultProps = {
-    plain:                  false,
   };
 
   constructor(props) {
@@ -49,6 +55,8 @@ class Button extends React.Component {
 const style = {
   plainBase: {
     cursor: 'pointer',
+    userSelect: 'none',
+    WebkitUserSelect: 'none',
   },
   buttonBase: {
     display: 'inline-block',

@@ -4,7 +4,7 @@ import { merge }            from 'timm';
 require('babel-polyfill');
 import {
   Select, DateInput, Textarea, Checkbox,
-  TextInput, NumberInput, RangeInput,
+  TextInput, PasswordInput, NumberInput, RangeInput,
   FileInput, RadioGroup, ColorInput,
   LIST_SEPARATOR,
   DropDownMenu,
@@ -583,6 +583,13 @@ class FormExample extends React.Component {
             style={{width: 80}}
           />
           <TextInput disabled value="Disabled" style={{width: 80}} />
+          &nbsp;&nbsp;
+          <PasswordInput
+            required
+            onChange={onChange}
+            placeholder="password"
+            style={{width: 80}}
+          />
           &nbsp;&nbsp;
           <Checkbox
             value={true} onChange={onChange}

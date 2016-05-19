@@ -7,6 +7,37 @@ import { SelectCustom }     from '../inputs/selectCustom';
 // ==========================================
 // Component
 // ==========================================
+// -- * **type** *string(`native`|`inlinePicker`|`dropDownPicker`)? = `native`*
+// -- * **items** *array(object)*: each item has the following attributes:
+// --   - **value** *any*: any value that can be converted to JSON. Values should be unique
+// --   - **label** *string*: descriptive string that will be shown to the user
+// --   - **keys** *array(string)?*: keyboard shortcuts for this option, e.g.
+// --     `mod+a` (= `cmd+a` in OS X, `ctrl+a` in Windows), `alt+backspace`, `shift+up`...
+// --     **Only supported in non-native Selects**
+// -- * **required** *boolean?*: apart from its use for [validation](#input-validation),
+// --   enabling this flag disables the addition of a `null` option to the `items` list
+// --
+// -- You can also include a separator between `items` by including the special
+// -- `LIST_SEPARATOR` item (**only in non-native Selects**):
+// --
+// -- ```js
+// -- import { Select, LIST_SEPARATOR } from 'giu';
+// -- <Select required items={[
+// --   { value: 1, label: '1', keys: ['mod+1'] },
+// --   { value: 2, label: '2', keys: ['mod+2'] },
+// --   LIST_SEPARATOR,
+// --   { value: 3, label: '3', keys: ['mod+3'] },
+// --   { value: 4, label: '4', keys: ['mod+4'] },
+// -- ]} />
+// -- ```
+// --
+// -- Additional props for non-native Selects:
+// -- * **styleList** *object?*: when `type === 'inlinePicker'`,
+// --   merged with the outermost `div` style
+// -- * **twoStageStyle** *boolean?*: when enabled, two different visual styles are applied
+// --   to an item depending on whether it is just *hovered* or also *selected*. If disabled,
+// --   a single style is used to highlight the selected or the hovered item
+// -- * **accentColor** *string?*: CSS color descriptor (e.g. `darkgray`, `#ccffaa`...)
 class Select extends React.Component {
   static propTypes = {
     type:                   React.PropTypes.oneOf([

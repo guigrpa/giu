@@ -85,6 +85,22 @@ const DEFAULT_PROPS = {
 // ==========================================
 // Component
 // ==========================================
+// -- * **type** *string(`onlyField`|`inlinePicker`|`dropDownPicker`)? =
+// --   `dropDownPicker`*
+// -- * **placeholder** *string?*: when unspecified, the expected date/time
+// --   format will be used
+// -- * **date** *boolean? = true*: whether the date is part of the value
+// -- * **time** *boolean?*: whether the time is part of the value
+// -- * **analogTime** *boolean? = true*: whether the time picker should be
+// --   analogue (traditional clock) or digital (list)
+// -- * **seconds** *boolean?*: whether seconds should be included in the time value
+// -- * **utc** *boolean?*: by default, it is `true` *unless* `date` and `time` are both `true`.
+// --   In other words, local time is only used by default if both `date` and `time` are enabled
+// -- * **todayName** *string? = 'Today'*: label for the *Today* button
+// -- * **style** *object?*: merged with the `input` style
+// -- * **styleOuter** *object?*: when `type === 'inlinePicker'`,
+// --   merged with the outermost `span` style
+// -- * **accentColor** *string?*: CSS color descriptor (e.g. `darkgray`, `#ccffaa`...)
 class DateInput extends React.Component {
   static propTypes = {
     type:                   React.PropTypes.oneOf([

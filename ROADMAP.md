@@ -71,9 +71,9 @@
 - [x] Add clipboard support -- *Unfortunately, native selects and native range/checkbox inputs do not work*
 - [x] Add style to dropdownmenu title
 - [x] Check embedded hint positioning!
-- [ ] PasswordInput!
 - [ ] Documentation:
     + [ ] Reference
+    + [ ] Add screenshots
     + [ ] Long demo with explanations
 - [ ] Test as a user, in particular DateInputs with i18n
 - [ ] Basic tests with enzyme? Floats, modals, etc. are bound to be tricky

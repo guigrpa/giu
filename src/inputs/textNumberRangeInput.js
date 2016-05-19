@@ -16,6 +16,11 @@ const classOptions = {
     toExternalValue: val => (val !== NULL_VALUE ? val : null),
     isNull: val => val === NULL_VALUE,
   },
+  password: {
+    toInternalValue: val => (val != null ? val : NULL_VALUE),
+    toExternalValue: val => (val !== NULL_VALUE ? val : null),
+    isNull: val => val === NULL_VALUE,
+  },
   number: {
     toInternalValue: val => (val != null ? String(val) : NULL_VALUE),
     toExternalValue: val => (val !== NULL_VALUE ? Number(val) : null),
@@ -29,6 +34,8 @@ const classOptions = {
   },
 };
 
+// -- * **style** *object?*: merged with the `input`/`textarea` style
+// -- * **vertical** *boolean?*: [only for `RangeInput`]
 const PROP_TYPES = {
   disabled:               React.PropTypes.bool,
   style:                  React.PropTypes.object,
@@ -96,9 +103,10 @@ const style = {
 // Public API
 // ==========================================
 const TextInput = createClass('TextInput', 'text');
+const PasswordInput = createClass('PasswordInput', 'password');
 const NumberInput = createClass('NumberInput', 'number');
 const RangeInput = createClass('RangeInput', 'range');
 
 export {
-  TextInput, NumberInput, RangeInput,
+  TextInput, PasswordInput, NumberInput, RangeInput,
 };

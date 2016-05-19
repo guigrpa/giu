@@ -11,6 +11,8 @@ let cntId = 0;
 // ==========================================
 // Component
 // ==========================================
+// -- * **label** *string?*: gets converted to a `label` element
+// -- * **styleLabel** *object?*: merged with the `label` style
 class Checkbox extends React.Component {
   static propTypes = {
     id:                     React.PropTypes.string,

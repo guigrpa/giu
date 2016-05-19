@@ -25,7 +25,6 @@ function getPlaceHolderText(val) {
 // ==========================================
 class Textarea extends React.Component {
   static propTypes = {
-    onKeyUp:                React.PropTypes.func,
     style:                  React.PropTypes.object,
     // Input HOC
     curValue:               React.PropTypes.any.isRequired,
@@ -99,13 +98,7 @@ class Textarea extends React.Component {
     if (this.props.onResizeOuter) this.props.onResizeOuter();
   }
 
-  onKeyUp(ev) {
-    if (ev.which === KEYS.return) {
-      ev.stopPropagation();
-    } else {
-      if (this.props.onKeyUp) this.props.onKeyUp(ev);
-    }
-  }
+  onKeyUp(ev) { if (ev.which === KEYS.return) ev.stopPropagation(); }
 }
 
 // ==========================================

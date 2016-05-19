@@ -5,6 +5,8 @@ import { omit }             from 'timm';
 // ==========================================
 // Component
 // ==========================================
+// -- A wrapper for the native HTML `progress` element (with 100% width).
+// -- *All props are passed through to the `progress` element*
 class Progress extends React.Component {
   static propTypes = {
     // all other props are passed through

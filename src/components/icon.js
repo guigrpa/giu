@@ -7,6 +7,15 @@ require('font-awesome/css/font-awesome.css');
 // ==========================================
 // Component
 // ==========================================
+// -- A wrapper for Font Awesome icons.
+// --
+// -- * **icon** *string*: e.g. `ambulance`, `cogs`...
+// -- * **size** *string(`lg`|`2x`|`3x`|`4x`|`5x`)?*
+// -- * **fixedWidth** *boolean?*
+// -- * **spin** *boolean?*
+// -- * **disabled** *boolean?*
+// -- * **style** *object?*: merged with the `i` element style
+// -- * *All other props are passed through to the `i` element*
 class Icon extends React.Component {
   static propTypes = {
     icon:                   React.PropTypes.string.isRequired,

@@ -4,11 +4,19 @@ import {
 }                           from '../gral/helpers';
 import { MISC }             from '../gral/constants';
 
-// -----------------------------------------------
+// ==========================================
 // Get-cropping-ancestor algorithm (recursive)
-// -----------------------------------------------
+// ==========================================
 
-// Returns `true` if it is *fully* visible
+// -- **isVisible()**
+// --
+// -- Determines whether the provided node is *fully* visible
+// -- in the browser window.
+// --
+// -- * **node** *object?*: DOM node; if unspecified, the function returns `false`
+// -- * **bcr** *object?*: bounding client rectangle for `node`; if not specified,
+// --   `getBoundingClientRect()` will be called on `node`
+// -- * **Returns** *boolean*
 function isVisible(node, bcr0) {
   if (!node) return false;
   const bcr = bcr0 || node.getBoundingClientRect();
@@ -55,11 +63,22 @@ function _getCroppingAncestor(refBcr, ancestor, options = {}) {
   return _getCroppingAncestor(refBcr, ancestor.parentNode, options);
 }
 
-// -----------------------------------------------
+// ==========================================
 // Scroll-into-view algorithm (iterative)
-// -----------------------------------------------
+// ==========================================
 
-// Scroll vertically, then horizontally
+// -- **scrollIntoView()**
+// --
+// -- Scrolls the node's ancestors as needed in order to make a node fully visible
+// -- in the browser window (or at least most of it, if it is too large).
+// -- Implemented as a recursive algorithm that is first run
+// -- vertically and then horizontally.
+// --
+// -- * **node** *object?*: DOM node
+// -- * **options** *object? = {}*: the following options are allowed:
+// --   - **topAncestor** *object*: stop the recursive algorithm at this
+// --     ancestor (otherwise stops at the root level or when a `Modal`
+// --     ancestor is reached)
 function scrollIntoView(node, options = {}) {
   if (!node) return;
   _scrollIntoView(node, timmSet(options, 'fHoriz', false));
@@ -114,16 +133,16 @@ function _scrollIntoView(node, options) {
   }
 }
 
-// -----------------------------------------------
+// ==========================================
 // Helpers
-// -----------------------------------------------
+// ==========================================
 function _isOverflowVisible(overflow) {
   return (!overflow || overflow === 'visible');
 }
 
-// -----------------------------------------------
+// ==========================================
 // Public API
-// -----------------------------------------------
+// ==========================================
 export {
   isVisible,
   scrollIntoView,

@@ -21,12 +21,15 @@ let cntId = 0;
 // ==========================================
 // Component
 // ==========================================
+// -- * **items** *array(object)*: each item has the following attributes
+// --   - **value** *any*: any value that can be converted to JSON. Values should be unique
+// --   - **label** *any?*: React elements that will be shown as a label for
+// --     the corresponding radio button
+// --   - **labelExtra** *any?*: React elements that will be shown below the main label
 class RadioGroup extends React.Component {
   static propTypes = {
     disabled:               React.PropTypes.bool,
     items:                  React.PropTypes.array.isRequired,
-    onClickItem:            React.PropTypes.func,
-    onCloseFloat:           React.PropTypes.func,
     // Input HOC
     curValue:               React.PropTypes.string.isRequired,
     onChange:               React.PropTypes.func.isRequired,

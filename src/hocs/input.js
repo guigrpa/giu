@@ -25,8 +25,8 @@ const PROP_TYPES = {
   value:                  React.PropTypes.any,
   errors:                 React.PropTypes.array,
   required:               React.PropTypes.bool,   // also passed through
-  noErrors:               React.PropTypes.bool,
   validators:             React.PropTypes.array,
+  noErrors:               React.PropTypes.bool,
   cmds:                   React.PropTypes.array,  // also passed through
   disabled:               React.PropTypes.bool,   // also passed through
   floatZ:                 React.PropTypes.number, // also passed through
@@ -170,6 +170,7 @@ function input(ComposedComponent, {
     // state handling to the input and only want to retrieve the value when submitting a form)
     getValue() { return this.toExternalValue(this.state.curValue, this.props); }
     getErrors() { return this.errors; }
+    validateAndGetValue() { return this._validate().then(() => this.getValue()); }
 
     // ==========================================
     // Render
@@ -356,7 +357,7 @@ function input(ComposedComponent, {
 
     _validate() {
       const { noErrors } = this.props;
-      if (noErrors) return;
+      if (noErrors) return Promise.resolve();
       let validators;
       if (this.props.validators.length) {
         validators = merge({}, defaultValidators);
@@ -397,9 +398,14 @@ function input(ComposedComponent, {
       }
 
       // When all promises have resolved, changed the current state
-      Promise.all(pErrors).then(validationErrors0 => {
+      return Promise.all(pErrors).then(validationErrors0 => {
         const validationErrors = validationErrors0.filter(o => o != null);
         this && this.setState && this.setState({ validationErrors });
+        if (validationErrors.length) {
+          const exception = new Error('VALIDATION_ERROR');
+          exception.errors = validationErrors;
+          throw exception;
+        }
       });
     }
   };

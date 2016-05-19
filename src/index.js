@@ -5,6 +5,7 @@ export Select             from './inputs/select';
 export { LIST_SEPARATOR } from './inputs/selectCustom';
 export {
   TextInput,
+  PasswordInput,
   NumberInput,
   RangeInput,
 }                         from './inputs/textNumberRangeInput';
@@ -73,4 +74,7 @@ export {
   windowHeightWithoutScrollbar, windowWidthWithoutScrollbar,
 }                         from './gral/helpers';
 export *                  from './gral/validators';
-export *                  from './gral/visibility';
+export {
+  isVisible,
+  scrollIntoView,
+}                         from './gral/visibility';
