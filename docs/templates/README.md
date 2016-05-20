@@ -1,28 +1,31 @@
 # Giu [![npm version](https://img.shields.io/npm/v/giu.svg)](https://www.npmjs.com/package/giu)
 
-An opinionated Swiss-army knife for React webapp GUI building.
+An opinionated Swiss-army knife for building React application GUIs.
 
-**WORK IN PROGRESS**
+Online demos: [an extremely compact one](https://giu-dziantuohl.now.sh/)
 
 ## Why?
 
-- Flexibility:
-    + If you use the ES6 sources and Webpack 2, you can bundle only the components you need, nothing more. For example, if you `import Modal`, you will not embed Redux, which you will if you `import Modals`.
-    + If you need a simple confirmation modal, use `Modal` directly. If you need stacked modals and more state control, include a `Modals` component at the top of your app and use the provided API. If you need even more control, use the exported `modalReducer` and `modalActions` (action creators) with your own application's Redux store. Same for `Notifications`and `Floats`.
-    + In form components (`TextInput`, `Select`, `Textarea`...), choose whether you want Giu to handle state for you (and then retrieve the component's value when e.g. the user clicks on Submit) or you want full control from outside.
-    + Styles: lightweight styles are included for some components, but you can always customise the appearance including your own `style` attributes.
-- Nice touches:
+TBW: General screenshot?
+TBW: Online demo: examples.js (now?)
+
+- A use-what-you-need philosophy, especially if you use the ES6 sources and Webpack 2 (with *tree shaking*)
+- Improvements over native HTML inputs: (optional) [state delegation](#inputs), [comprehensive validation](#input-validation), [native JS types and nullability](#input-value-types).
+- Support for i18n: error messages, date inputs, etc.
+- Love for detail:
+    + [Stackable modals](#modals) with autofocus, default buttons, etc.
+    + Sticky/retainable [notifications](#notifications)
+    + [Keyboard shortcuts](#select) (cmd/ctrl-J, shift-up...) for options in selects and drop-down menus
+    + Keyboard navigation for (almost) everything
+    + Automatic scroll-into-view when inputs, even custom ones, are focused
+    + Smart positioning of floating pickers (date and color inputs, drop-down menus, validation errors, etc.)
+    + Ultra-customisable [date/time inputs](#dateinput)
     + Textarea with auto-resize
-    + Keyboard shortcuts, autofocus, default buttons on Modals
-    + Sticky/retainable notifications
-- The styles used on Giu inputs are very low-key and can be easily overriden.
-- Completeness:
-    + Basic components: Button, Icon, Spinner, LargeMessage...
-    + Form components: TextInput, NumberInput, Select, Textarea, Checkbox...
-    + Not-so-basic ones: Modal(s), Notification(s)...
-    + Higher-order components: Hoverable
-    + Style helpers: ...
-    + Other helpers: ...
+    + Uniform, lightweight styles with key accents that can easily be overriden
+    + ... and a gorgeous [analog time picker](#dateinput)!
+- Easy creation of [hint screens](#hint-screens) with dynamically-positioned labels and arrows
+- Lots of [helper functions](#helpers)
+
 
 ## Installation
 
@@ -47,8 +50,8 @@ Giu provides a wide variety of inputs and several useful abstractions over nativ
 You'll understand the benefits it brings with an example. Let's say you want to build a form that allows users to modify certain parameters of their registration profile, e.g. their age. With native HTML inputs, you'd use something like this:
 
 ```js
-<input id="age"
-  type="number" min={0} step={1}
+<input type="number" id="age"
+  min={0} step={1}
   value={this.state.age} onChange={age => this.setState({ age: Number(age) })}
 />
 ```
@@ -60,7 +63,7 @@ It seems simple, right? But in reality you are handling a lot of stuff yourself:
 * You must convert back and forth between the input's `string` value and your `number` attribute.
 * You must validate input contents before submitting the form.
 
-You *could* use Giu similarly:
+You *could* use Giu in a similar way:
 
 ```js
 <NumberInput id="age" 
@@ -69,7 +72,7 @@ You *could* use Giu similarly:
 />
 ```
 
-This approach follows *The React Way™*, but we're already seeing a first benefit: the `onChange` handler will be called (in addition to the native event) with the *converted* input value: either a `number` (*not* a `string`) or `null`. No need to perform the conversion ourselves.
+This approach follows *The React Way™*, but we're already seeing a first benefit: the `onChange` handler will be called (in addition to the native event) with the *converted* input value: either a number or `null`; no need to do the conversion ourselves.
 
 But we can further improve on this:
 
@@ -94,24 +97,24 @@ The promise returned by `validateAndGetValue()` will either resolve with the cur
 
 ### Input value types
 
-Most HTML inputs can only hold strings. Giu inputs provide you with JS types and allow `null` values (if you don't specify the `required` prop):
+Most HTML inputs can only hold strings. Giu inputs provide you with JS types and allow `null` values by default (include the `required` flag to change that):
 
 | Components | JS type |
 | --- | --- |
-| `TextInput`, `PasswordInput`, `Textarea` | *string* |
-| `NumberInput`, `RangeInput` | *number* |
-| `Checkbox` | *boolean* |
-| `DateInput` | *Date* (see full range of date/time possibilities below) |
-| `Select`, `RadioGroup` | *any* (depends on the values specified in the `items` prop, see below) |
-| `ColorInput` | *string* (8-digit hex color code) |
-| `FileInput` | *File* |
+| TextInput, PasswordInput, Textarea | *string* |
+| NumberInput, RangeInput | *number* |
+| Checkbox | *boolean* |
+| DateInput | *Date* (see full range of date/time possibilities below) |
+| Select, RadioGroup | *any* (depends on the values specified in the `items` prop, see below) |
+| ColorInput | *string* (8-digit hex color code) |
+| FileInput | *File* |
 
 
 ### Input validation
 
 #### Predefined validators
 
-Some validators are already enabled by default:
+Some validators are enabled by default:
 
 ```js
 // Shows an error if the provided value is an invalid date.
@@ -119,9 +122,11 @@ Some validators are already enabled by default:
 <DateInput />
 ```
 
-Validation occurs automatically when the input loses focus (`blur`). You can also trigger it imperatively with the `validateAndGetValue()` function (see [Imperative API](#imperative-api)).
+![Validator screenshot](https://raw.githubusercontent.com/guigrpa/giu/master/docs/Validator1.png)
 
-Enabling additional validators is also simple:
+Validation occurs automatically when the input loses focus (i.e. on `blur`). You can also trigger it imperatively by calling `validateAndGetValue()` (see [Imperative API](#imperative-api)).
+
+Enabling additional validators is easy:
 
 ```js
 // Shows an error if left blank ('is required')
@@ -137,7 +142,7 @@ Here is the list of predefined validators, with some examples:
 
 [[[./src/gral/validators.js]]]
 
-As we saw above, some of these validators are automatically enabled for certain components, e.g. `isDate()` in `DateInput`s and `isNumber()` in `NumberInput`s. However, you can include them in your `validators` list for customization (e.g. i18n), as you'll see next.
+As we saw above, some of these validators are automatically enabled for certain components, e.g. `isDate()` in DateInputs and `isNumber()` in NumberInputs. However, you can include them in your `validators` list for customization (e.g. i18n), as you'll see next.
 
 
 #### Custom validators
@@ -174,10 +179,10 @@ import i18n from 'mady';  // a translation function
 ]} />
 ```
 
-You can also create your own validators, which can be sync (return an error message) or async (return a promise) and should have this signature:
+You can also create your own validators, which can be synchronous (returning an error message) or asynchronous (returning a promise of an error message) and should have this signature:
 
 * **value** *any?*: the current internal value of the input component
-* **props** *object*: the input component's props (including defaults props)
+* **props** *object*: the input component's props (including default props)
 * **context** *object?*: additional validator context provided by certain components. For example, `DateInput` injects the `moment` object via context
 * **Returns** *Promise(string?)|string?*: error message
 
@@ -220,7 +225,7 @@ onClickSubmit() {
 
 This is the only truly *imperative* API provided by Giu, provided for convenience.
 
-Tasks 2 and 3 above are managed via a *pseudo-imperative* API, the `cmds` prop, an array of commands that are executed by the [Input HOC](#input-hoc). Commands are plain objects with a `type` attribute, plus other attributes as needed. Currently supported commands are:
+Tasks 2 and 3 above are managed via a *pseudo-imperative* API, the `cmds` prop, an array of commands that are executed by the so-called Input Higher-Order Component (HOC). Commands are plain objects with a `type` attribute, plus other attributes as needed. Currently supported commands are:
 
 * `SET_VALUE`: change the current input state (without affecting the original `value` prop). The new value is passed in the command object as `value`.
 * `REVERT`: revert the current input state to the original `value` prop.
@@ -232,8 +237,8 @@ Tasks 2 and 3 above are managed via a *pseudo-imperative* API, the `cmds` prop, 
 ### Common input props
 
 * Basic (see also the [introduction to inputs](#inputs)):
-    * **value** *any?*: either the original value, or the current input value (if you want to handle state yourself). See also the list of [input value types](#input-value-types)
-    * **onChange** *function?*: include it if you want to handle input state yourself, or if you just want to be informed about user changes
+    * **value** *any?*: either the original value to be modified by the user, or the current input value (if you want to manage state yourself). See also the list of [input value types](#input-value-types)
+    * **onChange** *function?*: include it if you want to manage state yourself, or if you just want to be informed about user changes
     * **onFocus** *function?*
     * **onBlur** *function?*
     * **disabled** *boolean?*: prevents the input from being interacted with; also affects styles
@@ -242,7 +247,7 @@ Tasks 2 and 3 above are managed via a *pseudo-imperative* API, the `cmds` prop, 
     * **required** *boolean?*: synonym for the `isRequired()` validator
     * **validators** *array(object|function)?*: objects are used for predefined validators, whereas functions are used for custom ones
     * **noErrors** *boolean?*: ignore validation altogether
-* Float-related (for all inputs with floating pickers, e.g. `Select`, `DateInput`, `ColorInput`):
+* Float-related (for all inputs with floating pickers, e.g. Select, DateInput, ColorInput):
     * **floatPosition** *string(`above`|`below`)?*: if unspecified, a suitable position is selected algorithmically
     * **floatAlign** *string(`left`|`right`)? = `left`*: if unspecified, a suitable position is selected algorithmically
     * **floatZ** *number? = 5*
@@ -254,13 +259,9 @@ Tasks 2 and 3 above are managed via a *pseudo-imperative* API, the `cmds` prop, 
 
 ### Specific input props
 
-xx | `Checkbox` | *boolean* |
-| `DateInput` | *Date* (see full range of date/time possibilities below) |
-| `Select`, `RadioGroup` | *any* (depends on the values specified in the `items` prop, see below) |
-xx | `ColorInput` | *string* (8-digit hex color code) |
-| `FileInput` | *File* |
-
 #### TextInput, PasswordInput, NumberInput, RangeInput, Textarea
+
+*Note: out of the box, Textarea resizes automatically as needed. You can limit its maximum height by adding a `style` prop: e.g. `style={{ maxHeight: 100 }}`*
 
 [[[./src/inputs/textNumberRangeInput.js]]]
 
@@ -270,9 +271,19 @@ xx | `ColorInput` | *string* (8-digit hex color code) |
 
 #### DateInput
 
+Shown below are some examples of DateInput, one of Giu's most versatile components: date/time/date-time modes, with or without drop-down pickers, inline pickers, custom accent color, digital/analogue time picker, disabled style... Not shown: keyboard navigation, clipboard events.
+
+![DateInput screenshots](https://raw.githubusercontent.com/guigrpa/giu/master/docs/DateInputs.png)
+
 [[[./src/inputs/dateInput.js]]]
 
 #### Select
+
+Shown below are some examples of Select and its features: `native` and custom (`inlinePicker`|`dropDownPicker`) versions, keyboard shortcuts, custom accent color, disabled style. Not shown: keyboard navigation, clipboard events, automatic scrolling.
+
+![Select screenshots](https://raw.githubusercontent.com/guigrpa/giu/master/docs/Selects2.png)
+
+*Recommendation: use `dropDownPicker` for performance, especially if you have hundreds/thousands of such components with many options: `native` Selects attach all of their `option` subelements to the page, whereas custom Selects only do that when the dropdown is shown.*
 
 [[[./src/inputs/select.js]]]
 
@@ -282,32 +293,45 @@ xx | `ColorInput` | *string* (8-digit hex color code) |
 
 #### ColorInput
 
+Shown below are some examples of ColorInput and its features: inline and drop-down versions, RGB and HSV pickers, transparency slider, custom accent color, disabled style. Not shown: clipboard events.
+
+![ColorInput screenshots](https://raw.githubusercontent.com/guigrpa/giu/master/docs/ColorInputs.png)
+
 [[[./src/inputs/colorInput.js]]]
 
 #### FileInput
 
 [[[./src/inputs/fileInput.js]]]
 
-
 ## DropDownMenu
 
-TBW
+![DropDownMenu screenshots](https://raw.githubusercontent.com/guigrpa/giu/master/docs/DropDownMenu.png)
+
+[[[./src/components/dropDownMenu.js]]]
 
 ## Modals
 
-TBW
+![Modal screenshots](https://raw.githubusercontent.com/guigrpa/giu/master/docs/Modal.png)
+
+[[[./src/components/modals.js]]]
 
 ## Notifications
 
-TBW
+![Notifications screenshots](https://raw.githubusercontent.com/guigrpa/giu/master/docs/Notification.png)
 
-## Floats
+[[[./src/components/notifications.js]]]
 
-TBW
+## Hint screens
 
-## Hints
+Hint screens give tips on how to use your application, through
+a combination of labels (icons, images, text) and dynamically-positioned
+arrows. You can show hint screens, for example, when the user reaches a
+certain part of your application or performs an action for the first time.
 
-TBW
+![Hint screen screenshots](https://raw.githubusercontent.com/guigrpa/giu/master/docs/Hints.png)
+
+[[[./src/components/hints.js]]]
+
 
 ## Tiny little things
 
@@ -350,10 +374,6 @@ export default hoverable(MyReactComponent);
 ### Hoverable HOC
 
 [[[./src/hocs/hoverable.js]]]
-
-### Input HOC
-
-TBW
 
 
 ## Helpers

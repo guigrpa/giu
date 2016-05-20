@@ -72,10 +72,13 @@
 - [x] Add style to dropdownmenu title
 - [x] Check embedded hint positioning!
 - [ ] Documentation:
-    + [ ] Reference
-    + [ ] Add screenshots
+    + [x] Reference
     + [ ] Long demo with explanations
-- [ ] Test as a user, in particular DateInputs with i18n
+- [ ] Test as a user, in particular DateInputs with i18n. Screenshot and add to ref.
+- [ ] Check installation with:
+    + [ ] Webpack 1
+    + [ ] Webpack 2
+    + [ ] Without Webpack!
 - [ ] Basic tests with enzyme? Floats, modals, etc. are bound to be tricky
 
 - [ ] Focus delegation?

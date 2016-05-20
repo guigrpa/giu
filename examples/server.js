@@ -10,14 +10,16 @@ const PORT = 8080;
 
 const expressApp = express();
 
-const compiler = webpack(webpackConfig);
-expressApp.use(webpackDevMiddleware(compiler, {
-  noInfo: true,
-  quiet: false,
-  publicPath: webpackConfig.output.publicPath,
-  stats: { colors: true },
-}));
-expressApp.use(webpackHotMiddleware(compiler));
+if (!process.env.NODE_ENV === 'production') {
+  const compiler = webpack(webpackConfig);
+  expressApp.use(webpackDevMiddleware(compiler, {
+    noInfo: true,
+    quiet: false,
+    publicPath: webpackConfig.output.publicPath,
+    stats: { colors: true },
+  }));
+  expressApp.use(webpackHotMiddleware(compiler));
+}
 expressApp.use(express.static(__dirname));
 
 const httpServer = http.createServer(expressApp);

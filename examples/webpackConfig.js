@@ -1,12 +1,13 @@
-import path                 from 'path';
-import webpack              from 'webpack';
+const path = require('path');
+const webpack = require('webpack');
+const fProduction = process.env.NODE_ENV === 'production';
 
 const _entry = (entry) => [
   // 'webpack-hot-middleware/client?reload=true',
   entry,
 ];
 
-export default {
+module.exports = {
 
   // -------------------------------------------------
   // Input (entry point)
@@ -22,15 +23,15 @@ export default {
     filename: '[name].bundle.js',
 
     // Where PRODUCTION bundles will be stored
-    path: path.resolve(process.cwd(), 'public'),
+    path: path.resolve(process.cwd(), 'examples/public'),
 
-    publicPath: '/',
+    publicPath: '/public/',
   },
 
   // -------------------------------------------------
   // Configuration
   // -------------------------------------------------
-  devtool: 'eval',
+  devtool: fProduction ? undefined : 'eval',
 
   resolve: {
     // Add automatically the following extensions to required modules
@@ -40,6 +41,9 @@ export default {
   plugins: [
     // new webpack.HotModuleReplacementPlugin(),
     new webpack.NoErrorsPlugin(),
+    new webpack.DefinePlugin({
+      'process.env.NODE_ENV': JSON.stringify(fProduction ? 'production' : 'development'),
+    }),
   ],
 
   module: {

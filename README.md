@@ -1,28 +1,31 @@
 # Giu [![npm version](https://img.shields.io/npm/v/giu.svg)](https://www.npmjs.com/package/giu)
 
-An opinionated Swiss-army knife for React webapp GUI building.
+An opinionated Swiss-army knife for building React application GUIs.
 
-**WORK IN PROGRESS**
+Online demos: [an extremely compact one](https://giu-dziantuohl.now.sh/)
 
 ## Why?
 
-- Flexibility:
-    + If you use the ES6 sources and Webpack 2, you can bundle only the components you need, nothing more. For example, if you `import Modal`, you will not embed Redux, which you will if you `import Modals`.
-    + If you need a simple confirmation modal, use `Modal` directly. If you need stacked modals and more state control, include a `Modals` component at the top of your app and use the provided API. If you need even more control, use the exported `modalReducer` and `modalActions` (action creators) with your own application's Redux store. Same for `Notifications`and `Floats`.
-    + In form components (`TextInput`, `Select`, `Textarea`...), choose whether you want Giu to handle state for you (and then retrieve the component's value when e.g. the user clicks on Submit) or you want full control from outside.
-    + Styles: lightweight styles are included for some components, but you can always customise the appearance including your own `style` attributes.
-- Nice touches:
+TBW: General screenshot?
+TBW: Online demo: examples.js (now?)
+
+- A use-what-you-need philosophy, especially if you use the ES6 sources and Webpack 2 (with *tree shaking*)
+- Improvements over native HTML inputs: (optional) [state delegation](#inputs), [comprehensive validation](#input-validation), [native JS types and nullability](#input-value-types).
+- Support for i18n: error messages, date inputs, etc.
+- Love for detail:
+    + [Stackable modals](#modals) with autofocus, default buttons, etc.
+    + Sticky/retainable [notifications](#notifications)
+    + [Keyboard shortcuts](#select) (cmd/ctrl-J, shift-up...) for options in selects and drop-down menus
+    + Keyboard navigation for (almost) everything
+    + Automatic scroll-into-view when inputs, even custom ones, are focused
+    + Smart positioning of floating pickers (date and color inputs, drop-down menus, validation errors, etc.)
+    + Ultra-customisable [date/time inputs](#dateinput)
     + Textarea with auto-resize
-    + Keyboard shortcuts, autofocus, default buttons on Modals
-    + Sticky/retainable notifications
-- The styles used on Giu inputs are very low-key and can be easily overriden.
-- Completeness:
-    + Basic components: Button, Icon, Spinner, LargeMessage...
-    + Form components: TextInput, NumberInput, Select, Textarea, Checkbox...
-    + Not-so-basic ones: Modal(s), Notification(s)...
-    + Higher-order components: Hoverable
-    + Style helpers: ...
-    + Other helpers: ...
+    + Uniform, lightweight styles with key accents that can easily be overriden
+    + ... and a gorgeous [analog time picker](#dateinput)!
+- Easy creation of [hint screens](#hint-screens) with dynamically-positioned labels and arrows
+- Lots of [helper functions](#helpers)
+
 
 ## Installation
 
@@ -47,8 +50,8 @@ Giu provides a wide variety of inputs and several useful abstractions over nativ
 You'll understand the benefits it brings with an example. Let's say you want to build a form that allows users to modify certain parameters of their registration profile, e.g. their age. With native HTML inputs, you'd use something like this:
 
 ```js
-<input id="age"
-  type="number" min={0} step={1}
+<input type="number" id="age"
+  min={0} step={1}
   value={this.state.age} onChange={age => this.setState({ age: Number(age) })}
 />
 ```
@@ -60,7 +63,7 @@ It seems simple, right? But in reality you are handling a lot of stuff yourself:
 * You must convert back and forth between the input's `string` value and your `number` attribute.
 * You must validate input contents before submitting the form.
 
-You *could* use Giu similarly:
+You *could* use Giu in a similar way:
 
 ```js
 <NumberInput id="age" 
@@ -69,7 +72,7 @@ You *could* use Giu similarly:
 />
 ```
 
-This approach follows *The React Way™*, but we're already seeing a first benefit: the `onChange` handler will be called (in addition to the native event) with the *converted* input value: either a `number` (*not* a `string`) or `null`. No need to perform the conversion ourselves.
+This approach follows *The React Way™*, but we're already seeing a first benefit: the `onChange` handler will be called (in addition to the native event) with the *converted* input value: either a number or `null`; no need to do the conversion ourselves.
 
 But we can further improve on this:
 
@@ -94,24 +97,24 @@ The promise returned by `validateAndGetValue()` will either resolve with the cur
 
 ### Input value types
 
-Most HTML inputs can only hold strings. Giu inputs provide you with JS types and allow `null` values (if you don't specify the `required` prop):
+Most HTML inputs can only hold strings. Giu inputs provide you with JS types and allow `null` values by default (include the `required` flag to change that):
 
 | Components | JS type |
 | --- | --- |
-| `TextInput`, `PasswordInput`, `Textarea` | *string* |
-| `NumberInput`, `RangeInput` | *number* |
-| `Checkbox` | *boolean* |
-| `DateInput` | *Date* (see full range of date/time possibilities below) |
-| `Select`, `RadioGroup` | *any* (depends on the values specified in the `items` prop, see below) |
-| `ColorInput` | *string* (8-digit hex color code) |
-| `FileInput` | *File* |
+| TextInput, PasswordInput, Textarea | *string* |
+| NumberInput, RangeInput | *number* |
+| Checkbox | *boolean* |
+| DateInput | *Date* (see full range of date/time possibilities below) |
+| Select, RadioGroup | *any* (depends on the values specified in the `items` prop, see below) |
+| ColorInput | *string* (8-digit hex color code) |
+| FileInput | *File* |
 
 
 ### Input validation
 
 #### Predefined validators
 
-Some validators are already enabled by default:
+Some validators are enabled by default:
 
 ```js
 // Shows an error if the provided value is an invalid date.
@@ -119,9 +122,11 @@ Some validators are already enabled by default:
 <DateInput />
 ```
 
-Validation occurs automatically when the input loses focus (`blur`). You can also trigger it imperatively with the `validateAndGetValue()` function (see [Imperative API](#imperative-api)).
+![Validator screenshot](https://raw.githubusercontent.com/guigrpa/giu/master/docs/Validator1.png)
 
-Enabling additional validators is also simple:
+Validation occurs automatically when the input loses focus (i.e. on `blur`). You can also trigger it imperatively by calling `validateAndGetValue()` (see [Imperative API](#imperative-api)).
+
+Enabling additional validators is easy:
 
 ```js
 // Shows an error if left blank ('is required')
@@ -159,7 +164,7 @@ isWithinRange(0, 1000)
 isDate()
 ```
 
-As we saw above, some of these validators are automatically enabled for certain components, e.g. `isDate()` in `DateInput`s and `isNumber()` in `NumberInput`s. However, you can include them in your `validators` list for customization (e.g. i18n), as you'll see next.
+As we saw above, some of these validators are automatically enabled for certain components, e.g. `isDate()` in DateInputs and `isNumber()` in NumberInputs. However, you can include them in your `validators` list for customization (e.g. i18n), as you'll see next.
 
 
 #### Custom validators
@@ -196,10 +201,10 @@ import i18n from 'mady';  // a translation function
 ]} />
 ```
 
-You can also create your own validators, which can be sync (return an error message) or async (return a promise) and should have this signature:
+You can also create your own validators, which can be synchronous (returning an error message) or asynchronous (returning a promise of an error message) and should have this signature:
 
 * **value** *any?*: the current internal value of the input component
-* **props** *object*: the input component's props (including defaults props)
+* **props** *object*: the input component's props (including default props)
 * **context** *object?*: additional validator context provided by certain components. For example, `DateInput` injects the `moment` object via context
 * **Returns** *Promise(string?)|string?*: error message
 
@@ -242,7 +247,7 @@ onClickSubmit() {
 
 This is the only truly *imperative* API provided by Giu, provided for convenience.
 
-Tasks 2 and 3 above are managed via a *pseudo-imperative* API, the `cmds` prop, an array of commands that are executed by the [Input HOC](#input-hoc). Commands are plain objects with a `type` attribute, plus other attributes as needed. Currently supported commands are:
+Tasks 2 and 3 above are managed via a *pseudo-imperative* API, the `cmds` prop, an array of commands that are executed by the so-called Input Higher-Order Component (HOC). Commands are plain objects with a `type` attribute, plus other attributes as needed. Currently supported commands are:
 
 * `SET_VALUE`: change the current input state (without affecting the original `value` prop). The new value is passed in the command object as `value`.
 * `REVERT`: revert the current input state to the original `value` prop.
@@ -254,8 +259,8 @@ Tasks 2 and 3 above are managed via a *pseudo-imperative* API, the `cmds` prop, 
 ### Common input props
 
 * Basic (see also the [introduction to inputs](#inputs)):
-    * **value** *any?*: either the original value, or the current input value (if you want to handle state yourself). See also the list of [input value types](#input-value-types)
-    * **onChange** *function?*: include it if you want to handle input state yourself, or if you just want to be informed about user changes
+    * **value** *any?*: either the original value to be modified by the user, or the current input value (if you want to manage state yourself). See also the list of [input value types](#input-value-types)
+    * **onChange** *function?*: include it if you want to manage state yourself, or if you just want to be informed about user changes
     * **onFocus** *function?*
     * **onBlur** *function?*
     * **disabled** *boolean?*: prevents the input from being interacted with; also affects styles
@@ -264,7 +269,7 @@ Tasks 2 and 3 above are managed via a *pseudo-imperative* API, the `cmds` prop, 
     * **required** *boolean?*: synonym for the `isRequired()` validator
     * **validators** *array(object|function)?*: objects are used for predefined validators, whereas functions are used for custom ones
     * **noErrors** *boolean?*: ignore validation altogether
-* Float-related (for all inputs with floating pickers, e.g. `Select`, `DateInput`, `ColorInput`):
+* Float-related (for all inputs with floating pickers, e.g. Select, DateInput, ColorInput):
     * **floatPosition** *string(`above`|`below`)?*: if unspecified, a suitable position is selected algorithmically
     * **floatAlign** *string(`left`|`right`)? = `left`*: if unspecified, a suitable position is selected algorithmically
     * **floatZ** *number? = 5*
@@ -276,16 +281,13 @@ Tasks 2 and 3 above are managed via a *pseudo-imperative* API, the `cmds` prop, 
 
 ### Specific input props
 
-xx | `Checkbox` | *boolean* |
-| `DateInput` | *Date* (see full range of date/time possibilities below) |
-| `Select`, `RadioGroup` | *any* (depends on the values specified in the `items` prop, see below) |
-xx | `ColorInput` | *string* (8-digit hex color code) |
-| `FileInput` | *File* |
-
 #### TextInput, PasswordInput, NumberInput, RangeInput, Textarea
+
+*Note: out of the box, Textarea resizes automatically as needed. You can limit its maximum height by adding a `style` prop: e.g. `style={{ maxHeight: 100 }}`*
 
 * **style** *object?*: merged with the `input`/`textarea` style
 * **vertical** *boolean?*: [only for `RangeInput`]
+* *All other props are passed through to the `input` element*
 
 #### Checkbox
 
@@ -293,6 +295,10 @@ xx | `ColorInput` | *string* (8-digit hex color code) |
 * **styleLabel** *object?*: merged with the `label` style
 
 #### DateInput
+
+Shown below are some examples of DateInput, one of Giu's most versatile components: date/time/date-time modes, with or without drop-down pickers, inline pickers, custom accent color, digital/analogue time picker, disabled style... Not shown: keyboard navigation, clipboard events.
+
+![DateInput screenshots](https://raw.githubusercontent.com/guigrpa/giu/master/docs/DateInputs.png)
 
 * **type** *string(`onlyField`|`inlinePicker`|`dropDownPicker`)? =
   `dropDownPicker`*
@@ -313,6 +319,12 @@ xx | `ColorInput` | *string* (8-digit hex color code) |
 
 #### Select
 
+Shown below are some examples of Select and its features: `native` and custom (`inlinePicker`|`dropDownPicker`) versions, keyboard shortcuts, custom accent color, disabled style. Not shown: keyboard navigation, clipboard events, automatic scrolling.
+
+![Select screenshots](https://raw.githubusercontent.com/guigrpa/giu/master/docs/Selects2.png)
+
+*Recommendation: use `dropDownPicker` for performance, especially if you have hundreds/thousands of such components with many options: `native` Selects attach all of their `option` subelements to the page, whereas custom Selects only do that when the dropdown is shown.*
+
 * **type** *string(`native`|`inlinePicker`|`dropDownPicker`)? = `native`*
 * **items** *array(object)*: each item has the following attributes:
   - **value** *any*: any value that can be converted to JSON. Values should be unique
@@ -328,7 +340,7 @@ You can also include a separator between `items` by including the special
 
 ```js
 import { Select, LIST_SEPARATOR } from 'giu';
-<Select items={[
+<Select required items={[
   { value: 1, label: '1', keys: ['mod+1'] },
   { value: 2, label: '2', keys: ['mod+2'] },
   LIST_SEPARATOR,
@@ -355,6 +367,10 @@ Additional props for non-native Selects:
 
 #### ColorInput
 
+Shown below are some examples of ColorInput and its features: inline and drop-down versions, RGB and HSV pickers, transparency slider, custom accent color, disabled style. Not shown: clipboard events.
+
+![ColorInput screenshots](https://raw.githubusercontent.com/guigrpa/giu/master/docs/ColorInputs.png)
+
 * **inlinePicker** *boolean?*: whether the complete color picker
   should be inlined (`true`) or appear as a dropdown when clicked
 * **onCloseFloat** *function?*
@@ -366,26 +382,179 @@ Additional props for non-native Selects:
   will be shown inside the button
 * **style** *object?*: will be merged with the outermost `span` element
 
-
 ## DropDownMenu
 
-TBW
+![DropDownMenu screenshots](https://raw.githubusercontent.com/guigrpa/giu/master/docs/DropDownMenu.png)
+
+* **items** *array(object)*: menu items, similar to [Select](#select)
+  but with the inclusion of an `onClick` callback:
+  - **value** *any*: any value that can be converted to JSON. Values should be unique
+  - **label** *string*: descriptive string that will be shown to the user
+  - **keys** *array(string)?*: keyboard shortcuts for this option, e.g.
+    `mod+a` (= `cmd+a` in OS X, `ctrl+a` in Windows), `alt+backspace`, `shift+up`...
+  - **onClick** *function?*: called when the item is clicked with the event as argument
+* **children** *any*: React elements that will be shown as the menu's title
+* **onClickItem** *function?*: called when an item is clicked
+  with the following arguments:
+  - **ev** *object*: `click` event
+  - **value** *any*: the item's `value` (as specified in the `items` prop)
+* **style** *object?*: will be merged with the menu title's `div` wrapper
+* **accentColor** *string?*: CSS color descriptor (e.g. `darkgray`, `#ccffaa`...)
+* *All other props are passed through to the Select input component*
 
 ## Modals
 
-TBW
+![Modal screenshots](https://raw.githubusercontent.com/guigrpa/giu/master/docs/Modal.png)
+
+**Include the `<Modals />` component at (or near)
+the root level of your React tree**. No props are required.
+Here's an example on how you would open and close a modal:
+
+```js
+import { modalPush, modalPop, Button } from 'giu';
+class ModalExample extends React.Component {
+  render() {
+    return <Button onClick={() => this.deleteItem()}>Delete item</Button>
+  }
+
+  deleteItem() {
+    const children = 'Are you sure you want to delete this item?';
+    const deleteItem = () => { alert('deleted!'); modalPop(); }
+    const buttons = [
+      { label: 'Close', onClick: modalPop, defaultButton: true },
+      { label: 'Delete', onClick: deleteItem },
+    ];
+    modalPush({ children, buttons, onEsc: modalPop });
+  }
+}
+```
+
+API reference:
+
+* **modalPush()**: creates a modal and pushes it on top of the stack:
+  - **pars** *object*: modal parameters:
+    * **title** *string?*: modal title displayed to the user
+    * **children** *any?*: body of the modal
+    * **buttons** *array(object)?*: button objects:
+      - **left** *boolean? = false*: align button left instead of right
+      - **label** *string*: button text
+      - **onClick** *function*: `click` handler for the button
+      - **defaultButton** *boolean?*: will be highlighted and
+        automatically selected when RETURN is pressed
+    * **onClickBackdrop** *function?*: called when the backdrop
+      (semi-transparent layer highlighting the modal in fron of other
+      page contents) is clicked
+    * **onEsc** *function?*: called when ESC is pressed
+    * **style** *object?*: merge with the modal's `div` style, e.g. to
+      fix a modal width
+* **modalPop()**: removes the modal currently at the top of the stack
 
 ## Notifications
 
-TBW
+![Notifications screenshots](https://raw.githubusercontent.com/guigrpa/giu/master/docs/Notification.png)
 
-## Floats
+**Include the `<Notifications />` component at (or near)
+the root level of your React tree**. No props are required.
+Here's an example on how you would create a notification:
 
-TBW
+```js
+import { notify, Button } from 'giu';
+const NotifExample = () =>
+  <Button onClick={() => notify({ msg: 'Idea!', icon: 'lightbulb-o' })}>
+    Inspire me!
+  </Button>;
+```
 
-## Hints
+API reference:
 
-TBW
+* **notify()**: creates a notification:
+  - **pars** *object*: notification parameters:
+    + **sticky** *boolean?*: never delete this notification
+    + **timeOut** *number? = 4000*: time [ms] after which it's deleted
+    + **type** *string(`info`|`success`|`warn`|`error`)? = `info`*
+    + **icon** *string? = `exclamation`*
+    + **iconSpin** *boolean?*
+    + **title** *string?*: highlighted text at the top of the notification
+    + **msg** *string*: notification text
+    + **onClick** *function?*: `click` handler
+    + **style** *object?*: merged with the outermost `div` style
+  - **Returns** *string*: notification ID
+* **notifRetain()**: marks a notification as retained
+  (it will not be automatically deleted, even if it's `sticky`):
+  - **id** *string*: ID of the notification to be marked as retained
+* **notifDelete()**: deletes a notification:
+  - **id** *string*: ID of the notification to be deleted
+* **notifDeleteByName()**: deletes a notification:
+  - **name** *string*: name of the notification to be deleted
+
+## Hint screens
+
+Hint screens give tips on how to use your application, through
+a combination of labels (icons, images, text) and dynamically-positioned
+arrows. You can show hint screens, for example, when the user reaches a
+certain part of your application or performs an action for the first time.
+
+![Hint screen screenshots](https://raw.githubusercontent.com/guigrpa/giu/master/docs/Hints.png)
+
+**Include the `<Hints />` component at (or near)
+the root level of your React tree**. No props are required.
+Here's an example on how you would define a hint screen and show it
+afterwards:
+
+```js
+import { hintShow, Button } from 'giu';
+class HintExample extends React.Component {
+  componentWillMount() {
+    hintDefine('hintExample', {
+      labels: [{
+        x: 200, y: 50,
+        children: <span>A label with an icon <Icon icon="ambulance" /></span>,
+      }],
+      arrows: [{
+        from: { x: 200, y: 50 }, to: { x: 50, y: 50 }, counterclockwise: true,
+      }],
+    });
+  }
+
+  render() {
+    <Button onClick={() => hintShow('hintExample')}>Show hint</Button>
+  }
+}
+```
+
+The first time you click on the button, the hint screen will appear.
+After that, the `hintExample` screen will be disabled (unless `hintReset()`
+is called or the `force` argument of `hintShow()` is used, see below).
+The list of disabled hint screens is stored in LocalStorage.
+
+API reference:
+
+* **hintDefine()**: defines a hint screen:
+  - **id** *string*: ID of the hint to be created
+  - **pars** *object*: hint parameters:
+    + **arrows** *array(object)|function?**: either an array of arrow objects,
+      or a function returning such an array (for dynamic positioning).
+      Arrow objects have these attributes:
+      - **from** *object*: coordinates, e.g. `{ x: 5, y: 10 }`
+      - **to** *object*: coordinates
+      - **counterclockwise** *boolean*
+    + **labels** *array(object)|function?**: either an array of label objects,
+      or a function returning such an array (for dynamic positioning).
+      Arrow objects have these attributes:
+      - **x** and **y** *number*: coordinates
+      - **align** *string(`left`|`center`|`right`)? = `left`*
+      - **children** *any*: React elements that comprise the label
+    + **closeLabel** *string? = `Got it!`*: label of the close button
+    + **onClose** *function?*: called when the hint screen is closed
+* **hintDisableAll()**: disables all hints
+* **hintReset()**: clears the list of disabled hints
+* **hintShow()**: shows a hint
+  - **id** *string*: ID of the hint to be shown
+  - **force** *boolean?*: if not enabled, the hint will only be shown if
+    hints are enabled (no previous call to `hintDisableAll()` and it has not
+    already been shown)
+* **hintHide()**: hides the currently shown hint, if any
+
 
 ## Tiny little things
 
@@ -426,7 +595,9 @@ that kind of thing.
 ### Progress
 
 A wrapper for the native HTML `progress` element (with 100% width).
-*All props are passed through to the `progress` element*
+*All props are passed through to the `progress` element.
+Remember that an indeterminate progress bar will be shown if you
+don't specify the `value` prop (native HTML behaviour).*
 
 
 ## Higher-order components (HOCs)
@@ -474,14 +645,10 @@ Additional props passed to the base component:
 * **onHoverStop** *function*: `onMouseLeave` event handler you can attach to
   your target DOM elements
 
-### Input HOC
-
-TBW
-
 
 ## Helpers
 
-You can find here a wide variety of helper functions, from very simple ones (`cancelEvent()`, `flexContainer()`) to relatively complex (`scrollIntoView()`). This is just an opinionated collection of hopefully useful bits and pieces for building React components.
+You can find here a wide variety of helper functions, from the very simple (`cancelEvent()`, `flexContainer()`) to the relatively complex (`scrollIntoView()`). This is just an opinionated collection of hopefully useful bits and pieces for building React components.
 
 ### DOM node visibility helpers
 
@@ -497,10 +664,10 @@ in the browser window.
 
 **scrollIntoView()**
 
-Scrolls the node's ancestors so that a node is fully visible
+Scrolls the node's ancestors as needed in order to make a node fully visible
 in the browser window (or at least most of it, if it is too large).
 Implemented as a recursive algorithm that is first run
-for vertical scrolling, then in the horizontal direction.
+vertically and then horizontally.
 
 * **node** *object?*: DOM node
 * **options** *object? = {}*: the following options are allowed:

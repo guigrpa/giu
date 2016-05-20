@@ -46,16 +46,24 @@ const specs = {
   scripts: {
 
     // Top-level
-    start:                      'babel-node examples/server',
+    start:                      'cross-env NODE_ENV=production babel-node examples/server',
+    startDev:                   'babel-node examples/server',
     compile:                    runMultiple([
+                                  'node package',
                                   'rm -rf ./lib ./libEs6',
                                   'babel -d lib src',
-                                  // 'cp -r src libEs6'
+                                  'cp src/*.css lib',
+                                  'cp src/components/*.css lib/components',
+                                  'cp src/inputs/*.css lib/inputs',
+                                  'cp -r src/fonts lib/fonts',
+                                  'cp -r src libEs6',
                                 ]),
     docs:                       'extract-docs --template docs/templates/README.md --output README.md',
+    buildExample:               'cross-env NODE_ENV=production webpack -p --config examples/webpackConfig.js --progress --display-chunks',
     build:                      runMultiple([
                                   'npm run lint',
                                   'npm run compile',
+                                  'npm run buildExample',
                                   // 'npm run test',
                                   'npm run docs',
                                 ]),

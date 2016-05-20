@@ -335,7 +335,7 @@ class ModalExample extends React.Component {
           errorZ={52}
         />
         <DateInput
-          placeholder="date"
+          placeholder="date of birth"
           floatZ={55}
           errors={["Must be non-null"]}
         />
@@ -359,7 +359,7 @@ class ModalExample extends React.Component {
           errorZ={52}
         />{' '}
         <DateInput
-          placeholder="date"
+          placeholder="date of birth"
           floatZ={55}
           errors={["Must be non-null"]}
         />
@@ -472,8 +472,8 @@ class HintExample extends React.Component {
     const close = () => this.setState({ fEmbeddedHint: false });
     const arrows = () => {
       const out = [
-        { from: {x: 300, y: 30}, to: {x: 400, y: 60} },
-        { from: {x: 450, y: 120}, to: {x: 700, y: 140}, counterclockwise: true },
+        { from: {x: 300, y: 30}, to: {x: 420, y: 60} },
+        { from: {x: 550, y: 120}, to: {x: 700, y: 140}, counterclockwise: true },
       ];
       const ref = this.refs.buttonEmbedHint;
       if (ref) {
@@ -493,7 +493,7 @@ class HintExample extends React.Component {
           x: 300, y: 30, align: 'right',
           children: <span>A right-aligned label with an icon: <Icon icon="ambulance" /></span>
         }, {
-          x: 400, y: 60, align: 'center',
+          x: 500, y: 60, align: 'center',
           children: <span>A <span style={{color: 'yellow'}}>center-aligned</span> label</span>
         }, {
           x: 700, y: 80,
