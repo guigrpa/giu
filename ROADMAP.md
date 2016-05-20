@@ -74,9 +74,10 @@
 - [ ] Documentation:
     + [x] Reference
     + [ ] Long demo with explanations
+- [ ] **Bug** Esc on component with dropdown within Modal should close the dropdown, not the modal
 - [ ] Test as a user, in particular DateInputs with i18n. Screenshot and add to ref.
 - [ ] Check installation with:
-    + [ ] Webpack
+    + [x] Webpack
     + [ ] Without Webpack!
 - [ ] Basic tests with enzyme? Floats, modals, etc. are bound to be tricky
 

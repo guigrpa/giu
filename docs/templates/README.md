@@ -33,7 +33,27 @@ $ npm install --save-dev giu
 
 Make sure you also install the required `peerDependencies` ([*react*](https://github.com/facebook/react), [*react-addons-pure-render-mixin*](https://www.npmjs.com/package/react-addons-pure-render-mixin) and [*moment*](https://github.com/moment/moment)).
 
-Installation note: Why is *moment* part of `peerDependencies` and not `dependencies`? For i18n reasons: we want to make sure the user's `moment` object and the one used internally by Giu are exactly the same, so that `DateInput`'s strings and other locale-specific attributes (e.g. first day of the week) are shown correctly. If the version specified by the user and by Giu were incompatible, we would end up with two different `moment` objects.
+Installation notes: 
+
+* Many Giu components (including all inputs) require that you **include the `<Floats />` component at (or near) the root level of your React tree**. No props are required. If you forget it, you'll see a warning in the console and the components will not work correctly.
+
+* Why is *moment* part of `peerDependencies` and not `dependencies`? For i18n reasons: we want to make sure the user's `moment` object and the one used internally by Giu are exactly the same, so that `DateInput`'s strings and other locale-specific attributes (e.g. first day of the week) are shown correctly. If the version specified by the user and by Giu were incompatible, we would end up with two different `moment` objects.
+
+* *Moment* drags into your production bundle a lot of i18n resources which you probably don't need. Whitelist the languages bundled by Webpack doing something like this (webpack.config.js):
+
+```js
+const MOMENT_LANGS = ['en-gb', 'ca', 'es', 'de'];
+module.exports = {
+  // ...
+  plugins: [
+    // ..
+    new webpack.ContextReplacementPlugin(
+      /moment[\\\/]locale$/,
+      new RegExp(`.[\\\/](${MOMENT_LANGS.join('|')})`)
+    ),
+  ],
+}
+```
 
 ## Inputs
 
@@ -234,7 +254,7 @@ Tasks 2 and 3 above are managed via a *pseudo-imperative* API, the `cmds` prop, 
     * **onFocus** *function?*
     * **onBlur** *function?*
     * **disabled** *boolean?*: prevents the input from being interacted with; also affects styles
-    * **cmds** *array(object)?*: see [Imperative API](imperative-api)
+    * **cmds** *array(object)?*: see [Imperative API](#imperative-api)
 * Validation-related (see also [input validation](#input-validation)):
     * **required** *boolean?*: synonym for the `isRequired()` validator
     * **validators** *array(object|function)?*: objects are used for predefined validators, whereas functions are used for custom ones
@@ -266,6 +286,10 @@ Tasks 2 and 3 above are managed via a *pseudo-imperative* API, the `cmds` prop, 
 Shown below are some examples of DateInput, one of Giu's most versatile components: date/time/date-time modes, with or without drop-down pickers, inline pickers, custom accent color, digital/analogue time picker, disabled style... Not shown: keyboard navigation, clipboard events.
 
 ![DateInput screenshots](https://raw.githubusercontent.com/guigrpa/giu/master/docs/DateInputs.png)
+
+If you use [*moment*](https://github.com/moment/moment), your date picker and date/time formats will be automatically translated when you choose a different locale, e.g. `moment.locale('es')`:
+
+![Translated date picker](https://raw.githubusercontent.com/guigrpa/giu/master/docs/DateInput-i18n.png)
 
 [[[./src/inputs/dateInput.js]]]
 

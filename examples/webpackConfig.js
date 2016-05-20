@@ -7,6 +7,8 @@ const _entry = (entry) => [
   entry,
 ];
 
+const MOMENT_LANGS = ['en-gb', 'ca', 'es', 'de'];
+
 module.exports = {
 
   // -------------------------------------------------
@@ -44,6 +46,10 @@ module.exports = {
     new webpack.DefinePlugin({
       'process.env.NODE_ENV': JSON.stringify(fProduction ? 'production' : 'development'),
     }),
+    new webpack.ContextReplacementPlugin(
+      /moment[\\\/]locale$/,
+      new RegExp(`.[\\\/](${MOMENT_LANGS.join('|')})`)
+    ),
   ],
 
   module: {
