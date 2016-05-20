@@ -315,7 +315,7 @@ Shown below are some examples of Select and its features: `native` and custom (`
 
 ![Select screenshots](https://raw.githubusercontent.com/guigrpa/giu/master/docs/Selects2.png)
 
-*Recommendation: use `dropDownPicker` for performance, especially if you have hundreds/thousands of such components with many options: `native` Selects attach all of their `option` subelements to the page, whereas custom Selects only do that when the dropdown is shown.*
+*Recommendation: use `dropDownPicker` for performance, especially if you have hundreds/thousands of Selects with many options: `native` Selects attach all of their `option` subelements to the page, whereas custom Selects only do that when the dropdown is shown.*
 
 * **type** *string(`native`|`inlinePicker`|`dropDownPicker`)? = `native`*
 * **items** *array(object)*: each item has the following attributes:

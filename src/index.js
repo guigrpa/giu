@@ -1,8 +1,8 @@
 /*!
  * Giu
- * 
+ *
  * An opinionated Swiss-army knife for building React application GUIs.
- * 
+ *
  * @copyright Guillermo Grau Panea 2016
  * @license MIT
  */
