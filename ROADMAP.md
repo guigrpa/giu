@@ -76,8 +76,7 @@
     + [ ] Long demo with explanations
 - [ ] Test as a user, in particular DateInputs with i18n. Screenshot and add to ref.
 - [ ] Check installation with:
-    + [ ] Webpack 1
-    + [ ] Webpack 2
+    + [ ] Webpack
     + [ ] Without Webpack!
 - [ ] Basic tests with enzyme? Floats, modals, etc. are bound to be tricky
 

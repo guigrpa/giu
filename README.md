@@ -6,10 +6,6 @@ Online demos: [an extremely compact one](https://giu-dziantuohl.now.sh/)
 
 ## Why?
 
-TBW: General screenshot?
-TBW: Online demo: examples.js (now?)
-
-- A use-what-you-need philosophy, especially if you use the ES6 sources and Webpack 2 (with *tree shaking*)
 - Improvements over native HTML inputs: (optional) [state delegation](#inputs), [comprehensive validation](#input-validation), [native JS types and nullability](#input-value-types).
 - Support for i18n: error messages, date inputs, etc.
 - Love for detail:
@@ -37,11 +33,7 @@ $ npm install --save-dev giu
 
 Make sure you also install the required `peerDependencies` ([*react*](https://github.com/facebook/react), [*react-addons-pure-render-mixin*](https://www.npmjs.com/package/react-addons-pure-render-mixin) and [*moment*](https://github.com/moment/moment)).
 
-Installation notes: 
-
-* *moment* will not be included in your production bundle if you don't use `DateInput` and set up *webpack*'s' [*tree shaking*](http://www.2ality.com/2015/12/webpack-tree-shaking.html). However, it should be installed since *webpack* will look for it in development mode.
-
-* Why is *moment* part of `peerDependencies` and not `dependencies`? For i18n reasons: we want to make sure the user's `moment` object and the one used internally by Giu are exactly the same, so that `DateInput`'s strings and other locale-specific attributes (e.g. first day of the week) are shown correctly. If the version specified by the user and by Giu were incompatible, we would end up with two different `moment` objects.
+Installation note: Why is *moment* part of `peerDependencies` and not `dependencies`? For i18n reasons: we want to make sure the user's `moment` object and the one used internally by Giu are exactly the same, so that `DateInput`'s strings and other locale-specific attributes (e.g. first day of the week) are shown correctly. If the version specified by the user and by Giu were incompatible, we would end up with two different `moment` objects.
 
 ## Inputs
 

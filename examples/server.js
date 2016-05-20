@@ -10,7 +10,7 @@ const PORT = 8080;
 
 const expressApp = express();
 
-if (!process.env.NODE_ENV === 'production') {
+if (process.env.NODE_ENV !== 'production') {
   const compiler = webpack(webpackConfig);
   expressApp.use(webpackDevMiddleware(compiler, {
     noInfo: true,
