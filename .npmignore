@@ -15,6 +15,7 @@ node_modules
 *.sublime-workspace
 
 # Project-specific
+/examples/public
 
 
 # NPM-specific

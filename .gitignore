@@ -15,11 +15,13 @@ node_modules
 *.sublime-workspace
 
 # Project-specific
+/examples/public
 
 
 # GIT-specific
 # ------------
 # All projects
 /lib
+/libEs6
 
 # Project-specific
