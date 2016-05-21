@@ -721,7 +721,7 @@ class FormExample extends React.Component {
               items={NORMAL_OPTIONS}
               onChange={onChangeJson}
               styleOuter={flexItem(1, { marginRight: 4 })}
-              styleList={{height: 150}}
+              style={{height: 150}}
               accentColor="gray"
             />
             <Select type="inlinePicker"
@@ -729,20 +729,20 @@ class FormExample extends React.Component {
               value={33} onChange={onChangeJson}
               twoStageStyle 
               styleOuter={flexItem(1, { marginRight: 4 })}
-              styleList={{height: 150}}
+              style={{height: 150}}
               accentColor="lightGray"
             />
             <Select type="inlinePicker"
               items={[]}
               onChange={onChangeJson}
               styleOuter={flexItem(1, { marginRight: 4 })}
-              styleList={{height: 150}}
+              style={{height: 150}}
             />
             <Select type="inlinePicker" disabled
               items={TALL_OPTIONS}
               value={33} onChange={onChangeJson}
               styleOuter={flexItem(1)}
-              styleList={{height: 150}}
+              style={{height: 150}}
               accentColor="lightGray"
             />
           </div>

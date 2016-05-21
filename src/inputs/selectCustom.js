@@ -53,7 +53,7 @@ class SelectCustomBase extends React.Component {
     floatPosition:          React.PropTypes.string,
     floatAlign:             React.PropTypes.string,
     floatZ:                 React.PropTypes.number,
-    styleList:              React.PropTypes.object,
+    style:                  React.PropTypes.object,
     twoStageStyle:          React.PropTypes.bool,
     accentColor:            React.PropTypes.string,
     // Input HOC
@@ -193,7 +193,7 @@ class SelectCustomBase extends React.Component {
       registerOuterRef,
       curValue, onChange,
       disabled, fFocused,
-      styleList,
+      style: styleList,
       twoStageStyle, accentColor,
     } = this.props;
     return (

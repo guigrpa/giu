@@ -19,6 +19,7 @@ class SelectNative extends React.Component {
     items:                  React.PropTypes.array.isRequired,
     required:               React.PropTypes.bool,
     disabled:               React.PropTypes.bool,
+    style:                  React.PropTypes.object,
     // Input HOC
     curValue:               React.PropTypes.string.isRequired,
     registerFocusableRef:   React.PropTypes.func.isRequired,
@@ -65,9 +66,10 @@ const style = {
     backgroundColor: 'default',
     border: 'default',
   }),
-  field: ({ disabled }) => {
+  field: ({ disabled, style: base }) => {
     let out = style.fieldBase;
     if (disabled) out = merge(out, INPUT_DISABLED);
+    out = merge(out, base);
     return out;
   },
 };

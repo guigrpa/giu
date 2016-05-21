@@ -350,6 +350,8 @@ Shown below are some examples of Select and its features: `native` and custom (`
     **Only supported in non-native Selects**
 * **required** *boolean?*: apart from its use for [validation](#input-validation),
   enabling this flag disables the addition of a `null` option to the `items` list
+* **style** *object?*: merged with the outermost `div` style (if `type` is `inlinePicker`),
+  or with the `input` style (if `type` is `native`)
 
 You can also include a separator between `items` by including the special
 `LIST_SEPARATOR` item (**only in non-native Selects**):
@@ -366,8 +368,6 @@ import { Select, LIST_SEPARATOR } from 'giu';
 ```
 
 Additional props for non-native Selects:
-* **styleList** *object?*: when `type === 'inlinePicker'`,
-  merged with the outermost `div` style
 * **twoStageStyle** *boolean?*: when enabled, two different visual styles are applied
   to an item depending on whether it is just *hovered* or also *selected*. If disabled,
   a single style is used to highlight the selected or the hovered item
