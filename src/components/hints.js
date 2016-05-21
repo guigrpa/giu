@@ -120,8 +120,10 @@ function reducer(state0 = INITIAL_STATE, action) {
       id = action.id;
       if (action.force ||
           (!state.fDisableAll && state.disabled.indexOf(id) < 0)) {
-        state = timmSet(state, 'disabled', state.disabled.concat(id));
         state = timmSet(state, 'shown', id);
+        if (state.disabled.indexOf(id) < 0) {
+          state = timmSet(state, 'disabled', state.disabled.concat(id));
+        }
       }
       break;
     case 'HINT_HIDE':
