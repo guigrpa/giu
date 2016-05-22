@@ -548,7 +548,7 @@ API reference:
 * **hintDefine()**: defines a hint screen:
   - **id** *string*: ID of the hint to be created
   - **pars** *object*: hint parameters:
-    + **elements** *array(object)|function?**: either an array of elements,
+    + **elements** *array(object)|function?*: either an array of elements,
       or a function returning such an element (for dynamic positioning).
       Elements have these attributes:
       - **type** *string(`LABEL`|`ARROW`)*
