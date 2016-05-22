@@ -71,11 +71,12 @@
 - [x] Add clipboard support -- *Unfortunately, native selects and native range/checkbox inputs do not work*
 - [x] Add style to dropdownmenu title
 - [x] Check embedded hint positioning!
-- [ ] Documentation:
-    + [x] Reference
-    + [ ] Long demo with explanations
+- [x] Reference docs
 - [x] **Breaking change** Hints: make it a single function that returns arrows and labels, *hint elements*
+- [ ] **Bug** Incorrect validation error colors. Save the value with error and compare against this to choose the displayed color, not against the original (external) value prop.
 - [ ] **Bug** Esc on component with dropdown within Modal should close the dropdown, not the modal
+- [ ] Use only onKeyDown. Correct ESC-RETURN key behaviour in components within modals
+- [ ] Long demo with explanations
 - [ ] Basic tests with enzyme? Floats, modals, etc. are bound to be tricky
 
 - [ ] Focus delegation?

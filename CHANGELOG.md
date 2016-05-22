@@ -1,5 +1,7 @@
 # Changelog
 
+* **Bugfix**: execute `FOCUS` and `BLUR` commands asynchronously, so that owner of Input component doesn't find a `null` ref in a `focus`/`blur` handler
+
 ## 0.4.0 (May. 22, 2013)
 
 * **Breaking**: Hints: merge `arrows` and `labels` props into a single `elements` prop.

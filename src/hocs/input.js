@@ -131,8 +131,14 @@ function input(ComposedComponent, {
         this.renderErrorFloat();
       }
       if (this.pendingFocusBlur) {
-        this[this.pendingFocusBlur]();
-        this.pendingFocusBlur = null;
+        // execute `FOCUS` and `BLUR` commands asynchronously, so that the owner
+        // of the Input component doesn't find a `null` ref in a `focus`/`blur` handler
+        setTimeout(() => {
+          if (!this.pendingFocusBlur) return;
+          if (!this[this.pendingFocusBlur]) return;
+          this[this.pendingFocusBlur]();
+          this.pendingFocusBlur = null;
+        });
       }
     }
 
