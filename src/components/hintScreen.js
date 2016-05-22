@@ -24,11 +24,7 @@ const FONT_FAMILY = '"Gloria Hallelujah", cursive';
 // In such a case, use `Hints` instead.
 class HintScreen extends React.Component {
   static propTypes = {
-    arrows:                 React.PropTypes.oneOfType([
-      React.PropTypes.array,
-      React.PropTypes.func,
-    ]),
-    labels:                 React.PropTypes.oneOfType([
+    elements:               React.PropTypes.oneOfType([
       React.PropTypes.array,
       React.PropTypes.func,
     ]),
@@ -37,6 +33,7 @@ class HintScreen extends React.Component {
     zIndex:                 React.PropTypes.number,
   };
   static defaultProps = {
+    elements:               [],
     closeLabel:             'Got it!',
     zIndex:                 MISC.zHintBase,
   }
@@ -45,13 +42,19 @@ class HintScreen extends React.Component {
     super(props);
     this.shouldComponentUpdate = PureRenderMixin.shouldComponentUpdate.bind(this);
     bindAll(this, [
+      'onResize',
     ]);
   }
+
+  componentDidMount() { window.addEventListener('resize', this.onResize); }
+  componentWillUnmount() { window.removeEventListener('resize', this.onResize); }
 
   // ==========================================
   // Render
   // ==========================================
   render() {
+    let { elements } = this.props;
+    if (typeof elements === 'function') elements = elements();
     return (
       <div
         className="giu-hint-screen"
@@ -60,8 +63,8 @@ class HintScreen extends React.Component {
       >
         { this.renderBackdrop() }
         <div style={style.contents}>
-          { this.renderArrows() }
-          { this.renderLabels() }
+          { this.renderArrows(elements) }
+          { this.renderLabels(elements) }
           { this.renderCloseButton() }
         </div>
       </div>
@@ -70,9 +73,8 @@ class HintScreen extends React.Component {
 
   renderBackdrop() { return <Backdrop style={style.backdrop} />; }
 
-  renderArrows() {
-    let { arrows } = this.props;
-    if (typeof arrows === 'function') arrows = arrows();
+  renderArrows(elements) {
+    const arrows = elements.filter(o => o.type === 'ARROW');
     if (!arrows || !arrows.length) return null;
     return (
       <svg style={style.svg}>
@@ -81,10 +83,9 @@ class HintScreen extends React.Component {
     );
   }
 
-  renderLabels() {
-    let { labels } = this.props;
-    if (typeof labels === 'function') labels = labels();
-    if (!labels) return null;
+  renderLabels(elements) {
+    const labels = elements.filter(o => o.type === 'LABEL');
+    if (!labels || !labels.length) return null;
     return labels.map((label, idx) => (
       <HintLabel key={idx}
         fontSize={FONT_SIZE}
@@ -97,6 +98,11 @@ class HintScreen extends React.Component {
     const { closeLabel } = this.props;
     return <div style={style.closeButton}>{closeLabel}</div>;
   }
+
+  // ==========================================
+  // Event handlers
+  // ==========================================
+  onResize() { this.forceUpdate(); }
 }
 
 

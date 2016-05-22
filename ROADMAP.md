@@ -74,7 +74,7 @@
 - [ ] Documentation:
     + [x] Reference
     + [ ] Long demo with explanations
-- [ ] **Breaking change** Hints: make it a single function that returns arrows and labels, *hint elements*
+- [x] **Breaking change** Hints: make it a single function that returns arrows and labels, *hint elements*
 - [ ] **Bug** Esc on component with dropdown within Modal should close the dropdown, not the modal
 - [ ] Basic tests with enzyme? Floats, modals, etc. are bound to be tricky
 

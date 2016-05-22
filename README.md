@@ -522,13 +522,13 @@ import { hintShow, Button } from 'giu';
 class HintExample extends React.Component {
   componentWillMount() {
     hintDefine('hintExample', {
-      labels: [{
-        x: 200, y: 50,
-        children: <span>A label with an icon <Icon icon="ambulance" /></span>,
-      }],
-      arrows: [{
-        from: { x: 200, y: 50 }, to: { x: 50, y: 50 }, counterclockwise: true,
-      }],
+      elements: [
+        {
+          type: 'LABEL', x: 200, y: 50,
+          children: <span>A label with an icon <Icon icon="ambulance" /></span>,
+        },
+        { type: 'ARROW', from: { x: 200, y: 50 }, to: { x: 50, y: 50 }, counterclockwise: true }
+      ],
     });
   }
 
@@ -548,18 +548,18 @@ API reference:
 * **hintDefine()**: defines a hint screen:
   - **id** *string*: ID of the hint to be created
   - **pars** *object*: hint parameters:
-    + **arrows** *array(object)|function?**: either an array of arrow objects,
-      or a function returning such an array (for dynamic positioning).
-      Arrow objects have these attributes:
-      - **from** *object*: coordinates, e.g. `{ x: 5, y: 10 }`
-      - **to** *object*: coordinates
-      - **counterclockwise** *boolean*
-    + **labels** *array(object)|function?**: either an array of label objects,
-      or a function returning such an array (for dynamic positioning).
-      Arrow objects have these attributes:
-      - **x** and **y** *number*: coordinates
-      - **align** *string(`left`|`center`|`right`)? = `left`*
-      - **children** *any*: React elements that comprise the label
+    + **elements** *array(object)|function?**: either an array of elements,
+      or a function returning such an element (for dynamic positioning).
+      Elements have these attributes:
+      - **type** *string(`LABEL`|`ARROW`)*
+      - Arrows:
+        - **from** *object*: coordinates, e.g. `{ x: 5, y: 10 }`
+        - **to** *object*: coordinates
+        - **counterclockwise** *boolean*
+      - Labels:
+        - **x** and **y** *number*: coordinates
+        - **align** *string(`left`|`center`|`right`)? = `left`*
+        - **children** *any*: React elements that comprise the label
     + **closeLabel** *string? = `Got it!`*: label of the close button
     + **onClose** *function?*: called when the hint screen is closed
 * **hintDisableAll()**: disables all hints

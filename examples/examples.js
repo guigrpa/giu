@@ -409,25 +409,20 @@ class HintExample extends React.Component {
 
   componentWillMount() {
     hintDefine('hintExample', {
-      labels: () => {
+      elements: () => {
         const out = [];
         const ref = this.refs.buttonShowHint;
         if (ref) {
           const bcr = ref.getBoundingClientRect();
+          const x = bcr.right + 90;
+          const y = bcr.top - 80;
           out.push({
-            x: bcr.right + 90, y: bcr.top - 80,
+            type: 'LABEL', x, y,
             children: 'Just shows a pre-defined hint (if not already shown)',
           });
-        }
-        return out;
-      },
-      arrows: () => {
-        const out = [];
-        const ref = this.refs.buttonShowHint;
-        if (ref) {
-          const bcr = ref.getBoundingClientRect();
           out.push({
-            from: { x: bcr.right + 90, y: bcr.top - 80 },
+            type: 'ARROW',
+            from: { x, y },
             to: { x: (bcr.left + bcr.right) / 2, y: bcr.top - 5 },
             counterclockwise: true,
           });
@@ -470,10 +465,20 @@ class HintExample extends React.Component {
 
   renderEmbeddedHint() {
     const close = () => this.setState({ fEmbeddedHint: false });
-    const arrows = () => {
+    const elements = () => {
       const out = [
-        { from: {x: 300, y: 30}, to: {x: 420, y: 60} },
-        { from: {x: 550, y: 120}, to: {x: 700, y: 140}, counterclockwise: true },
+        {
+          type: 'LABEL', x: 300, y: 30, align: 'right',
+          children: <span>A right-aligned label with an icon: <Icon icon="ambulance" /></span>,
+        }, {
+          type: 'LABEL', x: 500, y: 60, align: 'center',
+          children: <span>A <span style={{ color: 'yellow' }}>center-aligned</span> label</span>,
+        }, {
+          type: 'LABEL', x: 700, y: 80,
+          children: <span>A very, very, very, very, very, very, very, very long label</span>,
+        },
+        { type: 'ARROW', from: { x: 300, y: 30 }, to: { x: 420, y: 60 } },
+        { type: 'ARROW', from: { x: 550, y: 120 }, to: { x: 700, y: 140 }, counterclockwise: true },
       ];
       const ref = this.refs.buttonEmbedHint;
       if (ref) {
@@ -483,34 +488,15 @@ class HintExample extends React.Component {
           ? { x: bcr.right + 10, y }
           : { x: (bcr.left + bcr.right) / 2, y: bcr.bottom + 10 };
         const counterclockwise = y >= 130;
-        out.push({ from: { x: 160, y: Math.max(130, y) }, to, counterclockwise });
-      }
-      return out;
-    };
-    const labels = () => {
-      const out = [
-        { 
-          x: 300, y: 30, align: 'right',
-          children: <span>A right-aligned label with an icon: <Icon icon="ambulance" /></span>
-        }, {
-          x: 500, y: 60, align: 'center',
-          children: <span>A <span style={{color: 'yellow'}}>center-aligned</span> label</span>
-        }, {
-          x: 700, y: 80,
-          children: <span>A very, very, very, very, very, very, very, very long label</span>
-        }
-      ];
-      const ref = this.refs.buttonEmbedHint;
-      if (ref) {
-        const bcr = ref.getBoundingClientRect();
         out.push({
-          x: 160, y: Math.max(130, (bcr.top + bcr.bottom) / 2),
+          type: 'LABEL', x: 160, y: Math.max(130, (bcr.top + bcr.bottom) / 2),
           children: <span>This is <i>the</i> button</span>,
         });
+        out.push({ type: 'ARROW', from: { x: 160, y: Math.max(130, y) }, to, counterclockwise });
       }
       return out;
     };
-    return <HintScreen onClose={close} arrows={arrows} labels={labels} />;
+    return <HintScreen onClose={close} elements={elements} />;
   }
 
 }
