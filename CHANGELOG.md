@@ -1,7 +1,12 @@
 # Changelog
 
-* **Bugfix**: execute `FOCUS` and `BLUR` commands asynchronously, so that owner of Input component doesn't find a `null` ref in a `focus`/`blur` handler
-* **Bugfix**: correct validation error colors (compare against last validated value)
+## 0.4.1 (May. 22, 2013)
+
+* **Bugfix**: Execute `FOCUS` and `BLUR` commands asynchronously, so that owner of Input component doesn't find a `null` ref in a `focus`/`blur` handler.
+* **Bugfix**: Correct validation error colors (compare against last validated value).
+* **Bugfix**: Correct repositioning of error message floats when anchor resizes.
+* **Bugfix**: Correct pass/stop behaviour for ESC/RETURN keys within modals.
+* Add `stopPropagation()` helper function.
 
 ## 0.4.0 (May. 22, 2013)
 

@@ -764,6 +764,12 @@ Calls `preventDefault()` on the provided event.
 
 * **ev** *object?*: event for which default behaviour is to be prevented
 
+**stopPropagation()**
+
+Calls `stopPropagation()` on the provided event.
+
+* **ev** *object?*: event for which default behaviour is to be prevented
+
 **cancelBodyScrolling()**
 
 `onWheel` event handler that can be attached to a scroller DOM node,
