@@ -1,5 +1,8 @@
 # Changelog
 
+## 0.4.0 (May. 22, 2013)
+
+* **Breaking**: Hints: merge `arrows` and `labels` props into a single `elements` prop.
 * **Bugfix**: Hints: upon `hintShow()`, only add a hint screen to the disabled list if not already there.
 
 ## 0.3.1 (May. 21, 2013)
