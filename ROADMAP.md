@@ -78,8 +78,6 @@
 
 - [ ] Focus delegation?
 - [ ] Include native components for mobile? (e.g. `input type="date"`)
-- [ ] Pressing enter on button opening a modal also dismisses the modal!
-- [ ] Add alternative style to inputs (no borders, etc.) or make it simple to wrap the provided components and customise
 - [ ] Multi-selection ListPicker
 - [ ] Drag and drop
 - [ ] Include SVG font?
