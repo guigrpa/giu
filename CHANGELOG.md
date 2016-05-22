@@ -1,6 +1,7 @@
 # Changelog
 
 * **Bugfix**: execute `FOCUS` and `BLUR` commands asynchronously, so that owner of Input component doesn't find a `null` ref in a `focus`/`blur` handler
+* **Bugfix**: correct validation error colors (compare against last validated value)
 
 ## 0.4.0 (May. 22, 2013)
 

@@ -85,6 +85,7 @@ function input(ComposedComponent, {
         fFocused: false,
         keyDown: null,
         validationErrors: [],
+        lastValidatedValue: toInternalValue(props.value, props),
       };
       bindAll(this, [
         'registerOuterRef',
@@ -276,9 +277,9 @@ function input(ComposedComponent, {
     }
 
     renderErrors(errors) {
-      const { value } = this.props;
-      const extCurValue = this.toExternalValue(this.state.curValue, this.props);
-      const fModified = value != null ? (extCurValue !== value) : (extCurValue != null);
+      const { curValue, lastValidatedValue } = this.state;
+      let fModified = false;
+      if (curValue != null) fModified = curValue !== lastValidatedValue;
       return (
         <div style={style.errors(fModified)}>
           {errors.join(' | ')}
@@ -406,7 +407,10 @@ function input(ComposedComponent, {
       // When all promises have resolved, changed the current state
       return Promise.all(pErrors).then(validationErrors0 => {
         const validationErrors = validationErrors0.filter(o => o != null);
-        this && this.setState && this.setState({ validationErrors });
+        this && this.setState && this.setState({
+          validationErrors,
+          lastValidatedValue: internalValue,
+        });
         if (validationErrors.length) {
           const exception = new Error('VALIDATION_ERROR');
           exception.errors = validationErrors;

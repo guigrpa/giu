@@ -73,7 +73,7 @@
 - [x] Check embedded hint positioning!
 - [x] Reference docs
 - [x] **Breaking change** Hints: make it a single function that returns arrows and labels, *hint elements*
-- [ ] **Bug** Incorrect validation error colors. Save the value with error and compare against this to choose the displayed color, not against the original (external) value prop.
+- [x] **Bug** Correct validation error colors. Save the value with error and compare against this to choose the displayed color, not against the original (external) value prop.
 - [ ] **Bug** Esc on component with dropdown within Modal should close the dropdown, not the modal
 - [ ] Use only onKeyDown. Correct ESC-RETURN key behaviour in components within modals
 - [ ] Long demo with explanations
