@@ -1,10 +1,16 @@
 import React                from 'react';
 import { omit, merge }      from 'timm';
-import { bindAll }          from '../gral/helpers';
+import {
+  bindAll,
+  preventDefault, stopPropagation,
+}                           from '../gral/helpers';
 import { KEYS }             from '../gral/constants';
 import {
   inputReset, INPUT_DISABLED,
 }                           from '../gral/styles';
+import {
+  isAnyModifierPressed,
+}                           from '../gral/keys';
 import input                from '../hocs/input';
 
 const NULL_VALUE = '';
@@ -40,7 +46,7 @@ class Textarea extends React.Component {
     bindAll(this, [
       'registerInputRef',
       'resize',
-      'onKeyUp',
+      'onKeyDown',
     ]);
   }
 
@@ -75,7 +81,7 @@ class Textarea extends React.Component {
         </div>
         <textarea ref={this.registerInputRef}
           value={curValue}
-          onKeyUp={this.onKeyUp}
+          onKeyDown={this.onKeyDown}
           style={style.field(this.props)}
           tabIndex={disabled ? -1 : undefined}
           {...otherProps}
@@ -98,7 +104,17 @@ class Textarea extends React.Component {
     if (this.props.onResizeOuter) this.props.onResizeOuter();
   }
 
-  onKeyUp(ev) { if (ev.which === KEYS.return) ev.stopPropagation(); }
+  // shift-enter should not insert a new line (it should be bubbled up);
+  // enter (with no modifier) should insert a new line (and not bubble)
+  onKeyDown(ev) {
+    if (ev.which === KEYS.return) {
+      if (isAnyModifierPressed(ev)) {
+        preventDefault(ev);
+      } else {
+        stopPropagation(ev);
+      }
+    }
+  }
 }
 
 // ==========================================

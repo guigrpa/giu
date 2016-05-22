@@ -79,7 +79,7 @@ class Modal extends React.Component {
     super(props);
     this.shouldComponentUpdate = PureRenderMixin.shouldComponentUpdate.bind(this);
     bindAll(this, [
-      'onKeyUp',
+      'onKeyDown',
       'onClickOuter',
     ]);
   }
@@ -97,7 +97,7 @@ class Modal extends React.Component {
       <div
         className="giu-modal"
         id={this.props.id}
-        onKeyUp={this.onKeyUp}
+        onKeyDown={this.onKeyDown}
         onClick={this.onClickOuter}
         style={style.outer(this.props.zIndex)}
       >
@@ -172,7 +172,7 @@ class Modal extends React.Component {
   // ==========================================
   // Handlers
   // ==========================================
-  onKeyUp(ev) {
+  onKeyDown(ev) {
     const { which } = ev;
     let buttons;
     switch (which) {
@@ -189,10 +189,15 @@ class Modal extends React.Component {
           }
         }
         break;
+      case KEYS.pageUp:
+      case KEYS.pageDown:
+      case KEYS.home:
+      case KEYS.end:
+        cancelEvent(ev);
+        break;
       default:
         break;
     }
-    cancelEvent(ev);
   }
 
   // Except when clicking on an embedded focusable node, refocus on this modal
