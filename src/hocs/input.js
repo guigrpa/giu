@@ -17,6 +17,7 @@ import {
   floatAdd,
   floatDelete,
   floatUpdate,
+  floatReposition,
   warnFloats,
 }                           from '../components/floats';
 import FocusCapture         from '../components/focusCapture';
@@ -204,7 +205,7 @@ function input(ComposedComponent, {
           onCopy={fIncludeClipboardProps ? this.onCopyCut : undefined}
           onCut={fIncludeClipboardProps ? this.onCopyCut : undefined}
           onPaste={fIncludeClipboardProps ? this.onPaste : undefined}
-          onResizeOuter={this.renderErrorFloat}
+          onResizeOuter={floatReposition}
           styleOuter={fIncludeFocusCapture ? undefined : this.props.styleOuter}
         />
       );
