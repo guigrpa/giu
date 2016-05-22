@@ -38,6 +38,16 @@ function preventDefault(ev) {
   ev.preventDefault && ev.preventDefault();
 }
 
+// -- **stopPropagation()**
+// --
+// -- Calls `stopPropagation()` on the provided event.
+// --
+// -- * **ev** *object?*: event for which default behaviour is to be prevented
+function stopPropagation(ev) {
+  if (!ev) return;
+  ev.stopPropagation && ev.stopPropagation();
+}
+
 // -- **cancelBodyScrolling()**
 // --
 // -- `onWheel` event handler that can be attached to a scroller DOM node,
@@ -96,7 +106,7 @@ function windowWidthWithoutScrollbar() {
 // ==========================================
 export {
   bindAll,
-  cancelEvent, preventDefault,
+  cancelEvent, preventDefault, stopPropagation,
   cancelBodyScrolling,
   windowBottomScrollbarHeight, windowRightScrollbarWidth,
   windowHeightWithoutScrollbar, windowWidthWithoutScrollbar,

@@ -77,11 +77,14 @@ export {
 // Other
 export {
   bindAll,
-  cancelEvent, preventDefault,
+  cancelEvent, preventDefault, stopPropagation,
   cancelBodyScrolling,
   windowHeightWithoutScrollbar, windowWidthWithoutScrollbar,
 }                         from './gral/helpers';
 export *                  from './gral/validators';
+export {
+  isAnyModifierPressed,
+}                         from './gral/keys';
 export {
   isVisible,
   scrollIntoView,

@@ -54,6 +54,10 @@ function registerShortcut(shortcut, cb) {
 
 function unregisterShortcut(shortcut) { delete shortcuts[shortcut.hash]; }
 
+function isAnyModifierPressed(ev) {
+  return ev.altKey || ev.metaKey || ev.ctrlKey || ev.shiftKey;
+}
+
 function onKeyDown(ev) {
   const hash = getHash(ev);
   const shortcut = shortcuts[hash];
@@ -70,4 +74,5 @@ export {
   createShortcut,
   registerShortcut,
   unregisterShortcut,
+  isAnyModifierPressed,
 };
