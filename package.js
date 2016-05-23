@@ -66,6 +66,7 @@ const specs = {
                                   'npm run buildExample',
                                   // 'npm run test',
                                   'npm run docs',
+                                  'npm run xxl',
                                 ]),
     travis:                     runMultiple([
                                   'npm run compile',
@@ -74,6 +75,7 @@ const specs = {
 
     // Static analysis
     lint:                       'eslint src',
+    xxl:                        "xxl --src \"[\\\"src\\\"]\"",
 
     // Testing - general
     test:                       'npm run testCovFull',
@@ -130,6 +132,7 @@ const specs = {
   devDependencies: {
     storyboard: '^1.0.0',
     'extract-docs': '^1.0.0',
+    'xxl': '^0.1.0',
     'cross-env': '^1.0.7',
 
     moment: '^2.0.0',

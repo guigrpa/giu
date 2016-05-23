@@ -26,9 +26,10 @@
     "compile": "node package && rm -rf ./lib ./libEs6 && babel -d lib src && cp src/*.css lib && cp src/components/*.css lib/components && cp src/inputs/*.css lib/inputs && cp -r src/fonts lib/fonts && cp -r src libEs6",
     "docs": "extract-docs --template docs/templates/README.md --output README.md",
     "buildExample": "cross-env NODE_ENV=production webpack -p --config examples/webpackConfig.js --progress --display-chunks",
-    "build": "npm run lint && npm run compile && npm run buildExample && npm run docs",
+    "build": "npm run lint && npm run compile && npm run buildExample && npm run docs && npm run xxl",
     "travis": "npm run compile",
     "lint": "eslint src",
+    "xxl": "xxl --src \"[\\\"src\\\"]\"",
     "test": "npm run testCovFull",
     "testCovFull": "npm run testCovPrepare && npm run testDev && npm run testProd && npm run testCovReport",
     "testCovFast": "npm run testCovPrepare && npm run testDev && npm run testCovReport",
@@ -83,7 +84,8 @@
     "style-loader": "0.13.1",
     "webpack": "1.13.0",
     "webpack-dev-middleware": "1.6.1",
-    "webpack-hot-middleware": "2.10.0"
+    "webpack-hot-middleware": "2.10.0",
+    "xxl": "^0.1.0"
   },
   "ava": {
     "files": [
