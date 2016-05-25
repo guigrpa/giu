@@ -126,6 +126,7 @@ const style = {
   },
   fieldBase: inputReset({
     width: '100%',
+    height: 1, // initial value; for sure < than the placeholder
     overflow: 'hidden',
     cursor: 'beam',
     resize: 'none',

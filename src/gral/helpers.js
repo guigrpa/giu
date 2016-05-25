@@ -68,22 +68,20 @@ function cancelBodyScrolling(ev) {
 // Widths, heights...
 // ==========================================
 function windowBottomScrollbarHeight() {
-  let out;
-  if (document.body.scrollWidth > window.innerWidth) {
-    out = getScrollbarWidth();
-  } else {
-    out = 0;
-  }
+  let out = 0;
+  // May be SSR, hence try
+  try {
+    if (document.body.scrollWidth > window.innerWidth) out = getScrollbarWidth();
+  } catch (err) { /* ignore */ }
   return out;
 }
 
 function windowRightScrollbarWidth() {
-  let out;
-  if (document.body.scrollHeight > window.innerHeight) {
-    out = getScrollbarWidth();
-  } else {
-    out = 0;
-  }
+  let out = 0;
+  // May be SSR, hence try
+  try {
+    if (document.body.scrollHeight > window.innerHeight) out = getScrollbarWidth();
+  } catch (err) { /* ignore */ }
   return out;
 }
 
@@ -94,11 +92,21 @@ function windowRightScrollbarWidth() {
 // --
 // -- * **Returns** *number*: inner height (width) in pixels
 function windowHeightWithoutScrollbar() {
-  return window.innerHeight - windowBottomScrollbarHeight();
+  // May be SSR, hence try
+  try {
+    return window.innerHeight - windowBottomScrollbarHeight();
+  } catch (err) {
+    return 600;
+  }
 }
 
 function windowWidthWithoutScrollbar() {
-  return window.innerWidth - windowRightScrollbarWidth();
+  // May be SSR, hence try
+  try {
+    return window.innerWidth - windowRightScrollbarWidth();
+  } catch (err) {
+    return 600;
+  }
 }
 
 // ==========================================

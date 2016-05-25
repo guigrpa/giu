@@ -102,10 +102,13 @@ const GLOW = {
 // --
 // -- * **styles** *string*: CSS styles to be added to the page
 function addStylesToPage(styles) {
-  const el = document.createElement('style');
-  el.type = 'text/css';
-  el.innerHTML = styles;
-  document.getElementsByTagName('head')[0].appendChild(el);
+  // May be SSR, hence try
+  try {
+    const el = document.createElement('style');
+    el.type = 'text/css';
+    el.innerHTML = styles;
+    document.getElementsByTagName('head')[0].appendChild(el);
+  } catch (err) { /* ignore */ }
 }
 
 export {

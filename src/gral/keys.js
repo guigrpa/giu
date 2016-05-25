@@ -2,7 +2,11 @@ import keycode              from 'keycode';
 import { UNICODE }          from '../gral/constants';
 import { cancelEvent }      from '../gral/helpers';
 
-const IS_MAC = /Mac|iPod|iPhone|iPad/.test(navigator.platform);
+let IS_MAC = false;
+// May be SSR, hence try
+try {
+  IS_MAC = /Mac|iPod|iPhone|iPad/.test(navigator.platform);
+} catch (err) { /* ignore */ }
 
 const shortcuts = {};
 

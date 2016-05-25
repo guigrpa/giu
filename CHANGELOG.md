@@ -1,5 +1,9 @@
 # Changelog
 
+* SSR-related:
+    - Prevent access to `document` or `window` at the server side, at least in unsafe parts (not event handlers, module initialisation, etc.)
+    - Initialise Textarea input's height to a very low value, so that it does not render in SSR very large and then shrink in the browser
+
 ## 0.4.2 (May. 25, 2016)
 
 * **Bugfix**: Reposition floats for inputs in modals.
