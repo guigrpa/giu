@@ -1,5 +1,9 @@
 # Changelog
 
+## 0.4.2 (May. 25, 2016)
+
+* **Bugfix**: Reposition floats for inputs in modals.
+
 ## 0.4.1 (May. 22, 2016)
 
 * **Bugfix**: Execute `FOCUS` and `BLUR` commands asynchronously, so that owner of Input component doesn't find a `null` ref in a `focus`/`blur` handler.
