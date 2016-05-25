@@ -1,6 +1,6 @@
 {
   "name": "giu",
-  "version": "0.4.2",
+  "version": "0.5.0",
   "description": "A collection of React components and utilities",
   "main": "lib/index.js",
   "author": "Guillermo Grau Panea",
@@ -10,7 +10,9 @@
     "components",
     "collection",
     "forms",
-    "inputs"
+    "inputs",
+    "ssr",
+    "i18n"
   ],
   "homepage": "https://github.com/guigrpa/giu#readme",
   "bugs": {

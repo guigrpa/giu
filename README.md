@@ -7,7 +7,8 @@ Online demos: [an extremely compact one](https://giu-dziantuohl.now.sh/)
 ## Why?
 
 - Improvements over native HTML inputs: (optional) [state delegation](#inputs), [comprehensive validation](#input-validation), [native JS types and nullability](#input-value-types).
-- Support for i18n: error messages, date inputs, etc.
+- Support for **Server-Side Rendering**.
+- Support for **i18n**: error messages, date inputs, etc.
 - Love for detail:
     + [Stackable modals](#modals) with autofocus, default buttons, etc.
     + Sticky/retainable [notifications](#notifications)
