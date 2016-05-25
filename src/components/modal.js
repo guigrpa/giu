@@ -19,6 +19,7 @@ import {
 import Button               from './button';
 import Backdrop             from './backdrop';
 import FocusCapture         from './focusCapture';
+import { floatReposition }  from './floats';
 
 const FOCUSABLE = ['input', 'textarea', 'select'];
 
@@ -118,6 +119,7 @@ class Modal extends React.Component {
         {this.renderSpacer()}
         <div
           onWheel={cancelBodyScrolling}
+          onScroll={floatReposition}
           style={merge(style.modal, baseStyle)}
         >
           <FocusCapture
