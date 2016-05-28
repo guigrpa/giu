@@ -276,6 +276,7 @@ const style = {
   },
   monthRow: flexContainer('row', {
     justifyContent: 'space-between',
+    alignItems: 'baseline',
     height: ROW_HEIGHT,
   }),
   monthChange: {
@@ -287,6 +288,7 @@ const style = {
   },
   dayNamesRow: flexContainer('row', {
     justifyContent: 'space-between',
+    alignItems: 'baseline',
     height: ROW_HEIGHT,
   }),
   dayName: {
@@ -295,6 +297,7 @@ const style = {
   },
   week: flexContainer('row', {
     justifyContent: 'space-between',
+    alignItems: 'baseline',
     height: ROW_HEIGHT,
   }),
   day: (fSelected, fHovered, fInShownMonth, { disabled, accentColor }) => {

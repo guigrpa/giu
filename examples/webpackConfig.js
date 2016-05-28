@@ -16,6 +16,7 @@ module.exports = {
   // -------------------------------------------------
   entry: {
     examples: _entry('./examples/examples.js'),
+    demo2: _entry('./examples/demo2.js'),
   },
 
   // -------------------------------------------------

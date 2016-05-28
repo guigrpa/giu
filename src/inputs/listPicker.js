@@ -279,7 +279,7 @@ const style = {
       color = COLORS[isDark(backgroundColor) ? 'lightText' : 'darkText'];
     }
     return flexContainer('row', {
-      alignItems: 'baseline',
+      alignItems: 'center',
       backgroundColor, color, border,
       cursor: 'default',
       whiteSpace: 'nowrap',
