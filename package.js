@@ -46,8 +46,7 @@ const specs = {
   scripts: {
 
     // Top-level
-    start:                      'cross-env NODE_ENV=production babel-node examples/server',
-    startDev:                   'babel-node examples/server',
+    start:                      'babel-node examples/server',
     compile:                    runMultiple([
                                   'node package',
                                   'rm -rf ./lib ./libEs6',
@@ -60,6 +59,7 @@ const specs = {
                                 ]),
     docs:                       'extract-docs --template docs/templates/README.md --output README.md',
     buildExamples:              'cross-env NODE_ENV=production webpack -p --config examples/webpackConfig.js --progress --display-chunks',
+    buildExamplesDev:           'cross-env NODE_ENV=production webpack --config examples/webpackConfig.js --progress --display-chunks --watch',
     build:                      runMultiple([
                                   'npm run lint',
                                   'npm run compile',

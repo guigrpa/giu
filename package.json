@@ -23,11 +23,11 @@
     "url": "git+https://github.com/guigrpa/giu.git"
   },
   "scripts": {
-    "start": "cross-env NODE_ENV=production babel-node examples/server",
-    "startDev": "babel-node examples/server",
+    "start": "babel-node examples/server",
     "compile": "node package && rm -rf ./lib ./libEs6 && babel -d lib src && cp src/*.css lib && cp src/components/*.css lib/components && cp src/inputs/*.css lib/inputs && cp -r src/fonts lib/fonts && cp -r src libEs6",
     "docs": "extract-docs --template docs/templates/README.md --output README.md",
     "buildExamples": "cross-env NODE_ENV=production webpack -p --config examples/webpackConfig.js --progress --display-chunks",
+    "buildExamplesDev": "cross-env NODE_ENV=production webpack --config examples/webpackConfig.js --progress --display-chunks --watch",
     "build": "npm run lint && npm run compile && npm run buildExamples && npm run docs && npm run xxl",
     "travis": "npm run compile",
     "lint": "eslint src",

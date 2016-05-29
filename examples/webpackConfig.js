@@ -1,5 +1,6 @@
 const path = require('path');
 const webpack = require('webpack');
+const ExtractTextPlugin = require('extract-text-webpack-plugin');
 const fProduction = process.env.NODE_ENV === 'production';
 
 const _entry = (entry) => [
@@ -9,13 +10,15 @@ const _entry = (entry) => [
 
 const MOMENT_LANGS = ['en-gb', 'ca', 'es', 'de'];
 
+const _styleLoader = loaderDesc => ExtractTextPlugin.extract('style-loader', loaderDesc);
+
 module.exports = {
 
   // -------------------------------------------------
   // Input (entry point)
   // -------------------------------------------------
   entry: {
-    examples: _entry('./examples/examples.js'),
+    demo1: _entry('./examples/demo1.js'),
     demo2: _entry('./examples/demo2.js'),
   },
 
@@ -28,7 +31,7 @@ module.exports = {
     // Where PRODUCTION bundles will be stored
     path: path.resolve(process.cwd(), 'examples/public'),
 
-    publicPath: 'public/',
+    publicPath: '',
   },
 
   // -------------------------------------------------
@@ -51,6 +54,7 @@ module.exports = {
       /moment[\\\/]locale$/,
       new RegExp(`.[\\\/](${MOMENT_LANGS.join('|')})`)
     ),
+    new ExtractTextPlugin('[name].bundle.css'),
   ],
 
   module: {
@@ -63,7 +67,7 @@ module.exports = {
       loader: 'file',
     }, {
       test: /\.css$/,
-      loader: 'style!css',
+      loader: _styleLoader('css'),
     }],
   },
 };
