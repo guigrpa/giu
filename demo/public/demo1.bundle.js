@@ -44,11 +44,1532 @@
 /* 0 */
 /***/ function(module, exports, __webpack_require__) {
 
-	module.exports = __webpack_require__(552);
+	module.exports = __webpack_require__(1);
 
 
 /***/ },
-/* 1 */,
+/* 1 */
+/***/ function(module, exports, __webpack_require__) {
+
+	'use strict';
+
+	var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
+
+	var _react = __webpack_require__(2);
+
+	var _react2 = _interopRequireDefault(_react);
+
+	var _reactDom = __webpack_require__(33);
+
+	var _reactDom2 = _interopRequireDefault(_reactDom);
+
+	var _timm = __webpack_require__(164);
+
+	var _src = __webpack_require__(165);
+
+	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+	function _possibleConstructorReturn(self, call) { if (!self) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return call && (typeof call === "object" || typeof call === "function") ? call : self; }
+
+	function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
+
+	__webpack_require__(254);
+	var floor = Math.floor;
+	var random = Math.random;
+
+	var randomInt = function randomInt(min, max) {
+	  return min + floor(random() * (max - min + 1));
+	};
+	var sample = function sample(arr) {
+	  return arr[randomInt(0, arr.length - 1)];
+	};
+	var onChange = function onChange(ev, o) {
+	  return console.log(o);
+	};
+	var onChangeJson = function onChangeJson(ev, o) {
+	  return console.log(JSON.stringify(o));
+	};
+
+	var NORMAL_OPTIONS = [{ label: 'A', value: 'a', keys: 'mod+a', onClick: function onClick() {
+	    return console.log('Custom click A');
+	  } }, { label: '2', value: 2, keys: 'mod+2' }, _src.LIST_SEPARATOR, { label: 'B', value: 'b', keys: ['shift+b', 'shift+c'] }, { label: 'true', value: true, keys: 'alt+backspace' }, { label: 'C', value: 'c', keys: 'shift+up' }];
+	var TALL_OPTIONS = [];
+	for (var i = 0; i < 50; i++) {
+	  TALL_OPTIONS.push({
+	    label: 'Option ' + i,
+	    value: i
+	  });
+	}
+	var WIDE_OPTIONS = [{ label: 'A long, really long, very very very very very very long option', value: 'a' }, { label: 'Another long, really long, very very long option', value: 2 }, _src.LIST_SEPARATOR, { label: 'B', value: 'b' }, { label: 'true', value: true }, { label: 'C', value: 'c' }];
+
+	var LONG_TEXT = 'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Proin\n  mi tortor, sagittis in ultricies ullamcorper, feugiat quis\n  mauris. Nam dapibus velit nec dictum vulputate. Morbi tincidunt\n  diam eu velit gravida, vel consequat ante luctus. Integer ut\n  consequat sem, dictum eleifend nunc. Quisque elit massa,\n  gravida non tortor sed, condimentum pulvinar lorem. Duis\n  ullamcorper placerat mi sed tempor. Praesent sed justo ut leo\n  congue pharetra sed sit amet libero. Suspendisse odio velit, mattis\n  non pulvinar non, posuere sit amet quam. Etiam lacinia lobortis\n  tincidunt.';
+
+	var cntNotif = 1;
+	var notify = function notify(msg) {
+	  return (0, _src.notify)({
+	    msg: msg || 'Notification #' + cntNotif++,
+	    type: sample(['info', 'success', 'warn', 'error']),
+	    icon: sample(['arrow-left', 'arrow-right', 'arrow-up', 'arrow-down'])
+	  });
+	};
+
+	// -----------------------------------------------
+	// Examples
+	// -----------------------------------------------
+	var TEST = 0;
+	var EVERYTHING = true;
+	var App = function App() {
+	  var out = void 0;
+	  switch (TEST) {
+	    case 1:
+	      out = _react2.default.createElement(
+	        'div',
+	        null,
+	        _react2.default.createElement(_src.Floats, null),
+	        'Test',
+	        _react2.default.createElement('br', null),
+	        'Test',
+	        _react2.default.createElement('br', null),
+	        'Test',
+	        _react2.default.createElement('br', null),
+	        'Test',
+	        _react2.default.createElement('br', null),
+	        'Test',
+	        _react2.default.createElement('br', null),
+	        'Test',
+	        _react2.default.createElement('br', null),
+	        'Test',
+	        _react2.default.createElement('br', null),
+	        'Test',
+	        _react2.default.createElement('br', null),
+	        'Test',
+	        _react2.default.createElement('br', null),
+	        'Test',
+	        _react2.default.createElement('br', null),
+	        'Test',
+	        _react2.default.createElement('br', null),
+	        'Test',
+	        _react2.default.createElement('br', null),
+	        'Test',
+	        _react2.default.createElement('br', null),
+	        'Test',
+	        _react2.default.createElement('br', null),
+	        'Test',
+	        _react2.default.createElement('br', null),
+	        'Test',
+	        _react2.default.createElement('br', null),
+	        'Test',
+	        _react2.default.createElement('br', null),
+	        'Test',
+	        _react2.default.createElement('br', null),
+	        'Test',
+	        _react2.default.createElement('br', null),
+	        'Test',
+	        _react2.default.createElement('br', null),
+	        'Test',
+	        _react2.default.createElement('br', null),
+	        'Test',
+	        _react2.default.createElement('br', null),
+	        'Test',
+	        _react2.default.createElement('br', null),
+	        'Test',
+	        _react2.default.createElement('br', null),
+	        'Test',
+	        _react2.default.createElement('br', null),
+	        'Test',
+	        _react2.default.createElement('br', null),
+	        'Test',
+	        _react2.default.createElement('br', null),
+	        'Test',
+	        _react2.default.createElement('br', null),
+	        'Test',
+	        _react2.default.createElement('br', null),
+	        'Test',
+	        _react2.default.createElement('br', null),
+	        'Test',
+	        _react2.default.createElement('br', null),
+	        'Test',
+	        _react2.default.createElement('br', null),
+	        'Test',
+	        _react2.default.createElement('br', null),
+	        'Test',
+	        _react2.default.createElement('br', null),
+	        'Test',
+	        _react2.default.createElement('br', null),
+	        'Test',
+	        _react2.default.createElement('br', null),
+	        'Test',
+	        _react2.default.createElement('br', null),
+	        'Test',
+	        _react2.default.createElement('br', null),
+	        'Test',
+	        _react2.default.createElement('br', null),
+	        'Test',
+	        _react2.default.createElement('br', null),
+	        'Test',
+	        _react2.default.createElement('br', null),
+	        'Test',
+	        _react2.default.createElement('br', null),
+	        'Test',
+	        _react2.default.createElement('br', null),
+	        'Test',
+	        _react2.default.createElement('br', null),
+	        'Test',
+	        _react2.default.createElement('br', null),
+	        _react2.default.createElement(_src.TextInput, {
+	          onChange: onChange,
+	          errors: ['Must be numeric'],
+	          errorPosition: 'above', errorAlign: 'right'
+	        }),
+	        _react2.default.createElement('br', null),
+	        'Test',
+	        _react2.default.createElement('br', null),
+	        'Test',
+	        _react2.default.createElement('br', null),
+	        'Test',
+	        _react2.default.createElement('br', null),
+	        'Test',
+	        _react2.default.createElement('br', null),
+	        'Test',
+	        _react2.default.createElement('br', null),
+	        'Test',
+	        _react2.default.createElement('br', null),
+	        'Test',
+	        _react2.default.createElement('br', null),
+	        'Test',
+	        _react2.default.createElement('br', null),
+	        'Test',
+	        _react2.default.createElement('br', null),
+	        'Test',
+	        _react2.default.createElement('br', null),
+	        'Test',
+	        _react2.default.createElement('br', null),
+	        'Test',
+	        _react2.default.createElement('br', null),
+	        'Test',
+	        _react2.default.createElement('br', null),
+	        'Test',
+	        _react2.default.createElement('br', null),
+	        'Test',
+	        _react2.default.createElement('br', null),
+	        'Test',
+	        _react2.default.createElement('br', null),
+	        'Test',
+	        _react2.default.createElement('br', null),
+	        'Test',
+	        _react2.default.createElement('br', null),
+	        'Test',
+	        _react2.default.createElement('br', null),
+	        'Test',
+	        _react2.default.createElement('br', null),
+	        'Test',
+	        _react2.default.createElement('br', null),
+	        'Test',
+	        _react2.default.createElement('br', null),
+	        'Test',
+	        _react2.default.createElement('br', null),
+	        'Test',
+	        _react2.default.createElement('br', null),
+	        'Test',
+	        _react2.default.createElement('br', null),
+	        'Test',
+	        _react2.default.createElement('br', null),
+	        'Test',
+	        _react2.default.createElement('br', null),
+	        'Test',
+	        _react2.default.createElement('br', null),
+	        'Test',
+	        _react2.default.createElement('br', null),
+	        'Test',
+	        _react2.default.createElement('br', null),
+	        'Test',
+	        _react2.default.createElement('br', null),
+	        'Test',
+	        _react2.default.createElement('br', null),
+	        'Test',
+	        _react2.default.createElement('br', null),
+	        'Test',
+	        _react2.default.createElement('br', null),
+	        'Test',
+	        _react2.default.createElement('br', null),
+	        'Test',
+	        _react2.default.createElement('br', null),
+	        'Test',
+	        _react2.default.createElement('br', null),
+	        'Test',
+	        _react2.default.createElement('br', null),
+	        'Test',
+	        _react2.default.createElement('br', null),
+	        'Test',
+	        _react2.default.createElement('br', null),
+	        'Test',
+	        _react2.default.createElement('br', null),
+	        'Test',
+	        _react2.default.createElement('br', null),
+	        'Test',
+	        _react2.default.createElement('br', null),
+	        'Test',
+	        _react2.default.createElement('br', null),
+	        'Test',
+	        _react2.default.createElement('br', null)
+	      );
+	      break;
+	    case 2:
+	      out = _react2.default.createElement(
+	        'div',
+	        { style: { padding: 5 } },
+	        _react2.default.createElement(_src.Floats, null),
+	        'Date (UTC midnight - default): ',
+	        _react2.default.createElement(_src.DateInput, { onChange: onChange }),
+	        _react2.default.createElement('br', null),
+	        'Date (local midnight): ',
+	        _react2.default.createElement(_src.DateInput, { onChange: onChange, utc: false }),
+	        _react2.default.createElement('br', null),
+	        'Date-time (UTC midnight): ',
+	        _react2.default.createElement(_src.DateInput, { onChange: onChange, time: true, utc: true, value: new Date() }),
+	        _react2.default.createElement('br', null),
+	        'Date-time (local midnight - default): ',
+	        _react2.default.createElement(_src.DateInput, { onChange: onChange, time: true, value: new Date() }),
+	        _react2.default.createElement('br', null),
+	        'Time (UTC midnight - default): ',
+	        _react2.default.createElement(_src.DateInput, { onChange: onChange, date: false, time: true, value: new Date() }),
+	        _react2.default.createElement('br', null),
+	        'Time (local midnight): ',
+	        _react2.default.createElement(_src.DateInput, { onChange: onChange, date: false, time: true, utc: false, value: new Date() }),
+	        _react2.default.createElement('br', null)
+	      );
+	      break;
+	    case 3:
+	      out = _react2.default.createElement(
+	        'div',
+	        null,
+	        _react2.default.createElement(_src.Floats, null),
+	        _react2.default.createElement(
+	          _src.DropDownMenu,
+	          {
+	            items: NORMAL_OPTIONS,
+	            onClickItem: onChange
+	          },
+	          _react2.default.createElement(_src.Icon, { icon: 'bars' }),
+	          ' Menu'
+	        )
+	      );
+	      break;
+	    case 4:
+	      out = _react2.default.createElement(
+	        'div',
+	        null,
+	        _react2.default.createElement(_src.Floats, null),
+	        _react2.default.createElement(_src.DateInput, { date: false, time: true, onChange: onChange, type: 'inlinePicker' })
+	      );
+	      break;
+	    case 5:
+	      out = _react2.default.createElement(
+	        'div',
+	        null,
+	        _react2.default.createElement(_src.Floats, null),
+	        _react2.default.createElement(_src.RangeInput, { value: '55', min: 0, max: 100, step: 5, onChange: onChange }),
+	        _react2.default.createElement(_src.RangeInput, { disabled: true, value: '34', min: 0, max: 100, step: 5, onChange: onChange })
+	      );
+	      break;
+	    default:
+	      out = _react2.default.createElement(
+	        'div',
+	        null,
+	        _react2.default.createElement(
+	          'div',
+	          { style: { padding: 10, fontSize: '1.8em', fontWeight: 'bold' } },
+	          _react2.default.createElement(
+	            'a',
+	            { target: '_blank', href: 'http://github.com/guigrpa/giu' },
+	            'Giu'
+	          ),
+	          ' demo page'
+	        ),
+	        _react2.default.createElement(
+	          'div',
+	          { style: (0, _src.flexContainer)('row') },
+	          _react2.default.createElement(_src.Modals, null),
+	          _react2.default.createElement(_src.Floats, null),
+	          _react2.default.createElement(_src.Notifications, null),
+	          _react2.default.createElement(_src.Hints, null),
+	          _react2.default.createElement(
+	            'div',
+	            { style: (0, _src.flexItem)(1) },
+	            EVERYTHING && _react2.default.createElement(NotificationExample, null),
+	            EVERYTHING && _react2.default.createElement(MessageExample, null),
+	            EVERYTHING && _react2.default.createElement(IconExample, null),
+	            EVERYTHING && _react2.default.createElement(ButtonExample, null),
+	            EVERYTHING && _react2.default.createElement(HoverableExample, null),
+	            EVERYTHING && _react2.default.createElement(StyleUtilsExample, null),
+	            EVERYTHING && _react2.default.createElement(DropDownExample, null),
+	            EVERYTHING && _react2.default.createElement(ModalExample, null),
+	            EVERYTHING && _react2.default.createElement(HintExample, null),
+	            EVERYTHING && _react2.default.createElement(ScrollingExample, null),
+	            EVERYTHING && _react2.default.createElement(ProgressExample, null)
+	          ),
+	          _react2.default.createElement(
+	            'div',
+	            { style: (0, _src.flexItem)(1) },
+	            EVERYTHING && _react2.default.createElement(FormExample, null)
+	          )
+	        ),
+	        _react2.default.createElement(
+	          'div',
+	          { style: { textAlign: 'right', padding: 10, fontSize: '1.2em' } },
+	          'by ',
+	          _react2.default.createElement(
+	            'a',
+	            { target: '_blank', href: 'http://github.com/guigrpa' },
+	            'Guillermo Grau Panea'
+	          ),
+	          ' 2016'
+	        )
+	      );
+	      break;
+	  }
+	  return out;
+	};
+
+	var NotificationExample = function NotificationExample() {
+	  return _react2.default.createElement(
+	    'div',
+	    { style: style.example },
+	    _react2.default.createElement(
+	      ExampleLabel,
+	      null,
+	      'Notification (embedded)'
+	    ),
+	    _react2.default.createElement(_src.Notification, {
+	      icon: 'cog', iconSpin: true,
+	      title: 'Title',
+	      msg: 'Notification message',
+	      noStylePosition: true
+	    })
+	  );
+	};
+
+	var MessageExample = function MessageExample() {
+	  return _react2.default.createElement(
+	    'div',
+	    { style: style.example },
+	    _react2.default.createElement(
+	      ExampleLabel,
+	      null,
+	      'LargeMessage'
+	    ),
+	    _react2.default.createElement(
+	      _src.LargeMessage,
+	      null,
+	      'No items found.'
+	    )
+	  );
+	};
+
+	var IconExample = function IconExample() {
+	  return _react2.default.createElement(
+	    'div',
+	    { style: style.example },
+	    _react2.default.createElement(
+	      ExampleLabel,
+	      null,
+	      'Icon'
+	    ),
+	    _react2.default.createElement(_src.Icon, { icon: 'heart', id: 'a' }),
+	    ' ',
+	    _react2.default.createElement(_src.Spinner, null),
+	    ' ',
+	    _react2.default.createElement(_src.Icon, { icon: 'spinner', spin: true }),
+	    ' ',
+	    _react2.default.createElement(_src.Icon, { icon: 'arrow-left', id: 'a' }),
+	    ' ',
+	    _react2.default.createElement(_src.Icon, {
+	      icon: 'arrow-right',
+	      onClick: function onClick() {
+	        return notify();
+	      }
+	    })
+	  );
+	};
+
+	var ButtonExample = function ButtonExample() {
+	  return _react2.default.createElement(
+	    'div',
+	    { style: style.example },
+	    _react2.default.createElement(
+	      ExampleLabel,
+	      null,
+	      'Button'
+	    ),
+	    _react2.default.createElement(
+	      _src.Button,
+	      { onClick: function onClick() {
+	          return notify('Normal button pressed');
+	        } },
+	      'Notify me!'
+	    ),
+	    ' ',
+	    _react2.default.createElement(
+	      _src.Button,
+	      { onClick: function onClick() {
+	          return notify('Plain button pressed');
+	        }, plain: true },
+	      'Notify me!'
+	    )
+	  );
+	};
+
+	var HoverableExample = (0, _src.hoverable)(function (_ref) {
+	  var hovering = _ref.hovering;
+	  var onHoverStart = _ref.onHoverStart;
+	  var onHoverStop = _ref.onHoverStop;
+	  return _react2.default.createElement(
+	    'div',
+	    {
+	      onMouseEnter: onHoverStart,
+	      onMouseLeave: onHoverStop,
+	      style: (0, _timm.merge)(style.example, style.hoverable(hovering))
+	    },
+	    _react2.default.createElement(
+	      ExampleLabel,
+	      null,
+	      'Hoverable (HOC)'
+	    )
+	  );
+	});
+
+	var StyleUtilsExample = function StyleUtilsExample() {
+	  return _react2.default.createElement(
+	    'div',
+	    { style: style.example },
+	    _react2.default.createElement(
+	      ExampleLabel,
+	      null,
+	      'Style utilities'
+	    ),
+	    _react2.default.createElement(
+	      'div',
+	      { style: (0, _src.flexContainer)('row') },
+	      _react2.default.createElement(
+	        'span',
+	        null,
+	        'Flex left'
+	      ),
+	      _react2.default.createElement(FlexSpacer, null),
+	      _react2.default.createElement(
+	        'span',
+	        null,
+	        'Flex right'
+	      )
+	    ),
+	    _react2.default.createElement(
+	      'div',
+	      { style: (0, _src.flexContainer)('row') },
+	      _react2.default.createElement(
+	        'span',
+	        null,
+	        'Left'
+	      ),
+	      _react2.default.createElement(FlexSpacer, null),
+	      _react2.default.createElement(
+	        'span',
+	        null,
+	        'Center'
+	      ),
+	      _react2.default.createElement(FlexSpacer, null),
+	      _react2.default.createElement(
+	        'span',
+	        null,
+	        'Right'
+	      )
+	    ),
+	    _react2.default.createElement(
+	      'div',
+	      { style: (0, _src.boxWithShadow)({ padding: 3 }) },
+	      'A box with a shadow'
+	    )
+	  );
+	};
+
+	var FlexSpacer = function FlexSpacer(_ref2) {
+	  var children = _ref2.children;
+	  return _react2.default.createElement(
+	    'div',
+	    { style: (0, _src.flexItem)('1') },
+	    children
+	  );
+	};
+
+	var DropDownExample = function DropDownExample() {
+	  return _react2.default.createElement(
+	    'div',
+	    { style: style.example },
+	    _react2.default.createElement(
+	      ExampleLabel,
+	      null,
+	      'DropDownMenu (focusable, keyboard-controlled, embedded ListPicker)'
+	    ),
+	    _react2.default.createElement(
+	      _src.DropDownMenu,
+	      {
+	        items: NORMAL_OPTIONS,
+	        onClickItem: onChange,
+	        style: { padding: "3px 8px" }
+	      },
+	      _react2.default.createElement(_src.Icon, { icon: 'bars' }),
+	      ' Menu'
+	    ),
+	    _react2.default.createElement(
+	      _src.DropDownMenu,
+	      {
+	        items: TALL_OPTIONS,
+	        onClickItem: onChange,
+	        accentColor: 'darkgreen',
+	        style: { padding: "3px 8px" }
+	      },
+	      _react2.default.createElement(_src.Icon, { icon: 'bullseye' }),
+	      ' Long menu'
+	    ),
+	    _react2.default.createElement(
+	      _src.DropDownMenu,
+	      {
+	        items: WIDE_OPTIONS,
+	        floatAlign: 'right',
+	        accentColor: 'darkblue',
+	        style: { padding: "3px 8px" }
+	      },
+	      _react2.default.createElement(_src.Icon, { icon: 'cube' }),
+	      ' Menu to the left'
+	    )
+	  );
+	};
+
+	var ModalExample = function (_React$Component) {
+	  _inherits(ModalExample, _React$Component);
+
+	  function ModalExample(props) {
+	    _classCallCheck(this, ModalExample);
+
+	    var _this = _possibleConstructorReturn(this, Object.getPrototypeOf(ModalExample).call(this, props));
+
+	    _this.state = { fEmbeddedModal: false };
+	    return _this;
+	  }
+
+	  _createClass(ModalExample, [{
+	    key: 'render',
+	    value: function render() {
+	      var _this2 = this;
+
+	      return _react2.default.createElement(
+	        'div',
+	        { style: style.example },
+	        _react2.default.createElement(
+	          ExampleLabel,
+	          null,
+	          'Modals (stackable) and Modal (embedded): focusable, keyboard-controlled'
+	        ),
+	        _react2.default.createElement(
+	          _src.Button,
+	          { onClick: this.addModal.bind(this) },
+	          'Add modal'
+	        ),
+	        ' ',
+	        _react2.default.createElement(
+	          _src.Button,
+	          {
+	            onClick: function onClick() {
+	              return _this2.setState({ fEmbeddedModal: true });
+	            }
+	          },
+	          'Embed modal'
+	        ),
+	        this.state.fEmbeddedModal && this.renderEmbeddedModal()
+	      );
+	    }
+	  }, {
+	    key: 'renderEmbeddedModal',
+	    value: function renderEmbeddedModal() {
+	      var _this3 = this;
+
+	      var close = function close() {
+	        return _this3.setState({ fEmbeddedModal: false });
+	      };
+	      var buttons = [{ label: 'Close', onClick: close }, {
+	        label: 'Introduce me',
+	        onClick: function onClick() {
+	          alert(_this3.refInput.getValue());
+	          close();
+	        },
+	        defaultButton: true
+	      }];
+	      return _react2.default.createElement(
+	        _src.Modal,
+	        {
+	          title: 'Embedded modal',
+	          buttons: buttons,
+	          onClickBackdrop: close,
+	          onEsc: close,
+	          style: { width: 500 }
+	        },
+	        'What\'s your name?',
+	        ' ',
+	        _react2.default.createElement(_src.TextInput, { ref: function ref(o) {
+	            _this3.refInput = o;
+	          },
+	          autoFocus: true,
+	          errors: ["Must be non-null"],
+	          errorZ: 52
+	        }),
+	        _react2.default.createElement(_src.DateInput, {
+	          placeholder: 'date of birth',
+	          floatZ: 55,
+	          errors: ["Must be non-null"]
+	        }),
+	        _react2.default.createElement(_src.Textarea, {
+	          placeholder: 'Write something...',
+	          errors: ["Must write something in the textarea"],
+	          errorZ: 52,
+	          style: { maxHeight: 100 }
+	        })
+	      );
+	    }
+	  }, {
+	    key: 'addModal',
+	    value: function addModal() {
+	      var _this4 = this;
+
+	      var title = 'Hello, what\'s your name?';
+	      var children = _react2.default.createElement(
+	        'div',
+	        null,
+	        _react2.default.createElement(_src.TextInput, { ref: function ref(o) {
+	            _this4.refName = o;
+	          },
+	          autoFocus: true,
+	          errors: ["Must be non-null"],
+	          errorZ: 52
+	        }),
+	        ' ',
+	        _react2.default.createElement(_src.DateInput, {
+	          placeholder: 'date of birth',
+	          floatZ: 55,
+	          errors: ["Must be non-null"]
+	        })
+	      );
+	      (0, _src.modalPush)({
+	        title: title,
+	        children: children,
+	        buttons: [{ label: 'Hello!', onClick: this.addModal2.bind(this), defaultButton: true }, { label: 'Back', onClick: _src.modalPop, left: true }],
+	        onEsc: _src.modalPop
+	      });
+	    }
+	  }, {
+	    key: 'addModal2',
+	    value: function addModal2() {
+	      var title = 'Introduction';
+	      var children = _react2.default.createElement(
+	        'div',
+	        null,
+	        'Nice to meet you, ',
+	        this.refName.getValue(),
+	        '!',
+	        _react2.default.createElement('br', null),
+	        'This is some really long text:',
+	        _react2.default.createElement('br', null),
+	        LONG_TEXT,
+	        _react2.default.createElement('br', null),
+	        LONG_TEXT,
+	        _react2.default.createElement('br', null),
+	        LONG_TEXT,
+	        _react2.default.createElement('br', null),
+	        LONG_TEXT,
+	        _react2.default.createElement('br', null),
+	        LONG_TEXT,
+	        _react2.default.createElement('br', null)
+	      );
+	      (0, _src.modalPush)({
+	        title: title,
+	        children: children,
+	        buttons: [{ label: 'Back', onClick: _src.modalPop, defaultButton: true }],
+	        onEsc: _src.modalPop,
+	        style: { width: 500 }
+	      });
+	    }
+	  }]);
+
+	  return ModalExample;
+	}(_react2.default.Component);
+
+	var HintExample = function (_React$Component2) {
+	  _inherits(HintExample, _React$Component2);
+
+	  function HintExample(props) {
+	    _classCallCheck(this, HintExample);
+
+	    var _this5 = _possibleConstructorReturn(this, Object.getPrototypeOf(HintExample).call(this, props));
+
+	    _this5.state = { fEmbeddedHint: false };
+	    return _this5;
+	  }
+
+	  _createClass(HintExample, [{
+	    key: 'componentWillMount',
+	    value: function componentWillMount() {
+	      var _this6 = this;
+
+	      (0, _src.hintDefine)('hintExample', {
+	        elements: function elements() {
+	          var out = [];
+	          var ref = _this6.refs.buttonShowHint;
+	          if (ref) {
+	            var bcr = ref.getBoundingClientRect();
+	            var x = bcr.right + 90;
+	            var y = bcr.top - 80;
+	            out.push({
+	              type: 'LABEL', x: x, y: y,
+	              children: 'Just shows a pre-defined hint (if not already shown)'
+	            });
+	            out.push({
+	              type: 'ARROW',
+	              from: { x: x, y: y },
+	              to: { x: (bcr.left + bcr.right) / 2, y: bcr.top - 5 },
+	              counterclockwise: true
+	            });
+	          }
+	          return out;
+	        }
+	      });
+	    }
+	  }, {
+	    key: 'render',
+	    value: function render() {
+	      var _this7 = this;
+
+	      return _react2.default.createElement(
+	        'div',
+	        { style: style.example },
+	        _react2.default.createElement(
+	          ExampleLabel,
+	          null,
+	          'Hints (show once, disable-all, reset) and Hint (embedded): simple label positioning, even taking into account DOM element positions'
+	        ),
+	        _react2.default.createElement(
+	          'span',
+	          { ref: 'buttonShowHint' },
+	          _react2.default.createElement(
+	            _src.Button,
+	            { onClick: function onClick() {
+	                return (0, _src.hintShow)('hintExample');
+	              } },
+	            'Show hint (if not already shown)'
+	          )
+	        ),
+	        ' ',
+	        _react2.default.createElement(
+	          _src.Button,
+	          { onClick: function onClick() {
+	              (0, _src.hintReset)();alert('Hints have been reset');
+	            } },
+	          'Reset hints'
+	        ),
+	        ' ',
+	        _react2.default.createElement(
+	          _src.Button,
+	          { onClick: function onClick() {
+	              (0, _src.hintDisableAll)();alert('Hints have been disabled');
+	            } },
+	          'Disable all'
+	        ),
+	        ' ',
+	        _react2.default.createElement('br', null),
+	        _react2.default.createElement(
+	          'span',
+	          { ref: 'buttonEmbedHint' },
+	          _react2.default.createElement(
+	            _src.Button,
+	            { onClick: function onClick() {
+	                return _this7.setState({ fEmbeddedHint: true });
+	              } },
+	            'Embed hint'
+	          )
+	        ),
+	        this.state.fEmbeddedHint && this.renderEmbeddedHint()
+	      );
+	    }
+	  }, {
+	    key: 'renderEmbeddedHint',
+	    value: function renderEmbeddedHint() {
+	      var _this8 = this;
+
+	      var close = function close() {
+	        return _this8.setState({ fEmbeddedHint: false });
+	      };
+	      var elements = function elements() {
+	        var out = [{
+	          type: 'LABEL', x: 300, y: 30, align: 'right',
+	          children: _react2.default.createElement(
+	            'span',
+	            null,
+	            'A right-aligned label with an icon: ',
+	            _react2.default.createElement(_src.Icon, { icon: 'ambulance' })
+	          )
+	        }, {
+	          type: 'LABEL', x: 500, y: 60, align: 'center',
+	          children: _react2.default.createElement(
+	            'span',
+	            null,
+	            'A ',
+	            _react2.default.createElement(
+	              'span',
+	              { style: { color: 'yellow' } },
+	              'center-aligned'
+	            ),
+	            ' label'
+	          )
+	        }, {
+	          type: 'LABEL', x: 700, y: 80,
+	          children: _react2.default.createElement(
+	            'span',
+	            null,
+	            'A very, very, very, very, very, very, very, very long label'
+	          )
+	        }, { type: 'ARROW', from: { x: 300, y: 30 }, to: { x: 420, y: 60 } }, { type: 'ARROW', from: { x: 550, y: 120 }, to: { x: 700, y: 140 }, counterclockwise: true }];
+	        var ref = _this8.refs.buttonEmbedHint;
+	        if (ref) {
+	          var bcr = ref.getBoundingClientRect();
+	          var y = (bcr.top + bcr.bottom) / 2;
+	          var to = y >= 130 ? { x: bcr.right + 10, y: y } : { x: (bcr.left + bcr.right) / 2, y: bcr.bottom + 10 };
+	          var counterclockwise = y >= 130;
+	          out.push({
+	            type: 'LABEL', x: 160, y: Math.max(130, (bcr.top + bcr.bottom) / 2),
+	            children: _react2.default.createElement(
+	              'span',
+	              null,
+	              'This is ',
+	              _react2.default.createElement(
+	                'i',
+	                null,
+	                'the'
+	              ),
+	              ' button'
+	            )
+	          });
+	          out.push({ type: 'ARROW', from: { x: 160, y: Math.max(130, y) }, to: to, counterclockwise: counterclockwise });
+	        }
+	        return out;
+	      };
+	      return _react2.default.createElement(_src.HintScreen, { onClose: close, elements: elements });
+	    }
+	  }]);
+
+	  return HintExample;
+	}(_react2.default.Component);
+
+	var ScrollingExample = function ScrollingExample() {
+	  return _react2.default.createElement(
+	    'div',
+	    { style: style.example },
+	    _react2.default.createElement(
+	      ExampleLabel,
+	      null,
+	      'Scrollable (with translateZ(0)) with floats'
+	    ),
+	    _react2.default.createElement(
+	      'div',
+	      {
+	        onScroll: _src.floatReposition,
+	        style: style.scrolling
+	      },
+	      _react2.default.createElement(_src.DateInput, { placeholder: 'date', date: true, time: true }),
+	      _react2.default.createElement('br', null),
+	      LONG_TEXT,
+	      _react2.default.createElement('br', null),
+	      LONG_TEXT,
+	      _react2.default.createElement('br', null),
+	      LONG_TEXT,
+	      _react2.default.createElement('br', null),
+	      _react2.default.createElement(_src.DateInput, { placeholder: 'date' }),
+	      _react2.default.createElement('br', null),
+	      LONG_TEXT,
+	      _react2.default.createElement('br', null),
+	      LONG_TEXT,
+	      _react2.default.createElement('br', null),
+	      LONG_TEXT,
+	      _react2.default.createElement('br', null),
+	      LONG_TEXT,
+	      _react2.default.createElement('br', null),
+	      _react2.default.createElement(_src.DateInput, { placeholder: 'date' })
+	    )
+	  );
+	};
+
+	var ProgressExample = function (_React$Component3) {
+	  _inherits(ProgressExample, _React$Component3);
+
+	  function ProgressExample(props) {
+	    _classCallCheck(this, ProgressExample);
+
+	    var _this9 = _possibleConstructorReturn(this, Object.getPrototypeOf(ProgressExample).call(this, props));
+
+	    _this9.state = { value: 0.3 };
+	    setInterval(function () {
+	      _this9.setState({ value: Math.random() });
+	    }, 2000);
+	    return _this9;
+	  }
+
+	  _createClass(ProgressExample, [{
+	    key: 'render',
+	    value: function render() {
+	      return _react2.default.createElement(
+	        'div',
+	        { style: style.example },
+	        _react2.default.createElement(
+	          ExampleLabel,
+	          null,
+	          'Progress'
+	        ),
+	        _react2.default.createElement(_src.Progress, { value: this.state.value }),
+	        _react2.default.createElement(_src.Progress, null)
+	      );
+	    }
+	  }]);
+
+	  return ProgressExample;
+	}(_react2.default.Component);
+
+	var FormExample = function (_React$Component4) {
+	  _inherits(FormExample, _React$Component4);
+
+	  function FormExample(props) {
+	    _classCallCheck(this, FormExample);
+
+	    var _this10 = _possibleConstructorReturn(this, Object.getPrototypeOf(FormExample).call(this, props));
+
+	    _this10.state = {
+	      fShowDateInput: true,
+	      fixedDate: new Date()
+	    };
+	    return _this10;
+	  }
+
+	  _createClass(FormExample, [{
+	    key: 'render',
+	    value: function render() {
+	      var _this11 = this;
+
+	      return _react2.default.createElement(
+	        'div',
+	        { style: style.example },
+	        _react2.default.createElement(
+	          'div',
+	          null,
+	          _react2.default.createElement(
+	            ExampleLabel,
+	            null,
+	            'Inputs'
+	          ),
+	          _react2.default.createElement(_src.NumberInput, {
+	            step: '0.1',
+	            value: null, onChange: onChange,
+	            placeholder: 'number', style: { width: 80 }
+	          }),
+	          _react2.default.createElement(_src.NumberInput, { disabled: true, value: 6.5, style: { width: 80 } }),
+	          '  ',
+	          _react2.default.createElement(_src.TextInput, {
+	            value: 'a', onChange: onChange,
+	            placeholder: 'text',
+	            errors: ["Example error above"],
+	            errorPosition: 'above', errorAlign: 'right',
+	            style: { width: 80 }
+	          }),
+	          _react2.default.createElement(_src.TextInput, { disabled: true, value: 'Disabled', style: { width: 80 } }),
+	          '  ',
+	          _react2.default.createElement(_src.PasswordInput, {
+	            required: true,
+	            onChange: onChange,
+	            placeholder: 'password',
+	            style: { width: 80 }
+	          }),
+	          '  ',
+	          _react2.default.createElement(_src.Checkbox, {
+	            value: true, onChange: onChange,
+	            label: 'checkbox',
+	            errors: ["Example error below"]
+	          }),
+	          ' ',
+	          _react2.default.createElement(_src.Checkbox, { disabled: true, value: true, label: 'checkbox' })
+	        ),
+	        _react2.default.createElement(
+	          'div',
+	          null,
+	          _react2.default.createElement(_src.FileInput, null),
+	          _react2.default.createElement(_src.FileInput, { disabled: true })
+	        ),
+	        _react2.default.createElement('br', null),
+	        _react2.default.createElement(
+	          'div',
+	          { style: (0, _src.flexContainer)('row') },
+	          _react2.default.createElement(
+	            'div',
+	            null,
+	            _react2.default.createElement(
+	              ExampleLabel,
+	              null,
+	              'RadioGroup (flexible labels, clipboard)'
+	            ),
+	            _react2.default.createElement(
+	              'div',
+	              { style: (0, _src.flexContainer)('row') },
+	              _react2.default.createElement(_src.RadioGroup, { items: NORMAL_OPTIONS, required: true, onChange: onChange }),
+	              _react2.default.createElement(_src.RadioGroup, { items: NORMAL_OPTIONS, value: 'a', disabled: true }),
+	              _react2.default.createElement(_src.RadioGroup, {
+	                items: [{ value: 1, label: "A simple text label" }, { value: 2, label: _react2.default.createElement(
+	                    'span',
+	                    null,
+	                    'A label with ',
+	                    _react2.default.createElement(
+	                      'i',
+	                      null,
+	                      'some'
+	                    ),
+	                    ' ',
+	                    _react2.default.createElement(
+	                      'b',
+	                      null,
+	                      'formatting'
+	                    )
+	                  ) }, { value: 3, label: _react2.default.createElement(
+	                    'span',
+	                    null,
+	                    'A multiline label'
+	                  ),
+	                  labelExtra: _react2.default.createElement(
+	                    'div',
+	                    null,
+	                    'because yes, we can ',
+	                    _react2.default.createElement(_src.Icon, { icon: 'smile-o' })
+	                  )
+	                }, { value: 4, label: "Another normal label" }, { value: 5, label: _react2.default.createElement(
+	                    'span',
+	                    null,
+	                    'A label with a ',
+	                    _react2.default.createElement(
+	                      _src.Button,
+	                      { onClick: function onClick() {
+	                          return console.log('hi!');
+	                        } },
+	                      'button'
+	                    )
+	                  ) }]
+	              })
+	            )
+	          ),
+	          _react2.default.createElement(
+	            'div',
+	            { style: { marginLeft: 10 } },
+	            _react2.default.createElement(
+	              ExampleLabel,
+	              null,
+	              'RangeInput (horizontal/vertical)'
+	            ),
+	            _react2.default.createElement(
+	              'div',
+	              { style: (0, _src.flexContainer)('row') },
+	              _react2.default.createElement(
+	                'div',
+	                { style: { marginLeft: 5 } },
+	                _react2.default.createElement(_src.RangeInput, {
+	                  value: 25, onChange: onChange,
+	                  min: 0, max: 100, step: 5,
+	                  style: { display: 'block' }
+	                }),
+	                _react2.default.createElement(_src.RangeInput, { disabled: true,
+	                  value: 55, onChange: onChange,
+	                  min: 0, max: 100, step: 5,
+	                  style: { display: 'block' }
+	                })
+	              ),
+	              _react2.default.createElement(_src.RangeInput, {
+	                value: 55, onChange: onChange,
+	                min: 0, max: 100, step: 5,
+	                vertical: true,
+	                style: { marginLeft: 20, height: 100, width: 25 }
+	              })
+	            )
+	          )
+	        ),
+	        _react2.default.createElement('br', null),
+	        _react2.default.createElement(
+	          'div',
+	          null,
+	          _react2.default.createElement(
+	            ExampleLabel,
+	            null,
+	            'Input validation'
+	          ),
+	          _react2.default.createElement(_src.TextInput, { placeholder: 'no validation' }),
+	          _react2.default.createElement(_src.TextInput, { placeholder: 'required (shortcut)',
+	            required: true }),
+	          _react2.default.createElement(_src.TextInput, { placeholder: 'isRequired, custom',
+	            validators: [(0, _src.isRequired)('please write something!')] }),
+	          _react2.default.createElement(_src.TextInput, { placeholder: 'isEmail',
+	            required: true, validators: [(0, _src.isEmail)()] }),
+	          _react2.default.createElement(_src.TextInput, { placeholder: 'isEmail (custom msg)',
+	            required: true, validators: [(0, _src.isEmail)('please write your e-mail!')] }),
+	          _react2.default.createElement(_src.TextInput, { placeholder: 'isEmail (custom msg 2)',
+	            required: true, validators: [(0, _src.isEmail)(function (msg, val) {
+	              return '\'' + val + '\' is not an email!';
+	            })] }),
+	          _react2.default.createElement(_src.TextInput, { placeholder: 'custom sync validator',
+	            required: true, validators: [function (o) {
+	              return o.toLowerCase() === 'unicorn' ? undefined : 'must be \'unicorn\'';
+	            }] }),
+	          _react2.default.createElement(_src.TextInput, { placeholder: 'custom promise validator',
+	            required: true, validators: [function (o) {
+	              return new Promise(function (resolve, reject) {
+	                return setTimeout(function () {
+	                  return o.toLowerCase() === 'unicorn' ? resolve(undefined) : resolve('checked the database; you must be a \'unicorn\'');
+	                }, 1000);
+	              });
+	            }] }),
+	          _react2.default.createElement(_src.DateInput, { type: 'onlyField', placeholder: 'MM/DD/YYYY' }),
+	          _react2.default.createElement(_src.DateInput, { type: 'onlyField', date: false, time: true, seconds: true, placeholder: 'HH:MM:ss' }),
+	          _react2.default.createElement(_src.DateInput, { type: 'onlyField', date: false, time: true, seconds: true, placeholder: 'HH:MM:ss',
+	            required: true, validators: [(0, _src.isDate)(function (msg, val, _ref3) {
+	              var fmt = _ref3.fmt;
+	              return 'ha de ser una hora correcta: ' + fmt;
+	            })] })
+	        ),
+	        _react2.default.createElement('br', null),
+	        _react2.default.createElement(
+	          'div',
+	          null,
+	          _react2.default.createElement(
+	            ExampleLabel,
+	            null,
+	            'Textarea (with auto-resize)'
+	          ),
+	          _react2.default.createElement(_src.Textarea, { value: 'En un lugar de la Mancha...' }),
+	          _react2.default.createElement(_src.Textarea, { disabled: true, value: 'En un lugar de la Mancha...' })
+	        ),
+	        _react2.default.createElement('br', null),
+	        _react2.default.createElement(
+	          'div',
+	          null,
+	          _react2.default.createElement(
+	            ExampleLabel,
+	            null,
+	            'Select: native, or with inline/dropdown ListPicker (keyboard-controlled, shortcuts, clipboard, one/two-stage, autoscroll)'
+	          ),
+	          _react2.default.createElement(
+	            'div',
+	            null,
+	            _react2.default.createElement(_src.Select, {
+	              value: 'a',
+	              items: NORMAL_OPTIONS, required: true
+	            }),
+	            _react2.default.createElement(_src.Select, {
+	              value: null, onChange: onChangeJson,
+	              items: NORMAL_OPTIONS
+	            }),
+	            _react2.default.createElement(_src.Select, { disabled: true, value: 'a', items: NORMAL_OPTIONS }),
+	            '  ',
+	            _react2.default.createElement(_src.Select, { type: 'dropDownPicker', required: true,
+	              value: 'a', onChange: onChangeJson,
+	              items: NORMAL_OPTIONS
+	            }),
+	            _react2.default.createElement(_src.Select, { type: 'dropDownPicker',
+	              value: null, onChange: onChangeJson,
+	              items: NORMAL_OPTIONS
+	            }),
+	            _react2.default.createElement(_src.Select, { type: 'dropDownPicker',
+	              value: 28, onChange: onChangeJson,
+	              items: TALL_OPTIONS
+	            }),
+	            _react2.default.createElement(_src.Select, { disabled: true, type: 'dropDownPicker', value: 28, items: TALL_OPTIONS })
+	          ),
+	          _react2.default.createElement(
+	            'div',
+	            { style: (0, _src.flexContainer)('row') },
+	            _react2.default.createElement(_src.Select, { type: 'inlinePicker', required: true,
+	              items: NORMAL_OPTIONS,
+	              onChange: onChangeJson,
+	              styleOuter: (0, _src.flexItem)(1, { marginRight: 4 }),
+	              style: { height: 150 },
+	              accentColor: 'gray'
+	            }),
+	            _react2.default.createElement(_src.Select, { type: 'inlinePicker',
+	              items: TALL_OPTIONS,
+	              value: 33, onChange: onChangeJson,
+	              twoStageStyle: true,
+	              styleOuter: (0, _src.flexItem)(1, { marginRight: 4 }),
+	              style: { height: 150 },
+	              accentColor: 'lightGray'
+	            }),
+	            _react2.default.createElement(_src.Select, { type: 'inlinePicker',
+	              items: [],
+	              onChange: onChangeJson,
+	              styleOuter: (0, _src.flexItem)(1, { marginRight: 4 }),
+	              style: { height: 150 }
+	            }),
+	            _react2.default.createElement(_src.Select, { type: 'inlinePicker', disabled: true,
+	              items: TALL_OPTIONS,
+	              value: 33, onChange: onChangeJson,
+	              styleOuter: (0, _src.flexItem)(1),
+	              style: { height: 150 },
+	              accentColor: 'lightGray'
+	            })
+	          )
+	        ),
+	        _react2.default.createElement('br', null),
+	        _react2.default.createElement(
+	          'div',
+	          null,
+	          _react2.default.createElement(
+	            ExampleLabel,
+	            null,
+	            'DateInput: field-only, or with inline/dropdown DateTimePicker (keyboard-controlled, clipboard; local for date+time, UTC otherwise)'
+	          ),
+	          _react2.default.createElement(
+	            'div',
+	            null,
+	            _react2.default.createElement(_src.DateInput, { onChange: onChange }),
+	            '  ',
+	            _react2.default.createElement(_src.DateInput, { date: true, time: true, onChange: onChange }),
+	            '  ',
+	            _react2.default.createElement(_src.DateInput, { date: false, time: true, onChange: onChange,
+	              style: { width: 60 }
+	            }),
+	            _react2.default.createElement(_src.DateInput, { date: false, time: true, seconds: true, analogTime: false, onChange: onChange,
+	              style: { width: 80 }
+	            }),
+	            ' dropDownPicker (default)'
+	          ),
+	          _react2.default.createElement(
+	            'div',
+	            null,
+	            _react2.default.createElement(_src.DateInput, { type: 'onlyField', onChange: onChange }),
+	            '  ',
+	            _react2.default.createElement(_src.DateInput, { type: 'onlyField', date: true, time: true, onChange: onChange }),
+	            '  ',
+	            _react2.default.createElement(_src.DateInput, { type: 'onlyField', date: false, time: true, onChange: onChange,
+	              style: { width: 60 }
+	            }),
+	            _react2.default.createElement(_src.DateInput, { type: 'onlyField', date: false, time: true, seconds: true, analogTime: false, onChange: onChange,
+	              style: { width: 80 }
+	            }),
+	            ' onlyField'
+	          ),
+	          _react2.default.createElement(
+	            'div',
+	            null,
+	            _react2.default.createElement(_src.DateInput, { disabled: true, value: new Date(), type: 'onlyField' }),
+	            '  ',
+	            _react2.default.createElement(_src.DateInput, { disabled: true, value: new Date(), type: 'onlyField', date: true, time: true }),
+	            '  ',
+	            _react2.default.createElement(_src.DateInput, { disabled: true, value: new Date(), type: 'onlyField', date: false, time: true,
+	              style: { width: 60 }
+	            }),
+	            _react2.default.createElement(_src.DateInput, { disabled: true, value: new Date(), type: 'onlyField', date: false, time: true, seconds: true, analogTime: false,
+	              style: { width: 80 }
+	            }),
+	            ' disabled'
+	          ),
+	          _react2.default.createElement(
+	            'div',
+	            { style: (0, _src.flexContainer)('row') },
+	            _react2.default.createElement(_src.DateInput, { type: 'inlinePicker',
+	              onChange: onChange,
+	              time: true, analogTime: false,
+	              lang: 'es',
+	              accentColor: 'lightgray'
+	            }),
+	            '  ',
+	            _react2.default.createElement(_src.DateInput, { type: 'inlinePicker',
+	              value: this.state.fixedDate,
+	              onChange: onChange,
+	              accentColor: 'darkblue'
+	            }),
+	            '  ',
+	            _react2.default.createElement(_src.DateInput, { type: 'inlinePicker', date: false, time: true, seconds: true,
+	              value: this.state.fixedDate,
+	              onChange: onChange,
+	              accentColor: 'darkgreen'
+	            }),
+	            '  ',
+	            _react2.default.createElement(_src.DateInput, { type: 'inlinePicker',
+	              onChange: onChange,
+	              date: false, time: true, analogTime: false,
+	              accentColor: 'turquoise'
+	            })
+	          ),
+	          _react2.default.createElement(
+	            'div',
+	            { style: (0, _src.flexContainer)('row', { marginTop: 5 }) },
+	            _react2.default.createElement(TimePickerNow, null),
+	            '  ',
+	            _react2.default.createElement(_src.DateInput, { type: 'inlinePicker',
+	              onChange: onChange,
+	              date: true, time: true
+	            })
+	          )
+	        ),
+	        _react2.default.createElement('br', null),
+	        _react2.default.createElement(
+	          'div',
+	          null,
+	          _react2.default.createElement(
+	            ExampleLabel,
+	            null,
+	            'ColorInput: with inline/dropdown ColorPicker (RGB/HSV, alpha, clipboard)'
+	          ),
+	          _react2.default.createElement(
+	            'div',
+	            { style: (0, _src.flexContainer)('row') },
+	            _react2.default.createElement(_src.ColorInput, { value: 'aadc5400', accentColor: 'darkmagenta', onChange: onChange }),
+	            _react2.default.createElement(_src.ColorInput, { value: 'ffdc5400', disabled: true }),
+	            _react2.default.createElement(
+	              'div',
+	              null,
+	              ' '
+	            ),
+	            _react2.default.createElement(_src.ColorInput, { inlinePicker: true, value: 'ffcca500', accentColor: 'lightGray', onChange: onChange }),
+	            _react2.default.createElement(_src.ColorInput, { inlinePicker: true, value: 'ffcca500', disabled: true, accentColor: 'lightGray', onChange: onChange })
+	          )
+	        ),
+	        _react2.default.createElement('br', null),
+	        _react2.default.createElement(
+	          'div',
+	          null,
+	          _react2.default.createElement(
+	            ExampleLabel,
+	            null,
+	            'Imperative example'
+	          ),
+	          _react2.default.createElement(_src.TextInput, {
+	            value: 'Initial value',
+	            cmds: this.cmds,
+	            onFocus: function onFocus() {
+	              return console.log('focus');
+	            },
+	            onBlur: function onBlur() {
+	              return console.log('blur');
+	            }
+	          }),
+	          ' ',
+	          _react2.default.createElement(
+	            _src.Button,
+	            {
+	              onMouseDown: _src.cancelEvent,
+	              onClick: function onClick() {
+	                _this11.cmds = [{ type: 'SET_VALUE', value: 'Different value' }, { type: 'FOCUS' }];
+	                _this11.forceUpdate();
+	              }
+	            },
+	            'Change & focus'
+	          ),
+	          ' ',
+	          _react2.default.createElement(
+	            _src.Button,
+	            {
+	              onMouseDown: _src.cancelEvent,
+	              onClick: function onClick() {
+	                _this11.cmds = [{ type: 'REVERT' }, { type: 'BLUR' }];
+	                _this11.forceUpdate();
+	              }
+	            },
+	            'Revert & blur'
+	          )
+	        )
+	      );
+	    }
+	  }]);
+
+	  return FormExample;
+	}(_react2.default.Component);
+
+	var TimePickerNow = function (_React$Component5) {
+	  _inherits(TimePickerNow, _React$Component5);
+
+	  function TimePickerNow(props) {
+	    _classCallCheck(this, TimePickerNow);
+
+	    var _this12 = _possibleConstructorReturn(this, Object.getPrototypeOf(TimePickerNow).call(this, props));
+
+	    _this12.state = {
+	      curDate: new Date()
+	    };
+	    setInterval(function () {
+	      _this12.setState({ curDate: new Date() });
+	    }, 1000);
+	    return _this12;
+	  }
+
+	  _createClass(TimePickerNow, [{
+	    key: 'render',
+	    value: function render() {
+	      return _react2.default.createElement(_src.DateInput, { type: 'inlinePicker',
+	        value: this.state.curDate,
+	        time: true, seconds: true, disabled: true
+	      });
+	    }
+	  }]);
+
+	  return TimePickerNow;
+	}(_react2.default.Component);
+
+	// -----------------------------------------------
+	// Helpers
+	// -----------------------------------------------
+
+
+	var ExampleLabel = function ExampleLabel(_ref4) {
+	  var children = _ref4.children;
+	  return _react2.default.createElement(
+	    'div',
+	    { style: style.label },
+	    children
+	  );
+	};
+
+	// -----------------------------------------------
+	// Styles
+	// -----------------------------------------------
+	var style = {
+	  example: {
+	    marginLeft: 5,
+	    marginTop: 5,
+	    marginBottom: 5,
+	    border: '1px solid #ccc',
+	    padding: 10,
+	    minWidth: 400
+	  },
+	  scrolling: {
+	    maxHeight: 120,
+	    overflow: 'auto',
+	    transform: 'translateZ(0)'
+	  },
+	  hoverable: function hoverable(hovering) {
+	    return {
+	      backgroundColor: hovering ? '#ccc' : undefined
+	    };
+	  },
+	  label: {
+	    fontWeight: 'bold',
+	    color: 'darkblue'
+	  }
+	};
+
+	// -----------------------------------------------
+	// Render main
+	// -----------------------------------------------
+	_reactDom2.default.render(_react2.default.createElement(App, null), document.getElementById('app'));
+
+/***/ },
 /* 2 */
 /***/ function(module, exports, __webpack_require__) {
 
@@ -45495,212 +47016,6 @@
 	    return String(it).replace(regExp, replacer);
 	  };
 	};
-
-/***/ },
-/* 552 */
-/***/ function(module, exports, __webpack_require__) {
-
-	'use strict';
-
-	var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
-
-	var _react = __webpack_require__(2);
-
-	var _react2 = _interopRequireDefault(_react);
-
-	var _reactDom = __webpack_require__(33);
-
-	var _reactDom2 = _interopRequireDefault(_reactDom);
-
-	var _timm = __webpack_require__(164);
-
-	var _src = __webpack_require__(165);
-
-	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
-
-	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
-
-	function _possibleConstructorReturn(self, call) { if (!self) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return call && (typeof call === "object" || typeof call === "function") ? call : self; }
-
-	function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
-
-	__webpack_require__(254);
-
-
-	// -----------------------------------------------
-	// Examples
-	// -----------------------------------------------
-
-	var App = function (_React$Component) {
-	  _inherits(App, _React$Component);
-
-	  function App(props) {
-	    _classCallCheck(this, App);
-
-	    var _this = _possibleConstructorReturn(this, Object.getPrototypeOf(App).call(this, props));
-
-	    _this.state = {
-	      initialDate: new Date()
-	    };
-	    return _this;
-	  }
-
-	  _createClass(App, [{
-	    key: 'render',
-	    value: function render() {
-	      return _react2.default.createElement(
-	        'section',
-	        null,
-	        _react2.default.createElement(_src.Floats, null),
-	        _react2.default.createElement(_src.Modals, null),
-	        _react2.default.createElement(_src.Notifications, null),
-	        _react2.default.createElement(_src.Hints, null),
-	        _react2.default.createElement(DateTimeInputs, null)
-	      );
-	    }
-	  }]);
-
-	  return App;
-	}(_react2.default.Component);
-
-	var DateTimeInputs = function (_React$Component2) {
-	  _inherits(DateTimeInputs, _React$Component2);
-
-	  function DateTimeInputs(props) {
-	    _classCallCheck(this, DateTimeInputs);
-
-	    var _this2 = _possibleConstructorReturn(this, Object.getPrototypeOf(DateTimeInputs).call(this, props));
-
-	    _this2.state = {
-	      initialDate: new Date()
-	    };
-	    return _this2;
-	  }
-
-	  _createClass(DateTimeInputs, [{
-	    key: 'render',
-	    value: function render() {
-	      return _react2.default.createElement(
-	        'section',
-	        null,
-	        _react2.default.createElement(
-	          'h2',
-	          null,
-	          'Date and time inputs'
-	        ),
-	        _react2.default.createElement(
-	          'p',
-	          null,
-	          'You can have date (default), time and date-time pickers:'
-	        ),
-	        _react2.default.createElement(
-	          'div',
-	          { style: (0, _src.flexContainer)('row', { flexWrap: 'wrap', justifyContent: 'center' }) },
-	          _react2.default.createElement(_src.DateInput, { type: 'inlinePicker',
-	            value: this.state.initialDate,
-	            styleOuter: { marginRight: '1em' }
-	          }),
-	          _react2.default.createElement(_src.DateInput, { type: 'inlinePicker', date: false, time: true, utc: false, seconds: true,
-	            value: this.state.initialDate,
-	            styleOuter: { marginRight: '1em' }
-	          }),
-	          _react2.default.createElement(_src.DateInput, { type: 'inlinePicker',
-	            value: this.state.initialDate,
-	            time: true, seconds: true
-	          })
-	        ),
-	        _react2.default.createElement(
-	          'p',
-	          null,
-	          'In date pickers, press the arrow keys to change the date/time, and the page-up/page-down keys to show the previous/next month. In time pickers, press the arrow keys to move the minute hand, and the page-up/page-down keys to move the hour hand.'
-	        ),
-	        _react2.default.createElement(
-	          'p',
-	          null,
-	          ' You can also choose between an analogue time picker (with or without second hand) and a digital one:'
-	        ),
-	        _react2.default.createElement(
-	          'div',
-	          { style: (0, _src.flexContainer)('row', { flexWrap: 'wrap', justifyContent: 'center' }) },
-	          _react2.default.createElement(_src.DateInput, { type: 'inlinePicker', date: false, time: true, utc: false, seconds: true,
-	            value: this.state.initialDate,
-	            styleOuter: { marginRight: '1em' }
-	          }),
-	          _react2.default.createElement(_src.DateInput, { type: 'inlinePicker', date: false, time: true, utc: false,
-	            value: this.state.initialDate,
-	            styleOuter: { marginRight: '1em' }
-	          }),
-	          _react2.default.createElement(_src.DateInput, { type: 'inlinePicker', date: false, time: true, analogTime: false, utc: false, seconds: true,
-	            value: this.state.initialDate
-	          })
-	        ),
-	        '-- Disabled (with current time) -- Accent color -- Explain UTC variants',
-	        _react2.default.createElement(
-	          'p',
-	          null,
-	          'Date and time pickers can be of three types:'
-	        ),
-	        _react2.default.createElement(
-	          'ul',
-	          null,
-	          _react2.default.createElement(
-	            'li',
-	            null,
-	            'A simple field (',
-	            _react2.default.createElement(
-	              'code',
-	              null,
-	              'type="onlyField"'
-	            ),
-	            '):',
-	            ' ',
-	            _react2.default.createElement(_src.DateInput, { type: 'onlyField', placeholder: 'MM/DD/YYYY' })
-	          ),
-	          _react2.default.createElement(
-	            'li',
-	            null,
-	            'A field with a dropdown (',
-	            _react2.default.createElement(
-	              'code',
-	              null,
-	              'type="dropDownPicker"'
-	            ),
-	            '), the default one:',
-	            ' ',
-	            _react2.default.createElement(_src.DateInput, { placeholder: 'MM/DD/YYYY' }),
-	            ' ',
-	            '(press ESC to show/hide the picker)'
-	          ),
-	          _react2.default.createElement(
-	            'li',
-	            null,
-	            'An inline date or time picker (',
-	            _react2.default.createElement(
-	              'code',
-	              null,
-	              'type="inlinePicker"'
-	            ),
-	            '):'
-	          ),
-	          _react2.default.createElement(
-	            'div',
-	            { style: { marginTop: '1em', textAlign: 'center' } },
-	            _react2.default.createElement(_src.DateInput, { type: 'inlinePicker', styleOuter: { display: 'inline-block' } })
-	          )
-	        )
-	      );
-	    }
-	  }]);
-
-	  return DateTimeInputs;
-	}(_react2.default.Component);
-
-	// -----------------------------------------------
-	// Render main
-	// -----------------------------------------------
-
-
-	_reactDom2.default.render(_react2.default.createElement(App, null), document.getElementById('app'));
 
 /***/ }
 /******/ ]);
