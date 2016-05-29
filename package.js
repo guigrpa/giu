@@ -59,11 +59,11 @@ const specs = {
                                   'cp -r src libEs6',
                                 ]),
     docs:                       'extract-docs --template docs/templates/README.md --output README.md',
-    buildExample:               'cross-env NODE_ENV=production webpack -p --config examples/webpackConfig.js --progress --display-chunks',
+    buildExamples:              'cross-env NODE_ENV=production webpack -p --config examples/webpackConfig.js --progress --display-chunks',
     build:                      runMultiple([
                                   'npm run lint',
                                   'npm run compile',
-                                  'npm run buildExample',
+                                  'npm run buildExamples',
                                   // 'npm run test',
                                   'npm run docs',
                                   'npm run xxl',

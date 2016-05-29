@@ -28,7 +28,7 @@ module.exports = {
     // Where PRODUCTION bundles will be stored
     path: path.resolve(process.cwd(), 'examples/public'),
 
-    publicPath: '/public/',
+    publicPath: 'public/',
   },
 
   // -------------------------------------------------
