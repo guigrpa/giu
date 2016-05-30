@@ -21,6 +21,8 @@ const runTestCov = env => {
   ]);
 };
 
+const WEBPACK = 'webpack --config examples/webpackConfig.js --progress --display-chunks';
+
 // ===============================================
 // Specs
 // ===============================================
@@ -58,8 +60,6 @@ const specs = {
                                   'cp -r src libEs6',
                                 ]),
     docs:                       'extract-docs --template docs/templates/README.md --output README.md',
-    buildExamples:              'cross-env NODE_ENV=production webpack -p --config examples/webpackConfig.js --progress --display-chunks',
-    buildExamplesDev:           'cross-env NODE_ENV=production webpack --config examples/webpackConfig.js --progress --display-chunks --watch',
     build:                      runMultiple([
                                   'npm run lint',
                                   'npm run compile',
@@ -71,6 +71,35 @@ const specs = {
     travis:                     runMultiple([
                                   'npm run compile',
                                   // 'npm run testCovFull',
+                                ]),
+
+    // Examples
+    buildExamples:              'npm run buildExamplesSsr',
+    buildExamplesDev:           runMultiple([
+                                  'npm run buildExamplesClean',
+                                  'npm run buildExamplesCopy',
+                                  'cp examples/*.html examples/public/',
+                                  `${WEBPACK} --watch`,
+                                ]),
+    buildExamplesSsr:           runMultiple([
+                                  'npm run buildExamplesClean',
+                                  'npm run buildExamplesCopy',
+                                  `cross-env NODE_ENV=production SERVER_SIDE_RENDERING=true ${WEBPACK} -p --watch`,
+                                ]),
+    buildExamplesSsrDev:        runMultiple([
+                                  'npm run buildExamplesClean',
+                                  'npm run buildExamplesCopy',
+                                  `cross-env NODE_ENV=production SERVER_SIDE_RENDERING=true ${WEBPACK} --watch`,
+                                ]),
+    buildExamplesClean:         runMultiple([
+                                  'rm -rf ./examples/public',
+                                  'cd examples',
+                                  'mkdir public',
+                                  'cd ..',
+                                ]),
+    buildExamplesCopy:          runMultiple([
+                                  'cp -r examples/stylesheets examples/public/',
+                                  'cp examples/favicon.ico examples/public/',
                                 ]),
 
     // Static analysis
@@ -134,6 +163,7 @@ const specs = {
     'extract-docs': '^1.0.0',
     'xxl': '^0.1.0',
     'cross-env': '^1.0.7',
+    'diveSync': '0.3.0',
 
     moment: '^2.0.0',
 
@@ -160,6 +190,7 @@ const specs = {
     'css-loader': '0.23.1',
     'style-loader': '0.13.1',
     'extract-text-webpack-plugin': '1.0.1',
+    'static-site-generator-webpack-plugin': '2.1.0',
 
     // Linting
     'eslint': '^2.4.0',

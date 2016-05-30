@@ -528,8 +528,6 @@ class ProgressExample extends React.Component {
   constructor(props) {
     super(props);
     this.state = { value: 0.3 };
-  }
-  componentDidMount() {
     setInterval(() => { this.setState({ value: Math.random() }); }, 2000);
   }
   render() {
@@ -870,8 +868,6 @@ class TimePickerNow extends React.Component {
     this.state = {
       curDate: new Date(),
     };
-  }
-  componentDidMount() {
     setInterval(() => {
       this.setState({ curDate: new Date() });
     }, 1000);

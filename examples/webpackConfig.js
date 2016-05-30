@@ -1,7 +1,9 @@
+const fs = require('fs');
 const path = require('path');
 const webpack = require('webpack');
-const ExtractTextPlugin = require('extract-text-webpack-plugin');
+const StaticSiteGeneratorPlugin = require('static-site-generator-webpack-plugin');
 const fProduction = process.env.NODE_ENV === 'production';
+const fSsr = !!process.env.SERVER_SIDE_RENDERING;
 
 const _entry = (entry) => [
   // 'webpack-hot-middleware/client?reload=true',
@@ -9,8 +11,6 @@ const _entry = (entry) => [
 ];
 
 const MOMENT_LANGS = ['en-gb', 'ca', 'es', 'de'];
-
-const _styleLoader = loaderDesc => ExtractTextPlugin.extract('style-loader', loaderDesc);
 
 module.exports = {
 
@@ -32,30 +32,46 @@ module.exports = {
     path: path.resolve(process.cwd(), 'examples/public'),
 
     publicPath: '',
+
+    libraryTarget: fSsr ? 'umd' : undefined,
   },
 
   // -------------------------------------------------
   // Configuration
   // -------------------------------------------------
-  devtool: fProduction ? undefined : 'eval',
+  // devtool: fProduction ? undefined : 'eval',
 
   resolve: {
     // Add automatically the following extensions to required modules
     extensions: ['', '.jsx', '.js'],
   },
 
-  plugins: [
-    // new webpack.HotModuleReplacementPlugin(),
-    new webpack.NoErrorsPlugin(),
-    new webpack.DefinePlugin({
-      'process.env.NODE_ENV': JSON.stringify(fProduction ? 'production' : 'development'),
-    }),
-    new webpack.ContextReplacementPlugin(
-      /moment[\\\/]locale$/,
-      new RegExp(`.[\\\/](${MOMENT_LANGS.join('|')})`)
-    ),
-    new ExtractTextPlugin('[name].bundle.css'),
-  ],
+  plugins: (() => {
+    const out = [
+      // new webpack.HotModuleReplacementPlugin(),
+      new webpack.NoErrorsPlugin(),
+      new webpack.DefinePlugin({
+        'process.env.NODE_ENV': JSON.stringify(fProduction ? 'production' : 'development'),
+        'process.env.SERVER_SIDE_RENDERING': JSON.stringify(fSsr),
+      }),
+      new webpack.ContextReplacementPlugin(
+        /moment[\\\/]locale$/,
+        new RegExp(`.[\\\/](${MOMENT_LANGS.join('|')})`)
+      ),
+    ];
+    if (fSsr) {
+      out.push(new StaticSiteGeneratorPlugin('demo1', ['demo1.html'], {
+        template: fs.readFileSync(path.join(__dirname, 'demo1.html'), 'utf8'),
+      }));
+      const inlineDocs = require('./extractInlineDocs');
+      out.push(new StaticSiteGeneratorPlugin('demo2', ['demo2.html'], {
+        template: fs.readFileSync(path.join(__dirname, 'demo2.html'), 'utf8'),
+        mdOutput: 'README_alt.md',
+        inlineDocs,
+      }));
+    }
+    return out;
+  })(),
 
   module: {
     loaders: [{
@@ -67,7 +83,7 @@ module.exports = {
       loader: 'file',
     }, {
       test: /\.css$/,
-      loader: _styleLoader('css'),
+      loader: fSsr ? 'css' : 'style!css',
     }],
   },
 };
