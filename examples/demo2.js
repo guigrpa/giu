@@ -2,6 +2,7 @@ import React                from 'react';
 import ReactDOM             from 'react-dom';
 import ReactDOMServer       from 'react-dom/server';
 import marked               from 'marked';
+import hljs                 from 'highlight.js';
 import { merge }            from 'timm';
 require('babel-polyfill');
 import {
@@ -23,53 +24,75 @@ import {
   isRequired, isEmail, isGte, isOneOf, isDate,
 }                           from '../src';
 
-let allMarkdown = '';
+hljs.configure({ languages: ['js', 'html'] });
+const highlight = code => hljs.highlightAuto(code).value;
+marked.setOptions({ highlight });
 
-const Markdown = ({ md }) => {
-  allMarkdown += `${md}\n`;
-  return <div dangerouslySetInnerHTML={marked(md)} />;
-};
+const Markdown = ({ md }) =>
+  <div dangerouslySetInnerHTML={{ __html: marked(md) }} />;
 
 // -----------------------------------------------
 // Main
 // -----------------------------------------------
-const App = () => (
-  <div>
-    <Floats />
-    <Modals />
-    <Notifications />
-    <Hints />
-    <section className="page-header">
-      <h1 className="project-name">Giu Demo</h1>
-    </section>
+const App = ({ md }) => {
+  const contentPieces = [];
+  if (md) {
+    md.split(/\[\[\[(.+)\]\]\]/).forEach((segment, i) => {
+      if (i % 2) {
+        contentPieces.push(<Contents key={i} id={segment} />);
+      } else {
+        contentPieces.push(<Markdown key={i} md={segment} />);
+      }
+    });
+  }
+  return (
+    <div>
+      <Floats />
+      <Modals />
+      <Notifications />
+      <Hints />
+      <section className="page-header">
+        <h1 className="project-name">Giu</h1>
+        <h2 className="project-tagline">An opinionated Swiss-army knife for building React application GUIs.</h2>
+      </section>
 
-    <section className="main-content">
-      <Contents />
+      <section className="main-content">
+        {contentPieces}
 
-      <footer className="site-footer">
-        <span className="site-footer-owner">
-          <a href="https://github.com/guigrpa/giu">Giu</a>
-          {' '}is maintained by{' '}
-          <a href="https://github.com/guigrpa">guigrpa</a>.
-        </span>
-        <span className="site-footer-credits">
-          This page uses the{' '}
-          <a href="https://github.com/jasonlong/cayman-theme">Cayman theme</a>
-          {' '}by{' '}
-          <a href="https://twitter.com/jasonlong">Jason Long</a>.
-        </span>
-      </footer>
+        <Inputs />
 
-    </section>
+        <footer className="site-footer">
+          <span className="site-footer-owner">
+            <a href="https://github.com/guigrpa/giu">Giu</a>
+            {' '}is maintained by{' '}
+            <a href="https://github.com/guigrpa">guigrpa</a>.
+          </span>
+          <span className="site-footer-credits">
+            This page uses the{' '}
+            <a href="https://github.com/jasonlong/cayman-theme">Cayman theme</a>
+            {' '}by{' '}
+            <a href="https://twitter.com/jasonlong">Jason Long</a>.
+          </span>
+        </footer>
 
-  </div>
-);
+      </section>
 
-const Contents = () => (
-  <div>
-    <Inputs />
-  </div>
-);
+    </div>
+  );
+};
+
+const Contents = ({ id }) => {
+  let el;
+  switch (id) {
+    case 'demo:input-types': el = <InputTypes />; break;
+    default: el = <div><b>MISSING DEMO: {id}</b></div>; break;
+  }
+  return (
+    <div>
+      {el}
+    </div>
+  );
+};
 
 // -----------------------------------------------
 // Sections
@@ -84,7 +107,6 @@ class Inputs extends React.Component {
           state delegation (optional), comprehensive validation, JS types and nullability.
           More details on usage can be found in the <a href="http://guigrpa.github.io/giu/">docs</a>.
         </p>
-        <InputTypes />
         <InputValidation />
         <DateInputs />
         <Selects />
@@ -145,9 +167,8 @@ class InputValidation extends React.Component {
   render() {
     return (
       <div>
-        <h3>Input validation</h3>
         <p>
-          Here are some examples of predefined validators 
+          And here are some examples of predefined validators 
           (just focus on a field, enter a valid/invalid value and focus elsewhere to trigger validation):
         </p>
         <div style={{ textAlign: 'center' }}>
@@ -326,7 +347,7 @@ class Selects extends React.Component {
           browsers and platforms than the native Selects.
         </p>
         <ul>
-          <li>Native select: <Select items={selectOptions} value="blueberries" required /></li>
+          <li>Native select: <Select items={selectOptions('alt')} value="blueberries" required /></li>
           <li>Custom select, drop-down: <Select type="dropDownPicker" items={selectOptions('shift+alt')} value="blueberries" required /></li>
           <li>
             Custom select, inline: 
@@ -365,18 +386,25 @@ class DropDownMenus extends React.Component {
 // -----------------------------------------------
 // Render main
 // -----------------------------------------------
-const mainEl = <App />;
 
 // Normal render
 if (typeof document !== 'undefined') {
+  const mainEl = <App md={window.appBootstrap.md} />;
   ReactDOM.render(mainEl, document.getElementById('app'));
 
 // SSR
 } else {
   module.exports = function render(locals, callback) {
+    const mainEl = <App md={locals.readme} />;
+    const ssrBootstrap = `
+      <script>
+        window.appBootstrap = ${JSON.stringify({ md: locals.readme })}
+      </script>
+    `.trim();
     const ssrHtml = ReactDOMServer.renderToString(mainEl);
-    const ssrCss = require('../src/all.css');
+    const ssrCss = require('../src/all.css') + '\n' + require('highlight.js/styles/github.css');
     let rendered = locals.template;
+    rendered = rendered.replace('<!-- ssrBootstrap -->', ssrBootstrap);
     rendered = rendered.replace('<!-- ssrHtml -->', ssrHtml);
     rendered = rendered.replace('<!-- ssrCss -->', ssrCss);
     callback(null, rendered);

@@ -1,7 +1,5 @@
 # Giu [![npm version](https://img.shields.io/npm/v/giu.svg)](https://www.npmjs.com/package/giu)
 
-An opinionated Swiss-army knife for building React application GUIs.
-
 Online demos: [an extremely compact one](http://guigrpa.github.io/giu/demo/demo1.html)
 
 ## Why?
@@ -42,19 +40,19 @@ Installation notes:
 
 * *Moment* drags into your production bundle a lot of i18n resources which you probably don't need. Whitelist the languages bundled by Webpack doing something like this (webpack.config.js):
 
-```js
-const MOMENT_LANGS = ['en-gb', 'ca', 'es', 'de'];
-module.exports = {
-  // ...
-  plugins: [
-    // ..
-    new webpack.ContextReplacementPlugin(
-      /moment[\\\/]locale$/,
-      new RegExp(`.[\\\/](${MOMENT_LANGS.join('|')})`)
-    ),
-  ],
-}
-```
+    ```js
+    const MOMENT_LANGS = ['en-gb', 'ca', 'es', 'de'];
+    module.exports = {
+      // ...
+      plugins: [
+        // ..
+        new webpack.ContextReplacementPlugin(
+          /moment[\\\/]locale$/,
+          new RegExp(`.[\\\/](${MOMENT_LANGS.join('|')})`)
+        ),
+      ],
+    }
+    ```
 
 ## Inputs
 
@@ -85,6 +83,8 @@ You *could* use Giu in a similar way:
 />
 ```
 
+[[[demo:input-intro-age]]]
+
 This approach follows *The React Way™*, but we're already seeing a first benefit: the `onChange` handler will be called (in addition to the native event) with the *converted* input value: either a number or `null`; no need to do the conversion ourselves.
 
 But we can further improve on this:
@@ -107,6 +107,7 @@ onClickSubmit() {
 
 The promise returned by `validateAndGetValue()` will either resolve with the current value or reject if validation fails.
 
+[[[demo:input-types]]]
 
 ### Input value types
 
@@ -135,7 +136,7 @@ Some validators are enabled by default:
 <DateInput />
 ```
 
-![Validator screenshot](https://raw.githubusercontent.com/guigrpa/giu/master/docs/Validator1.png)
+[[[demo:validation-intro]]]
 
 Validation occurs automatically when the input loses focus (i.e. on `blur`). You can also trigger it imperatively by calling `validateAndGetValue()` (see [Imperative API](#imperative-api)).
 
@@ -151,12 +152,15 @@ Enabling additional validators is easy:
 <NumberInput validators={[isGte(5), isLte(10)]} />
 ```
 
-Here is the list of predefined validators, with some examples:
+[[[demo:validation-intro2]]]
+
+Here is the list of predefined validators:
 
 [[[./src/gral/validators.js]]]
 
 As we saw above, some of these validators are automatically enabled for certain components, e.g. `isDate()` in DateInputs and `isNumber()` in NumberInputs. However, you can include them in your `validators` list for customization (e.g. i18n), as you'll see next.
 
+[[[demo:validation-predefined]]]
 
 #### Custom validators
 
@@ -192,6 +196,8 @@ import i18n from 'mady';  // a translation function
 ]} />
 ```
 
+[[[demo:validation-custom-message]]]
+
 You can also create your own validators, which can be synchronous (returning an error message) or asynchronous (returning a promise of an error message) and should have this signature:
 
 * **value** *any?*: the current internal value of the input component
@@ -219,6 +225,8 @@ A couple of examples:
 ]} />
 ```
 
+[[[demo:validation-custom-validator]]]
+
 
 ### Imperative API
 
@@ -243,6 +251,8 @@ Tasks 2 and 3 above are managed via a *pseudo-imperative* API, the `cmds` prop, 
 * `SET_VALUE`: change the current input state (without affecting the original `value` prop). The new value is passed in the command object as `value`.
 * `REVERT`: revert the current input state to the original `value` prop.
 * `FOCUS`, `BLUR`: move the focus to or away from the input component.
+
+[[[demo:imperative-api]]]
 
 *Important note: Commands in the `cmds` prop are executed when a new array is passed down (strict equality is checked). Take this into account so that your commands are not executed more than once!*
 

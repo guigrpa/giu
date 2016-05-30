@@ -1,6 +1,7 @@
 const fs = require('fs');
 const path = require('path');
 const webpack = require('webpack');
+const extractDocs = require('extract-docs');
 const StaticSiteGeneratorPlugin = require('static-site-generator-webpack-plugin');
 const fProduction = process.env.NODE_ENV === 'production';
 const fSsr = !!process.env.SERVER_SIDE_RENDERING;
@@ -63,11 +64,11 @@ module.exports = {
       out.push(new StaticSiteGeneratorPlugin('demo1', ['demo1.html'], {
         template: fs.readFileSync(path.join(__dirname, 'demo1.html'), 'utf8'),
       }));
-      const inlineDocs = require('./extractInlineDocs');
+      // const inlineDocs = require('./extractInlineDocs');
+      const readme = extractDocs({ template: './docs/templates/README.md', missingRefs: true });
       out.push(new StaticSiteGeneratorPlugin('demo2', ['demo2.html'], {
         template: fs.readFileSync(path.join(__dirname, 'demo2.html'), 'utf8'),
-        mdOutput: 'README_alt.md',
-        inlineDocs,
+        readme,
       }));
     }
     return out;

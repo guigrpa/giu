@@ -89,7 +89,7 @@ const specs = {
     buildExamplesSsrDev:        runMultiple([
                                   'npm run buildExamplesClean',
                                   'npm run buildExamplesCopy',
-                                  `cross-env NODE_ENV=production SERVER_SIDE_RENDERING=true ${WEBPACK} --watch`,
+                                  `cross-env SERVER_SIDE_RENDERING=true ${WEBPACK} --watch`,
                                 ]),
     buildExamplesClean:         runMultiple([
                                   'rm -rf ./examples/public',
@@ -160,10 +160,12 @@ const specs = {
 
   devDependencies: {
     storyboard: '^1.0.0',
-    'extract-docs': '^1.0.0',
+    'extract-docs': '^1.2.0',
     'xxl': '^0.1.0',
     'cross-env': '^1.0.7',
     'diveSync': '0.3.0',
+    'marked': '0.3.5',
+    'highlight.js': '9.4.0',
 
     moment: '^2.0.0',
 
