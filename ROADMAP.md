@@ -73,8 +73,10 @@
 - [x] Check embedded hint positioning!
 - [x] Reference docs
 - [x] **Breaking change** Hints: make it a single function that returns arrows and labels, *hint elements*
+- [ ] Provide at least a minimum level of mobile support. Currently there are problems with FocusCapture and Hints.
 - [ ] Long demo with explanations:
     + [ ] Complete demos
+    + [ ] Add DateInput i18n demo
     + [ ] Upload compiled for PRODUCTION
 - [ ] Basic tests with enzyme? Floats, modals, etc. are bound to be tricky
 
