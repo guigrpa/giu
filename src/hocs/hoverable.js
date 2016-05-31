@@ -7,6 +7,7 @@ import { bindAll }          from '../gral/helpers';
 // ==========================================
 // -- Keeps track of `hovering` state and passes it as prop to your base
 // -- component. Provides `onHoverStart`/`onHoverStop` event handlers
+// -- (for `mouseenter` and `mouseleave`, respectively)
 // -- you can attach to any of your base component's DOM elements
 // -- (works for multiple elements).
 // -- If you attach these handlers to an element with an `id` attribute,

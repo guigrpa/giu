@@ -1,5 +1,7 @@
 # Giu [![npm version](https://img.shields.io/npm/v/giu.svg)](https://www.npmjs.com/package/giu)
 
+An opinionated Swiss-army knife for building React application GUIs.
+
 Online demos: [an extremely compact one](http://guigrpa.github.io/giu/demo/demo1.html)
 
 ## Why?
@@ -34,7 +36,7 @@ Make sure you also install the required `peerDependencies` ([*react*](https://gi
 
 Installation notes: 
 
-* Many Giu components (including all inputs) require that you **include the `<Floats />` component at (or near) the root level of your React tree**. No props are required. If you forget it, you'll see a warning in the console and the components will not work correctly.
+* Many Giu components (including all inputs) require that you **include the `<Floats />` component at (or near) the root level of your React tree**. No props are required. If you forget it, you'll see a warning in the console and the components will not work correctly. Other components you might need to add, depending on whether you use them: `<Modals />`, `<Notifications />`, `<Hints />`. More about them below.
 
 * Why is *moment* part of `peerDependencies` and not `dependencies`? For i18n reasons: we want to make sure the user's `moment` object and the one used internally by Giu are exactly the same, so that `DateInput`'s strings and other locale-specific attributes (e.g. first day of the week) are shown correctly. If the version specified by the user and by Giu were incompatible, we would end up with two different `moment` objects.
 
@@ -83,8 +85,6 @@ You *could* use Giu in a similar way:
 />
 ```
 
-
-
 This approach follows *The React Way™*, but we're already seeing a first benefit: the `onChange` handler will be called (in addition to the native event) with the *converted* input value: either a number or `null`; no need to do the conversion ourselves.
 
 But we can further improve on this:
@@ -104,6 +104,8 @@ onClickSubmit() {
   this.refs.age.validateAndGetValue().then(age => { ... })
 }
 ```
+
+
 
 The promise returned by `validateAndGetValue()` will either resolve with the current value or reject if validation fails.
 
@@ -241,7 +243,7 @@ A couple of examples:
     setTimeout(() => 
       val.toLowerCase() === 'unicorn'
         ? resolve()
-        : resolve('checked the database; you must be a \'unicorn\'')
+        : resolve('checked the database; must be a \'unicorn\'')
     , 1000)
   ),
 ]} />
@@ -302,9 +304,7 @@ Tasks 2 and 3 above are managed via a *pseudo-imperative* API, the `cmds` prop, 
     * **errorZ** *number?*: if unspecified, Giu chooses a suitable z-index algorithmically
 
 
-### Specific input props
-
-#### TextInput, PasswordInput, NumberInput, RangeInput, Textarea
+### TextInput, PasswordInput, NumberInput, RangeInput, Textarea
 
 *Note: out of the box, Textarea resizes automatically as needed. You can limit its maximum height by adding a `style` prop: e.g. `style={{ maxHeight: 100 }}`*
 
@@ -312,16 +312,18 @@ Tasks 2 and 3 above are managed via a *pseudo-imperative* API, the `cmds` prop, 
 * **vertical** *boolean?*: [only for `RangeInput`]
 * *All other props are passed through to the `input` element*
 
-#### Checkbox
+### Checkbox
 
 * **label** *string?*: gets converted to a `label` element
 * **styleLabel** *object?*: merged with the `label` style
 
-#### DateInput
+### DateInput
+
 
 Shown below are some examples of DateInput, one of Giu's most versatile components: date/time/date-time modes, with or without drop-down pickers, inline pickers, custom accent color, digital/analogue time picker, disabled style... Not shown: keyboard navigation, clipboard events.
 
 ![DateInput screenshots](https://raw.githubusercontent.com/guigrpa/giu/master/docs/DateInputs.png)
+
 
 If you use [*moment*](https://github.com/moment/moment), your date picker and date/time formats will be automatically translated when you choose a different locale, e.g. `moment.locale('es')`:
 
@@ -344,7 +346,9 @@ If you use [*moment*](https://github.com/moment/moment), your date picker and da
   merged with the outermost `span` style
 * **accentColor** *string?*: CSS color descriptor (e.g. `darkgray`, `#ccffaa`...)
 
-#### Select
+
+
+### Select
 
 Shown below are some examples of Select and its features: `native` and custom (`inlinePicker`|`dropDownPicker`) versions, keyboard shortcuts, custom accent color, disabled style. Not shown: keyboard navigation, clipboard events, automatic scrolling.
 
@@ -384,7 +388,7 @@ Additional props for non-native Selects:
   a single style is used to highlight the selected or the hovered item
 * **accentColor** *string?*: CSS color descriptor (e.g. `darkgray`, `#ccffaa`...)
 
-#### RadioGroup
+### RadioGroup
 
 * **items** *array(object)*: each item has the following attributes
   - **value** *any*: any value that can be converted to JSON. Values should be unique
@@ -392,7 +396,7 @@ Additional props for non-native Selects:
     the corresponding radio button
   - **labelExtra** *any?*: React elements that will be shown below the main label
 
-#### ColorInput
+### ColorInput
 
 Shown below are some examples of ColorInput and its features: inline and drop-down versions, RGB and HSV pickers, transparency slider, custom accent color, disabled style. Not shown: clipboard events.
 
@@ -403,7 +407,7 @@ Shown below are some examples of ColorInput and its features: inline and drop-do
 * **onCloseFloat** *function?*
 * **accentColor** *string?*: CSS color descriptor (e.g. `darkgray`, `#ccffaa`...)
 
-#### FileInput
+### FileInput
 
 * **children** *any? = `Choose file…`*: React elements that
   will be shown inside the button

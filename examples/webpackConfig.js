@@ -20,7 +20,7 @@ module.exports = {
   // -------------------------------------------------
   entry: {
     demo1: _entry('./examples/demo1.js'),
-    demo2: _entry('./examples/demo2.js'),
+    index: _entry('./examples/index.js'),
   },
 
   // -------------------------------------------------
@@ -61,14 +61,17 @@ module.exports = {
       ),
     ];
     if (fSsr) {
+      const readme = extractDocs({
+        template: './docs/templates/README.md',
+        missingRefs: true,
+        skipConditional: true,
+      });
+      out.push(new StaticSiteGeneratorPlugin('index', ['index.html'], {
+        template: fs.readFileSync(path.join(__dirname, 'index.html'), 'utf8'),
+        readme,
+      }));
       out.push(new StaticSiteGeneratorPlugin('demo1', ['demo1.html'], {
         template: fs.readFileSync(path.join(__dirname, 'demo1.html'), 'utf8'),
-      }));
-      // const inlineDocs = require('./extractInlineDocs');
-      const readme = extractDocs({ template: './docs/templates/README.md', missingRefs: true });
-      out.push(new StaticSiteGeneratorPlugin('demo2', ['demo2.html'], {
-        template: fs.readFileSync(path.join(__dirname, 'demo2.html'), 'utf8'),
-        readme,
       }));
     }
     return out;

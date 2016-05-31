@@ -259,14 +259,14 @@ const DropDownExample = () =>
     <ExampleLabel>DropDownMenu (focusable, keyboard-controlled, embedded ListPicker)</ExampleLabel>
     <DropDownMenu
       items={NORMAL_OPTIONS}
-      onClickItem={onChange}
+      onClickItem={onChangeJson}
       style={{padding: "3px 8px"}}
     >
       <Icon icon="bars" /> Menu
     </DropDownMenu>
     <DropDownMenu
       items={TALL_OPTIONS}
-      onClickItem={onChange}
+      onClickItem={onChangeJson}
       accentColor="darkgreen"
       style={{padding: "3px 8px"}}
     >
@@ -274,6 +274,7 @@ const DropDownExample = () =>
     </DropDownMenu>
     <DropDownMenu
       items={WIDE_OPTIONS}
+      onClickItem={onChangeJson}
       floatAlign="right"
       accentColor="darkblue"
       style={{padding: "3px 8px"}}

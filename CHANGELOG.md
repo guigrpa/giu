@@ -1,5 +1,8 @@
 # Changelog
 
+* LargeMessage: allow style customisation.
+* **Bugfix**: SelectCustom: fix value provided to the `onClickItem` handler.
+
 ## 0.5.0 (May. 25, 2016)
 
 * [M] **Add SSR support**:

@@ -1,5 +1,7 @@
 # Giu [![npm version](https://img.shields.io/npm/v/giu.svg)](https://www.npmjs.com/package/giu)
 
+[[[*An opinionated Swiss-army knife for building React application GUIs.]]]
+
 Online demos: [an extremely compact one](http://guigrpa.github.io/giu/demo/demo1.html)
 
 ## Why?
@@ -34,7 +36,7 @@ Make sure you also install the required `peerDependencies` ([*react*](https://gi
 
 Installation notes: 
 
-* Many Giu components (including all inputs) require that you **include the `<Floats />` component at (or near) the root level of your React tree**. No props are required. If you forget it, you'll see a warning in the console and the components will not work correctly.
+* Many Giu components (including all inputs) require that you **include the `<Floats />` component at (or near) the root level of your React tree**. No props are required. If you forget it, you'll see a warning in the console and the components will not work correctly. Other components you might need to add, depending on whether you use them: `<Modals />`, `<Notifications />`, `<Hints />`. More about them below.
 
 * Why is *moment* part of `peerDependencies` and not `dependencies`? For i18n reasons: we want to make sure the user's `moment` object and the one used internally by Giu are exactly the same, so that `DateInput`'s strings and other locale-specific attributes (e.g. first day of the week) are shown correctly. If the version specified by the user and by Giu were incompatible, we would end up with two different `moment` objects.
 
@@ -83,8 +85,6 @@ You *could* use Giu in a similar way:
 />
 ```
 
-[[[demo:input-intro-age]]]
-
 This approach follows *The React Way™*, but we're already seeing a first benefit: the `onChange` handler will be called (in addition to the native event) with the *converted* input value: either a number or `null`; no need to do the conversion ourselves.
 
 But we can further improve on this:
@@ -104,6 +104,8 @@ onClickSubmit() {
   this.refs.age.validateAndGetValue().then(age => { ... })
 }
 ```
+
+[[[demo:input-intro-age]]]
 
 The promise returned by `validateAndGetValue()` will either resolve with the current value or reject if validation fails.
 
@@ -219,7 +221,7 @@ A couple of examples:
     setTimeout(() => 
       val.toLowerCase() === 'unicorn'
         ? resolve()
-        : resolve('checked the database; you must be a \'unicorn\'')
+        : resolve('checked the database; must be a \'unicorn\'')
     , 1000)
   ),
 ]} />
@@ -280,23 +282,27 @@ Tasks 2 and 3 above are managed via a *pseudo-imperative* API, the `cmds` prop, 
     * **errorZ** *number?*: if unspecified, Giu chooses a suitable z-index algorithmically
 
 
-### Specific input props
+### TextInput, PasswordInput, NumberInput, RangeInput, Textarea
 
-#### TextInput, PasswordInput, NumberInput, RangeInput, Textarea
+[[[demo:inputs-simple]]]
 
 *Note: out of the box, Textarea resizes automatically as needed. You can limit its maximum height by adding a `style` prop: e.g. `style={{ maxHeight: 100 }}`*
 
 [[[./src/inputs/textNumberRangeInput.js]]]
 
-#### Checkbox
+### Checkbox
+
+[[[demo:checkboxes]]]
 
 [[[./src/inputs/checkbox.js]]]
 
-#### DateInput
-
+### DateInput
+[[[*
 Shown below are some examples of DateInput, one of Giu's most versatile components: date/time/date-time modes, with or without drop-down pickers, inline pickers, custom accent color, digital/analogue time picker, disabled style... Not shown: keyboard navigation, clipboard events.
 
 ![DateInput screenshots](https://raw.githubusercontent.com/guigrpa/giu/master/docs/DateInputs.png)
+]]]
+[[[demo:date-inputs]]]
 
 If you use [*moment*](https://github.com/moment/moment), your date picker and date/time formats will be automatically translated when you choose a different locale, e.g. `moment.locale('es')`:
 
@@ -304,47 +310,61 @@ If you use [*moment*](https://github.com/moment/moment), your date picker and da
 
 [[[./src/inputs/dateInput.js]]]
 
-#### Select
-
+### Select
+[[[*
 Shown below are some examples of Select and its features: `native` and custom (`inlinePicker`|`dropDownPicker`) versions, keyboard shortcuts, custom accent color, disabled style. Not shown: keyboard navigation, clipboard events, automatic scrolling.
 
 ![Select screenshots](https://raw.githubusercontent.com/guigrpa/giu/master/docs/Selects2.png)
+]]]
+[[[demo:selects]]]
 
 *Recommendation: use `dropDownPicker` for performance, especially if you have hundreds/thousands of Selects with many options: `native` Selects attach all of their `option` subelements to the page, whereas custom Selects only do that when the dropdown is shown.*
 
 [[[./src/inputs/select.js]]]
 
-#### RadioGroup
+### RadioGroup
+
+[[[demo:radio-groups]]]
 
 [[[./src/inputs/radioGroup.js]]]
 
-#### ColorInput
-
+### ColorInput
+[[[*
 Shown below are some examples of ColorInput and its features: inline and drop-down versions, RGB and HSV pickers, transparency slider, custom accent color, disabled style. Not shown: clipboard events.
 
 ![ColorInput screenshots](https://raw.githubusercontent.com/guigrpa/giu/master/docs/ColorInputs.png)
+]]]
+[[[demo:color-inputs]]]
 
 [[[./src/inputs/colorInput.js]]]
 
-#### FileInput
+### FileInput
+
+[[[demo:file-inputs]]]
 
 [[[./src/inputs/fileInput.js]]]
 
 ## DropDownMenu
-
+[[[*
 ![DropDownMenu screenshots](https://raw.githubusercontent.com/guigrpa/giu/master/docs/DropDownMenu.png)
+]]]
+[[[demo:drop-down-menus]]]
 
 [[[./src/components/dropDownMenu.js]]]
 
 ## Modals
-
+[[[*
 ![Modal screenshots](https://raw.githubusercontent.com/guigrpa/giu/master/docs/Modal.png)
+]]]
+[[[demo:modals]]]
 
 [[[./src/components/modals.js]]]
 
 ## Notifications
-
+[[[*
 ![Notifications screenshots](https://raw.githubusercontent.com/guigrpa/giu/master/docs/Notification.png)
+]]]
+[[[demo:notifications]]]
 
 [[[./src/components/notifications.js]]]
 
@@ -354,8 +374,10 @@ Hint screens give tips on how to use your application, through
 a combination of labels (icons, images, text) and dynamically-positioned
 arrows. You can show hint screens, for example, when the user reaches a
 certain part of your application or performs an action for the first time.
-
+[[[*
 ![Hint screen screenshots](https://raw.githubusercontent.com/guigrpa/giu/master/docs/Hints.png)
+]]]
+[[[demo:hints]]]
 
 [[[./src/components/hints.js]]]
 
@@ -364,9 +386,13 @@ certain part of your application or performs an action for the first time.
 
 ### Button
 
+[[[demo:buttons]]]
+
 [[[./src/components/button.js]]]
 
 ### Icon and Spinner
+
+[[[demo:icons]]]
 
 [[[./src/components/icon.js]]]
 
@@ -374,9 +400,13 @@ certain part of your application or performs an action for the first time.
 
 ### LargeMessage
 
+[[[demo:large-messages]]]
+
 [[[./src/components/largeMessage.js]]]
 
 ### Progress
+
+[[[demo:progress]]]
 
 [[[./src/components/progress.js]]]
 
@@ -399,6 +429,8 @@ export default hoverable(MyReactComponent);
 ```
 
 ### Hoverable HOC
+
+[[[demo:hoverable]]]
 
 [[[./src/hocs/hoverable.js]]]
 
