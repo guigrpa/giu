@@ -232,7 +232,7 @@ class SelectCustomBase extends React.Component {
   onClickItem(ev, nextValue) {
     const { inlinePicker } = this.props;
     if (!inlinePicker) this.setState({ fFloat: false });
-    this.props.onClickItem && this.props.onClickItem(ev, nextValue);
+    this.props.onClickItem && this.props.onClickItem(ev, toExternalValue(nextValue));
   }
 
   // ==========================================
