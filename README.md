@@ -2,7 +2,9 @@
 
 An opinionated Swiss-army knife for building React application GUIs.
 
-Online demos: [an extremely compact one](http://guigrpa.github.io/giu/demo/demo1.html)
+Online demos: [an extremely compact one](http://guigrpa.github.io/giu/demo1.html) and [an interactive version of this documentation](http://guigrpa.github.io).
+
+
 
 ## Why?
 
@@ -306,6 +308,8 @@ Tasks 2 and 3 above are managed via a *pseudo-imperative* API, the `cmds` prop, 
 
 ### TextInput, PasswordInput, NumberInput, RangeInput, Textarea
 
+
+
 *Note: out of the box, Textarea resizes automatically as needed. You can limit its maximum height by adding a `style` prop: e.g. `style={{ maxHeight: 100 }}`*
 
 * **style** *object?*: merged with the `input`/`textarea` style
@@ -314,15 +318,17 @@ Tasks 2 and 3 above are managed via a *pseudo-imperative* API, the `cmds` prop, 
 
 ### Checkbox
 
+
+
 * **label** *string?*: gets converted to a `label` element
 * **styleLabel** *object?*: merged with the `label` style
 
 ### DateInput
 
-
 Shown below are some examples of DateInput, one of Giu's most versatile components: date/time/date-time modes, with or without drop-down pickers, inline pickers, custom accent color, digital/analogue time picker, disabled style... Not shown: keyboard navigation, clipboard events.
 
 ![DateInput screenshots](https://raw.githubusercontent.com/guigrpa/giu/master/docs/DateInputs.png)
+
 
 
 If you use [*moment*](https://github.com/moment/moment), your date picker and date/time formats will be automatically translated when you choose a different locale, e.g. `moment.locale('es')`:
@@ -346,13 +352,13 @@ If you use [*moment*](https://github.com/moment/moment), your date picker and da
   merged with the outermost `span` style
 * **accentColor** *string?*: CSS color descriptor (e.g. `darkgray`, `#ccffaa`...)
 
-
-
 ### Select
 
 Shown below are some examples of Select and its features: `native` and custom (`inlinePicker`|`dropDownPicker`) versions, keyboard shortcuts, custom accent color, disabled style. Not shown: keyboard navigation, clipboard events, automatic scrolling.
 
 ![Select screenshots](https://raw.githubusercontent.com/guigrpa/giu/master/docs/Selects2.png)
+
+
 
 *Recommendation: use `dropDownPicker` for performance, especially if you have hundreds/thousands of Selects with many options: `native` Selects attach all of their `option` subelements to the page, whereas custom Selects only do that when the dropdown is shown.*
 
@@ -390,6 +396,8 @@ Additional props for non-native Selects:
 
 ### RadioGroup
 
+
+
 * **items** *array(object)*: each item has the following attributes
   - **value** *any*: any value that can be converted to JSON. Values should be unique
   - **label** *any?*: React elements that will be shown as a label for
@@ -402,12 +410,16 @@ Shown below are some examples of ColorInput and its features: inline and drop-do
 
 ![ColorInput screenshots](https://raw.githubusercontent.com/guigrpa/giu/master/docs/ColorInputs.png)
 
+
+
 * **inlinePicker** *boolean?*: whether the complete color picker
   should be inlined (`true`) or appear as a dropdown when clicked
 * **onCloseFloat** *function?*
 * **accentColor** *string?*: CSS color descriptor (e.g. `darkgray`, `#ccffaa`...)
 
 ### FileInput
+
+
 
 * **children** *any? = `Choose file…`*: React elements that
   will be shown inside the button
@@ -416,6 +428,8 @@ Shown below are some examples of ColorInput and its features: inline and drop-do
 ## DropDownMenu
 
 ![DropDownMenu screenshots](https://raw.githubusercontent.com/guigrpa/giu/master/docs/DropDownMenu.png)
+
+
 
 * **items** *array(object)*: menu items, similar to [Select](#select)
   but with the inclusion of an `onClick` callback:
@@ -436,6 +450,8 @@ Shown below are some examples of ColorInput and its features: inline and drop-do
 ## Modals
 
 ![Modal screenshots](https://raw.githubusercontent.com/guigrpa/giu/master/docs/Modal.png)
+
+
 
 **Include the `<Modals />` component at (or near)
 the root level of your React tree**. No props are required.
@@ -484,6 +500,8 @@ API reference:
 
 ![Notifications screenshots](https://raw.githubusercontent.com/guigrpa/giu/master/docs/Notification.png)
 
+
+
 **Include the `<Notifications />` component at (or near)
 the root level of your React tree**. No props are required.
 Here's an example on how you would create a notification:
@@ -526,6 +544,8 @@ arrows. You can show hint screens, for example, when the user reaches a
 certain part of your application or performs an action for the first time.
 
 ![Hint screen screenshots](https://raw.githubusercontent.com/guigrpa/giu/master/docs/Hints.png)
+
+
 
 **Include the `<Hints />` component at (or near)
 the root level of your React tree**. No props are required.
@@ -591,6 +611,8 @@ API reference:
 
 ### Button
 
+
+
 An inconspicuous-looking button-in-a-`span`.
 
 * **plain** *boolean?*: removes most button styles
@@ -602,6 +624,8 @@ An inconspicuous-looking button-in-a-`span`.
 * *All other props are passed through to the `span` element*
 
 ### Icon and Spinner
+
+
 
 A wrapper for Font Awesome icons.
 
@@ -617,13 +641,19 @@ A wrapper for Font Awesome icons.
 
 ### LargeMessage
 
+
+
 A simple `div` showing a centered message with a large font size.
 Ideal for *No matches found*, *Choose one of the options above*,
 that kind of thing.
 
 * **children** *any*: the contents to be shown
+* **style** *object?*: merged with the outermost `div` style
+* *All other props are passed through to the `div` element*
 
 ### Progress
+
+
 
 A wrapper for the native HTML `progress` element (with 100% width).
 *All props are passed through to the `progress` element.
@@ -650,8 +680,11 @@ export default hoverable(MyReactComponent);
 
 ### Hoverable HOC
 
+
+
 Keeps track of `hovering` state and passes it as prop to your base
 component. Provides `onHoverStart`/`onHoverStop` event handlers
+(for `mouseenter` and `mouseleave`, respectively)
 you can attach to any of your base component's DOM elements
 (works for multiple elements).
 If you attach these handlers to an element with an `id` attribute,

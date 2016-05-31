@@ -90,6 +90,7 @@ const App = ({ md }) => {
 const Contents = ({ id }) => {
   let el;
   switch (id) {
+    case 'demo:intro': el = <DemoIntro />; break;
     case 'demo:input-intro-age': el = <InputIntroAge />; break;
     case 'demo:input-types': el = <InputTypes />; break;
     case 'demo:validation-intro': el = <ValidationIntro />; break;
@@ -119,6 +120,12 @@ const Contents = ({ id }) => {
 // -----------------------------------------------
 // Demos
 // -----------------------------------------------
+const DemoIntro = () =>
+  <div>
+    All of the examples in this page are interactive and use Giu's
+    components and helpers. Feel free to play with them!
+  </div>
+
 class InputIntroAge extends React.Component {
   render() {
     return (
@@ -679,7 +686,7 @@ class LargeMessages extends React.Component {
         break;
       default: break;
     }
-    return <LargeMessage>{el}</LargeMessage>;
+    return <LargeMessage style={{ minHeight: 110 }}>{el}</LargeMessage>;
   }
 }
 
