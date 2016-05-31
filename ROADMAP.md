@@ -74,7 +74,8 @@
 - [x] Reference docs
 - [x] **Breaking change** Hints: make it a single function that returns arrows and labels, *hint elements*
 - [ ] Long demo with explanations:
-    + [ ] RadioGroup: add space between radio button and label
+    + [ ] Complete demos
+    + [ ] Upload compiled for PRODUCTION
 - [ ] Basic tests with enzyme? Floats, modals, etc. are bound to be tricky
 
 - [ ] Focus delegation?
