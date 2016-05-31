@@ -1,5 +1,6 @@
 import React                from 'react';
 import PureRenderMixin      from 'react-addons-pure-render-mixin';
+import { omit, merge }      from 'timm';
 import { COLORS }           from '../gral/constants';
 
 // ==========================================
@@ -10,9 +11,12 @@ import { COLORS }           from '../gral/constants';
 // -- that kind of thing.
 // --
 // -- * **children** *any*: the contents to be shown
+// -- * **style** *object?*: merged with the outermost `div` style
+// -- * *All other props are passed through to the `div` element*
 class LargeMessage extends React.Component {
   static propTypes = {
     children:               React.PropTypes.any,
+    style:                  React.PropTypes.object,
   };
 
   constructor(props) {
@@ -21,10 +25,12 @@ class LargeMessage extends React.Component {
   }
 
   render() {
+    const otherProps = omit(this.props, PROP_KEYS);
     return (
       <div
         className="giu-large-message"
-        style={style.outer}
+        {...otherProps}
+        style={style.outer(this.props)}
       >
         {this.props.children}
       </div>
@@ -33,15 +39,23 @@ class LargeMessage extends React.Component {
 }
 
 // ==========================================
+// Miscellaneous
+// ==========================================
+const PROP_KEYS = Object.keys(LargeMessage.propTypes);
+
+// ==========================================
 // Styles
 // ==========================================
 const style = {
-  outer: {
-    fontSize: '1.4em',
-    fontWeight: 700,
-    color: COLORS.dim,
-    padding: '0.8em',
-    textAlign: 'center',
+  outer: ({ style: baseStyle }) => {
+    const out = {
+      fontSize: '1.4em',
+      fontWeight: 700,
+      color: COLORS.dim,
+      padding: '0.8em',
+      textAlign: 'center',
+    };
+    return merge(out, baseStyle);
   },
 };
 
