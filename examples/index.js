@@ -403,7 +403,7 @@ class DateInputs extends React.Component {
   }
 
   render() {
-    const { lang } = this.state;
+    const { lang, initialDate, curDate } = this.state;
     const todayName = TODAY[lang];
     return (
       <div>
@@ -411,15 +411,15 @@ class DateInputs extends React.Component {
 
         <CenteredFlex>
           <DateInput type="inlinePicker"
-            value={this.state.initialDate}
+            value={initialDate}
             lang={lang} todayName={todayName}
           />
           <DateInput type="inlinePicker" date={false} time seconds
-            value={this.state.initialDate}
+            value={initialDate}
             lang={lang} todayName={todayName}
           />
           <DateInput type="inlinePicker" time seconds
-            value={this.state.initialDate}
+            value={initialDate}
             lang={lang} todayName={todayName}
           />
         </CenteredFlex>
@@ -440,12 +440,12 @@ class DateInputs extends React.Component {
         </Centered>
 
         <p><b>UTC vs. local time:</b> By default, date-time pickers use local time, whereas time-only pickers use UTC and date-only
-        pickers provide dates with time set to 00:00UTC. You can change this specifying the `utc` prop;
+        pickers provide dates with time set to 00:00UTC. You can change this specifying the <code>utc</code> prop;
         for example, a local-time time picker:</p>
 
         <CenteredFlex>
           <DateInput type="inlinePicker" date={false} time seconds utc={false}
-            value={this.state.initialDate}
+            value={initialDate}
             lang={lang} todayName={todayName}
           />
         </CenteredFlex>
@@ -487,20 +487,22 @@ class DateInputs extends React.Component {
           </div>
         </ul>
 
+        <p><i>Note that Giu pickers are replaced by the native HTML ones on iOS.</i></p>
+
         <p>If you are including a time picker, you can choose between an analogue one
         (with or without second hand) and a digital one:</p>
 
         <CenteredFlex>
           <DateInput type="inlinePicker" date={false} time utc={false} seconds
-            value={this.state.initialDate}
+            value={initialDate}
             lang={lang} todayName={todayName}
           />
           <DateInput type="inlinePicker" date={false} time utc={false}
-            value={this.state.initialDate}
+            value={initialDate}
             lang={lang} todayName={todayName}
           />
           <DateInput type="inlinePicker" date={false} time analogTime={false} utc={false} seconds
-            value={this.state.initialDate}
+            value={initialDate}
             lang={lang} todayName={todayName}
           />
         </CenteredFlex>
@@ -509,12 +511,12 @@ class DateInputs extends React.Component {
 
         <CenteredFlex>
           <DateInput type="inlinePicker" time seconds
-            value={this.state.initialDate}
+            value={initialDate}
             accentColor="olive"
             lang={lang} todayName={todayName}
           />
           <DateInput type="inlinePicker" time seconds analogTime={false}
-            value={this.state.initialDate}
+            value={initialDate}
             accentColor="lightgreen"
             lang={lang} todayName={todayName}
           />
@@ -524,11 +526,11 @@ class DateInputs extends React.Component {
 
         <CenteredFlex style={{ alignItems: 'flex-start', marginBottom: '1em' }}>
           <DateInput time seconds
-            value={this.state.curDate} disabled
+            value={curDate} disabled nativeOnIos={false}
             lang={lang} todayName={todayName}
           />
           <DateInput type="inlinePicker" time seconds
-            value={this.state.curDate} disabled
+            value={curDate} disabled nativeOnIos={false}
             lang={lang} todayName={todayName}
           />
         </CenteredFlex>
