@@ -1,4 +1,8 @@
 import {
+  merge,
+  addDefaults,
+}                           from 'timm';
+import {
   getScrollbarWidth,
 }                           from '../gral/constants';
 
@@ -109,6 +113,10 @@ function windowWidthWithoutScrollbar() {
   }
 }
 
+function propsWithDefaultsAndOverrides(props, defaults, overrides) {
+  return merge(addDefaults(props, defaults), overrides);
+}
+
 // ==========================================
 // Public API
 // ==========================================
@@ -118,4 +126,5 @@ export {
   cancelBodyScrolling,
   windowBottomScrollbarHeight, windowRightScrollbarWidth,
   windowHeightWithoutScrollbar, windowWidthWithoutScrollbar,
+  propsWithDefaultsAndOverrides,
 };

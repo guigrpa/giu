@@ -32,6 +32,18 @@ function dateTimeFormat(fDate, fTime, fSeconds) {
   return `${dateFormat()} ${timeFormat(fSeconds)}`;
 }
 
+function dateTimeFormatNative(fDate, fTime) {
+  let out;
+  if (fDate && fTime) {
+    out = 'YYYY-MM-DDTHH:mm:ss';
+  } else if (fDate) {
+    out = 'YYYY-MM-DD';
+  } else {
+    out = 'HH:mm';
+  }
+  return out;
+}
+
 export {
   getUtcFlag,
   startOfToday,
@@ -39,5 +51,5 @@ export {
   getTimeInSecs,
   dateFormat,
   timeFormat,
-  dateTimeFormat,
+  dateTimeFormat, dateTimeFormatNative,
 };
