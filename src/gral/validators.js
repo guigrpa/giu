@@ -182,6 +182,7 @@ const isDate = (msg) => ({
   fInternal: true,
   id: 'isDate',
   validate: (_val, props, context) => {
+    if (props.type === 'native') return undefined;
     const { moment } = context;
     const { date, time, seconds } = props;
     const fmt = dateTimeFormat(date, time, seconds);
