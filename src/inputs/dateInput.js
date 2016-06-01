@@ -97,6 +97,10 @@ const DEFAULT_PROPS = {
 // -- * **utc** *boolean?*: by default, it is `true` *unless* `date` and `time` are both `true`.
 // --   In other words, local time is only used by default if both `date` and `time` are enabled
 // -- * **todayName** *string? = 'Today'*: label for the *Today* button
+// -- * **lang** *string?*: the current language. Use it to inform Giu that
+// --   you have changed moment's language, so that it updates the string representation of
+// --   the current value accordingly and re-renders the component. 
+// --   Note: **you still must configure moment() yourself**
 // -- * **style** *object?*: merged with the `input` style
 // -- * **styleOuter** *object?*: when `type === 'inlinePicker'`,
 // --   merged with the outermost `span` style
@@ -116,6 +120,7 @@ class DateInput extends React.Component {
     seconds:                React.PropTypes.bool,
     utc:                    React.PropTypes.bool,
     todayName:              React.PropTypes.string,
+    lang:                   React.PropTypes.string,
     floatPosition:          React.PropTypes.string,
     floatAlign:             React.PropTypes.string,
     floatZ:                 React.PropTypes.number,
@@ -140,6 +145,7 @@ class DateInput extends React.Component {
     this.state = { fFloat: false };
     this.cmdsToPicker = null;
     this.keyDown = undefined;
+    this.lastExtValue = toExternalValue(props.curValue, props);
     bindAll(this, [
       'registerInputRef',
       'onMouseDown',
@@ -156,7 +162,22 @@ class DateInput extends React.Component {
     }
   }
 
-  componentDidUpdate() { this.renderFloat(); }
+  componentWillReceiveProps(nextProps) {
+    if (nextProps.curValue !== this.props.curValue) {
+      this.lastExtValue = toExternalValue(nextProps.curValue, nextProps);
+    }
+  }
+
+  componentDidUpdate(prevProps) {
+    this.renderFloat();
+    const { lang, onChange } = this.props;
+
+    // When the external language changes, we must update the internal value (a string)
+    // to reflect the new date format
+    if (prevProps.lang !== lang && this.lastExtValue != null) {
+      onChange(null, toInternalValue(this.lastExtValue, this.props), { fDontFocus: true });
+    }
+  }
   componentWillUnmount() { floatDelete(this.floatId); }
 
   // ==========================================

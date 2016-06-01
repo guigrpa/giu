@@ -112,10 +112,22 @@ try {
 } catch (err) { /* ignore */ }
 
 // ==========================================
+// Platform detection
+// ==========================================
+let IS_MAC = false;
+let IS_IDEVICE = false;
+// May be SSR, hence try
+try {
+  IS_MAC = /Mac/.test(navigator.platform);
+  IS_IDEVICE = /iPod|iPhone|iPad/.test(navigator.platform);
+} catch (err) { /* ignore */ }
+
+// ==========================================
 // Public API
 // ==========================================
 export {
   COLORS, KEYS, UNICODE, MISC,
   NULL_STRING,
   getScrollbarWidth,
+  IS_MAC, IS_IDEVICE,
 };

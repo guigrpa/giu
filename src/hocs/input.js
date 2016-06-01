@@ -9,7 +9,11 @@ import {
   bindAll,
   cancelEvent,
 }                           from '../gral/helpers';
-import { COLORS, MISC }     from '../gral/constants';
+import {
+  COLORS,
+  MISC,
+  IS_IDEVICE,
+}                           from '../gral/constants';
 import { scrollIntoView }   from '../gral/visibility';
 import { isDark }           from '../gral/styles';
 import { isRequired }       from '../gral/validators';
@@ -185,7 +189,7 @@ function input(ComposedComponent, {
     // ==========================================
     render() {
       const otherProps = omit(this.props, PROP_KEYS);
-      const el = (
+      let out = (
         <ComposedComponent
           registerOuterRef={this.registerOuterRef}
           registerFocusableRef={fIncludeFocusCapture ? undefined : this.registerFocusableRef}
@@ -209,32 +213,42 @@ function input(ComposedComponent, {
           styleOuter={fIncludeFocusCapture ? undefined : this.props.styleOuter}
         />
       );
-      let out;
-      if (fIncludeFocusCapture) {
-        const { disabled, styleOuter } = this.props;
-        out = (
-          <span
-            className={className}
-            onMouseDown={this.onMouseDownWrapper}
-            style={styleOuter}
-          >
-            <FocusCapture
-              registerRef={this.registerFocusableRef}
-              disabled={disabled}
-              onFocus={this.onFocus} onBlur={this.onBlur}
-              onCopy={this.onCopyCut} onCut={this.onCopyCut} onPaste={this.onPaste}
-              onKeyDown={this.onKeyDown}
-            />
-            {el}
-          </span>
-        );
-      } else {
-        out = el;
-      }
+
+      // Render FocusCapture if needed
+      let focusCaptureEl;
+      if (fIncludeFocusCapture) focusCaptureEl = (
+        <FocusCapture
+          registerRef={this.registerFocusableRef}
+          disabled={this.props.disabled}
+          onFocus={this.onFocus} onBlur={this.onBlur}
+          onCopy={this.onCopyCut} onCut={this.onCopyCut} onPaste={this.onPaste}
+          onKeyDown={this.onKeyDown}
+        />
+      );
+
+      // Render errors if needed
+      let errorsEl;
+      const { errors } = this;
+      if (IS_IDEVICE && errors.length) errorsEl = this.renderErrors(this.errors);
+
+      // Wrap element if needed
+      if (focusCaptureEl || errorsEl) out = (
+        <span
+          className={className}
+          onMouseDown={focusCaptureEl ? this.onMouseDownWrapper : undefined}
+          style={style.wrapper(this.props)}
+        >
+          {focusCaptureEl}
+          {errorsEl}
+          {out}
+        </span>
+      );
+
       return out;
     }
 
     renderErrorFloat() {
+      if (IS_IDEVICE) return;
       const { errors } = this;
 
       // Remove float
@@ -282,7 +296,7 @@ function input(ComposedComponent, {
       let fModified = false;
       if (curValue != null) fModified = curValue !== lastValidatedValue;
       return (
-        <div style={style.errors(fModified)}>
+        <div style={style.errors(fModified, this.props)}>
           {errors.join(' | ')}
         </div>
       );
@@ -294,7 +308,7 @@ function input(ComposedComponent, {
     registerOuterRef(c) { this.refOuter = c; }
     registerFocusableRef(c) { this.refFocusable = c; }
 
-    onChange(ev, providedValue) {
+    onChange(ev, providedValue, options) {
       const { onChange, disabled } = this.props;
       if (disabled) return;
       let curValue = providedValue;
@@ -303,7 +317,9 @@ function input(ComposedComponent, {
       }
       this.setState({ curValue });
       if (onChange) onChange(ev, this.toExternalValue(curValue, this.props));
-      if (!this.state.fFocused) this._focus();
+      if (!this.state.fFocused) {
+        if (options && !options.fDontFocus) this._focus();
+      }
     }
 
     onFocus(ev) {
@@ -430,11 +446,27 @@ const errorFgColorBase = COLORS[isDark(errorBgColorBase) ? 'lightText' : 'darkTe
 const errorBgColorModified = COLORS.notifs.warn;
 const errorFgColorModified = COLORS[isDark(errorBgColorModified) ? 'lightText' : 'darkText'];
 const style = {
-  errors: fModified => ({
-    backgroundColor: fModified ? errorBgColorModified : errorBgColorBase,
-    color: fModified ? errorFgColorModified : errorFgColorBase,
-    padding: '1px 3px',
-  }),
+  wrapper: ({ styleOuter }) => {
+    let out = styleOuter || {};
+    out = merge(out, {
+      position: 'relative',
+      display: 'inline-block',
+    });
+    return out;
+  },
+  errors: fModified => {
+    const out = {
+      padding: '1px 3px',
+    };
+    if (IS_IDEVICE) {
+      out.position = 'absolute';
+      out.top = '100%';
+      out.left = 0;
+    }
+    out.backgroundColor = fModified ? errorBgColorModified : errorBgColorBase;
+    out.color = fModified ? errorFgColorModified : errorFgColorBase;
+    return out;
+  },
 };
 
 // ==========================================

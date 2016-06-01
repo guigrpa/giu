@@ -116,19 +116,23 @@ class BaseListPicker extends React.Component {
 
   renderItem(item, idx) {
     const { value: itemValue, label, shortcuts } = item;
-    if (label === LIST_SEPARATOR_KEY) {
-      return (
-        <div key={`separator_${idx}`} ref={c => { this.refItems[idx] = c; }}
-          style={style.separator}
-        />
-      );
-    }
     const {
       curValue,
       hovering, onHoverStart, onHoverStop,
       disabled,
       styleItem, twoStageStyle, accentColor,
     } = this.props;
+    if (label === LIST_SEPARATOR_KEY) {
+      return (
+        <div key={`separator_${idx}`} ref={c => { this.refItems[idx] = c; }}
+          onMouseEnter={!disabled && onHoverStart}
+          onMouseLeave={!disabled && onHoverStop}
+          style={style.separatorWrapper}
+        >
+          <div style={style.separator} />
+        </div>
+      );
+    }
     const styleProps = {
       hovering,
       fHovered: hovering === itemValue,
@@ -286,12 +290,15 @@ const style = {
       padding: `3px ${10 + getScrollbarWidth()}px 3px 10px`,
     });
   },
+  separatorWrapper: {
+    paddingTop: 3,
+    paddingBottom: 3,
+    height: 7,
+    cursor: 'default',
+  },
   separator: {
     borderTop: `1px solid ${COLORS.line}`,
     height: 1,
-    marginTop: 3,
-    marginBottom: 3,
-    cursor: 'default',
   },
   shortcut: {
     marginLeft: 20,

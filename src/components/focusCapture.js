@@ -1,6 +1,9 @@
 import React                from 'react';
-import { omit }             from 'timm';
-import { HIDDEN_FOCUS_CAPTURE } from '../gral/styles';
+import { merge, omit }      from 'timm';
+import { IS_IDEVICE }       from '../gral/constants';
+import {
+  HIDDEN_FOCUS_CAPTURE,
+}                           from '../gral/styles';
 
 // ==========================================
 // Component
@@ -14,13 +17,18 @@ class FocusCapture extends React.Component {
   render() {
     const { registerRef, disabled } = this.props;
     const otherProps = omit(this.props, PROP_KEYS);
-    return (
+    const el = (
       <input ref={registerRef}
-        style={style.outer}
+        style={style.input}
         tabIndex={disabled ? -1 : undefined}
         {...otherProps}
       />
     );
+    if (IS_IDEVICE) {
+      return <span style={style.iDeviceWrapper}>{el}</span>
+    } else {
+      return el;
+    }
   }
 }
 
@@ -28,7 +36,17 @@ class FocusCapture extends React.Component {
 // Styles
 // ==========================================
 const style = {
-  outer: HIDDEN_FOCUS_CAPTURE,
+  input: IS_IDEVICE
+    ? merge(HIDDEN_FOCUS_CAPTURE, {
+        position: 'absolute',
+        top: 0,
+        left: 0,
+      })
+    : HIDDEN_FOCUS_CAPTURE,
+  iDeviceWrapper: {
+    position: 'relative',
+    opacity: 0,
+  },
 };
 
 // ==========================================

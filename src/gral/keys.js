@@ -1,12 +1,6 @@
 import keycode              from 'keycode';
-import { UNICODE }          from '../gral/constants';
+import { UNICODE, IS_MAC }  from '../gral/constants';
 import { cancelEvent }      from '../gral/helpers';
-
-let IS_MAC = false;
-// May be SSR, hence try
-try {
-  IS_MAC = /Mac|iPod|iPhone|iPad/.test(navigator.platform);
-} catch (err) { /* ignore */ }
 
 const shortcuts = {};
 
