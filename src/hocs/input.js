@@ -53,7 +53,6 @@ function input(ComposedComponent, {
   toInternalValue = (o => o),
   toExternalValue = (o => o),
   isNull,
-  defaultProps,
   valueAttr = 'value',
   fIncludeFocusCapture = false,
   defaultValidators = {},
@@ -81,12 +80,8 @@ function input(ComposedComponent, {
       // NOTE: this.errors = this.props.errors + this.state.validationErrors
       this.errors = props.errors;
       this.prevErrors = this.errors;
-      this.toInternalValue = (value, props0) =>
-        toInternalValue(value, addDefaults(props0, defaultProps));
-      this.toExternalValue = (value, props0) =>
-        toExternalValue(value, addDefaults(props0, defaultProps));
       this.state = {
-        curValue: this.toInternalValue(props.value, props),
+        curValue: toInternalValue(props.value, props),
         fFocused: false,
         keyDown: null,
         validationErrors: [],
@@ -114,7 +109,7 @@ function input(ComposedComponent, {
     componentWillReceiveProps(nextProps) {
       const { value, cmds } = nextProps;
       if (value !== this.props.value) {
-        this.setState({ curValue: this.toInternalValue(value, nextProps) });
+        this.setState({ curValue: toInternalValue(value, nextProps) });
       }
       if (cmds !== this.props.cmds) this.processCmds(cmds);
     }
@@ -158,10 +153,10 @@ function input(ComposedComponent, {
       cmds.forEach(cmd => {
         switch (cmd.type) {
           case 'SET_VALUE':
-            this.setState({ curValue: this.toInternalValue(cmd.value, this.props) });
+            this.setState({ curValue: toInternalValue(cmd.value, this.props) });
             break;
           case 'REVERT':
-            this.setState({ curValue: this.toInternalValue(this.props.value, this.props) });
+            this.setState({ curValue: toInternalValue(this.props.value, this.props) });
             break;
           case 'VALIDATE':
             this.validate();
@@ -180,7 +175,7 @@ function input(ComposedComponent, {
 
     // Alternative to using the `onChange` prop (e.g. if we want to delegate
     // state handling to the input and only want to retrieve the value when submitting a form)
-    getValue() { return this.toExternalValue(this.state.curValue, this.props); }
+    getValue() { return toExternalValue(this.state.curValue, this.props); }
     getErrors() { return this.errors; }
     validateAndGetValue() { return this._validate().then(() => this.getValue()); }
 
@@ -316,7 +311,7 @@ function input(ComposedComponent, {
         curValue = ev.currentTarget[valueAttr];
       }
       this.setState({ curValue });
-      if (onChange) onChange(ev, this.toExternalValue(curValue, this.props));
+      if (onChange) onChange(ev, toExternalValue(curValue, this.props));
       if (!this.state.fFocused) {
         if (options && !options.fDontFocus) this._focus();
       }
@@ -393,7 +388,7 @@ function input(ComposedComponent, {
         validators = defaultValidators;
       }
       const { curValue: internalValue } = this.state;
-      const externalValue = this.toExternalValue(internalValue, this.props);
+      const externalValue = toExternalValue(internalValue, this.props);
       const fRequired = this.props.required || validators.isRequired != null;
       const fIsNull = isNull(internalValue);
       let pErrors; // promised errors
@@ -415,8 +410,7 @@ function input(ComposedComponent, {
           const validator = validators[id];
           const validate = validator.validate || validator;
           const value = validator.fInternal ? internalValue : externalValue;
-          const props = addDefaults(this.props, defaultProps);
-          const pError = validate(value, props, validatorContext);
+          const pError = validate(value, this.props, validatorContext);
           if (pError != null) pErrors.push(pError);
         });
       }

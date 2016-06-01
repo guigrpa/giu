@@ -335,8 +335,10 @@ If you use [*moment*](https://github.com/moment/moment), your date picker and da
 
 
 
-* **type** *string(`onlyField`|`inlinePicker`|`dropDownPicker`)? =
+* **type** *string(`native`|`onlyField`|`inlinePicker`|`dropDownPicker`)? =
   `dropDownPicker`*
+* **nativeOnIos** *boolean? = true*: whether the custom DateInput should be
+  replaced by a native one in iOS
 * **placeholder** *string?*: when unspecified, the expected date/time
   format will be used
 * **date** *boolean? = true*: whether the date is part of the value

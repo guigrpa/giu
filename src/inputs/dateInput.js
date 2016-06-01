@@ -1,17 +1,24 @@
 import React                from 'react';
-import { omit, merge }      from 'timm';
+import {
+  omit, merge,
+  set as timmSet,
+  addDefaults,
+}                           from 'timm';
 import moment               from 'moment';
 import {
   bindAll,
   cancelEvent,
 }                           from '../gral/helpers';
-import { COLORS, KEYS }     from '../gral/constants';
+import {
+  COLORS, KEYS,
+  IS_IDEVICE,
+}                           from '../gral/constants';
 import {
   HIDDEN_FOCUS_CAPTURE,
   inputReset, INPUT_DISABLED,
 }                           from '../gral/styles';
 import {
-  dateTimeFormat,
+  dateTimeFormat, dateTimeFormatNative,
   dateFormat,
   timeFormat,
   getUtcFlag,
@@ -36,10 +43,13 @@ import {
 const NULL_VALUE = '';
 function toInternalValue(extDate, props) {
   if (extDate == null) return NULL_VALUE;
-  const { date, time, seconds, utc } = props;
+  const { type, date, time, seconds, utc } = props;
   const mom = moment(extDate);
   if (getUtcFlag(date, time, utc)) mom.utc();
-  return mom.format(dateTimeFormat(date, time, seconds));
+  const fmt = type === 'native'
+    ? dateTimeFormatNative(date, time)
+    : dateTimeFormat(date, time, seconds);
+  return mom.format(fmt);
 }
 function toExternalValue(str, props) {
   const mom = displayToMoment(str, props);
@@ -49,12 +59,15 @@ function isNull(val) { return val === NULL_VALUE; }
 
 function momentToDisplay(mom, props) {
   if (mom == null) return NULL_VALUE;
-  const { date, time, seconds } = props;
-  return mom.format(dateTimeFormat(date, time, seconds));
+  const { type, date, time, seconds } = props;
+  const fmt = type === 'native'
+    ? dateTimeFormatNative(date, time)
+    : dateTimeFormat(date, time, seconds);
+  return mom.format(fmt);
 }
 function displayToMoment(str, props) {
   if (str === NULL_VALUE) return null;
-  const { date, time, utc } = props;
+  const { type, date, time, utc } = props;
   const fUtc = getUtcFlag(date, time, utc);
   let mom;
   if (!date) {
@@ -63,30 +76,27 @@ function displayToMoment(str, props) {
     mom.add(moment.duration(str));
   } else {
     // Parse string, including seconds (even if props.seconds may be false)
-    const fmt = date && time
-      ? `${dateFormat()} ${timeFormat(true)}`
-      : dateFormat();
+    let fmt;
+    if (type === 'native') {
+      fmt = undefined; // automatic format detection for native HTML inputs
+    } else {
+      fmt = date && time
+        ? `${dateFormat()} ${timeFormat(true)}`
+        : dateFormat();
+    }
     const fnMoment = fUtc ? moment.utc : moment;
     mom = fnMoment(str, fmt);
   }
   return mom.isValid() ? mom : null;
 }
 
-const DEFAULT_PROPS = {
-  type:                   'dropDownPicker',
-  date:                   true,
-  time:                   false,
-  analogTime:             true,
-  seconds:                false,
-  todayName:              'Today',
-  accentColor:            COLORS.accent,
-};
-
 // ==========================================
-// Component
+// Wrapper
 // ==========================================
-// -- * **type** *string(`onlyField`|`inlinePicker`|`dropDownPicker`)? =
+// -- * **type** *string(`native`|`onlyField`|`inlinePicker`|`dropDownPicker`)? =
 // --   `dropDownPicker`*
+// -- * **nativeOnIos** *boolean? = true*: whether the custom DateInput should be
+// --   replaced by a native one in iOS
 // -- * **placeholder** *string?*: when unspecified, the expected date/time
 // --   format will be used
 // -- * **date** *boolean? = true*: whether the date is part of the value
@@ -99,19 +109,48 @@ const DEFAULT_PROPS = {
 // -- * **todayName** *string? = 'Today'*: label for the *Today* button
 // -- * **lang** *string?*: the current language. Use it to inform Giu that
 // --   you have changed moment's language, so that it updates the string representation of
-// --   the current value accordingly and re-renders the component. 
+// --   the current value accordingly and re-renders the component.
 // --   Note: **you still must configure moment() yourself**
 // -- * **style** *object?*: merged with the `input` style
 // -- * **styleOuter** *object?*: when `type === 'inlinePicker'`,
 // --   merged with the outermost `span` style
 // -- * **accentColor** *string?*: CSS color descriptor (e.g. `darkgray`, `#ccffaa`...)
-class DateInput extends React.Component {
+const DEFAULT_PROPS = {
+  type:                   'dropDownPicker',
+  nativeOnIos:            true,
+  date:                   true,
+  time:                   false,
+  analogTime:             true,
+  seconds:                false,
+  todayName:              'Today',
+  accentColor:            COLORS.accent,
+};
+
+const DateInputWrapper = props0 => {
+  let props = addDefaults(props0, DEFAULT_PROPS);
+  if (IS_IDEVICE && props.nativeOnIos) {
+    props = timmSet(props, 'type', 'native');
+  }
+  props = omit(props, ['nativeOnIos']);
+  return <DateInput {...props} />;
+};
+
+DateInputWrapper.propTypes = {
+  nativeOnIos:              React.PropTypes.bool,
+};
+
+// ==========================================
+// Component
+// ==========================================
+class BaseDateInput extends React.Component {
   static propTypes = {
     type:                   React.PropTypes.oneOf([
+      'native',
       'onlyField',
       'inlinePicker',
       'dropDownPicker',
     ]),
+    nativeOnIos:            React.PropTypes.bool,
     disabled:               React.PropTypes.bool,
     placeholder:            React.PropTypes.string,
     date:                   React.PropTypes.bool,
@@ -138,7 +177,6 @@ class DateInput extends React.Component {
     onChange:               React.PropTypes.func.isRequired,
     // all others are passed through unchanged
   };
-  static defaultProps = DEFAULT_PROPS;
 
   constructor(props) {
     super(props);
@@ -184,8 +222,11 @@ class DateInput extends React.Component {
   // Render
   // ==========================================
   render() {
+    const { type } = this.props;
     let out;
-    if (this.props.type === 'inlinePicker') {
+    if (type === 'native') {
+      out = this.renderNativeField();
+    } else if (type === 'inlinePicker') {
       out = (
         <span
           className="giu-date-input giu-date-input-inline-picker"
@@ -199,6 +240,37 @@ class DateInput extends React.Component {
       out = this.renderField();
     }
     return out;
+  }
+
+  renderNativeField() {
+    const {
+      curValue, onChange, placeholder,
+      date, time,
+      disabled,
+    } = this.props;
+    const otherProps = omit(this.props, PROP_KEYS);
+    let htmlInputType;
+    if (date && time) {
+      htmlInputType = 'datetime-local';
+    } else if (date) {
+      htmlInputType = 'date';
+    } else {
+      htmlInputType = 'time';
+    }
+    return (
+      <input ref={this.registerInputRef}
+        className="giu-date-input"
+        type={htmlInputType}
+        value={curValue}
+        {...otherProps}
+        placeholder={placeholder || dateTimeFormatNative(date, time)}
+        onFocus={this.onFocus}
+        onBlur={this.onBlur}
+        onChange={onChange}
+        tabIndex={disabled ? -1 : undefined}
+        style={style.field(this.props)}
+      />
+    );
   }
 
   renderField(fHidden) {
@@ -359,15 +431,16 @@ const style = {
 // ==========================================
 // Miscellaneous
 // ==========================================
-const PROP_KEYS = Object.keys(DateInput.propTypes);
+const PROP_KEYS = Object.keys(BaseDateInput.propTypes);
 
 // ==========================================
 // Public API
 // ==========================================
-export default input(DateInput, {
+const DateInput = input(BaseDateInput, {
   toInternalValue, toExternalValue, isNull,
-  defaultProps: DEFAULT_PROPS,
   defaultValidators: { isDate: isDate() },
   validatorContext: { moment },
   fIncludeClipboardProps: true,
 });
+
+export default DateInputWrapper;
