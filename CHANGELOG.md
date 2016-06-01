@@ -1,7 +1,9 @@
 # Changelog
 
 * LargeMessage: allow style customisation.
+* [M] DateInput: when the `lang` prop is used, the component changes its internal value whenever `lang` changes, to reflect the new applicable format.
 * **Bugfix**: SelectCustom: fix value provided to the `onClickItem` handler.
+* **Bugfix**: ListPicker: don't highlight the Select's current value when hovering a separator.
 
 ## 0.5.0 (May. 25, 2016)
 

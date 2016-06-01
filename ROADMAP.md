@@ -73,9 +73,11 @@
 - [x] Check embedded hint positioning!
 - [x] Reference docs
 - [x] **Breaking change** Hints: make it a single function that returns arrows and labels, *hint elements*
-- [x] **Provide at least a minimum level of mobile support. Currently there are problems with FocusCapture and Hints.**
-- [x] Bugfix: ListPicker: when hovering a separator, even though the separator itself should not be highlighted, the original value should NOT be highlighted.
+- [ ] Mobile support:
+    + [ ] Float position: DropDownMenu, Select, DateInput, ...
+    + [ ] Native DateInput?
 - [ ] Long demo with explanations:
+    + [ ] Add internal links from input types to the respective sections
     + [ ] Upload compiled for PRODUCTION
     + [ ] Add twoStageStyle demo
     + [ ] ListPicker: if not focused, it should not scrollintoview! But don't use fFocused (draws a border). Add a new `fParentFocused` and use it for this purpose. Dropdownmenus should stop scrolling also if keyboard shortcuts are used
