@@ -143,6 +143,13 @@ const App = () => {
         </div>
       );
       break;
+    case 6:
+      out = (
+        <div>
+          <NativeDateInput />
+        </div>
+      );
+      break;
     default:
       out = (
         <div>
@@ -180,6 +187,41 @@ const App = () => {
   }
   return out;
 };
+
+class NativeDateInput extends React.Component {
+  constructor(props) {
+    super(props);
+    this.state = { value: new Date() };
+  }
+
+  render() {
+    return (
+      <div>
+        <DateInput type="native"
+          value={this.state.value}
+          onChange={(ev, value) => this.setState({ value })}
+        />
+        <DateInput type="native" utc={false}
+          value={this.state.value}
+          onChange={(ev, value) => this.setState({ value })}
+        />
+        <DateInput type="native" time
+          value={this.state.value}
+          onChange={(ev, value) => this.setState({ value })}
+        />
+        <DateInput type="native" date={false} time
+          value={this.state.value}
+          onChange={(ev, value) => this.setState({ value })}
+        />
+        <DateInput type="native" date={false} time utc={false}
+          value={this.state.value}
+          onChange={(ev, value) => this.setState({ value })}
+        />
+        <span>{this.state.value ? this.state.value.toString() : 'none'}</span>
+      </div>
+    );
+  }
+}
 
 const NotificationExample = () =>
   <div style={style.example}>
@@ -672,8 +714,8 @@ class FormExample extends React.Component {
         <br />
         <div>
           <ExampleLabel>Textarea (with auto-resize)</ExampleLabel>
-          <Textarea value="En un lugar de la Mancha..." />
-          <Textarea disabled value="En un lugar de la Mancha..." />
+          <Textarea value="En un lugar de la Mancha..." style={{minHeight: '1.5em'}} />
+          <Textarea disabled value="En un lugar de la Mancha..."  style={{minHeight: '1.5em'}} />
         </div>
         <br />
         <div>
@@ -744,35 +786,62 @@ class FormExample extends React.Component {
             (keyboard-controlled, clipboard; local for date+time, UTC otherwise)
           </ExampleLabel>
           <div>
-            <DateInput onChange={onChange} />&nbsp;&nbsp;
-            <DateInput date time onChange={onChange} />&nbsp;&nbsp;
+            <DateInput onChange={onChange}
+              style={{width: 130}}
+            />&nbsp;&nbsp;
+            <DateInput date time onChange={onChange}
+              style={{width: 180}}
+            />&nbsp;&nbsp;
             <DateInput date={false} time onChange={onChange}
-              style={{width: 60}}
-            />
+              style={{width: 70}}
+            />&nbsp;&nbsp;
             <DateInput date={false} time seconds analogTime={false} onChange={onChange}
-              style={{width: 80}}
+              style={{width: 70}}
             />
             &nbsp;dropDownPicker (default)
           </div>
           <div>
-            <DateInput type="onlyField" onChange={onChange} />&nbsp;&nbsp;
-            <DateInput type="onlyField" date time onChange={onChange} />&nbsp;&nbsp;
+            <DateInput type="onlyField" onChange={onChange}
+              style={{width: 130}}
+            />&nbsp;&nbsp;
+            <DateInput type="onlyField" date time onChange={onChange}
+              style={{width: 180}}
+            />&nbsp;&nbsp;
             <DateInput type="onlyField" date={false} time onChange={onChange}
-              style={{width: 60}}
-            />
+              style={{width: 70}}
+            />&nbsp;&nbsp;
             <DateInput type="onlyField" date={false} time seconds analogTime={false} onChange={onChange}
-              style={{width: 80}}
+              style={{width: 70}}
             />
             &nbsp;onlyField
           </div>
           <div>
-            <DateInput disabled value={new Date()} type="onlyField" />&nbsp;&nbsp;
-            <DateInput disabled value={new Date()} type="onlyField" date time />&nbsp;&nbsp;
-            <DateInput disabled value={new Date()} type="onlyField" date={false} time
-              style={{width: 60}}
+            <DateInput type="native" onChange={onChange}
+              style={{fontSize: 10, width: 130}}
+            />&nbsp;&nbsp;
+            <DateInput type="native" date time onChange={onChange}
+              style={{fontSize: 10, width: 180}}
+            />&nbsp;&nbsp;
+            <DateInput type="native" date={false} time onChange={onChange}
+              style={{fontSize: 10, width: 70}}
+            />&nbsp;&nbsp;
+            <DateInput type="native" date={false} time seconds analogTime={false} onChange={onChange}
+              style={{fontSize: 10, width: 70}}
             />
+            &nbsp;native
+          </div>
+          <div>
+            <DateInput disabled value={new Date()} type="onlyField"
+              style={{width: 130}}
+            />&nbsp;&nbsp;
+            <DateInput disabled value={new Date()} type="onlyField" date time
+              style={{width: 180}}
+            />&nbsp;&nbsp;
+            <DateInput disabled value={new Date()} type="onlyField" date={false} time
+              style={{width: 70}}
+            />&nbsp;&nbsp;
             <DateInput disabled value={new Date()} type="onlyField" date={false} time seconds analogTime={false}
-              style={{width: 80}}
+              style={{width: 70}}
             />
             &nbsp;disabled
           </div>
