@@ -25,11 +25,11 @@ import { SelectCustom }     from '../inputs/selectCustom';
 // -- ```js
 // -- import { Select, LIST_SEPARATOR } from 'giu';
 // -- <Select required items={[
-// --   { value: 1, label: '1', keys: ['mod+1'] },
-// --   { value: 2, label: '2', keys: ['mod+2'] },
+// --   { value: 'apples', label: 'Apples', keys: 'alt+a' },
+// --   { value: 'cherries', label: 'Cherries', keys: ['alt+h', 'alt+e'] },
 // --   LIST_SEPARATOR,
-// --   { value: 3, label: '3', keys: ['mod+3'] },
-// --   { value: 4, label: '4', keys: ['mod+4'] },
+// --   { value: 'peaches', label: 'Peaches', keys: 'alt+p' },
+// --   { value: 'blueberries', label: 'Blueberries', keys: 'alt+b' },
 // -- ]} />
 // -- ```
 // --

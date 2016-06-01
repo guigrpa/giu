@@ -45,7 +45,7 @@ Installation notes:
 * *Moment* drags into your production bundle a lot of i18n resources which you probably don't need. Whitelist the languages bundled by Webpack doing something like this (webpack.config.js):
 
     ```js
-    const MOMENT_LANGS = ['en-gb', 'ca', 'es', 'de'];
+    const MOMENT_LANGS = ['en-us', 'ca', 'es', 'de'];
     module.exports = {
       // ...
       plugins: [
@@ -303,12 +303,12 @@ Tasks 2 and 3 above are managed via a *pseudo-imperative* API, the `cmds` prop, 
 Shown below are some examples of DateInput, one of Giu's most versatile components: date/time/date-time modes, with or without drop-down pickers, inline pickers, custom accent color, digital/analogue time picker, disabled style... Not shown: keyboard navigation, clipboard events.
 
 ![DateInput screenshots](https://raw.githubusercontent.com/guigrpa/giu/master/docs/DateInputs.png)
-]]]
-[[[demo:date-inputs]]]
 
 If you use [*moment*](https://github.com/moment/moment), your date picker and date/time formats will be automatically translated when you choose a different locale, e.g. `moment.locale('es')`:
 
 ![Translated date picker](https://raw.githubusercontent.com/guigrpa/giu/master/docs/DateInput-i18n.png)
+]]]
+[[[demo:date-inputs]]]
 
 [[[./src/inputs/dateInput.js]]]
 
@@ -317,10 +317,10 @@ If you use [*moment*](https://github.com/moment/moment), your date picker and da
 Shown below are some examples of Select and its features: `native` and custom (`inlinePicker`|`dropDownPicker`) versions, keyboard shortcuts, custom accent color, disabled style. Not shown: keyboard navigation, clipboard events, automatic scrolling.
 
 ![Select screenshots](https://raw.githubusercontent.com/guigrpa/giu/master/docs/Selects2.png)
-]]]
-[[[demo:selects]]]
 
 *Recommendation: use `dropDownPicker` for performance, especially if you have hundreds/thousands of Selects with many options: `native` Selects attach all of their `option` subelements to the page, whereas custom Selects only do that when the dropdown is shown.*
+]]]
+[[[demo:selects]]]
 
 [[[./src/inputs/select.js]]]
 

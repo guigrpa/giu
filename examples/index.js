@@ -4,6 +4,7 @@ import ReactDOMServer       from 'react-dom/server';
 import marked               from 'marked';
 import hljs                 from 'highlight.js';
 import { merge }            from 'timm';
+import moment               from 'moment';
 require('babel-polyfill');
 import {
   Select, DateInput, Textarea, Checkbox,
@@ -14,19 +15,35 @@ import {
   Button,
   Progress,
   Icon, Spinner, LargeMessage,
-  Floats, floatReposition,
-  Modals, Modal, modalPush, modalPop,
-  Notifications, Notification, notify as createNotif,
-  Hints, HintScreen, hintDefine, hintShow, hintHide, hintDisableAll, hintReset,
+  Floats,
+  Modals, modalPush, modalPop,
+  Notifications, notify as createNotif,
+  Hints, hintDefine, hintShow,
   hoverable,
-  flexContainer, flexItem, boxWithShadow,
-  cancelEvent,
+  flexContainer,
   isRequired, isEmail, isGte, isLte, isOneOf, isDate,
 }                           from '../src';
 
 hljs.configure({ languages: ['js', 'html'] });
 const highlight = code => hljs.highlightAuto(code).value;
 marked.setOptions({ highlight });
+
+const LANG_OPTIONS = [
+  { value: 'en-us', label: 'English (US)' },
+  { value: 'en-gb', label: 'English (UK)' },
+  { value: 'ca', label: 'Català' },
+  { value: 'es', label: 'Español' },
+  { value: 'fr', label: 'Français' },
+  { value: 'de', label: 'Deutsch' },
+];
+const TODAY = {
+  ca: 'Avui',
+  es: 'Hoy',
+  fr: "Aujourd'hui",
+  de: 'Heute',
+};
+const changeLang = lang => moment.locale(lang);
+changeLang('en-us');
 
 const LONG_TEXT = `Lorem ipsum dolor sit amet, consectetur adipiscing elit. Proin
   mi tortor, sagittis in ultricies ullamcorper, feugiat quis
@@ -98,8 +115,11 @@ const Contents = ({ id }) => {
     case 'demo:validation-predefined': el = <ValidationPredefined />; break;
     case 'demo:validation-custom-message': el = <ValidationCustomMessage />; break;
     case 'demo:validation-custom-validator': el = <ValidationCustomValidator />; break;
+    case 'demo:imperative-api': el = <ImperativeApi />; break;
+    case 'demo:inputs-simple': el = <InputsSimple />; break;
+    case 'demo:checkboxes': el = <Checkboxes />; break;
     case 'demo:date-inputs': el = <DateInputs />; break;
-
+    case 'demo:selects': el = <Selects />; break;
     case 'demo:radio-groups': el = <RadioGroups />; break;
     case 'demo:color-inputs': el = <ColorInputs />; break;
     case 'demo:file-inputs': el = <FileInputs />; break;
@@ -304,12 +324,77 @@ class InputValidation extends React.Component {
   }
 }
 
+class ImperativeApi extends React.Component {
+  render() {
+    return (
+      <Centered>
+        <TextInput value="Initial value" cmds={this.cmds} />{' '}
+        <Button
+          onClick={() => {
+            this.cmds = [
+              { type: 'SET_VALUE', value: 'Different value' },
+              { type: 'FOCUS' },
+            ];
+            this.forceUpdate();
+          }}
+        >
+          Change & focus
+        </Button>
+        {' '}
+        <Button
+          onClick={() => {
+            this.cmds = [
+              { type: 'REVERT' },
+              { type: 'BLUR' },
+            ];
+            this.forceUpdate();
+          }}
+        >
+          Revert & blur
+        </Button>
+      </Centered>
+    );
+  }
+}
+
+const InputsSimple = () =>
+  <div>
+    <CenteredFlex>
+      <div>
+        <TextInput placeholder="TextInput" /><br />
+        <PasswordInput placeholder="PasswordInput" /><br />
+        <NumberInput step="5" placeholder="NumberInput" /><br />
+        <RangeInput
+          value={55}
+          min={0} max={100} step={5}
+          style={{width: '100%', marginTop: 4}}
+        />
+        <Textarea placeholder="Textarea" style={{ minHeight: 32 }} />
+      </div>
+      <div>
+        <RangeInput
+          value={55}
+          min={0} max={100} step={5}
+          vertical
+          style={{height: 150, width: 25}}
+        />
+      </div>
+    </CenteredFlex>
+  </div>;
+
+
+const Checkboxes = () =>
+  <Centered>
+    <Checkbox value={true} label="Simple, huh?" />
+  </Centered>;
+
 class DateInputs extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
       initialDate: new Date(),
       curDate: new Date(),
+      lang: 'en-us',
     };
   }
 
@@ -318,6 +403,8 @@ class DateInputs extends React.Component {
   }
 
   render() {
+    const { lang } = this.state;
+    const todayName = TODAY[lang];
     return (
       <div>
         <p>You can have date-only (default), time-only and date-time pickers:</p>
@@ -325,14 +412,32 @@ class DateInputs extends React.Component {
         <CenteredFlex>
           <DateInput type="inlinePicker"
             value={this.state.initialDate}
+            lang={lang} todayName={todayName}
           />
           <DateInput type="inlinePicker" date={false} time seconds
             value={this.state.initialDate}
+            lang={lang} todayName={todayName}
           />
           <DateInput type="inlinePicker" time seconds
             value={this.state.initialDate}
+            lang={lang} todayName={todayName}
           />
         </CenteredFlex>
+
+        <p>If you use <a href="https://github.com/moment/moment"><i>moment</i></a>,
+          your date picker and date/time formats will be automatically translated when
+          you choose a different locale, e.g. <code>moment.locale('es')</code>:</p>
+
+        <Centered>
+          <Select type="dropDownPicker"
+            items={LANG_OPTIONS} required
+            value={lang}
+            onChange={(ev, newLang) => {
+              changeLang(newLang);
+              this.setState({ lang: newLang });
+            }}
+          />
+        </Centered>
 
         <p><b>UTC vs. local time:</b> By default, date-time pickers use local time, whereas time-only pickers use UTC and date-only
         pickers provide dates with time set to 00:00UTC. You can change this specifying the `utc` prop;
@@ -341,6 +446,7 @@ class DateInputs extends React.Component {
         <CenteredFlex>
           <DateInput type="inlinePicker" date={false} time seconds utc={false}
             value={this.state.initialDate}
+            lang={lang} todayName={todayName}
           />
         </CenteredFlex>
 
@@ -355,12 +461,17 @@ class DateInputs extends React.Component {
           <li>
             A simple field (<code>type="onlyField"</code>):
             {' '}
-            <DateInput type="onlyField" placeholder="MM/DD/YYYY" />
+            <DateInput
+              type="onlyField"
+              lang={lang} todayName={todayName}
+            />
           </li>
           <li>
             A field with a dropdown (<code>type="dropDownPicker"</code>), the default one:
             {' '}
-            <DateInput placeholder="MM/DD/YYYY" />
+            <DateInput
+              lang={lang} todayName={todayName}
+            />
             {' '}(press ESC to show/hide the picker)
           </li>
           <li>
@@ -368,7 +479,10 @@ class DateInputs extends React.Component {
           </li>
           <div style={{ marginTop: '1em' }}>
             <CenteredFlex>
-              <DateInput type="inlinePicker" />
+              <DateInput
+                type="inlinePicker"
+                lang={lang} todayName={todayName}
+              />
             </CenteredFlex>
           </div>
         </ul>
@@ -379,12 +493,15 @@ class DateInputs extends React.Component {
         <CenteredFlex>
           <DateInput type="inlinePicker" date={false} time utc={false} seconds
             value={this.state.initialDate}
+            lang={lang} todayName={todayName}
           />
           <DateInput type="inlinePicker" date={false} time utc={false}
             value={this.state.initialDate}
+            lang={lang} todayName={todayName}
           />
           <DateInput type="inlinePicker" date={false} time analogTime={false} utc={false} seconds
             value={this.state.initialDate}
+            lang={lang} todayName={todayName}
           />
         </CenteredFlex>
 
@@ -394,21 +511,25 @@ class DateInputs extends React.Component {
           <DateInput type="inlinePicker" time seconds
             value={this.state.initialDate}
             accentColor="olive"
+            lang={lang} todayName={todayName}
           />
           <DateInput type="inlinePicker" time seconds analogTime={false}
             value={this.state.initialDate}
             accentColor="lightgreen"
+            lang={lang} todayName={todayName}
           />
         </CenteredFlex>
 
         <p>And this is what disabled DateInputs look like:</p>
 
-        <CenteredFlex style={{ alignItems: 'flex-start' }}>
+        <CenteredFlex style={{ alignItems: 'flex-start', marginBottom: '1em' }}>
           <DateInput time seconds
             value={this.state.curDate} disabled
+            lang={lang} todayName={todayName}
           />
           <DateInput type="inlinePicker" time seconds
             value={this.state.curDate} disabled
+            lang={lang} todayName={todayName}
           />
         </CenteredFlex>
       </div>
@@ -416,85 +537,103 @@ class DateInputs extends React.Component {
   }
 }
 
-
-class Selects extends React.Component {
-  render() {
-    const selectOptions = modifier => [
-      { label: 'Apples', value: 'apples', keys: `${modifier}+a` },
-      { label: 'Cherries', value: 'cherries', keys: [`${modifier}+c`, `${modifier}+h`] },
-      LIST_SEPARATOR,
-      { label: 'Peaches', value: 'peaches', keys: `${modifier}+p` },
-      { label: 'Blueberries', value: 'blueberries', keys: `${modifier}+b` },
-    ];
-    return (
-      <div>
-        <h3><a name="selects" />Selects</h3>
-        <p>
-          You can choose between a native Select (default) and a CustomSelect
-          (<code>type="dropDownPicker"</code> or <code>type="inlinePicker"</code>).
-          CustomSelects are faster (they only render options when open), support
-          separators and keyboard shortcuts, and are much more similar across
-          browsers and platforms than the native Selects.
-        </p>
-        <ul>
-          <li>Native select: <Select items={selectOptions('alt')} value="blueberries" required /></li>
-          <li>Custom select, drop-down: <Select type="dropDownPicker" items={selectOptions('shift+alt')} value="blueberries" required /></li>
-          <li>
-            Custom select, inline: 
-            <Select type="inlinePicker" 
-              items={selectOptions('alt')} required
-              value="blueberries"
-              style={{width: 320}}
-            />
-          </li>
-        </ul>
+const Selects = () =>
+  <div>
+    <p>Selects can be of three types:</p>
+    <ul>
+      <li>
+        The native HTML select (<code>type="native"</code>), the default one:{' '}
+        <Select items={getExampleItems()} value="blueberries" required />
+      </li>
+      <li>
+        A custom select with a drop-down (<code>type="dropDownPicker"</code>):{' '}
+        <Select type="dropDownPicker"
+          items={getExampleItems({ fSeparator: true })}
+          value="blueberries"
+          required
+        />
+        {' '}(press ESC to show/hide the picker)
+      </li>
+      <li>An inline picker (<code>type="inlinePicker"</code>):</li>
+      <div style={{ marginTop: '1em' }}>
+        <CenteredFlex>
+          <Select type="inlinePicker" 
+            items={getExampleItems({ fSeparator: true, fKeys: true, modifier: 'alt' })}
+            value="blueberries"
+            required
+          />
+        </CenteredFlex>
       </div>
-    );
-  }
-}
+    </ul>
+    <p>
+      Custom Selects are faster (they only render options when open), support
+      separators and keyboard shortcuts, and are much more similar across
+      browsers and platforms than the native Selects.
+    </p>
+    <p>Customize your picker's accent color:</p>
+
+    <CenteredFlex>
+      <Select type="inlinePicker"
+        items={getExampleItems({ fSeparator: true })} value="blueberries" required
+        accentColor="olive"
+      />
+      <Select type="inlinePicker"
+        items={getExampleItems({ fSeparator: true })} value="blueberries" required
+        accentColor="lightgreen"
+      />
+    </CenteredFlex>
+
+    <p>And this is what disabled Selects look like:</p>
+
+    <CenteredFlex style={{ alignItems: 'flex-start' }}>
+      <Select type="dropDownPicker"
+        items={getExampleItems({ fSeparator: true })} value="blueberries" required
+        disabled
+      />
+      <Select type="inlinePicker"
+        items={getExampleItems({ fSeparator: true })} value="blueberries" required
+        disabled
+      />
+    </CenteredFlex>
+  </div>;
 
 const RadioGroups = () =>
   <CenteredFlex>
     <RadioGroup items={getExampleItems()} value="cherries" />
   </CenteredFlex>;
 
-class ColorInputs extends React.Component {
-  render() {
-    return (
-      <div>
-        <p>ColorInputs can be of two types:</p>
-        <ul>
-          <li>
-            A field with a dropdown, the default one:
-            {' '}
-            <ColorInput value="aadc5400" styleOuter={{ position: 'relative', top: 4 }} />
-            {' '}(press ESC to show/hide the picker)
-          </li>
-          <li>An inline color picker (add the <code>inlinePicker</code> prop):</li>
-          <div style={{ marginTop: '1em' }}>
-            <CenteredFlex>
-              <ColorInput value="aa66be52" inlinePicker />
-            </CenteredFlex>
-          </div>
-        </ul>
-
-        <p>Customize your picker's accent color:</p>
-
+const ColorInputs = () =>
+  <div>
+    <p>ColorInputs can be of two types:</p>
+    <ul>
+      <li>
+        A field with a dropdown, the default one:
+        {' '}
+        <ColorInput value="aadc5400" styleOuter={{ position: 'relative', top: 4 }} />
+        {' '}(press ESC to show/hide the picker)
+      </li>
+      <li>An inline color picker (add the <code>inlinePicker</code> prop):</li>
+      <div style={{ marginTop: '1em' }}>
         <CenteredFlex>
-          <ColorInput value="aabe5282" inlinePicker accentColor="olive" />
-          <ColorInput value="aabe5282" inlinePicker accentColor="lightgreen" />
-        </CenteredFlex>
-
-        <p>And this is what disabled ColorInputs look like:</p>
-
-        <CenteredFlex>
-          <ColorInput value="aa52b6be" disabled />
-          <ColorInput value="aa52b6be" disabled inlinePicker />
+          <ColorInput value="aa66be52" inlinePicker />
         </CenteredFlex>
       </div>
-    );
-  }
-}
+    </ul>
+
+    <p>Customize your picker's accent color:</p>
+
+    <CenteredFlex>
+      <ColorInput value="aabe5282" inlinePicker accentColor="olive" />
+      <ColorInput value="aabe5282" inlinePicker accentColor="lightgreen" />
+    </CenteredFlex>
+
+    <p>And this is what disabled ColorInputs look like:</p>
+
+    <CenteredFlex>
+      <ColorInput value="aa52b6be" disabled />
+      <ColorInput value="aa52b6be" disabled inlinePicker />
+    </CenteredFlex>
+  </div>;
 
 const FileInputs = () =>
   <CenteredFlex>
@@ -639,7 +778,7 @@ const Buttons = ({ fIncludeDisabled }) =>
         msg: 'What about some sushi?',
       })}
     >
-      <Icon icon="lighbulb-o" />Inspire me!
+      <Icon icon="lightbulb-o" /> Inspire me!
     </Button>&nbsp;&nbsp;
     <Button
       onClick={() => createNotif({

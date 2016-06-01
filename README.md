@@ -45,7 +45,7 @@ Installation notes:
 * *Moment* drags into your production bundle a lot of i18n resources which you probably don't need. Whitelist the languages bundled by Webpack doing something like this (webpack.config.js):
 
     ```js
-    const MOMENT_LANGS = ['en-gb', 'ca', 'es', 'de'];
+    const MOMENT_LANGS = ['en-us', 'ca', 'es', 'de'];
     module.exports = {
       // ...
       plugins: [
@@ -329,11 +329,11 @@ Shown below are some examples of DateInput, one of Giu's most versatile componen
 
 ![DateInput screenshots](https://raw.githubusercontent.com/guigrpa/giu/master/docs/DateInputs.png)
 
-
-
 If you use [*moment*](https://github.com/moment/moment), your date picker and date/time formats will be automatically translated when you choose a different locale, e.g. `moment.locale('es')`:
 
 ![Translated date picker](https://raw.githubusercontent.com/guigrpa/giu/master/docs/DateInput-i18n.png)
+
+
 
 * **type** *string(`onlyField`|`inlinePicker`|`dropDownPicker`)? =
   `dropDownPicker`*
@@ -347,6 +347,10 @@ If you use [*moment*](https://github.com/moment/moment), your date picker and da
 * **utc** *boolean?*: by default, it is `true` *unless* `date` and `time` are both `true`.
   In other words, local time is only used by default if both `date` and `time` are enabled
 * **todayName** *string? = 'Today'*: label for the *Today* button
+* **lang** *string?*: the current language. Use it to inform Giu that
+  you have changed moment's language, so that it updates the string representation of
+  the current value accordingly and re-renders the component.
+  Note: **you still must configure moment() yourself**
 * **style** *object?*: merged with the `input` style
 * **styleOuter** *object?*: when `type === 'inlinePicker'`,
   merged with the outermost `span` style
@@ -358,9 +362,9 @@ Shown below are some examples of Select and its features: `native` and custom (`
 
 ![Select screenshots](https://raw.githubusercontent.com/guigrpa/giu/master/docs/Selects2.png)
 
-
-
 *Recommendation: use `dropDownPicker` for performance, especially if you have hundreds/thousands of Selects with many options: `native` Selects attach all of their `option` subelements to the page, whereas custom Selects only do that when the dropdown is shown.*
+
+
 
 * **type** *string(`native`|`inlinePicker`|`dropDownPicker`)? = `native`*
 * **items** *array(object)*: each item has the following attributes:
@@ -380,11 +384,11 @@ You can also include a separator between `items` by including the special
 ```js
 import { Select, LIST_SEPARATOR } from 'giu';
 <Select required items={[
-  { value: 1, label: '1', keys: ['mod+1'] },
-  { value: 2, label: '2', keys: ['mod+2'] },
+  { value: 'apples', label: 'Apples', keys: 'alt+a' },
+  { value: 'cherries', label: 'Cherries', keys: ['alt+h', 'alt+e'] },
   LIST_SEPARATOR,
-  { value: 3, label: '3', keys: ['mod+3'] },
-  { value: 4, label: '4', keys: ['mod+4'] },
+  { value: 'peaches', label: 'Peaches', keys: 'alt+p' },
+  { value: 'blueberries', label: 'Blueberries', keys: 'alt+b' },
 ]} />
 ```
 

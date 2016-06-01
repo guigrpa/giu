@@ -11,7 +11,7 @@ const _entry = (entry) => [
   entry,
 ];
 
-const MOMENT_LANGS = ['en-gb', 'ca', 'es', 'de'];
+const MOMENT_LANGS = ['en-us', 'en-gb', 'ca', 'es', 'fr', 'de'];
 
 module.exports = {
 
