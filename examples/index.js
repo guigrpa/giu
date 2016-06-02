@@ -185,11 +185,32 @@ class InputTypes extends React.Component {
           Giu inputs cover most (if not all) of their native HTML counterparts:
         </p>
         <ul>
-          <li>TextInput:{' '}<TextInput /></li>
-          <li>PasswordInput:{' '}<PasswordInput /></li>
-          <li>NumberInput:{' '}<NumberInput step="0.1" /></li>
-          <li><a href="#dateinput">DateInput</a>:{' '}<DateInput time seconds style={{ width: 220 }} /></li>
-          <li>Checkbox:{' '}<Checkbox value={true} label="Try me" /></li>
+          <li>
+            <a href="#textinput-passwordinput-numberinput-rangeinput-textarea">
+              TextInput
+            </a>:{' '}
+            <TextInput />
+          </li>
+          <li>
+            <a href="#textinput-passwordinput-numberinput-rangeinput-textarea">
+              PasswordInput
+            </a>:{' '}
+            <PasswordInput />
+          </li>
+          <li>
+            <a href="#textinput-passwordinput-numberinput-rangeinput-textarea">
+              NumberInput
+            </a>:{' '}
+            <NumberInput step="0.1" />
+          </li>
+          <li>
+            <a href="#dateinput">DateInput</a>:{' '}
+            <DateInput time seconds style={{ width: 220 }} />
+          </li>
+          <li>
+            <a href="#checkbox">Checkbox</a>:{' '}
+            <Checkbox value={true} label="Try me" />
+          </li>
           <li>
             <a href="#select">Select</a>:{' '}
             <Select
@@ -205,13 +226,27 @@ class InputTypes extends React.Component {
             /> (custom)
           </li>
           <li>
-            RadioGroup:
+            <a href="#radiogroup">RadioGroup</a>:
             <div><RadioGroup items={getExampleItems()} value="cherries" /></div>
           </li>
-          <li>ColorInput:{' '}<ColorInput value="aadc5400" /> (<a href="#color-inputs">more details</a>)</li>
-          <li>FileInput:{' '}<FileInput /></li>
-          <li>RangeInput:{' '}<RangeInput value="55" min={0} max={100} step={5} style={{position: 'relative', top: 4}}/></li>
-          <li>Textarea (auto-resizing):
+          <li>
+            <a href="#colorinput">ColorInput</a>:{' '}
+            <ColorInput value="aadc5400" /> (<a href="#color-inputs">more details</a>)
+          </li>
+          <li>
+            <a href="#fileinput">FileInput</a>:{' '}
+            <FileInput />
+          </li>
+          <li>
+            <a href="#textinput-passwordinput-numberinput-rangeinput-textarea">
+              RangeInput
+            </a>:{' '}
+            <RangeInput value="55" min={0} max={100} step={5} style={{position: 'relative', top: 4}}/>
+          </li>
+          <li>
+            <a href="#textinput-passwordinput-numberinput-rangeinput-textarea">
+              Textarea
+            </a> (auto-resizing):
             <Textarea placeholder="Write something really long..." style={{ minHeight: '1.8em' }}/>
           </li>
         </ul>
@@ -572,6 +607,17 @@ const Selects = () =>
       separators and keyboard shortcuts, and are much more similar across
       browsers and platforms than the native Selects.
     </p>
+
+    <p><b>Variants:</b> Here is an example enabling the <code>twoStageStyle</code> prop; hover
+    and you'll see the difference:</p>
+
+    <CenteredFlex>
+      <Select type="inlinePicker"
+        twoStageStyle
+        items={getExampleItems({ fSeparator: true })} value="blueberries" required
+      />
+    </CenteredFlex>
+
     <p>Customize your picker's accent color:</p>
 
     <CenteredFlex>
