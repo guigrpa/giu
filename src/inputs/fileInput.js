@@ -15,6 +15,8 @@ function isNull(val) { return val == null; }
 // ==========================================
 // Component
 // ==========================================
+// -- Props:
+// --
 // -- * **children** *any? = `Choose file…`*: React elements that
 // --   will be shown inside the button
 // -- * **style** *object?*: will be merged with the outermost `span` element

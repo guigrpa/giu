@@ -26,6 +26,8 @@ const SWATCH_HEIGHT = 10;
 // ==========================================
 // Component
 // ==========================================
+// -- Props:
+// --
 // -- * **inlinePicker** *boolean?*: whether the complete color picker
 // --   should be inlined (`true`) or appear as a dropdown when clicked
 // -- * **onCloseFloat** *function?*

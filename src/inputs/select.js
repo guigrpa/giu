@@ -7,7 +7,9 @@ import { SelectCustom }     from '../inputs/selectCustom';
 // ==========================================
 // Component
 // ==========================================
-// -- * **type** *string(`native`|`inlinePicker`|`dropDownPicker`)? = `native`*
+// -- Props:
+// --
+// -- * **type** *string(`native` | `inlinePicker` | `dropDownPicker`)? = `native`*
 // -- * **items** *array(object)*: each item has the following attributes:
 // --   - **value** *any*: any value that can be converted to JSON. Values should be unique
 // --   - **label** *string*: descriptive string that will be shown to the user
@@ -34,6 +36,7 @@ import { SelectCustom }     from '../inputs/selectCustom';
 // -- ```
 // --
 // -- Additional props for non-native Selects:
+// --
 // -- * **twoStageStyle** *boolean?*: when enabled, two different visual styles are applied
 // --   to an item depending on whether it is just *hovered* or also *selected*. If disabled,
 // --   a single style is used to highlight the selected or the hovered item

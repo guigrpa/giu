@@ -10,6 +10,8 @@ import Select               from '../inputs/select';
 // ==========================================
 // Component
 // ==========================================
+// -- Props:
+// --
 // -- * **items** *array(object)*: menu items, similar to [Select](#select)
 // --   but with the inclusion of an `onClick` callback:
 // --   - **value** *any*: any value that can be converted to JSON. Values should be unique

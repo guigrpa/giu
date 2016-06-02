@@ -6,7 +6,7 @@ import { COLORS }           from '../gral/constants';
 // ==========================================
 // Component
 // ==========================================
-// -- An inconspicuous-looking button-in-a-`span`.
+// -- An inconspicuous-looking button-in-a-`span`. Props:
 // --
 // -- * **plain** *boolean?*: removes most button styles
 // -- * **children** *any*: button contents (can include `Icon`

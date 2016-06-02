@@ -6,7 +6,7 @@ import { COLORS }           from '../gral/constants';
 // --
 // -- Provides an inline style object for a Flex container.
 // --
-// -- * **flexDirection** *string(`row`|`column`)? = `row`*
+// -- * **flexDirection** *string(`row` | `column`)? = `row`*
 // -- * **style** *object?*: custom style (merged with the Flex style)
 // -- * **Returns** *object*: Flex container style
 const flexContainer = (flexDirection = 'row', style) => merge({

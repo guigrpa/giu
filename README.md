@@ -312,6 +312,8 @@ Tasks 2 and 3 above are managed via a *pseudo-imperative* API, the `cmds` prop, 
 
 *Note: out of the box, Textarea resizes automatically as needed. You can limit its maximum height by adding a `style` prop: e.g. `style={{ maxHeight: 100 }}`*
 
+Props:
+
 * **style** *object?*: merged with the `input`/`textarea` style
 * **vertical** *boolean?*: [only for `RangeInput`]
 * *All other props are passed through to the `input` element*
@@ -319,6 +321,8 @@ Tasks 2 and 3 above are managed via a *pseudo-imperative* API, the `cmds` prop, 
 ### Checkbox
 
 
+
+Props:
 
 * **label** *string?*: gets converted to a `label` element
 * **styleLabel** *object?*: merged with the `label` style
@@ -335,7 +339,9 @@ If you use [*moment*](https://github.com/moment/moment), your date picker and da
 
 
 
-* **type** *string(`native`|`onlyField`|`inlinePicker`|`dropDownPicker`)? =
+Props:
+
+* **type** *string(`native` | `onlyField` | `inlinePicker` | `dropDownPicker`)? =
   `dropDownPicker`*
 * **nativeOnIos** *boolean? = true*: whether the custom DateInput should be
   replaced by a native one in iOS
@@ -368,7 +374,9 @@ Shown below are some examples of Select and its features: `native` and custom (`
 
 
 
-* **type** *string(`native`|`inlinePicker`|`dropDownPicker`)? = `native`*
+Props:
+
+* **type** *string(`native` | `inlinePicker` | `dropDownPicker`)? = `native`*
 * **items** *array(object)*: each item has the following attributes:
   - **value** *any*: any value that can be converted to JSON. Values should be unique
   - **label** *string*: descriptive string that will be shown to the user
@@ -395,6 +403,7 @@ import { Select, LIST_SEPARATOR } from 'giu';
 ```
 
 Additional props for non-native Selects:
+
 * **twoStageStyle** *boolean?*: when enabled, two different visual styles are applied
   to an item depending on whether it is just *hovered* or also *selected*. If disabled,
   a single style is used to highlight the selected or the hovered item
@@ -403,6 +412,8 @@ Additional props for non-native Selects:
 ### RadioGroup
 
 
+
+Props:
 
 * **items** *array(object)*: each item has the following attributes
   - **value** *any*: any value that can be converted to JSON. Values should be unique
@@ -418,6 +429,8 @@ Shown below are some examples of ColorInput and its features: inline and drop-do
 
 
 
+Props:
+
 * **inlinePicker** *boolean?*: whether the complete color picker
   should be inlined (`true`) or appear as a dropdown when clicked
 * **onCloseFloat** *function?*
@@ -426,6 +439,8 @@ Shown below are some examples of ColorInput and its features: inline and drop-do
 ### FileInput
 
 
+
+Props:
 
 * **children** *any? = `Choose file…`*: React elements that
   will be shown inside the button
@@ -436,6 +451,8 @@ Shown below are some examples of ColorInput and its features: inline and drop-do
 ![DropDownMenu screenshots](https://raw.githubusercontent.com/guigrpa/giu/master/docs/DropDownMenu.png)
 
 
+
+Props:
 
 * **items** *array(object)*: menu items, similar to [Select](#select)
   but with the inclusion of an `onClick` callback:
@@ -526,7 +543,7 @@ API reference:
   - **pars** *object*: notification parameters:
     + **sticky** *boolean?*: never delete this notification
     + **timeOut** *number? = 4000*: time [ms] after which it's deleted
-    + **type** *string(`info`|`success`|`warn`|`error`)? = `info`*
+    + **type** *string(`info` | `success` | `warn` | `error`)? = `info`*
     + **icon** *string? = `exclamation`*
     + **iconSpin** *boolean?*
     + **title** *string?*: highlighted text at the top of the notification
@@ -592,14 +609,14 @@ API reference:
     + **elements** *array(object)|function?*: either an array of elements,
       or a function returning such an element (for dynamic positioning).
       Elements have these attributes:
-      - **type** *string(`LABEL`|`ARROW`)*
+      - **type** *string(`LABEL` | `ARROW`)*
       - Arrows:
         - **from** *object*: coordinates, e.g. `{ x: 5, y: 10 }`
         - **to** *object*: coordinates
         - **counterclockwise** *boolean*
       - Labels:
         - **x** and **y** *number*: coordinates
-        - **align** *string(`left`|`center`|`right`)? = `left`*
+        - **align** *string(`left` | `center` | `right`)? = `left`*
         - **children** *any*: React elements that comprise the label
     + **closeLabel** *string? = `Got it!`*: label of the close button
     + **onClose** *function?*: called when the hint screen is closed
@@ -619,7 +636,7 @@ API reference:
 
 
 
-An inconspicuous-looking button-in-a-`span`.
+An inconspicuous-looking button-in-a-`span`. Props:
 
 * **plain** *boolean?*: removes most button styles
 * **children** *any*: button contents (can include `Icon`
@@ -633,10 +650,10 @@ An inconspicuous-looking button-in-a-`span`.
 
 
 
-A wrapper for Font Awesome icons.
+A wrapper for Font Awesome icons. Props:
 
 * **icon** *string*: e.g. `ambulance`, `cogs`...
-* **size** *string(`lg`|`2x`|`3x`|`4x`|`5x`)?*
+* **size** *string(`lg` | `2x` | `3x` | `4x` | `5x`)?*
 * **fixedWidth** *boolean?*
 * **spin** *boolean?*
 * **disabled** *boolean?*
@@ -651,7 +668,7 @@ A wrapper for Font Awesome icons.
 
 A simple `div` showing a centered message with a large font size.
 Ideal for *No matches found*, *Choose one of the options above*,
-that kind of thing.
+that kind of thing. Props:
 
 * **children** *any*: the contents to be shown
 * **style** *object?*: merged with the outermost `div` style
@@ -751,7 +768,7 @@ vertically and then horizontally.
 
 Provides an inline style object for a Flex container.
 
-* **flexDirection** *string(`row`|`column`)? = `row`*
+* **flexDirection** *string(`row` | `column`)? = `row`*
 * **style** *object?*: custom style (merged with the Flex style)
 * **Returns** *object*: Flex container style
 

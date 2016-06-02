@@ -34,7 +34,7 @@ API reference:
   - **pars** *object*: notification parameters:
     + **sticky** *boolean?*: never delete this notification
     + **timeOut** *number? = 4000*: time [ms] after which it's deleted
-    + **type** *string(`info`|`success`|`warn`|`error`)? = `info`*
+    + **type** *string(`info` | `success` | `warn` | `error`)? = `info`*
     + **icon** *string? = `exclamation`*
     + **iconSpin** *boolean?*
     + **title** *string?*: highlighted text at the top of the notification

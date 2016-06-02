@@ -8,7 +8,7 @@ import { COLORS }           from '../gral/constants';
 // ==========================================
 // -- A simple `div` showing a centered message with a large font size.
 // -- Ideal for *No matches found*, *Choose one of the options above*,
-// -- that kind of thing.
+// -- that kind of thing. Props:
 // --
 // -- * **children** *any*: the contents to be shown
 // -- * **style** *object?*: merged with the outermost `div` style

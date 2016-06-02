@@ -52,14 +52,14 @@ API reference:
     + **elements** *array(object)|function?*: either an array of elements,
       or a function returning such an element (for dynamic positioning).
       Elements have these attributes:
-      - **type** *string(`LABEL`|`ARROW`)*
+      - **type** *string(`LABEL` | `ARROW`)*
       - Arrows:
         - **from** *object*: coordinates, e.g. `{ x: 5, y: 10 }`
         - **to** *object*: coordinates
         - **counterclockwise** *boolean*
       - Labels:
         - **x** and **y** *number*: coordinates
-        - **align** *string(`left`|`center`|`right`)? = `left`*
+        - **align** *string(`left` | `center` | `right`)? = `left`*
         - **children** *any*: React elements that comprise the label
     + **closeLabel** *string? = `Got it!`*: label of the close button
     + **onClose** *function?*: called when the hint screen is closed

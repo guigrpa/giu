@@ -34,6 +34,8 @@ const classOptions = {
   },
 };
 
+// -- Props:
+// --
 // -- * **style** *object?*: merged with the `input`/`textarea` style
 // -- * **vertical** *boolean?*: [only for `RangeInput`]
 // -- * *All other props are passed through to the `input` element*

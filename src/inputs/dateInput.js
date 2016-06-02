@@ -93,7 +93,9 @@ function displayToMoment(str, props) {
 // ==========================================
 // Wrapper
 // ==========================================
-// -- * **type** *string(`native`|`onlyField`|`inlinePicker`|`dropDownPicker`)? =
+// -- Props:
+// --
+// -- * **type** *string(`native` | `onlyField` | `inlinePicker` | `dropDownPicker`)? =
 // --   `dropDownPicker`*
 // -- * **nativeOnIos** *boolean? = true*: whether the custom DateInput should be
 // --   replaced by a native one in iOS

@@ -7,10 +7,10 @@ require('font-awesome/css/font-awesome.css');
 // ==========================================
 // Component
 // ==========================================
-// -- A wrapper for Font Awesome icons.
+// -- A wrapper for Font Awesome icons. Props:
 // --
 // -- * **icon** *string*: e.g. `ambulance`, `cogs`...
-// -- * **size** *string(`lg`|`2x`|`3x`|`4x`|`5x`)?*
+// -- * **size** *string(`lg` | `2x` | `3x` | `4x` | `5x`)?*
 // -- * **fixedWidth** *boolean?*
 // -- * **spin** *boolean?*
 // -- * **disabled** *boolean?*

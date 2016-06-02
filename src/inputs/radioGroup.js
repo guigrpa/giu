@@ -21,6 +21,8 @@ let cntId = 0;
 // ==========================================
 // Component
 // ==========================================
+// -- Props:
+// --
 // -- * **items** *array(object)*: each item has the following attributes
 // --   - **value** *any*: any value that can be converted to JSON. Values should be unique
 // --   - **label** *any?*: React elements that will be shown as a label for
