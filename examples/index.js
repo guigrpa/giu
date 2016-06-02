@@ -2,7 +2,8 @@ import React                from 'react';
 import ReactDOM             from 'react-dom';
 import ReactDOMServer       from 'react-dom/server';
 import marked               from 'marked';
-import hljs                 from 'highlight.js';
+// import hljs                 from 'highlight.js';
+const Prism = require('prismjs');
 import { merge }            from 'timm';
 import moment               from 'moment';
 require('babel-polyfill');
@@ -24,8 +25,9 @@ import {
   isRequired, isEmail, isGte, isLte, isOneOf, isDate,
 }                           from '../src';
 
-hljs.configure({ languages: ['js', 'html'] });
-const highlight = code => hljs.highlightAuto(code).value;
+// hljs.configure({ languages: ['js', 'html'] });
+// const highlight = code => hljs.highlightAuto(code).value;
+const highlight = code => Prism.highlight(code, Prism.languages.javascript);
 marked.setOptions({ highlight });
 
 const LANG_OPTIONS = [
@@ -685,8 +687,8 @@ const ColorInputs = () =>
 
 const FileInputs = () =>
   <CenteredFlex>
-    <FileInput />
-    <FileInput disabled>Disabled FileInput</FileInput>
+    <FileInput><Icon icon="file-o" /> Choose a file...</FileInput>
+    <FileInput disabled><Icon icon="file-o" /> Disabled FileInput</FileInput>
   </CenteredFlex>;
 
 class DropDownMenus extends React.Component {
