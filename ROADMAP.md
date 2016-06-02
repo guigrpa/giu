@@ -74,15 +74,15 @@
 - [x] Reference docs
 - [x] **Breaking change** Hints: make it a single function that returns arrows and labels, *hint elements*
 - [ ] Mobile support:
-    + [ ] Float position: DropDownMenu, Select, DateInput, ...
-    + [ ] Native DateInput?
-- [ ] Long demo with explanations:
-    + [ ] Add internal links from input types to the respective sections
-    + [ ] Upload compiled for PRODUCTION
-    + [ ] Add twoStageStyle demo
-    + [ ] ListPicker: if not focused, it should not scrollintoview! But don't use fFocused (draws a border). Add a new `fParentFocused` and use it for this purpose. Dropdownmenus should stop scrolling also if keyboard shortcuts are used
-- [ ] Basic tests with enzyme? Floats, modals, etc. are bound to be tricky
+    + [ ] Float position: DropDownMenu, Select, ColorInput...
+    + [ ] Float mousedowns; inline mousedowns
+    + [ ] Focusing on modals
+    + [ ] Hint -- wrong backdrop, font
+- [ ] Long demo with explanations: 
+    + [ ] Try prism.js for highlighting!
+- [ ] ListPicker: if not focused, it should not scrollintoview! But don't use fFocused (draws a border). Add a new `fParentFocused` and use it for this purpose. Dropdownmenus should stop scrolling also if keyboard shortcuts are used
 
+- [ ] Basic tests with enzyme? Floats, modals, etc. are bound to be tricky
 - [ ] Focus delegation?
 - [ ] Include native components for mobile? (e.g. `input type="date"`)
 - [ ] Multi-selection ListPicker
