@@ -4,6 +4,10 @@ import ReactDOMServer       from 'react-dom/server';
 import marked               from 'marked';
 import hljs                 from 'highlight.js';
 // import Prism                from 'prismjs';
+let FontFaceObserver;
+try {
+  FontFaceObserver = require('fontfaceobserver');
+} catch (err) { /* ignore */ }
 import { merge }            from 'timm';
 import moment               from 'moment';
 require('babel-polyfill');
@@ -30,7 +34,7 @@ import {
 const highlight = (code, lang) => {
   if (!lang) return code;
   return hljs.highlight(lang, code).value;
-}
+};
 // const highlight = code => Prism.highlight(code, Prism.languages.javascript);
 marked.setOptions({ highlight });
 
@@ -65,50 +69,75 @@ const LONG_TEXT = `Lorem ipsum dolor sit amet, consectetur adipiscing elit. Proi
 // -----------------------------------------------
 // Main
 // -----------------------------------------------
-const App = ({ md }) => {
-  const contentPieces = [];
-  if (md) {
-    md.split(/\[\[\[(.+)\]\]\]/).forEach((segment, i) => {
-      if (i % 2) {
-        contentPieces.push(<Contents key={i} id={segment} />);
-      } else {
-        contentPieces.push(<Markdown key={i} md={segment} />);
-      }
-    });
+class App extends React.Component {
+  static propTypes = {
+    md: React.PropTypes.string,
+  };
+
+  constructor(props) {
+    super(props);
+    this.state = {
+      fFontsLoaded: false,
+    };
   }
-  return (
-    <div>
-      <Floats />
-      <Modals />
-      <Notifications />
-      <Hints />
-      <section className="page-header">
-        <h1 className="project-name">Giu</h1>
-        <h2 className="project-tagline">An opinionated Swiss-army knife for building React application GUIs.</h2>
-      </section>
 
-      <section className="main-content">
-        {contentPieces}
+  componentDidMount() {
+    const font = new FontFaceObserver('Open Sans');
+    font.load()
+    .then(() => this.setState({ fFontsLoaded: true }));
+  }
 
-        <footer className="site-footer">
-          <span className="site-footer-owner">
-            <a href="https://github.com/guigrpa/giu">Giu</a>
-            {' '}is maintained by{' '}
-            <a href="https://github.com/guigrpa">guigrpa</a>.
-          </span>
-          <span className="site-footer-credits">
-            This page uses the{' '}
-            <a href="https://github.com/jasonlong/cayman-theme">Cayman theme</a>
-            {' '}by{' '}
-            <a href="https://twitter.com/jasonlong">Jason Long</a>.
-          </span>
-        </footer>
+  render() {
+    const { md } = this.props;
+    const contentPieces = [];
+    if (md) {
+      md.split(/\[\[\[(.+)\]\]\]/).forEach((segment, i) => {
+        if (i % 2) {
+          contentPieces.push(<Contents key={i} id={segment} />);
+        } else {
+          contentPieces.push(<Markdown key={i} md={segment} />);
+        }
+      });
+    }
+    return (
+      <div style={this.style()}>
+        <Floats />
+        <Modals />
+        <Notifications />
+        <Hints />
+        <section className="page-header">
+          <h1 className="project-name">Giu</h1>
+          <h2 className="project-tagline">
+            An opinionated Swiss-army knife for building React application GUIs.
+          </h2>
+        </section>
 
-      </section>
+        <section className="main-content">
+          {contentPieces}
+          <footer className="site-footer">
+            <span className="site-footer-owner">
+              <a href="https://github.com/guigrpa/giu">Giu</a>
+              {' '}is maintained by{' '}
+              <a href="https://github.com/guigrpa">guigrpa</a>.
+            </span>
+            <span className="site-footer-credits">
+              This page uses the{' '}
+              <a href="https://github.com/jasonlong/cayman-theme">Cayman theme</a>
+              {' '}by{' '}
+              <a href="https://twitter.com/jasonlong">Jason Long</a>.
+            </span>
+          </footer>
+        </section>
+      </div>
+    );
+  }
 
-    </div>
-  );
-};
+  style() {
+    if (!this.state.fFontsLoaded) return undefined;
+    return { fontFamily: 'Open Sans, sans-serif' };
+  }
+}
+
 
 const Contents = ({ id }) => {
   let el;

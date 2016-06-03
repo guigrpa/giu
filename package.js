@@ -201,6 +201,7 @@ const specs = {
     'extract-docs': '^1.2.0',
     'marked': '0.3.5',
     'highlight.js': '9.4.0',
+    'fontfaceobserver': '1.7.1',
 
     // Testing
     'ava': '^0.13.0',
