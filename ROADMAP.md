@@ -74,10 +74,11 @@
 - [x] Reference docs
 - [x] **Breaking change** Hints: make it a single function that returns arrows and labels, *hint elements*
 - [ ] Mobile support:
+    + [ ] Inline DateInputs: don't replace by native ones. Do the same as for inline ColorInputs and Selects
     + [ ] Float position: DropDownMenu, Select, ColorInput...
-    + [ ] Float mousedowns; inline mousedowns
     + [ ] Focusing on modals
     + [ ] Hint -- wrong backdrop, font
+    + [ ] Fix fontfaceobserver in Safari & Mobile Safari
 - [ ] Long demo with explanations: 
     + [ ] Check other highlighting options: http://twitter.com/ryanflorence/status/738236122950602752
 - [ ] ListPicker: if not focused, it should not scrollintoview! But don't use fFocused (draws a border). Add a new `fParentFocused` and use it for this purpose. Dropdownmenus should stop scrolling also if keyboard shortcuts are used

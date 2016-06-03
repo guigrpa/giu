@@ -3,7 +3,6 @@ import PureRenderMixin      from 'react-addons-pure-render-mixin';
 import {
   omit,
   merge,
-  addDefaults,
 }                           from 'timm';
 import {
   bindAll,
