@@ -72,7 +72,7 @@ export {
 export {
   COLORS, KEYS,
   getScrollbarWidth,
-  IS_MAC, IS_IDEVICE,
+  IS_MAC, IS_IOS,
 }                         from './gral/constants';
 
 // Other

@@ -11,7 +11,7 @@ import {
 import {
   COLORS,
   MISC,
-  IS_IDEVICE,
+  IS_IOS,
 }                           from '../gral/constants';
 import { scrollIntoView }   from '../gral/visibility';
 import { isDark }           from '../gral/styles';
@@ -223,7 +223,7 @@ function input(ComposedComponent, {
       // Render errors if needed
       let errorsEl;
       const { errors } = this;
-      if (IS_IDEVICE && errors.length) errorsEl = this.renderErrors(this.errors);
+      if (IS_IOS && errors.length) errorsEl = this.renderErrors(this.errors);
 
       // Wrap element if needed
       if (focusCaptureEl || errorsEl) out = (
@@ -242,7 +242,7 @@ function input(ComposedComponent, {
     }
 
     renderErrorFloat() {
-      if (IS_IDEVICE) return;
+      if (IS_IOS) return;
       const { errors } = this;
 
       // Remove float
@@ -449,7 +449,7 @@ const style = {
     const out = {
       padding: '1px 3px',
     };
-    if (IS_IDEVICE) {
+    if (IS_IOS) {
       out.position = 'absolute';
       out.top = '100%';
       out.left = 0;

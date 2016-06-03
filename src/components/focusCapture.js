@@ -1,6 +1,6 @@
 import React                from 'react';
 import { merge, omit }      from 'timm';
-import { IS_IDEVICE }       from '../gral/constants';
+import { IS_IOS }           from '../gral/constants';
 import {
   HIDDEN_FOCUS_CAPTURE,
 }                           from '../gral/styles';
@@ -24,7 +24,7 @@ class FocusCapture extends React.Component {
         {...otherProps}
       />
     );
-    if (IS_IDEVICE) {
+    if (IS_IOS) {
       return <span style={style.iDeviceWrapper}>{el}</span>
     } else {
       return el;
@@ -36,7 +36,7 @@ class FocusCapture extends React.Component {
 // Styles
 // ==========================================
 const style = {
-  input: IS_IDEVICE
+  input: IS_IOS
     ? merge(HIDDEN_FOCUS_CAPTURE, {
         position: 'absolute',
         top: 0,

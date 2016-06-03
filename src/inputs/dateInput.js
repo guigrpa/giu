@@ -11,7 +11,7 @@ import {
 }                           from '../gral/helpers';
 import {
   COLORS, KEYS,
-  IS_IDEVICE,
+  IS_IOS,
 }                           from '../gral/constants';
 import {
   HIDDEN_FOCUS_CAPTURE,
@@ -130,7 +130,7 @@ const DEFAULT_PROPS = {
 
 const DateInputWrapper = props0 => {
   let props = addDefaults(props0, DEFAULT_PROPS);
-  if (IS_IDEVICE && props.nativeOnIos) {
+  if (IS_IOS && props.nativeOnIos) {
     if (props.type === 'dropDownPicker') props = timmSet(props, 'type', 'native');
     props = timmSet(props, 'analogTime', false);
   }
@@ -387,7 +387,7 @@ class BaseDateInput extends React.Component {
 
   onMouseDown(ev) {
     cancelEvent(ev);
-    if (!this.props.fFocused && !IS_IDEVICE) this.refInput.focus();
+    if (!this.props.fFocused && !IS_IOS) this.refInput.focus();
   }
 
   onFocus(ev) {
@@ -425,7 +425,7 @@ class BaseDateInput extends React.Component {
     this.props.onChange(
       ev,
       momentToDisplay(nextValue, this.props),
-      { fDontFocus: IS_IDEVICE },
+      { fDontFocus: IS_IOS },
     );
   }
 }

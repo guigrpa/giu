@@ -115,11 +115,11 @@ try {
 // Platform detection
 // ==========================================
 let IS_MAC = false;
-let IS_IDEVICE = false;
+let IS_IOS = false;
 // May be SSR, hence try
 try {
   IS_MAC = /Mac/.test(navigator.platform);
-  IS_IDEVICE = /iPod|iPhone|iPad/.test(navigator.platform);
+  IS_IOS = /iPod|iPhone|iPad/.test(navigator.platform);
 } catch (err) { /* ignore */ }
 
 // ==========================================
@@ -129,5 +129,5 @@ export {
   COLORS, KEYS, UNICODE, MISC,
   NULL_STRING,
   getScrollbarWidth,
-  IS_MAC, IS_IDEVICE,
+  IS_MAC, IS_IOS,
 };

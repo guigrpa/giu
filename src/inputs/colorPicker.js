@@ -4,7 +4,7 @@ import tinycolor            from 'tinycolor2';
 import { merge }            from 'timm';
 import {
   COLORS,
-  IS_IDEVICE,
+  IS_IOS,
 }                           from '../gral/constants';
 import {
   bindAll,
@@ -425,7 +425,7 @@ class ColorPicker extends React.Component {
       hex8 = col.toHex8();
       if (hex8 === prevHex8) this.forceUpdate();
     }
-    this.props.onChange(ev, hex8, { fDontFocus: IS_IDEVICE });
+    this.props.onChange(ev, hex8, { fDontFocus: IS_IOS });
   }
 }
 
