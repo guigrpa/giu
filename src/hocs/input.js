@@ -303,7 +303,7 @@ function input(ComposedComponent, {
     registerOuterRef(c) { this.refOuter = c; }
     registerFocusableRef(c) { this.refFocusable = c; }
 
-    onChange(ev, providedValue, options) {
+    onChange(ev, providedValue, options = {}) {
       const { onChange, disabled } = this.props;
       if (disabled) return;
       let curValue = providedValue;
@@ -312,9 +312,7 @@ function input(ComposedComponent, {
       }
       this.setState({ curValue });
       if (onChange) onChange(ev, toExternalValue(curValue, this.props));
-      if (!this.state.fFocused) {
-        if (options && !options.fDontFocus) this._focus();
-      }
+      if (!this.state.fFocused && !options.fDontFocus) this._focus();
     }
 
     onFocus(ev) {
