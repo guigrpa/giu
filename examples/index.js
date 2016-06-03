@@ -76,15 +76,14 @@ class App extends React.Component {
 
   constructor(props) {
     super(props);
-    this.state = {
-      fFontsLoaded: false,
-    };
+    this.state = { fFontsLoaded: false };
   }
 
   componentDidMount() {
     const font = new FontFaceObserver('Open Sans');
     font.load()
-    .then(() => this.setState({ fFontsLoaded: true }));
+    .then(() => this.setState({ fFontsLoaded: true }))
+    .catch(err => console.error('Error loading font', err));
   }
 
   render() {
