@@ -64,7 +64,7 @@ Giu provides a wide variety of inputs and several useful abstractions over nativ
 
 You'll understand the benefits it brings with an example. Let's say you want to build a form that allows users to modify certain parameters of their registration profile, e.g. their age. With native HTML inputs, you'd use something like this:
 
-```js
+```html
 <input type="number" id="age"
   min={0} step={1}
   value={this.state.age} onChange={age => this.setState({ age: Number(age) })}
@@ -80,7 +80,7 @@ It seems simple, right? But in reality you are handling a lot of stuff yourself:
 
 You *could* use Giu in a similar way:
 
-```js
+```html
 <NumberInput id="age" 
   min={0} step={1}
   value={this.state.age} onChange={(ev, age) => this.setState({ age })}
@@ -91,12 +91,13 @@ This approach follows *The React Way™*, but we're already seeing a first benef
 
 But we can further improve on this:
 
-```js
-<NumberInput ref="age" /* or: ref={c => { this.refAge = c; }}*/
+```html
+<NumberInput ref="age"
   min={0} step={1}
   value={this.props.age}
   required validators={[isGte(18)]}
 />
+// alternatively: <NumberInput ref={c => { this.refAge = c; }} ... />
 ```
 
 What's happened here? We only pass the original age as `value`, but we delegate keeping track of the value entered by the user. We also drop the `onChange` handler and add some `validators` (see [details below](#input-validation)). When the time comes to submit the form, we can do:
@@ -134,7 +135,7 @@ Most HTML inputs can only hold strings. Giu inputs provide you with JS types and
 
 Some validators are enabled by default:
 
-```js
+```html
 // Shows an error if the provided value is an invalid date.
 // Will NOT complain if left blank; by default, Giu inputs can be left blank.
 <DateInput />
@@ -146,7 +147,7 @@ Validation occurs automatically when the input loses focus (i.e. on `blur`). You
 
 Enabling additional validators is easy:
 
-```js
+```html
 // Shows an error if left blank ('is required')
 // OR if the format is not valid ('must be a valid date...').
 <DateInput required />
@@ -198,7 +199,7 @@ Customize a predefined validator by passing it an additional argument upon insta
 
 Some examples:
 
-```js
+```html
 // Override the message for the `isEmail` validator
 <TextInput validators={[
   isEmail("please write your email address (it's safe with us!)"),
@@ -233,7 +234,7 @@ You can also create your own validators, which can be synchronous (returning an 
 
 A couple of examples:
 
-```js
+```html
 // A custom sync validator
 <TextInput required validators={[
   val => val.toLowerCase() === 'unicorn' ? undefined : 'must be a \'unicorn\''

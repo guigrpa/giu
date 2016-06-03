@@ -2,8 +2,8 @@ import React                from 'react';
 import ReactDOM             from 'react-dom';
 import ReactDOMServer       from 'react-dom/server';
 import marked               from 'marked';
-// import hljs                 from 'highlight.js';
-const Prism = require('prismjs');
+import hljs                 from 'highlight.js';
+// import Prism                from 'prismjs';
 import { merge }            from 'timm';
 import moment               from 'moment';
 require('babel-polyfill');
@@ -27,7 +27,11 @@ import {
 
 // hljs.configure({ languages: ['js', 'html'] });
 // const highlight = code => hljs.highlightAuto(code).value;
-const highlight = code => Prism.highlight(code, Prism.languages.javascript);
+const highlight = (code, lang) => {
+  if (!lang) return code;
+  return hljs.highlight(lang, code).value;
+}
+// const highlight = code => Prism.highlight(code, Prism.languages.javascript);
 marked.setOptions({ highlight });
 
 const LANG_OPTIONS = [

@@ -79,7 +79,7 @@
     + [ ] Focusing on modals
     + [ ] Hint -- wrong backdrop, font
 - [ ] Long demo with explanations: 
-    + [ ] Try prism.js for highlighting!
+    + [ ] Check other highlighting options: http://twitter.com/ryanflorence/status/738236122950602752
 - [ ] ListPicker: if not focused, it should not scrollintoview! But don't use fFocused (draws a border). Add a new `fParentFocused` and use it for this purpose. Dropdownmenus should stop scrolling also if keyboard shortcuts are used
 
 - [ ] Basic tests with enzyme? Floats, modals, etc. are bound to be tricky

@@ -160,12 +160,9 @@ const specs = {
 
   devDependencies: {
     storyboard: '^1.0.0',
-    'extract-docs': '^1.2.0',
     'xxl': '^0.1.0',
     'cross-env': '^1.0.7',
-    'diveSync': '0.3.0',
-    'marked': '0.3.5',
-    'highlight.js': '9.4.0',
+    // 'diveSync': '0.3.0',
 
     moment: '^2.0.0',
 
@@ -191,7 +188,7 @@ const specs = {
     'file-loader': '0.8.5',
     'css-loader': '0.23.1',
     'style-loader': '0.13.1',
-    'extract-text-webpack-plugin': '1.0.1',
+    // 'extract-text-webpack-plugin': '1.0.1',
     'static-site-generator-webpack-plugin': '2.1.0',
 
     // Linting
@@ -199,6 +196,11 @@ const specs = {
     'eslint-config-airbnb': '^6.2.0',
     'eslint-plugin-react': '^4.2.3',
     'babel-eslint': '^6.0.0',
+
+    // Documentation
+    'extract-docs': '^1.2.0',
+    'marked': '0.3.5',
+    'highlight.js': '9.4.0',
 
     // Testing
     'ava': '^0.13.0',
