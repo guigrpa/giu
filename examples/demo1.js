@@ -871,9 +871,8 @@ class FormExample extends React.Component {
               accentColor="turquoise"
             />
           </div>
+          <TimePickerNow />
           <div style={flexContainer('row', { marginTop: 5 })}>
-            <TimePickerNow />
-            &nbsp;&nbsp;
             <DateInput type="inlinePicker"
               onChange={onChange}
               date time
@@ -949,10 +948,17 @@ class TimePickerNow extends React.Component {
 
   render() {
     return (
-      <DateInput type="inlinePicker"
-        value={this.state.curDate}
-        time seconds disabled
-      />
+      <div style={flexContainer('row', { marginTop: 5 })}>
+        <DateInput type="inlinePicker"
+          value={this.state.curDate}
+          time seconds nativeOnIos={false} disabled
+        />
+        &nbsp;&nbsp;
+        <DateInput type="inlinePicker"
+          value={this.state.curDate}
+          time seconds analogTime={false} nativeOnIos={false} disabled
+        />
+      </div>
     );
   }
 }

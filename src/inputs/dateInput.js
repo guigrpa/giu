@@ -131,13 +131,20 @@ const DEFAULT_PROPS = {
 const DateInputWrapper = props0 => {
   let props = addDefaults(props0, DEFAULT_PROPS);
   if (IS_IDEVICE && props.nativeOnIos) {
-    props = timmSet(props, 'type', 'native');
+    if (props.type === 'dropDownPicker') props = timmSet(props, 'type', 'native');
+    props = timmSet(props, 'analogTime', false);
   }
   props = omit(props, ['nativeOnIos']);
   return <DateInput {...props} />;
 };
 
 DateInputWrapper.propTypes = {
+  type:                     React.PropTypes.oneOf([
+    'native',
+    'onlyField',
+    'inlinePicker',
+    'dropDownPicker',
+  ]),
   nativeOnIos:              React.PropTypes.bool,
 };
 
@@ -215,7 +222,11 @@ class BaseDateInput extends React.Component {
     // When the external language changes, we must update the internal value (a string)
     // to reflect the new date format
     if (prevProps.lang !== lang && this.lastExtValue != null) {
-      onChange(null, toInternalValue(this.lastExtValue, this.props), { fDontFocus: true });
+      onChange(
+        null,
+        toInternalValue(this.lastExtValue, this.props),
+        { fDontFocus: true },
+      );
     }
   }
   componentWillUnmount() { floatDelete(this.floatId); }
@@ -376,7 +387,7 @@ class BaseDateInput extends React.Component {
 
   onMouseDown(ev) {
     cancelEvent(ev);
-    if (!this.props.fFocused) this.refInput.focus();
+    if (!this.props.fFocused && !IS_IDEVICE) this.refInput.focus();
   }
 
   onFocus(ev) {
@@ -411,7 +422,11 @@ class BaseDateInput extends React.Component {
   }
 
   onChangePicker(ev, nextValue) {
-    this.props.onChange(ev, momentToDisplay(nextValue, this.props));
+    this.props.onChange(
+      ev,
+      momentToDisplay(nextValue, this.props),
+      { fDontFocus: IS_IDEVICE },
+    );
   }
 }
 
