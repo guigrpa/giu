@@ -2,8 +2,14 @@ import React                from 'react';
 import PureRenderMixin      from 'react-addons-pure-render-mixin';
 import tinycolor            from 'tinycolor2';
 import { merge }            from 'timm';
-import { COLORS }           from '../gral/constants';
-import { bindAll }          from '../gral/helpers';
+import {
+  COLORS,
+  IS_IDEVICE,
+}                           from '../gral/constants';
+import {
+  bindAll,
+  cancelEvent,
+}                           from '../gral/helpers';
 import {
   isDark,
   flexContainer, flexItem,
@@ -160,6 +166,7 @@ class ColorPicker extends React.Component {
     return (
       <div ref={registerOuterRef}
         className="giu-color-picker"
+        onMouseDown={cancelEvent}
         style={style.outer(this.props)}
       >
         {this.renderColorSelector()}
@@ -292,7 +299,7 @@ class ColorPicker extends React.Component {
     return (
       <div
         id={mode}
-        onClick={this.onMouseDownMode}
+        onMouseDown={this.onMouseDownMode}
         style={style.modeButton(fSelected, this.props)}
       >
         {mode.toUpperCase()}
@@ -418,7 +425,7 @@ class ColorPicker extends React.Component {
       hex8 = col.toHex8();
       if (hex8 === prevHex8) this.forceUpdate();
     }
-    this.props.onChange(ev, hex8);
+    this.props.onChange(ev, hex8, { fDontFocus: IS_IDEVICE });
   }
 }
 

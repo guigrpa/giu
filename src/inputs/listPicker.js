@@ -6,6 +6,7 @@ import {
   UNICODE,
   KEYS,
   NULL_STRING,
+  IS_IDEVICE,
   getScrollbarWidth,
 }                           from '../gral/constants';
 import {
@@ -60,7 +61,6 @@ class BaseListPicker extends React.Component {
       'registerOuterRef',
       'renderItem',
       'onClickItem',
-      'doClickItemByIndex',
     ]);
   }
 
@@ -139,14 +139,18 @@ class BaseListPicker extends React.Component {
       fSelected: curValue === itemValue,
       twoStageStyle, accentColor,
     };
-    const keyEl = this.renderKeys(shortcuts);
+    const keyEl = IS_IDEVICE ? undefined : this.renderKeys(shortcuts);
+    const eventHandlers = {
+      onMouseEnter: !disabled && onHoverStart,
+      onMouseLeave: !disabled && onHoverStop,
+      onMouseDown: cancelEvent,
+      onMouseUp: IS_IDEVICE ? undefined : this.onClickItem,
+      onClick: IS_IDEVICE ? this.onClickItem : undefined,
+    };
     return (
       <div key={itemValue} ref={c => { this.refItems[idx] = c; }}
         id={itemValue}
-        onMouseEnter={!disabled && onHoverStart}
-        onMouseLeave={!disabled && onHoverStop}
-        onMouseDown={cancelEvent}
-        onMouseUp={this.onClickItem}
+        {...eventHandlers}
         style={merge(style.item(styleProps), styleItem)}
       >
         {label || UNICODE.nbsp}
@@ -173,15 +177,8 @@ class BaseListPicker extends React.Component {
 
   onClickItem(ev) {
     const { onClickItem, onChange } = this.props;
-    onChange(ev, ev.currentTarget.id);
+    onChange(ev, ev.currentTarget.id, { fDontFocus: IS_IDEVICE });
     if (onClickItem) onClickItem(ev, ev.currentTarget.id);
-  }
-
-  doClickItemByIndex(idx) {
-    const { items, onClickItem, onChange } = this.props;
-    const value = items[idx].value;
-    onChange(null, value);
-    if (onClickItem) onClickItem(null, value);
   }
 
   // ==========================================
