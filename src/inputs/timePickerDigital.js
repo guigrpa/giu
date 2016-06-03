@@ -43,13 +43,14 @@ class TimePickerDigital extends React.Component {
   // Render
   // ==========================================
   render() {
-    const { keyDown, accentColor } = this.props;
+    const { keyDown, disabled, accentColor } = this.props;
     return (
       <ListPicker
         items={this.timeItems}
         curValue={this.getSeconds()}
         onChange={this.onChange}
         keyDown={keyDown}
+        disabled={disabled}
         style={style.outer} twoStageStyle
         styleItem={style.item}
         accentColor={accentColor}
