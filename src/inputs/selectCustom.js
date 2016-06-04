@@ -5,6 +5,7 @@ import {
   COLORS, KEYS,
   UNICODE,
   NULL_STRING,
+  IS_IOS,
 }                           from '../gral/constants';
 import {
   flexContainer, flexItem,
@@ -21,6 +22,7 @@ import {
   ListPicker,
   LIST_SEPARATOR_KEY,
 }                           from '../inputs/listPicker';
+import IosFloatWrapper      from '../inputs/iosFloatWrapper';
 import {
   floatAdd,
   floatDelete,
@@ -126,9 +128,15 @@ class SelectCustomBase extends React.Component {
   }
 
   renderProvidedTitle() {
-    return React.cloneElement(this.props.children, {
+    const elTitle = React.cloneElement(this.props.children, {
       ref: this.registerTitleRef,
     });
+    return IS_IOS ?
+      <span style={style.providedTitleWrapperForIos}>
+        {elTitle}
+        {this.renderFloatForIos()}
+      </span> :
+      elTitle;
   }
 
   renderDefaultTitle() {
@@ -152,12 +160,14 @@ class SelectCustomBase extends React.Component {
         {label}
         <span style={flexItem(1)} />
         <Icon icon={caretIcon} style={style.caret} />
+        {IS_IOS && this.renderFloatForIos()}
       </span>
     );
   }
 
   renderFloat() {
     if (this.props.inlinePicker) return;
+    if (IS_IOS) return;
     const { fFloat } = this.state;
 
     // Remove float
@@ -185,6 +195,20 @@ class SelectCustomBase extends React.Component {
         floatUpdate(this.floatId, floatOptions);
       }
     }
+  }
+
+  renderFloatForIos() {
+    if (!this.state.fFloat) return null;
+    const { floatPosition, floatAlign, floatZ } = this.props;
+    return (
+      <IosFloatWrapper
+        floatPosition={floatPosition}
+        floatAlign={floatAlign}
+        floatZ={floatZ}
+      >
+        {this.renderPicker()}
+      </IosFloatWrapper>
+    );
   }
 
   renderPicker() {
@@ -298,6 +322,7 @@ const style = {
     padding: '1px 2px',
     minWidth: 40,
     cursor: 'pointer',
+    position: 'relative',
   })),
   title: ({ disabled, fFocused }) => {
     let out = style.titleBase;
@@ -309,6 +334,9 @@ const style = {
     marginLeft: 15,
     marginRight: 3,
     marginTop: 1,
+  },
+  providedTitleWrapperForIos: {
+    position: 'relative',
   },
 };
 
