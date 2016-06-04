@@ -74,7 +74,11 @@
 - [x] Reference docs
 - [x] **Breaking change** Hints: make it a single function that returns arrows and labels, *hint elements*
 - [ ] Mobile support:
-    + [ ] Float position: DropDownMenu, Select, ColorInput...
+    + [x] Fix ColorInputs: inline and dropdown
+    + [x] Fix Selects: inline and dropdown
+    + [x] Fix Selects: custom title DropDownMenu
+    + [ ] Fix DateInputs: inline, dropdown
+    + [ ] Input errors: honour float props, use iosFloatWrapper
     + [ ] Focusing on modals
     + [ ] Hint -- wrong backdrop, font
     + [ ] Fix fontfaceobserver in Safari & Mobile Safari

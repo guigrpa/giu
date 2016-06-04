@@ -951,12 +951,12 @@ class TimePickerNow extends React.Component {
       <div style={flexContainer('row', { marginTop: 5 })}>
         <DateInput type="inlinePicker"
           value={this.state.curDate}
-          time seconds nativeOnIos={false} disabled
+          time seconds checkIos={false} disabled
         />
         &nbsp;&nbsp;
         <DateInput type="inlinePicker"
           value={this.state.curDate}
-          time seconds analogTime={false} nativeOnIos={false} disabled
+          time seconds analogTime={false} checkIos={false} disabled
         />
       </div>
     );

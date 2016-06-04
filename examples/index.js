@@ -595,11 +595,11 @@ class DateInputs extends React.Component {
 
         <CenteredFlex style={{ alignItems: 'flex-start', marginBottom: '1em' }}>
           <DateInput time seconds
-            value={curDate} disabled nativeOnIos={false}
+            value={curDate} disabled checkIos={false}
             lang={lang} todayName={todayName}
           />
           <DateInput type="inlinePicker" time seconds
-            value={curDate} disabled nativeOnIos={false}
+            value={curDate} disabled checkIos={false}
             lang={lang} todayName={todayName}
           />
         </CenteredFlex>

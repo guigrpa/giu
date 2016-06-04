@@ -24,11 +24,9 @@ class FocusCapture extends React.Component {
         {...otherProps}
       />
     );
-    if (IS_IOS) {
-      return <span style={style.iDeviceWrapper}>{el}</span>
-    } else {
-      return el;
-    }
+    return IS_IOS ?
+      <span style={style.iosWrapper}>{el}</span> :
+      el;
   }
 }
 
@@ -36,14 +34,14 @@ class FocusCapture extends React.Component {
 // Styles
 // ==========================================
 const style = {
-  input: IS_IOS
-    ? merge(HIDDEN_FOCUS_CAPTURE, {
-        position: 'absolute',
-        top: 0,
-        left: 0,
-      })
-    : HIDDEN_FOCUS_CAPTURE,
-  iDeviceWrapper: {
+  input: IS_IOS ?
+    merge(HIDDEN_FOCUS_CAPTURE, {
+      position: 'absolute',
+      top: 0,
+      left: 0,
+    }) :
+    HIDDEN_FOCUS_CAPTURE,
+  iosWrapper: {
     position: 'relative',
     opacity: 0,
   },
