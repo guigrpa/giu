@@ -97,8 +97,8 @@ function displayToMoment(str, props) {
 // --
 // -- * **type** *string(`native` | `onlyField` | `inlinePicker` | `dropDownPicker`)? =
 // --   `dropDownPicker`*
-// -- * **nativeOnIos** *boolean? = true*: whether the custom DateInput should be
-// --   replaced by a native one in iOS
+// -- * **checkIos** *boolean? = true*: whether Giu should check for iOS in order to
+// --   simplify certain components (e.g. do not use analogue time picker)
 // -- * **placeholder** *string?*: when unspecified, the expected date/time
 // --   format will be used
 // -- * **date** *boolean? = true*: whether the date is part of the value
@@ -119,7 +119,7 @@ function displayToMoment(str, props) {
 // -- * **accentColor** *string?*: CSS color descriptor (e.g. `darkgray`, `#ccffaa`...)
 const DEFAULT_PROPS = {
   type:                   'dropDownPicker',
-  nativeOnIos:            true,
+  checkIos:               true,
   date:                   true,
   time:                   false,
   analogTime:             true,
@@ -130,11 +130,10 @@ const DEFAULT_PROPS = {
 
 const DateInputWrapper = props0 => {
   let props = addDefaults(props0, DEFAULT_PROPS);
-  if (IS_IOS && props.nativeOnIos) {
-    if (props.type === 'dropDownPicker') props = timmSet(props, 'type', 'native');
+  if (IS_IOS && props.checkIos) {
     props = timmSet(props, 'analogTime', false);
   }
-  props = omit(props, ['nativeOnIos']);
+  props = omit(props, ['checkIos']);
   return <DateInput {...props} />;
 };
 
@@ -145,7 +144,7 @@ DateInputWrapper.propTypes = {
     'inlinePicker',
     'dropDownPicker',
   ]),
-  nativeOnIos:              React.PropTypes.bool,
+  checkIos:              React.PropTypes.bool,
 };
 
 // ==========================================
@@ -159,7 +158,6 @@ class BaseDateInput extends React.Component {
       'inlinePicker',
       'dropDownPicker',
     ]),
-    nativeOnIos:            React.PropTypes.bool,
     disabled:               React.PropTypes.bool,
     placeholder:            React.PropTypes.string,
     date:                   React.PropTypes.bool,
