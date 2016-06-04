@@ -2,7 +2,11 @@ import React                from 'react';
 import { merge }            from 'timm';
 import tinycolor            from 'tinycolor2';
 import { bindAll }          from '../gral/helpers';
-import { COLORS, KEYS }     from '../gral/constants';
+import {
+  COLORS,
+  KEYS,
+  IS_IOS,
+}                           from '../gral/constants';
 import {
   GLOW,
   inputReset, INPUT_DISABLED,
@@ -15,6 +19,7 @@ import {
   warnFloats,
 }                           from '../components/floats';
 import ColorPicker          from '../inputs/colorPicker';
+import IosFloatWrapper      from '../inputs/iosFloatWrapper';
 
 function toInternalValue(val) { return val; }
 function toExternalValue(val) { return val; }
@@ -101,12 +106,14 @@ class ColorInput extends React.Component {
           style={style.swatchTiles}
         />
         <div style={style.swatch(this.props)} />
+        {IS_IOS && this.renderFloatForIos()}
       </div>
     );
   }
 
   renderFloat() {
     if (this.props.inlinePicker) return;
+    if (IS_IOS) return;
     const { fFloat } = this.state;
 
     // Remove float
@@ -133,6 +140,20 @@ class ColorInput extends React.Component {
         floatUpdate(this.floatId, floatOptions);
       }
     }
+  }
+
+  renderFloatForIos() {
+    if (!this.state.fFloat) return null;
+    const { floatPosition, floatAlign, floatZ } = this.props;
+    return (
+      <IosFloatWrapper
+        floatPosition={floatPosition}
+        floatAlign={floatAlign}
+        floatZ={floatZ}
+      >
+        {this.renderPicker()}
+      </IosFloatWrapper>
+    );
   }
 
   renderPicker() {

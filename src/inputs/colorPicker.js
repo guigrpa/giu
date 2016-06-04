@@ -2,10 +2,7 @@ import React                from 'react';
 import PureRenderMixin      from 'react-addons-pure-render-mixin';
 import tinycolor            from 'tinycolor2';
 import { merge }            from 'timm';
-import {
-  COLORS,
-  IS_IOS,
-}                           from '../gral/constants';
+import { COLORS }           from '../gral/constants';
 import {
   bindAll,
   cancelEvent,
@@ -425,7 +422,7 @@ class ColorPicker extends React.Component {
       hex8 = col.toHex8();
       if (hex8 === prevHex8) this.forceUpdate();
     }
-    this.props.onChange(ev, hex8, { fDontFocus: IS_IOS });
+    this.props.onChange(ev, hex8);
   }
 }
 
