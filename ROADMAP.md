@@ -82,7 +82,7 @@
     + [ ] Modals: 
         * [ ] Input dropdowns get cut -- unavoidable?
         * [ ] Focusing on inputs in modals: causes page to scroll...
-        * [ ] Backdrop does not cover full screen
+        * [x] Backdrop does not cover full screen
         * [x] Backdrop still allows scrolling of underlying page
     + [ ] Hint -- wrong backdrop, font
     + [ ] Demo1: fix Flex
