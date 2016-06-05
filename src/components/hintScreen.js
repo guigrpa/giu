@@ -13,7 +13,7 @@ import HintArrow            from '../components/hintArrow';
 require('./hintScreen.css');
 
 const FONT_SIZE = 20;
-const FONT_FAMILY = '"Gloria Hallelujah", cursive';
+const FONT_FAMILY = '"Gloria Hallelujah", sans-serif';
 
 // ==========================================
 // Component
