@@ -335,9 +335,7 @@ const style = {
     marginRight: 3,
     marginTop: 1,
   },
-  providedTitleWrapperForIos: {
-    position: 'relative',
-  },
+  providedTitleWrapperForIos: { position: 'relative' },
 };
 
 // ==========================================

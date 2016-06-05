@@ -15,6 +15,7 @@ import {
 }                           from '../gral/constants';
 import {
   HIDDEN_FOCUS_CAPTURE,
+  HIDDEN_FOCUS_CAPTURE_IOS,
   inputReset, INPUT_DISABLED,
 }                           from '../gral/styles';
 import {
@@ -36,6 +37,7 @@ import {
   DateTimePicker,
   TRAPPED_KEYS,
 }                           from '../inputs/dateTimePicker';
+import IosFloatWrapper      from '../inputs/iosFloatWrapper';
 
 // External value: `Date?`
 // Internal value: `String` (introduced by the user, copied & pasted, via dropdown...)
@@ -241,14 +243,24 @@ class BaseDateInput extends React.Component {
       out = (
         <span
           className="giu-date-input giu-date-input-inline-picker"
-          style={this.props.styleOuter}
+          style={style.outerInline(this.props)}
         >
           {this.renderField(true)}
           {this.renderPicker(true)}
         </span>
       );
-    } else {
-      out = this.renderField();
+    } else {  // 'only-field' || 'dropDownPicker'
+      const elField = this.renderField();
+      if (IS_IOS && type === 'dropDownPicker') {
+        out = (
+          <span style={style.wrapperForIos}>
+            {elField}
+            {this.renderFloatForIos()}
+          </span>
+        );
+      } else {
+        out = elField;
+      }
     }
     return out;
   }
@@ -314,6 +326,7 @@ class BaseDateInput extends React.Component {
 
   renderFloat() {
     if (this.props.type !== 'dropDownPicker') return;
+    if (IS_IOS) return;
     const { fFloat } = this.state;
 
     // Remove float
@@ -339,6 +352,20 @@ class BaseDateInput extends React.Component {
         floatUpdate(this.floatId, floatOptions);
       }
     }
+  }
+
+  renderFloatForIos() {
+    if (!this.state.fFloat) return null;
+    const { floatPosition, floatAlign, floatZ } = this.props;
+    return (
+      <IosFloatWrapper
+        floatPosition={floatPosition}
+        floatAlign={floatAlign}
+        floatZ={floatZ}
+      >
+        {this.renderPicker(false)}
+      </IosFloatWrapper>
+    );
   }
 
   renderPicker(fInline) {
@@ -385,7 +412,7 @@ class BaseDateInput extends React.Component {
 
   onMouseDown(ev) {
     cancelEvent(ev);
-    if (!this.props.fFocused && !IS_IOS) this.refInput.focus();
+    if (!this.props.fFocused) this.refInput.focus();
   }
 
   onFocus(ev) {
@@ -420,11 +447,7 @@ class BaseDateInput extends React.Component {
   }
 
   onChangePicker(ev, nextValue) {
-    this.props.onChange(
-      ev,
-      momentToDisplay(nextValue, this.props),
-      { fDontFocus: IS_IOS },
-    );
+    this.props.onChange(ev, momentToDisplay(nextValue, this.props));
   }
 }
 
@@ -432,7 +455,11 @@ class BaseDateInput extends React.Component {
 // Styles
 // ==========================================
 const style = {
-  outerInline: undefined,
+  outerInline: ({ styleOuter }) => {
+    let out = styleOuter;
+    if (IS_IOS) out = timmSet(out, 'position', 'relative');
+    return out;
+  },
   fieldBase: inputReset(),
   field: ({ style: styleField, disabled }) => {
     let out = style.fieldBase;
@@ -440,7 +467,8 @@ const style = {
     out = merge(out, styleField);
     return out;
   },
-  fieldHidden: HIDDEN_FOCUS_CAPTURE,
+  fieldHidden: IS_IOS ? HIDDEN_FOCUS_CAPTURE_IOS : HIDDEN_FOCUS_CAPTURE,
+  wrapperForIos: { position: 'relative' },
 };
 
 // ==========================================

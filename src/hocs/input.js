@@ -210,15 +210,17 @@ function input(ComposedComponent, {
 
       // Render FocusCapture if needed
       let focusCaptureEl;
-      if (fIncludeFocusCapture) focusCaptureEl = (
-        <FocusCapture
-          registerRef={this.registerFocusableRef}
-          disabled={this.props.disabled}
-          onFocus={this.onFocus} onBlur={this.onBlur}
-          onCopy={this.onCopyCut} onCut={this.onCopyCut} onPaste={this.onPaste}
-          onKeyDown={this.onKeyDown}
-        />
-      );
+      if (fIncludeFocusCapture) {
+        focusCaptureEl = (
+          <FocusCapture
+            registerRef={this.registerFocusableRef}
+            disabled={this.props.disabled}
+            onFocus={this.onFocus} onBlur={this.onBlur}
+            onCopy={this.onCopyCut} onCut={this.onCopyCut} onPaste={this.onPaste}
+            onKeyDown={this.onKeyDown}
+          />
+        );
+      }
 
       // Render errors if needed
       let errorsEl;
@@ -226,17 +228,19 @@ function input(ComposedComponent, {
       if (IS_IOS && errors.length) errorsEl = this.renderErrors(this.errors);
 
       // Wrap element if needed
-      if (focusCaptureEl || errorsEl) out = (
-        <span
-          className={className}
-          onMouseDown={focusCaptureEl ? this.onMouseDownWrapper : undefined}
-          style={style.wrapper(this.props)}
-        >
-          {focusCaptureEl}
-          {errorsEl}
-          {out}
-        </span>
-      );
+      if (focusCaptureEl || errorsEl) {
+        out = (
+          <span
+            className={className}
+            onMouseDown={focusCaptureEl ? this.onMouseDownWrapper : undefined}
+            style={style.wrapper(this.props)}
+          >
+            {focusCaptureEl}
+            {errorsEl}
+            {out}
+          </span>
+        );
+      }
 
       return out;
     }

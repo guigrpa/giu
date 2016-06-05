@@ -1,8 +1,9 @@
 import React                from 'react';
-import { merge, omit }      from 'timm';
+import { omit }             from 'timm';
 import { IS_IOS }           from '../gral/constants';
 import {
   HIDDEN_FOCUS_CAPTURE,
+  HIDDEN_FOCUS_CAPTURE_IOS,
 }                           from '../gral/styles';
 
 // ==========================================
@@ -34,17 +35,8 @@ class FocusCapture extends React.Component {
 // Styles
 // ==========================================
 const style = {
-  input: IS_IOS ?
-    merge(HIDDEN_FOCUS_CAPTURE, {
-      position: 'absolute',
-      top: 0,
-      left: 0,
-    }) :
-    HIDDEN_FOCUS_CAPTURE,
-  iosWrapper: {
-    position: 'relative',
-    opacity: 0,
-  },
+  input: IS_IOS ? HIDDEN_FOCUS_CAPTURE_IOS : HIDDEN_FOCUS_CAPTURE,
+  iosWrapper: { position: 'relative' },
 };
 
 // ==========================================

@@ -77,10 +77,11 @@
     + [x] Fix ColorInputs: inline and dropdown
     + [x] Fix Selects: inline and dropdown
     + [x] Fix Selects: custom title DropDownMenu
-    + [ ] Fix DateInputs: inline, dropdown
+    + [x] Fix DateInputs: inline, dropdown
     + [ ] Input errors: honour float props, use iosFloatWrapper
     + [ ] Focusing on modals
     + [ ] Hint -- wrong backdrop, font
+    + [ ] Demo1: fix Flex
     + [ ] Fix fontfaceobserver in Safari & Mobile Safari
 - [ ] Long demo with explanations:
     + [ ] Check other highlighting options: http://twitter.com/ryanflorence/status/738236122950602752
