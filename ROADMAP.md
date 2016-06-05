@@ -78,8 +78,12 @@
     + [x] Fix Selects: inline and dropdown
     + [x] Fix Selects: custom title DropDownMenu
     + [x] Fix DateInputs: inline, dropdown
-    + [ ] Input errors: honour float props, use iosFloatWrapper
-    + [ ] Focusing on modals
+    + [x] Input errors: honour float props, use iosFloatWrapper
+    + [ ] Modals: 
+        * [ ] Input dropdowns get cut -- unavoidable?
+        * [ ] Focusing on inputs in modals: causes page to scroll...
+        * [ ] Backdrop does not cover full screen
+        * [x] Backdrop still allows scrolling of underlying page
     + [ ] Hint -- wrong backdrop, font
     + [ ] Demo1: fix Flex
     + [ ] Fix fontfaceobserver in Safari & Mobile Safari

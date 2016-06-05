@@ -144,6 +144,7 @@ class Modal extends React.Component {
       <div
         onClick={this.props.onClickBackdrop}
         onWheel={cancelEvent}
+        onTouchMove={cancelEvent}
         style={flexItem(1)}
       />
     );

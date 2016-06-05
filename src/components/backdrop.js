@@ -22,6 +22,7 @@ class Backdrop extends React.Component {
       <div
         className="giu-backdrop"
         onWheel={cancelEvent}
+        onTouchMove={cancelEvent}
         {...this.props}
         style={style.backdrop(this.props)}
       />
