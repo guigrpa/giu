@@ -24,6 +24,7 @@ import {
   warnFloats,
 }                           from '../components/floats';
 import FocusCapture         from '../components/focusCapture';
+import IosFloatWrapper      from '../inputs/iosFloatWrapper';
 
 const PROP_TYPES = {
   value:                  React.PropTypes.any,
@@ -225,7 +226,18 @@ function input(ComposedComponent, {
       // Render errors if needed
       let errorsEl;
       const { errors } = this;
-      if (IS_IOS && errors.length) errorsEl = this.renderErrors(this.errors);
+      if (IS_IOS && errors.length) {
+        const { position, align, zIndex } = this.calcFloatPosition();
+        errorsEl = (
+          <IosFloatWrapper
+            floatPosition={position}
+            floatAlign={align}
+            floatZ={zIndex}
+          >
+            {this.renderErrors(this.errors)}
+          </IosFloatWrapper>
+        );
+      }
 
       // Wrap element if needed
       if (focusCaptureEl || errorsEl) {
@@ -262,25 +274,10 @@ function input(ComposedComponent, {
       // will open `below`, position the error float `above`; also adjust `z-index`
       // to be below another float's level, so that it doesn't obscure the main float).
       if (errors.length) {
-        const {
-          floatZ, floatPosition,
-          errorZ, errorPosition, errorAlign,
-        } = this.props;
-        let zIndex = errorZ;
-        if (zIndex == null) {
-          zIndex = floatZ != null ? floatZ - MISC.zErrorFloatDelta : MISC.zErrorFloatDelta;
-        }
-        let position = errorPosition;
-        if (position == null) {
-          position = floatPosition === 'below' ? 'above' : 'below';
-        }
-        const floatOptions = {
-          position,
-          align: errorAlign,
-          zIndex,
+        const floatOptions = merge(this.calcFloatPosition(), {
           getAnchorNode: () => this.refOuter || this.refFocusable,
           children: this.renderErrors(errors),
-        };
+        });
         if (this.errorFloatId == null) {
           this.errorFloatId = floatAdd(floatOptions);
         } else {
@@ -294,7 +291,7 @@ function input(ComposedComponent, {
       let fModified = false;
       if (curValue != null) fModified = curValue !== lastValidatedValue;
       return (
-        <div style={style.errors(fModified, this.props)}>
+        <div style={style.errors(fModified)}>
           {errors.join(' | ')}
         </div>
       );
@@ -430,6 +427,22 @@ function input(ComposedComponent, {
         }
       });
     }
+
+    calcFloatPosition() {
+      const {
+        floatZ, floatPosition,
+        errorZ, errorPosition, errorAlign,
+      } = this.props;
+      let zIndex = errorZ;
+      if (zIndex == null) {
+        zIndex = floatZ != null ? floatZ - MISC.zErrorFloatDelta : MISC.zErrorFloatDelta;
+      }
+      let position = errorPosition;
+      if (position == null) {
+        position = floatPosition === 'below' ? 'above' : 'below';
+      }
+      return { position, align: errorAlign, zIndex };
+    }
   };
 }
 
@@ -449,19 +462,11 @@ const style = {
     });
     return out;
   },
-  errors: fModified => {
-    const out = {
-      padding: '1px 3px',
-    };
-    if (IS_IOS) {
-      out.position = 'absolute';
-      out.top = '100%';
-      out.left = 0;
-    }
-    out.backgroundColor = fModified ? errorBgColorModified : errorBgColorBase;
-    out.color = fModified ? errorFgColorModified : errorFgColorBase;
-    return out;
-  },
+  errors: fModified => ({
+    padding: '1px 3px',
+    backgroundColor: fModified ? errorBgColorModified : errorBgColorBase,
+    color: fModified ? errorFgColorModified : errorFgColorBase,
+  }),
 };
 
 // ==========================================
