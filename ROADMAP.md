@@ -84,7 +84,6 @@
         * [ ] Focusing on inputs in modals: causes page to scroll...
         * [x] Backdrop does not cover full screen
         * [x] Backdrop still allows scrolling of underlying page
-    + [ ] Hint -- woff2 font not supported on iOS, use fonts directly from Google.
     + [ ] Demo1: fix Flex
     + [ ] Fix fontfaceobserver in Safari & Mobile Safari
 - [ ] Long demo with explanations:
