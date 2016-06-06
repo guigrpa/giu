@@ -27,6 +27,7 @@ import {
   hoverable,
   flexContainer,
   isRequired, isEmail, isGte, isLte, isOneOf, isDate,
+  IS_IOS,
 }                           from '../src';
 
 // hljs.configure({ languages: ['js', 'html'] });
@@ -556,10 +557,14 @@ class DateInputs extends React.Component {
           </div>
         </ul>
 
-        <p><i>Note that Giu pickers are replaced by the native HTML ones on iOS.</i></p>
-
         <p>If you are including a time picker, you can choose between an analogue one
-        (with or without second hand) and a digital one:</p>
+        (with or without second hand) and a digital one
+        {IS_IOS &&
+          <span>
+            (<i>note that, by default, Giu pickers are replaced by the native HTML ones on iOS.</i>)
+          </span>
+        }
+        :</p>
 
         <CenteredFlex>
           <DateInput type="inlinePicker" date={false} time utc={false} seconds
@@ -824,7 +829,7 @@ class HintDemo extends React.Component {
           const y = fTop ? bcr.top - 80 : bcr.bottom + 80;
           out.push({
             type: 'LABEL', x, y,
-            children: 'Just shows a pre-defined hint (if not already shown)',
+            children: 'Just shows a pre-defined hint',
           });
           out.push({
             type: 'ARROW',

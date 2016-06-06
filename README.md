@@ -344,8 +344,8 @@ Props:
 
 * **type** *string(`native` | `onlyField` | `inlinePicker` | `dropDownPicker`)? =
   `dropDownPicker`*
-* **nativeOnIos** *boolean? = true*: whether the custom DateInput should be
-  replaced by a native one in iOS
+* **checkIos** *boolean? = true*: whether Giu should check for iOS in order to
+  simplify certain components (e.g. do not use analogue time picker)
 * **placeholder** *string?*: when unspecified, the expected date/time
   format will be used
 * **date** *boolean? = true*: whether the date is part of the value

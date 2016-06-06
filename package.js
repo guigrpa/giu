@@ -63,9 +63,9 @@ const specs = {
     build:                      runMultiple([
                                   'npm run lint',
                                   'npm run compile',
-                                  'npm run buildExamples',
-                                  // 'npm run test',
                                   'npm run docs',
+                                  'npm run buildExamplesSsr',
+                                  // 'npm run test',
                                   'npm run xxl',
                                 ]),
     travis:                     runMultiple([
@@ -84,7 +84,7 @@ const specs = {
     buildExamplesSsr:           runMultiple([
                                   'npm run buildExamplesClean',
                                   'npm run buildExamplesCopy',
-                                  `cross-env NODE_ENV=production SERVER_SIDE_RENDERING=true ${WEBPACK} -p --watch`,
+                                  `cross-env NODE_ENV=production SERVER_SIDE_RENDERING=true ${WEBPACK} -p`,
                                 ]),
     buildExamplesSsrDev:        runMultiple([
                                   'npm run buildExamplesClean',
