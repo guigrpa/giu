@@ -851,24 +851,28 @@ class FormExample extends React.Component {
               time analogTime={false}
               lang="es"
               accentColor="lightgray"
+              styleOuter={{ flexShrink: 0 }}
             />
             &nbsp;&nbsp;
             <DateInput type="inlinePicker"
               value={this.state.fixedDate}
               onChange={onChange}
               accentColor="darkblue"
+              styleOuter={{ flexShrink: 0 }}
             />
             &nbsp;&nbsp;
             <DateInput type="inlinePicker" date={false} time seconds
               value={this.state.fixedDate}
               onChange={onChange}
               accentColor="darkgreen"
+              styleOuter={{ flexShrink: 0 }}
             />
             &nbsp;&nbsp;
             <DateInput type="inlinePicker"
               onChange={onChange}
               date={false} time analogTime={false}
               accentColor="turquoise"
+              styleOuter={{ flexShrink: 0 }}
             />
           </div>
           <TimePickerNow />
@@ -876,6 +880,7 @@ class FormExample extends React.Component {
             <DateInput type="inlinePicker"
               onChange={onChange}
               date time
+              styleOuter={{ flexShrink: 0 }}
             />
           </div>
         </div>
@@ -885,11 +890,26 @@ class FormExample extends React.Component {
             ColorInput: with inline/dropdown ColorPicker (RGB/HSV, alpha, clipboard)
           </ExampleLabel>
           <div style={flexContainer('row')}>
-            <ColorInput value="aadc5400" accentColor="darkmagenta" onChange={onChange} />
-            <ColorInput value="ffdc5400" disabled />
-            <div>&nbsp;</div>
-            <ColorInput inlinePicker value="ffcca500" accentColor="lightGray" onChange={onChange} />
-            <ColorInput inlinePicker value="ffcca500" disabled accentColor="lightGray" onChange={onChange} />
+            <ColorInput
+              value="aadc5400" onChange={onChange}
+              accentColor="darkmagenta"
+              styleOuter={{ flexShrink: 0 }}
+            />
+            <ColorInput
+              value="ffdc5400" disabled
+              styleOuter={{ flexShrink: 0 }}
+            />
+            &nbsp;&nbsp;
+            <ColorInput inlinePicker
+              value="ffcca500" onChange={onChange}
+              accentColor="lightGray"
+              styleOuter={{ flexShrink: 0 }}
+            />
+            <ColorInput inlinePicker
+              value="ffcca500" onChange={onChange}
+              disabled accentColor="lightGray"
+              styleOuter={{ flexShrink: 0 }}
+            />
           </div>
         </div>
         <br />
@@ -952,11 +972,13 @@ class TimePickerNow extends React.Component {
         <DateInput type="inlinePicker"
           value={this.state.curDate}
           time seconds checkIos={false} disabled
+          styleOuter={{ flexShrink: 0 }}
         />
         &nbsp;&nbsp;
         <DateInput type="inlinePicker"
           value={this.state.curDate}
           time seconds analogTime={false} checkIos={false} disabled
+          styleOuter={{ flexShrink: 0 }}
         />
       </div>
     );

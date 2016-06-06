@@ -74,17 +74,11 @@
 - [x] Reference docs
 - [x] **Breaking change** Hints: make it a single function that returns arrows and labels, *hint elements*
 - [ ] Mobile support:
-    + [x] Fix ColorInputs: inline and dropdown
-    + [x] Fix Selects: inline and dropdown
-    + [x] Fix Selects: custom title DropDownMenu
-    + [x] Fix DateInputs: inline, dropdown
-    + [x] Input errors: honour float props, use iosFloatWrapper
     + [ ] Modals: 
         * [ ] Input dropdowns get cut -- unavoidable?
         * [ ] Focusing on inputs in modals: causes page to scroll...
         * [x] Backdrop does not cover full screen
         * [x] Backdrop still allows scrolling of underlying page
-    + [ ] Demo1: fix Flex
     + [ ] Fix fontfaceobserver in Safari & Mobile Safari
 - [ ] Long demo with explanations:
     + [ ] Check other highlighting options: http://twitter.com/ryanflorence/status/738236122950602752
