@@ -2,9 +2,9 @@
 
 An opinionated Swiss-army knife for building React application GUIs.
 
+
+
 Online demos: [an extremely compact one](http://guigrpa.github.io/giu/demo1.html) and [an interactive version of this documentation](http://guigrpa.github.io/giu).
-
-
 
 ## Why?
 
@@ -479,6 +479,12 @@ Props:
 
 **Include the `<Modals />` component at (or near)
 the root level of your React tree**. No props are required.
+
+**Note on iOS usage**: on iOS, don't use Modals with embedded
+inputs (TextInput, DateInput and so on). 
+Due to [these bugs](https://dzone.com/articles/issues-position-fixed),
+when the user focuses on the embedded input, the whole page scrolls to the top.
+
 Here's an example on how you would open and close a modal:
 
 ```js
@@ -788,7 +794,7 @@ Provides an inline style object for a slightly rounded shadowed box.
 * **style** *object?*: custom style (merged with the base style)
 * **Returns** *object*: inline style
 
-**isDark()/isLight()**
+**isDark() / isLight()**
 
 Determines whether the provided color is perceived as dark or light.
 Can be used to decide whether text on this background color should be light
@@ -798,7 +804,7 @@ or dark, respectively, for good readability.
   can be processed by [tinycolor](https://github.com/bgrins/TinyColor))
 * **Returns** *bool*: whether the color is dark (light)
 
-**darken()/lighten()**
+**darken() / lighten()**
 
 Darkens or lightens a given color by a given percentage.
 
@@ -850,7 +856,7 @@ the scroller reaches the top/bottom of its contents.
 
 * **ev** *object*: `wheel` event
 
-**windowHeightWithoutScrollbar()/windowWidthWithoutScrollbar()**
+**windowHeightWithoutScrollbar() / windowWidthWithoutScrollbar()**
 
 Provides the inner height (width) of the window
 excluding scrollbars (if any).
