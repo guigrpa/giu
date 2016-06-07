@@ -153,15 +153,15 @@ const App = () => {
     default:
       out = (
         <div>
+          <Modals />
+          <Floats />
+          <Notifications />
+          <Hints />
           <div style={{padding: 10, fontSize: '1.8em', fontWeight: 'bold'}}>
             <a target="_blank" href="http://github.com/guigrpa/giu">Giu</a> demo page
           </div>
           <div style={flexContainer('row')}>
-            <Modals />
-            <Floats />
-            <Notifications />
-            <Hints />
-            <div style={flexItem(1)}>
+            <div style={flexItem('1 0 500px')}>
               {EVERYTHING && <NotificationExample />}
               {EVERYTHING && <MessageExample />}
               {EVERYTHING && <IconExample />}
@@ -174,7 +174,7 @@ const App = () => {
               {EVERYTHING && <ScrollingExample />}
               {EVERYTHING && <ProgressExample />}
             </div>
-            <div style={flexItem(1)}>
+            <div style={flexItem('1 0 500px')}>
               {EVERYTHING && <FormExample />}
             </div>
           </div>
@@ -860,7 +860,8 @@ class FormExample extends React.Component {
               accentColor="darkblue"
               styleOuter={{ flexShrink: 0 }}
             />
-            &nbsp;&nbsp;
+          </div>
+          <div style={flexContainer('row')}>
             <DateInput type="inlinePicker" date={false} time seconds
               value={this.state.fixedDate}
               onChange={onChange}
@@ -874,8 +875,8 @@ class FormExample extends React.Component {
               accentColor="turquoise"
               styleOuter={{ flexShrink: 0 }}
             />
+            <TimePickerNow />
           </div>
-          <TimePickerNow />
           <div style={flexContainer('row', { marginTop: 5 })}>
             <DateInput type="inlinePicker"
               onChange={onChange}
@@ -905,6 +906,8 @@ class FormExample extends React.Component {
               accentColor="lightGray"
               styleOuter={{ flexShrink: 0 }}
             />
+          </div>
+          <div style={flexContainer('row')}>
             <ColorInput inlinePicker
               value="ffcca500" onChange={onChange}
               disabled accentColor="lightGray"
@@ -968,19 +971,11 @@ class TimePickerNow extends React.Component {
 
   render() {
     return (
-      <div style={flexContainer('row', { marginTop: 5 })}>
-        <DateInput type="inlinePicker"
-          value={this.state.curDate}
-          time seconds checkIos={false} disabled
-          styleOuter={{ flexShrink: 0 }}
-        />
-        &nbsp;&nbsp;
-        <DateInput type="inlinePicker"
-          value={this.state.curDate}
-          time seconds analogTime={false} checkIos={false} disabled
-          styleOuter={{ flexShrink: 0 }}
-        />
-      </div>
+      <DateInput type="inlinePicker"
+        value={this.state.curDate}
+        time seconds checkIos={false} disabled
+        styleOuter={{ flexShrink: 0 }}
+      />
     );
   }
 }

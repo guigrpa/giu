@@ -12,6 +12,12 @@ import Modal                from './modal';
 /* --
 **Include the `<Modals />` component at (or near)
 the root level of your React tree**. No props are required.
+
+**Note on iOS usage**: on iOS, don't use Modals with embedded
+inputs (TextInput, DateInput and so on). 
+Due to [these bugs](https://dzone.com/articles/issues-position-fixed),
+when the user focuses on the embedded input, the whole page scrolls to the top.
+
 Here's an example on how you would open and close a modal:
 
 ```js
