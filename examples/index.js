@@ -133,8 +133,11 @@ class App extends React.Component {
   }
 
   style() {
-    if (!this.state.fFontsLoaded) return undefined;
-    return { fontFamily: 'Open Sans, sans-serif' };
+    return {
+      fontFamily: this.state.fFontsLoaded ?
+        'Open Sans, sans-serif' :
+        'Helvetica, Arial, sans-serif',
+    };
   }
 }
 
