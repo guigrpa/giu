@@ -38,7 +38,7 @@ const boxWithShadow = style => merge({
   boxShadow: '0 3px 6px rgba(0,0,0,0.16), 0 3px 6px rgba(0,0,0,0.23)',
 }, style);
 
-// -- **isDark()/isLight()**
+// -- **isDark() / isLight()**
 // --
 // -- Determines whether the provided color is perceived as dark or light.
 // -- Can be used to decide whether text on this background color should be light
@@ -50,7 +50,7 @@ const boxWithShadow = style => merge({
 const isDark = color => tinycolor(color).getLuminance() < 0.6;
 const isLight = color => !isDark(color);
 
-// -- **darken()/lighten()**
+// -- **darken() / lighten()**
 // --
 // -- Darkens or lightens a given color by a given percentage.
 // --

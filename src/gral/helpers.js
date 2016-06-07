@@ -89,7 +89,7 @@ function windowRightScrollbarWidth() {
   return out;
 }
 
-// -- **windowHeightWithoutScrollbar()/windowWidthWithoutScrollbar()**
+// -- **windowHeightWithoutScrollbar() / windowWidthWithoutScrollbar()**
 // --
 // -- Provides the inner height (width) of the window
 // -- excluding scrollbars (if any).

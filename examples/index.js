@@ -703,12 +703,12 @@ const ColorInputs = () =>
         {' '}(press ESC to show/hide the picker)
       </li>
       <li>An inline color picker (add the <code>inlinePicker</code> prop):</li>
-      <div style={{ marginTop: '1em' }}>
-        <CenteredFlex>
-          <ColorInput value="aa66be52" inlinePicker />
-        </CenteredFlex>
-      </div>
     </ul>
+    <div style={{ marginTop: '1em' }}>
+      <CenteredFlex>
+        <ColorInput value="aa66be52" inlinePicker />
+      </CenteredFlex>
+    </div>
 
     <p>Customize your picker's accent color:</p>
 
