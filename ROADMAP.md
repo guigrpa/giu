@@ -73,8 +73,6 @@
 - [x] Check embedded hint positioning!
 - [x] Reference docs
 - [x] **Breaking change** Hints: make it a single function that returns arrows and labels, *hint elements*
-- [ ] Mobile support:
-    + [ ] Fix imperative focus/blur
 - [ ] ListPicker: if not focused, it should not scrollintoview! But don't use fFocused (draws a border). Add a new `fParentFocused` and use it for this purpose. Dropdownmenus should stop scrolling also if keyboard shortcuts are used
 
 - [ ] Basic tests with enzyme? Floats, modals, etc. are bound to be tricky

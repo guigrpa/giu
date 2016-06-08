@@ -255,7 +255,7 @@ Tasks 2 and 3 above are managed via a *pseudo-imperative* API, the `cmds` prop, 
 
 * `SET_VALUE`: change the current input state (without affecting the original `value` prop). The new value is passed in the command object as `value`.
 * `REVERT`: revert the current input state to the original `value` prop.
-* `FOCUS`, `BLUR`: move the focus to or away from the input component.
+* `FOCUS`, `BLUR`: move the focus to or away from the input component. [*not supported in Mobile Safari*]
 
 [[[demo:imperative-api]]]
 

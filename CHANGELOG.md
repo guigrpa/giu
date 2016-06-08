@@ -1,10 +1,15 @@
 # Changelog
 
-* LargeMessage: allow style customisation.
+* [M] **Add iOS support**, with some limitations, most notably:
+    - When the user focuses on an input *inside a Modal*, the browser scrolls to the top of the page. This is a known issue with Mobile Safari that appeared years ago (!!).
+    - The `FOCUS` and `BLUR` commands on Inputs do not work correctly in Mobile Safari. Apparently `focus()` can only be called from within a `click` event handler, but I couldn't find the way to trigger the `click` handler programmatically.
+    - *Any suggestion on how to solve these issues is welcome!*
 * [M] DateInput: when the `lang` prop is used, the component changes its internal value whenever `lang` changes, to reflect the new applicable format.
-* **Bugfix**: SelectCustom: fix bug where keyboard shortcuts were unregistered when props changed.
-* **Bugfix**: SelectCustom: fix value provided to the `onClickItem` handler.
-* **Bugfix**: ListPicker: don't highlight the Select's current value when hovering a separator.
+* LargeMessage: allow style customisation.
+* Bugfixes:
+    - SelectCustom: fix bug where keyboard shortcuts were unregistered when props changed.
+    - SelectCustom: fix value provided to the `onClickItem` handler.
+    - ListPicker: don't highlight the Select's current value when hovering a separator.
 
 ## 0.5.0 (May. 25, 2016)
 

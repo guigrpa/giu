@@ -13,12 +13,13 @@ let cntId = 0;
 // ==========================================
 // -- Props:
 // --
-// -- * **label** *string?*: gets converted to a `label` element
+// -- * **label** *any?*: React components to be included in the
+// --   checkbox's `label` element
 // -- * **styleLabel** *object?*: merged with the `label` style
 class Checkbox extends React.Component {
   static propTypes = {
     id:                     React.PropTypes.string,
-    label:                  React.PropTypes.string,
+    label:                  React.PropTypes.any,
     disabled:               React.PropTypes.bool,
     styleLabel:             React.PropTypes.object,
     // Input HOC
