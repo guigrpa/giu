@@ -277,7 +277,7 @@ Tasks 2 and 3 above are managed via a *pseudo-imperative* API, the `cmds` prop, 
 
 * `SET_VALUE`: change the current input state (without affecting the original `value` prop). The new value is passed in the command object as `value`.
 * `REVERT`: revert the current input state to the original `value` prop.
-* `FOCUS`, `BLUR`: move the focus to or away from the input component.
+* `FOCUS`, `BLUR`: move the focus to or away from the input component. [*not supported in Mobile Safari*]
 
 
 
@@ -325,7 +325,8 @@ Props:
 
 Props:
 
-* **label** *string?*: gets converted to a `label` element
+* **label** *any?*: React components to be included in the
+  checkbox's `label` element
 * **styleLabel** *object?*: merged with the `label` style
 
 ### DateInput
@@ -481,7 +482,7 @@ Props:
 the root level of your React tree**. No props are required.
 
 **Note on iOS usage**: on iOS, don't use Modals with embedded
-inputs (TextInput, DateInput and so on). 
+inputs (TextInput, DateInput and so on).
 Due to [these bugs](https://dzone.com/articles/issues-position-fixed),
 when the user focuses on the embedded input, the whole page scrolls to the top.
 

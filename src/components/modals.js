@@ -14,7 +14,7 @@ import Modal                from './modal';
 the root level of your React tree**. No props are required.
 
 **Note on iOS usage**: on iOS, don't use Modals with embedded
-inputs (TextInput, DateInput and so on). 
+inputs (TextInput, DateInput and so on).
 Due to [these bugs](https://dzone.com/articles/issues-position-fixed),
 when the user focuses on the embedded input, the whole page scrolls to the top.
 

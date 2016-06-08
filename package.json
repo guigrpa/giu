@@ -1,6 +1,6 @@
 {
   "name": "giu",
-  "version": "0.5.0",
+  "version": "0.6.0",
   "description": "A collection of React components and utilities",
   "main": "lib/index.js",
   "author": "Guillermo Grau Panea",
@@ -26,7 +26,7 @@
     "start": "babel-node examples/server",
     "compile": "node package && rm -rf ./lib ./libEs6 && babel -d lib src && cp src/*.css lib && cp src/components/*.css lib/components && cp src/inputs/*.css lib/inputs && cp -r src/fonts lib/fonts && cp -r src libEs6",
     "docs": "extract-docs --template docs/templates/README.md --output README.md",
-    "build": "npm run lint && npm run compile && npm run buildExamplesSsr && npm run docs && npm run xxl",
+    "build": "npm run lint && npm run compile && npm run docs && npm run buildExamplesSsr && npm run xxl",
     "travis": "npm run compile",
     "buildExamples": "npm run buildExamplesSsr",
     "buildExamplesDev": "npm run buildExamplesClean && npm run buildExamplesCopy && cp examples/*.html examples/public/ && webpack --config examples/webpackConfig.js --progress --display-chunks --watch",

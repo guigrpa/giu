@@ -1,5 +1,7 @@
 # Changelog
 
+## 0.6.0 (June 8, 2016)
+
 * [M] **Add iOS support**, with some limitations, most notably:
     - When the user focuses on an input *inside a Modal*, the browser scrolls to the top of the page. This is a known issue with Mobile Safari that appeared years ago (!!).
     - The `FOCUS` and `BLUR` commands on Inputs do not work correctly in Mobile Safari. Apparently `focus()` can only be called from within a `click` event handler, but I couldn't find the way to trigger the `click` handler programmatically.
