@@ -95,7 +95,6 @@ class SelectCustomBase extends React.Component {
     const { keyDown, items, required, fFocused } = nextProps;
     if (keyDown !== this.props.keyDown) this.processKeyDown(keyDown);
     if (items !== this.props.items || required !== this.props.required) {
-      this.unregisterShortcuts();
       this.prepareItems(items, required);
     }
     if (fFocused !== this.props.fFocused) {
