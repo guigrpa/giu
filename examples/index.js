@@ -180,8 +180,9 @@ const Contents = ({ id }) => {
 // -----------------------------------------------
 const DemoIntro = () =>
   <div>
-    All of the examples in this page are interactive and use Giu's
-    components and helpers. Feel free to play with them!
+    <p><b>All of the examples in this page are interactive</b> and use Giu's
+    components and helpers. Feel free to play with them!</p>
+    <p>You can also check out this <a href="demo1.html">compact demo</a>.</p>
   </div>
 
 class InputIntroAge extends React.Component {
@@ -636,7 +637,7 @@ const Selects = () =>
       <li>An inline picker (<code>type="inlinePicker"</code>):</li>
       <div style={{ marginTop: '1em' }}>
         <CenteredFlex>
-          <Select type="inlinePicker" 
+          <Select type="inlinePicker"
             items={getExampleItems({ fSeparator: true, fKeys: true, modifier: 'alt' })}
             value="blueberries"
             required
