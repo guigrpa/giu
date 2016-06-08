@@ -64,9 +64,12 @@ function input(ComposedComponent, {
   const fIncludeClipboardProps = fIncludeClipboardProps0 != null
     ? fIncludeClipboardProps0
     : fIncludeFocusCapture;
+  const composedComponentName = ComposedComponent.displayName ||
+    ComposedComponent.name || 'Component';
+  const hocDisplayName = `Input(${composedComponentName})`;
 
   return class extends React.Component {
-    static displayName = `Input(${ComposedComponent.name})`;
+    static displayName = hocDisplayName;
     static propTypes = PROP_TYPES;
     static defaultProps = {
       errors:                 [],
@@ -102,7 +105,7 @@ function input(ComposedComponent, {
     }
 
     componentDidMount() {
-      warnFloats(this.constructor.name);
+      warnFloats(hocDisplayName);
       this.renderErrorFloat();
     }
 

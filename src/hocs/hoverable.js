@@ -32,8 +32,12 @@ import { bindAll }          from '../gral/helpers';
 // -- * **onHoverStop** *function*: `onMouseLeave` event handler you can attach to
 // --   your target DOM elements
 function hoverable(ComposedComponent) {
+  const composedComponentName = ComposedComponent.displayName ||
+    ComposedComponent.name || 'Component';
+  const hocDisplayName = `Hoverable(${composedComponentName})`;
+
   return class extends React.Component {
-    static displayName = `Hoverable(${ComposedComponent.name})`;
+    static displayName = hocDisplayName;
     static propTypes = {
       onHoverStart:           React.PropTypes.func,
       onHoverStop:            React.PropTypes.func,
