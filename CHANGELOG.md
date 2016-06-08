@@ -10,6 +10,7 @@
     - SelectCustom: fix bug where keyboard shortcuts were unregistered when props changed.
     - SelectCustom: fix value provided to the `onClickItem` handler.
     - ListPicker: don't highlight the Select's current value when hovering a separator.
+    - HOCs: fix `displayName`.
 
 ## 0.5.0 (May. 25, 2016)
 

@@ -31,7 +31,6 @@ import {
   floatAdd,
   floatDelete,
   floatUpdate,
-  warnFloats,
 }                           from '../components/floats';
 import {
   DateTimePicker,
@@ -201,12 +200,6 @@ class BaseDateInput extends React.Component {
       'onKeyDown',
       'onChangePicker',
     ]);
-  }
-
-  componentDidMount() {
-    if (this.props.type === 'dropDownPicker') {
-      warnFloats(this.constructor.name);
-    }
   }
 
   componentWillReceiveProps(nextProps) {

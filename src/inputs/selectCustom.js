@@ -27,7 +27,6 @@ import {
   floatAdd,
   floatDelete,
   floatUpdate,
-  warnFloats,
 }                           from '../components/floats';
 import Icon                 from '../components/icon';
 
@@ -84,12 +83,7 @@ class SelectCustomBase extends React.Component {
     this.prepareItems(this.props.items, this.props.required);
   }
 
-  componentDidMount() {
-    if (!this.props.inlinePicker) {
-      warnFloats(this.constructor.name);
-    }
-    this.registerShortcuts();
-  }
+  componentDidMount() { this.registerShortcuts(); }
 
   componentWillReceiveProps(nextProps) {
     const { keyDown, items, required, fFocused } = nextProps;

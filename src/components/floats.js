@@ -321,7 +321,8 @@ const style = {
 // ==========================================
 let fCheckedFloats = false;
 const floatsWarning = name => `<${name}> requires a <Floats> component to be \
-included in your application. It will not work properly otherwise.`;
+included in your application. It will not work properly otherwise. Please add it \
+as close as possible to the application root; no props are needed.`;
 
 function warnFloats(componentName) {
   if (fCheckedFloats) return;

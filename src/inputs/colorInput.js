@@ -16,7 +16,6 @@ import {
   floatAdd,
   floatDelete,
   floatUpdate,
-  warnFloats,
 }                           from '../components/floats';
 import ColorPicker          from '../inputs/colorPicker';
 import IosFloatWrapper      from '../inputs/iosFloatWrapper';
@@ -62,13 +61,6 @@ class ColorInput extends React.Component {
       'onMouseDownTitle',
       'onClick',
     ]);
-  }
-
-
-  componentDidMount() {
-    if (!this.props.inlinePicker) {
-      warnFloats(this.constructor.name);
-    }
   }
 
   componentWillReceiveProps(nextProps) {
