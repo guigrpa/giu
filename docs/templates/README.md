@@ -2,7 +2,7 @@
 
 [[[*An opinionated Swiss-army knife for building React application GUIs.
 
-*Online demos: [an extremely compact one](http://guigrpa.github.io/giu/demo1.html) and [an interactive version of this documentation](http://guigrpa.github.io/giu).]]]
+Online demos: [an extremely compact one](http://guigrpa.github.io/giu/demo1.html) and [an interactive version of this documentation](http://guigrpa.github.io/giu).]]]
 
 [[[demo:intro]]]
 
