@@ -1,5 +1,9 @@
 # Changelog
 
+*[M]: major change; [m]: minor change*
+
+* [m] Input HOC: allow simultaneously setting a new value prop and reverting to it
+
 ## 0.6.0 (June 8, 2016)
 
 * [M] **Add iOS support**, with some limitations, most notably:

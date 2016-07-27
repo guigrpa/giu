@@ -114,7 +114,7 @@ function input(ComposedComponent, {
       if (value !== this.props.value) {
         this.setState({ curValue: toInternalValue(value, nextProps) });
       }
-      if (cmds !== this.props.cmds) this.processCmds(cmds);
+      if (cmds !== this.props.cmds) this.processCmds(cmds, nextProps);
     }
 
     componentWillUpdate(nextProps, nextState) {
@@ -151,18 +151,18 @@ function input(ComposedComponent, {
     // ==========================================
     // Imperative API (via props or directly)
     // ==========================================
-    processCmds(cmds) {
+    processCmds(cmds, nextProps) {
       if (cmds == null) return;
       cmds.forEach(cmd => {
         switch (cmd.type) {
           case 'SET_VALUE':
-            this.setState({ curValue: toInternalValue(cmd.value, this.props) });
+            this.setState({ curValue: toInternalValue(cmd.value, nextProps) });
             break;
           case 'REVERT':
-            this.setState({ curValue: toInternalValue(this.props.value, this.props) });
+            this.setState({ curValue: toInternalValue(nextProps.value, nextProps) });
             break;
           case 'VALIDATE':
-            this.validate();
+            this._validate();
             break;
           case 'FOCUS':
             this.pendingFocusBlur = '_focus';
