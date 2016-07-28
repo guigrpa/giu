@@ -2,6 +2,8 @@
 
 *[M]: major change; [m]: minor change*
 
+## 0.7.0 (July 28, 2016)
+
 * [M] Bump deps, including React (to 15.2.x)
 * [m] ColorInput: initial values can be in any format supported by [tinycolor2](https://github.com/bgrins/TinyColor). Note that v1.4.1 of this library is aligned to CSS 4 color specification RRGGBBAA (previously AARRGGBB). In any case, the values provided by this input are in the browser-ready `rgba(r, g, b, a)` format
 * [m] Input HOC: allow simultaneously setting a new value prop and reverting to it
