@@ -62,7 +62,7 @@ class FileInput extends React.Component {
       registerOuterRef,
       disabled,
     } = this.props;
-    const otherProps = omit(this.props, PROP_KEYS);
+    const otherProps = omit(this.props, PROP_KEYS_TO_REMOVE_FROM_INPUT);
     return (
       <span ref={registerOuterRef}
         className="giu-file-input"
@@ -135,7 +135,9 @@ const style = {
 // ==========================================
 // Miscellaneous
 // ==========================================
-const PROP_KEYS = Object.keys(FileInput.propTypes);
+const PROP_KEYS_TO_REMOVE_FROM_INPUT = Object.keys(FileInput.propTypes).concat([
+  'keyDown', 'floatZ', 'floatPosition', 'onResizeOuter', 'styleOuter',
+]);
 
 // ==========================================
 // Public API

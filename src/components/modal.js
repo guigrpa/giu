@@ -102,8 +102,8 @@ class Modal extends React.Component {
         onClick={this.onClickOuter}
         style={style.outer(this.props.zIndex)}
       >
-        { this.renderBackdrop() }
-        { this.renderModal() }
+        {this.renderBackdrop()}
+        {this.renderModal()}
       </div>
     );
   }
@@ -126,9 +126,9 @@ class Modal extends React.Component {
             registerRef={c => { this.refFocusCapture = c; }}
             autoFocus
           />
-          { title && this.renderTitle(title) }
-          { children }
-          { buttons && this.renderButtons(buttons) }
+          {title && this.renderTitle(title)}
+          {children}
+          {buttons && this.renderButtons(buttons)}
         </div>
         {this.renderSpacer()}
       </div>
@@ -153,9 +153,9 @@ class Modal extends React.Component {
   renderButtons(buttons) {
     return (
       <div style={style.buttons}>
-        { buttons.filter(o => !!o.left).map(this.renderButton) }
+        {buttons.filter(o => !!o.left).map(this.renderButton)}
         <div style={flexItem(1)} />
-        { buttons.filter(o => !o.left).map(this.renderButton) }
+        {buttons.filter(o => !o.left).map(this.renderButton)}
       </div>
     );
   }

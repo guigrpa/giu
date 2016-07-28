@@ -1,3 +1,4 @@
+/* eslint-disable no-underscore-dangle */
 import React                from 'react';
 import PureRenderMixin      from 'react-addons-pure-render-mixin';
 import {
@@ -7,6 +8,7 @@ import {
 import {
   bindAll,
   cancelEvent,
+  stopPropagation,
 }                           from '../gral/helpers';
 import {
   COLORS,
@@ -100,6 +102,7 @@ function input(ComposedComponent, {
         'onCopyCut',
         'onPaste',
         'onMouseDownWrapper',
+        'onClickWrapper',
         'onKeyDown',
       ]);
     }
@@ -248,6 +251,7 @@ function input(ComposedComponent, {
           <span
             className={className}
             onMouseDown={focusCaptureEl ? this.onMouseDownWrapper : undefined}
+            onClick={focusCaptureEl ? this.onClickWrapper : undefined}
             style={style.wrapper(this.props)}
           >
             {focusCaptureEl}
@@ -344,6 +348,13 @@ function input(ComposedComponent, {
       // If not focused, a mouse-down should focus the component and cancel the event
       if (this.state.fFocused) return;
       this._focus();
+    }
+
+    // Cancel bubbling of click events; they may reach Modals
+    // on their way up and cause the element to blur.
+    // Allow free propagation if the element is disabled.
+    onClickWrapper(ev) {
+      if (!this.props.disabled) stopPropagation(ev);
     }
 
     onKeyDown(ev) {

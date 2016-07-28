@@ -2,12 +2,10 @@ import React                from 'react';
 import PureRenderMixin      from 'react-addons-pure-render-mixin';
 import { createStore }      from 'redux';
 import {
-  addLast,
-  removeAt,
+  addLast, removeAt,
   set as timmSet,
-  merge,
-  mergeIn,
-  addDefaults,
+  merge, mergeIn, addDefaults,
+  omit,
 }                           from 'timm';
 import {
   bindAll,
@@ -19,6 +17,10 @@ import { MISC }             from '../gral/constants';
 import {
   boxWithShadow,
 }                           from '../gral/styles';
+
+const PROP_KEYS_TO_REMOVE_FROM_FLOAT_DIV = [
+  'position', 'align', 'zIndex', 'limitSize', 'getAnchorNode',
+];
 
 // ==========================================
 // Store, reducer
@@ -174,7 +176,7 @@ class Floats extends React.Component {
         style={style.wrapper(zIndex)}
       >
         <div ref={c => { this.refFloats[idx] = c; }}
-          {...props}
+          {...omit(props, PROP_KEYS_TO_REMOVE_FROM_FLOAT_DIV)}
           style={style.floatInitial(props)}
         />
       </div>

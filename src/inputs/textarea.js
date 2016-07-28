@@ -68,7 +68,7 @@ class Textarea extends React.Component {
       registerOuterRef,
       style: styleField,
     } = this.props;
-    const otherProps = omit(this.props, PROP_KEYS);
+    const otherProps = omit(this.props, PROP_KEYS_TO_REMOVE_FROM_INPUT);
     return (
       <div ref={registerOuterRef}
         className="giu-textarea"
@@ -163,7 +163,9 @@ const style = {
 // ==========================================
 // Miscellaneous
 // ==========================================
-const PROP_KEYS = Object.keys(Textarea.propTypes);
+const PROP_KEYS_TO_REMOVE_FROM_INPUT = Object.keys(Textarea.propTypes).concat([
+  'cmds', 'keyDown', 'fFocused', 'floatZ', 'floatPosition', 'styleOuter',
+]);
 
 // ==========================================
 // Public API

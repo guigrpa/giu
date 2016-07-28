@@ -1,3 +1,4 @@
+/* eslint-disable no-underscore-dangle */
 import { set as timmSet }   from 'timm';
 import {
   windowHeightWithoutScrollbar, windowWidthWithoutScrollbar,

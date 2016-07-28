@@ -58,7 +58,7 @@ class Checkbox extends React.Component {
 
   renderInput(className) {
     const { curValue, disabled, registerFocusableRef } = this.props;
-    const inputProps = omit(this.props, PROP_KEYS);
+    const inputProps = omit(this.props, PROP_KEYS_TO_REMOVE_FROM_INPUT);
     return (
       <input ref={registerFocusableRef}
         id={this.labelId} className={className}
@@ -83,7 +83,10 @@ const style = {
 // ==========================================
 // Miscellaneous
 // ==========================================
-const PROP_KEYS = Object.keys(Checkbox.propTypes);
+const PROP_KEYS_TO_REMOVE_FROM_INPUT = Object.keys(Checkbox.propTypes).concat([
+  'cmds', 'errors', 'keyDown', 'fFocused',
+  'floatZ', 'floatPosition', 'onResizeOuter', 'styleOuter',
+]);
 
 // ==========================================
 // Public API

@@ -84,14 +84,11 @@ class RadioGroup extends React.Component {
           value={value}
           checked={curValue === value}
           onMouseDown={preventDefault}
-          readOnly /* will change via parent's onClick */
+          readOnly /* will change via parents onClick */
           tabIndex={-1}
         />
         <label htmlFor={id}>{label}</label>
-        {
-          labelExtra &&
-          <div style={style.labelExtra}>{labelExtra}</div>
-        }
+        {labelExtra && <div style={style.labelExtra}>{labelExtra}</div>}
       </div>
     );
   }

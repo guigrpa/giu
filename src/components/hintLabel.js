@@ -26,7 +26,7 @@ class HintLabel extends React.Component {
         style={style.outer(this.props)}
       >
         <div style={style.label(this.props)}>
-          { this.props.children }
+          {this.props.children}
         </div>
       </div>
     );

@@ -8,6 +8,7 @@ import moment               from 'moment';
 import {
   bindAll,
   cancelEvent,
+  stopPropagation,
 }                           from '../gral/helpers';
 import {
   COLORS, KEYS,
@@ -195,6 +196,7 @@ class BaseDateInput extends React.Component {
     bindAll(this, [
       'registerInputRef',
       'onMouseDown',
+      'onClick',
       'onFocus',
       'onBlur',
       'onKeyDown',
@@ -264,7 +266,7 @@ class BaseDateInput extends React.Component {
       date, time,
       disabled,
     } = this.props;
-    const otherProps = omit(this.props, PROP_KEYS);
+    const otherProps = omit(this.props, PROP_KEYS_TO_REMOVE_FROM_INPUT);
     let htmlInputType;
     if (date && time) {
       htmlInputType = 'datetime-local';
@@ -296,7 +298,7 @@ class BaseDateInput extends React.Component {
       disabled,
       onCopy, onCut, onPaste,
     } = this.props;
-    const otherProps = omit(this.props, PROP_KEYS);
+    const otherProps = omit(this.props, PROP_KEYS_TO_REMOVE_FROM_INPUT);
     return (
       <input ref={this.registerInputRef}
         className={fHidden ? undefined : 'giu-date-input'}
@@ -381,6 +383,7 @@ class BaseDateInput extends React.Component {
         fFocused={fInline && fFocused}
         curValue={mom}
         onMouseDown={this.onMouseDown}
+        onClick={this.onClick}
         onChange={this.onChangePicker}
         date={date}
         time={time}
@@ -406,6 +409,13 @@ class BaseDateInput extends React.Component {
   onMouseDown(ev) {
     cancelEvent(ev);
     if (!this.props.fFocused) this.refInput.focus();
+  }
+
+  // Cancel bubbling of click events; they may reach Modals
+  // on their way up and cause the element to blur.
+  // Allow free propagation if the element is disabled.
+  onClick(ev) {
+    if (!this.props.disabled) stopPropagation(ev);
   }
 
   onFocus(ev) {
@@ -467,7 +477,9 @@ const style = {
 // ==========================================
 // Miscellaneous
 // ==========================================
-const PROP_KEYS = Object.keys(BaseDateInput.propTypes);
+const PROP_KEYS_TO_REMOVE_FROM_INPUT = Object.keys(BaseDateInput.propTypes).concat([
+  'cmds', 'keyDown', 'onResizeOuter',
+]);
 
 // ==========================================
 // Public API

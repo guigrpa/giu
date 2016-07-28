@@ -61,11 +61,11 @@ class HintScreen extends React.Component {
         onClick={this.props.onClose}
         style={style.outer(this.props.zIndex)}
       >
-        { this.renderBackdrop() }
+        {this.renderBackdrop()}
         <div style={style.contents}>
-          { this.renderArrows(elements) }
-          { this.renderLabels(elements) }
-          { this.renderCloseButton() }
+          {this.renderArrows(elements)}
+          {this.renderLabels(elements)}
+          {this.renderCloseButton()}
         </div>
       </div>
     );

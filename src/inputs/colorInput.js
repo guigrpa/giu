@@ -59,7 +59,6 @@ class ColorInput extends React.Component {
     bindAll(this, [
       'registerTitleRef',
       'onMouseDownTitle',
-      'onClick',
     ]);
   }
 
@@ -89,10 +88,12 @@ class ColorInput extends React.Component {
 
   renderTitle() {
     return (
+      // The `x` text keeps baselines aligned
       <div ref={this.registerTitleRef}
         onMouseDown={this.onMouseDownTitle}
         style={style.title(this.props)}
       >
+        x
         <div
           className="giu-transparency-tiles"
           style={style.swatchTiles}
@@ -183,11 +184,6 @@ class ColorInput extends React.Component {
     this.setState({ fFloat: !this.state.fFloat });
   }
 
-  onClick() {
-    const { inlinePicker } = this.props;
-    if (!inlinePicker) this.setState({ fFloat: false });
-  }
-
   // ==========================================
   // Helpers
   // ==========================================
@@ -208,9 +204,10 @@ const style = {
       position: 'relative',
       cursor: 'pointer',
       border: `1px solid ${COLORS.line}`,
-      padding: 4,
+      padding: '2px 4px 6px 4px',
       height: SWATCH_HEIGHT + 2 * 4 + 2,
       width: SWATCH_WIDTH + 2 * 4 + 2,
+      color: 'transparent', // hide the placeholder text that keeps baselines aligned
     });
     if (disabled) out = merge(out, INPUT_DISABLED);
     if (fFocused) out = merge(out, GLOW);

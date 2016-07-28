@@ -50,7 +50,9 @@ const PROP_TYPES = {
   registerFocusableRef:   React.PropTypes.func.isRequired,
   // all others are passed through unchanged
 };
-const PROP_KEYS = Object.keys(PROP_TYPES);
+const PROP_KEYS_TO_REMOVE_FROM_INPUT = Object.keys(PROP_TYPES).concat([
+  'cmds', 'keyDown', 'fFocused', 'floatZ', 'floatPosition', 'onResizeOuter', 'styleOuter',
+]);
 
 // ==========================================
 // Component
@@ -70,7 +72,7 @@ function createClass(name, inputType) {
         // For ranges
         vertical,
       } = this.props;
-      const otherProps = omit(this.props, PROP_KEYS);
+      const otherProps = omit(this.props, PROP_KEYS_TO_REMOVE_FROM_INPUT);
       return (
         <input ref={registerFocusableRef}
           className={`giu-${inputType}-input`}

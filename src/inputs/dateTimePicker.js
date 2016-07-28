@@ -40,6 +40,7 @@ class DateTimePicker extends React.Component {
     utc:                    React.PropTypes.bool,
     todayName:              React.PropTypes.string,
     onMouseDown:            React.PropTypes.func,
+    onClick:                React.PropTypes.func,
     onChange:               React.PropTypes.func.isRequired,
     fFocused:               React.PropTypes.bool,
     style:                  React.PropTypes.object,
@@ -86,7 +87,7 @@ class DateTimePicker extends React.Component {
     const {
       curValue, style: baseStyle,
       date, time, utc,
-      onMouseDown,
+      onMouseDown, onClick,
     } = this.props;
     this.utc = getUtcFlag(date, time, utc);
     if (curValue != null && this.utc) curValue.utc();
@@ -94,6 +95,7 @@ class DateTimePicker extends React.Component {
       <div ref={this.registerOuterRef}
         className="giu-date-time-picker"
         onMouseDown={onMouseDown}
+        onClick={onClick}
         style={merge(style.outer(this.props), baseStyle)}
       >
         {this.renderDate()}

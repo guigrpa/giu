@@ -422,7 +422,7 @@ class ColorPicker extends React.Component {
       hex8 = col.toHex8();
       if (hex8 === prevHex8) this.forceUpdate();
     }
-    this.props.onChange(ev, hex8);
+    this.props.onChange(ev, tinycolor(hex8).toRgbString());
   }
 }
 

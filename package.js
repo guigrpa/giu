@@ -75,7 +75,7 @@ const specs = {
 
     // Examples
     buildExamples:              'npm run buildExamplesSsr',
-    buildExamplesDev:           runMultiple([
+    buildExamplesDev:           runMultiple([    // demo1.js OK, index.js NOK (use buildExamplesSsrDev instead)
                                   'npm run buildExamplesClean',
                                   'npm run buildExamplesCopy',
                                   'cp examples/*.html examples/public/',
@@ -149,19 +149,19 @@ const specs = {
   },
 
   dependencies: {
-    timm: '^0.6.1',
-    'font-awesome': '4.6.1',
+    timm: '1.0.0',
+    'font-awesome': '4.6.3',
     redux: '3.5.2',
-    'redux-thunk': '2.0.1',
-    tinycolor2: '1.3.0',
+    'redux-thunk': '2.1.0',
+    tinycolor2: '1.4.1',
     filesize: '3.3.0',
     keycode: '2.1.1',
   },
 
   devDependencies: {
-    storyboard: '^1.0.0',
+    storyboard: '2.0.2',
     'xxl': '^0.1.0',
-    'cross-env': '^1.0.7',
+    'cross-env': '^1.0.8',
     // 'diveSync': '0.3.0',
 
     moment: '^2.0.0',
@@ -173,17 +173,17 @@ const specs = {
     'react-addons-perf': '^15.0.0',
 
     // Babel (except babel-eslint)
-    'babel-cli': '^6.6.5',
-    'babel-core': '^6.7.2',
-    'babel-polyfill': '^6.7.2',
-    'babel-preset-es2015': '^6.6.0',
-    'babel-preset-stage-0': '^6.5.0',
-    'babel-preset-react': '^6.5.0',
+    'babel-cli': '6.11.4',
+    'babel-core': '6.11.4',
+    'babel-polyfill': '6.9.1',
+    'babel-preset-es2015': '6.9.0',
+    'babel-preset-stage-0': '6.5.0',
+    'babel-preset-react': '6.11.1',
 
     // Webpack + loaders (+ related stuff)
-    webpack: '1.13.0',
+    webpack: '1.13.1',
     'webpack-dev-middleware': '1.6.1',
-    'webpack-hot-middleware': '2.10.0',
+    'webpack-hot-middleware': '2.12.2',
     'babel-loader': '6.2.4',
     'file-loader': '0.8.5',
     'css-loader': '0.23.1',
@@ -192,19 +192,21 @@ const specs = {
     'static-site-generator-webpack-plugin': '2.1.0',
 
     // Linting
-    'eslint': '^2.4.0',
-    'eslint-config-airbnb': '^6.2.0',
-    'eslint-plugin-react': '^4.2.3',
-    'babel-eslint': '^6.0.0',
+    'eslint': '^2.13.1',
+    'eslint-config-airbnb': '^9.0.0',
+    'eslint-plugin-react': '^5.2.2',
+    'eslint-plugin-jsx-a11y': '^1.5.3',
+    'eslint-plugin-import': '^1.9.2',
+    'babel-eslint': '^6.1.2',
 
     // Documentation
     'extract-docs': '^1.2.0',
     'marked': '0.3.5',
-    'highlight.js': '9.4.0',
+    'highlight.js': '9.5.0',
     'fontfaceobserver': '1.7.1',
 
     // Testing
-    'ava': '^0.13.0',
+    'ava': '0.15.2',
     'nyc': '^6.1.1',
   },
 

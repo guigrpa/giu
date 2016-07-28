@@ -40,7 +40,7 @@ class SelectNative extends React.Component {
     items.forEach(option => {
       if (option.label !== LIST_SEPARATOR_KEY) finalItems.push(option);
     });
-    const otherProps = omit(this.props, PROP_KEYS);
+    const otherProps = omit(this.props, PROP_KEYS_TO_REMOVE_FROM_INPUT);
     return (
       <select ref={registerFocusableRef}
         className="giu-select-native"
@@ -77,7 +77,10 @@ const style = {
 // ==========================================
 // Miscellaneous
 // ==========================================
-const PROP_KEYS = Object.keys(SelectNative.propTypes);
+const PROP_KEYS_TO_REMOVE_FROM_INPUT = Object.keys(SelectNative.propTypes).concat([
+  'registerOuterRef', 'inlinePicker', 'errors', 'cmds', 'keyDown', 'fFocused',
+  'floatZ', 'floatPosition', 'onResizeOuter', 'styleOuter',
+]);
 
 // ==========================================
 // Public API

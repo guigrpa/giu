@@ -1,3 +1,5 @@
+/* eslint-disable no-console, no-alert, max-len */
+/* eslint-disable react/prop-types, react/no-multi-comp, react/jsx-no-bind, react/jsx-boolean-value */
 import React                from 'react';
 import ReactDOM             from 'react-dom';
 import ReactDOMServer       from 'react-dom/server';
@@ -15,11 +17,11 @@ import {
   Floats, floatReposition,
   Modals, Modal, modalPush, modalPop,
   Notifications, Notification, notify as createNotif,
-  Hints, HintScreen, hintDefine, hintShow, hintHide, hintDisableAll, hintReset,
+  Hints, HintScreen, hintDefine, hintShow, hintReset, hintDisableAll,
   hoverable,
   flexContainer, flexItem, boxWithShadow,
   cancelEvent,
-  isRequired, isEmail, isOneOf, isDate,
+  isRequired, isEmail, isDate,
 }                           from '../src';
 
 const { floor, random } = Math;
@@ -102,7 +104,7 @@ const App = () => {
       break;
     case 2:
       out = (
-        <div style={{padding: 5}}>
+        <div style={{ padding: 5 }}>
           <Floats />
           Date (UTC midnight - default): <DateInput onChange={onChange} /><br />
           Date (local midnight): <DateInput onChange={onChange} utc={false} /><br />
@@ -157,7 +159,7 @@ const App = () => {
           <Floats />
           <Notifications />
           <Hints />
-          <div style={{padding: 10, fontSize: '1.8em', fontWeight: 'bold'}}>
+          <div style={{ padding: 10, fontSize: '1.8em', fontWeight: 'bold' }}>
             <a target="_blank" href="http://github.com/guigrpa/giu">Giu</a> demo page
           </div>
           <div style={flexContainer('row')}>
@@ -178,7 +180,7 @@ const App = () => {
               {EVERYTHING && <FormExample />}
             </div>
           </div>
-          <div style={{textAlign: 'right', padding: 10, fontSize: '1.2em'}}>
+          <div style={{ textAlign: 'right', padding: 10, fontSize: '1.2em' }}>
             by <a target="_blank" href="http://github.com/guigrpa">Guillermo Grau Panea</a> 2016
           </div>
         </div>
@@ -289,7 +291,7 @@ const StyleUtilsExample = () =>
       <FlexSpacer />
       <span>Right</span>
     </div>
-    <div style={boxWithShadow({padding: 3})}>
+    <div style={boxWithShadow({ padding: 3 })}>
       A box with a shadow
     </div>
   </div>;
@@ -302,7 +304,7 @@ const DropDownExample = () =>
     <DropDownMenu
       items={NORMAL_OPTIONS}
       onClickItem={onChangeJson}
-      style={{padding: "3px 8px"}}
+      style={{ padding: '3px 8px' }}
     >
       <Icon icon="bars" /> Menu
     </DropDownMenu>
@@ -310,7 +312,7 @@ const DropDownExample = () =>
       items={TALL_OPTIONS}
       onClickItem={onChangeJson}
       accentColor="darkgreen"
-      style={{padding: "3px 8px"}}
+      style={{ padding: '3px 8px' }}
     >
       <Icon icon="bullseye" /> Long menu
     </DropDownMenu>
@@ -319,7 +321,7 @@ const DropDownExample = () =>
       onClickItem={onChangeJson}
       floatAlign="right"
       accentColor="darkblue"
-      style={{padding: "3px 8px"}}
+      style={{ padding: '3px 8px' }}
     >
       <Icon icon="cube" /> Menu to the left
     </DropDownMenu>
@@ -346,7 +348,7 @@ class ModalExample extends React.Component {
         >
           Embed modal
         </Button>
-        { this.state.fEmbeddedModal && this.renderEmbeddedModal() }
+        {this.state.fEmbeddedModal && this.renderEmbeddedModal()}
       </div>
     );
   }
@@ -375,20 +377,33 @@ class ModalExample extends React.Component {
         What's your name?{' '}
         <TextInput ref={o => { this.refInput = o; }}
           autoFocus
-          errors={["Must be non-null"]}
+          errors={['Must be non-null']}
           errorZ={52}
         />
         <DateInput
           placeholder="date of birth"
           floatZ={55}
-          errors={["Must be non-null"]}
+          errors={['Must be non-null']}
         />
-        <Textarea 
-          placeholder="Write something..." 
-          errors={["Must write something in the textarea"]}
+        <Textarea
+          placeholder="Write something..."
+          errors={['Must write something in the textarea']}
           errorZ={52}
           style={{ maxHeight: 100 }}
         />
+        <br />
+        <br />
+        <br />
+        <ExampleLabel>
+          Some examples to see that everything works correctly in a modal
+        </ExampleLabel>
+        <ColorInput floatZ={55} />
+        <ColorInput floatZ={55} disabled />
+        <Select floatZ={55} type="dropDownPicker" value="a" items={NORMAL_OPTIONS} />
+        <Select floatZ={55} type="dropDownPicker" value="a" items={NORMAL_OPTIONS} disabled />
+        <DropDownMenu floatZ={55} items={NORMAL_OPTIONS} onClickItem={onChange}>
+          <Icon icon="bars" /> Menu
+        </DropDownMenu>
       </Modal>
     );
   }
@@ -399,13 +414,13 @@ class ModalExample extends React.Component {
       <div>
         <TextInput ref={o => { this.refName = o; }}
           autoFocus
-          errors={["Must be non-null"]}
+          errors={['Must be non-null']}
           errorZ={52}
         />{' '}
         <DateInput
           placeholder="date of birth"
           floatZ={55}
-          errors={["Must be non-null"]}
+          errors={['Must be non-null']}
         />
       </div>
     );
@@ -489,11 +504,11 @@ class HintExample extends React.Component {
           </Button>
         </span>
         {' '}
-        <Button onClick={() => { hintReset(); alert('Hints have been reset') }}>
+        <Button onClick={() => { hintReset(); alert('Hints have been reset'); }}>
           Reset hints
         </Button>
         {' '}
-        <Button onClick={() => { hintDisableAll(); alert('Hints have been disabled') }}>
+        <Button onClick={() => { hintDisableAll(); alert('Hints have been disabled'); }}>
           Disable all
         </Button>
         {' '}<br />
@@ -502,7 +517,7 @@ class HintExample extends React.Component {
             Embed hint
           </Button>
         </span>
-        { this.state.fEmbeddedHint && this.renderEmbeddedHint() }
+        {this.state.fEmbeddedHint && this.renderEmbeddedHint()}
       </div>
     );
   }
@@ -603,32 +618,32 @@ class FormExample extends React.Component {
           <NumberInput
             step="0.1"
             value={null} onChange={onChange}
-            placeholder="number" style={{width: 80}}
+            placeholder="number" style={{ width: 80 }}
           />
-          <NumberInput disabled value={6.5} style={{width: 80}} />
+          <NumberInput disabled value={6.5} style={{ width: 80 }} />
           &nbsp;&nbsp;
           <TextInput
             value="a" onChange={onChange}
             placeholder="text"
-            errors={["Example error above"]}
+            errors={['Example error above']}
             errorPosition="above" errorAlign="right"
-            style={{width: 80}}
+            style={{ width: 80 }}
           />
-          <TextInput disabled value="Disabled" style={{width: 80}} />
+          <TextInput disabled value="Disabled" style={{ width: 80 }} />
           &nbsp;&nbsp;
           <PasswordInput
             required
             onChange={onChange}
             placeholder="password"
-            style={{width: 80}}
+            style={{ width: 80 }}
           />
           &nbsp;&nbsp;
           <Checkbox
             value={true} onChange={onChange}
             label="checkbox"
-            errors={["Example error below"]}
+            errors={['Example error below']}
           />&nbsp;
-          <Checkbox disabled value={true} label="checkbox"/>
+          <Checkbox disabled value={true} label="checkbox" />
         </div>
         <div>
           <FileInput />
@@ -641,39 +656,39 @@ class FormExample extends React.Component {
             <div style={flexContainer('row')}>
               <RadioGroup items={NORMAL_OPTIONS} required onChange={onChange} />
               <RadioGroup items={NORMAL_OPTIONS} value="a" disabled />
-              <RadioGroup 
+              <RadioGroup
                 items={[
-                  { value: 1, label: "A simple text label" },
+                  { value: 1, label: 'A simple text label' },
                   { value: 2, label: <span>A label with <i>some</i> <b>formatting</b></span> },
-                  { value: 3, label: <span>A multiline label</span>, 
-                    labelExtra: <div>because yes, we can <Icon icon="smile-o" /></div>
+                  { value: 3, label: <span>A multiline label</span>,
+                    labelExtra: <div>because yes, we can <Icon icon="smile-o" /></div>,
                   },
-                  { value: 4, label: "Another normal label" },
+                  { value: 4, label: 'Another normal label' },
                   { value: 5, label: <span>A label with a <Button onClick={() => console.log('hi!')}>button</Button></span> },
                 ]}
               />
             </div>
           </div>
-          <div style={{marginLeft: 10}}>
+          <div style={{ marginLeft: 10 }}>
             <ExampleLabel>RangeInput (horizontal/vertical)</ExampleLabel>
             <div style={flexContainer('row')}>
-              <div style={{marginLeft: 5}}>
+              <div style={{ marginLeft: 5 }}>
                 <RangeInput
                   value={25} onChange={onChange}
                   min={0} max={100} step={5}
-                  style={{display: 'block'}}
+                  style={{ display: 'block' }}
                 />
                 <RangeInput disabled
                   value={55} onChange={onChange}
                   min={0} max={100} step={5}
-                  style={{display: 'block'}}
+                  style={{ display: 'block' }}
                 />
               </div>
               <RangeInput
                 value={55} onChange={onChange}
                 min={0} max={100} step={5}
                 vertical
-                style={{marginLeft: 20, height: 100, width: 25}}
+                style={{ marginLeft: 20, height: 100, width: 25 }}
               />
             </div>
           </div>
@@ -683,39 +698,47 @@ class FormExample extends React.Component {
           <ExampleLabel>Input validation</ExampleLabel>
           <TextInput placeholder="no validation" />
           <TextInput placeholder="required (shortcut)"
-            required />
+            required
+          />
           <TextInput placeholder="isRequired, custom"
-            validators={[isRequired('please write something!')]} />
+            validators={[isRequired('please write something!')]}
+          />
           <TextInput placeholder="isEmail"
-            required validators={[isEmail()]} />
+            required validators={[isEmail()]}
+          />
           <TextInput placeholder="isEmail (custom msg)"
-            required validators={[isEmail('please write your e-mail!')]} />
+            required validators={[isEmail('please write your e-mail!')]}
+          />
           <TextInput placeholder="isEmail (custom msg 2)"
-            required validators={[isEmail((msg, val) => `'${val}' is not an email!`)]} />
+            required validators={[isEmail((msg, val) => `'${val}' is not an email!`)]}
+          />
           <TextInput placeholder="custom sync validator"
             required validators={[
-              o => o.toLowerCase() === 'unicorn' ? undefined : 'must be \'unicorn\''
-            ]} />
+              o => (o.toLowerCase() === 'unicorn' ? undefined : 'must be \'unicorn\''),
+            ]}
+          />
           <TextInput placeholder="custom promise validator"
             required validators={[
-              o => new Promise((resolve, reject) =>
-                setTimeout(() => 
-                  o.toLowerCase() === 'unicorn' ? resolve(undefined) : resolve('checked the database; you must be a \'unicorn\'')
+              o => new Promise((resolve) =>
+                setTimeout(() =>
+                  (o.toLowerCase() === 'unicorn' ? resolve(undefined) : resolve('checked the database; you must be a \'unicorn\''))
                 , 1000)
-              )
-            ]} />
+              ),
+            ]}
+          />
           <DateInput type="onlyField" placeholder="MM/DD/YYYY" />
           <DateInput type="onlyField" date={false} time seconds placeholder="HH:MM:ss" />
           <DateInput type="onlyField" date={false} time seconds placeholder="HH:MM:ss"
-            required validators={[isDate((msg, val, { fmt }) => 
-              `ha de ser una hora correcta: ${fmt}`
-            )]} />
+            required validators={[
+              isDate((msg, val, { fmt }) => `ha de ser una hora correcta: ${fmt}`),
+            ]}
+          />
         </div>
         <br />
         <div>
           <ExampleLabel>Textarea (with auto-resize)</ExampleLabel>
-          <Textarea value="En un lugar de la Mancha..." style={{minHeight: '1.5em'}} />
-          <Textarea disabled value="En un lugar de la Mancha..."  style={{minHeight: '1.5em'}} />
+          <Textarea value="En un lugar de la Mancha..." style={{ minHeight: '1.5em' }} />
+          <Textarea disabled value="En un lugar de la Mancha..." style={{ minHeight: '1.5em' }} />
         </div>
         <br />
         <div>
@@ -746,35 +769,35 @@ class FormExample extends React.Component {
               value={28} onChange={onChangeJson}
               items={TALL_OPTIONS}
             />
-            <Select disabled type="dropDownPicker" value={28} items={TALL_OPTIONS}/>
+            <Select disabled type="dropDownPicker" value={28} items={TALL_OPTIONS} />
           </div>
           <div style={flexContainer('row')}>
             <Select type="inlinePicker" required
               items={NORMAL_OPTIONS}
               onChange={onChangeJson}
               styleOuter={flexItem(1, { marginRight: 4 })}
-              style={{height: 150}}
+              style={{ height: 150 }}
               accentColor="gray"
             />
             <Select type="inlinePicker"
               items={TALL_OPTIONS}
               value={33} onChange={onChangeJson}
-              twoStageStyle 
+              twoStageStyle
               styleOuter={flexItem(1, { marginRight: 4 })}
-              style={{height: 150}}
+              style={{ height: 150 }}
               accentColor="lightGray"
             />
             <Select type="inlinePicker"
               items={[]}
               onChange={onChangeJson}
               styleOuter={flexItem(1, { marginRight: 4 })}
-              style={{height: 150}}
+              style={{ height: 150 }}
             />
             <Select type="inlinePicker" disabled
               items={TALL_OPTIONS}
               value={33} onChange={onChangeJson}
               styleOuter={flexItem(1)}
-              style={{height: 150}}
+              style={{ height: 150 }}
               accentColor="lightGray"
             />
           </div>
@@ -787,61 +810,61 @@ class FormExample extends React.Component {
           </ExampleLabel>
           <div>
             <DateInput onChange={onChange}
-              style={{width: 130}}
+              style={{ width: 130 }}
             />&nbsp;&nbsp;
             <DateInput date time onChange={onChange}
-              style={{width: 180}}
+              style={{ width: 180 }}
             />&nbsp;&nbsp;
             <DateInput date={false} time onChange={onChange}
-              style={{width: 70}}
+              style={{ width: 70 }}
             />&nbsp;&nbsp;
             <DateInput date={false} time seconds analogTime={false} onChange={onChange}
-              style={{width: 70}}
+              style={{ width: 70 }}
             />
             &nbsp;dropDownPicker (default)
           </div>
           <div>
             <DateInput type="onlyField" onChange={onChange}
-              style={{width: 130}}
+              style={{ width: 130 }}
             />&nbsp;&nbsp;
             <DateInput type="onlyField" date time onChange={onChange}
-              style={{width: 180}}
+              style={{ width: 180 }}
             />&nbsp;&nbsp;
             <DateInput type="onlyField" date={false} time onChange={onChange}
-              style={{width: 70}}
+              style={{ width: 70 }}
             />&nbsp;&nbsp;
             <DateInput type="onlyField" date={false} time seconds analogTime={false} onChange={onChange}
-              style={{width: 70}}
+              style={{ width: 70 }}
             />
             &nbsp;onlyField
           </div>
           <div>
             <DateInput type="native" onChange={onChange}
-              style={{fontSize: 10, width: 130}}
+              style={{ fontSize: 10, width: 130 }}
             />&nbsp;&nbsp;
             <DateInput type="native" date time onChange={onChange}
-              style={{fontSize: 10, width: 180}}
+              style={{ fontSize: 10, width: 180 }}
             />&nbsp;&nbsp;
             <DateInput type="native" date={false} time onChange={onChange}
-              style={{fontSize: 10, width: 70}}
+              style={{ fontSize: 10, width: 70 }}
             />&nbsp;&nbsp;
             <DateInput type="native" date={false} time seconds analogTime={false} onChange={onChange}
-              style={{fontSize: 10, width: 70}}
+              style={{ fontSize: 10, width: 70 }}
             />
             &nbsp;native
           </div>
           <div>
             <DateInput disabled value={new Date()} type="onlyField"
-              style={{width: 130}}
+              style={{ width: 130 }}
             />&nbsp;&nbsp;
             <DateInput disabled value={new Date()} type="onlyField" date time
-              style={{width: 180}}
+              style={{ width: 180 }}
             />&nbsp;&nbsp;
             <DateInput disabled value={new Date()} type="onlyField" date={false} time
-              style={{width: 70}}
+              style={{ width: 70 }}
             />&nbsp;&nbsp;
             <DateInput disabled value={new Date()} type="onlyField" date={false} time seconds analogTime={false}
-              style={{width: 70}}
+              style={{ width: 70 }}
             />
             &nbsp;disabled
           </div>
@@ -892,24 +915,24 @@ class FormExample extends React.Component {
           </ExampleLabel>
           <div style={flexContainer('row')}>
             <ColorInput
-              value="aadc5400" onChange={onChange}
+              value="dc5400aa" onChange={onChange}
               accentColor="darkmagenta"
               styleOuter={{ flexShrink: 0 }}
             />
             <ColorInput
-              value="ffdc5400" disabled
+              value="dc5400ff" disabled
               styleOuter={{ flexShrink: 0 }}
             />
             &nbsp;&nbsp;
             <ColorInput inlinePicker
-              value="ffcca500" onChange={onChange}
+              value="cca500ff" onChange={onChange}
               accentColor="lightGray"
               styleOuter={{ flexShrink: 0 }}
             />
           </div>
           <div style={flexContainer('row')}>
             <ColorInput inlinePicker
-              value="ffcca500" onChange={onChange}
+              value="cca500ff" onChange={onChange}
               disabled accentColor="lightGray"
               styleOuter={{ flexShrink: 0 }}
             />
@@ -983,7 +1006,7 @@ class TimePickerNow extends React.Component {
 // -----------------------------------------------
 // Helpers
 // -----------------------------------------------
-const ExampleLabel = ({ children }) => <div style={style.label}>{children}</div>
+const ExampleLabel = ({ children }) => <div style={style.label}>{children}</div>;
 
 // -----------------------------------------------
 // Styles
@@ -1000,7 +1023,7 @@ const style = {
   scrolling: {
     maxHeight: 120,
     overflow: 'auto',
-    transform: 'translateZ(0)'
+    transform: 'translateZ(0)',
   },
   hoverable: hovering => ({
     backgroundColor: hovering ? '#ccc' : undefined,
@@ -1024,7 +1047,9 @@ if (typeof document !== 'undefined') {
 } else {
   module.exports = function render(locals, callback) {
     const ssrHtml = ReactDOMServer.renderToString(mainEl);
+    /* eslint-disable global-require */
     const ssrCss = require('../src/all.css');
+    /* eslint-enable global-require */
     let rendered = locals.template;
     rendered = rendered.replace('<!-- ssrHtml -->', ssrHtml);
     rendered = rendered.replace('<!-- ssrCss -->', ssrCss);

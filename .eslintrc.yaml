@@ -15,8 +15,9 @@ rules:
     - except-parens
   key-spacing:
     - warn
-    - 
+    -
       beforeColon: false
       afterColon: true
       mode: 'minimum'
   react/sort-comp: off
+  react/jsx-first-prop-new-line: off

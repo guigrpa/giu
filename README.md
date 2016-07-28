@@ -36,7 +36,7 @@ $ npm install --save-dev giu
 
 Make sure you also install the required `peerDependencies` ([*react*](https://github.com/facebook/react), [*react-addons-pure-render-mixin*](https://www.npmjs.com/package/react-addons-pure-render-mixin) and [*moment*](https://github.com/moment/moment)).
 
-Installation notes: 
+Installation notes:
 
 * Many Giu components (including all inputs) require that you **include the `<Floats />` component at (or near) the root level of your React tree**. No props are required. If you forget it, you'll see a warning in the console and the components will not work correctly. Other components you might need to add, depending on whether you use them: `<Modals />`, `<Notifications />`, `<Hints />`. More about them below.
 
@@ -81,7 +81,7 @@ It seems simple, right? But in reality you are handling a lot of stuff yourself:
 You *could* use Giu in a similar way:
 
 ```html
-<NumberInput id="age" 
+<NumberInput id="age"
   min={0} step={1}
   value={this.state.age} onChange={(ev, age) => this.setState({ age })}
 />
@@ -125,7 +125,7 @@ Most HTML inputs can only hold strings. Giu inputs provide you with JS types and
 | Checkbox | *boolean* |
 | DateInput | *Date* (see full range of date/time possibilities below) |
 | Select, RadioGroup | *any* (depends on the values specified in the `items` prop, see below) |
-| ColorInput | *string* (8-digit hex color code) |
+| ColorInput | *string* (e.g. `rgba(173, 163, 120, 0.62)`) |
 | FileInput | *File* |
 
 
@@ -243,7 +243,7 @@ A couple of examples:
 // A custom async validator
 <TextInput required validators={[
   val => new Promise((resolve, reject) =>
-    setTimeout(() => 
+    setTimeout(() =>
       val.toLowerCase() === 'unicorn'
         ? resolve()
         : resolve('checked the database; must be a \'unicorn\'')

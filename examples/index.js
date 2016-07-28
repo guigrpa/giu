@@ -1,3 +1,6 @@
+/* eslint-disable global-require, no-console, max-len */
+/* eslint-disable react/prop-types, react/no-multi-comp, react/prefer-stateless-function, react/jsx-boolean-value */
+/* eslint-disable react/jsx-indent */
 import React                from 'react';
 import ReactDOM             from 'react-dom';
 import ReactDOMServer       from 'react-dom/server';
@@ -183,7 +186,7 @@ const DemoIntro = () =>
     <p><b>All of the examples in this page are interactive</b> and use Giu's
     components and helpers. Feel free to play with them!</p>
     <p>You can also check out this <a href="demo1.html">compact demo</a>.</p>
-  </div>
+  </div>;
 
 class InputIntroAge extends React.Component {
   render() {
@@ -198,14 +201,14 @@ class InputIntroAge extends React.Component {
           style={{ width: 80 }}
         />{' '}
         <Button
-          onClick={() => 
+          onClick={() =>
             this.refs.age.validateAndGetValue()
             .then(age => createNotif({
               type: 'success',
               icon: 'save',
               title: 'Saved!',
               msg: `Your age is ${age}`,
-            })) 
+            }))
           }
         >
           <Icon icon="save" />{' '}Save
@@ -255,7 +258,7 @@ class InputTypes extends React.Component {
             <Select
               items={getExampleItems()}
               value="blueberries"
-              required 
+              required
             /> (native){' '}
             <Select
               required
@@ -280,13 +283,13 @@ class InputTypes extends React.Component {
             <a href="#textinput-passwordinput-numberinput-rangeinput-textarea">
               RangeInput
             </a>:{' '}
-            <RangeInput value="55" min={0} max={100} step={5} style={{position: 'relative', top: 4}}/>
+            <RangeInput value="55" min={0} max={100} step={5} style={{ position: 'relative', top: 4 }} />
           </li>
           <li>
             <a href="#textinput-passwordinput-numberinput-rangeinput-textarea">
               Textarea
             </a> (auto-resizing):
-            <Textarea placeholder="Write something really long..." style={{ minHeight: '1.8em' }}/>
+            <Textarea placeholder="Write something really long..." style={{ minHeight: '1.8em' }} />
           </li>
         </ul>
       </div>
@@ -312,7 +315,7 @@ const ValidationIntro2 = () =>
 
 const ValidationPredefined = () =>
   <CenteredFlex>
-    <TextInput placeholder="rabbit | cow | eagle" 
+    <TextInput placeholder="rabbit | cow | eagle"
       required validators={[isOneOf(['rabbit', 'cow', 'eagle'])]}
     />
     <TextInput placeholder="email" required validators={[isEmail()]} />
@@ -322,14 +325,14 @@ const ValidationPredefined = () =>
 const ValidationCustomMessage = () =>
   <div>
     <CenteredFlex>
-      <TextInput placeholder="email" 
+      <TextInput placeholder="email"
         required
         validators={[isEmail("please write your email address (it's safe with us!)")]}
       />
       <TextInput placeholder="name" validators={[isRequired('please write your name')]} />
     </CenteredFlex>
     <CenteredFlex>
-      <TextInput placeholder="email" 
+      <TextInput placeholder="email"
         required
         validators={[
           isEmail((defaultMsg, value) => `'${value}' no es una dirección electrónica válida`),
@@ -341,28 +344,28 @@ const ValidationCustomMessage = () =>
     </CenteredFlex>
     <CenteredFlex>
       <NumberInput placeholder=">= 15" validators={[
-        isGte(15, (defaultMsg, value, { min }) => `must be >= {min}`),
+        isGte(15, (defaultMsg, value, { min }) => `must be >= ${min}`),
       ]} />
     </CenteredFlex>
   </div>;
 
 const ValidationCustomValidator = () =>
   <CenteredFlex>
-    <TextInput 
-      placeholder="custom sync validator" 
+    <TextInput
+      placeholder="custom sync validator"
       required validators={[
-        val => val.toLowerCase() === 'unicorn' ? undefined : 'must be a \'unicorn\''
+        val => (val.toLowerCase() === 'unicorn' ? undefined : 'must be a \'unicorn\''),
       ]}
       style={{ width: 250 }}
     />
-    <TextInput 
+    <TextInput
       placeholder="custom promise validator"
       required validators={[
-        val => new Promise((resolve, reject) =>
-          setTimeout(() => 
-            val.toLowerCase() === 'unicorn'
+        val => new Promise((resolve) =>
+          setTimeout(() =>
+            (val.toLowerCase() === 'unicorn'
               ? resolve()
-              : resolve('checked the database; must be a \'unicorn\'')
+              : resolve('checked the database; must be a \'unicorn\''))
           , 1000)
         ),
       ]}
@@ -370,33 +373,33 @@ const ValidationCustomValidator = () =>
     />
   </CenteredFlex>;
 
-class InputValidation extends React.Component {
-  render() {
-    return (
-      <div>
-        <p>And you can provide your own validators, synchronous or asynchronous (Promise):</p>
-        <div style={{ textAlign: 'center' }}>
-          <TextInput placeholder="custom sync validator"
-            required validators={[
-              o => o.toLowerCase() === 'unicorn' ? undefined : 'must be \'unicorn\''
-            ]} 
-            style={{ width: 250 }}
-          /><br />
-          <TextInput placeholder="custom promise validator"
-            required validators={[
-              o => new Promise((resolve, reject) =>
-                setTimeout(() => 
-                  o.toLowerCase() === 'unicorn' ? resolve(undefined) : resolve('checked the database; must be \'unicorn\'')
-                , 1000)
-              )
-            ]}
-            style={{ width: 250 }}
-          />
-        </div>
-      </div>
-    );
-  }
-}
+// class InputValidation extends React.Component {
+//   render() {
+//     return (
+//       <div>
+//         <p>And you can provide your own validators, synchronous or asynchronous (Promise):</p>
+//         <div style={{ textAlign: 'center' }}>
+//           <TextInput placeholder="custom sync validator"
+//             required validators={[
+//               o => (o.toLowerCase() === 'unicorn' ? undefined : 'must be \'unicorn\''),
+//             ]}
+//             style={{ width: 250 }}
+//           /><br />
+//           <TextInput placeholder="custom promise validator"
+//             required validators={[
+//               o => new Promise((resolve) =>
+//                 setTimeout(() =>
+//                   (o.toLowerCase() === 'unicorn' ? resolve(undefined) : resolve('checked the database; must be \'unicorn\''))
+//                 , 1000)
+//               ),
+//             ]}
+//             style={{ width: 250 }}
+//           />
+//         </div>
+//       </div>
+//     );
+//   }
+// }
 
 class ImperativeApi extends React.Component {
   render() {
@@ -441,7 +444,7 @@ const InputsSimple = () =>
         <RangeInput
           value={55}
           min={0} max={100} step={5}
-          style={{width: '100%', marginTop: 4}}
+          style={{ width: '100%', marginTop: 4 }}
         />
         <Textarea placeholder="Textarea" style={{ minHeight: 32 }} />
       </div>
@@ -450,7 +453,7 @@ const InputsSimple = () =>
           value={55}
           min={0} max={100} step={5}
           vertical
-          style={{height: 150, width: 25}}
+          style={{ height: 150, width: 25 }}
         />
       </div>
     </CenteredFlex>
@@ -744,7 +747,7 @@ class DropDownMenus extends React.Component {
             icon: 'shopping-cart',
             type: 'success',
           })}
-          style={{ padding: "3px 8px" }}
+          style={{ padding: '3px 8px' }}
         >
           <Icon icon="shopping-basket" />&nbsp;
           Which fruit?
@@ -884,7 +887,7 @@ const Buttons = ({ fIncludeDisabled }) =>
     {fIncludeDisabled && <Button disabled>I'm disabled</Button>}
   </Centered>;
 
-const Icons = () => 
+const Icons = () =>
   <Centered>
     <Icon size="2x" icon="globe" />&nbsp;&nbsp;
     <Icon size="2x" icon="group" />&nbsp;&nbsp;
@@ -892,7 +895,7 @@ const Icons = () =>
     <Icon size="2x" icon="music" />&nbsp;&nbsp;
     <Icon size="2x" icon="cog" spin />&nbsp;&nbsp;
     <Spinner size="2x" />
-  </Centered>
+  </Centered>;
 
 class LargeMessages extends React.Component {
   constructor(props) {
@@ -906,13 +909,13 @@ class LargeMessages extends React.Component {
     let el;
     switch (this.state.value % 3) {
       case 0:
-        el = <span><Icon icon="exclamation-circle" /> No matches found</span>
+        el = <span><Icon icon="exclamation-circle" /> No matches found</span>;
         break;
       case 1:
-        el = <span>Use the <Icon icon="cog" spin /> button to configure the application</span>
+        el = <span>Use the <Icon icon="cog" spin /> button to configure the application</span>;
         break;
       case 2:
-        el = <span><Icon icon="bars" /> Choose one of the options above</span>
+        el = <span><Icon icon="bars" /> Choose one of the options above</span>;
         break;
       default: break;
     }
@@ -1009,7 +1012,9 @@ if (typeof document !== 'undefined') {
       </script>
     `.trim();
     const ssrHtml = ReactDOMServer.renderToString(mainEl);
+    /* eslint-disable prefer-template */
     const ssrCss = require('../src/all.css') + '\n' + require('highlight.js/styles/github.css');
+    /* eslint-enable prefer-template */
     let rendered = locals.template;
     rendered = rendered.replace('<!-- ssrBootstrap -->', ssrBootstrap);
     rendered = rendered.replace('<!-- ssrHtml -->', ssrHtml);

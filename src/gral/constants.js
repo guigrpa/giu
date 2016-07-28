@@ -114,6 +114,7 @@ try {
 // ==========================================
 // Platform detection
 // ==========================================
+/* eslint-disable import/no-mutable-exports */
 let IS_MAC = false;
 let IS_IOS = false;
 // May be SSR, hence try
@@ -121,6 +122,7 @@ try {
   IS_MAC = /Mac/.test(navigator.platform);
   IS_IOS = /iPod|iPhone|iPad/.test(navigator.platform);
 } catch (err) { /* ignore */ }
+/* eslint-enable import/no-mutable-exports */
 
 // ==========================================
 // Public API

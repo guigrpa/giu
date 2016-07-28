@@ -6,7 +6,7 @@ const StaticSiteGeneratorPlugin = require('static-site-generator-webpack-plugin'
 const fProduction = process.env.NODE_ENV === 'production';
 const fSsr = !!process.env.SERVER_SIDE_RENDERING;
 
-const _entry = (entry) => [
+const prepareEntry = (entry) => [
   // 'webpack-hot-middleware/client?reload=true',
   entry,
 ];
@@ -19,8 +19,8 @@ module.exports = {
   // Input (entry point)
   // -------------------------------------------------
   entry: {
-    demo1: _entry('./examples/demo1.js'),
-    index: _entry('./examples/index.js'),
+    demo1: prepareEntry('./examples/demo1.js'),
+    index: prepareEntry('./examples/index.js'),
   },
 
   // -------------------------------------------------
