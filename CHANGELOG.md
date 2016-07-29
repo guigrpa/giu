@@ -2,6 +2,10 @@
 
 *[M]: major change; [m]: minor change*
 
+## 0.7.1 (July 29, 2016)
+
+* [m] Modal: allow customising button style.
+
 ## 0.7.0 (July 28, 2016)
 
 * [M] Bump deps, including React (to 15.2.x)
