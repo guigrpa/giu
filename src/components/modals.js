@@ -32,7 +32,7 @@ class ModalExample extends React.Component {
     const deleteItem = () => { alert('deleted!'); modalPop(); }
     const buttons = [
       { label: 'Close', onClick: modalPop, defaultButton: true },
-      { label: 'Delete', onClick: deleteItem },
+      { label: 'Delete', onClick: deleteItem, style: { backgroundColor: 'red' } },
     ];
     modalPush({ children, buttons, onEsc: modalPop });
   }
@@ -51,12 +51,13 @@ API reference:
       - **onClick** *function*: `click` handler for the button
       - **defaultButton** *boolean?*: will be highlighted and
         automatically selected when RETURN is pressed
+      - **style** *object?*: merge with the button's style
     * **onClickBackdrop** *function?*: called when the backdrop
       (semi-transparent layer highlighting the modal in fron of other
       page contents) is clicked
     * **onEsc** *function?*: called when ESC is pressed
     * **style** *object?*: merge with the modal's `div` style, e.g. to
-      fix a modal width
+      fix a modal width or background color
 * **modalPop()**: removes the modal currently at the top of the stack
 -- */
 

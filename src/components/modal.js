@@ -50,7 +50,7 @@ class ModalExample extends React.Component {
     const deleteItem = () => { alert('deleted!'); close(); };
     const buttons = [
       { label: 'Close', onClick: close, defaultButton: true },
-      { label: 'Delete', onClick: deleteItem },
+      { label: 'Delete', onClick: deleteItem, style: { backgroundColor: 'red' } },
     ];
     return (
       <Modal buttons={buttons} onClickBackdrop={close} onEsc={close}>
@@ -247,11 +247,11 @@ const style = {
     borderTop: `1px solid ${COLORS.line}`,
     paddingTop: 10,
   }),
-  button: ({ left, defaultButton }) => ({
+  button: ({ left, defaultButton, style: baseStyle }) => merge({
     marginRight: left ? 5 : undefined,
     marginLeft: left ? undefined : 5,
     border: defaultButton ? '1px solid black' : undefined,
-  }),
+  }, baseStyle),
 };
 
 // ==========================================
