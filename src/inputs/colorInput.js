@@ -208,6 +208,7 @@ const style = {
       height: SWATCH_HEIGHT + 2 * 4 + 2,
       width: SWATCH_WIDTH + 2 * 4 + 2,
       color: 'transparent', // hide the placeholder text that keeps baselines aligned
+      lineHeight: '1em',
     });
     if (disabled) out = merge(out, INPUT_DISABLED);
     if (fFocused) out = merge(out, GLOW);
