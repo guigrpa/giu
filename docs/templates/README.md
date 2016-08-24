@@ -163,13 +163,13 @@ Here is the list of predefined validators:
 
 [[[./src/gral/validators.js]]]
 
-As we saw above, some of these validators are automatically enabled for certain components, e.g. `isDate()` in DateInputs and `isNumber()` in NumberInputs. However, you can include them in your `validators` list for customization (e.g. i18n), as you'll see next.
+As we saw above, some of these validators are automatically enabled for certain components, e.g. `isDate()` in DateInputs and `isNumber()` in NumberInputs. However, you can include them in your `validators` list for customisation (e.g. i18n), as you'll see next.
 
 [[[demo:validation-predefined]]]
 
 #### Custom validators
 
-Customize a predefined validator by passing it an additional argument upon instantiation. This argument can be a string or a function returning the desired error message (e.g. for i18n) based on the following arguments:
+Customise a predefined validator by passing it an additional argument upon instantiation. This argument can be a string or a function returning the desired error message (e.g. for i18n) based on the following arguments:
 
 * Default error message
 * Current (internal) input value
@@ -186,7 +186,7 @@ Some examples:
 // Override the message for the `required` validator
 <TextInput validators={[isRequired('please write your name')]} />
 
-// Specify a function to further customize/translate your message
+// Specify a function to further customise/translate your message
 import i18n from 'mady';  // a translation function
 <TextInput validators={[
   isEmail((defaultMsg, value) => i18n("'{VALUE}' is not a valid email address", { VALUE })),

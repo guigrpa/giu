@@ -374,7 +374,7 @@ class ModalExample extends React.Component {
         onEsc={close}
         style={{ width: 500 }}
       >
-        What's your name?{' '}
+        What&#39;s your name?{' '}
         <TextInput ref={o => { this.refInput = o; }}
           autoFocus
           errors={['Must be non-null']}

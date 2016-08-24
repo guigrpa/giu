@@ -15,7 +15,6 @@ node_modules
 *.sublime-workspace
 
 # Project-specific
-/examples/public
 
 
 # NPM-specific
@@ -34,3 +33,4 @@ node_modules
 /ROADMAP.md
 
 # Project-specific
+/docs

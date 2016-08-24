@@ -588,7 +588,7 @@ class DateInputs extends React.Component {
           />
         </CenteredFlex>
 
-        <p>Customize your picker's accent color:</p>
+        <p>Customise your picker&#39;s accent color:</p>
 
         <CenteredFlex>
           <DateInput type="inlinePicker" time seconds
@@ -664,7 +664,7 @@ const Selects = () =>
       />
     </CenteredFlex>
 
-    <p>Customize your picker's accent color:</p>
+    <p>Customise your picker's accent color:</p>
 
     <CenteredFlex>
       <Select type="inlinePicker"
@@ -703,7 +703,7 @@ const ColorInputs = () =>
       <li>
         A field with a dropdown, the default one:
         {' '}
-        <ColorInput value="aadc5400" styleOuter={{ position: 'relative', top: 4 }} />
+        <ColorInput value="aadc5400" />
         {' '}(press ESC to show/hide the picker)
       </li>
       <li>An inline color picker (add the <code>inlinePicker</code> prop):</li>
@@ -714,7 +714,7 @@ const ColorInputs = () =>
       </CenteredFlex>
     </div>
 
-    <p>Customize your picker's accent color:</p>
+    <p>Customise your picker's accent color:</p>
 
     <CenteredFlex>
       <ColorInput value="aabe5282" inlinePicker accentColor="olive" />
@@ -763,7 +763,7 @@ class ModalDemo extends React.Component {
       <Centered>
         <Button onClick={() => this.addModal()}>
           <Icon icon="comments" />&nbsp;
-          Let's talk!
+          Let&#39;s talk!
         </Button>
       </Centered>
     );
@@ -884,7 +884,7 @@ const Buttons = ({ fIncludeDisabled }) =>
     >
       OK, thanks!
     </Button>&nbsp;&nbsp;
-    {fIncludeDisabled && <Button disabled>I'm disabled</Button>}
+    {fIncludeDisabled && <Button disabled>I&#39;m disabled</Button>}
   </Centered>;
 
 const Icons = () =>

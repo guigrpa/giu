@@ -30,7 +30,7 @@ module.exports = {
     filename: '[name].bundle.js',
 
     // Where PRODUCTION bundles will be stored
-    path: path.resolve(process.cwd(), 'examples/public'),
+    path: path.resolve(process.cwd(), 'docs'),
 
     publicPath: '',
 

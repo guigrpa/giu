@@ -76,30 +76,21 @@ const specs = {
     // Examples
     buildExamples:              'npm run buildExamplesSsr',
     buildExamplesDev:           runMultiple([    // demo1.js OK, index.js NOK (use buildExamplesSsrDev instead)
-                                  'npm run buildExamplesClean',
                                   'npm run buildExamplesCopy',
-                                  'cp examples/*.html examples/public/',
+                                  'cp examples/*.html docs/',
                                   `${WEBPACK} --watch`,
                                 ]),
     buildExamplesSsr:           runMultiple([
-                                  'npm run buildExamplesClean',
                                   'npm run buildExamplesCopy',
                                   `cross-env NODE_ENV=production SERVER_SIDE_RENDERING=true ${WEBPACK} -p`,
                                 ]),
     buildExamplesSsrDev:        runMultiple([
-                                  'npm run buildExamplesClean',
                                   'npm run buildExamplesCopy',
                                   `cross-env SERVER_SIDE_RENDERING=true ${WEBPACK} --watch`,
                                 ]),
-    buildExamplesClean:         runMultiple([
-                                  'rm -rf ./examples/public',
-                                  'cd examples',
-                                  'mkdir public',
-                                  'cd ..',
-                                ]),
     buildExamplesCopy:          runMultiple([
-                                  'cp -r examples/stylesheets examples/public/',
-                                  'cp examples/favicon.ico examples/public/',
+                                  'cp -r examples/stylesheets docs/',
+                                  'cp examples/favicon.ico docs/',
                                 ]),
 
     // Static analysis
@@ -151,6 +142,7 @@ const specs = {
   dependencies: {
     timm: '1.0.0',
     'font-awesome': '4.6.3',
+    'react-virtualized': '7.19.4',
     redux: '3.5.2',
     'redux-thunk': '2.1.0',
     tinycolor2: '1.4.1',
