@@ -134,17 +134,23 @@ const specs = {
   },
 
   peerDependencies: {
-    react: '^0.14.0 || ^15.0.0',
+    react:                            '^0.14.0 || ^15.0.0',
+    'react-dom':                      '^0.14.0 || ^15.0.0',
     'react-addons-pure-render-mixin': '^0.14.0 || ^15.0.0',
+    'react-addons-shallow-compare':   '^0.14.0 || ^15.0.0',
     moment: '^2.0.0',
   },
 
   dependencies: {
     timm: '1.0.0',
-    'font-awesome': '4.6.3',
-    'react-virtualized': '7.19.4',
+
     redux: '3.5.2',
     'redux-thunk': '2.1.0',
+
+    'font-awesome': '4.6.3',
+    'react-virtualized': '7.22.0',
+    'react-sortable-hoc': '0.0.7',
+
     tinycolor2: '1.4.1',
     filesize: '3.3.0',
     keycode: '2.1.1',

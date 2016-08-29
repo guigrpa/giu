@@ -50,6 +50,7 @@ export {
 }                         from './components/hints';
 export HintScreen         from './components/hintScreen';
 
+export DataTable          from './components/dataTable';
 export DropDownMenu       from './components/dropDownMenu';
 export Button             from './components/button';
 export Icon               from './components/icon';

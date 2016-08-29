@@ -39,7 +39,7 @@ class DropDownMenu extends React.Component {
     onHoverStart:           React.PropTypes.func.isRequired,
     onHoverStop:            React.PropTypes.func.isRequired,
     // all others are passed through unchanged
-  }
+  };
   static defaultProps = {
     accentColor:            COLORS.accent,
   };
