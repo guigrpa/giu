@@ -4,6 +4,7 @@ import React                from 'react';
 import ReactDOM             from 'react-dom';
 import ReactDOMServer       from 'react-dom/server';
 import { merge }            from 'timm';
+import faker                from 'faker';
 require('babel-polyfill');
 import {
   Select, DateInput, Textarea, Checkbox,
@@ -18,6 +19,7 @@ import {
   Modals, Modal, modalPush, modalPop,
   Notifications, Notification, notify as createNotif,
   Hints, HintScreen, hintDefine, hintShow, hintReset, hintDisableAll,
+  DataTable,
   hoverable,
   flexContainer, flexItem, boxWithShadow,
   cancelEvent,
@@ -175,6 +177,7 @@ const App = () => {
               {EVERYTHING && <HintExample />}
               {EVERYTHING && <ScrollingExample />}
               {EVERYTHING && <ProgressExample />}
+              {EVERYTHING && <DataTableExample />}
             </div>
             <div style={flexItem('1 0 500px')}>
               {EVERYTHING && <FormExample />}
@@ -596,6 +599,36 @@ class ProgressExample extends React.Component {
         <ExampleLabel>Progress</ExampleLabel>
         <Progress value={this.state.value} />
         <Progress />
+      </div>
+    );
+  }
+}
+
+const DATA_ITEMS = {};
+const DATA_ITEM_IDS = [];
+for (let i = 0; i < 1000; i++) {
+  DATA_ITEMS[i] = {
+    id: String(i),
+    name: faker.name.findName(),
+    phone: faker.phone.phoneNumber(),
+  };
+  DATA_ITEM_IDS.push(String(i));
+}
+const DATA_TABLE_COLS = [
+  { attr: 'name' },
+  { attr: 'phone' },
+];
+
+class DataTableExample extends React.Component {
+  render() {
+    return (
+      <div style={style.example}>
+        <ExampleLabel>DataTable</ExampleLabel>
+        <DataTable
+          itemsById={DATA_ITEMS}
+          cols={DATA_TABLE_COLS}
+          shownIds={DATA_ITEM_IDS}
+        />
       </div>
     );
   }

@@ -1,8 +1,7 @@
 # Roadmap
 
-- [ ] Upgrade to React 15.3 (PureComponent)
-- DATATABLE, using react-virtualized
-  - 
+- [ ] DATATABLE, using react-virtualized
+- [ ] Check Select support for language changes
 
 Long-standing:
 - [ ] ListPicker: if not focused, it should not scrollintoview! But don't use fFocused (draws a border). Add a new `fParentFocused` and use it for this purpose. Dropdownmenus should stop scrolling also if keyboard shortcuts are used

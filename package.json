@@ -48,10 +48,10 @@
     "node": ">=4"
   },
   "peerDependencies": {
-    "react-addons-shallow-compare": "^0.14.0 || ^15.0.0",
     "react": "^0.14.0 || ^15.0.0",
     "react-dom": "^0.14.0 || ^15.0.0",
     "react-addons-pure-render-mixin": "^0.14.0 || ^15.0.0",
+    "react-addons-shallow-compare": "^0.14.0 || ^15.0.0",
     "moment": "^2.0.0"
   },
   "dependencies": {
@@ -83,6 +83,7 @@
     "eslint-plugin-jsx-a11y": "^1.5.3",
     "eslint-plugin-react": "^5.2.2",
     "extract-docs": "^1.2.0",
+    "faker": "3.0.1",
     "file-loader": "0.8.5",
     "fontfaceobserver": "1.7.1",
     "highlight.js": "9.5.0",

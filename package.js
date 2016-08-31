@@ -163,6 +163,7 @@ const specs = {
     // 'diveSync': '0.3.0',
 
     moment: '^2.0.0',
+    faker: '3.0.1',
 
     // React
     react: '^15.0.0',
