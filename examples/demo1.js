@@ -628,6 +628,7 @@ class DataTableExample extends React.Component {
           itemsById={DATA_ITEMS}
           cols={DATA_TABLE_COLS}
           shownIds={DATA_ITEM_IDS}
+          height={250}
         />
       </div>
     );

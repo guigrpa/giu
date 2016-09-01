@@ -1,17 +1,6 @@
 import React                from 'react';
-import ReactDOM             from 'react-dom';
 import PureRenderMixin      from 'react-addons-pure-render-mixin';
-import {
-  AutoSizer,
-  CellMeasurer,
-  FlexTable, FlexColumn, defaultFlexTableRowRenderer,
-}                           from 'react-virtualized';
-import {
-  SortableContainer as sortableContainer,
-  SortableElement as sortableElement,
-  SortableHandle as sortableHandle,
-  arrayMove,
-}                           from 'react-sortable-hoc';
+import throttle             from 'lodash/throttle';
 import { bindAll }          from '../gral/helpers';
 import 'react-virtualized/styles.css'; // only needs to be imported once
 
@@ -80,8 +69,10 @@ class DataTable extends React.Component {
     // Styles
     height:                 React.PropTypes.number,
     width:                  React.PropTypes.number,
-    hasUniformRowHeight:    React.PropTypes.bool,
-    rowHeight:              React.PropTypes.number,
+    rowHeight:              React.PropTypes.number,   // auto-calculated if unspecified
+
+    numRowsInitialRender:   React.PropTypes.number,
+    maxRowsToRender:        React.PropTypes.number,
   };
 
   static defaultProps = {
@@ -104,7 +95,8 @@ class DataTable extends React.Component {
     isCopyAllowed:          true,
     isCutAllowed:           false,
 
-    hasUniformHeight:       false,
+    numRowsInitialRender:   20,
+    maxRowsToRender:        1000,
   };
 
   constructor(props) {
@@ -118,9 +110,42 @@ class DataTable extends React.Component {
       sortDescending: props.sortDescending,
     };
     this.cachedHeights = {};
+    this.pendingHeights = [];
+    this.totalHeight = undefined;
+    this.rowTops = {};
     bindAll(this, [
-      'onDragEnd',
+      'onChangeRowHeight',
+      'recalcViewPort',
     ]);
+    this.throttledRecalcViewPort = throttle(this.recalcViewPort, 200);
+  }
+
+  componentDidMount() {
+    this.recalcViewPort();
+    window.addEventListener('resize', this.throttledRecalcViewPort);
+  }
+
+  componentWillUnmount() {
+    window.removeEventListener('resize', this.throttledRecalcViewPort);
+  }
+
+  componentDidUpdate() {
+    this.recalcViewPort();
+  }
+
+  recalcViewPort() {
+    if (!this.refBody) return;
+    const { scrollTop, clientHeight } = this.refBody;
+    // console.log(`scrollTop=${scrollTop}, clientHeight=${clientHeight}`)
+    if (
+      scrollTop !== this.scrollTop ||
+      clientHeight !== this.clientHeight
+    ) {
+      this.scrollTop = scrollTop;
+      this.clientHeight = clientHeight;
+      this.scrollBottom = scrollTop + clientHeight; // convenience
+      this.forceUpdate();
+    }
   }
 
   componentWillReceiveProps(nextProps) {
@@ -135,128 +160,268 @@ class DataTable extends React.Component {
   // Render
   // ===============================================================
   render() {
-    console.log('Rendering data table...')
-    const { shownIds } = this.state;
+    console.log(`Rendering data table [top=${this.scrollTop}, bottom=${this.scrollBottom}]...`);
+    const idsToRender = this.getIdsToRender();
+    console.log(`idsToRender: ${idsToRender}`);
     return (
-      <div style={style.outer}>
-        <AutoSizer>
-          {({ height, width }) => (
-            <CellMeasurer
-              cellRenderer={({ rowIndex }) => rendererForSizeMeasurement(this.getRow(rowIndex))}
-              cellSizeCache={this}
-              columnCount={1}
-              rowCount={shownIds.length}
-              width={width}
-            >
-              {({ getRowHeight }) => (
-                <SortableFlexTable
-                  ref={c => { this.refSortableTable = c; }}
-                  getContainer={(wrappedInstance) => ReactDOM.findDOMNode(wrappedInstance.Grid)}
-                  onSortEnd={this.onDragEnd}
-                  width={width}
-                  height={height}
-                  headerHeight={30}
-                  rowCount={shownIds.length}
-                  rowHeight={getRowHeight}
-                  rowGetter={({ index }) => this.getRow(index)}
-                  rowRenderer={props => <SortableRow {...props} />}
-                >
-                  {this.renderCols()}
-                </SortableFlexTable>
-              )}
-            </CellMeasurer>
-          )}
-        </AutoSizer>
+      <div>
+        {/* TODO: Header */}
+        <div ref={c => { this.refBody = c; }}
+          onScroll={this.recalcViewPort}
+          style={style.body(this.props)}
+        >
+          {this.renderSizer()}
+          {idsToRender.map(this.renderRow, this)}
+        </div>
       </div>
     );
   }
 
-  getRow(index) { return this.props.itemsById[this.state.shownIds[index]]; }
+  renderSizer() {
+    console.log(`totalHeight: ${this.totalHeight}`)
+    return <div style={style.sizer(this.totalHeight)}></div>;
+  }
 
-  renderCols() {
-    return this.props.cols.map(col => {
-      const { attr, minWidth, flexGrow, flexShrink } = col;
-      return (
-        <FlexColumn
-          key={attr}
-          label={attr}
-          dataKey={attr}
-          width={minWidth || 50}
-          flexGrow={flexGrow}
-          flexShrink={flexShrink}
-        />
-      );
-    });
+  renderRow(id) {
+    const item = this.props.itemsById[id];
+    if (!this.cachedHeights[id]) this.pendingHeights.push(id);
+    return (
+      <VerticalManager key={id}
+        id={id}
+        top={this.rowTops[id]}
+        onChangeHeight={this.onChangeRowHeight}
+      >
+        <DataTableRow id={id} item={item} />
+      </VerticalManager>
+    );
   }
 
   // ===============================================================
   // Event handlers
   // ===============================================================
-  onDragEnd() {}
+  onChangeRowHeight(id, height) {
+    console.log('New height', id, height)
+    if (this.cachedHeights[id] == null) {
+      this.pendingHeights = this.pendingHeights.filter(o => o !== id);
+    }
+    this.cachedHeights[id] = height;
+    if (!this.pendingHeights.length) {
+      this.recalcTops();
+      this.forceUpdate();
+    }
+  }
 
   // ===============================================================
-  // Height cache -- we implement it right in the component so that we can use
-  // row ID as the key instead of the index. This way, re-sorting rows does not
-  // require re-rendering to recalculate heights
+  // Virtual list
   // ===============================================================
-  clearAllColumnWidths() {}
-  clearAllRowHeights() {
-    console.log('clearAllRowHeights()');
-    this.cachedHeights = {};
+  getIdsToRender() {
+    const { shownIds } = this.state;
+    const { maxRowsToRender } = this.props;
+    const { scrollTop, scrollBottom, minHeight = 1 } = this;
+    const numRows = shownIds.length;
+    let out;
+
+    // We have no idea at all (probably during the first render)...
+    if (scrollTop == null) {
+      const { height, rowHeight } = this.props;
+      let numRowsToRender = height != null && rowHeight != null ?
+        Math.ceil(height / rowHeight + 1) :
+        this.props.numRowsInitialRender;
+      if (numRowsToRender > maxRowsToRender) numRowsToRender = maxRowsToRender;
+      out = shownIds.slice(0, numRowsToRender);
+
+    // We know where the scroller is
+    } else {
+      // Look for the first row that either:
+      // - has no rowTop
+      // - is partially visible
+      let idxFirst;
+      const { rowTops } = this;
+      let fFirstRowIsCached = false;
+      let rowTopFirst = 0;
+      for (idxFirst = 1; idxFirst < numRows; idxFirst++) {
+        const rowTop = rowTops[shownIds[idxFirst]];
+        if (rowTop == null) break;
+        if (rowTop >= scrollTop) {
+          fFirstRowIsCached = true;
+          break;
+        }
+        rowTopFirst = rowTop;
+      }
+      idxFirst--;
+      if (fFirstRowIsCached) {
+        // Look for the first row after `idxFirst` that either:
+        // - has no rowTop
+        // - is partially visible
+        let fLastRowIsCached = false;
+        let idxLast;
+        let rowTopLast;
+        for (idxLast = idxFirst; idxLast < numRows; idxLast++) {
+          rowTopLast = rowTops[shownIds[idxLast]];
+          if (rowTopLast == null) break;
+          if (rowTopLast > scrollBottom) {
+            fLastRowIsCached = true;
+            break;
+          }
+        }
+        if (fLastRowIsCached) {
+          out = shownIds.slice(idxFirst, idxLast);
+        } else {
+          let numRowsToRender = Math.ceil((scrollBottom - rowTopLast) / minHeight + 1);
+          if (numRowsToRender > maxRowsToRender) numRowsToRender = maxRowsToRender;
+          out = shownIds.slice(idxFirst, idxLast + numRowsToRender);
+        }
+      } else {
+        let numRowsToRender = Math.ceil((scrollBottom - rowTopFirst) / minHeight + 1);
+        if (numRowsToRender > maxRowsToRender) numRowsToRender = maxRowsToRender;
+        out = shownIds.slice(idxFirst, idxFirst + numRowsToRender);
+      }
+    }
+    return out;
   }
-  clearColumnWidth(index) {}
-  clearRowHeight(index) {
-    console.log(`clearRowHeight(${index})`);
-    const id = this.state.shownIds[index];
-    this.cachedHeights[id] = undefined;
-  }
-  getColumnWidth (index) { return undefined; }
-  getRowHeight (index) {
-    // console.log(`getRowHeight(${index})`);
-    const id = this.state.shownIds[index];
-    return this.cachedHeights[id];
-  }
-  hasColumnWidth (index) { return false; }
-  hasRowHeight (index) {
-    // console.log(`hasRowHeight(${index})`);
-    const id = this.state.shownIds[index];
-    return this.cachedHeights[id] >= 0;
-  }
-  setColumnWidth (index, width) {}
-  setRowHeight (index, height) {
-    // console.log(`setRowHeight(${index}, ${height})`);
-    const id = this.state.shownIds[index];
-    this.cachedHeights[id] = height;
+
+  recalcTops() {
+    const { shownIds } = this.state;
+    let top = 0;
+    const numRows = shownIds.length;
+    let i;
+    let minHeight = Infinity;
+    for (i = 0; i < numRows; i++) {
+      const id = shownIds[i];
+      this.rowTops[id] = top;
+      const height = this.cachedHeights[id];
+      if (height == null) break;
+      if (height > 0 && height < minHeight) minHeight = height;
+      top += height;
+    }
+    this.minHeight = minHeight;
+    if (i === numRows) {
+      this.totalHeight = top;
+    } else {
+      const numPending = numRows - i;
+      const avgHeight = top / i;
+      this.totalHeight = top + numPending * avgHeight;
+    }
   }
 }
-
-// ===============================================================
-// Helper components
-// ===============================================================
-const DragHandle = sortableHandle(() => <span style={style.handle}>***</span>)
-const dragRenderer = () => <DragHandle />;
-
-const SortableFlexTable = sortableContainer(FlexTable, { withRef: true });
-const SortableRow = sortableElement(defaultFlexTableRowRenderer);
-
-const descRenderer = ({ item }) => <span>{item.name}</span>;
-
-const rendererForSizeMeasurement = item => descRenderer({ item });
 
 // ===============================================================
 // Styles
 // ===============================================================
 const style = {
-  outer: {
-    width: 500,
-    height: 400,
-    backgroundColor: 'lavender',
-  },
+  outer: {},
+  body: ({ height, width }) => ({
+    position: 'relative',
+    backgroundColor: 'aliceblue',
+    height, width,
+    overflow: 'auto',
+  }),
+  sizer: totalHeight => ({
+    position: 'absolute',
+    top: 0,
+    left: 0,
+    right: 0,
+    height: totalHeight != null ? totalHeight : 1,
+    opacity: 0,
+    zIndex: -1,
+  }),
   handle: {
     marginRight: 10,
     cursor: 'pointer',
   },
 };
+
+
+// ===============================================================
+// VerticalManager
+// ===============================================================
+// Renders hidden first, reports on its height, then becomes visible when
+// it gets a `top` property passed from the top. Becoming visible does not
+// mean its child component gets re-rendered (this is more efficient than
+// react-virtualized when using its CellMeasurer component).
+class VerticalManager extends React.Component {
+  static propTypes = {
+    id:                     React.PropTypes.string.isRequired,
+    children:               React.PropTypes.any,
+    onChangeHeight:         React.PropTypes.func.isRequired,
+    top:                    React.PropTypes.number,
+  }
+
+  constructor(props) {
+    super(props);
+    bindAll(this, [
+      'measure',
+    ]);
+    this.measure = throttle(this.measure.bind(this), 200);
+  }
+
+  componentDidMount() {
+    this.measure();
+    window.addEventListener('resize', this.measure);
+  }
+
+  componentDidUpdate() { this.measure(); }
+
+  componentWillUnmount() { window.removeEventListener('resize', this.measure); }
+
+  measure() {
+    const container = this.refs.container;
+    if (!container) return;
+    const height = container.clientHeight;
+    if (height !== this.height) {
+      this.height = height;
+      this.props.onChangeHeight(this.props.id, height);
+    }
+  }
+
+  render() {
+    return (
+      <div ref="container" style={styleY(this.props)}>
+        {this.props.children}
+      </div>
+    );
+  }
+}
+
+const styleY = ({ top }) => ({
+  position: 'absolute',
+  opacity: top != null ? 1 : 0,
+  top,
+  left: 0,
+  right: 0,
+});
+
+// ===============================================================
+// Row
+// ===============================================================
+const DEBUG_HEIGHTS = [20, 40, 25, 36, 15, 80];
+
+class DataTableRow extends React.Component {
+  constructor(props) {
+    super(props);
+    this.shouldComponentUpdate = PureRenderMixin.shouldComponentUpdate.bind(this);
+  }
+
+  render() {
+    const { id, item } = this.props;
+    console.log(`Rendering row ${id}...`);
+    return <div style={{height: DEBUG_HEIGHTS[parseInt(id) % 6]}}>{item.id} - {item.name}</div>;
+  }
+}
+
+
+// ===============================================================
+// Helper components
+// ===============================================================
+// const DragHandle = sortableHandle(() => <span style={style.handle}>***</span>)
+// const dragRenderer = () => <DragHandle />;
+//
+// const SortableFlexTable = sortableContainer(FlexTable, { withRef: true });
+// const SortableRow = sortableElement(defaultFlexTableRowRenderer);
+//
+// const descRenderer = ({ item }) => <span>{item.name}</span>;
+//
+// const rendererForSizeMeasurement = item => descRenderer({ item });
 
 // ===============================================================
 // Public API

@@ -147,6 +147,8 @@ const specs = {
     redux: '3.5.2',
     'redux-thunk': '2.1.0',
 
+    'lodash': '4.15.0',  // only parts of it will be included
+
     'font-awesome': '4.6.3',
     'react-virtualized': '7.22.0',
     'react-sortable-hoc': '0.0.7',
