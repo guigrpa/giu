@@ -1,8 +1,7 @@
 import React                from 'react';
 import PureRenderMixin      from 'react-addons-pure-render-mixin';
-import throttle             from 'lodash/throttle';
 import { bindAll }          from '../gral/helpers';
-import 'react-virtualized/styles.css'; // only needs to be imported once
+import VirtualScroller      from './virtualScroller';
 
 const PropTypeColumn = React.PropTypes.shape({
   attr:                     React.PropTypes.string.isRequired,
@@ -70,9 +69,12 @@ class DataTable extends React.Component {
     height:                 React.PropTypes.number,
     width:                  React.PropTypes.number,
     rowHeight:              React.PropTypes.number,   // auto-calculated if unspecified
+    uniformRowHeight:       React.PropTypes.bool,
 
+    // For VirtualScroller specifically
+    estimatedMinRowHeight:  React.PropTypes.number,
     numRowsInitialRender:   React.PropTypes.number,
-    maxRowsToRender:        React.PropTypes.number,
+    maxRowsToRenderInOneGo: React.PropTypes.number,
   };
 
   static defaultProps = {
@@ -94,9 +96,6 @@ class DataTable extends React.Component {
     hasMultipleSelection:   false,
     isCopyAllowed:          true,
     isCutAllowed:           false,
-
-    numRowsInitialRender:   20,
-    maxRowsToRender:        1000,
   };
 
   constructor(props) {
@@ -109,43 +108,6 @@ class DataTable extends React.Component {
       sortBy: props.sortBy,
       sortDescending: props.sortDescending,
     };
-    this.cachedHeights = {};
-    this.pendingHeights = [];
-    this.totalHeight = undefined;
-    this.rowTops = {};
-    bindAll(this, [
-      'onChangeRowHeight',
-      'recalcViewPort',
-    ]);
-    this.throttledRecalcViewPort = throttle(this.recalcViewPort, 200);
-  }
-
-  componentDidMount() {
-    this.recalcViewPort();
-    window.addEventListener('resize', this.throttledRecalcViewPort);
-  }
-
-  componentWillUnmount() {
-    window.removeEventListener('resize', this.throttledRecalcViewPort);
-  }
-
-  componentDidUpdate() {
-    this.recalcViewPort();
-  }
-
-  recalcViewPort() {
-    if (!this.refBody) return;
-    const { scrollTop, clientHeight } = this.refBody;
-    // console.log(`scrollTop=${scrollTop}, clientHeight=${clientHeight}`)
-    if (
-      scrollTop !== this.scrollTop ||
-      clientHeight !== this.clientHeight
-    ) {
-      this.scrollTop = scrollTop;
-      this.clientHeight = clientHeight;
-      this.scrollBottom = scrollTop + clientHeight; // convenience
-      this.forceUpdate();
-    }
   }
 
   componentWillReceiveProps(nextProps) {
@@ -160,148 +122,23 @@ class DataTable extends React.Component {
   // Render
   // ===============================================================
   render() {
-    console.log(`Rendering data table [top=${this.scrollTop}, bottom=${this.scrollBottom}]...`);
-    const idsToRender = this.getIdsToRender();
-    console.log(`idsToRender: ${idsToRender}`);
     return (
       <div>
         {/* TODO: Header */}
-        <div ref={c => { this.refBody = c; }}
-          onScroll={this.recalcViewPort}
-          style={style.body(this.props)}
-        >
-          {this.renderSizer()}
-          {idsToRender.map(this.renderRow, this)}
-        </div>
+        <VirtualScroller
+          itemsById={this.props.itemsById}
+          shownIds={this.state.shownIds}
+          RowComponent={DataTableRow}
+          height={this.props.height}
+          width={this.props.width}
+          rowHeight={this.props.rowHeight}
+          uniformRowHeight={this.props.uniformRowHeight}
+          estimatedMinRowHeight={this.props.estimatedMinRowHeight}
+          numRowsInitialRender={this.props.numRowsInitialRender}
+          maxRowsToRenderInOneGo={this.props.maxRowsToRenderInOneGo}
+        />
       </div>
     );
-  }
-
-  renderSizer() {
-    console.log(`totalHeight: ${this.totalHeight}`)
-    return <div style={style.sizer(this.totalHeight)}></div>;
-  }
-
-  renderRow(id) {
-    const item = this.props.itemsById[id];
-    if (!this.cachedHeights[id]) this.pendingHeights.push(id);
-    return (
-      <VerticalManager key={id}
-        id={id}
-        top={this.rowTops[id]}
-        onChangeHeight={this.onChangeRowHeight}
-      >
-        <DataTableRow id={id} item={item} />
-      </VerticalManager>
-    );
-  }
-
-  // ===============================================================
-  // Event handlers
-  // ===============================================================
-  onChangeRowHeight(id, height) {
-    console.log('New height', id, height)
-    if (this.cachedHeights[id] == null) {
-      this.pendingHeights = this.pendingHeights.filter(o => o !== id);
-    }
-    this.cachedHeights[id] = height;
-    if (!this.pendingHeights.length) {
-      this.recalcTops();
-      this.forceUpdate();
-    }
-  }
-
-  // ===============================================================
-  // Virtual list
-  // ===============================================================
-  getIdsToRender() {
-    const { shownIds } = this.state;
-    const { maxRowsToRender } = this.props;
-    const { scrollTop, scrollBottom, minHeight = 1 } = this;
-    const numRows = shownIds.length;
-    let out;
-
-    // We have no idea at all (probably during the first render)...
-    if (scrollTop == null) {
-      const { height, rowHeight } = this.props;
-      let numRowsToRender = height != null && rowHeight != null ?
-        Math.ceil(height / rowHeight + 1) :
-        this.props.numRowsInitialRender;
-      if (numRowsToRender > maxRowsToRender) numRowsToRender = maxRowsToRender;
-      out = shownIds.slice(0, numRowsToRender);
-
-    // We know where the scroller is
-    } else {
-      // Look for the first row that either:
-      // - has no rowTop
-      // - is partially visible
-      let idxFirst;
-      const { rowTops } = this;
-      let fFirstRowIsCached = false;
-      let rowTopFirst = 0;
-      for (idxFirst = 1; idxFirst < numRows; idxFirst++) {
-        const rowTop = rowTops[shownIds[idxFirst]];
-        if (rowTop == null) break;
-        if (rowTop >= scrollTop) {
-          fFirstRowIsCached = true;
-          break;
-        }
-        rowTopFirst = rowTop;
-      }
-      idxFirst--;
-      if (fFirstRowIsCached) {
-        // Look for the first row after `idxFirst` that either:
-        // - has no rowTop
-        // - is partially visible
-        let fLastRowIsCached = false;
-        let idxLast;
-        let rowTopLast;
-        for (idxLast = idxFirst; idxLast < numRows; idxLast++) {
-          rowTopLast = rowTops[shownIds[idxLast]];
-          if (rowTopLast == null) break;
-          if (rowTopLast > scrollBottom) {
-            fLastRowIsCached = true;
-            break;
-          }
-        }
-        if (fLastRowIsCached) {
-          out = shownIds.slice(idxFirst, idxLast);
-        } else {
-          let numRowsToRender = Math.ceil((scrollBottom - rowTopLast) / minHeight + 1);
-          if (numRowsToRender > maxRowsToRender) numRowsToRender = maxRowsToRender;
-          out = shownIds.slice(idxFirst, idxLast + numRowsToRender);
-        }
-      } else {
-        let numRowsToRender = Math.ceil((scrollBottom - rowTopFirst) / minHeight + 1);
-        if (numRowsToRender > maxRowsToRender) numRowsToRender = maxRowsToRender;
-        out = shownIds.slice(idxFirst, idxFirst + numRowsToRender);
-      }
-    }
-    return out;
-  }
-
-  recalcTops() {
-    const { shownIds } = this.state;
-    let top = 0;
-    const numRows = shownIds.length;
-    let i;
-    let minHeight = Infinity;
-    for (i = 0; i < numRows; i++) {
-      const id = shownIds[i];
-      this.rowTops[id] = top;
-      const height = this.cachedHeights[id];
-      if (height == null) break;
-      if (height > 0 && height < minHeight) minHeight = height;
-      top += height;
-    }
-    this.minHeight = minHeight;
-    if (i === numRows) {
-      this.totalHeight = top;
-    } else {
-      const numPending = numRows - i;
-      const avgHeight = top / i;
-      this.totalHeight = top + numPending * avgHeight;
-    }
   }
 }
 
@@ -309,92 +146,17 @@ class DataTable extends React.Component {
 // Styles
 // ===============================================================
 const style = {
-  outer: {},
-  body: ({ height, width }) => ({
-    position: 'relative',
-    backgroundColor: 'aliceblue',
-    height, width,
-    overflow: 'auto',
-  }),
-  sizer: totalHeight => ({
-    position: 'absolute',
-    top: 0,
-    left: 0,
-    right: 0,
-    height: totalHeight != null ? totalHeight : 1,
-    opacity: 0,
-    zIndex: -1,
-  }),
   handle: {
     marginRight: 10,
     cursor: 'pointer',
   },
 };
 
-
-// ===============================================================
-// VerticalManager
-// ===============================================================
-// Renders hidden first, reports on its height, then becomes visible when
-// it gets a `top` property passed from the top. Becoming visible does not
-// mean its child component gets re-rendered (this is more efficient than
-// react-virtualized when using its CellMeasurer component).
-class VerticalManager extends React.Component {
-  static propTypes = {
-    id:                     React.PropTypes.string.isRequired,
-    children:               React.PropTypes.any,
-    onChangeHeight:         React.PropTypes.func.isRequired,
-    top:                    React.PropTypes.number,
-  }
-
-  constructor(props) {
-    super(props);
-    bindAll(this, [
-      'measure',
-    ]);
-    this.measure = throttle(this.measure.bind(this), 200);
-  }
-
-  componentDidMount() {
-    this.measure();
-    window.addEventListener('resize', this.measure);
-  }
-
-  componentDidUpdate() { this.measure(); }
-
-  componentWillUnmount() { window.removeEventListener('resize', this.measure); }
-
-  measure() {
-    const container = this.refs.container;
-    if (!container) return;
-    const height = container.clientHeight;
-    if (height !== this.height) {
-      this.height = height;
-      this.props.onChangeHeight(this.props.id, height);
-    }
-  }
-
-  render() {
-    return (
-      <div ref="container" style={styleY(this.props)}>
-        {this.props.children}
-      </div>
-    );
-  }
-}
-
-const styleY = ({ top }) => ({
-  position: 'absolute',
-  opacity: top != null ? 1 : 0,
-  top,
-  left: 0,
-  right: 0,
-});
-
 // ===============================================================
 // Row
 // ===============================================================
-const DEBUG_HEIGHTS = [20, 40, 25, 36, 15, 80];
+// const DEBUG_HEIGHTS = [20, 40, 25, 36, 15, 23];
+const DEBUG_HEIGHTS = [25];
 
 class DataTableRow extends React.Component {
   constructor(props) {
@@ -404,8 +166,8 @@ class DataTableRow extends React.Component {
 
   render() {
     const { id, item } = this.props;
-    console.log(`Rendering row ${id}...`);
-    return <div style={{height: DEBUG_HEIGHTS[parseInt(id) % 6]}}>{item.id} - {item.name}</div>;
+    // console.log(`Rendering row ${id}...`);
+    return <div style={{height: DEBUG_HEIGHTS[parseInt(id) % DEBUG_HEIGHTS.length]}}>{item.id} - {item.name}</div>;
   }
 }
 

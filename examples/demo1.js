@@ -77,7 +77,7 @@ const notify = (msg) => createNotif({
 // -----------------------------------------------
 // Examples
 // -----------------------------------------------
-const TEST = 0;
+const TEST = 7;
 const EVERYTHING = true;
 const App = () => {
   let out;
@@ -151,6 +151,13 @@ const App = () => {
       out = (
         <div>
           <NativeDateInput />
+        </div>
+      );
+      break;
+    case 7:
+      out = (
+        <div>
+          <DataTableExample />
         </div>
       );
       break;
@@ -629,6 +636,8 @@ class DataTableExample extends React.Component {
           cols={DATA_TABLE_COLS}
           shownIds={DATA_ITEM_IDS}
           height={250}
+          // rowHeight={40}
+          uniformRowHeight
         />
       </div>
     );
