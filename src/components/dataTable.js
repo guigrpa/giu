@@ -1,5 +1,4 @@
 import React                from 'react';
-import PureRenderMixin      from 'react-addons-pure-render-mixin';
 import { bindAll }          from '../gral/helpers';
 import VirtualScroller      from './virtualScroller';
 
@@ -35,7 +34,7 @@ const SORT_MANUALLY = '__SORT_MANUALLY__';
 // ===============================================================
 // Component
 // ===============================================================
-class DataTable extends React.Component {
+class DataTable extends React.PureComponent {
   static propTypes = {
     itemsById:              React.PropTypes.object,
     cols:                   React.PropTypes.arrayOf(PropTypeColumn),
@@ -100,7 +99,6 @@ class DataTable extends React.Component {
 
   constructor(props) {
     super(props);
-    this.shouldComponentUpdate = PureRenderMixin.shouldComponentUpdate.bind(this);
     this.state = {
       // State initialised by outer props, then free to change by default
       shownIds: props.shownIds,
@@ -155,19 +153,23 @@ const style = {
 // ===============================================================
 // Row
 // ===============================================================
-// const DEBUG_HEIGHTS = [20, 40, 25, 36, 15, 23];
-const DEBUG_HEIGHTS = [25];
+const DEBUG_HEIGHTS = [20, 40, 25, 36, 15, 23];
+// const DEBUG_HEIGHTS = [25];
 
-class DataTableRow extends React.Component {
-  constructor(props) {
-    super(props);
-    this.shouldComponentUpdate = PureRenderMixin.shouldComponentUpdate.bind(this);
-  }
+class DataTableRow extends React.PureComponent {
+  static propTypes = {
+    id:                     React.PropTypes.string.isRequired,
+    item:                   React.PropTypes.object.isRequired,
+  };
 
   render() {
     const { id, item } = this.props;
-    // console.log(`Rendering row ${id}...`);
-    return <div style={{height: DEBUG_HEIGHTS[parseInt(id) % DEBUG_HEIGHTS.length]}}>{item.id} - {item.name}</div>;
+    console.log(`Rendering row ${id}...`);
+    return (
+      <div style={{ height: DEBUG_HEIGHTS[parseInt(id) % DEBUG_HEIGHTS.length] }}>
+        {item.id} - {item.name}
+      </div>
+    );
   }
 }
 

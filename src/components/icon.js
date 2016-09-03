@@ -1,5 +1,4 @@
 import React                from 'react';
-import PureRenderMixin      from 'react-addons-pure-render-mixin';
 import { merge, omit }      from 'timm';
 import { COLORS }           from '../gral/constants';
 require('font-awesome/css/font-awesome.css');
@@ -16,7 +15,7 @@ require('font-awesome/css/font-awesome.css');
 // -- * **disabled** *boolean?*
 // -- * **style** *object?*: merged with the `i` element style
 // -- * *All other props are passed through to the `i` element*
-class Icon extends React.Component {
+class Icon extends React.PureComponent {
   static propTypes = {
     icon:                   React.PropTypes.string.isRequired,
     size:                   React.PropTypes.string,   // lg, 2x, 3x, 4x, 5x
@@ -26,11 +25,6 @@ class Icon extends React.Component {
     style:                  React.PropTypes.object,
     // all other props are passed through
   };
-
-  constructor(props) {
-    super(props);
-    this.shouldComponentUpdate = PureRenderMixin.shouldComponentUpdate.bind(this);
-  }
 
   render() {
     const { icon, size, fixedWidth, spin, disabled } = this.props;

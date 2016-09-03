@@ -1,5 +1,4 @@
 import React                from 'react';
-import PureRenderMixin      from 'react-addons-pure-render-mixin';
 import { omit }             from 'timm';
 
 // ==========================================
@@ -9,15 +8,10 @@ import { omit }             from 'timm';
 // -- *All props are passed through to the `progress` element.
 // -- Remember that an indeterminate progress bar will be shown if you
 // -- don't specify the `value` prop (native HTML behaviour).*
-class Progress extends React.Component {
+class Progress extends React.PureComponent {
   static propTypes = {
     // all other props are passed through
   };
-
-  constructor(props) {
-    super(props);
-    this.shouldComponentUpdate = PureRenderMixin.shouldComponentUpdate.bind(this);
-  }
 
   render() {
     const otherProps = omit(this.props, PROP_KEYS);

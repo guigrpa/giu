@@ -1,5 +1,4 @@
 import React                from 'react';
-import PureRenderMixin      from 'react-addons-pure-render-mixin';
 import { omit, merge }      from 'timm';
 import { COLORS }           from '../gral/constants';
 
@@ -15,7 +14,7 @@ import { COLORS }           from '../gral/constants';
 // -- * **disabled** *boolean?*
 // -- * **style** *object?*: merged with the `span` style
 // -- * *All other props are passed through to the `span` element*
-class Button extends React.Component {
+class Button extends React.PureComponent {
   static propTypes = {
     plain:                  React.PropTypes.bool,
     children:               React.PropTypes.any,
@@ -24,11 +23,6 @@ class Button extends React.Component {
     style:                  React.PropTypes.object,
     // all other props are passed through
   };
-
-  constructor(props) {
-    super(props);
-    this.shouldComponentUpdate = PureRenderMixin.shouldComponentUpdate.bind(this);
-  }
 
   // ==========================================
   // Render

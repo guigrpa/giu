@@ -1,5 +1,4 @@
 import React                from 'react';
-import PureRenderMixin      from 'react-addons-pure-render-mixin';
 import {
   merge,
   set as timmSet,
@@ -38,7 +37,7 @@ const correctLeaps = (prevVal, nextVal, steps) => {
 // ==========================================
 // Component
 // ==========================================
-class TimePickerAnalog extends React.Component {
+class TimePickerAnalog extends React.PureComponent {
   static propTypes = {
     disabled:               React.PropTypes.bool.isRequired,
     curValue:               React.PropTypes.object,  // moment object, not start of day
@@ -377,11 +376,6 @@ class WatchFace extends React.Component {
   static propTypes = {
     radius:                 React.PropTypes.number.isRequired,
   };
-
-  constructor(props) {
-    super(props);
-    this.shouldComponentUpdate = PureRenderMixin.shouldComponentUpdate.bind(this);
-  }
 
   render() {
     const { radius: r } = this.props;

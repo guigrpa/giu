@@ -1,5 +1,4 @@
 import React                from 'react';
-import PureRenderMixin      from 'react-addons-pure-render-mixin';
 import { omit, merge }      from 'timm';
 import { COLORS }           from '../gral/constants';
 
@@ -13,16 +12,11 @@ import { COLORS }           from '../gral/constants';
 // -- * **children** *any*: the contents to be shown
 // -- * **style** *object?*: merged with the outermost `div` style
 // -- * *All other props are passed through to the `div` element*
-class LargeMessage extends React.Component {
+class LargeMessage extends React.PureComponent {
   static propTypes = {
     children:               React.PropTypes.any,
     style:                  React.PropTypes.object,
   };
-
-  constructor(props) {
-    super(props);
-    this.shouldComponentUpdate = PureRenderMixin.shouldComponentUpdate.bind(this);
-  }
 
   render() {
     const otherProps = omit(this.props, PROP_KEYS);

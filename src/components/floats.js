@@ -1,5 +1,4 @@
 import React                from 'react';
-import PureRenderMixin      from 'react-addons-pure-render-mixin';
 import { createStore }      from 'redux';
 import {
   addLast, removeAt,
@@ -121,11 +120,10 @@ function isAnchorVisible({ getAnchorNode }) {
 let fFloatsMounted = false;
 const isFloatsMounted = () => fFloatsMounted;
 
-class Floats extends React.Component {
+class Floats extends React.PureComponent {
 
   constructor(props) {
     super(props);
-    this.shouldComponentUpdate = PureRenderMixin.shouldComponentUpdate.bind(this);
     bindAll(this, [
       'forceUpdate',
       'renderFloat',

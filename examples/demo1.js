@@ -77,7 +77,7 @@ const notify = (msg) => createNotif({
 // -----------------------------------------------
 // Examples
 // -----------------------------------------------
-const TEST = 7;
+const TEST = 0;
 const EVERYTHING = true;
 const App = () => {
   let out;
@@ -637,7 +637,7 @@ class DataTableExample extends React.Component {
           shownIds={DATA_ITEM_IDS}
           height={250}
           // rowHeight={40}
-          uniformRowHeight
+          // uniformRowHeight
         />
       </div>
     );

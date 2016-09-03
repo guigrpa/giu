@@ -1,5 +1,4 @@
 import React                from 'react';
-import PureRenderMixin      from 'react-addons-pure-render-mixin';
 import {
   COLORS,
   MISC,
@@ -22,7 +21,7 @@ const FONT_FAMILY = '"Gloria Hallelujah", sans-serif';
 // with `translateZ(0)` or similar (which creates a stacking context and
 // a containing block) will not be properly positioned and may even be cropped.
 // In such a case, use `Hints` instead.
-class HintScreen extends React.Component {
+class HintScreen extends React.PureComponent {
   static propTypes = {
     elements:               React.PropTypes.oneOfType([
       React.PropTypes.array,
@@ -40,10 +39,7 @@ class HintScreen extends React.Component {
 
   constructor(props) {
     super(props);
-    this.shouldComponentUpdate = PureRenderMixin.shouldComponentUpdate.bind(this);
-    bindAll(this, [
-      'onResize',
-    ]);
+    bindAll(this, ['onResize']);
   }
 
   componentDidMount() { window.addEventListener('resize', this.onResize); }

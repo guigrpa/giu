@@ -1,6 +1,5 @@
 /* eslint-disable no-underscore-dangle */
 import React                from 'react';
-import PureRenderMixin      from 'react-addons-pure-render-mixin';
 import {
   omit,
   merge,
@@ -70,7 +69,7 @@ function input(ComposedComponent, {
     ComposedComponent.name || 'Component';
   const hocDisplayName = `Input(${composedComponentName})`;
 
-  return class extends React.Component {
+  return class extends React.PureComponent {
     static displayName = hocDisplayName;
     static propTypes = PROP_TYPES;
     static defaultProps = {
@@ -80,7 +79,6 @@ function input(ComposedComponent, {
 
     constructor(props) {
       super(props);
-      this.shouldComponentUpdate = PureRenderMixin.shouldComponentUpdate.bind(this);
 
       // NOTE: this.errors = this.props.errors + this.state.validationErrors
       this.errors = props.errors;

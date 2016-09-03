@@ -1,5 +1,4 @@
 import React                from 'react';
-import PureRenderMixin      from 'react-addons-pure-render-mixin';
 import throttle             from 'lodash/throttle';
 import { bindAll }          from '../gral/helpers';
 import VerticalManager      from './verticalManager';
@@ -9,7 +8,7 @@ const MAX_ROWS_INITIAL_RENDER = 20;
 // ===============================================================
 // Component
 // ===============================================================
-class VirtualScroller extends React.Component {
+class VirtualScroller extends React.PureComponent {
   static propTypes = {
     itemsById:              React.PropTypes.object,
     shownIds:               React.PropTypes.arrayOf(React.PropTypes.string),
@@ -38,7 +37,6 @@ class VirtualScroller extends React.Component {
 
   constructor(props) {
     super(props);
-    this.shouldComponentUpdate = PureRenderMixin.shouldComponentUpdate.bind(this);
 
     // If the row height is specified (and hence uniform), important optimisations apply.
     // If it is uniform but unknown, the following value will become defined upon measurement.
@@ -299,7 +297,7 @@ class VirtualScroller extends React.Component {
   }
 
   recalcTops() {
-    console.log('Recalculating tops...')
+    // console.log('Recalculating tops...')
     const { shownIds } = this.props;
     let top = 0;
     const numRows = shownIds.length;

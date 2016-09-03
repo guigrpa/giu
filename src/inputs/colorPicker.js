@@ -1,5 +1,4 @@
 import React                from 'react';
-import PureRenderMixin      from 'react-addons-pure-render-mixin';
 import tinycolor            from 'tinycolor2';
 import { merge }            from 'timm';
 import { COLORS }           from '../gral/constants';
@@ -99,7 +98,7 @@ const GRADIENTS = {
 // ==========================================
 // Component
 // ==========================================
-class ColorPicker extends React.Component {
+class ColorPicker extends React.PureComponent {
   static propTypes = {
     registerOuterRef:       React.PropTypes.func,
     curValue:               React.PropTypes.string,
@@ -114,7 +113,6 @@ class ColorPicker extends React.Component {
 
   constructor(props) {
     super(props);
-    this.shouldComponentUpdate = PureRenderMixin.shouldComponentUpdate.bind(this);
     this.state = {
       mode: 'hsv',
       activeAttr: 'h',

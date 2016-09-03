@@ -1,5 +1,4 @@
 import React                from 'react';
-import PureRenderMixin      from 'react-addons-pure-render-mixin';
 import { merge }            from 'timm';
 import { cancelEvent }      from '../gral/helpers';
 import { IS_IOS }           from '../gral/constants';
@@ -7,15 +6,10 @@ import { IS_IOS }           from '../gral/constants';
 // ==========================================
 // Component
 // ==========================================
-class Backdrop extends React.Component {
+class Backdrop extends React.PureComponent {
   static propTypes = {
     style:                  React.PropTypes.object,
   };
-
-  constructor(props) {
-    super(props);
-    this.shouldComponentUpdate = PureRenderMixin.shouldComponentUpdate.bind(this);
-  }
 
   // All props are forwarded to the child `<div>`
   render() {

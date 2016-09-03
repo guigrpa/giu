@@ -1,5 +1,4 @@
 import React                from 'react';
-import PureRenderMixin      from 'react-addons-pure-render-mixin';
 import {
   createStore,
   applyMiddleware,
@@ -169,14 +168,13 @@ const hintHide = () => store.dispatch(actions.hintHide());
 // ==========================================
 // Hints component
 // ==========================================
-class Hints extends React.Component {
+class Hints extends React.PureComponent {
   static propTypes = {
     storeState:             React.PropTypes.object,
   };
 
   constructor(props) {
     super(props);
-    this.shouldComponentUpdate = PureRenderMixin.shouldComponentUpdate.bind(this);
     if (props.storeState == null) {
       if (!store) initStore();
       this.storeUnsubscribe = store.subscribe(this.forceUpdate.bind(this));

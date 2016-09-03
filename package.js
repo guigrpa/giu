@@ -134,10 +134,9 @@ const specs = {
   },
 
   peerDependencies: {
-    react:                            '^0.14.0 || ^15.0.0',
-    'react-dom':                      '^0.14.0 || ^15.0.0',
-    'react-addons-pure-render-mixin': '^0.14.0 || ^15.0.0',
-    'react-addons-shallow-compare':   '^0.14.0 || ^15.0.0',
+    react:                            '^15.3.0',
+    'react-dom':                      '^15.3.0',
+    'react-addons-pure-render-mixin': '^15.3.0',
     moment: '^2.0.0',
   },
 
@@ -150,7 +149,6 @@ const specs = {
     'lodash': '4.15.0',  // only parts of it will be included
 
     'font-awesome': '4.6.3',
-    'react-virtualized': '7.22.0',
     'react-sortable-hoc': '0.0.7',
 
     tinycolor2: '1.4.1',
@@ -168,10 +166,10 @@ const specs = {
     faker: '3.0.1',
 
     // React
-    react: '^15.0.0',
-    'react-dom': '^15.0.0',
-    'react-addons-pure-render-mixin': '^15.0.0',
-    'react-addons-perf': '^15.0.0',
+    react:                              '^15.3.0',
+    'react-dom':                        '^15.3.0',
+    'react-addons-pure-render-mixin':   '^15.3.0',
+    'react-addons-perf':                '^15.3.0',
 
     // Babel (except babel-eslint)
     'babel-cli': '6.11.4',

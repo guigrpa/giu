@@ -1,5 +1,4 @@
 import React                from 'react';
-import PureRenderMixin      from 'react-addons-pure-render-mixin';
 import {
   createStore,
   applyMiddleware,
@@ -141,14 +140,13 @@ const notifDeleteByName = name => store.dispatch(actions.notifDeleteByName(name)
 // ==========================================
 // Notifications component
 // ==========================================
-class Notifications extends React.Component {
+class Notifications extends React.PureComponent {
   static propTypes = {
     notifs:                 React.PropTypes.array,
   };
 
   constructor(props) {
     super(props);
-    this.shouldComponentUpdate = PureRenderMixin.shouldComponentUpdate.bind(this);
     bindAll(this, [
       'onRetain',
       'onDismiss',

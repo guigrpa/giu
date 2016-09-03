@@ -1,5 +1,4 @@
 import React                from 'react';
-import PureRenderMixin      from 'react-addons-pure-render-mixin';
 import { merge }            from 'timm';
 import {
   flexContainer, flexItem,
@@ -13,7 +12,7 @@ import Icon                 from './icon';
 // ==========================================
 // Component
 // ==========================================
-class Notification extends React.Component {
+class Notification extends React.PureComponent {
   static propTypes = {
     id:                     React.PropTypes.string,
     type:                   React.PropTypes.string,
@@ -34,11 +33,6 @@ class Notification extends React.Component {
     type:                   'info',
     icon:                   'exclamation',
   };
-
-  constructor(props) {
-    super(props);
-    this.shouldComponentUpdate = PureRenderMixin.shouldComponentUpdate.bind(this);
-  }
 
   // ==========================================
   // Render

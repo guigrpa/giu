@@ -1,5 +1,4 @@
 import React                from 'react';
-import PureRenderMixin      from 'react-addons-pure-render-mixin';
 import { omit, merge }      from 'timm';
 import { COLORS }           from '../gral/constants';
 import { bindAll }          from '../gral/helpers';
@@ -27,7 +26,7 @@ import Select               from '../inputs/select';
 // -- * **style** *object?*: will be merged with the menu title's `div` wrapper
 // -- * **accentColor** *string?*: CSS color descriptor (e.g. `darkgray`, `#ccffaa`...)
 // -- * *All other props are passed through to the Select input component*
-class DropDownMenu extends React.Component {
+class DropDownMenu extends React.PureComponent {
   static propTypes = {
     items:                  React.PropTypes.array.isRequired,
     children:               React.PropTypes.any.isRequired,
@@ -46,7 +45,6 @@ class DropDownMenu extends React.Component {
 
   constructor(props) {
     super(props);
-    this.shouldComponentUpdate = PureRenderMixin.shouldComponentUpdate.bind(this);
     this.state = {
       fFocused: false,
       cmds: null,

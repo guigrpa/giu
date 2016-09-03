@@ -1,5 +1,4 @@
 import React                from 'react';
-import PureRenderMixin      from 'react-addons-pure-render-mixin';
 import { createStore }      from 'redux';
 import {
   addLast,
@@ -106,14 +105,13 @@ const modalPop = () => store.dispatch(actions.modalPop());
 // ==========================================
 // Modals component
 // ==========================================
-class Modals extends React.Component {
+class Modals extends React.PureComponent {
   static propTypes = {
     modals:                 React.PropTypes.array,
   };
 
   constructor(props) {
     super(props);
-    this.shouldComponentUpdate = PureRenderMixin.shouldComponentUpdate.bind(this);
     this.refModals = [];
     this.prevModals = [];
     if (props.modals == null) {

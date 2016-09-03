@@ -1,5 +1,4 @@
 import React                from 'react';
-import PureRenderMixin      from 'react-addons-pure-render-mixin';
 import { merge }            from 'timm';
 import {
   COLORS,
@@ -28,7 +27,7 @@ const LIST_SEPARATOR_KEY = '__SEPARATOR__';
 // ==========================================
 // Component
 // ==========================================
-class BaseListPicker extends React.Component {
+class BaseListPicker extends React.PureComponent {
   static propTypes = {
     registerOuterRef:       React.PropTypes.func,
     items:                  React.PropTypes.array.isRequired,
@@ -56,7 +55,6 @@ class BaseListPicker extends React.Component {
 
   constructor(props) {
     super(props);
-    this.shouldComponentUpdate = PureRenderMixin.shouldComponentUpdate.bind(this);
     bindAll(this, [
       'registerOuterRef',
       'renderItem',

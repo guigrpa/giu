@@ -1,5 +1,4 @@
 import React                from 'react';
-import PureRenderMixin      from 'react-addons-pure-render-mixin';
 import { merge }            from 'timm';
 import {
   COLORS,
@@ -61,7 +60,7 @@ class ModalExample extends React.Component {
 }
 ```
 -- */
-class Modal extends React.Component {
+class Modal extends React.PureComponent {
   static propTypes = {
     id:                     React.PropTypes.string,
     title:                  React.PropTypes.string,
@@ -78,7 +77,6 @@ class Modal extends React.Component {
 
   constructor(props) {
     super(props);
-    this.shouldComponentUpdate = PureRenderMixin.shouldComponentUpdate.bind(this);
     bindAll(this, [
       'onKeyDown',
       'onClickOuter',
