@@ -1,4 +1,4 @@
-/* eslint-disable strict, indent, max-len, quote-props */
+/* eslint-disable strict, indent, max-len, quote-props, quotes, no-underscore-dangle */
 'use strict';
 
 // ===============================================

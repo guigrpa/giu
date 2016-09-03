@@ -372,7 +372,7 @@ class TimePickerAnalog extends React.PureComponent {
 // WatchFace
 // ==========================================
 /* eslint-disable react/no-multi-comp */
-class WatchFace extends React.Component {
+class WatchFace extends React.PureComponent {
   static propTypes = {
     radius:                 React.PropTypes.number.isRequired,
   };

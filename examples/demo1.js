@@ -1,5 +1,6 @@
 /* eslint-disable no-console, no-alert, max-len */
 /* eslint-disable react/prop-types, react/no-multi-comp, react/jsx-no-bind, react/jsx-boolean-value */
+/* eslint-disable react/prefer-stateless-function */
 import React                from 'react';
 import ReactDOM             from 'react-dom';
 import ReactDOMServer       from 'react-dom/server';

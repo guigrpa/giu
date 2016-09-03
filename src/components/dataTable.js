@@ -1,5 +1,4 @@
 import React                from 'react';
-import { bindAll }          from '../gral/helpers';
 import VirtualScroller      from './virtualScroller';
 
 const PropTypeColumn = React.PropTypes.shape({
@@ -143,12 +142,12 @@ class DataTable extends React.PureComponent {
 // ===============================================================
 // Styles
 // ===============================================================
-const style = {
-  handle: {
-    marginRight: 10,
-    cursor: 'pointer',
-  },
-};
+// const style = {
+//   handle: {
+//     marginRight: 10,
+//     cursor: 'pointer',
+//   },
+// };
 
 // ===============================================================
 // Row
@@ -164,9 +163,9 @@ class DataTableRow extends React.PureComponent {
 
   render() {
     const { id, item } = this.props;
-    console.log(`Rendering row ${id}...`);
+    // console.log(`Rendering row ${id}...`);
     return (
-      <div style={{ height: DEBUG_HEIGHTS[parseInt(id) % DEBUG_HEIGHTS.length] }}>
+      <div style={{ height: DEBUG_HEIGHTS[parseInt(id, 10) % DEBUG_HEIGHTS.length] }}>
         {item.id} - {item.name}
       </div>
     );
