@@ -4,7 +4,7 @@
 import React                from 'react';
 import ReactDOM             from 'react-dom';
 import ReactDOMServer       from 'react-dom/server';
-import { merge }            from 'timm';
+import { merge, setIn }     from 'timm';
 import faker                from 'faker';
 require('babel-polyfill');
 import {
@@ -78,7 +78,7 @@ const notify = (msg) => createNotif({
 // -----------------------------------------------
 // Examples
 // -----------------------------------------------
-const TEST = 0;
+const TEST = 7;
 const EVERYTHING = true;
 const App = () => {
   let out;
@@ -612,7 +612,7 @@ class ProgressExample extends React.Component {
   }
 }
 
-const DATA_ITEMS = {};
+let DATA_ITEMS = {};
 const DATA_ITEM_IDS = [];
 for (let i = 0; i < 1000; i++) {
   DATA_ITEMS[i] = {
@@ -631,7 +631,12 @@ class DataTableExample extends React.Component {
   render() {
     return (
       <div style={style.example}>
-        <ExampleLabel>DataTable</ExampleLabel>
+        <ExampleLabel>
+          DataTable
+        </ExampleLabel>
+        <Button onClick={() => this.onClickChangeRowHeight()}>
+          Change row height from within
+        </Button><br /><br />
         <DataTable
           itemsById={DATA_ITEMS}
           cols={DATA_TABLE_COLS}
@@ -642,6 +647,13 @@ class DataTableExample extends React.Component {
         />
       </div>
     );
+  }
+
+  onClickChangeRowHeight() {
+    const text = faker.lorem.sentences(Math.random(4) + 6);
+    console.log(text);
+    DATA_ITEMS = setIn(DATA_ITEMS, [DATA_ITEM_IDS[1], 'name'], text);
+    this.forceUpdate();
   }
 }
 

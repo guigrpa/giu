@@ -1,6 +1,7 @@
 # Roadmap
 
-- [ ] DATATABLE, using react-virtualized
+- [ ] DATATABLE
+  - [ ] Does request animation frame bring some benefit?
 - [ ] Check Select support for language changes
 
 Long-standing:

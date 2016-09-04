@@ -151,9 +151,12 @@ class VirtualScroller extends React.PureComponent {
       onChangeHeight = this.onChangeRowHeight;
       if (!this.cachedHeights[id]) this.pendingHeights.push(id);
     }
+    const childProps = { id, item };
     return (
       <VerticalManager key={id}
         id={id}
+        childProps={childProps}
+        ChildComponent={RowComponent}
         top={top}
         rowHeight={rowHeight}
         onChangeHeight={onChangeHeight}

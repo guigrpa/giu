@@ -12,11 +12,16 @@ import throttle             from 'lodash/throttle';
 class VerticalManager extends React.Component {
   static propTypes = {
     id:                     React.PropTypes.string.isRequired,
-    children:               React.PropTypes.any,
+    childProps:             React.PropTypes.object,
+    ChildComponent:         React.PropTypes.any.isRequired,
     onChangeHeight:         React.PropTypes.func,
     top:                    React.PropTypes.number,
     rowHeight:              React.PropTypes.number,
-  }
+  };
+
+  static defaultProps = {
+    childProps:             {},
+  };
 
   constructor(props) {
     super(props);
@@ -48,10 +53,17 @@ class VerticalManager extends React.Component {
     }
   }
 
+  // ===============================================================
+  // Render
+  // ===============================================================
   render() {
+    const { ChildComponent, childProps } = this.props;
     return (
       <div ref="container" style={style.outer(this.props)}>
-        {this.props.children}
+        <ChildComponent
+          {...childProps}
+          onChangeHeight={this.measureHeight}
+        />
       </div>
     );
   }
@@ -67,8 +79,9 @@ const style = {
     top,
     left: 0,
     right: 0,
-    height: rowHeight,
-    overflowY: rowHeight != null ? 'hidden' : undefined,
+    transition: 'top 300ms'
+    // height: rowHeight,
+    // overflowY: rowHeight != null ? 'hidden' : undefined,
   }),
 };
 

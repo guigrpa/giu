@@ -159,18 +159,34 @@ class DataTableRow extends React.PureComponent {
   static propTypes = {
     id:                     React.PropTypes.string.isRequired,
     item:                   React.PropTypes.object.isRequired,
+    onChangeHeight:         React.PropTypes.func,
   };
+
+  componentDidUpdate() {
+    const { onChangeHeight } = this.props;
+    console.log(`Row ${this.props.id} didUpdate`)
+    if (onChangeHeight) onChangeHeight();
+  }
 
   render() {
     const { id, item } = this.props;
-    // console.log(`Rendering row ${id}...`);
+    console.log(`Rendering row ${id}...`);
     return (
-      <div style={{ height: DEBUG_HEIGHTS[parseInt(id, 10) % DEBUG_HEIGHTS.length] }}>
+      <div style={styleRow.outer(this.props)}>
         {item.id} - {item.name}
       </div>
     );
   }
 }
+
+// ===============================================================
+// Styles
+// ===============================================================
+const styleRow = {
+  outer: ({ id }) => ({
+    minHeight: DEBUG_HEIGHTS[parseInt(id, 10) % DEBUG_HEIGHTS.length],
+  }),
+};
 
 
 // ===============================================================
