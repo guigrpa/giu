@@ -20,7 +20,7 @@ import {
   Modals, Modal, modalPush, modalPop,
   Notifications, Notification, notify as createNotif,
   Hints, HintScreen, hintDefine, hintShow, hintReset, hintDisableAll,
-  DataTable,
+  DataTable, VirtualScroller,
   hoverable,
   flexContainer, flexItem, boxWithShadow,
   cancelEvent,
@@ -158,6 +158,7 @@ const App = () => {
     case 7:
       out = (
         <div>
+          <Floats />
           <DataTableExample />
         </div>
       );
@@ -619,12 +620,14 @@ for (let i = 0; i < 1000; i++) {
     id: String(i),
     name: faker.name.findName(),
     phone: faker.phone.phoneNumber(),
+    notes: '',
   };
   DATA_ITEM_IDS.push(String(i));
 }
 const DATA_TABLE_COLS = [
   { attr: 'name' },
   { attr: 'phone' },
+  { attr: 'notes' },
 ];
 
 class DataTableExample extends React.Component {
@@ -634,26 +637,35 @@ class DataTableExample extends React.Component {
         <ExampleLabel>
           DataTable
         </ExampleLabel>
-        <Button onClick={() => this.onClickChangeRowHeight()}>
-          Change row height from within
-        </Button><br /><br />
         <DataTable
           itemsById={DATA_ITEMS}
           cols={DATA_TABLE_COLS}
           shownIds={DATA_ITEM_IDS}
-          height={250}
+          height={200}
           // rowHeight={40}
           // uniformRowHeight
         />
+        {false && <VirtualScroller
+          itemsById={DATA_ITEMS}
+          shownIds={DATA_ITEM_IDS}
+          RowComponent={DataTableExampleRow}
+          height={200}
+        />}
       </div>
     );
   }
+}
 
-  onClickChangeRowHeight() {
-    const text = faker.lorem.sentences(Math.random(4) + 6);
-    console.log(text);
-    DATA_ITEMS = setIn(DATA_ITEMS, [DATA_ITEM_IDS[1], 'name'], text);
-    this.forceUpdate();
+class DataTableExampleRow extends React.Component {
+  render() {
+    return (
+      <div style={flexContainer('row')}>
+        <div style={{ width: 40 }}>{this.props.id}</div>
+        <div style={flexItem(1)}>
+          <Textarea onChange={() => setImmediate(this.props.onMayHaveChangedHeight)} />
+        </div>
+      </div>
+    )
   }
 }
 
