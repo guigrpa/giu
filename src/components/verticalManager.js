@@ -14,7 +14,7 @@ class VerticalManager extends React.Component {
     id:                     React.PropTypes.string.isRequired,
     childProps:             React.PropTypes.object,
     ChildComponent:         React.PropTypes.any.isRequired,
-    onChangeHeight:         React.PropTypes.func,
+    onChangeHeight:         React.PropTypes.func.isRequired,
     top:                    React.PropTypes.number,
     rowHeight:              React.PropTypes.number,
   };
@@ -43,7 +43,6 @@ class VerticalManager extends React.Component {
   }
 
   measureHeight() {
-    if (!this.props.onChangeHeight) return;
     const container = this.refs.container;
     if (!container) return;
     const height = container.clientHeight;
@@ -62,7 +61,7 @@ class VerticalManager extends React.Component {
       <div ref="container" style={style.outer(this.props)}>
         <ChildComponent
           {...childProps}
-          onChangeHeight={this.measureHeight}
+          onMayHaveChangedHeight={this.measureHeight}
         />
       </div>
     );
@@ -73,15 +72,21 @@ class VerticalManager extends React.Component {
 // Styles
 // ===============================================================
 const style = {
-  outer: ({ top, rowHeight }) => ({
+  outer: ({ top }) => ({
     position: 'absolute',
     opacity: top != null ? 1 : 0,
     top,
     left: 0,
     right: 0,
-    transition: 'top 300ms'
-    // height: rowHeight,
-    // overflowY: rowHeight != null ? 'hidden' : undefined,
+
+    // Important transition, no only aesthetically. When a row's contents changes height
+    // and it is not shown because it is above the viewport, wheneve the user scrolls up
+    // to that row it will get rendered, report on its new height, and all of the subsequent
+    // rows will get repositioned. This should happen slowly to avoid confusing jumps
+    // while scrolling
+    // TODO: maybe disable this transition when list is draggable (react-sortable-hoc already
+    // includes transition CSS)
+    transition: 'top 300ms',
   }),
 };
 

@@ -159,13 +159,13 @@ class DataTableRow extends React.PureComponent {
   static propTypes = {
     id:                     React.PropTypes.string.isRequired,
     item:                   React.PropTypes.object.isRequired,
-    onChangeHeight:         React.PropTypes.func,
+    onMayHaveChangedHeight: React.PropTypes.func,
   };
 
   componentDidUpdate() {
-    const { onChangeHeight } = this.props;
-    console.log(`Row ${this.props.id} didUpdate`)
-    if (onChangeHeight) onChangeHeight();
+    const { onMayHaveChangedHeight } = this.props;
+    console.log(`Row ${this.props.id} didUpdate`);
+    if (onMayHaveChangedHeight) onMayHaveChangedHeight();
   }
 
   render() {
