@@ -119,6 +119,10 @@ class DataTable extends React.PureComponent {
   // Render
   // ===============================================================
   render() {
+    const commonRowProps = {
+      cols: this.props.cols,
+      selectedIds: this.props.selectedIds,
+    };
     return (
       <div>
         {/* TODO: Header */}
@@ -126,6 +130,7 @@ class DataTable extends React.PureComponent {
           itemsById={this.props.itemsById}
           shownIds={this.state.shownIds}
           RowComponent={DataTableRow}
+          commonRowProps={commonRowProps}
           height={this.props.height}
           width={this.props.width}
           rowHeight={this.props.rowHeight}

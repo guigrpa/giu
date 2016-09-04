@@ -26,12 +26,12 @@ class VerticalManager extends React.Component {
   constructor(props) {
     super(props);
     bindAll(this, ['measureHeight']);
-    this.measureHeight = throttle(this.measureHeight.bind(this), 200);
+    this.throttledMeasureHeight = throttle(this.measureHeight.bind(this), 200);
   }
 
   componentDidMount() {
     this.measureHeight();
-    window.addEventListener('resize', this.measureHeight);
+    window.addEventListener('resize', this.throttledMeasureHeight);
   }
 
   componentDidUpdate() {
@@ -39,7 +39,7 @@ class VerticalManager extends React.Component {
   }
 
   componentWillUnmount() {
-    window.removeEventListener('resize', this.measureHeight);
+    window.removeEventListener('resize', this.throttledMeasureHeight);
   }
 
   measureHeight() {

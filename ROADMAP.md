@@ -1,7 +1,8 @@
 # Roadmap
 
-- [ ] DATATABLE
+- [ ] DATATABLE/VIRTUALSCROLLER
   - [ ] Does request animation frame bring some benefit?
+  - [ ] Add prop: list of rows that should NOT be removed even when out of sight (e.g. editing)
 - [ ] Check Select support for language changes
 
 Long-standing:

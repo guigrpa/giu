@@ -1,3 +1,4 @@
+import { merge }            from 'timm';
 import React                from 'react';
 import throttle             from 'lodash/throttle';
 import { bindAll }          from '../gral/helpers';
@@ -13,6 +14,7 @@ class VirtualScroller extends React.PureComponent {
     itemsById:              React.PropTypes.object,
     shownIds:               React.PropTypes.arrayOf(React.PropTypes.string),
     RowComponent:           React.PropTypes.any.isRequired,
+    commonRowProps:         React.PropTypes.any,
 
     height:                 React.PropTypes.number,
     width:                  React.PropTypes.number,
@@ -139,7 +141,7 @@ class VirtualScroller extends React.PureComponent {
   }
 
   renderRow(idx, id) {
-    const { itemsById, RowComponent } = this.props;
+    const { itemsById, RowComponent, commonRowProps } = this.props;
     const { rowHeight } = this;
     const item = itemsById[id];
     let top;
@@ -151,12 +153,12 @@ class VirtualScroller extends React.PureComponent {
       onChangeHeight = this.onChangeRowHeight;
       if (!this.cachedHeights[id]) this.pendingHeights.push(id);
     }
-    const childProps = { id, item };
+    const childProps = merge({ id, item }, commonRowProps);
     return (
       <VerticalManager key={id}
         id={id}
-        childProps={childProps}
         ChildComponent={RowComponent}
+        childProps={childProps}
         top={top}
         rowHeight={rowHeight}
         onChangeHeight={onChangeHeight}
