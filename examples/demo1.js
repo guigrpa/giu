@@ -676,8 +676,8 @@ class DataTableExample extends React.Component {
       <div style={style.example}>
         <ExampleLabel>
           DataTable (sort, filter, select, fetch more...) + VirtualScroller (only render
-          visible rows, with dynamic+unknown, uniform+unknown, uniform+known row heights)<br />
-         {this.state.fFetching && <Spinner />}
+          visible rows, with dynamic+unknown, uniform+unknown, uniform+known row heights)
+          {' '}{this.state.fFetching && <Spinner />}
         </ExampleLabel>
 
         <div><Button onClick={() => this.toggleLang()}>Toggle lang</Button></div>

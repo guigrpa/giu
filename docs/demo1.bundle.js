@@ -1252,7 +1252,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	          ExampleLabel,
 	          null,
 	          'DataTable (sort, filter, select, fetch more...) + VirtualScroller (only render visible rows, with dynamic+unknown, uniform+unknown, uniform+known row heights)',
-	          _react2.default.createElement('br', null),
+	          ' ',
 	          this.state.fFetching && _react2.default.createElement(_src.Spinner, null)
 	        ),
 	        _react2.default.createElement(
