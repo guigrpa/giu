@@ -32,12 +32,12 @@ class VerticalManager extends React.Component {
   }
 
   componentDidMount() {
-    this.measureHeight();
+    this.asyncMeasureHeight();
     window.addEventListener('resize', this.throttledMeasureHeight);
   }
 
   componentDidUpdate() {
-    this.measureHeight();
+    this.asyncMeasureHeight();
   }
 
   componentWillUnmount() {

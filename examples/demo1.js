@@ -623,7 +623,7 @@ const sampleDataTableItems = (num, idStart = 0) => {
       name: faker.name.findName(),
       confirmed: Math.random() > 0.5,
       phone: faker.phone.phoneNumber(),
-      notes: faker.lorem.sentences(2),
+      notes: faker.lorem.sentences(2).split('\n').join(' '),
     };
   }
   return out;

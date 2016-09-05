@@ -146,13 +146,13 @@ const style = {
     top: 0,
     left: 0,
     width: '100%',
-    opacity: 0,
+    opacity: 1, // 0,
     padding: 2,
     border: '1px solid red',
     color: 'red',
     cursor: 'beam',
     whiteSpace: 'pre-wrap',
-    zIndex: -50,
+    zIndex: +50, // -50,
 
     // If the user specifies a `maxHeight`, we don't want
     // the (hidden) text to overflow vertically
