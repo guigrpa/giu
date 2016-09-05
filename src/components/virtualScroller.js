@@ -2,9 +2,11 @@ import { merge }            from 'timm';
 import React                from 'react';
 import throttle             from 'lodash/throttle';
 import { bindAll }          from '../gral/helpers';
+import { getScrollbarWidth } from '../gral/constants';
 import VerticalManager      from './verticalManager';
 
 const MAX_ROWS_INITIAL_RENDER = 20;
+const CHECK_SCROLLBAR_PERIOD = 500;
 
 // ===============================================================
 // Component
@@ -20,6 +22,10 @@ class VirtualScroller extends React.PureComponent {
     width:                  React.PropTypes.number,
     rowHeight:              React.PropTypes.number,   // auto-calculated if unspecified
     uniformRowHeight:       React.PropTypes.bool,
+
+    onRenderLastRow:        React.PropTypes.func,
+
+    onChangeScrollbarWidth: React.PropTypes.func,
 
     // Related to calculating the number of rows to render in a batch
     numRowsInitialRender:   React.PropTypes.number,
@@ -68,21 +74,32 @@ class VirtualScroller extends React.PureComponent {
     bindAll(this, [
       'onChangeRowHeight',
       'recalcViewport',
+      'checkScrollbar',
     ]);
     this.throttledRecalcViewport = throttle(this.recalcViewport, 200);
   }
 
   componentDidMount() {
-    this.recalcViewport();  // initial viewport measurement
     window.addEventListener('resize', this.throttledRecalcViewport);
+    this.recalcViewport();  // initial viewport measurement
+    this.checkRenderLastRow();
+    this.timerCheckScrollbar = setInterval(this.checkScrollbar, CHECK_SCROLLBAR_PERIOD);
   }
 
   componentWillUnmount() {
     window.removeEventListener('resize', this.throttledRecalcViewport);
+    if (this.timerCheckScrollbar != null) clearInterval(this.timerCheckScrollbar);
+  }
+
+  componentWillReceiveProps(nextProps) {
+    if (nextProps.shownIds !== this.props.shownIds) {
+      this.recalcTops(nextProps);
+    }
   }
 
   componentDidUpdate() {
     this.recalcViewport();
+    this.checkRenderLastRow();
   }
 
   recalcViewport() {
@@ -100,6 +117,34 @@ class VirtualScroller extends React.PureComponent {
     }
   }
 
+  checkScrollbar() {
+    if (!this.refScroller) return;
+    const { scrollHeight, clientHeight } = this.refScroller;
+    const fHasScrollbar = scrollHeight > clientHeight;
+    if (fHasScrollbar !== this.fHasScrollbar) {
+      this.fHasScrollbar = fHasScrollbar;
+      const { onChangeScrollbarWidth } = this.props;
+      if (onChangeScrollbarWidth) {
+        const scrollbarWidth = this.fHasScrollbar ? getScrollbarWidth() : 0;
+        onChangeScrollbarWidth(scrollbarWidth);
+      }
+    }
+  }
+
+  checkRenderLastRow() {
+    const { onRenderLastRow, shownIds } = this.props;
+    if (!onRenderLastRow) return;
+    const numRows = shownIds.length;
+    if (!numRows) return;
+    if (
+      this.idxLast === numRows - 1 &&
+      this.reportedLastRowRendered !== this.idxLast
+    ) {
+      this.reportedLastRowRendered = this.idxLast;
+      onRenderLastRow(shownIds[this.idxLast]);
+    }
+  }
+
   // ===============================================================
   // Render
   // ===============================================================
@@ -108,6 +153,7 @@ class VirtualScroller extends React.PureComponent {
     //   `bottom=${this.scrollBottom}]...`);
     return (
       <div ref={c => { this.refScroller = c; }}
+        className="giu-virtual-scroller"
         onScroll={this.recalcViewport}
         style={style.scroller(this.props)}
       >
@@ -160,11 +206,8 @@ class VirtualScroller extends React.PureComponent {
         ChildComponent={RowComponent}
         childProps={childProps}
         top={top}
-        rowHeight={rowHeight}
         onChangeHeight={onChangeHeight}
-      >
-        <RowComponent id={id} item={item} />
-      </VerticalManager>
+      />
     );
   }
 
@@ -186,7 +229,7 @@ class VirtualScroller extends React.PureComponent {
     }
     this.cachedHeights[id] = height;
     if (!this.pendingHeights.length) {
-      this.recalcTops();
+      this.recalcTops(this.props);
       this.forceUpdate();
     }
   }
@@ -301,9 +344,9 @@ class VirtualScroller extends React.PureComponent {
     this.idxLast = idxLast != null ? Math.min(idxLast, numRows - 1) : undefined;
   }
 
-  recalcTops() {
+  recalcTops(props) {
     // console.log('Recalculating tops...')
-    const { shownIds } = this.props;
+    const { shownIds } = props;
     let top = 0;
     const numRows = shownIds.length;
     let i;
@@ -335,7 +378,8 @@ const style = {
     position: 'relative',
     backgroundColor: 'aliceblue',
     height, width,
-    overflow: 'auto',
+    overflowY: 'auto',
+    overflowX: 'hidden',
   }),
   sizer: totalHeight => ({
     position: 'absolute',

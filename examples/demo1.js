@@ -4,7 +4,7 @@
 import React                from 'react';
 import ReactDOM             from 'react-dom';
 import ReactDOMServer       from 'react-dom/server';
-import { merge, setIn }     from 'timm';
+import { merge }            from 'timm';
 import faker                from 'faker';
 require('babel-polyfill');
 import {
@@ -613,59 +613,81 @@ class ProgressExample extends React.Component {
   }
 }
 
-let DATA_ITEMS = {};
-const DATA_ITEM_IDS = [];
-for (let i = 0; i < 1000; i++) {
-  DATA_ITEMS[i] = {
-    id: String(i),
-    name: faker.name.findName(),
-    phone: faker.phone.phoneNumber(),
-    notes: '',
-  };
-  DATA_ITEM_IDS.push(String(i));
-}
+const sampleDataTableItems = (num, idStart = 0) => {
+  const out = {};
+  for (let i = 0; i < num; i++) {
+    const id = String(idStart + i);
+    out[id] = {
+      id,
+      name: faker.name.findName(),
+      phone: faker.phone.phoneNumber(),
+      notes: faker.lorem.sentences(2),
+    };
+  }
+  return out;
+};
+
 const DATA_TABLE_COLS = [
-  { attr: 'name' },
-  { attr: 'phone' },
-  { attr: 'notes' },
+  { attr: 'name', minWidth: 200 },
+  {
+    attr: 'notes',
+    flexGrow: 1,
+    minWidth: 200,
+    render: ({ item, onMayHaveChangedHeight }) =>
+      <Textarea value={item.notes} onChange={onMayHaveChangedHeight} />,
+  },
+  { attr: 'phone', minWidth: 150 },
 ];
 
 class DataTableExample extends React.Component {
+  constructor(props) {
+    super(props);
+    const numItems = 200;
+    const itemsById = sampleDataTableItems(numItems);
+    this.state = {
+      numItems,
+      itemsById,
+      shownIds: Object.keys(itemsById),
+      fFetching: false,
+    };
+    this.fetchMore = this.fetchMore.bind(this);
+  }
+
   render() {
     return (
       <div style={style.example}>
         <ExampleLabel>
-          DataTable
+          DataTable {this.state.fFetching && <Spinner />}
         </ExampleLabel>
         <DataTable
-          itemsById={DATA_ITEMS}
+          itemsById={this.state.itemsById}
           cols={DATA_TABLE_COLS}
-          shownIds={DATA_ITEM_IDS}
+          shownIds={this.state.shownIds}
           height={200}
           // rowHeight={40}
           // uniformRowHeight
+          fetchMoreItems={this.fetchMore}
+          fetching={this.state.fFetching}
         />
-        {false && <VirtualScroller
-          itemsById={DATA_ITEMS}
-          shownIds={DATA_ITEM_IDS}
-          RowComponent={DataTableExampleRow}
-          height={200}
-        />}
       </div>
     );
   }
-}
 
-class DataTableExampleRow extends React.Component {
-  render() {
-    return (
-      <div style={flexContainer('row')}>
-        <div style={{ width: 40 }}>{this.props.id}</div>
-        <div style={flexItem(1)}>
-          <Textarea onChange={() => setImmediate(this.props.onMayHaveChangedHeight)} />
-        </div>
-      </div>
-    )
+  fetchMore(id) {
+    console.log(`Fetch items after ${id}`);
+    if (this.state.numItems > 400) return;
+    this.setState({ fFetching: true });
+    setTimeout(() => {
+      const numNewItems = 20;
+      const newItems = sampleDataTableItems(numNewItems, this.state.numItems);
+      const itemsById = merge(this.state.itemsById, newItems);
+      this.setState({
+        numItems: this.state.numItems + numNewItems,
+        itemsById,
+        shownIds: Object.keys(itemsById),
+        fFetching: false,
+      });
+    }, 800);
   }
 }
 

@@ -14,9 +14,8 @@ class VerticalManager extends React.Component {
     id:                     React.PropTypes.string.isRequired,
     childProps:             React.PropTypes.object,
     ChildComponent:         React.PropTypes.any.isRequired,
-    onChangeHeight:         React.PropTypes.func.isRequired,
+    onChangeHeight:         React.PropTypes.func,
     top:                    React.PropTypes.number,
-    rowHeight:              React.PropTypes.number,
   };
 
   static defaultProps = {
@@ -25,7 +24,10 @@ class VerticalManager extends React.Component {
 
   constructor(props) {
     super(props);
-    bindAll(this, ['measureHeight']);
+    bindAll(this, [
+      'measureHeight',
+      'asyncMeasureHeight',
+    ]);
     this.throttledMeasureHeight = throttle(this.measureHeight.bind(this), 200);
   }
 
@@ -43,13 +45,23 @@ class VerticalManager extends React.Component {
   }
 
   measureHeight() {
+    const { onChangeHeight } = this.props;
+    if (!onChangeHeight) return;
     const container = this.refs.container;
     if (!container) return;
     const height = container.clientHeight;
     if (height !== this.height) {
       this.height = height;
-      this.props.onChangeHeight(this.props.id, height);
+      onChangeHeight(this.props.id, height);
     }
+  }
+
+  // Some components (e.g. Textarea) are too fast reporting that
+  // they have changed, before the DOM has actually been updated
+  // and the new height can be measured. Wait for the next tick
+  // for things to stabilise before measuring.
+  asyncMeasureHeight() {
+    setImmediate(this.measureHeight);
   }
 
   // ===============================================================
@@ -61,9 +73,12 @@ class VerticalManager extends React.Component {
       <div ref="container" style={style.outer(this.props)}>
         <ChildComponent
           {...childProps}
-          onMayHaveChangedHeight={this.measureHeight}
+          onMayHaveChangedHeight={this.asyncMeasureHeight}
         />
       </div>
+      // Typical example of `onMayHaveChangedHeight`: in the `render`
+      // property of a given DataTable column:
+      // <Textarea onChange={this.props.onMayHaveChangedHeight} />
     );
   }
 }

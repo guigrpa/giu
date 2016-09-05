@@ -1,32 +1,12 @@
 import React                from 'react';
 import VirtualScroller      from './virtualScroller';
-
-const PropTypeColumn = React.PropTypes.shape({
-  attr:                     React.PropTypes.string.isRequired,
-
-  // Label
-  label:                    React.PropTypes.oneOfType([
-    React.PropTypes.string,
-    React.PropTypes.func,
-  ]),
-  labelLevel:               React.PropTypes.number,  // useful for very narrow cols
-
-  // Contents
-  rawValue:                 React.PropTypes.func,
-  filterValue:              React.PropTypes.func,
-  sortValue:                React.PropTypes.func,
-  render:                   React.PropTypes.func,
-
-  // Functionalities
-  isSortable:               React.PropTypes.bool,  // true by default
-  isSortableDescending:     React.PropTypes.bool,  // true by default
-
-  // Appearance
-  isHidden:                 React.PropTypes.bool,
-  minWidth:                 React.PropTypes.number,
-  flexGrow:                 React.PropTypes.number,
-  flexShrink:               React.PropTypes.number,
-});
+import { bindAll }          from '../gral/helpers';
+import {
+  DataTableHeader,
+  DataTableRow,
+  DATA_TABLE_COLUMN_PROP_TYPES,
+  FOOTER_ROW,
+}                           from './dataTableRow';
 
 const SORT_MANUALLY = '__SORT_MANUALLY__';
 
@@ -36,7 +16,7 @@ const SORT_MANUALLY = '__SORT_MANUALLY__';
 class DataTable extends React.PureComponent {
   static propTypes = {
     itemsById:              React.PropTypes.object,
-    cols:                   React.PropTypes.arrayOf(PropTypeColumn),
+    cols:                   React.PropTypes.arrayOf(DATA_TABLE_COLUMN_PROP_TYPES),
     idAttr:                 React.PropTypes.string,
 
     shownIds:               React.PropTypes.arrayOf(React.PropTypes.string),
@@ -45,23 +25,24 @@ class DataTable extends React.PureComponent {
     filterValue:            React.PropTypes.string,
 
     // Sorting
-    areHeadersClickable:    React.PropTypes.bool,
-    isManuallySortable:     React.PropTypes.bool,     // dragging possible (adds dragging col)
-    onChangeSort:           React.PropTypes.func,     // N/A if (!areHeadersClickable)
+    headerClickForSorting:  React.PropTypes.bool,
+    allowManualSorting:     React.PropTypes.bool,     // dragging possible (adds dragging col)
+    onChangeSort:           React.PropTypes.func,     // N/A if (!headerClickForSorting)
     sortBy:                 React.PropTypes.string,
     sortDescending:         React.PropTypes.bool,
 
     // Selection
     selectedIds:            React.PropTypes.arrayOf(React.PropTypes.string),
-    areRowsSelectable:      React.PropTypes.bool,
-    hasMultipleSelection:   React.PropTypes.bool,
+    allowSelect:            React.PropTypes.bool,
+    multipleSelection:      React.PropTypes.bool,
     onChangeSelection:      React.PropTypes.func,
-    isCopyAllowed:          React.PropTypes.bool,
-    isCutAllowed:           React.PropTypes.bool,
+    allowCopy:              React.PropTypes.bool,
+    allowCut:               React.PropTypes.bool,
     onCopyCut:              React.PropTypes.func,
 
     // Fetching
     fetchMoreItems:         React.PropTypes.func,
+    fetching:               React.PropTypes.bool,
 
     // Styles
     height:                 React.PropTypes.number,
@@ -84,27 +65,34 @@ class DataTable extends React.PureComponent {
 
     filterValue:            '',
 
-    areHeadersClickable:    true,
-    isManuallySortable:     true,
+    headerClickForSorting:  true,
+    allowManualSorting:     true,
     sortBy:                 null,
     sortDescending:         false,
 
     selectedIds:            [],
-    areRowsSelectable:      false,
-    hasMultipleSelection:   false,
+    allowSelect:            false,
+    multipleSelection:      false,
     isCopyAllowed:          true,
     isCutAllowed:           false,
+
+    fetching:               false,
   };
 
   constructor(props) {
     super(props);
     this.state = {
+      scrollbarWidth: 0,
       // State initialised by outer props, then free to change by default
       shownIds: props.shownIds,
       selectedIds: props.selectedIds,
       sortBy: props.sortBy,
       sortDescending: props.sortDescending,
     };
+    bindAll(this, [
+      'onRenderLastRow',
+      'onChangeScrollbarWidth',
+    ]);
   }
 
   componentWillReceiveProps(nextProps) {
@@ -119,18 +107,26 @@ class DataTable extends React.PureComponent {
   // Render
   // ===============================================================
   render() {
+    const { cols } = this.props;
     const commonRowProps = {
-      cols: this.props.cols,
+      cols,
       selectedIds: this.props.selectedIds,
     };
+    const shownIds = this.props.fetching ?
+      this.state.shownIds.concat(FOOTER_ROW) : this.state.shownIds;
     return (
-      <div>
-        {/* TODO: Header */}
+      <div className="giu-data-table">
+        <DataTableHeader
+          cols={cols}
+          scrollbarWidth={this.state.scrollbarWidth}
+        />
         <VirtualScroller
           itemsById={this.props.itemsById}
-          shownIds={this.state.shownIds}
+          shownIds={shownIds}
           RowComponent={DataTableRow}
           commonRowProps={commonRowProps}
+          onRenderLastRow={this.onRenderLastRow}
+          onChangeScrollbarWidth={this.onChangeScrollbarWidth}
           height={this.props.height}
           width={this.props.width}
           rowHeight={this.props.rowHeight}
@@ -141,6 +137,20 @@ class DataTable extends React.PureComponent {
         />
       </div>
     );
+  }
+
+  // ===============================================================
+  // Event handlers
+  // ===============================================================
+  onRenderLastRow(id) {
+    if (id === FOOTER_ROW) return;
+    const { fetchMoreItems } = this.props;
+    if (!fetchMoreItems) return;
+    fetchMoreItems(id);
+  }
+
+  onChangeScrollbarWidth(scrollbarWidth) {
+    this.setState({ scrollbarWidth });
   }
 }
 
@@ -153,46 +163,6 @@ class DataTable extends React.PureComponent {
 //     cursor: 'pointer',
 //   },
 // };
-
-// ===============================================================
-// Row
-// ===============================================================
-const DEBUG_HEIGHTS = [20, 40, 25, 36, 15, 23];
-// const DEBUG_HEIGHTS = [25];
-
-class DataTableRow extends React.PureComponent {
-  static propTypes = {
-    id:                     React.PropTypes.string.isRequired,
-    item:                   React.PropTypes.object.isRequired,
-    onMayHaveChangedHeight: React.PropTypes.func,
-  };
-
-  componentDidUpdate() {
-    const { onMayHaveChangedHeight } = this.props;
-    console.log(`Row ${this.props.id} didUpdate`);
-    if (onMayHaveChangedHeight) onMayHaveChangedHeight();
-  }
-
-  render() {
-    const { id, item } = this.props;
-    console.log(`Rendering row ${id}...`);
-    return (
-      <div style={styleRow.outer(this.props)}>
-        {item.id} - {item.name}
-      </div>
-    );
-  }
-}
-
-// ===============================================================
-// Styles
-// ===============================================================
-const styleRow = {
-  outer: ({ id }) => ({
-    minHeight: DEBUG_HEIGHTS[parseInt(id, 10) % DEBUG_HEIGHTS.length],
-  }),
-};
-
 
 // ===============================================================
 // Helper components
