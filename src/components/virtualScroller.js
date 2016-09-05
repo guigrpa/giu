@@ -6,7 +6,7 @@ import { getScrollbarWidth } from '../gral/constants';
 import VerticalManager      from './verticalManager';
 
 const MAX_ROWS_INITIAL_RENDER = 20;
-const CHECK_SCROLLBAR_PERIOD = 500;
+const CHECK_SCROLLBAR_PERIOD = 400;
 
 // ===============================================================
 // Component

@@ -1,3 +1,4 @@
+import { merge }            from 'timm';
 import React                from 'react';
 import VirtualScroller      from './virtualScroller';
 import { bindAll }          from '../gral/helpers';
@@ -17,6 +18,7 @@ class DataTable extends React.PureComponent {
   static propTypes = {
     itemsById:              React.PropTypes.object,
     cols:                   React.PropTypes.arrayOf(DATA_TABLE_COLUMN_PROP_TYPES),
+    lang:                   React.PropTypes.string,
     idAttr:                 React.PropTypes.string,
 
     shownIds:               React.PropTypes.arrayOf(React.PropTypes.string),
@@ -89,6 +91,7 @@ class DataTable extends React.PureComponent {
       sortBy: props.sortBy,
       sortDescending: props.sortDescending,
     };
+    this.calcMaxLabelLevel(props.cols);
     bindAll(this, [
       'onRenderLastRow',
       'onChangeScrollbarWidth',
@@ -96,35 +99,51 @@ class DataTable extends React.PureComponent {
   }
 
   componentWillReceiveProps(nextProps) {
-    const { shownIds, sortBy, sortDescending, selectedIds } = nextProps;
+    const { shownIds, sortBy, sortDescending, selectedIds, cols } = nextProps;
     if (shownIds !== this.props.shownIds) this.setState({ shownIds });
     if (selectedIds !== this.props.selectedIds) this.setState({ selectedIds });
     if (sortBy !== this.props.sortBy) this.setState({ sortBy });
     if (sortDescending !== this.props.sortDescending) this.setState({ sortDescending });
+    if (cols !== this.props.cols) this.calcMaxLabelLevel(cols);
+  }
+
+  calcMaxLabelLevel(cols) {
+    let maxLabelLevel = 0;
+    for (let i = 0; i < cols.length; i++) {
+      const labelLevel = cols[i].labelLevel;
+      if (labelLevel > maxLabelLevel) maxLabelLevel = labelLevel;
+    }
+    this.maxLabelLevel = maxLabelLevel;
   }
 
   // ===============================================================
   // Render
   // ===============================================================
   render() {
-    const { cols } = this.props;
-    const commonRowProps = {
+    const { cols, lang } = this.props;
+    this.commonRowProps = merge(this.commonRowProps || {}, {
       cols,
+      lang,
       selectedIds: this.props.selectedIds,
-    };
+    });
     const shownIds = this.props.fetching ?
       this.state.shownIds.concat(FOOTER_ROW) : this.state.shownIds;
     return (
-      <div className="giu-data-table">
+      <div
+        className="giu-data-table"
+        style={style.outer}
+      >
         <DataTableHeader
           cols={cols}
+          lang={lang}
+          maxLabelLevel={this.maxLabelLevel}
           scrollbarWidth={this.state.scrollbarWidth}
         />
         <VirtualScroller
           itemsById={this.props.itemsById}
           shownIds={shownIds}
           RowComponent={DataTableRow}
-          commonRowProps={commonRowProps}
+          commonRowProps={this.commonRowProps}
           onRenderLastRow={this.onRenderLastRow}
           onChangeScrollbarWidth={this.onChangeScrollbarWidth}
           height={this.props.height}
@@ -157,12 +176,12 @@ class DataTable extends React.PureComponent {
 // ===============================================================
 // Styles
 // ===============================================================
-// const style = {
-//   handle: {
-//     marginRight: 10,
-//     cursor: 'pointer',
-//   },
-// };
+const style = {
+  outer: {
+    maxWidth: '100%',
+    overflowX: 'hidden',
+  },
+};
 
 // ===============================================================
 // Helper components

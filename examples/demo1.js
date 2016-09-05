@@ -613,6 +613,7 @@ class ProgressExample extends React.Component {
   }
 }
 
+let dataTableLang = false;
 const sampleDataTableItems = (num, idStart = 0) => {
   const out = {};
   for (let i = 0; i < num; i++) {
@@ -620,6 +621,7 @@ const sampleDataTableItems = (num, idStart = 0) => {
     out[id] = {
       id,
       name: faker.name.findName(),
+      confirmed: Math.random() > 0.5,
       phone: faker.phone.phoneNumber(),
       notes: faker.lorem.sentences(2),
     };
@@ -628,15 +630,31 @@ const sampleDataTableItems = (num, idStart = 0) => {
 };
 
 const DATA_TABLE_COLS = [
-  { attr: 'name', minWidth: 200 },
+  {
+    attr: 'name',
+    label: () => (dataTableLang ? 'Nombre' : 'Name'),
+    minWidth: 200,
+  },
+  {
+    attr: 'confirmed',
+    labelLevel: 1,
+    label: () => (dataTableLang ? 'Confirmado' : 'Confirmed'),
+    minWidth: 30,
+    render: ({ item }) => <Checkbox value={item.confirmed} disabled />,
+  },
   {
     attr: 'notes',
+    label: () => (dataTableLang ? 'Notas' : 'Notes'),
     flexGrow: 1,
     minWidth: 200,
     render: ({ item, onMayHaveChangedHeight }) =>
       <Textarea value={item.notes} onChange={onMayHaveChangedHeight} />,
   },
-  { attr: 'phone', minWidth: 150 },
+  {
+    attr: 'phone',
+    label: () => (dataTableLang ? 'Teléfono' : 'Phone'),
+    minWidth: 150,
+  },
 ];
 
 class DataTableExample extends React.Component {
@@ -659,9 +677,11 @@ class DataTableExample extends React.Component {
         <ExampleLabel>
           DataTable {this.state.fFetching && <Spinner />}
         </ExampleLabel>
+        <div><Button onClick={() => this.toggleLang()}>Toggle lang</Button></div>
         <DataTable
           itemsById={this.state.itemsById}
           cols={DATA_TABLE_COLS}
+          lang={String(dataTableLang)}
           shownIds={this.state.shownIds}
           height={200}
           // rowHeight={40}
@@ -671,6 +691,11 @@ class DataTableExample extends React.Component {
         />
       </div>
     );
+  }
+
+  toggleLang() {
+    dataTableLang = !dataTableLang;
+    this.forceUpdate();
   }
 
   fetchMore(id) {
