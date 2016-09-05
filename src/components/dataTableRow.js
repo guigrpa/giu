@@ -107,7 +107,7 @@ class DataTableRow extends React.PureComponent {
     if (this.props.id === FOOTER_ROW) {
       return <div><Spinner size="lg" /></div>;
     }
-    console.log(`Rendering row ${this.props.id}...`);
+    // console.log(`Rendering row ${this.props.id}...`);
     return (
       <div style={style.rowOuter}>
         {this.props.cols.map(this.renderCell, this)}

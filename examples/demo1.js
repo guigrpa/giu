@@ -78,7 +78,7 @@ const notify = (msg) => createNotif({
 // -----------------------------------------------
 // Examples
 // -----------------------------------------------
-const TEST = 7;
+const TEST = 0;
 const EVERYTHING = true;
 const App = () => {
   let out;
@@ -675,8 +675,11 @@ class DataTableExample extends React.Component {
     return (
       <div style={style.example}>
         <ExampleLabel>
-          DataTable {this.state.fFetching && <Spinner />}
+          DataTable (sort, filter, select, fetch more...) + VirtualScroller (only render
+          visible rows, with dynamic+unknown, uniform+unknown, uniform+known row heights)<br />
+         {this.state.fFetching && <Spinner />}
         </ExampleLabel>
+
         <div><Button onClick={() => this.toggleLang()}>Toggle lang</Button></div>
         <DataTable
           itemsById={this.state.itemsById}
