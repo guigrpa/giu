@@ -154,6 +154,7 @@ const specs = {
     tinycolor2: '1.4.1',
     filesize: '3.3.0',
     keycode: '2.1.1',
+    unorm: '1.4.1',
   },
 
   devDependencies: {

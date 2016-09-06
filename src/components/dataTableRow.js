@@ -2,9 +2,11 @@ import React                from 'react';
 import { merge }            from 'timm';
 import upperFirst           from 'lodash/upperFirst';
 import isFunction           from 'lodash/isFunction';
+import { bindAll }          from '../gral/helpers';
 import { flexContainer }    from '../gral/styles';
 import { COLORS }           from '../gral/constants';
 import Spinner              from './spinner';
+import Icon                 from './icon';
 
 const DATA_TABLE_COLUMN_PROP_TYPES = React.PropTypes.shape({
   attr:                     React.PropTypes.string.isRequired,
@@ -25,6 +27,7 @@ const DATA_TABLE_COLUMN_PROP_TYPES = React.PropTypes.shape({
   // Functionalities
   sortable:                 React.PropTypes.bool,  // true by default
   sortableDescending:       React.PropTypes.bool,  // true by default
+  filterable:               React.PropTypes.bool,  // true by default
 
   // Appearance
   hidden:                   React.PropTypes.bool,
@@ -33,7 +36,7 @@ const DATA_TABLE_COLUMN_PROP_TYPES = React.PropTypes.shape({
   flexShrink:               React.PropTypes.number,
 });
 
-const FOOTER_ROW = '__FOOTER_ROW__';
+const FETCHING_MORE_ITEMS_ROW = '__FETCHING_MORE_ITEMS_ROW__';
 
 // ===============================================================
 // Header
@@ -44,8 +47,19 @@ class DataTableHeader extends React.PureComponent {
     lang:                   React.PropTypes.string,
     maxLabelLevel:          React.PropTypes.number.isRequired,
     scrollbarWidth:         React.PropTypes.number.isRequired,
+    sortBy:                 React.PropTypes.string,
+    sortDescending:         React.PropTypes.bool,
+    onClick:                React.PropTypes.func,
   };
 
+  constructor(props) {
+    super(props);
+    bindAll(this, ['onClick']);
+  }
+
+  // ===============================================================
+  // Render
+  // ===============================================================
   render() {
     return (
       <div style={style.headerOuter(this.props)}>
@@ -55,20 +69,26 @@ class DataTableHeader extends React.PureComponent {
   }
 
   renderColHeader(col, idxCol) {
-    const { attr, label, labelLevel } = col;
+    const { attr, label, labelLevel, sortable } = col;
     let finalLabel;
     if (label != null) {
       finalLabel = isFunction(label) ? label() : label;
     } else {
       finalLabel = upperFirst(attr);
     }
+    const fAttrIsSortable = this.props.onClick && !(sortable === false);
+    const fAttrIsSortKey = fAttrIsSortable && attr === this.props.sortBy;
+    const elIcon = fAttrIsSortKey ? this.renderSortIcon(this.props.sortDescending) : undefined;
     return (
       <div
         key={attr}
-        style={style.headerCell(idxCol, col)}
+        id={attr}
+        onClick={fAttrIsSortable ? this.onClick : undefined}
+        style={style.headerCell(idxCol, col, fAttrIsSortable)}
       >
         {labelLevel && this.renderCallOut(labelLevel)}
         {finalLabel}
+        {elIcon}
       </div>
     );
   }
@@ -82,6 +102,19 @@ class DataTableHeader extends React.PureComponent {
         <path d={d} />
       </svg>
     );
+  }
+
+  renderSortIcon(fDescending) {
+    const icon = fDescending ? 'caret-down' : 'caret-up';
+    return <Icon icon={icon} style={style.headerSortIcon} />;
+  }
+
+  // ===============================================================
+  // Event handlers
+  // ===============================================================
+  onClick(ev) {
+    const attr = ev.currentTarget.id;
+    this.props.onClick(attr);
   }
 }
 
@@ -99,15 +132,17 @@ class DataTableRow extends React.PureComponent {
 
   componentDidUpdate() {
     const { onMayHaveChangedHeight } = this.props;
-    // console.log(`Row ${this.props.id} didUpdate`);
     if (onMayHaveChangedHeight) onMayHaveChangedHeight();
   }
 
+  // ===============================================================
+  // Render
+  // ===============================================================
   render() {
-    if (this.props.id === FOOTER_ROW) {
+    if (this.props.id === FETCHING_MORE_ITEMS_ROW) {
       return <div><Spinner size="lg" /></div>;
     }
-    // console.log(`Rendering row ${this.props.id}...`);
+    console.log(`Rendering row ${this.props.id}...`);
     return (
       <div style={style.rowOuter}>
         {this.props.cols.map(this.renderCell, this)}
@@ -158,12 +193,13 @@ const style = {
       paddingRight: 2,
     };
   },
-  headerCell: (idxCol, col) => {
+  headerCell: (idxCol, col, fEnableHeaderClicks) => {
     const level = col.labelLevel || 0;
     let out = {
       fontWeight: 'bold',
       whiteSpace: 'nowrap',
       textOverflow: 'ellipsis',
+      cursor: fEnableHeaderClicks ? 'pointer' : undefined,
     };
     out = merge(out, style.rowCell(idxCol, col));
     if (level) {
@@ -184,6 +220,9 @@ const style = {
     strokeWidth: 1,
     fill: 'none',
   }),
+  headerSortIcon: {
+    marginLeft: 5,
+  },
 };
 
 // ===============================================================
@@ -193,5 +232,5 @@ export {
   DataTableHeader,
   DataTableRow,
   DATA_TABLE_COLUMN_PROP_TYPES,
-  FOOTER_ROW,
+  FETCHING_MORE_ITEMS_ROW,
 };

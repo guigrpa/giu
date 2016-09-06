@@ -4,6 +4,13 @@
 import React                from 'react';
 import ReactDOM             from 'react-dom';
 import ReactDOMServer       from 'react-dom/server';
+if (process.env.NODE_ENV !== 'production') {
+  try {
+    /*  eslint-disable global-require */
+    window.ReactPerf = require('react-addons-perf');
+    /*  eslint-enable global-require */
+  } catch (err) { /* ignore */ }
+}
 import { merge }            from 'timm';
 import faker                from 'faker';
 require('babel-polyfill');
@@ -20,7 +27,8 @@ import {
   Modals, Modal, modalPush, modalPop,
   Notifications, Notification, notify as createNotif,
   Hints, HintScreen, hintDefine, hintShow, hintReset, hintDisableAll,
-  DataTable, VirtualScroller,
+  DataTable,
+  bindAll,
   hoverable,
   flexContainer, flexItem, boxWithShadow,
   cancelEvent,
@@ -78,7 +86,7 @@ const notify = (msg) => createNotif({
 // -----------------------------------------------
 // Examples
 // -----------------------------------------------
-const TEST = 0;
+const TEST = 7;
 const EVERYTHING = true;
 const App = () => {
   let out;
@@ -618,18 +626,24 @@ const sampleDataTableItems = (num, idStart = 0) => {
   const out = {};
   for (let i = 0; i < num; i++) {
     const id = String(idStart + i);
+    const name = i === 0 ? 'Mª Antonia Pérez Ñandú' : faker.name.findName();
     out[id] = {
       id,
-      name: faker.name.findName(),
+      name,
       confirmed: Math.random() > 0.5,
       phone: faker.phone.phoneNumber(),
-      notes: faker.lorem.sentences(2).split('\n').join(' '),
+      notes: faker.lorem.sentences(5).split('\n').join(' '),
     };
   }
   return out;
 };
 
 const DATA_TABLE_COLS = [
+  {
+    attr: 'id',
+    label: 'ID',
+    minWidth: 40,
+  },
   {
     attr: 'name',
     label: () => (dataTableLang ? 'Nombre' : 'Name'),
@@ -649,6 +663,8 @@ const DATA_TABLE_COLS = [
     minWidth: 200,
     render: ({ item, onMayHaveChangedHeight }) =>
       <Textarea value={item.notes} onChange={onMayHaveChangedHeight} />,
+    sortable: false,
+    filterable: false,
   },
   {
     attr: 'phone',
@@ -660,14 +676,19 @@ const DATA_TABLE_COLS = [
 class DataTableExample extends React.Component {
   constructor(props) {
     super(props);
-    const numItems = 200;
+    const numItems = 300;
     const itemsById = sampleDataTableItems(numItems);
     this.state = {
       numItems,
       itemsById,
       shownIds: Object.keys(itemsById),
+      filterValue: '',
       fFetching: false,
     };
+    bindAll(this, [
+      'fetchMore',
+      'logArgs',
+    ]);
     this.fetchMore = this.fetchMore.bind(this);
   }
 
@@ -677,10 +698,17 @@ class DataTableExample extends React.Component {
         <ExampleLabel>
           DataTable (sort, filter, select, fetch more...) + VirtualScroller (only render
           visible rows, with dynamic+unknown, uniform+unknown, uniform+known row heights)
-          {' '}{this.state.fFetching && <Spinner />}
+          {' '}
+          {this.state.fFetching && <Spinner />}
         </ExampleLabel>
 
-        <div><Button onClick={() => this.toggleLang()}>Toggle lang</Button></div>
+        <div>
+          <Button onClick={() => this.toggleLang()}>Toggle lang</Button>
+          {' '}
+          Quick find:
+          {' '}
+          <TextInput onChange={(ev, filterValue) => this.setState({ filterValue })} />
+        </div>
         <DataTable
           itemsById={this.state.itemsById}
           cols={DATA_TABLE_COLS}
@@ -689,8 +717,10 @@ class DataTableExample extends React.Component {
           height={200}
           // rowHeight={40}
           // uniformRowHeight
-          fetchMoreItems={this.fetchMore}
+          fetchMoreItems={this.state.filterValue === '' ? this.fetchMore : undefined}
           fetching={this.state.fFetching}
+          filterValue={this.state.filterValue}
+          onChangeSort={this.logArgs}
         />
       </div>
     );
@@ -717,6 +747,8 @@ class DataTableExample extends React.Component {
       });
     }, 800);
   }
+
+  logArgs(...args) { console.log(args); }
 }
 
 class FormExample extends React.Component {

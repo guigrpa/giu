@@ -13,6 +13,8 @@ import {
 }                           from '../gral/keys';
 import input                from '../hocs/input';
 
+const DEBUG = false && process.env.NODE_ENV !== 'production';
+
 const NULL_VALUE = '';
 function toInternalValue(val) { return val != null ? val : NULL_VALUE; }
 function toExternalValue(val) { return val !== NULL_VALUE ? val : null; }
@@ -146,13 +148,13 @@ const style = {
     top: 0,
     left: 0,
     width: '100%',
-    opacity: 1, // 0,
+    opacity: DEBUG ? 1 : 0,
     padding: 2,
     border: '1px solid red',
     color: 'red',
     cursor: 'beam',
     whiteSpace: 'pre-wrap',
-    zIndex: +50, // -50,
+    zIndex: DEBUG ? +50 : -50,
 
     // If the user specifies a `maxHeight`, we don't want
     // the (hidden) text to overflow vertically

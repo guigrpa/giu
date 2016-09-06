@@ -2,6 +2,7 @@ import {
   merge,
   addDefaults,
 }                           from 'timm';
+import unorm                from 'unorm';
 import {
   getScrollbarWidth,
 }                           from '../gral/constants';
@@ -117,6 +118,12 @@ function propsWithDefaultsAndOverrides(props, defaults, overrides) {
   return merge(addDefaults(props, defaults), overrides);
 }
 
+const COMBINING_CODEPOINTS = /[\u0300-\u036F]/g;
+function simplifyString(str) {
+  if (str == null) return str;
+  return unorm.nfkd(str).replace(COMBINING_CODEPOINTS, '').toLowerCase();
+}
+
 // ==========================================
 // Public API
 // ==========================================
@@ -127,4 +134,5 @@ export {
   windowBottomScrollbarHeight, windowRightScrollbarWidth,
   windowHeightWithoutScrollbar, windowWidthWithoutScrollbar,
   propsWithDefaultsAndOverrides,
+  simplifyString,
 };

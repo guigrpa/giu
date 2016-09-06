@@ -50,6 +50,9 @@ class VerticalManager extends React.Component {
     const container = this.refs.container;
     if (!container) return;
     const height = container.clientHeight;
+    /* eslint-disable max-len */
+    // console.log(`Measured height for ${this.props.id} - ${this.props.childProps.item.name}: ${height}`)
+    /* eslint-enable max-len */
     if (height !== this.height) {
       this.height = height;
       onChangeHeight(this.props.id, height);
@@ -68,9 +71,12 @@ class VerticalManager extends React.Component {
   // Render
   // ===============================================================
   render() {
-    const { ChildComponent, childProps } = this.props;
+    const { id, ChildComponent, childProps } = this.props;
     return (
-      <div ref="container" style={style.outer(this.props)}>
+      <div ref="container"
+        id={id}
+        style={style.outer(this.props)}
+      >
         <ChildComponent
           {...childProps}
           onMayHaveChangedHeight={this.asyncMeasureHeight}

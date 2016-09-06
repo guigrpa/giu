@@ -1,6 +1,7 @@
 # Roadmap
 
 - [ ] DATATABLE/VIRTUALSCROLLER
+  - [ ] After filtering (and then removing the filter), fetchMore no longer works
   - [ ] Does request animation frame bring some benefit?
   - [ ] Add prop: list of rows that should NOT be removed even when out of sight (e.g. editing)
 - [ ] Add language support for Selects:
