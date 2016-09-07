@@ -15,6 +15,7 @@ class VirtualScroller extends React.PureComponent {
   static propTypes = {
     itemsById:              React.PropTypes.object,
     shownIds:               React.PropTypes.arrayOf(React.PropTypes.string),
+    alwaysRenderIds:        React.PropTypes.arrayOf(React.PropTypes.string),
     RowComponent:           React.PropTypes.any.isRequired,
     commonRowProps:         React.PropTypes.any,
 
@@ -36,6 +37,7 @@ class VirtualScroller extends React.PureComponent {
   static defaultProps = {
     itemsById:              {},
     shownIds:               [],
+    alwaysRenderIds:        [],
 
     uniformRowHeight:       false,
 
@@ -193,21 +195,40 @@ class VirtualScroller extends React.PureComponent {
 
   renderRows() {
     this.determineRenderInterval();
-    const { idxFirst, idxLast } = this;
+    const { idxFirst, idxLast, rowHeight } = this;
     console.log(`VirtualScroller: idxFirst: ${idxFirst}, idxLast: ${idxLast}`);
     if (idxFirst == null || idxLast == null) return null;
-    const { shownIds } = this.props;
+    const { shownIds, alwaysRenderIds } = this.props;
     const numVisibleRows = idxLast - idxFirst + 1;
     this.pendingHeights = [];
-    const rows = new Array(numVisibleRows);
+    let rows = new Array(numVisibleRows);
     for (let i = 0; i < numVisibleRows; i++) {
       const idx = idxFirst + i;
-      rows[i] = this.renderRow(idx, shownIds[idx]);
+      const id = shownIds[idx];
+      rows[i] = this.renderRow(idx, id);
+    }
+    if (alwaysRenderIds.length) {
+      const before = [];
+      const after = [];
+      for (let i = 0; i < alwaysRenderIds.length; i++) {
+        const id = alwaysRenderIds[i];
+        const idx = shownIds.indexOf(id);
+        if (idx < 0) continue;
+        let targetArray;
+        if (idx < idxFirst) {
+          targetArray = before;
+        } else if (idx > idxLast) {
+          targetArray = after;
+        } else continue;
+        targetArray.push(this.renderRow(idx, id));
+      }
+      rows = before.concat(rows, after);
     }
     return rows;
   }
 
   renderRow(idx, id) {
+    console.log(`VirtualScroller: rendering row ${id} (idx: ${idx})`);
     const { itemsById, RowComponent, commonRowProps } = this.props;
     const { rowHeight } = this;
     const item = itemsById[id];
@@ -402,7 +423,6 @@ class VirtualScroller extends React.PureComponent {
 const style = {
   scroller: ({ height, width }) => ({
     position: 'relative',
-    backgroundColor: 'aliceblue',
     height, width,
     overflowY: 'auto',
     overflowX: 'hidden',

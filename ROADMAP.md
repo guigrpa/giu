@@ -1,10 +1,18 @@
 # Roadmap
 
 - [ ] DATATABLE/VIRTUALSCROLLER
-  - [ ] After filtering (and then removing the filter), fetchMore no longer works
-  - [ ] Does request animation frame bring some benefit?
-  - [ ] Add prop: list of rows that should NOT be removed even when out of sight (e.g. editing)
-- [ ] Add language support for Selects:
+  - [x] Selection & multi-selection
+  - [x] alwaysRenderIds
+  - [ ] Drag-n-drop sorting
+  - [ ] Clipboard actions (requires focus -- what about nested focusable items??)
+  - [ ] Style customisation
+  - [ ] Add examples:
+      - [ ] All defaults
+      - [ ] Classical pagination (external) vs. infinite scrolling
+      - [ ] Multi-level sorting (external) vs. default sorting
+      - [ ] Clipboard actions
+
+- [ ] LANGUAGE SUPPORT FOR SELECTS:
   - [ ] Native
   - [ ] Custom (probably DropDownMenu should also pass down lang property if it exists...)
 

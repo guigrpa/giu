@@ -1,6 +1,11 @@
-import { merge }            from 'timm';
+import {
+  set as timmSet,
+  removeAt, addLast,
+}                           from 'timm';
 import React                from 'react';
 import VirtualScroller      from './virtualScroller';
+import { COLORS }           from '../gral/constants';
+import { isDark }           from '../gral/styles';
 import {
   bindAll,
   simplifyString,
@@ -24,6 +29,7 @@ class DataTable extends React.PureComponent {
     lang:                   React.PropTypes.string,
 
     shownIds:               React.PropTypes.arrayOf(React.PropTypes.string),
+    alwaysRenderIds:        React.PropTypes.arrayOf(React.PropTypes.string),
 
     // Filtering
     filterValue:            React.PropTypes.string,
@@ -40,9 +46,7 @@ class DataTable extends React.PureComponent {
     allowSelect:            React.PropTypes.bool,
     multipleSelection:      React.PropTypes.bool,
     onChangeSelection:      React.PropTypes.func,
-    allowCopy:              React.PropTypes.bool,
-    allowCut:               React.PropTypes.bool,
-    onCopyCut:              React.PropTypes.func,
+    onClipboardAction:      React.PropTypes.func,
 
     // Fetching
     fetchMoreItems:         React.PropTypes.func,
@@ -53,6 +57,7 @@ class DataTable extends React.PureComponent {
     width:                  React.PropTypes.number,
     rowHeight:              React.PropTypes.number,   // auto-calculated if unspecified
     uniformRowHeight:       React.PropTypes.bool,
+    accentColor:            React.PropTypes.string,
 
     // For VirtualScroller specifically
     estimatedMinRowHeight:  React.PropTypes.number,
@@ -76,10 +81,10 @@ class DataTable extends React.PureComponent {
     selectedIds:            [],
     allowSelect:            false,
     multipleSelection:      false,
-    isCopyAllowed:          true,
-    isCutAllowed:           false,
 
     fetching:               false,
+
+    accentColor:            COLORS.accent,
   };
 
   constructor(props) {
@@ -92,11 +97,14 @@ class DataTable extends React.PureComponent {
     this.sortDescending = props.sortDescending;
     this.selectedIds = props.selectedIds;
     this.recalcShownIds(props);
+    this.recalcColors(props);
     bindAll(this, [
       'onRenderLastRow',
       'onChangeScrollbarWidth',
       'onClickHeader',
+      'onClickRow',
     ]);
+    this.commonRowProps = {};
   }
 
   componentWillReceiveProps(nextProps) {
@@ -107,6 +115,7 @@ class DataTable extends React.PureComponent {
       filterValue,
       sortBy, sortDescending,
       selectedIds,
+      accentColor,
     } = nextProps;
     let fRecalcShownIds = false;
     if (itemsById !== this.props.itemsById) fRecalcShownIds = true;
@@ -124,8 +133,9 @@ class DataTable extends React.PureComponent {
       this.sortDescending = sortDescending;
       fRecalcShownIds = true;
     }
-    if (selectedIds !== this.props.selectedIds) this.selectedIds = selectedIds;
     if (fRecalcShownIds) this.recalcShownIds(nextProps);
+    if (selectedIds !== this.props.selectedIds) this.selectedIds = selectedIds;
+    if (accentColor !== this.props.accentColor) this.recalcColors(nextProps);
   }
 
   recalcMaxLabelLevel(cols) {
@@ -137,10 +147,16 @@ class DataTable extends React.PureComponent {
     this.maxLabelLevel = maxLabelLevel;
   }
 
+  recalcColors(props) {
+    const { accentColor } = props;
+    this.selectedBgColor = accentColor;
+    this.selectedFgColor = COLORS[isDark(accentColor) ? 'lightText' : 'darkText'];
+  }
+
   recalcShownIds(props) {
-    let shownIds = props.shownIds;
-    shownIds = this.filter(shownIds);
-    shownIds = this.sort(shownIds);
+    let { shownIds } = props;
+    shownIds = this.filter(shownIds, props);
+    shownIds = this.sort(shownIds, props);
     this.shownIds = shownIds;
   }
 
@@ -148,15 +164,20 @@ class DataTable extends React.PureComponent {
   // Render
   // ===============================================================
   render() {
-    const { cols, lang } = this.props;
+    const { cols, lang, filterValue } = this.props;
+    const { selectedIds } = this;
 
     // Timm will make sure `this.commonRowProps` doesn't change unless
     // any of the merged properties changes.
-    this.commonRowProps = merge(this.commonRowProps || {}, {
-      cols,
-      lang,
-      selectedIds: this.props.selectedIds,
-    });
+    let commonRowProps = this.commonRowProps;
+    commonRowProps = timmSet(commonRowProps, 'cols', cols);
+    commonRowProps = timmSet(commonRowProps, 'lang', lang);
+    commonRowProps = timmSet(commonRowProps, 'selectedIds', selectedIds);
+    commonRowProps = timmSet(commonRowProps, 'selectedBgColor', this.selectedBgColor);
+    commonRowProps = timmSet(commonRowProps, 'selectedFgColor', this.selectedFgColor);
+    commonRowProps = timmSet(commonRowProps, 'onClick',
+      this.props.allowSelect ? this.onClickRow : undefined);
+    this.commonRowProps = commonRowProps;
 
     // Get the ordered list of IDs to be shown
     let shownIds = this.shownIds.slice();
@@ -178,9 +199,10 @@ class DataTable extends React.PureComponent {
         <VirtualScroller ref={c => { this.refVirtualScroller = c; }}
           itemsById={this.props.itemsById}
           shownIds={shownIds}
+          alwaysRenderIds={this.props.alwaysRenderIds}
           RowComponent={DataTableRow}
-          commonRowProps={this.commonRowProps}
-          onRenderLastRow={this.props.fetchMoreItems ? this.onRenderLastRow : undefined}
+          commonRowProps={commonRowProps}
+          onRenderLastRow={filterValue ? undefined : this.onRenderLastRow}
           onChangeScrollbarWidth={this.onChangeScrollbarWidth}
           height={this.props.height}
           width={this.props.width}
@@ -200,7 +222,6 @@ class DataTable extends React.PureComponent {
   onRenderLastRow(id) {
     if (id === FETCHING_MORE_ITEMS_ROW) return;
     const { fetchMoreItems } = this.props;
-    console.log('onRenderLastRow: ', fetchMoreItems)
     if (!fetchMoreItems) return;
     fetchMoreItems(id);
   }
@@ -228,6 +249,24 @@ class DataTable extends React.PureComponent {
     }
   }
 
+  onClickRow(ev, id) {
+    const prevSelectedIds = this.selectedIds;
+    const fShift = ev.shiftKey && this.props.multipleSelection;
+    if (fShift) {
+      const idx = this.selectedIds.indexOf(id);
+      if (idx >= 0) {
+        this.selectedIds = removeAt(this.selectedIds, idx);
+      } else {
+        this.selectedIds = addLast(this.selectedIds, id);
+      }
+    } else {
+      if (prevSelectedIds.length === 1 && prevSelectedIds[0] === id) return;
+      this.selectedIds = [id];
+    }
+    this.forceUpdate();
+    if (this.props.onChangeSelection) this.props.onChangeSelection(this.selectedIds);
+  }
+
   changeSort(sortBy, sortDescending) {
     if (sortBy === this.sortBy && sortDescending === this.sortDescending) return;
     this.sortBy = sortBy;
@@ -241,13 +280,12 @@ class DataTable extends React.PureComponent {
   // ===============================================================
   // Filtering and sorting
   // ===============================================================
-  filter(ids) {
+  filter(ids, props) {
     let needle = this.filterValue;
     if (!needle) return ids;
     needle = simplifyString(needle);
-    console.log(`Filtering for ${needle}...`);
-    const { itemsById } = this.props;
-    const cols = this.props.cols.filter(col => col.filterable !== false);
+    const { itemsById } = props;
+    const cols = props.cols.filter(col => col.filterable !== false);
     const numCols = cols.length;
     const filteredIds = [];
     for (let i = 0; i < ids.length; i++) {
@@ -262,7 +300,6 @@ class DataTable extends React.PureComponent {
         if (!haystack.toLowerCase) continue;
         haystack = simplifyString(haystack);
         if (haystack.indexOf && haystack.indexOf(needle) >= 0) {
-          console.log(`${id} included; ${haystack} includes ${needle}`);
           fInclude = true;
           break;
         }
@@ -272,11 +309,11 @@ class DataTable extends React.PureComponent {
     return filteredIds;
   }
 
-  sort(ids) {
+  sort(ids, props) {
     const { sortBy, sortDescending } = this;
-    const { itemsById } = this.props;
+    const { itemsById } = props;
     if (!sortBy) return ids;
-    const col = this.props.cols.find(o => o.attr === sortBy);
+    const col = props.cols.find(o => o.attr === sortBy);
     if (!col) return ids;
     const getSortValue = col.sortValue || col.rawValue || (item => item[sortBy]);
     const sortValues = {};

@@ -126,9 +126,18 @@ class DataTableRow extends React.PureComponent {
     id:                     React.PropTypes.string.isRequired,
     item:                   React.PropTypes.object,
     cols:                   React.PropTypes.arrayOf(DATA_TABLE_COLUMN_PROP_TYPES),
-    selectedIds:            React.PropTypes.arrayOf(React.PropTypes.string),
+    lang:                   React.PropTypes.string,
+    selectedIds:            React.PropTypes.arrayOf(React.PropTypes.string).isRequired,
+    selectedBgColor:        React.PropTypes.string.isRequired,
+    selectedFgColor:        React.PropTypes.string.isRequired,
     onMayHaveChangedHeight: React.PropTypes.func,
+    onClick:                React.PropTypes.func,
   };
+
+  constructor(props) {
+    super(props);
+    bindAll(this, ['onClick']);
+  }
 
   componentDidUpdate() {
     const { onMayHaveChangedHeight } = this.props;
@@ -139,12 +148,17 @@ class DataTableRow extends React.PureComponent {
   // Render
   // ===============================================================
   render() {
-    if (this.props.id === FETCHING_MORE_ITEMS_ROW) {
+    const { id } = this.props;
+    if (id === FETCHING_MORE_ITEMS_ROW) {
       return <div><Spinner size="lg" /></div>;
     }
-    console.log(`Rendering row ${this.props.id}...`);
+    console.log(`Rendering row ${id}...`);
+    const fSelected = this.props.selectedIds.indexOf(id) >= 0;
     return (
-      <div style={style.rowOuter}>
+      <div
+        onClick={this.onClick}
+        style={style.rowOuter(this.props, fSelected)}
+      >
         {this.props.cols.map(this.renderCell, this)}
       </div>
     );
@@ -165,13 +179,31 @@ class DataTableRow extends React.PureComponent {
       </div>
     );
   }
+
+  // ===============================================================
+  // Event handlers
+  // ===============================================================
+  onClick(ev) {
+    const { onClick } = this.props;
+    if (onClick) onClick(ev, this.props.id);
+  }
 }
 
 // ===============================================================
 // Styles
 // ===============================================================
 const style = {
-  rowOuter: flexContainer('row'),
+  rowOuterBase: flexContainer('row'),
+  rowOuter: ({ selectedBgColor, selectedFgColor }, fSelected) => {
+    let out = style.rowOuterBase;
+    if (fSelected) {
+      out = merge(out, {
+        backgroundColor: selectedBgColor,
+        color: selectedFgColor,
+      });
+    }
+    return out;
+  },
   headerOuter: ({ maxLabelLevel, scrollbarWidth }) => flexContainer('row', {
     marginRight: scrollbarWidth,
     marginTop: 2 + 15 * maxLabelLevel,

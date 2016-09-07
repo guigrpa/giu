@@ -662,7 +662,11 @@ const DATA_TABLE_COLS = [
     flexGrow: 1,
     minWidth: 200,
     render: ({ item, onMayHaveChangedHeight }) =>
-      <Textarea value={item.notes} onChange={onMayHaveChangedHeight} />,
+      <Textarea
+        value={item.notes}
+        onChange={onMayHaveChangedHeight}
+        style={{ color: 'black', backgroundColor: 'rgba(255, 255, 255, 0.7)' }}
+      />,
     sortable: false,
     filterable: false,
   },
@@ -676,8 +680,10 @@ const DATA_TABLE_COLS = [
 class DataTableExample extends React.Component {
   constructor(props) {
     super(props);
-    const numItems = 300;
+    const numItems = 30;
     const itemsById = sampleDataTableItems(numItems);
+    this.selectedIds = ['1'];
+    this.alwaysRenderIds = ['0', '1', '3'];
     this.state = {
       numItems,
       itemsById,
@@ -689,7 +695,6 @@ class DataTableExample extends React.Component {
       'fetchMore',
       'logArgs',
     ]);
-    this.fetchMore = this.fetchMore.bind(this);
   }
 
   render() {
@@ -714,13 +719,18 @@ class DataTableExample extends React.Component {
           cols={DATA_TABLE_COLS}
           lang={String(dataTableLang)}
           shownIds={this.state.shownIds}
+          alwaysRenderIds={this.alwaysRenderIds}
           height={200}
           // rowHeight={40}
           // uniformRowHeight
-          fetchMoreItems={this.state.filterValue === '' ? this.fetchMore : undefined}
+          fetchMoreItems={this.fetchMore}
           fetching={this.state.fFetching}
           filterValue={this.state.filterValue}
           onChangeSort={this.logArgs}
+          selectedIds={this.selectedIds}
+          allowSelect multipleSelection
+          onChangeSelection={this.logArgs}
+          accentColor="lightgray"
         />
       </div>
     );
@@ -748,7 +758,7 @@ class DataTableExample extends React.Component {
     }, 800);
   }
 
-  logArgs(...args) { console.log(args); }
+  logArgs(...args) { console.log(...args); }
 }
 
 class FormExample extends React.Component {
