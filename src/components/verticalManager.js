@@ -12,6 +12,7 @@ import throttle             from 'lodash/throttle';
 class VerticalManager extends React.Component {
   static propTypes = {
     id:                     React.PropTypes.string.isRequired,
+    index:                  React.PropTypes.number.isRequired,
     childProps:             React.PropTypes.object,
     ChildComponent:         React.PropTypes.any.isRequired,
     onChangeHeight:         React.PropTypes.func,
@@ -71,13 +72,15 @@ class VerticalManager extends React.Component {
   // Render
   // ===============================================================
   render() {
-    const { id, ChildComponent, childProps } = this.props;
+    const { id, index, ChildComponent, childProps } = this.props;
     return (
       <div ref="container"
         id={id}
         style={style.outer(this.props)}
       >
         <ChildComponent
+          // react-sortable-hoc sortableRow requires the index
+          index={index}
           {...childProps}
           onMayHaveChangedHeight={this.asyncMeasureHeight}
         />
@@ -96,6 +99,7 @@ const style = {
   outer: ({ top }) => ({
     position: 'absolute',
     opacity: top != null ? 1 : 0,
+    zIndex: top != null ? undefined : -5000,
     top,
     left: 0,
     right: 0,

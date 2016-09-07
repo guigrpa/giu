@@ -128,10 +128,11 @@ class DataTableRow extends React.PureComponent {
     cols:                   React.PropTypes.arrayOf(DATA_TABLE_COLUMN_PROP_TYPES),
     lang:                   React.PropTypes.string,
     selectedIds:            React.PropTypes.arrayOf(React.PropTypes.string).isRequired,
-    selectedBgColor:        React.PropTypes.string.isRequired,
-    selectedFgColor:        React.PropTypes.string.isRequired,
+    fSortedManually:        React.PropTypes.bool,
     onMayHaveChangedHeight: React.PropTypes.func,
     onClick:                React.PropTypes.func,
+    selectedBgColor:        React.PropTypes.string.isRequired,
+    selectedFgColor:        React.PropTypes.string.isRequired,
   };
 
   constructor(props) {
@@ -168,7 +169,12 @@ class DataTableRow extends React.PureComponent {
     const { attr, render } = col;
     const { item } = this.props;
     const value = render ?
-      render({ item, col, onMayHaveChangedHeight: this.props.onMayHaveChangedHeight }) :
+      render({
+        item,
+        col,
+        fSortedManually: this.props.fSortedManually,
+        onMayHaveChangedHeight: this.props.onMayHaveChangedHeight,
+      }) :
       item[attr];
     return (
       <div

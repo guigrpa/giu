@@ -643,6 +643,7 @@ const DATA_TABLE_COLS = [
     attr: 'id',
     label: 'ID',
     minWidth: 40,
+    // hidden: true,
   },
   {
     attr: 'name',
@@ -726,6 +727,7 @@ class DataTableExample extends React.Component {
           fetchMoreItems={this.fetchMore}
           fetching={this.state.fFetching}
           filterValue={this.state.filterValue}
+          manualSortColLabel={() => (dataTableLang ? 'Ordenar manualmente' : 'Sort manually')}
           onChangeSort={this.logArgs}
           selectedIds={this.selectedIds}
           allowSelect multipleSelection

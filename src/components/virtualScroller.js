@@ -133,7 +133,7 @@ class VirtualScroller extends React.PureComponent {
       // this will make all Textareas to resize if needed and all VerticalManagers
       // to measure themselves again (they may have become taller due to the scrollbar)
       if (fHasScrollbar) {
-        console.log('VirtualScroller: broadcasting resize event ' +
+        console.log('VirtualScroller: scrollbar has been added -> broadcasting resize event ' +
           '(may trigger re-render)...');
         window.dispatchEvent(new Event('resize'));
       }
@@ -228,7 +228,7 @@ class VirtualScroller extends React.PureComponent {
   }
 
   renderRow(idx, id) {
-    console.log(`VirtualScroller: rendering row ${id} (idx: ${idx})`);
+    // console.log(`VirtualScroller: rendering row ${id} (idx: ${idx})`);
     const { itemsById, RowComponent, commonRowProps } = this.props;
     const { rowHeight } = this;
     const item = itemsById[id];
@@ -245,6 +245,7 @@ class VirtualScroller extends React.PureComponent {
     return (
       <VerticalManager key={id}
         id={id}
+        index={idx}
         ChildComponent={RowComponent}
         childProps={childProps}
         top={top}
@@ -259,7 +260,7 @@ class VirtualScroller extends React.PureComponent {
   onChangeRowHeight(id, height) {
     const prevCachedHeight = this.cachedHeights[id];
     if (prevCachedHeight === height) return;
-    // console.log(`VirtualScroller: new height for row ${id}: ${height}`);
+    console.log(`VirtualScroller: new height for row ${id}: ${height}`);
     if (height < this.minHeight) this.minHeight = height;
     if (this.props.uniformRowHeight && this.rowHeight == null) {
       this.rowHeight = height;

@@ -3,7 +3,12 @@
 - [ ] DATATABLE/VIRTUALSCROLLER
   - [x] Selection & multi-selection
   - [x] alwaysRenderIds
-  - [ ] Drag-n-drop sorting
+  - [ ] Drag-n-drop sorting:
+      - [ ] Debug (in particular, what happens when there are alwaysRenderIds)
+      - [ ] Fix `sort()` function in DataTable
+      - [x] Add localStorage to save manual order? No, better leave to the user!
+      - [ ] Remove `top` animations while dragging
+
   - [ ] Clipboard actions (requires focus -- what about nested focusable items??)
   - [ ] Style customisation
   - [ ] Add examples:
