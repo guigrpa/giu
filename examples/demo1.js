@@ -724,8 +724,9 @@ class DataTableExample extends React.Component {
           height={250}
           // rowHeight={40}
           // uniformRowHeight
-          // fetchMoreItems={this.fetchMore}
+          fetchMoreItems={this.fetchMore}
           fetching={this.state.fFetching}
+          // FetchRowComponent={() => <div>Fetching...</div>}
           filterValue={this.state.filterValue}
           manualSortColLabel={() => (dataTableLang ? 'Ordenar manualmente' : 'Sort manually')}
           onChangeSort={this.logArgs}

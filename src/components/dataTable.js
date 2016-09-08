@@ -9,7 +9,7 @@ import {
   SortableHandle as sortableHandle,
   arrayMove,
 }                           from 'react-sortable-hoc';
-import VirtualScroller      from './virtualScroller';
+import VirtualScroller, { DEFAULT_ROW } from './virtualScroller';
 import { COLORS }           from '../gral/constants';
 import { isDark }           from '../gral/styles';
 import {
@@ -19,12 +19,13 @@ import {
 import {
   DataTableHeader,
   DataTableRow,
+  DataTableFetchingRow,
   DATA_TABLE_COLUMN_PROP_TYPES,
-  FETCHING_MORE_ITEMS_ROW,
 }                           from './dataTableRow';
 import Icon                 from './icon';
 import './dataTable.css';
 
+const FETCHING_MORE_ITEMS_ROW = '__FETCHING_MORE_ITEMS_ROW__';
 const SORT_MANUALLY = '__SORT_MANUALLY__';
 const createManualSortCol = label => ({
   attr: SORT_MANUALLY,
@@ -92,6 +93,7 @@ class DataTable extends React.PureComponent {
     // Fetching
     fetchMoreItems:         React.PropTypes.func,
     fetching:               React.PropTypes.bool,
+    FetchRowComponent:      React.PropTypes.any,
 
     // Styles
     height:                 React.PropTypes.number,
@@ -126,6 +128,7 @@ class DataTable extends React.PureComponent {
     multipleSelection:      false,
 
     fetching:               false,
+    FetchRowComponent:      DataTableFetchingRow,
 
     accentColor:            COLORS.accent,
   };
@@ -143,6 +146,7 @@ class DataTable extends React.PureComponent {
     this.selectedIds = props.selectedIds;
     this.manuallyOrderedIds = props.manuallyOrderedIds;
     this.recalcShownIds(props);
+    this.recalcRowComponents(props);
     this.recalcColors(props);
     bindAll(this, [
       'onRenderLastRow',
@@ -162,8 +166,9 @@ class DataTable extends React.PureComponent {
       shownIds,
       filterValue,
       sortBy, sortDescending,
-      manuallyOrderedIds,
+      allowManualSorting, manuallyOrderedIds,
       selectedIds,
+      FetchRowComponent,
       accentColor,
     } = nextProps;
     let fRecalcShownIds = false;
@@ -189,6 +194,12 @@ class DataTable extends React.PureComponent {
     }
     if (fRecalcShownIds) this.recalcShownIds(nextProps);
     if (selectedIds !== this.props.selectedIds) this.selectedIds = selectedIds;
+    if (
+      FetchRowComponent !== this.props.FetchRowComponent ||
+      allowManualSorting !== this.props.allowManualSorting
+    ) {
+      this.recalcRowComponents(nextProps);
+    }
     if (accentColor !== this.props.accentColor) this.recalcColors(nextProps);
   }
 
@@ -208,6 +219,13 @@ class DataTable extends React.PureComponent {
       if (labelLevel > maxLabelLevel) maxLabelLevel = labelLevel;
     }
     this.maxLabelLevel = maxLabelLevel;
+  }
+
+  recalcRowComponents(props) {
+    this.RowComponents = {
+      [FETCHING_MORE_ITEMS_ROW]: props.FetchRowComponent,
+      [DEFAULT_ROW]: props.allowManualSorting ? SortableDataTableRow : DataTableRow,
+    };
   }
 
   recalcColors(props) {
@@ -266,7 +284,7 @@ class DataTable extends React.PureComponent {
           itemsById={this.props.itemsById}
           shownIds={shownIds}
           alwaysRenderIds={this.props.alwaysRenderIds}
-          RowComponent={allowManualSorting ? SortableDataTableRow : DataTableRow}
+          RowComponents={this.RowComponents}
           commonRowProps={this.commonRowProps}
           fSortedManually={fSortedManually}
           onRenderLastRow={filterValue ? undefined : this.onRenderLastRow}

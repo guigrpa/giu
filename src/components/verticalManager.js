@@ -82,6 +82,7 @@ class VerticalManager extends React.Component {
         <ChildComponent
           // react-sortable-hoc sortableRow requires the index
           index={index}
+
           {...childProps}
           onMayHaveChangedHeight={this.asyncMeasureHeight}
 

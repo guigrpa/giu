@@ -36,8 +36,6 @@ const DATA_TABLE_COLUMN_PROP_TYPES = React.PropTypes.shape({
   flexShrink:               React.PropTypes.number,
 });
 
-const FETCHING_MORE_ITEMS_ROW = '__FETCHING_MORE_ITEMS_ROW__';
-
 // ===============================================================
 // Header
 // ===============================================================
@@ -150,9 +148,6 @@ class DataTableRow extends React.PureComponent {
   // ===============================================================
   render() {
     const { id } = this.props;
-    if (id === FETCHING_MORE_ITEMS_ROW) {
-      return <div><Spinner size="lg" /></div>;
-    }
     console.log(`Rendering row ${id}...`);
     const fSelected = this.props.selectedIds.indexOf(id) >= 0;
     return (
@@ -196,6 +191,12 @@ class DataTableRow extends React.PureComponent {
 }
 
 // ===============================================================
+// Other components
+// ===============================================================
+const DataTableFetchingRow = () =>
+  <div style={style.fetchingRow}><Spinner size="lg" /></div>;
+
+// ===============================================================
 // Styles
 // ===============================================================
 const style = {
@@ -210,10 +211,16 @@ const style = {
     }
     return out;
   },
+  fetchingRow: {
+    marginTop: 1,
+    marginBottom: 2,
+  },
   headerOuter: ({ maxLabelLevel, scrollbarWidth }) => flexContainer('row', {
     marginRight: scrollbarWidth,
     marginTop: 2 + 15 * maxLabelLevel,
     marginBottom: 2,
+    paddingBottom: 2,
+    borderBottom: `1px solid ${COLORS.line}`,
   }),
   rowCell: (idxCol, {
     hidden,
@@ -269,6 +276,6 @@ const style = {
 export {
   DataTableHeader,
   DataTableRow,
+  DataTableFetchingRow,
   DATA_TABLE_COLUMN_PROP_TYPES,
-  FETCHING_MORE_ITEMS_ROW,
 };

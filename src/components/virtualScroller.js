@@ -8,6 +8,8 @@ import VerticalManager      from './verticalManager';
 const MAX_ROWS_INITIAL_RENDER = 20;
 const CHECK_SCROLLBAR_PERIOD = 400;
 
+const DEFAULT_ROW = '__DEFAULT_ROW__';
+
 // ===============================================================
 // Component
 // ===============================================================
@@ -16,7 +18,7 @@ class VirtualScroller extends React.PureComponent {
     itemsById:              React.PropTypes.object,
     shownIds:               React.PropTypes.arrayOf(React.PropTypes.string),
     alwaysRenderIds:        React.PropTypes.arrayOf(React.PropTypes.string),
-    RowComponent:           React.PropTypes.any.isRequired,
+    RowComponents:          React.PropTypes.object.isRequired,
     commonRowProps:         React.PropTypes.any,
 
     height:                 React.PropTypes.number,
@@ -229,7 +231,7 @@ class VirtualScroller extends React.PureComponent {
 
   renderRow(idx, id) {
     // console.log(`VirtualScroller: rendering row ${id} (idx: ${idx})`);
-    const { itemsById, RowComponent, commonRowProps } = this.props;
+    const { itemsById, RowComponents, commonRowProps } = this.props;
     const { rowHeight } = this;
     const item = itemsById[id];
     let top;
@@ -242,6 +244,7 @@ class VirtualScroller extends React.PureComponent {
       if (!this.cachedHeights[id]) this.pendingHeights.push(id);
     }
     const childProps = merge({ id, item }, commonRowProps);
+    const RowComponent = RowComponents[id] || RowComponents[DEFAULT_ROW];
     return (
       <VerticalManager key={id}
         id={id}
@@ -443,3 +446,6 @@ const style = {
 // Public API
 // ===============================================================
 export default VirtualScroller;
+export {
+  DEFAULT_ROW,
+};
