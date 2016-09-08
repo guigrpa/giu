@@ -59,7 +59,7 @@ const SortableVirtualScroller = sortableContainer(VirtualScroller, { withRef: tr
 class DataTable extends React.PureComponent {
   static propTypes = {
     itemsById:              React.PropTypes.object,
-    cols:                   React.PropTypes.arrayOf(DATA_TABLE_COLUMN_PROP_TYPES),
+    cols:                   React.PropTypes.arrayOf(DATA_TABLE_COLUMN_PROP_TYPES).isRequired,
     lang:                   React.PropTypes.string,
 
     shownIds:               React.PropTypes.arrayOf(React.PropTypes.string),
@@ -110,8 +110,6 @@ class DataTable extends React.PureComponent {
 
   static defaultProps = {
     itemsById:              {},
-    cols:                   [],
-
     shownIds:               [],
 
     filterValue:            '',
@@ -124,12 +122,13 @@ class DataTable extends React.PureComponent {
     manualSortColLabel:     'Sort manually',
 
     selectedIds:            [],
-    allowSelect:            false,
-    multipleSelection:      false,
+    allowSelect:            true,
+    multipleSelection:      true,
 
     fetching:               false,
     FetchRowComponent:      DataTableFetchingRow,
 
+    height:                 200,
     accentColor:            COLORS.accent,
   };
 

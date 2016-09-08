@@ -4,11 +4,9 @@
   - [x] Selection & multi-selection
   - [x] alwaysRenderIds
   - [ ] Drag-n-drop sorting:
-      - [x] Debug (in particular, what happens when there are alwaysRenderIds)
-      - [x] Add localStorage to save manual order? No, better leave to the user!
-      - [x] Remove `top` animations while dragging
-      - [x] Fix `sort()` function in DataTable
-
+      - [ ] Bug: dragging does not work beyond the originally downloaded IDs
+  - [ ] Disable scroll wheel when we reach the end (same as in popups)
+  - [ ] Keyboard actions
   - [ ] Clipboard actions (requires focus -- what about nested focusable items??)
   - [ ] Style customisation
   - [ ] Add examples:

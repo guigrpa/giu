@@ -73,6 +73,7 @@ class VerticalManager extends React.Component {
   // ===============================================================
   render() {
     const { id, index, ChildComponent, childProps } = this.props;
+    const disabled = childProps.disabled || this.props.top == null;
     return (
       <div ref="verticalManager"
         className="giu-vertical-manager"
@@ -90,7 +91,7 @@ class VerticalManager extends React.Component {
           // (react-sortable-hoc) if its `top` is `undefined`
           // (i.e. if it is hidden and temporarily possitioned at the top,
           // hence possibly interfering in react-sortable-hoc´s algorithm)
-          disabled={this.props.top == null}
+          disabled={disabled}
         />
       </div>
       // Typical example of `onMayHaveChangedHeight`: in the `render`
