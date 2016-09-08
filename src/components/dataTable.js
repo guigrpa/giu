@@ -1,5 +1,5 @@
 import {
-  set as timmSet,
+  merge,
   removeAt, addLast,
 }                           from 'timm';
 import React                from 'react';
@@ -10,7 +10,6 @@ import {
   arrayMove,
 }                           from 'react-sortable-hoc';
 import VirtualScroller      from './virtualScroller';
-const SortableVirtualScroller = sortableContainer(VirtualScroller);
 import { COLORS }           from '../gral/constants';
 import { isDark }           from '../gral/styles';
 import {
@@ -24,6 +23,7 @@ import {
   FETCHING_MORE_ITEMS_ROW,
 }                           from './dataTableRow';
 import Icon                 from './icon';
+import './dataTable.css';
 
 const SORT_MANUALLY = '__SORT_MANUALLY__';
 const createManualSortCol = label => ({
@@ -42,8 +42,15 @@ const createManualSortCol = label => ({
 });
 
 const DragHandle = sortableHandle(({ disabled }) =>
-  <Icon icon="bars" disabled={disabled} style={style.dragHandle} />
+  <Icon
+    icon="bars"
+    disabled={disabled}
+    style={style.dragHandle}
+  />
 );
+
+const SortableDataTableRow = sortableElement(DataTableRow);
+const SortableVirtualScroller = sortableContainer(VirtualScroller, { withRef: true });
 
 // ===============================================================
 // Component
@@ -62,14 +69,18 @@ class DataTable extends React.PureComponent {
 
     // Sorting
     headerClickForSorting:  React.PropTypes.bool,
+    onChangeSort:           React.PropTypes.func,     // N/A if (!headerClickForSorting)
+    sortBy:                 React.PropTypes.string,
+    sortDescending:         React.PropTypes.bool,
+
+    // Manual sorting
     allowManualSorting:     React.PropTypes.bool,     // dragging possible (adds dragging col)
+    manuallyOrderedIds:     React.PropTypes.arrayOf(React.PropTypes.string),
+    onChangeManualOrder:    React.PropTypes.func,     // N/A if (!allowManualSorting)
     manualSortColLabel:     React.PropTypes.oneOfType([
       React.PropTypes.string,
       React.PropTypes.func,
     ]),
-    onChangeSort:           React.PropTypes.func,     // N/A if (!headerClickForSorting)
-    sortBy:                 React.PropTypes.string,
-    sortDescending:         React.PropTypes.bool,
 
     // Selection
     selectedIds:            React.PropTypes.arrayOf(React.PropTypes.string),
@@ -104,10 +115,11 @@ class DataTable extends React.PureComponent {
     filterValue:            '',
 
     headerClickForSorting:  true,
-    allowManualSorting:     true,
-    manualSortColLabel:     'Sort manually',
     sortBy:                 null,
     sortDescending:         false,
+
+    allowManualSorting:     true,
+    manualSortColLabel:     'Sort manually',
 
     selectedIds:            [],
     allowSelect:            false,
@@ -121,6 +133,7 @@ class DataTable extends React.PureComponent {
   constructor(props) {
     super(props);
     this.scrollbarWidth = 0;
+    this.fDragging = false;
     this.recalcCols(props);
     this.recalcMaxLabelLevel();
     // State initialised by outer props, then free to change by default
@@ -128,6 +141,7 @@ class DataTable extends React.PureComponent {
     this.sortBy = props.sortBy;
     this.sortDescending = props.sortDescending;
     this.selectedIds = props.selectedIds;
+    this.manuallyOrderedIds = props.manuallyOrderedIds;
     this.recalcShownIds(props);
     this.recalcColors(props);
     bindAll(this, [
@@ -135,6 +149,7 @@ class DataTable extends React.PureComponent {
       'onChangeScrollbarWidth',
       'onClickHeader',
       'onClickRow',
+      'onDragStart',
       'onDragEnd',
     ]);
     this.commonRowProps = {};
@@ -147,6 +162,7 @@ class DataTable extends React.PureComponent {
       shownIds,
       filterValue,
       sortBy, sortDescending,
+      manuallyOrderedIds,
       selectedIds,
       accentColor,
     } = nextProps;
@@ -166,6 +182,10 @@ class DataTable extends React.PureComponent {
       this.sortBy = sortBy;
       this.sortDescending = sortDescending;
       fRecalcShownIds = true;
+    }
+    if (manuallyOrderedIds !== this.props.manuallyOrderedIds) {
+      this.manuallyOrderedIds = manuallyOrderedIds;
+      if (sortBy === SORT_MANUALLY) fRecalcShownIds = true;
     }
     if (fRecalcShownIds) this.recalcShownIds(nextProps);
     if (selectedIds !== this.props.selectedIds) this.selectedIds = selectedIds;
@@ -207,31 +227,30 @@ class DataTable extends React.PureComponent {
   // Render
   // ===============================================================
   render() {
-    const { lang, filterValue } = this.props;
+    const { lang, filterValue, allowManualSorting } = this.props;
     const { cols, selectedIds, sortBy, sortDescending } = this;
 
     const fSortedManually = sortBy === SORT_MANUALLY;
 
     // Timm will make sure `this.commonRowProps` doesn't change unless
     // any of the merged properties changes.
-    let commonRowProps = this.commonRowProps;
-    commonRowProps = timmSet(commonRowProps, 'cols', cols);
-    commonRowProps = timmSet(commonRowProps, 'lang', lang);
-    commonRowProps = timmSet(commonRowProps, 'fSortedManually', fSortedManually);
-    commonRowProps = timmSet(commonRowProps, 'selectedIds', selectedIds);
-    commonRowProps = timmSet(commonRowProps, 'selectedBgColor', this.selectedBgColor);
-    commonRowProps = timmSet(commonRowProps, 'selectedFgColor', this.selectedFgColor);
-    commonRowProps = timmSet(commonRowProps, 'onClick',
-      this.props.allowSelect ? this.onClickRow : undefined);
-    this.commonRowProps = commonRowProps;
+    this.commonRowProps = merge(this.commonRowProps, {
+      cols, lang, selectedIds,
+      selectedBgColor: this.selectedBgColor,
+      selectedFgColor: this.selectedFgColor,
+      fSortedManually: allowManualSorting ? fSortedManually : undefined,
+      disabled: allowManualSorting ? !fSortedManually : undefined,
+      onClick: this.props.allowSelect ? this.onClickRow : undefined,
+    });
 
     // Get the ordered list of IDs to be shown
     let shownIds = this.shownIds.slice();
     if (this.props.fetching) shownIds.push(FETCHING_MORE_ITEMS_ROW);
-    const ChosenVirtualScroller = fSortedManually ? SortableVirtualScroller : VirtualScroller;
+    const ChosenVirtualScroller = allowManualSorting ? SortableVirtualScroller : VirtualScroller;
+
     return (
       <div
-        className="giu-data-table"
+        className={`giu-data-table ${this.fDragging ? 'dragging' : 'not-dragging'}`}
         style={style.outer}
       >
         <DataTableHeader
@@ -247,8 +266,9 @@ class DataTable extends React.PureComponent {
           itemsById={this.props.itemsById}
           shownIds={shownIds}
           alwaysRenderIds={this.props.alwaysRenderIds}
-          RowComponent={fSortedManually ? sortableElement(DataTableRow) : DataTableRow}
-          commonRowProps={commonRowProps}
+          RowComponent={allowManualSorting ? SortableDataTableRow : DataTableRow}
+          commonRowProps={this.commonRowProps}
+          fSortedManually={fSortedManually}
           onRenderLastRow={filterValue ? undefined : this.onRenderLastRow}
           onChangeScrollbarWidth={this.onChangeScrollbarWidth}
           height={this.props.height}
@@ -258,9 +278,11 @@ class DataTable extends React.PureComponent {
           estimatedMinRowHeight={this.props.estimatedMinRowHeight}
           numRowsInitialRender={this.props.numRowsInitialRender}
           maxRowsToRenderInOneGo={this.props.maxRowsToRenderInOneGo}
+
           // Sortable
-          useDragHandle={fSortedManually ? true : undefined}
-          onSortEnd={fSortedManually ? this.onDragEnd : undefined}
+          useDragHandle={allowManualSorting ? true : undefined}
+          onSortStart={allowManualSorting ? this.onDragStart : undefined}
+          onSortEnd={allowManualSorting ? this.onDragEnd : undefined}
         />
       </div>
     );
@@ -322,23 +344,31 @@ class DataTable extends React.PureComponent {
     this.sortBy = sortBy;
     this.sortDescending = sortDescending;
     this.recalcShownIds(this.props);
-    if (this.refVirtualScroller) this.refVirtualScroller.scrollToTop();
-    this.forceUpdate();
-    if (this.props.onChangeSort) {
-      this.props.onChangeSort({ sortBy, sortDescending, shownIds: this.shownIds });
+    let ref = this.refVirtualScroller;
+    if (ref) {
+      if (ref.getWrappedInstance) ref = ref.getWrappedInstance();
+      ref.scrollToTop();
     }
+    this.forceUpdate();
+    if (this.props.onChangeSort) this.props.onChangeSort({ sortBy, sortDescending });
+  }
+
+  onDragStart() {
+    this.fDragging = true;
+    this.forceUpdate();
   }
 
   onDragEnd({ oldIndex, newIndex }) {
-    console.log(`DataTable: moved #${oldIndex} to #${newIndex}`);
-    this.shownIds = this.shownIds.slice();
-    arrayMove(this.shownIds, oldIndex, newIndex);
-    this.props.onChangeSort({
-      sortBy: this.sortBy,
-      sortDescending: this.sortDescending,
-      shownIds: this.shownIds,
-    });
+    // console.log(`DataTable: moved #${oldIndex} to #${newIndex}`);
+    this.manuallyOrderedIds = this.manuallyOrderedIds.slice();
+    arrayMove(this.manuallyOrderedIds, oldIndex, newIndex);
+    this.recalcShownIds(this.props);
+    if (this.props.onChangeManualOrder) this.props.onChangeManualOrder(this.manuallyOrderedIds);
     this.forceUpdate();
+    setImmediate(() => {
+      this.fDragging = false;
+      this.forceUpdate();
+    });
   }
 
   // ===============================================================
@@ -373,8 +403,41 @@ class DataTable extends React.PureComponent {
     return filteredIds;
   }
 
-  // TODO: handle manual sort!
   sort(ids, props) {
+    let out;
+    if (this.sortBy === SORT_MANUALLY) {
+      out = this.sortManually(ids, props);
+    } else {
+      out = this.sortAutomatically(ids, props);
+    }
+    return out;
+  }
+
+  sortManually(ids, props) {
+    const { manuallyOrderedIds } = this;
+    if (manuallyOrderedIds == null) {
+      this.manuallyOrderedIds = ids.slice();
+      if (props.onChangeManualOrder) props.onChangeManualOrder(this.manuallyOrderedIds);
+      return ids;
+    }
+
+    // Copy from `manuallyOrderedIds` only those IDs that are in the input list
+    const sortedIds = [];
+    for (let i = 0; i < manuallyOrderedIds.length; i++) {
+      const id = manuallyOrderedIds[i];
+      if (ids.indexOf(id) >= 0) sortedIds.push(id);
+    }
+
+    // Add remaining IDs from the input list to the end
+    for (let i = 0; i < ids.length; i++) {
+      const id = ids[i];
+      if (sortedIds.indexOf(id) < 0) sortedIds.push(id);
+    }
+
+    return sortedIds;
+  }
+
+  sortAutomatically(ids, props) {
     const { sortBy, sortDescending } = this;
     const { itemsById } = props;
     if (!sortBy) return ids;
@@ -419,19 +482,6 @@ const style = {
     marginRight: 3,
   },
 };
-
-// ===============================================================
-// Helper components
-// ===============================================================
-// const DragHandle = sortableHandle(() => <span style={style.handle}>***</span>)
-// const dragRenderer = () => <DragHandle />;
-//
-// const SortableFlexTable = sortableContainer(FlexTable, { withRef: true });
-// const SortableRow = sortableElement(defaultFlexTableRowRenderer);
-//
-// const descRenderer = ({ item }) => <span>{item.name}</span>;
-//
-// const rendererForSizeMeasurement = item => descRenderer({ item });
 
 // ===============================================================
 // Public API

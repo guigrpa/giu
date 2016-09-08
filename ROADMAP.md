@@ -4,10 +4,10 @@
   - [x] Selection & multi-selection
   - [x] alwaysRenderIds
   - [ ] Drag-n-drop sorting:
-      - [ ] Debug (in particular, what happens when there are alwaysRenderIds)
-      - [ ] Fix `sort()` function in DataTable
+      - [x] Debug (in particular, what happens when there are alwaysRenderIds)
       - [x] Add localStorage to save manual order? No, better leave to the user!
-      - [ ] Remove `top` animations while dragging
+      - [x] Remove `top` animations while dragging
+      - [x] Fix `sort()` function in DataTable
 
   - [ ] Clipboard actions (requires focus -- what about nested focusable items??)
   - [ ] Style customisation

@@ -48,9 +48,9 @@ class VerticalManager extends React.Component {
   measureHeight() {
     const { onChangeHeight } = this.props;
     if (!onChangeHeight) return;
-    const container = this.refs.container;
-    if (!container) return;
-    const height = container.clientHeight;
+    const refVerticalManager = this.refs.verticalManager;
+    if (!refVerticalManager) return;
+    const height = refVerticalManager.clientHeight;
     /* eslint-disable max-len */
     // console.log(`Measured height for ${this.props.id} - ${this.props.childProps.item.name}: ${height}`)
     /* eslint-enable max-len */
@@ -74,7 +74,8 @@ class VerticalManager extends React.Component {
   render() {
     const { id, index, ChildComponent, childProps } = this.props;
     return (
-      <div ref="container"
+      <div ref="verticalManager"
+        className="giu-vertical-manager"
         id={id}
         style={style.outer(this.props)}
       >
@@ -83,6 +84,12 @@ class VerticalManager extends React.Component {
           index={index}
           {...childProps}
           onMayHaveChangedHeight={this.asyncMeasureHeight}
+
+          // Disable participation of this row in drag-n-drop
+          // (react-sortable-hoc) if its `top` is `undefined`
+          // (i.e. if it is hidden and temporarily possitioned at the top,
+          // hence possibly interfering in react-sortable-hoc´s algorithm)
+          disabled={this.props.top == null}
         />
       </div>
       // Typical example of `onMayHaveChangedHeight`: in the `render`
@@ -100,18 +107,10 @@ const style = {
     position: 'absolute',
     opacity: top != null ? 1 : 0,
     zIndex: top != null ? undefined : -5000,
+    // transform: top != null ? `translateY(${top}px)` : undefined,
     top,
     left: 0,
     right: 0,
-
-    // Important transition, no only aesthetically. When a row's contents changes height
-    // and it is not shown because it is above the viewport, wheneve the user scrolls up
-    // to that row it will get rendered, report on its new height, and all of the subsequent
-    // rows will get repositioned. This should happen slowly to avoid confusing jumps
-    // while scrolling
-    // TODO: maybe disable this transition when list is draggable (react-sortable-hoc already
-    // includes transition CSS)
-    transition: 'top 300ms',
   }),
 };
 

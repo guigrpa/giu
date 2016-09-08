@@ -195,7 +195,7 @@ class VirtualScroller extends React.PureComponent {
 
   renderRows() {
     this.determineRenderInterval();
-    const { idxFirst, idxLast, rowHeight } = this;
+    const { idxFirst, idxLast } = this;
     console.log(`VirtualScroller: idxFirst: ${idxFirst}, idxLast: ${idxLast}`);
     if (idxFirst == null || idxLast == null) return null;
     const { shownIds, alwaysRenderIds } = this.props;

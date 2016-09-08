@@ -1,0 +1,8 @@
+/* Important transition, no only aesthetically. When a row's contents changes height
+and it is not shown because it is above the viewport, wheneve the user scrolls up
+to that row it will get rendered, report on its new height, and all of the subsequent
+rows will get repositioned. This should happen slowly to avoid confusing jumps
+while scrolling */
+.giu-data-table.not-dragging .giu-vertical-manager {
+  transition: top 300ms;
+}

@@ -681,7 +681,7 @@ const DATA_TABLE_COLS = [
 class DataTableExample extends React.Component {
   constructor(props) {
     super(props);
-    const numItems = 30;
+    const numItems = 40;
     const itemsById = sampleDataTableItems(numItems);
     this.selectedIds = ['1'];
     this.alwaysRenderIds = ['0', '1', '3'];
@@ -721,10 +721,10 @@ class DataTableExample extends React.Component {
           lang={String(dataTableLang)}
           shownIds={this.state.shownIds}
           alwaysRenderIds={this.alwaysRenderIds}
-          height={200}
+          height={250}
           // rowHeight={40}
           // uniformRowHeight
-          fetchMoreItems={this.fetchMore}
+          // fetchMoreItems={this.fetchMore}
           fetching={this.state.fFetching}
           filterValue={this.state.filterValue}
           manualSortColLabel={() => (dataTableLang ? 'Ordenar manualmente' : 'Sort manually')}
