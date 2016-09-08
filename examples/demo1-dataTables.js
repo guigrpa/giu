@@ -78,6 +78,10 @@ class DevelopmentExample extends React.Component {
     const itemsById = sampleDataTableItems(numItems);
     this.selectedIds = ['1'];
     this.alwaysRenderIds = ['0', '1', '3'];
+    try {
+      const json = localStorage['giu.dataTableExample.manuallyOrderedIds'];
+      this.manuallyOrderedIds = JSON.parse(json);
+    } catch (err) { /* ignore */ }
     this.state = {
       numItems,
       itemsById,
@@ -93,14 +97,7 @@ class DevelopmentExample extends React.Component {
 
   render() {
     return (
-      <div style={exampleStyle}>
-        <ExampleLabel>
-          DataTable (sort, filter, select, fetch more...) + VirtualScroller (only render
-          visible rows, with dynamic+unknown, uniform+unknown, uniform+known row heights)
-          {' '}
-          {this.state.fFetching && <Spinner />}
-        </ExampleLabel>
-
+      <div>
         <div>
           <Button onClick={() => this.toggleLang()}>Toggle lang</Button>
           {' '}
@@ -121,7 +118,11 @@ class DevelopmentExample extends React.Component {
           fetching={this.state.fFetching}
           // FetchRowComponent={() => <div>Fetching...</div>}
           filterValue={this.state.filterValue}
+          manuallyOrderedIds={this.manuallyOrderedIds}
           manualSortColLabel={() => (dataTableLang ? 'Ordenar manualmente' : 'Sort manually')}
+          onChangeManualOrder={newOrder => {
+            localStorage['giu.dataTableExample.manuallyOrderedIds'] = JSON.stringify(newOrder);
+          }}
           onChangeSort={this.logArgs}
           selectedIds={this.selectedIds}
           allowSelect multipleSelection

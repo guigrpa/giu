@@ -4,7 +4,7 @@
   - [x] Selection & multi-selection
   - [x] alwaysRenderIds
   - [ ] Drag-n-drop sorting:
-      - [ ] Bug: dragging does not work beyond the originally downloaded IDs
+      - [ ] Include localStorage support?
   - [ ] Disable scroll wheel when we reach the end (same as in popups)
   - [ ] Keyboard actions
   - [ ] Clipboard actions (requires focus -- what about nested focusable items??)

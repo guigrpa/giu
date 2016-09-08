@@ -376,12 +376,26 @@ class DataTable extends React.PureComponent {
   }
 
   onDragEnd({ oldIndex, newIndex }) {
-    // console.log(`DataTable: moved #${oldIndex} to #${newIndex}`);
-    this.manuallyOrderedIds = this.manuallyOrderedIds.slice();
-    arrayMove(this.manuallyOrderedIds, oldIndex, newIndex);
+    // Convert indices in `shownIds` to indices in `manuallyOrderedIds`
+    const { shownIds, manuallyOrderedIds } = this;
+    const finalOldIndex = manuallyOrderedIds.indexOf(shownIds[oldIndex]);
+    const finalNewIndex = manuallyOrderedIds.indexOf(shownIds[newIndex]);
+    if (finalOldIndex < 0 || finalNewIndex < 0) return;
+
+    // Update `manuallyOrderedIds`, creating a new array
+    // console.log(`DataTable: moved #${finalOldIndex} to #${finalNewIndex}`);
+    this.manuallyOrderedIds = manuallyOrderedIds.slice();
+    arrayMove(this.manuallyOrderedIds, finalOldIndex, finalNewIndex);
+
+    // Update `shownIds` so that the changes are reflected. Then report on them to the user
+    // and re-render
     this.recalcShownIds(this.props);
     if (this.props.onChangeManualOrder) this.props.onChangeManualOrder(this.manuallyOrderedIds);
     this.forceUpdate();
+
+    // Finally, and asynchronously (to allow time for the previous re-render),
+    // set `fDragging` to `false` and re-render, to enable `VerticalManager` animations again
+    // (which were disabled during dragging)
     setImmediate(() => {
       this.fDragging = false;
       this.forceUpdate();
@@ -432,24 +446,51 @@ class DataTable extends React.PureComponent {
 
   sortManually(ids, props) {
     const { manuallyOrderedIds } = this;
+    let fChangedManualOrder = false;
+    let sortedIds;
+
+    // If we don't have a previous list of `manuallyOrderedIds`, create one.
+    // As a user, I would expect the IDs to remain exactly the same as they are just before
+    // we switch to manual order, so just copy the list passed as argument
     if (manuallyOrderedIds == null) {
       this.manuallyOrderedIds = ids.slice();
-      if (props.onChangeManualOrder) props.onChangeManualOrder(this.manuallyOrderedIds);
-      return ids;
+      fChangedManualOrder = true;
+      sortedIds = ids;
+
+    // In the general case, we do have a list of `manuallyOrderedIds`, but its set of IDs
+    // may differ from the `ids` list received as argument: `ids` may be filtered, it may be
+    // empty because the records have not been fetched yet, etc.
+    //
+    // The following algorithm makes sure that:
+    // - IDs that are both in `ids` and in `manuallyOrderedIds` are copies to the final list
+    // in the order defined by `manuallyOrderedIds`
+    // - All other IDs in the `ids` list (and *not* in `manuallyOrderedIds`) are appended
+    // to both the output list *and* the `manuallyOrderedIds`
+    } else {
+      sortedIds = [];
+
+      // Copy from `manuallyOrderedIds` only those IDs that are in the input list
+      for (let i = 0; i < manuallyOrderedIds.length; i++) {
+        const id = manuallyOrderedIds[i];
+        if (ids.indexOf(id) >= 0) sortedIds.push(id);
+      }
+
+      // Append remaining IDs from the input list to the output and to `manuallyOrderedIds`
+      for (let i = 0; i < ids.length; i++) {
+        const id = ids[i];
+        if (sortedIds.indexOf(id) < 0) {
+          sortedIds.push(id);
+          manuallyOrderedIds.push(id);
+          fChangedManualOrder = true;
+        }
+      }
     }
 
-    // Copy from `manuallyOrderedIds` only those IDs that are in the input list
-    const sortedIds = [];
-    for (let i = 0; i < manuallyOrderedIds.length; i++) {
-      const id = manuallyOrderedIds[i];
-      if (ids.indexOf(id) >= 0) sortedIds.push(id);
+    // Report to the user if he's interested and something has changed
+    if (fChangedManualOrder && props.onChangeManualOrder) {
+      props.onChangeManualOrder(this.manuallyOrderedIds);
     }
-
-    // Add remaining IDs from the input list to the end
-    for (let i = 0; i < ids.length; i++) {
-      const id = ids[i];
-      if (sortedIds.indexOf(id) < 0) sortedIds.push(id);
-    }
+    // console.log(`New manual order: ${this.manuallyOrderedIds.join(', ')}`)
 
     return sortedIds;
   }

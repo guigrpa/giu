@@ -263,7 +263,7 @@ class VirtualScroller extends React.PureComponent {
   onChangeRowHeight(id, height) {
     const prevCachedHeight = this.cachedHeights[id];
     if (prevCachedHeight === height) return;
-    console.log(`VirtualScroller: new height for row ${id}: ${height}`);
+    // console.log(`VirtualScroller: new height for row ${id}: ${height}`);
     if (height < this.minHeight) this.minHeight = height;
     if (this.props.uniformRowHeight && this.rowHeight == null) {
       this.rowHeight = height;
