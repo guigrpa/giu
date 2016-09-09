@@ -3,8 +3,8 @@
 - [ ] DATATABLE/VIRTUALSCROLLER
   - [x] Selection & multi-selection
   - [x] alwaysRenderIds
-  - [ ] Drag-n-drop sorting:
-      - [ ] Include localStorage support?
+  - [x] Drag-n-drop sorting:
+      - [x] Include localStorage support?
   - [ ] Disable scroll wheel when we reach the end (same as in popups)
   - [ ] Keyboard actions
   - [ ] Clipboard actions (requires focus -- what about nested focusable items??)

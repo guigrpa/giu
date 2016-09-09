@@ -92,3 +92,4 @@ export {
   isVisible,
   scrollIntoView,
 }                         from './gral/visibility';
+export *                  from './gral/storage';

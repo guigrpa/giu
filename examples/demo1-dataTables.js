@@ -120,9 +120,7 @@ class DevelopmentExample extends React.Component {
           filterValue={this.state.filterValue}
           manuallyOrderedIds={this.manuallyOrderedIds}
           manualSortColLabel={() => (dataTableLang ? 'Ordenar manualmente' : 'Sort manually')}
-          onChangeManualOrder={newOrder => {
-            localStorage['giu.dataTableExample.manuallyOrderedIds'] = JSON.stringify(newOrder);
-          }}
+          collectionName="complexDataTableExample"
           onChangeSort={this.logArgs}
           selectedIds={this.selectedIds}
           allowSelect multipleSelection
@@ -212,7 +210,7 @@ const DataTableExample = () =>
     </ExampleLabel>
     {<DevelopmentExample />}
     <br />
-    <b>Default behaviour:</b>
+    <b>The simplest example: leave everything to the DataTable component</b>
     <ExampleWithDefaults />
     <br />
     <b>Ultrafast, with uniform row heights:</b>

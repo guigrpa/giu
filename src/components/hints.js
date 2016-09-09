@@ -10,6 +10,7 @@ import {
   set as timmSet,
 }                           from 'timm';
 import HintScreen           from './hintScreen';
+import { localGet, localSet } from '../gral/storage';
 
 /* --
 **Include the `<Hints />` component at (or near)
@@ -89,10 +90,10 @@ function initStore() {
   const storeEnhancers = applyMiddleware(thunk);
   const initialState = merge({}, INITIAL_STATE);
   try {
-    initialState.fDisableAll = JSON.parse(localStorage[`${NAMESPACE}_fDisableAll`]);
+    initialState.fDisableAll = localGet('hints.fDisableAll');
   } catch (err) { /* discard */ }
   try {
-    initialState.disabled = JSON.parse(localStorage[`${NAMESPACE}_disabled`]);
+    initialState.disabled = localGet('hints.disabled');
   } catch (err) { /* discard */ }
   store = createStore(reducer, initialState, storeEnhancers);
 }
@@ -142,18 +143,18 @@ const actions = {
   hintDisableAll: () => (dispatch, getState) => {
     dispatch({ type: 'HINT_DISABLE_ALL' });
     const { fDisableAll } = getState();
-    localStorage[`${NAMESPACE}_fDisableAll`] = JSON.stringify(fDisableAll);
+    localSet('hints.fDisableAll', fDisableAll);
   },
   hintReset: () => (dispatch, getState) => {
     dispatch({ type: 'HINT_RESET' });
     const { fDisableAll, disabled } = getState();
-    localStorage[`${NAMESPACE}_fDisableAll`] = JSON.stringify(fDisableAll);
-    localStorage[`${NAMESPACE}_disabled`] = JSON.stringify(disabled);
+    localSet('hints.fDisableAll', fDisableAll);
+    localSet('hints.disabled', disabled);
   },
   hintShow: (id, force) => (dispatch, getState) => {
     dispatch({ type: 'HINT_SHOW', id, force });
     const { disabled } = getState();
-    localStorage[`${NAMESPACE}_disabled`] = JSON.stringify(disabled);
+    localSet('hints.disabled', disabled);
   },
   hintHide: () => ({ type: 'HINT_HIDE' }),
 };

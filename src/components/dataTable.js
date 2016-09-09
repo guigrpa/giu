@@ -16,6 +16,7 @@ import {
   bindAll,
   simplifyString,
 }                           from '../gral/helpers';
+import { localGet, localSet } from '../gral/storage';
 import {
   DataTableHeader,
   DataTableRow,
@@ -78,6 +79,7 @@ class DataTable extends React.PureComponent {
     allowManualSorting:     React.PropTypes.bool,     // dragging possible (adds dragging col)
     manuallyOrderedIds:     React.PropTypes.arrayOf(React.PropTypes.string),
     onChangeManualOrder:    React.PropTypes.func,     // N/A if (!allowManualSorting)
+    collectionName:         React.PropTypes.string,
     manualSortColLabel:     React.PropTypes.oneOfType([
       React.PropTypes.string,
       React.PropTypes.func,
@@ -143,7 +145,13 @@ class DataTable extends React.PureComponent {
     this.sortBy = props.sortBy;
     this.sortDescending = props.sortDescending;
     this.selectedIds = props.selectedIds;
-    this.manuallyOrderedIds = props.manuallyOrderedIds;
+    if (props.manuallyOrderedIds) {
+      this.manuallyOrderedIds = props.manuallyOrderedIds;
+    } else if (props.collectionName) {
+      this.manuallyOrderedIds = localGet(this.getLocalStorageKey(props.collectionName));
+    } else {
+      this.manuallyOrderedIds = undefined;
+    }
     this.recalcShownIds(props);
     this.recalcRowComponents(props);
     this.recalcColors(props);
@@ -390,7 +398,7 @@ class DataTable extends React.PureComponent {
     // Update `shownIds` so that the changes are reflected. Then report on them to the user
     // and re-render
     this.recalcShownIds(this.props);
-    if (this.props.onChangeManualOrder) this.props.onChangeManualOrder(this.manuallyOrderedIds);
+    this.manualOrderDidChange(this.props);
     this.forceUpdate();
 
     // Finally, and asynchronously (to allow time for the previous re-render),
@@ -486,11 +494,8 @@ class DataTable extends React.PureComponent {
       }
     }
 
-    // Report to the user if he's interested and something has changed
-    if (fChangedManualOrder && props.onChangeManualOrder) {
-      props.onChangeManualOrder(this.manuallyOrderedIds);
-    }
-    // console.log(`New manual order: ${this.manuallyOrderedIds.join(', ')}`)
+    // Report to the user if he's interested and the manual order has changed
+    if (fChangedManualOrder) this.manualOrderDidChange(props);
 
     return sortedIds;
   }
@@ -524,6 +529,18 @@ class DataTable extends React.PureComponent {
     });
     if (sortDescending) sortedIds.reverse();
     return sortedIds;
+  }
+
+  manualOrderDidChange(props) {
+    const { onChangeManualOrder, collectionName } = props;
+    const { manuallyOrderedIds } = this;
+    if (collectionName) localSet(this.getLocalStorageKey(collectionName), manuallyOrderedIds);
+    if (onChangeManualOrder) onChangeManualOrder(manuallyOrderedIds);
+    // console.log(`New manual order: ${this.manuallyOrderedIds.join(', ')}`)
+  }
+
+  getLocalStorageKey(collectionName) {
+    return `dataTable.${collectionName}.manuallyOrderedIds`;
   }
 }
 
