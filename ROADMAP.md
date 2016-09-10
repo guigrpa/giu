@@ -5,12 +5,11 @@
   - [x] alwaysRenderIds
   - [x] Drag-n-drop sorting:
       - [x] Include localStorage support?
-  - [ ] Disable scroll wheel when we reach the end (same as in popups)
+  - [x] Style customisation
   - [ ] Keyboard actions
   - [ ] Clipboard actions (requires focus -- what about nested focusable items??)
-  - [ ] Style customisation
   - [ ] Add examples:
-      - [ ] All defaults
+      - [x] All defaults
       - [ ] Classical pagination (external) vs. infinite scrolling
       - [ ] Multi-level sorting (external) vs. default sorting
       - [ ] Clipboard actions

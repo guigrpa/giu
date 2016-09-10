@@ -48,6 +48,7 @@ class DataTableHeader extends React.PureComponent {
     sortBy:                 React.PropTypes.string,
     sortDescending:         React.PropTypes.bool,
     onClick:                React.PropTypes.func,
+    style:                  React.PropTypes.object,
   };
 
   constructor(props) {
@@ -95,8 +96,15 @@ class DataTableHeader extends React.PureComponent {
     const h = 8 + 15 * level;
     const w = 5;
     const d = `M0,${h} l0,-${h} l${w},0`;
+    const { style: baseStyle } = this.props;
     return (
-      <svg style={style.headerCallOut({ width: w, height: h })}>
+      <svg
+        style={style.headerCallOut({
+          width: w,
+          height: h,
+          stroke: baseStyle ? baseStyle.color : undefined,
+        })}
+      >
         <path d={d} />
       </svg>
     );
@@ -129,6 +137,7 @@ class DataTableRow extends React.PureComponent {
     fSortedManually:        React.PropTypes.bool,
     onMayHaveChangedHeight: React.PropTypes.func,
     onClick:                React.PropTypes.func,
+    style:                  React.PropTypes.object,
     selectedBgColor:        React.PropTypes.string.isRequired,
     selectedFgColor:        React.PropTypes.string.isRequired,
   };
@@ -201,13 +210,14 @@ const DataTableFetchingRow = () =>
 // ===============================================================
 const style = {
   rowOuterBase: flexContainer('row'),
-  rowOuter: ({ selectedBgColor, selectedFgColor }, fSelected) => {
-    let out = style.rowOuterBase;
+  rowOuter: ({ selectedBgColor, selectedFgColor, style: baseStyle }, fSelected) => {
+    const out = merge(style.rowOuterBase, {
+      paddingTop: 1,
+      paddingBottom: 1,
+    }, baseStyle);
     if (fSelected) {
-      out = merge(out, {
-        backgroundColor: selectedBgColor,
-        color: selectedFgColor,
-      });
+      out.backgroundColor = selectedBgColor;
+      out.color = selectedFgColor;
     }
     return out;
   },
@@ -215,13 +225,15 @@ const style = {
     marginTop: 1,
     marginBottom: 2,
   },
-  headerOuter: ({ maxLabelLevel, scrollbarWidth }) => flexContainer('row', {
-    marginRight: scrollbarWidth,
-    marginTop: 2 + 15 * maxLabelLevel,
-    marginBottom: 2,
-    paddingBottom: 2,
-    borderBottom: `1px solid ${COLORS.line}`,
-  }),
+  headerOuter: ({ maxLabelLevel, scrollbarWidth, style: baseStyle }) =>
+    merge(flexContainer('row', {
+      marginRight: scrollbarWidth,
+      marginTop: 2,
+      marginBottom: 2,
+      paddingTop: 2 + 15 * maxLabelLevel,
+      paddingBottom: 2,
+      borderBottom: `1px solid ${COLORS.line}`,
+    }), baseStyle),
   rowCell: (idxCol, {
     hidden,
     minWidth = 50,
@@ -257,14 +269,14 @@ const style = {
     }
     return out;
   },
-  headerCallOut: base => merge(base, {
+  headerCallOut: base => merge({
     position: 'absolute',
     right: '100%',
     top: 7,
     stroke: COLORS.line,
     strokeWidth: 1,
     fill: 'none',
-  }),
+  }, base),
   headerSortIcon: {
     marginLeft: 5,
   },

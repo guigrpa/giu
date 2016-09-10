@@ -6,7 +6,7 @@ import faker                from 'faker';
 import { merge }            from 'timm';
 import {
   DataTable,
-  Textarea, Checkbox, TextInput, Button, Spinner,
+  Textarea, Checkbox, TextInput, Button,
   bindAll,
 } from '../src';
 import { ExampleLabel, exampleStyle } from './demo1-common';
@@ -126,6 +126,8 @@ class DevelopmentExample extends React.Component {
           allowSelect multipleSelection
           onChangeSelection={this.logArgs}
           accentColor="lightgray"
+          styleHeader={style.header}
+          styleRow={style.row}
         />
       </div>
     );
@@ -155,6 +157,18 @@ class DevelopmentExample extends React.Component {
 
   logArgs(...args) { console.log(...args); }
 }
+
+const style = {
+  header: {
+    color: 'white',
+    backgroundColor: 'gray',
+    borderBottom: '1px solid gray',
+  },
+  row: {
+    borderBottom: '1px solid #ccc',
+    paddingBottom: 0,
+  },
+};
 
 // -----------------------------------------------
 // Example with defaults
@@ -193,7 +207,7 @@ const ExampleWithUniformRowHeights = () => {
       itemsById={itemsById}
       cols={COLS2}
       shownIds={Object.keys(itemsById)}
-      height={150}
+      height={100}
       uniformRowHeight
     />
   );
@@ -206,8 +220,9 @@ const DataTableExample = () =>
   <div style={exampleStyle}>
     <ExampleLabel>
       DataTable (sort, filter, select, fetch more...) + VirtualScroller (only render
-      visible rows, with dynamic+unknown, uniform+unknown, uniform+known row heights)
+      visible rows, with dynamic-unknown, uniform-unknown or uniform-known row heights)
     </ExampleLabel>
+    <br />
     {<DevelopmentExample />}
     <br />
     <b>The simplest example: leave everything to the DataTable component</b>

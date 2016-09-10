@@ -110,7 +110,7 @@ const style = {
     opacity: top != null ? 1 : 0,
     zIndex: top != null ? undefined : -5000,
     // transform: top != null ? `translateY(${top}px)` : undefined,
-    top,
+    top: top != null ? Math.round(top) : undefined,
     left: 0,
     right: 0,
   }),

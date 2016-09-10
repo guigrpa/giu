@@ -103,6 +103,8 @@ class DataTable extends React.PureComponent {
     rowHeight:              React.PropTypes.number,   // auto-calculated if unspecified
     uniformRowHeight:       React.PropTypes.bool,
     accentColor:            React.PropTypes.string,
+    styleHeader:            React.PropTypes.object,
+    styleRow:               React.PropTypes.object,
 
     // For VirtualScroller specifically
     estimatedMinRowHeight:  React.PropTypes.number,
@@ -261,11 +263,12 @@ class DataTable extends React.PureComponent {
     // any of the merged properties changes.
     this.commonRowProps = merge(this.commonRowProps, {
       cols, lang, selectedIds,
-      selectedBgColor: this.selectedBgColor,
-      selectedFgColor: this.selectedFgColor,
       fSortedManually: allowManualSorting ? fSortedManually : undefined,
       disabled: allowManualSorting ? !fSortedManually : undefined,
       onClick: this.props.allowSelect ? this.onClickRow : undefined,
+      style: this.props.styleRow,
+      selectedBgColor: this.selectedBgColor,
+      selectedFgColor: this.selectedFgColor,
     });
 
     // Get the ordered list of IDs to be shown
@@ -286,6 +289,7 @@ class DataTable extends React.PureComponent {
           sortBy={sortBy}
           sortDescending={sortDescending}
           onClick={this.props.headerClickForSorting ? this.onClickHeader : undefined}
+          style={this.props.styleHeader}
         />
         <ChosenVirtualScroller ref={c => { this.refVirtualScroller = c; }}
           itemsById={this.props.itemsById}
