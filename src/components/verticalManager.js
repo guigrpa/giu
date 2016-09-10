@@ -73,7 +73,7 @@ class VerticalManager extends React.Component {
   // ===============================================================
   render() {
     const { id, index, ChildComponent, childProps } = this.props;
-    const disabled = childProps.disabled || this.props.top == null;
+    const disabled = !childProps.fSortedManually || this.props.top == null;
     return (
       <div ref="verticalManager"
         className="giu-vertical-manager"

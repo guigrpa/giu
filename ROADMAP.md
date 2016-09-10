@@ -1,18 +1,14 @@
 # Roadmap
 
 - [ ] DATATABLE/VIRTUALSCROLLER
-  - [x] Selection & multi-selection
-  - [x] alwaysRenderIds
-  - [x] Drag-n-drop sorting:
-      - [x] Include localStorage support?
-  - [x] Style customisation
-  - [ ] Keyboard actions
-  - [ ] Clipboard actions (requires focus -- what about nested focusable items??)
   - [ ] Add examples:
-      - [x] All defaults
+      - [x] Editing
       - [ ] Classical pagination (external) vs. infinite scrolling
       - [ ] Multi-level sorting (external) vs. default sorting
       - [ ] Clipboard actions
+      - [x] All defaults
+  - [ ] Keyboard actions
+  - [ ] Clipboard actions (requires focus -- what about nested focusable items??)
 
 - [ ] LANGUAGE SUPPORT FOR SELECTS:
   - [ ] Native

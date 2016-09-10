@@ -134,6 +134,7 @@ class DataTableRow extends React.PureComponent {
     cols:                   React.PropTypes.arrayOf(DATA_TABLE_COLUMN_PROP_TYPES),
     lang:                   React.PropTypes.string,
     selectedIds:            React.PropTypes.arrayOf(React.PropTypes.string).isRequired,
+    commonCellProps:        React.PropTypes.object,
     fSortedManually:        React.PropTypes.bool,
     onMayHaveChangedHeight: React.PropTypes.func,
     onClick:                React.PropTypes.func,
@@ -171,15 +172,18 @@ class DataTableRow extends React.PureComponent {
 
   renderCell(col, idxCol) {
     const { attr, render } = col;
-    const { item } = this.props;
-    const value = render ?
-      render({
-        item,
-        col,
+    const { id, item } = this.props;
+    let value;
+    if (render) {
+      const cellProps = merge({
+        item, id, col, attr,
         fSortedManually: this.props.fSortedManually,
         onMayHaveChangedHeight: this.props.onMayHaveChangedHeight,
-      }) :
-      item[attr];
+      }, this.props.commonCellProps);
+      value = render(cellProps);
+    } else {
+      value = item[attr];
+    }
     return (
       <div
         key={attr}

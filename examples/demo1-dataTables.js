@@ -3,11 +3,12 @@
 /* eslint-disable react/prefer-stateless-function */
 import React                from 'react';
 import faker                from 'faker';
-import { merge }            from 'timm';
+import { merge, setIn }     from 'timm';
 import {
   DataTable,
-  Textarea, Checkbox, TextInput, Button,
+  Textarea, Checkbox, TextInput, Button, Spinner,
   bindAll,
+  flexContainer, flexItem,
 } from '../src';
 import { ExampleLabel, exampleStyle } from './demo1-common';
 
@@ -25,7 +26,7 @@ const sampleDataTableItems = (num, idStart = 0) => {
       name,
       confirmed: Math.random() > 0.5,
       phone: faker.phone.phoneNumber(),
-      notes: faker.lorem.sentences(5).split('\n').join(' '),
+      notes: faker.lorem.sentences(2).split('\n').join(' '),
     };
   }
   return out;
@@ -33,36 +34,39 @@ const sampleDataTableItems = (num, idStart = 0) => {
 
 const DATA_TABLE_COLS = [
   {
-    attr: 'id',
-    label: 'ID',
-    minWidth: 40,
-    // hidden: true,
-  },
-  {
     attr: 'name',
     label: () => (dataTableLang ? 'Nombre' : 'Name'),
     minWidth: 100,
-  },
-  {
-    attr: 'confirmed',
-    labelLevel: 1,
-    label: () => (dataTableLang ? 'Confirmado' : 'Confirmed'),
-    minWidth: 30,
-    render: ({ item }) => <Checkbox value={item.confirmed} disabled />,
   },
   {
     attr: 'notes',
     label: () => (dataTableLang ? 'Notas' : 'Notes'),
     flexGrow: 1,
     minWidth: 100,
-    render: ({ item, onMayHaveChangedHeight }) =>
+    // render: ({ item, id, attr, onChange, onMayHaveChangedHeight }) =>
+    render: ({ item, id, attr, onChange }) =>
       <Textarea
         value={item.notes}
-        onChange={onMayHaveChangedHeight}
-        style={{ color: 'black', backgroundColor: 'rgba(255, 255, 255, 0.7)' }}
+        onChange={(ev, value) => onChange(id, attr, value)}
+        style={{
+          color: 'black',
+          backgroundColor: 'rgba(255, 255, 255, 0.6)',
+          marginBottom: -2,
+        }}
       />,
     sortable: false,
     filterable: false,
+  },
+  {
+    attr: 'confirmed',
+    labelLevel: 1,
+    label: () => (dataTableLang ? 'Confirmado' : 'Confirmed'),
+    minWidth: 30,
+    render: ({ item, id, attr, onChange }) =>
+      <Checkbox
+        value={item.confirmed}
+        onChange={(ev, value) => onChange(id, attr, value)}
+      />,
   },
   {
     attr: 'phone',
@@ -86,37 +90,44 @@ class DevelopmentExample extends React.Component {
       numItems,
       itemsById,
       shownIds: Object.keys(itemsById),
+      numShownIds: numItems,
       filterValue: '',
       fFetching: false,
     };
     bindAll(this, [
       'fetchMore',
       'logArgs',
+      'onChange',
     ]);
+    this.commonCellProps = { onChange: this.onChange };
   }
 
   render() {
     return (
       <div>
-        <div>
-          <Button onClick={() => this.toggleLang()}>Toggle lang</Button>
-          {' '}
-          Quick find:
-          {' '}
-          <TextInput onChange={(ev, filterValue) => this.setState({ filterValue })} />
+        <div style={flexContainer('row', { alignItems: 'baseline' })}>
+          <div>
+            <Button onClick={() => this.toggleLang()}>Toggle lang</Button>
+            {' '}
+            Quick find:
+            {' '}
+            <TextInput onChange={(ev, filterValue) => this.setState({ filterValue })} />
+          </div>
+          <div style={flexItem(1)}></div>
+          <div>Items: {this.state.numShownIds}</div>
         </div>
         <DataTable
           itemsById={this.state.itemsById}
           cols={DATA_TABLE_COLS}
           lang={String(dataTableLang)}
           shownIds={this.state.shownIds}
-          alwaysRenderIds={this.alwaysRenderIds}
+          onChangeShownIds={shownIds => this.setState({ numShownIds: shownIds.length })}
+          // alwaysRenderIds={this.alwaysRenderIds}
+          commonCellProps={this.commonCellProps}
           height={250}
-          // rowHeight={40}
-          // uniformRowHeight
           fetchMoreItems={this.fetchMore}
           fetching={this.state.fFetching}
-          // FetchRowComponent={() => <div>Fetching...</div>}
+          FetchRowComponent={() => <div><Spinner />{' '}Fetching...</div>}
           filterValue={this.state.filterValue}
           manuallyOrderedIds={this.manuallyOrderedIds}
           manualSortColLabel={() => (dataTableLang ? 'Ordenar manualmente' : 'Sort manually')}
@@ -155,6 +166,11 @@ class DevelopmentExample extends React.Component {
     }, 800);
   }
 
+  onChange(id, attr, value) {
+    const itemsById = setIn(this.state.itemsById, [id, attr], value);
+    this.setState({ itemsById });
+  }
+
   logArgs(...args) { console.log(...args); }
 }
 
@@ -166,7 +182,6 @@ const style = {
   },
   row: {
     borderBottom: '1px solid #ccc',
-    paddingBottom: 0,
   },
 };
 

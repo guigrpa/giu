@@ -64,7 +64,9 @@ class DataTable extends React.PureComponent {
     lang:                   React.PropTypes.string,
 
     shownIds:               React.PropTypes.arrayOf(React.PropTypes.string),
+    onChangeShownIds:       React.PropTypes.func,
     alwaysRenderIds:        React.PropTypes.arrayOf(React.PropTypes.string),
+    commonCellProps:        React.PropTypes.object,
 
     // Filtering
     filterValue:            React.PropTypes.string,
@@ -250,6 +252,16 @@ class DataTable extends React.PureComponent {
     this.shownIds = shownIds;
   }
 
+  componentDidUpdate() {
+    const { onChangeShownIds } = this.props;
+    if (onChangeShownIds) {
+      if (this.shownIds !== this.prevShownIds) {
+        this.prevShownIds = this.shownIds;
+        onChangeShownIds(this.shownIds);
+      }
+    }
+  }
+
   // ===============================================================
   // Render
   // ===============================================================
@@ -264,7 +276,7 @@ class DataTable extends React.PureComponent {
     this.commonRowProps = merge(this.commonRowProps, {
       cols, lang, selectedIds,
       fSortedManually: allowManualSorting ? fSortedManually : undefined,
-      disabled: allowManualSorting ? !fSortedManually : undefined,
+      commonCellProps: this.props.commonCellProps,
       onClick: this.props.allowSelect ? this.onClickRow : undefined,
       style: this.props.styleRow,
       selectedBgColor: this.selectedBgColor,
@@ -352,8 +364,8 @@ class DataTable extends React.PureComponent {
 
   onClickRow(ev, id) {
     const prevSelectedIds = this.selectedIds;
-    const fShift = ev.shiftKey && this.props.multipleSelection;
-    if (fShift) {
+    const fMultiSelect = (ev.metaKey || ev.ctrlKey) && this.props.multipleSelection;
+    if (fMultiSelect) {
       const idx = this.selectedIds.indexOf(id);
       if (idx >= 0) {
         this.selectedIds = removeAt(this.selectedIds, idx);
