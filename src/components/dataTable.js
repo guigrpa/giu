@@ -10,7 +10,7 @@ import {
   arrayMove,
 }                           from 'react-sortable-hoc';
 import VirtualScroller, { DEFAULT_ROW } from './virtualScroller';
-import { COLORS }           from '../gral/constants';
+import { COLORS, KEYS }     from '../gral/constants';
 import { isDark }           from '../gral/styles';
 import {
   bindAll,
@@ -23,6 +23,7 @@ import {
   DataTableFetchingRow,
   DATA_TABLE_COLUMN_PROP_TYPES,
 }                           from './dataTableRow';
+import FocusCapture         from './focusCapture';
 import Icon                 from './icon';
 import './dataTable.css';
 
@@ -42,6 +43,8 @@ const createManualSortCol = label => ({
   flexGrow: 0,
   flexShrink: 0,
 });
+
+const FOCUSABLE = ['input', 'textarea', 'select'];
 
 const DragHandle = sortableHandle(({ disabled }) =>
   <Icon
@@ -162,12 +165,18 @@ class DataTable extends React.PureComponent {
     bindAll(this, [
       'onRenderLastRow',
       'onChangeScrollbarWidth',
+      'onKeyDown',
+      'onClickOuter',
       'onClickHeader',
       'onClickRow',
       'onDragStart',
       'onDragEnd',
     ]);
     this.commonRowProps = {};
+  }
+
+  componentDidMount() {
+    this.scrollSelectedIntoView({ topAncestor: this.refOuter });
   }
 
   componentWillReceiveProps(nextProps) {
@@ -260,7 +269,15 @@ class DataTable extends React.PureComponent {
         onChangeShownIds(this.shownIds);
       }
     }
+
+    // TODO: if selectedIds have changed:
+    // this.scrollSelectedIntoView();
   }
+
+  // ==========================================
+  // Imperative API
+  // ==========================================
+  focus() { this.refFocusCapture && this.refFocusCapture.focus(); }
 
   // ===============================================================
   // Render
@@ -289,10 +306,13 @@ class DataTable extends React.PureComponent {
     const ChosenVirtualScroller = allowManualSorting ? SortableVirtualScroller : VirtualScroller;
 
     return (
-      <div
+      <div ref={c => { this.refOuter = c; }}
         className={`giu-data-table ${this.fDragging ? 'dragging' : 'not-dragging'}`}
+        onKeyDown={this.onKeyDown}
+        onClick={this.onClickOuter}
         style={style.outer}
       >
+        <FocusCapture registerRef={c => { this.refFocusCapture = c; }} />
         <DataTableHeader
           cols={cols}
           lang={lang}
@@ -332,6 +352,25 @@ class DataTable extends React.PureComponent {
   // ===============================================================
   // Event handlers
   // ===============================================================
+  onKeyDown(ev) {
+    switch (ev.which) {
+      case KEYS.up:
+        this.selectMoveDelta(-1);
+        break;
+      case KEYS.down:
+        this.selectMoveDelta(+1);
+        break;
+      default: break;
+    }
+  }
+
+  // Except when clicking on an embedded focusable node, refocus on this table
+  onClickOuter(ev) {
+    const { tagName, disabled } = ev.target;
+    if (FOCUSABLE.indexOf(tagName.toLowerCase()) >= 0 && !disabled) return;
+    this.focus();
+  }
+
   onRenderLastRow(id) {
     if (id === FETCHING_MORE_ITEMS_ROW) return;
     const { fetchMoreItems } = this.props;
@@ -363,35 +402,12 @@ class DataTable extends React.PureComponent {
   }
 
   onClickRow(ev, id) {
-    const prevSelectedIds = this.selectedIds;
     const fMultiSelect = (ev.metaKey || ev.ctrlKey) && this.props.multipleSelection;
     if (fMultiSelect) {
-      const idx = this.selectedIds.indexOf(id);
-      if (idx >= 0) {
-        this.selectedIds = removeAt(this.selectedIds, idx);
-      } else {
-        this.selectedIds = addLast(this.selectedIds, id);
-      }
+      this.selectToggleSingle(id);
     } else {
-      if (prevSelectedIds.length === 1 && prevSelectedIds[0] === id) return;
-      this.selectedIds = [id];
+      this.selectSingle(id);
     }
-    this.forceUpdate();
-    if (this.props.onChangeSelection) this.props.onChangeSelection(this.selectedIds);
-  }
-
-  changeSort(sortBy, sortDescending) {
-    if (sortBy === this.sortBy && sortDescending === this.sortDescending) return;
-    this.sortBy = sortBy;
-    this.sortDescending = sortDescending;
-    this.recalcShownIds(this.props);
-    let ref = this.refVirtualScroller;
-    if (ref) {
-      if (ref.getWrappedInstance) ref = ref.getWrappedInstance();
-      ref.scrollToTop();
-    }
-    this.forceUpdate();
-    if (this.props.onChangeSort) this.props.onChangeSort({ sortBy, sortDescending });
   }
 
   onDragStart() {
@@ -424,6 +440,55 @@ class DataTable extends React.PureComponent {
       this.fDragging = false;
       this.forceUpdate();
     });
+  }
+
+  // ===============================================================
+  // Selection
+  // ===============================================================
+  selectSingle(id) {
+    if (this.selectedIds.length === 1 && this.selectedIds[0] === id) return;
+    this.changeSelectedIds([id]);
+  }
+
+  selectMoveDelta(delta) {
+    const { shownIds, selectedIds } = this;
+    const len = shownIds.length;
+    if (!len) return;
+    if (!selectedIds.length) {
+      this.selectSingle(delta >= 0 ? shownIds[0] : shownIds[len - 1]);
+      return;
+    }
+    const prevIdx = shownIds.indexOf(selectedIds[0]);
+    if (prevIdx < 0) {
+      this.selectSingle(delta >= 0 ? shownIds[0] : shownIds[len - 1]);
+      return;
+    }
+    let nextIdx = prevIdx + delta;
+    nextIdx = Math.min(Math.max(nextIdx, 0), len - 1);
+    if (nextIdx === prevIdx) return;
+    this.selectSingle(shownIds[nextIdx]);
+  }
+
+  selectToggleSingle(id) {
+    const idx = this.selectedIds.indexOf(id);
+    this.changeSelectedIds(idx >= 0 ?
+      removeAt(this.selectedIds, idx) :
+      addLast(this.selectedIds, id));
+  }
+
+  changeSelectedIds(selectedIds) {
+    this.selectedIds = selectedIds;
+    this.forceUpdate();
+    if (this.props.onChangeSelection) this.props.onChangeSelection(this.selectedIds);
+  }
+
+  scrollSelectedIntoView(options) {
+    // TODO: tell VirtualScroller to scroll into that particular item
+    // const { shownIds, selectedIds } = this;
+    // if (!selectedIds.length) return;
+    // const idx = shownIds.indexOf(selectedIds[0]);
+    // if (idx < 0) return;
+    // scrollIntoView(this.refItems[idx], options);
   }
 
   // ===============================================================
@@ -545,6 +610,20 @@ class DataTable extends React.PureComponent {
     });
     if (sortDescending) sortedIds.reverse();
     return sortedIds;
+  }
+
+  changeSort(sortBy, sortDescending) {
+    if (sortBy === this.sortBy && sortDescending === this.sortDescending) return;
+    this.sortBy = sortBy;
+    this.sortDescending = sortDescending;
+    this.recalcShownIds(this.props);
+    let ref = this.refVirtualScroller;
+    if (ref) {
+      if (ref.getWrappedInstance) ref = ref.getWrappedInstance();
+      ref.scrollToTop();
+    }
+    this.forceUpdate();
+    if (this.props.onChangeSort) this.props.onChangeSort({ sortBy, sortDescending });
   }
 
   manualOrderDidChange(props) {

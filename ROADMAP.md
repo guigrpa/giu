@@ -7,7 +7,8 @@
       - [ ] Multi-level sorting (external) vs. default sorting
       - [ ] Clipboard actions
       - [x] All defaults
-  - [ ] Keyboard actions
+  - [x] Keyboard actions
+  - [ ] Scroll to selection (copy technique from listPicker)
   - [ ] Clipboard actions (requires focus -- what about nested focusable items??)
 
 - [ ] LANGUAGE SUPPORT FOR SELECTS:

@@ -86,7 +86,7 @@ class Modal extends React.PureComponent {
   // ==========================================
   // Imperative API
   // ==========================================
-  focus() { this.refFocusCapture.focus(); }
+  focus() { this.refFocusCapture && this.refFocusCapture.focus(); }
 
   // ==========================================
   // Render
