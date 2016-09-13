@@ -1,15 +1,12 @@
 # Roadmap
 
 - [ ] DATATABLE/VIRTUALSCROLLER
-  - [ ] Add examples:
-      - [x] Editing
-      - [ ] Classical pagination (external) vs. infinite scrolling
-      - [ ] Multi-level sorting (external) vs. default sorting
-      - [ ] Clipboard actions
-      - [x] All defaults
-  - [x] Keyboard actions
-  - [ ] Scroll to selection (copy technique from listPicker)
-  - [ ] Clipboard actions (requires focus -- what about nested focusable items??)
+  - [ ] Add example to modal
+  - [ ] Only scrollIntoView() fully when we have the focus
+
+Check behaviour when data loads after a certain interval
+
+- [ ] Use SVG icons: https://css-tricks.com/icon-fonts-vs-svg/
 
 - [ ] LANGUAGE SUPPORT FOR SELECTS:
   - [ ] Native

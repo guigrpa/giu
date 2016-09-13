@@ -50,7 +50,7 @@ export {
 }                         from './components/hints';
 export HintScreen         from './components/hintScreen';
 
-export DataTable          from './components/dataTable';
+export DataTable, { SORT_MANUALLY } from './components/dataTable';
 export VirtualScroller    from './components/virtualScroller';
 export DropDownMenu       from './components/dropDownMenu';
 export Button             from './components/button';

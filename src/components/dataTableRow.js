@@ -8,6 +8,8 @@ import { COLORS }           from '../gral/constants';
 import Spinner              from './spinner';
 import Icon                 from './icon';
 
+const DEBUG = true && process.env.NODE_ENV !== 'production';
+
 const DATA_TABLE_COLUMN_PROP_TYPES = React.PropTypes.shape({
   attr:                     React.PropTypes.string.isRequired,
 
@@ -42,7 +44,7 @@ const DATA_TABLE_COLUMN_PROP_TYPES = React.PropTypes.shape({
 class DataTableHeader extends React.PureComponent {
   static propTypes = {
     cols:                   React.PropTypes.arrayOf(DATA_TABLE_COLUMN_PROP_TYPES),
-    lang:                   React.PropTypes.string,
+    commonCellProps:        React.PropTypes.object,
     maxLabelLevel:          React.PropTypes.number.isRequired,
     scrollbarWidth:         React.PropTypes.number.isRequired,
     sortBy:                 React.PropTypes.string,
@@ -71,7 +73,7 @@ class DataTableHeader extends React.PureComponent {
     const { attr, label, labelLevel, sortable } = col;
     let finalLabel;
     if (label != null) {
-      finalLabel = isFunction(label) ? label() : label;
+      finalLabel = isFunction(label) ? label(this.props.commonCellProps) : label;
     } else {
       finalLabel = upperFirst(attr);
     }
@@ -132,13 +134,13 @@ class DataTableRow extends React.PureComponent {
     id:                     React.PropTypes.string.isRequired,
     item:                   React.PropTypes.object,
     cols:                   React.PropTypes.arrayOf(DATA_TABLE_COLUMN_PROP_TYPES),
-    lang:                   React.PropTypes.string,
     selectedIds:            React.PropTypes.arrayOf(React.PropTypes.string).isRequired,
     commonCellProps:        React.PropTypes.object,
     fSortedManually:        React.PropTypes.bool,
     onMayHaveChangedHeight: React.PropTypes.func,
     onClick:                React.PropTypes.func,
     style:                  React.PropTypes.object,
+    styleCell:              React.PropTypes.object,
     selectedBgColor:        React.PropTypes.string.isRequired,
     selectedFgColor:        React.PropTypes.string.isRequired,
   };
@@ -158,7 +160,7 @@ class DataTableRow extends React.PureComponent {
   // ===============================================================
   render() {
     const { id } = this.props;
-    console.log(`Rendering row ${id}...`);
+    DEBUG && console.log(`Rendering row ${id}...`);
     const fSelected = this.props.selectedIds.indexOf(id) >= 0;
     return (
       <div
@@ -231,9 +233,7 @@ const style = {
   },
   headerOuter: ({ maxLabelLevel, scrollbarWidth, style: baseStyle }) =>
     merge(flexContainer('row', {
-      marginRight: scrollbarWidth,
-      marginTop: 2,
-      marginBottom: 2,
+      paddingRight: scrollbarWidth,
       paddingTop: 2 + 15 * maxLabelLevel,
       paddingBottom: 2,
       borderBottom: `1px solid ${COLORS.line}`,
@@ -243,16 +243,17 @@ const style = {
     minWidth = 50,
     flexGrow,
     flexShrink,
+    style: baseStyle,
   }) => {
     if (hidden) return { display: 'none' };
     const flexValue = `${flexGrow || 0} ${flexShrink || 0} ${minWidth}px`;
-    return {
+    return merge({
       flex: flexValue,
       WebkitFlex: flexValue,
       maxWidth: flexGrow ? undefined : minWidth,
       paddingLeft: 2,
       paddingRight: 2,
-    };
+    }, baseStyle);
   },
   headerCell: (idxCol, col, fEnableHeaderClicks) => {
     const level = col.labelLevel || 0;

@@ -3,12 +3,15 @@ import React                from 'react';
 import throttle             from 'lodash/throttle';
 import { bindAll }          from '../gral/helpers';
 import { getScrollbarWidth } from '../gral/constants';
+import { scrollIntoView }   from '../gral/visibility';
 import VerticalManager      from './verticalManager';
 
 const MAX_ROWS_INITIAL_RENDER = 20;
 const CHECK_SCROLLBAR_PERIOD = 400;
 
 const DEFAULT_ROW = '__DEFAULT_ROW__';
+
+const DEBUG = false && process.env.NODE_ENV !== 'production';
 
 // ===============================================================
 // Component
@@ -21,7 +24,7 @@ class VirtualScroller extends React.PureComponent {
     RowComponents:          React.PropTypes.object.isRequired,
     commonRowProps:         React.PropTypes.any,
 
-    height:                 React.PropTypes.number,
+    height:                 React.PropTypes.number.isRequired,
     width:                  React.PropTypes.number,
     rowHeight:              React.PropTypes.number,   // auto-calculated if unspecified
     uniformRowHeight:       React.PropTypes.bool,
@@ -34,6 +37,8 @@ class VirtualScroller extends React.PureComponent {
     numRowsInitialRender:   React.PropTypes.number,
     estimatedMinRowHeight:  React.PropTypes.number,
     maxRowsToRenderInOneGo: React.PropTypes.number,
+
+    style:                  React.PropTypes.object,
   };
 
   static defaultProps = {
@@ -71,10 +76,14 @@ class VirtualScroller extends React.PureComponent {
     // scroller is correctly drawn.
     this.totalHeight = undefined;
 
+    // List of references to VerticalManager's <div>s (to scroll to them if needed)
+    this.refItems = {};
+
     // Auxiliary attributes
     this.minHeight = props.estimatedMinRowHeight;
     this.avgHeight = undefined;
     this.fHasScrollbar = false;
+    this.scrollbarWidth = 0;
 
     bindAll(this, [
       'onChangeRowHeight',
@@ -105,9 +114,13 @@ class VirtualScroller extends React.PureComponent {
   componentDidUpdate() {
     this.recalcViewport();
     this.checkRenderLastRow();
+    if (this.pendingScrollToId != null) {
+      const fSucceeded = this.doScrollToId(this.pendingScrollToId, this.pendingScrollToIdOptions);
+      if (fSucceeded) this.initPendingScroll();
+    }
   }
 
-  recalcViewport() {
+  recalcViewport(ev = {}) {
     if (!this.refScroller) return;
     const { scrollTop, clientHeight } = this.refScroller;
     if (scrollTop !== this.scrollTop || clientHeight !== this.clientHeight) {
@@ -118,7 +131,7 @@ class VirtualScroller extends React.PureComponent {
       this.determineRenderInterval();
       if (this.idxFirst !== idxFirst || this.idxLast !== idxLast) {
         /* eslint-disable max-len */
-        // console.log('VirtualScroller: recalcViewPort(): trigger re-render (due to scroll, resize, etc)...');
+        DEBUG && console.log(`VirtualScroller: recalcViewPort(${ev.type}): trigger re-render (due to scroll, resize, etc)...`);
         /* eslint-enable max-len */
         this.forceUpdate();
       }
@@ -128,23 +141,28 @@ class VirtualScroller extends React.PureComponent {
   checkScrollbar() {
     if (!this.refScroller) return;
     const { scrollHeight, clientHeight } = this.refScroller;
+    const { onChangeScrollbarWidth } = this.props;
     const fHasScrollbar = scrollHeight > clientHeight;
+    const scrollbarWidth = fHasScrollbar ? getScrollbarWidth() : 0;
     if (fHasScrollbar !== this.fHasScrollbar) {
       this.fHasScrollbar = fHasScrollbar;
       // If a scrollbar has appeared, trigger a `resize` event on the window;
       // this will make all Textareas to resize if needed and all VerticalManagers
       // to measure themselves again (they may have become taller due to the scrollbar)
       if (fHasScrollbar) {
-        console.log('VirtualScroller: scrollbar has been added -> broadcasting resize event ' +
+        DEBUG && console.log('VirtualScroller: scrollbar has been added -> broadcasting resize event ' +
           '(may trigger re-render)...');
         window.dispatchEvent(new Event('resize'));
       }
-      const { onChangeScrollbarWidth } = this.props;
-      if (onChangeScrollbarWidth) {
-        const scrollbarWidth = this.fHasScrollbar ? getScrollbarWidth() : 0;
-        onChangeScrollbarWidth(scrollbarWidth);
-      }
+      if (onChangeScrollbarWidth) onChangeScrollbarWidth(scrollbarWidth);
+
+    // Scroll bar width may change as a result of user zoom in/out
+    } else if (scrollbarWidth !== this.scrollbarWidth) {
+      DEBUG && console.log('VirtualScroller: scrollbar width changed: ' +
+        `${this.scrollbarWidth} -> ${scrollbarWidth}. Re-rendering...`);
+      if (onChangeScrollbarWidth) onChangeScrollbarWidth(scrollbarWidth);
     }
+    this.scrollbarWidth = scrollbarWidth;
   }
 
   checkRenderLastRow() {
@@ -166,15 +184,59 @@ class VirtualScroller extends React.PureComponent {
   // ===============================================================
   scrollToTop() {
     if (this.refScroller) this.refScroller.scrollTop = 0;
+    this.initPendingScroll();
     this.recalcViewport();
+  }
+
+  scrollPageUpDown(sign) {
+    const { refScroller } = this;
+    if (!refScroller) return;
+    const delta = sign * Math.max(this.clientHeight - 15, 0);
+    this.refScroller.scrollTop += delta;
+    this.initPendingScroll();
+    this.recalcViewport();
+  }
+
+  scrollIntoView(id, options) {
+    if (id == null) return;
+    if (!this.doScrollToId(id, options)) {
+      const idx = this.props.shownIds.indexOf(id);
+      if (idx < 0) {
+        DEBUG && console.log('VirtualScroller: scrollIntoView: ignored, id not in shownIds');
+        return;
+      }
+      this.pendingScrollToId = id;
+      this.pendingScrollToIdOptions = options;
+      DEBUG && console.log('VirtualScroller: scrollIntoView: re-rendering...');
+      this.forceUpdate();
+    }
+  }
+
+  doScrollToId(id, options) {
+    // Check whether the node is correctly positioned (in case of unknown rowHeight)
+    if (this.rowHeight == null) {
+      const top = this.rowTops[id];
+      if (top == null) return false;
+    }
+    const node = this.refItems[id];
+    if (!node) return false;
+    scrollIntoView(node, options);
+    return true;
+  }
+
+  initPendingScroll() {
+    this.pendingScrollToId = undefined;
+    this.pendingScrollToIdOptions = undefined;
   }
 
   // ===============================================================
   // Render
   // ===============================================================
   render() {
-    console.log(`VirtualScroller: Rendering [top=${this.scrollTop}, ` +
-      `bottom=${this.scrollBottom}]...`);
+    this.determineRenderInterval();
+    DEBUG && console.log(`VirtualScroller: RENDERING ` +
+      `[top=${this.scrollTop}, bottom=${this.scrollBottom}, ` +
+      `idxFirst=${this.idxFirst}, idxLast=${this.idxLast}]...`);
     return (
       <div ref={c => { this.refScroller = c; }}
         className="giu-virtual-scroller"
@@ -191,14 +253,12 @@ class VirtualScroller extends React.PureComponent {
     const totalHeight = this.rowHeight != null ?
       this.rowHeight * this.props.shownIds.length :
       this.totalHeight;
-    // console.log(`totalHeight: ${totalHeight}`);
+    // DEBUG && console.log(`VirtualScroller: totalHeight: ${totalHeight}`);
     return <div style={style.sizer(totalHeight)}></div>;
   }
 
   renderRows() {
-    this.determineRenderInterval();
     const { idxFirst, idxLast } = this;
-    console.log(`VirtualScroller: idxFirst: ${idxFirst}, idxLast: ${idxLast}`);
     if (idxFirst == null || idxLast == null) return null;
     const { shownIds, alwaysRenderIds } = this.props;
     const numVisibleRows = idxLast - idxFirst + 1;
@@ -230,7 +290,7 @@ class VirtualScroller extends React.PureComponent {
   }
 
   renderRow(idx, id) {
-    // console.log(`VirtualScroller: rendering row ${id} (idx: ${idx})`);
+    // DEBUG && console.log(`VirtualScroller: rendering row ${id} (idx: ${idx})`);
     const { itemsById, RowComponents, commonRowProps } = this.props;
     const { rowHeight } = this;
     const item = itemsById[id];
@@ -247,6 +307,7 @@ class VirtualScroller extends React.PureComponent {
     const RowComponent = RowComponents[id] || RowComponents[DEFAULT_ROW];
     return (
       <VerticalManager key={id}
+        registerOuterRef={c => { this.refItems[id] = c; }}
         id={id}
         index={idx}
         ChildComponent={RowComponent}
@@ -263,11 +324,11 @@ class VirtualScroller extends React.PureComponent {
   onChangeRowHeight(id, height) {
     const prevCachedHeight = this.cachedHeights[id];
     if (prevCachedHeight === height) return;
-    // console.log(`VirtualScroller: new height for row ${id}: ${height}`);
+    DEBUG && console.log(`VirtualScroller: received new height for row ${id}: ${height}`);
     if (height < this.minHeight) this.minHeight = height;
     if (this.props.uniformRowHeight && this.rowHeight == null) {
       this.rowHeight = height;
-      console.log('VirtualScroller: uniform row height is now known: re-rendering...');
+      DEBUG && console.log('VirtualScroller: uniform row height is now known: re-rendering...');
       this.forceUpdate();
       return;
     }
@@ -277,7 +338,7 @@ class VirtualScroller extends React.PureComponent {
     this.cachedHeights[id] = height;
     if (!this.pendingHeights.length) {
       this.recalcTops(this.props);
-      console.log('VirtualScroller: onChangeRowHeight: re-rendering...');
+      // console.log('VirtualScroller: onChangeRowHeight: re-rendering...');
       this.forceUpdate();
     }
   }
@@ -332,7 +393,7 @@ class VirtualScroller extends React.PureComponent {
     const { rowTops } = this;
 
     // Look for `idxFirst`, first row that either:
-    // - has no rowTop (and hence *must* be rendered)
+    // - has no rowTop (and hence the previous one *must* be rendered)
     // - is partially visible
     let idxFirst;
     let fFirstRowIsCached = true;
@@ -351,7 +412,7 @@ class VirtualScroller extends React.PureComponent {
     if (fFirstRowIsCached) {
       // Look for `idxLast`, first row after `idxFirst` that either:
       // - has no rowTop
-      // - is totally invisible
+      // - is totally invisible (then we take the previous one)
       let fLastRowIsCached = true;
       let idxLast;
       let rowTopLast = rowTopFirst;
@@ -364,6 +425,7 @@ class VirtualScroller extends React.PureComponent {
         if (rowTop > scrollBottom) break;
         rowTopLast = rowTop;
       }
+      idxLast--;
       if (fLastRowIsCached) {
         this.trimAndSetRenderInterval(idxFirst, idxLast);
         return;
@@ -391,9 +453,35 @@ class VirtualScroller extends React.PureComponent {
   }
 
   trimAndSetRenderInterval(idxFirst, idxLast) {
+    if (idxFirst == null || idxLast == null) {
+      this.idxFirst = this.idxLast = undefined;
+      return;
+    }
+
+    // Trim
     const numRows = this.props.shownIds.length;
-    this.idxFirst = idxFirst != null ? Math.max(idxFirst, 0) : undefined;
-    this.idxLast = idxLast != null ? Math.min(idxLast, numRows - 1) : undefined;
+    this.idxFirst = Math.max(idxFirst, 0);
+    this.idxLast = Math.min(idxLast, numRows - 1);
+
+    // If a scroll is pending:
+    // - If it is above the selected interval, shift it
+    // - If it is below, enlarge the interval to include it;
+    //   if the target row has a known `top`, shift the interval
+    const { pendingScrollToId } = this;
+    const pendingScrollToIdx = pendingScrollToId != null ?
+      this.props.shownIds.indexOf(pendingScrollToId) : undefined;
+    if (pendingScrollToIdx >= 0) {
+      const intervalLength = this.idxLast - this.idxFirst;
+      if (pendingScrollToIdx < this.idxFirst) {
+        this.idxFirst = pendingScrollToIdx;
+        this.idxLast = pendingScrollToIdx + intervalLength;
+      } else if (pendingScrollToIdx > this.idxLast) {
+        this.idxLast = pendingScrollToIdx;
+        if (this.rowTops[pendingScrollToId] != null) {
+          this.idxFirst = this.idxLast - intervalLength;
+        }
+      }
+    }
   }
 
   recalcTops(props) {
@@ -425,12 +513,12 @@ class VirtualScroller extends React.PureComponent {
 // Styles
 // ===============================================================
 const style = {
-  scroller: ({ height, width }) => ({
+  scroller: ({ height, width, style: baseStyle }) => merge({
     position: 'relative',
     height, width,
     overflowY: 'auto',
     overflowX: 'hidden',
-  }),
+  }, baseStyle),
   sizer: totalHeight => ({
     position: 'absolute',
     top: 0,

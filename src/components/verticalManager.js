@@ -11,6 +11,7 @@ import throttle             from 'lodash/throttle';
 // react-virtualized when using its CellMeasurer component).
 class VerticalManager extends React.Component {
   static propTypes = {
+    registerOuterRef:       React.PropTypes.func,
     id:                     React.PropTypes.string.isRequired,
     index:                  React.PropTypes.number.isRequired,
     childProps:             React.PropTypes.object,
@@ -28,6 +29,7 @@ class VerticalManager extends React.Component {
     bindAll(this, [
       'measureHeight',
       'asyncMeasureHeight',
+      'registerOuterRef',
     ]);
     this.throttledMeasureHeight = throttle(this.measureHeight.bind(this), 200);
   }
@@ -48,7 +50,7 @@ class VerticalManager extends React.Component {
   measureHeight() {
     const { onChangeHeight } = this.props;
     if (!onChangeHeight) return;
-    const refVerticalManager = this.refs.verticalManager;
+    const { refVerticalManager } = this;
     if (!refVerticalManager) return;
     const height = refVerticalManager.clientHeight;
     /* eslint-disable max-len */
@@ -75,7 +77,7 @@ class VerticalManager extends React.Component {
     const { id, index, ChildComponent, childProps } = this.props;
     const disabled = !childProps.fSortedManually || this.props.top == null;
     return (
-      <div ref="verticalManager"
+      <div ref={this.registerOuterRef}
         className="giu-vertical-manager"
         id={id}
         style={style.outer(this.props)}
@@ -98,6 +100,14 @@ class VerticalManager extends React.Component {
       // property of a given DataTable column:
       // <Textarea onChange={this.props.onMayHaveChangedHeight} />
     );
+  }
+
+  // ===============================================================
+  // Event handlers
+  // ===============================================================
+  registerOuterRef(c) {
+    this.refVerticalManager = c;
+    if (this.props.registerOuterRef) this.props.registerOuterRef(c);
   }
 }
 
