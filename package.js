@@ -149,7 +149,7 @@ const specs = {
     'lodash': '4.15.0',  // only parts of it will be included
 
     'font-awesome': '4.6.3',
-    'react-sortable-hoc': '0.0.7',
+    'react-sortable-hoc': '0.0.8',
 
     tinycolor2: '1.4.1',
     filesize: '3.3.0',
