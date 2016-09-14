@@ -366,6 +366,7 @@ class DataTable extends React.PureComponent {
           useDragHandle={allowManualSorting ? true : undefined}
           onSortStart={allowManualSorting ? this.onDragStart : undefined}
           onSortEnd={allowManualSorting ? this.onDragEnd : undefined}
+          helperClass="giu-data-table-dragged-row"
 
           style={style.scroller}
         />

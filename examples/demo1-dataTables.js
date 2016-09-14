@@ -7,7 +7,7 @@ import { set as timmSet, merge, setIn } from 'timm';
 import sample               from 'lodash/sample';
 import {
   DataTable, SORT_MANUALLY,
-  Textarea, Checkbox, TextInput, Button, Spinner, Select, Icon,
+  Textarea, Checkbox, TextInput, Button, Spinner, Select, Icon, Modal,
   bindAll,
   flexContainer, flexItem,
   COLORS,
@@ -231,9 +231,10 @@ const style = {
 // -----------------------------------------------
 // Simple example: minimum attributes
 // -----------------------------------------------
+const DATA_SIMPLE_EXAMPLE = sampleDataTableItems(1000, 0);
 const SimpleExample = () => {
   if (DEBUG) return null;
-  const itemsById = sampleDataTableItems(1000, 0);
+  const itemsById = DATA_SIMPLE_EXAMPLE;
   return (
     <DataTable
       itemsById={itemsById}
@@ -423,34 +424,86 @@ const style2 = {
 // -----------------------------------------------
 // Index
 // -----------------------------------------------
-const DataTableExample = () =>
-  <div style={exampleStyle}>
-    <ExampleLabel>
-      DataTable (sort, filter, select/multi-select, fetch more, keyboard-controlled,
-      clipboard, manual sort with drag-and-drop, LocalStorage persistence...)
-    </ExampleLabel>
-    <div>
-      Also check out the <b>VirtualScroller</b> (only render
-      visible rows, with dynamic-unknown, uniform-unknown or uniform-known row heights)
-    </div>
+class DataTableExample extends React.PureComponent {
+  constructor(props) {
+    super(props);
+    this.state = { fModal: false };
+    this.itemsById = sampleDataTableItems(1000, 0);
+    this.shownIds = Object.keys(this.itemsById);
+    this.cols = [
+      { attr: 'id' },
+      { attr: 'name', minWidth: 80 },
+      { attr: 'phone', minWidth: 100 },
+      { attr: 'notes', minWidth: 70, flexGrow: 1 },
+    ];
+  }
 
-    <br />
-    <b>Complete example</b>: editable, filtered, internationalised, <i>inifinite</i>
-    (fetch more items by scrolling down to the bottom of the list),
-    custom styles, etc.
-    <DevelopmentExample />
+  render() {
+    return (
+      <div style={exampleStyle}>
+        <ExampleLabel>
+          DataTable (sort, filter, select/multi-select, fetch more, keyboard-controlled,
+          clipboard, manual sort with drag-and-drop, LocalStorage persistence...)
+        </ExampleLabel>
+        <div>
+          Also check out the <b>VirtualScroller</b> (only render
+          visible rows, with dynamic-unknown, uniform-unknown or uniform-known row heights)
+        </div>
 
-    <br />
-    <br />
-    <b>Example with custom sort and pagination</b>: this one is also ultra-fast, thanks to
-    having uniform heights
-    <CustomSortPaginateExample />
+        <br />
+        <b>Complete example</b>: editable, filtered, internationalised, <i>inifinite</i>
+        (fetch more items by scrolling down to the bottom of the list),
+        custom styles, etc.
+        <DevelopmentExample />
 
-    <br />
-    <br />
-    <b>Simplest example</b>: leave everything to the DataTable component
-    <SimpleExample />
+        <br />
+        <br />
+        <b>Example with custom sort and pagination</b>: this one is also ultra-fast, thanks to
+        having uniform heights
+        <CustomSortPaginateExample />
 
-  </div>;
+        <br />
+        <br />
+        <b>Simplest example</b>: leave everything to the DataTable component
+        <SimpleExample />
+
+        <br />
+        <br />
+        You can also <b>embed a DataTable in a Modal</b>:
+        {' '}
+        <Button
+          onClick={() => this.setState({ fModal: true })}
+          className="giu-data-table-dragged-row"
+        >
+          Show me!
+        </Button>
+        {this.renderModal()}
+      </div>
+    );
+  }
+
+  renderModal() {
+    if (!this.state.fModal) return null;
+    const close = () => this.setState({ fModal: false });
+    const buttons = [{ label: 'Close', onClick: close }];
+    return (
+      <Modal
+        title="DataTable in a Modal"
+        buttons={[{ label: 'Close', onClick: close }]}
+        onClickBackdrop={close}
+        onEsc={close}
+        style={{ width: 500 }}
+      >
+        <DataTable
+          itemsById={this.itemsById}
+          cols={this.cols}
+          shownIds={this.shownIds}
+          collectionName="simpleDataTableExample2"
+          style={{ zIndex: 60 }}
+        />
+      </Modal>
+    );
+  }
+}
 
 export default DataTableExample;

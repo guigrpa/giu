@@ -6,3 +6,9 @@ while scrolling */
 .giu-data-table.not-dragging .giu-vertical-manager {
   transition: top 300ms;
 }
+
+/* Just in case a DataTable lands on a Modal: make sure the dragged
+row is drawn above the modal, not below */
+.giu-data-table-dragged-row {
+  z-index: 50000;
+}

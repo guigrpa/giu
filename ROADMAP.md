@@ -1,7 +1,9 @@
 # Roadmap
 
 - [ ] DATATABLE/VIRTUALSCROLLER
-  - [ ] Add example to modal
+  - [ ] Add example to modal:
+      - [ ] Scrollwheel not working
+      - [ ] Keys not working
   - [ ] Only scrollIntoView() fully when we have the focus
 
 Check behaviour when data loads after a certain interval

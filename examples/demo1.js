@@ -166,6 +166,7 @@ const App = () => {
       out = (
         <div>
           <Floats />
+          <Modals />
           <DataTableExample />
         </div>
       );
