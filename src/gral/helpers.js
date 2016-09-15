@@ -67,6 +67,7 @@ function cancelBodyScrolling(ev) {
   } else {
     if (el.scrollTop + el.clientHeight + 0.5 >= el.scrollHeight) cancelEvent(ev);
   }
+  stopPropagation(ev);
 }
 
 // ==========================================
