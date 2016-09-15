@@ -36,7 +36,16 @@ const LIST_SEPARATOR = {
 };
 
 function toInternalValue(val) { return val != null ? JSON.stringify(val) : NULL_STRING; }
-function toExternalValue(val) { return val !== NULL_STRING ? JSON.parse(val) : null; }
+function toExternalValue(val) {
+  if (val === NULL_STRING) return null;
+  try {
+    return JSON.parse(val);
+  } catch (err) {
+    // eslint-disable-next-line no-console
+    console.warn('SelectCustom: error parsing JSON', val);
+    return null;
+  }
+}
 function isNull(val) { return val === NULL_STRING; }
 
 // ==========================================
@@ -46,6 +55,7 @@ class SelectCustomBase extends React.Component {
   static propTypes = {
     disabled:               React.PropTypes.bool,
     items:                  React.PropTypes.array.isRequired,
+    lang:                   React.PropTypes.string,
     required:               React.PropTypes.bool,
     inlinePicker:           React.PropTypes.bool,
     children:               React.PropTypes.any,
@@ -210,6 +220,7 @@ class SelectCustomBase extends React.Component {
       registerOuterRef,
       curValue, onChange,
       disabled, fFocused,
+      lang,
       style: styleList,
       twoStageStyle, accentColor,
     } = this.props;
@@ -217,6 +228,7 @@ class SelectCustomBase extends React.Component {
       <ListPicker
         registerOuterRef={inlinePicker ? registerOuterRef : undefined}
         items={this.items}
+        lang={lang}
         curValue={curValue}
         onChange={onChange}
         onClickItem={this.onClickItem}

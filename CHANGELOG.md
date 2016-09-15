@@ -2,6 +2,13 @@
 
 *[M]: major change; [m]: minor change*
 
+* [M] **Add DataTable component**
+* [M] **Add VirtualScroller component**
+* [M] **Add language support to components with `items` props (Select, RadioGroup, DropDownMenu)**. Components now refresh when language changes, and item `label` members can now be functions.
+* [m] Protect JSON-based inputs (SelectNative, SelectCustom, RadioGroup) against invalid contents pasted in. They no longer throw and put themselves in an unstable state, but rather show a warning in the console and reset their contents.
+* [m] Compact demo: split in multiple sub-demos (it was becoming too big!)
+* [m] ColorInput: tweak vertical alignment (hopefully fix it once and for all!)
+
 ## 0.7.1 (July 29, 2016)
 
 * [m] Modal: allow customising button style.

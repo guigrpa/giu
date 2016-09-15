@@ -3,6 +3,7 @@ import {
   merge,
   set as timmSet,
 }                           from 'timm';
+import isFunction           from 'lodash/isFunction';
 import {
   bindAll,
   preventDefault,
@@ -13,7 +14,16 @@ import { GLOW }             from '../gral/styles';
 import input                from '../hocs/input';
 
 function toInternalValue(val) { return val != null ? JSON.stringify(val) : NULL_STRING; }
-function toExternalValue(val) { return val !== NULL_STRING ? JSON.parse(val) : null; }
+function toExternalValue(val) {
+  if (val === NULL_STRING) return null;
+  try {
+    return JSON.parse(val);
+  } catch (err) {
+    // eslint-disable-next-line no-console
+    console.warn('RadioGroup: error parsing JSON', val);
+    return null;
+  }
+}
 function isNull(val) { return val === NULL_STRING; }
 
 let cntId = 0;
@@ -28,10 +38,12 @@ let cntId = 0;
 // --   - **label** *any?*: React elements that will be shown as a label for
 // --     the corresponding radio button
 // --   - **labelExtra** *any?*: React elements that will be shown below the main label
+// -- * **lang** *string?*: current language (NB: just used to make sure the component is refreshed)
 class RadioGroup extends React.Component {
   static propTypes = {
     disabled:               React.PropTypes.bool,
     items:                  React.PropTypes.array.isRequired,
+    lang:                   React.PropTypes.string,
     // Input HOC
     curValue:               React.PropTypes.string.isRequired,
     onChange:               React.PropTypes.func.isRequired,
@@ -72,6 +84,7 @@ class RadioGroup extends React.Component {
     const { curValue } = this.props;
     const { value, label, labelExtra } = item;
     const id = `${this.buttonGroupName}_${idx}`;
+    const finalLabel = isFunction(label) ? label(this.props.lang) : label;
     return (
       <div key={value}
         id={idx}
@@ -87,7 +100,7 @@ class RadioGroup extends React.Component {
           readOnly /* will change via parents onClick */
           tabIndex={-1}
         />
-        <label htmlFor={id}>{label}</label>
+        <label htmlFor={id}>{finalLabel}</label>
         {labelExtra && <div style={style.labelExtra}>{labelExtra}</div>}
       </div>
     );

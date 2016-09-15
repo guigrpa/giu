@@ -1,18 +1,15 @@
 # Roadmap
 
-- [ ] DATATABLE/VIRTUALSCROLLER
-  - [ ] Add example to modal:
-      - [ ] Scrollwheel not working
-      - [ ] Keys not working
-  - [ ] Only scrollIntoView() fully when we have the focus
-
-Check behaviour when data loads after a certain interval
+- [ ] *Bug* ListPicker incorrect vertical alignment of items and shortcuts (it *is* correct in the main doc page)
+- [ ] Stop scrollers (in ListPickers and DataTables) from scrolling the window! (seems to happen only on Chrome Mac)
+- [ ] Safari Mac: DataTables don't scroll smoothly
+- [ ] Firefox: investigate red-bordered fields
+- [ ] Safari and Firefox: misaligned (vert.) custom select when label is empty
+- [ ] Check DataTable behaviour on iOS, especially dragging
+- [ ] Cut v0.8.0
 
 - [ ] Use SVG icons: https://css-tricks.com/icon-fonts-vs-svg/
-
-- [ ] LANGUAGE SUPPORT FOR SELECTS:
-  - [ ] Native
-  - [ ] Custom (probably DropDownMenu should also pass down lang property if it exists...)
+- [ ] Combo input (free-text, typeahead, list)
 
 Long-standing:
 - [ ] ListPicker: if not focused, it should not scrollintoview! But don't use fFocused (draws a border). Add a new `fParentFocused` and use it for this purpose. Dropdownmenus should stop scrolling also if keyboard shortcuts are used

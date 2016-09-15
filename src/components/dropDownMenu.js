@@ -18,6 +18,7 @@ import Select               from '../inputs/select';
 // --   - **keys** *array(string)?*: keyboard shortcuts for this option, e.g.
 // --     `mod+a` (= `cmd+a` in OS X, `ctrl+a` in Windows), `alt+backspace`, `shift+up`...
 // --   - **onClick** *function?*: called when the item is clicked with the event as argument
+// -- * **lang** *string?*: current language (NB: just used to make sure the component is refreshed)
 // -- * **children** *any*: React elements that will be shown as the menu's title
 // -- * **onClickItem** *function?*: called when an item is clicked
 // --   with the following arguments:
@@ -29,6 +30,7 @@ import Select               from '../inputs/select';
 class DropDownMenu extends React.PureComponent {
   static propTypes = {
     items:                  React.PropTypes.array.isRequired,
+    lang:                   React.PropTypes.string,
     children:               React.PropTypes.any.isRequired,
     onClickItem:            React.PropTypes.func,
     style:                  React.PropTypes.object,
@@ -67,6 +69,7 @@ class DropDownMenu extends React.PureComponent {
       <Select
         type="dropDownPicker"
         items={this.props.items}
+        lang={this.props.lang}
         cmds={this.state.cmds}
         onClickItem={this.onClickItem}
         onCloseFloat={this.closeMenu}

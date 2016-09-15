@@ -16,6 +16,7 @@ import { SelectCustom }     from '../inputs/selectCustom';
 // --   - **keys** *array(string)?*: keyboard shortcuts for this option, e.g.
 // --     `mod+a` (= `cmd+a` in OS X, `ctrl+a` in Windows), `alt+backspace`, `shift+up`...
 // --     **Only supported in non-native Selects**
+// -- * **lang** *string?*: current language (NB: just used to make sure the component is refreshed)
 // -- * **required** *boolean?*: apart from its use for [validation](#input-validation),
 // --   enabling this flag disables the addition of a `null` option to the `items` list
 // -- * **style** *object?*: merged with the outermost `div` style (if `type` is `inlinePicker`),

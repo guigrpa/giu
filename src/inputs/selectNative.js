@@ -1,5 +1,6 @@
 import React                from 'react';
 import { omit, merge }      from 'timm';
+import isFunction           from 'lodash/isFunction';
 import { NULL_STRING }      from '../gral/constants';
 import {
   inputReset, INPUT_DISABLED,
@@ -8,7 +9,17 @@ import input                from '../hocs/input';
 import { LIST_SEPARATOR_KEY } from '../inputs/listPicker';
 
 function toInternalValue(val) { return val != null ? JSON.stringify(val) : NULL_STRING; }
-function toExternalValue(val) { return val !== NULL_STRING ? JSON.parse(val) : null; }
+function toExternalValue(val) {
+  if (val === NULL_STRING) return null;
+  try {
+    return JSON.parse(val);
+  } catch (err) {
+    // eslint-disable-next-line no-console
+    console.warn('SelectNative: error parsing JSON', val);
+    return null;
+  }
+}
+
 function isNull(val) { return val === NULL_STRING; }
 
 // ==========================================
@@ -17,6 +28,7 @@ function isNull(val) { return val === NULL_STRING; }
 class SelectNative extends React.Component {
   static propTypes = {
     items:                  React.PropTypes.array.isRequired,
+    lang:                   React.PropTypes.string,
     required:               React.PropTypes.bool,
     disabled:               React.PropTypes.bool,
     style:                  React.PropTypes.object,
@@ -32,6 +44,7 @@ class SelectNative extends React.Component {
   render() {
     const {
       curValue, items,
+      lang,
       required, disabled,
       registerFocusableRef,
     } = this.props;
@@ -51,7 +64,8 @@ class SelectNative extends React.Component {
       >
         {finalItems.map(o => {
           const value = o.value === NULL_STRING ? o.value : toInternalValue(o.value);
-          return <option key={value} id={value} value={value}>{o.label}</option>;
+          const label = isFunction(o.label) ? o.label(lang) : o.label;
+          return <option key={value} id={value} value={value}>{label}</option>;
         })}
       </select>
     );

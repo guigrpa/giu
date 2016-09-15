@@ -1,5 +1,6 @@
 import React                from 'react';
 import { merge }            from 'timm';
+import isFunction           from 'lodash/isFunction';
 import {
   COLORS,
   UNICODE,
@@ -31,6 +32,7 @@ class BaseListPicker extends React.PureComponent {
   static propTypes = {
     registerOuterRef:       React.PropTypes.func,
     items:                  React.PropTypes.array.isRequired,
+    lang:                   React.PropTypes.string,
     curValue:               React.PropTypes.string.isRequired,
     keyDown:                React.PropTypes.object,
     emptyText:              React.PropTypes.string,
@@ -138,6 +140,7 @@ class BaseListPicker extends React.PureComponent {
       twoStageStyle, accentColor,
     };
     const keyEl = IS_IOS ? undefined : this.renderKeys(shortcuts);
+    const finalLabel = (isFunction(label) ? label(this.props.lang) : label) || UNICODE.nbsp;
     return (
       <div key={itemValue} ref={c => { this.refItems[idx] = c; }}
         id={itemValue}
@@ -148,7 +151,7 @@ class BaseListPicker extends React.PureComponent {
         onClick={IS_IOS ? this.onClickItem : undefined}
         style={merge(style.item(styleProps), styleItem)}
       >
-        {label || UNICODE.nbsp}
+        {finalLabel}
         {keyEl ? <div style={flexItem(1)} /> : undefined}
         {keyEl}
       </div>
