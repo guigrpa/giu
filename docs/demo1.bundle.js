@@ -110691,93 +110691,97 @@ return /******/ (function(modules) { // webpackBootstrap
 	          'table',
 	          null,
 	          _react2.default.createElement(
-	            'tr',
+	            'tbody',
 	            null,
 	            _react2.default.createElement(
-	              'td',
-	              { style: { verticalAlign: 'top' } },
+	              'tr',
+	              null,
 	              _react2.default.createElement(
-	                _demo1Common.ExampleLabel,
-	                null,
-	                'RadioGroup (flexible labels, clipboard)'
-	              ),
-	              _react2.default.createElement(
-	                'div',
-	                { style: (0, _src.flexContainer)('row') },
-	                _react2.default.createElement(_src.RadioGroup, { items: _demo1Common.NORMAL_OPTIONS, lang: lang, required: true, onChange: _demo1Common.onChange }),
-	                _react2.default.createElement(_src.RadioGroup, { items: _demo1Common.NORMAL_OPTIONS, lang: lang, value: 'a', disabled: true }),
-	                _react2.default.createElement(_src.RadioGroup, {
-	                  items: [{ value: 1, label: 'A simple text label' }, { value: 2, label: _react2.default.createElement(
-	                      'span',
-	                      null,
-	                      _react2.default.createElement(
-	                        'i',
-	                        null,
-	                        'Some'
-	                      ),
-	                      ' ',
-	                      _react2.default.createElement(
-	                        'b',
-	                        null,
-	                        'formatting'
-	                      )
-	                    ) }, { value: 3, label: _react2.default.createElement(
-	                      'span',
-	                      null,
-	                      'A multiline label'
-	                    ),
-	                    labelExtra: _react2.default.createElement(
-	                      'div',
-	                      null,
-	                      'because yes, we can ',
-	                      _react2.default.createElement(_src.Icon, { icon: 'smile-o' })
-	                    )
-	                  }, { value: 4, label: 'Another normal label' }, { value: 5, label: _react2.default.createElement(
-	                      'span',
-	                      null,
-	                      'A label with a ',
-	                      _react2.default.createElement(
-	                        _src.Button,
-	                        { onClick: function onClick() {
-	                            return console.log('hi!');
-	                          } },
-	                        'button'
-	                      )
-	                    ) }]
-	                })
-	              )
-	            ),
-	            _react2.default.createElement(
-	              'td',
-	              { style: { verticalAlign: 'top', paddingLeft: 10 } },
-	              _react2.default.createElement(
-	                _demo1Common.ExampleLabel,
-	                null,
-	                'RangeInput (horizontal/vertical)'
-	              ),
-	              _react2.default.createElement(
-	                'div',
-	                { style: (0, _src.flexContainer)('row') },
+	                'td',
+	                { style: { verticalAlign: 'top' } },
+	                _react2.default.createElement(
+	                  _demo1Common.ExampleLabel,
+	                  null,
+	                  'RadioGroup (flexible labels, clipboard)'
+	                ),
 	                _react2.default.createElement(
 	                  'div',
-	                  { style: { marginLeft: 5 } },
+	                  { style: (0, _src.flexContainer)('row') },
+	                  _react2.default.createElement(_src.RadioGroup, { items: _demo1Common.NORMAL_OPTIONS, lang: lang, required: true, onChange: _demo1Common.onChange }),
+	                  _react2.default.createElement(_src.RadioGroup, { items: _demo1Common.NORMAL_OPTIONS, lang: lang, value: 'a', disabled: true }),
+	                  _react2.default.createElement(_src.RadioGroup, {
+	                    items: [{ value: 1, label: 'A simple text label' }, { value: 2, label: _react2.default.createElement(
+	                        'span',
+	                        null,
+	                        _react2.default.createElement(
+	                          'i',
+	                          null,
+	                          'Some'
+	                        ),
+	                        ' ',
+	                        _react2.default.createElement(
+	                          'b',
+	                          null,
+	                          'formatting'
+	                        )
+	                      ) }, { value: 3, label: _react2.default.createElement(
+	                        'span',
+	                        null,
+	                        'A multiline label'
+	                      ),
+	                      labelExtra: _react2.default.createElement(
+	                        'div',
+	                        null,
+	                        'because yes, we can ',
+	                        _react2.default.createElement(_src.Icon, { icon: 'smile-o' })
+	                      )
+	                    }, { value: 4, label: 'Another normal label' }, { value: 5, label: _react2.default.createElement(
+	                        'span',
+	                        null,
+	                        'A label with a ',
+	                        _react2.default.createElement(
+	                          _src.Button,
+	                          { onClick: function onClick() {
+	                              return console.log('hi!');
+	                            } },
+	                          'button'
+	                        )
+	                      ) }]
+	                  })
+	                )
+	              ),
+	              _react2.default.createElement(
+	                'td',
+	                { style: { verticalAlign: 'top', paddingLeft: 10 } },
+	                _react2.default.createElement(
+	                  _demo1Common.ExampleLabel,
+	                  null,
+	                  'RangeInput (horizontal/vertical)'
+	                ),
+	                _react2.default.createElement(
+	                  'div',
+	                  { style: (0, _src.flexContainer)('row') },
+	                  _react2.default.createElement(
+	                    'div',
+	                    { style: { marginLeft: 5 } },
+	                    _react2.default.createElement(_src.RangeInput, {
+	                      value: 25, onChange: _demo1Common.onChange,
+	                      min: 0, max: 100, step: 5,
+	                      style: { display: 'block', width: 100 }
+	                    }),
+	                    _react2.default.createElement(_src.RangeInput, { disabled: true,
+	                      value: 55, onChange: _demo1Common.onChange,
+	                      min: 0, max: 100, step: 5,
+	                      style: { display: 'block', width: 100 }
+	                    })
+	                  ),
 	                  _react2.default.createElement(_src.RangeInput, {
-	                    value: 25, onChange: _demo1Common.onChange,
-	                    min: 0, max: 100, step: 5,
-	                    style: { display: 'block', width: 100 }
-	                  }),
-	                  _react2.default.createElement(_src.RangeInput, { disabled: true,
 	                    value: 55, onChange: _demo1Common.onChange,
 	                    min: 0, max: 100, step: 5,
-	                    style: { display: 'block', width: 100 }
+	                    vertical: true,
+	                    style: { marginLeft: 20, height: 100, width: 25 }
 	                  })
-	                ),
-	                _react2.default.createElement(_src.RangeInput, {
-	                  value: 55, onChange: _demo1Common.onChange,
-	                  min: 0, max: 100, step: 5,
-	                  vertical: true,
-	                  style: { marginLeft: 20, height: 100, width: 25 }
-	                })
+	                )
 	              )
 	            )
 	          )
