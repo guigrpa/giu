@@ -71,49 +71,51 @@ class FormExample extends React.Component {
           <FileInput disabled />
         </div>
         <br />
-        <div style={flexContainer('row')}>
-          <div style={flexItem(1)}>
-            <ExampleLabel>RadioGroup (flexible labels, clipboard)</ExampleLabel>
-            <div style={flexContainer('row')}>
-              <RadioGroup items={NORMAL_OPTIONS} lang={lang} required onChange={onChange} />
-              <RadioGroup items={NORMAL_OPTIONS} lang={lang} value="a" disabled />
-              <RadioGroup
-                items={[
-                  { value: 1, label: 'A simple text label' },
-                  { value: 2, label: <span><i>Some</i> <b>formatting</b></span> },
-                  { value: 3, label: <span>A multiline label</span>,
-                    labelExtra: <div>because yes, we can <Icon icon="smile-o" /></div>,
-                  },
-                  { value: 4, label: 'Another normal label' },
-                  { value: 5, label: <span>A label with a <Button onClick={() => console.log('hi!')}>button</Button></span> },
-                ]}
-              />
-            </div>
-          </div>
-          <div style={{ marginLeft: 10 }}>
-            <ExampleLabel>RangeInput (horizontal/vertical)</ExampleLabel>
-            <div style={flexContainer('row')}>
-              <div style={{ marginLeft: 5 }}>
-                <RangeInput
-                  value={25} onChange={onChange}
-                  min={0} max={100} step={5}
-                  style={{ display: 'block', width: 100 }}
-                />
-                <RangeInput disabled
-                  value={55} onChange={onChange}
-                  min={0} max={100} step={5}
-                  style={{ display: 'block', width: 100 }}
+        <table>
+          <tr>
+            <td style={{ verticalAlign: 'top' }}>
+              <ExampleLabel>RadioGroup (flexible labels, clipboard)</ExampleLabel>
+              <div style={flexContainer('row')}>
+                <RadioGroup items={NORMAL_OPTIONS} lang={lang} required onChange={onChange} />
+                <RadioGroup items={NORMAL_OPTIONS} lang={lang} value="a" disabled />
+                <RadioGroup
+                  items={[
+                    { value: 1, label: 'A simple text label' },
+                    { value: 2, label: <span><i>Some</i> <b>formatting</b></span> },
+                    { value: 3, label: <span>A multiline label</span>,
+                      labelExtra: <div>because yes, we can <Icon icon="smile-o" /></div>,
+                    },
+                    { value: 4, label: 'Another normal label' },
+                    { value: 5, label: <span>A label with a <Button onClick={() => console.log('hi!')}>button</Button></span> },
+                  ]}
                 />
               </div>
-              <RangeInput
-                value={55} onChange={onChange}
-                min={0} max={100} step={5}
-                vertical
-                style={{ marginLeft: 20, height: 100, width: 25 }}
-              />
-            </div>
-          </div>
-        </div>
+            </td>
+            <td style={{ verticalAlign: 'top', paddingLeft: 10 }}>
+              <ExampleLabel>RangeInput (horizontal/vertical)</ExampleLabel>
+              <div style={flexContainer('row')}>
+                <div style={{ marginLeft: 5 }}>
+                  <RangeInput
+                    value={25} onChange={onChange}
+                    min={0} max={100} step={5}
+                    style={{ display: 'block', width: 100 }}
+                  />
+                  <RangeInput disabled
+                    value={55} onChange={onChange}
+                    min={0} max={100} step={5}
+                    style={{ display: 'block', width: 100 }}
+                  />
+                </div>
+                <RangeInput
+                  value={55} onChange={onChange}
+                  min={0} max={100} step={5}
+                  vertical
+                  style={{ marginLeft: 20, height: 100, width: 25 }}
+                />
+              </div>
+            </td>
+          </tr>
+        </table>
         <br />
         <div>
           <ExampleLabel>Input validation</ExampleLabel>
