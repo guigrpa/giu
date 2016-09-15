@@ -111,10 +111,8 @@ function displayToMoment(str, props) {
 // -- * **utc** *boolean?*: by default, it is `true` *unless* `date` and `time` are both `true`.
 // --   In other words, local time is only used by default if both `date` and `time` are enabled
 // -- * **todayName** *string? = 'Today'*: label for the *Today* button
-// -- * **lang** *string?*: the current language. Use it to inform Giu that
-// --   you have changed moment's language, so that it updates the string representation of
-// --   the current value accordingly and re-renders the component.
-// --   Note: **you still must configure moment() yourself**
+// -- * **lang** *string?*: current language (NB: just used to make sure the component is
+// --   refreshed). Use it to inform Giu that you have changed `moment`'s language.
 // -- * **style** *object?*: merged with the `input` style
 // -- * **styleOuter** *object?*: when `type === 'inlinePicker'`,
 // --   merged with the outermost `span` style
