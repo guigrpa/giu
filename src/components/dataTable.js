@@ -1,3 +1,4 @@
+/* eslint-disable no-console */
 import {
   merge,
   removeAt, addLast,
@@ -15,6 +16,7 @@ import { isDark }           from '../gral/styles';
 import {
   bindAll,
   cancelEvent,
+  stopPropagation,
   simplifyString,
 }                           from '../gral/helpers';
 import { localGet, localSet } from '../gral/storage';
@@ -68,6 +70,7 @@ class DataTable extends React.PureComponent {
   static propTypes = {
     itemsById:              React.PropTypes.object,
     cols:                   React.PropTypes.arrayOf(DATA_TABLE_COLUMN_PROP_TYPES).isRequired,
+    lang:                   React.PropTypes.string,
 
     shownIds:               React.PropTypes.arrayOf(React.PropTypes.string),
     onChangeShownIds:       React.PropTypes.func,
@@ -294,6 +297,7 @@ class DataTable extends React.PureComponent {
   // Imperative API
   // ==========================================
   focus() { this.refFocusCapture && this.refFocusCapture.focus(); }
+  // scrollToTop: see below
 
   // ===============================================================
   // Render
@@ -301,7 +305,7 @@ class DataTable extends React.PureComponent {
   render() {
     DEBUG && console.log('DataTable: rendering...');
 
-    const { filterValue, allowManualSorting } = this.props;
+    const { lang, filterValue, allowManualSorting } = this.props;
     const { cols, selectedIds, sortBy, sortDescending } = this;
 
     const fSortedManually = sortBy === SORT_MANUALLY;
@@ -309,7 +313,7 @@ class DataTable extends React.PureComponent {
     // Timm will make sure `this.commonRowProps` doesn't change unless
     // any of the merged properties changes.
     this.commonRowProps = merge(this.commonRowProps, {
-      cols, selectedIds,
+      cols, lang, selectedIds,
       fSortedManually: allowManualSorting ? fSortedManually : undefined,
       commonCellProps: this.props.commonCellProps,
       onClick: this.props.allowSelect ? this.onClickRow : undefined,
@@ -337,6 +341,7 @@ class DataTable extends React.PureComponent {
         />
         <DataTableHeader
           cols={cols}
+          lang={lang}  // to force-refresh when it changes
           commonCellProps={this.props.commonCellProps}
           maxLabelLevel={this.maxLabelLevel}
           scrollbarWidth={this.scrollbarWidth}
@@ -386,23 +391,21 @@ class DataTable extends React.PureComponent {
         break;
       case KEYS.pageUp:
       case KEYS.pageDown:
-        this.onPageUpDown(ev, ev.which === KEYS.pageUp ? -1 : +1);
+        this.scrollPageUpDown(ev.which === KEYS.pageUp ? -1 : +1);
         cancelEvent(ev);
         break;
       default: break;
     }
   }
 
-  onPageUpDown(ev, sign) {
-    const refVirtualScroller = this.getVirtualScrollerRef();
-    if (refVirtualScroller) refVirtualScroller.scrollPageUpDown(sign);
-  }
-
   // Except when clicking on an embedded focusable node, refocus on this table
+  // Prevent bubbling of click events; they may reach Modals
+  // on their way up and cause the element to blur.
   onClickOuter(ev) {
     const { tagName, disabled } = ev.target;
     if (FOCUSABLE.indexOf(tagName.toLowerCase()) >= 0 && !disabled) return;
     this.focus();
+    stopPropagation(ev);
   }
 
   onRenderLastRow(id) {
@@ -561,12 +564,31 @@ class DataTable extends React.PureComponent {
     if (this.props.onChangeSelection) this.props.onChangeSelection(this.selectedIds);
   }
 
+  // ===============================================================
+  // Scrolling
+  // ===============================================================
+  scrollToTop() {
+    const refVirtualScroller = this.getVirtualScrollerRef();
+    if (refVirtualScroller) refVirtualScroller.scrollToTop();
+  }
+
+  scrollPageUpDown(sign) {
+    const refVirtualScroller = this.getVirtualScrollerRef();
+    if (refVirtualScroller) refVirtualScroller.scrollPageUpDown(sign);
+  }
+
   scrollSelectedIntoView(options) {
     const refVirtualScroller = this.getVirtualScrollerRef();
     if (!refVirtualScroller) return;
     if (!this.selectedIds.length) return;
     DEBUG && console.log(`DataTable: triggering a scrollIntoView... ${this.selectedIds.join(',')}`);
     refVirtualScroller.scrollIntoView(this.selectedIds[0], options);
+  }
+
+  getVirtualScrollerRef() {
+    let out = this.refVirtualScroller;
+    if (out && out.getWrappedInstance) out = out.getWrappedInstance();
+    return out;
   }
 
   // ===============================================================
@@ -697,16 +719,9 @@ class DataTable extends React.PureComponent {
     this.localStorageSave(this.props.collectionName, 'sortBy', this.sortBy);
     this.localStorageSave(this.props.collectionName, 'sortDescending', this.sortDescending);
     this.recalcShownIds(this.props);
-    const refVirtualScroller = this.getVirtualScrollerRef();
-    if (refVirtualScroller) refVirtualScroller.scrollToTop();
+    this.scrollToTop();
     this.forceUpdate();
     if (this.props.onChangeSort) this.props.onChangeSort({ sortBy, sortDescending });
-  }
-
-  getVirtualScrollerRef() {
-    let out = this.refVirtualScroller;
-    if (out && out.getWrappedInstance) out = out.getWrappedInstance();
-    return out;
   }
 
   manualOrderDidChange(props) {
