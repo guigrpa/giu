@@ -84,7 +84,6 @@ const INITIAL_STATE = {
   shown: null,
   catalogue: {},
 };
-const NAMESPACE = 'giu';
 
 function initStore() {
   const storeEnhancers = applyMiddleware(thunk);
