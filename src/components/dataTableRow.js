@@ -1,3 +1,4 @@
+/* eslint-disable no-console */
 import React                from 'react';
 import { merge }            from 'timm';
 import upperFirst           from 'lodash/upperFirst';
@@ -44,6 +45,7 @@ const DATA_TABLE_COLUMN_PROP_TYPES = React.PropTypes.shape({
 class DataTableHeader extends React.PureComponent {
   static propTypes = {
     cols:                   React.PropTypes.arrayOf(DATA_TABLE_COLUMN_PROP_TYPES),
+    lang:                   React.PropTypes.string,   // just to force-refresh upon update
     commonCellProps:        React.PropTypes.object,
     maxLabelLevel:          React.PropTypes.number.isRequired,
     scrollbarWidth:         React.PropTypes.number.isRequired,
@@ -71,9 +73,12 @@ class DataTableHeader extends React.PureComponent {
 
   renderColHeader(col, idxCol) {
     const { attr, label, labelLevel, sortable } = col;
+    const { commonCellProps } = this.props;
     let finalLabel;
     if (label != null) {
-      finalLabel = isFunction(label) ? label(this.props.commonCellProps) : label;
+      finalLabel = isFunction(label) ?
+        label(commonCellProps != null ? commonCellProps : this.props.lang) :
+        label;
     } else {
       finalLabel = upperFirst(attr);
     }
