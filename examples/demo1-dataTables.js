@@ -3,7 +3,7 @@
 /* eslint-disable react/prefer-stateless-function */
 import React                from 'react';
 import faker                from 'faker';
-import { set as timmSet, merge, setIn } from 'timm';
+import { merge, setIn }     from 'timm';
 import sample               from 'lodash/sample';
 import {
   DataTable, SORT_MANUALLY,
@@ -15,6 +15,12 @@ import {
 import { ExampleLabel, exampleStyle } from './demo1-common';
 
 const DEBUG = false && process.env.NODE_ENV !== 'production';
+
+const CELL_WITH_ELLIPSIS = {
+  whiteSpace: 'nowrap',
+  textOverflow: 'ellipsis',
+  overflowX: 'hidden',
+};
 
 // -----------------------------------------------
 // Development example
@@ -36,6 +42,7 @@ const sampleDataTableItems = (num, idStart = 0) => {
   return out;
 };
 
+let curLang;
 const DATA_TABLE_COLS = [
   {
     attr: 'id',
@@ -43,12 +50,12 @@ const DATA_TABLE_COLS = [
   },
   {
     attr: 'name',
-    label: ({ dataTableLang }) => (dataTableLang ? 'Nombre' : 'Name'),
+    label: () => (curLang === 'es' ? 'Nombre' : 'Name'),
     minWidth: 100,
   },
   {
     attr: 'notes',
-    label: ({ dataTableLang }) => (dataTableLang ? 'Notas' : 'Notes'),
+    label: () => (curLang === 'es' ? 'Notas' : 'Notes'),
     flexGrow: 1,
     minWidth: 100,
     // render: ({ item, id, attr, onChange, onMayHaveChangedHeight }) =>
@@ -68,7 +75,7 @@ const DATA_TABLE_COLS = [
   {
     attr: 'confirmed',
     labelLevel: 1,
-    label: ({ dataTableLang }) => (dataTableLang ? 'Confirmado' : 'Confirmed'),
+    label: () => (curLang === 'es' ? 'Confirmado' : 'Confirmed'),
     minWidth: 30,
     render: ({ item, id, attr, onChange }) =>
       <Checkbox
@@ -78,13 +85,13 @@ const DATA_TABLE_COLS = [
   },
   {
     attr: 'phone',
-    label: ({ dataTableLang }) => (dataTableLang ? 'Teléfono' : 'Phone'),
+    label: () => (curLang === 'es' ? 'Teléfono' : 'Phone'),
     minWidth: 150,
   },
 ];
 
-const manualSortColLabel = ({ dataTableLang }) =>
-  (dataTableLang ? 'Ordenar manualmente' : 'Sort manually');
+const manualSortColLabel = () =>
+  (curLang === 'es' ? 'Ordenar manualmente' : 'Sort manually');
 
 const FetchRowComponent = () => (
   <div style={{ padding: '5px 10px', backgroundColor: 'gray', color: 'white' }}>
@@ -105,7 +112,6 @@ class DevelopmentExample extends React.Component {
       numShownIds: 0,         // number of shown items (depending on filter)
       filterValue: '',
       fFetching: true,        // initially fetching...
-      dataTableLang: false,
     };
     bindAll(this, [
       'fetchMore',
@@ -114,7 +120,6 @@ class DevelopmentExample extends React.Component {
       'onChangeShownIds',
     ]);
     this.commonCellProps = {
-      dataTableLang: this.state.dataTableLang,
       onChange: this.onChange,
     };
   }
@@ -124,7 +129,7 @@ class DevelopmentExample extends React.Component {
       const numItems = 50;
       const itemsById = sampleDataTableItems(numItems);
       const shownIds = Object.keys(itemsById);
-      DEBUG && console.log('\n\nKEY WILL NOW BE 2')
+      DEBUG && console.log('\n\nKEY WILL NOW BE 2');
       this.setState({
         dataTableKey: 2,
         numItems,
@@ -136,25 +141,16 @@ class DevelopmentExample extends React.Component {
   }
 
   render() {
-    this.commonCellProps = timmSet(this.commonCellProps, 'dataTableLang', this.state.dataTableLang);
+    if (DEBUG) return null;
+    const { lang } = this.props;
+    curLang = lang;
     return (
       <div>
-        <div style={flexContainer('row', { alignItems: 'baseline', marginTop: 4, marginBottom: 4 })}>
-          <div>
-            <Button onClick={() => this.toggleLang()}>Toggle lang</Button>
-            {' '}
-            Quick find:
-            {' '}
-            <TextInput onChange={(ev, filterValue) => this.setState({ filterValue })} />
-            {' '}
-            <Button onClick={() => this.selectRandomRow()}>Select random row</Button>
-          </div>
-          <div style={flexItem(1)}></div>
-          <div>Items: {this.state.numShownIds}</div>
-        </div>
+        {this.renderControls()}
         <DataTable key={this.state.dataTableKey}
           itemsById={this.state.itemsById}
           cols={DATA_TABLE_COLS}
+          lang={lang}
           shownIds={this.state.shownIds}
           onChangeShownIds={this.onChangeShownIds}
           // alwaysRenderIds={this.alwaysRenderIds}
@@ -178,8 +174,20 @@ class DevelopmentExample extends React.Component {
     );
   }
 
-  toggleLang() {
-    this.setState({ dataTableLang: !this.state.dataTableLang });
+  renderControls() {
+    return (
+      <div style={flexContainer('row', { alignItems: 'baseline', marginTop: 4, marginBottom: 4 })}>
+        <div>
+          Quick find:
+          {' '}
+          <TextInput onChange={(ev, filterValue) => this.setState({ filterValue })} />
+          {' '}
+          <Button onClick={() => this.selectRandomRow()}>Select random row</Button>
+        </div>
+        <div style={flexItem(1)}></div>
+        <div>Items: {this.state.numShownIds}</div>
+      </div>
+    );
   }
 
   selectRandomRow() {
@@ -275,23 +283,27 @@ const SimpleExample = () => {
 // -----------------------------------------------
 const NUM_ITEMS = 1000;
 const ITEMS_PER_PAGE = 300;
+const CUSTOM_SORT_OPTIONS = [
+  { value: 'age+name', label: 'Age and name' },
+  { value: 'phone', label: 'Phone' },
+  { value: SORT_MANUALLY, label: 'Manually' },
+];
+const COLS = [
+  { attr: 'id' },
+  { attr: 'name', minWidth: 100, flexGrow: 1, style: CELL_WITH_ELLIPSIS },
+  { attr: 'age', minWidth: 50 },
+  { attr: 'phone', minWidth: 150, flexGrow: 1, style: CELL_WITH_ELLIPSIS },
+];
 
 class CustomSortPaginateExample extends React.Component {
   constructor(props) {
     super(props);
     this.itemsById = sampleDataTableItems(NUM_ITEMS, 0);
     this.numPages = Math.ceil(NUM_ITEMS / ITEMS_PER_PAGE);
-    this.cols = [
-      { attr: 'id' },
-      { attr: 'name', minWidth: 100, flexGrow: 1, style: style2.cellWithEllipsis },
-      { attr: 'age', minWidth: 50 },
-      { attr: 'phone', minWidth: 150, flexGrow: 1, style: style2.cellWithEllipsis },
-    ];
     this.state = {
       sortBy: 'age+name',
       page: 0,
     };
-    bindAll(this, ['onChangeManualOrder']);
   }
 
   render() {
@@ -301,54 +313,58 @@ class CustomSortPaginateExample extends React.Component {
     const fSortedManually = sortBy === SORT_MANUALLY;
     return (
       <div>
-        <div style={flexContainer('row', { alignItems: 'baseline', marginTop: 4 })}>
-          <div>
-            Sort by
-            {' '}
-            <Select
-              value={sortBy}
-              items={[
-                { value: 'age+name', label: 'Age and name' },
-                { value: 'phone', label: 'Phone' },
-                { value: SORT_MANUALLY, label: 'Manually' },
-              ]}
-              onChange={(ev, newSortBy) => this.setState({ sortBy: newSortBy, page: 0 })}
-              required
-            />
-          </div>
-          <div style={{ width: 10 }}></div>
-          <div>
-            Page:
-            {' '}
-            <Icon
-              icon="arrow-left"
-              disabled={page === 0}
-              onClick={() => this.setState({ page: this.state.page - 1 })}
-            />
-            {' '}
-            <b style={{ display: 'inline-block', width: 25, textAlign: 'center' }}>{page + 1}</b>
-            {' '}
-            <Icon
-              icon="arrow-right"
-              disabled={page === this.numPages - 1}
-              onClick={() => this.setState({ page: this.state.page + 1 })}
-            />
-          </div>
-        </div>
-        <DataTable
+        {this.renderControls(sortBy, page)}
+        <DataTable ref="dataTable"
           itemsById={this.itemsById}
-          cols={this.cols}
+          cols={COLS}
           shownIds={this.shownIds}
           headerClickForSorting={false}
           allowManualSorting={fSortedManually}
           sortBy={fSortedManually ? SORT_MANUALLY : undefined}
           sortDescending={false}
-          onChangeManualOrder={this.onChangeManualOrder}
           height={100}
           uniformRowHeight
           style={style2.outer}
           styleHeader={style2.header}
         />
+      </div>
+    );
+  }
+
+  renderControls(sortBy, page) {
+    return (
+      <div style={flexContainer('row', { alignItems: 'baseline', marginTop: 4 })}>
+        <div>
+          Sort by
+          {' '}
+          <Select
+            value={sortBy}
+            items={CUSTOM_SORT_OPTIONS}
+            onChange={(ev, newSortBy) => {
+              if (this.refs.dataTable) this.refs.dataTable.scrollToTop();
+              this.setState({ sortBy: newSortBy, page: 0 });
+            }}
+            required
+          />
+        </div>
+        <div style={{ width: 10 }}></div>
+        <div>
+          Page:
+          {' '}
+          <Icon
+            icon="arrow-left"
+            disabled={page === 0}
+            onClick={() => this.setState({ page: this.state.page - 1 })}
+          />
+          {' '}
+          <b style={{ display: 'inline-block', width: 25, textAlign: 'center' }}>{page + 1}</b>
+          {' '}
+          <Icon
+            icon="arrow-right"
+            disabled={page === this.numPages - 1}
+            onClick={() => this.setState({ page: this.state.page + 1 })}
+          />
+        </div>
       </div>
     );
   }
@@ -398,19 +414,10 @@ class CustomSortPaginateExample extends React.Component {
     ids.sort(comparator);
     return ids;
   }
-
-  onChangeManualOrder(ids) {
-    this.manuallyOrderedIds = ids;
-    this.forceUpdate();
-  }
 }
 
 const style2 = {
-  cellWithEllipsis: {
-    whiteSpace: 'nowrap',
-    textOverflow: 'ellipsis',
-    overflowX: 'hidden',
-  },
+  cellWithEllipsis: CELL_WITH_ELLIPSIS, // quick'n'dirty
   outer: {
     marginTop: 3,
     borderTop: `1px solid ${COLORS.accent}`,
@@ -445,38 +452,35 @@ class DataTableExample extends React.PureComponent {
           DataTable (sort, filter, select/multi-select, fetch more, keyboard-controlled,
           clipboard, manual sort with drag-and-drop, LocalStorage persistence...)
         </ExampleLabel>
-        <div>
-          Also check out the <b>VirtualScroller</b> (only render
-          visible rows, with dynamic-unknown, uniform-unknown or uniform-known row heights)
-        </div>
+        <p>
+          DataTable is based on the <b>VirtualScroller</b> component, whose primary function is
+          to render only visible rows. These rows can have uniform and well-known heights (at the simplest
+          end of the spectrum), uniform but unknown, and also dynamic: different for every row, and even
+          changing in time (as a result of passed-down props or their own intrinsic state).
+        </p>
 
-        <br />
-        <b>Complete example</b>: editable, filtered, internationalised, <i>inifinite</i>
+        <p><b>Complete example</b>: editable, filtered, internationalised, <i>inifinite</i>
         (fetch more items by scrolling down to the bottom of the list),
-        custom styles, etc.
-        <DevelopmentExample />
+        custom styles, etc.</p>
+        <DevelopmentExample lang={this.props.lang} />
 
-        <br />
-        <br />
-        <b>Example with custom sort and pagination</b>: this one is also ultra-fast, thanks to
-        having uniform heights
+        <p><b>Example with custom sort and pagination</b>: this one is also ultra-fast, thanks to
+        having uniform heights:</p>
         <CustomSortPaginateExample />
 
-        <br />
-        <br />
-        <b>Simplest example</b>: leave everything to the DataTable component
+        <p><b>Simplest example</b>: leave everything to the DataTable component</p>
         <SimpleExample />
 
-        <br />
-        <br />
-        You can also <b>embed a DataTable in a Modal</b>:
-        {' '}
-        <Button
-          onClick={() => this.setState({ fModal: true })}
-          className="giu-data-table-dragged-row"
-        >
-          Show me!
-        </Button>
+        <p>
+          Finally, you can also <b>embed a DataTable in a Modal</b>:
+          {' '}
+          <Button
+            onClick={() => this.setState({ fModal: true })}
+            className="giu-data-table-dragged-row"
+          >
+            Show me!
+          </Button>
+        </p>
         {this.renderModal()}
       </div>
     );
@@ -485,7 +489,6 @@ class DataTableExample extends React.PureComponent {
   renderModal() {
     if (!this.state.fModal) return null;
     const close = () => this.setState({ fModal: false });
-    const buttons = [{ label: 'Close', onClick: close }];
     return (
       <Modal
         title="DataTable in a Modal"
@@ -494,13 +497,16 @@ class DataTableExample extends React.PureComponent {
         onEsc={close}
         style={{ width: 500 }}
       >
-        <DataTable
-          itemsById={this.itemsById}
-          cols={this.cols}
-          shownIds={this.shownIds}
-          collectionName="simpleDataTableExample2"
-          style={{ zIndex: 60 }}
-        />
+        {/* Add some margin for debugging with visible FocusCaptures */}
+        <div style={{ marginLeft: 10, marginRight: 10 }}>
+          <DataTable
+            itemsById={this.itemsById}
+            cols={this.cols}
+            shownIds={this.shownIds}
+            collectionName="simpleDataTableExample2"
+            style={{ zIndex: 60 }}
+          />
+        </div>
       </Modal>
     );
   }
