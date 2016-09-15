@@ -1,5 +1,6 @@
 import React                from 'react';
 import { merge }            from 'timm';
+import isFunction           from 'lodash/isFunction';
 import { bindAll }          from '../gral/helpers';
 import {
   COLORS, KEYS,
@@ -143,15 +144,11 @@ class SelectCustomBase extends React.Component {
   }
 
   renderDefaultTitle() {
-    const { curValue } = this.props;
+    const { curValue, lang } = this.props;
     let label = UNICODE.nbsp;
     if (curValue !== NULL_STRING) {
-      for (let i = 0; i < this.items.length; i++) {
-        if (this.items[i].value === curValue) {
-          label = this.items[i].label;
-          break;
-        }
-      }
+      const item = this.items.find(o => o.value === curValue);
+      if (item) label = isFunction(item.label) ? item.label(lang) : item.label;
     }
     const caretIcon = this.state.fFloat ? 'caret-up' : 'caret-down';
     return (

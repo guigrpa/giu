@@ -28124,6 +28124,10 @@ return /******/ (function(modules) { // webpackBootstrap
 
 	var _timm = __webpack_require__(177);
 
+	var _isFunction = __webpack_require__(220);
+
+	var _isFunction2 = _interopRequireDefault(_isFunction);
+
 	var _helpers = __webpack_require__(191);
 
 	var _constants = __webpack_require__(193);
@@ -28267,16 +28271,16 @@ return /******/ (function(modules) { // webpackBootstrap
 	  }, {
 	    key: 'renderDefaultTitle',
 	    value: function renderDefaultTitle() {
-	      var curValue = this.props.curValue;
+	      var _props = this.props;
+	      var curValue = _props.curValue;
+	      var lang = _props.lang;
 
 	      var label = _constants.UNICODE.nbsp;
 	      if (curValue !== _constants.NULL_STRING) {
-	        for (var i = 0; i < this.items.length; i++) {
-	          if (this.items[i].value === curValue) {
-	            label = this.items[i].label;
-	            break;
-	          }
-	        }
+	        var item = this.items.find(function (o) {
+	          return o.value === curValue;
+	        });
+	        if (item) label = (0, _isFunction2.default)(item.label) ? item.label(lang) : item.label;
 	      }
 	      var caretIcon = this.state.fFloat ? 'caret-up' : 'caret-down';
 	      return _react2.default.createElement(
@@ -28312,10 +28316,10 @@ return /******/ (function(modules) { // webpackBootstrap
 
 	      // Create or update float
 	      if (fFloat) {
-	        var _props = this.props;
-	        var floatZ = _props.floatZ;
-	        var floatPosition = _props.floatPosition;
-	        var floatAlign = _props.floatAlign;
+	        var _props2 = this.props;
+	        var floatZ = _props2.floatZ;
+	        var floatPosition = _props2.floatPosition;
+	        var floatAlign = _props2.floatAlign;
 
 	        var floatOptions = {
 	          position: floatPosition,
@@ -28338,10 +28342,10 @@ return /******/ (function(modules) { // webpackBootstrap
 	    key: 'renderFloatForIos',
 	    value: function renderFloatForIos() {
 	      if (!this.state.fFloat) return null;
-	      var _props2 = this.props;
-	      var floatPosition = _props2.floatPosition;
-	      var floatAlign = _props2.floatAlign;
-	      var floatZ = _props2.floatZ;
+	      var _props3 = this.props;
+	      var floatPosition = _props3.floatPosition;
+	      var floatAlign = _props3.floatAlign;
+	      var floatZ = _props3.floatZ;
 
 	      return _react2.default.createElement(
 	        _iosFloatWrapper2.default,
@@ -28356,17 +28360,17 @@ return /******/ (function(modules) { // webpackBootstrap
 	  }, {
 	    key: 'renderPicker',
 	    value: function renderPicker() {
-	      var _props3 = this.props;
-	      var inlinePicker = _props3.inlinePicker;
-	      var registerOuterRef = _props3.registerOuterRef;
-	      var curValue = _props3.curValue;
-	      var onChange = _props3.onChange;
-	      var disabled = _props3.disabled;
-	      var fFocused = _props3.fFocused;
-	      var lang = _props3.lang;
-	      var styleList = _props3.style;
-	      var twoStageStyle = _props3.twoStageStyle;
-	      var accentColor = _props3.accentColor;
+	      var _props4 = this.props;
+	      var inlinePicker = _props4.inlinePicker;
+	      var registerOuterRef = _props4.registerOuterRef;
+	      var curValue = _props4.curValue;
+	      var onChange = _props4.onChange;
+	      var disabled = _props4.disabled;
+	      var fFocused = _props4.fFocused;
+	      var lang = _props4.lang;
+	      var styleList = _props4.style;
+	      var twoStageStyle = _props4.twoStageStyle;
+	      var accentColor = _props4.accentColor;
 
 	      return _react2.default.createElement(_listPicker.ListPicker, {
 	        registerOuterRef: inlinePicker ? registerOuterRef : undefined,

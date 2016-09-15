@@ -4,7 +4,6 @@
 - [ ] Stop scrollers (in ListPickers and DataTables) from scrolling the window! (seems to happen only on Chrome Mac)
 - [ ] Safari Mac: DataTables don't scroll smoothly
 - [ ] Firefox: investigate red-bordered fields
-- [ ] Safari and Firefox: misaligned (vert.) custom select when label is empty
 - [ ] Check DataTable behaviour on iOS, especially dragging
 - [ ] Cut v0.8.0
 
