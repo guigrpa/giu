@@ -1,6 +1,7 @@
 # Roadmap
 
-- [ ] *Bug* ListPicker incorrect vertical alignment of items and shortcuts (it *is* correct in the main doc page)
+- [ ] *Bug* ListPicker on Windows incorrectly aligns (vertically) items and shortcuts (it *is* correct in the main doc page)
+- [ ] Improve main docs (demo): ColorInput has as a default completely transparent value
 - [ ] Stop scrollers (in ListPickers and DataTables) from scrolling the window! (seems to happen only on Chrome Mac)
 - [ ] Safari Mac: DataTables don't scroll smoothly
 - [ ] Check DataTable behaviour on iOS, especially dragging
