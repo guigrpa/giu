@@ -1,7 +1,11 @@
+/* eslint-disable no-console */
 import { merge }            from 'timm';
 import React                from 'react';
 import throttle             from 'lodash/throttle';
-import { bindAll }          from '../gral/helpers';
+import {
+  bindAll,
+  cancelBodyScrolling,
+}                           from '../gral/helpers';
 import { getScrollbarWidth } from '../gral/constants';
 import { scrollIntoView }   from '../gral/visibility';
 import VerticalManager      from './verticalManager';
@@ -150,8 +154,8 @@ class VirtualScroller extends React.PureComponent {
       // this will make all Textareas to resize if needed and all VerticalManagers
       // to measure themselves again (they may have become taller due to the scrollbar)
       if (fHasScrollbar) {
-        DEBUG && console.log('VirtualScroller: scrollbar has been added -> broadcasting resize event ' +
-          '(may trigger re-render)...');
+        DEBUG && console.log('VirtualScroller: scrollbar has been added: ' +
+          'broadcasting resize event (may trigger re-render)...');
         window.dispatchEvent(new Event('resize'));
       }
       if (onChangeScrollbarWidth) onChangeScrollbarWidth(scrollbarWidth);
@@ -234,12 +238,13 @@ class VirtualScroller extends React.PureComponent {
   // ===============================================================
   render() {
     this.determineRenderInterval();
-    DEBUG && console.log(`VirtualScroller: RENDERING ` +
+    DEBUG && console.log('VirtualScroller: RENDERING ' +
       `[top=${this.scrollTop}, bottom=${this.scrollBottom}, ` +
       `idxFirst=${this.idxFirst}, idxLast=${this.idxLast}]...`);
     return (
       <div ref={c => { this.refScroller = c; }}
         className="giu-virtual-scroller"
+        onWheel={cancelBodyScrolling}
         onScroll={this.recalcViewport}
         style={style.scroller(this.props)}
       >
