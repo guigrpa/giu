@@ -52,6 +52,7 @@ const PROP_TYPES = {
 };
 const PROP_KEYS_TO_REMOVE_FROM_INPUT = Object.keys(PROP_TYPES).concat([
   'cmds', 'keyDown', 'fFocused', 'floatZ', 'floatPosition', 'onResizeOuter', 'styleOuter',
+  'required',
 ]);
 
 // ==========================================

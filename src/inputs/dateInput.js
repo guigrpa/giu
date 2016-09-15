@@ -476,7 +476,7 @@ const style = {
 // Miscellaneous
 // ==========================================
 const PROP_KEYS_TO_REMOVE_FROM_INPUT = Object.keys(BaseDateInput.propTypes).concat([
-  'cmds', 'keyDown', 'onResizeOuter',
+  'cmds', 'keyDown', 'onResizeOuter', 'required',
 ]);
 
 // ==========================================

@@ -34414,7 +34414,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	  registerFocusableRef: _react2.default.PropTypes.func.isRequired
 	};
 	// all others are passed through unchanged
-	var PROP_KEYS_TO_REMOVE_FROM_INPUT = Object.keys(PROP_TYPES).concat(['cmds', 'keyDown', 'fFocused', 'floatZ', 'floatPosition', 'onResizeOuter', 'styleOuter']);
+	var PROP_KEYS_TO_REMOVE_FROM_INPUT = Object.keys(PROP_TYPES).concat(['cmds', 'keyDown', 'fFocused', 'floatZ', 'floatPosition', 'onResizeOuter', 'styleOuter', 'required']);
 
 	// ==========================================
 	// Component
@@ -45510,7 +45510,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	// ==========================================
 	// Miscellaneous
 	// ==========================================
-	var PROP_KEYS_TO_REMOVE_FROM_INPUT = Object.keys(BaseDateInput.propTypes).concat(['cmds', 'keyDown', 'onResizeOuter']);
+	var PROP_KEYS_TO_REMOVE_FROM_INPUT = Object.keys(BaseDateInput.propTypes).concat(['cmds', 'keyDown', 'onResizeOuter', 'required']);
 
 	// ==========================================
 	// Public API
