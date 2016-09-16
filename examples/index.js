@@ -273,7 +273,7 @@ class InputTypes extends React.Component {
           </li>
           <li>
             <a href="#colorinput">ColorInput</a>:{' '}
-            <ColorInput value="aadc5400" /> (<a href="#color-inputs">more details</a>)
+            <ColorInput value="aadc54ab" /> (<a href="#color-inputs">more details</a>)
           </li>
           <li>
             <a href="#fileinput">FileInput</a>:{' '}
@@ -703,7 +703,7 @@ const ColorInputs = () =>
       <li>
         A field with a dropdown, the default one:
         {' '}
-        <ColorInput value="aadc5400" />
+        <ColorInput value="aadc54ab" />
         {' '}(press ESC to show/hide the picker)
       </li>
       <li>An inline color picker (add the <code>inlinePicker</code> prop):</li>
