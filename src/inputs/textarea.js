@@ -101,7 +101,9 @@ class Textarea extends React.Component {
   }
 
   resize() {
+    if (!this.refTaPlaceholder) return;
     const height = this.refTaPlaceholder.offsetHeight;
+    if (!this.refInput) return;
     this.refInput.style.height = `${height}px`;
     if (this.props.onResizeOuter) this.props.onResizeOuter();
   }

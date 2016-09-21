@@ -357,10 +357,8 @@ Props:
 * **utc** *boolean?*: by default, it is `true` *unless* `date` and `time` are both `true`.
   In other words, local time is only used by default if both `date` and `time` are enabled
 * **todayName** *string? = 'Today'*: label for the *Today* button
-* **lang** *string?*: the current language. Use it to inform Giu that
-  you have changed moment's language, so that it updates the string representation of
-  the current value accordingly and re-renders the component.
-  Note: **you still must configure moment() yourself**
+* **lang** *string?*: current language (NB: just used to make sure the component is
+  refreshed). Use it to inform Giu that you have changed `moment`'s language.
 * **style** *object?*: merged with the `input` style
 * **styleOuter** *object?*: when `type === 'inlinePicker'`,
   merged with the outermost `span` style
@@ -385,6 +383,7 @@ Props:
   - **keys** *array(string)?*: keyboard shortcuts for this option, e.g.
     `mod+a` (= `cmd+a` in OS X, `ctrl+a` in Windows), `alt+backspace`, `shift+up`...
     **Only supported in non-native Selects**
+* **lang** *string?*: current language (NB: just used to make sure the component is refreshed)
 * **required** *boolean?*: apart from its use for [validation](#input-validation),
   enabling this flag disables the addition of a `null` option to the `items` list
 * **style** *object?*: merged with the outermost `div` style (if `type` is `inlinePicker`),
@@ -422,6 +421,7 @@ Props:
   - **label** *any?*: React elements that will be shown as a label for
     the corresponding radio button
   - **labelExtra** *any?*: React elements that will be shown below the main label
+* **lang** *string?*: current language (NB: just used to make sure the component is refreshed)
 
 ### ColorInput
 
@@ -463,6 +463,7 @@ Props:
   - **keys** *array(string)?*: keyboard shortcuts for this option, e.g.
     `mod+a` (= `cmd+a` in OS X, `ctrl+a` in Windows), `alt+backspace`, `shift+up`...
   - **onClick** *function?*: called when the item is clicked with the event as argument
+* **lang** *string?*: current language (NB: just used to make sure the component is refreshed)
 * **children** *any*: React elements that will be shown as the menu's title
 * **onClickItem** *function?*: called when an item is clicked
   with the following arguments:
