@@ -42,22 +42,6 @@ Installation notes:
 
 * Why is *moment* part of `peerDependencies` and not `dependencies`? For i18n reasons: we want to make sure the user's `moment` object and the one used internally by Giu are exactly the same, so that `DateInput`'s strings and other locale-specific attributes (e.g. first day of the week) are shown correctly. If the version specified by the user and by Giu were incompatible, we would end up with two different `moment` objects.
 
-* *Moment* drags into your production bundle a lot of i18n resources which you probably don't need. Whitelist the languages bundled by Webpack doing something like this (webpack.config.js):
-
-    ```js
-    const MOMENT_LANGS = ['en-us', 'ca', 'es', 'de'];
-    module.exports = {
-      // ...
-      plugins: [
-        // ..
-        new webpack.ContextReplacementPlugin(
-          /moment[\\\/]locale$/,
-          new RegExp(`.[\\\/](${MOMENT_LANGS.join('|')})`)
-        ),
-      ],
-    }
-    ```
-
 ## Inputs
 
 Giu provides a wide variety of inputs and several useful abstractions over native HTML native elements: state delegation (optional), comprehensive validation, JS types and nullability.
