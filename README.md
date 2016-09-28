@@ -34,7 +34,7 @@ Giu is intended to be bundled with [*webpack*](https://webpack.github.io/), so i
 $ npm install --save-dev giu
 ```
 
-Make sure you also install the required `peerDependencies` ([*react*](https://github.com/facebook/react), [*react-addons-pure-render-mixin*](https://www.npmjs.com/package/react-addons-pure-render-mixin) and [*moment*](https://github.com/moment/moment)).
+Make sure you also install the required `peerDependencies` ([*react*](https://github.com/facebook/react) and [*moment*](https://github.com/moment/moment)).
 
 Installation notes:
 

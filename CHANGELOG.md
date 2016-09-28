@@ -2,6 +2,8 @@
 
 *[M]: major change; [m]: minor change*
 
+* [m] Remove legacy peer dependency: react-addons-pure-render-mixin
+
 ## 0.8.0 (September 21, 2016)
 
 * [M] **Add DataTable component**

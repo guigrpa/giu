@@ -136,7 +136,6 @@ const specs = {
   peerDependencies: {
     react:                            '^15.3.0',
     'react-dom':                      '^15.3.0',
-    'react-addons-pure-render-mixin': '^15.3.0',
     moment: '^2.0.0',
   },
 
@@ -169,7 +168,6 @@ const specs = {
     // React
     react:                              '^15.3.0',
     'react-dom':                        '^15.3.0',
-    'react-addons-pure-render-mixin':   '^15.3.0',
     'react-addons-perf':                '^15.3.0',
 
     // Babel (except babel-eslint)

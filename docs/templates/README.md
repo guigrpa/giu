@@ -34,29 +34,13 @@ Giu is intended to be bundled with [*webpack*](https://webpack.github.io/), so i
 $ npm install --save-dev giu
 ```
 
-Make sure you also install the required `peerDependencies` ([*react*](https://github.com/facebook/react), [*react-addons-pure-render-mixin*](https://www.npmjs.com/package/react-addons-pure-render-mixin) and [*moment*](https://github.com/moment/moment)).
+Make sure you also install the required `peerDependencies` ([*react*](https://github.com/facebook/react) and [*moment*](https://github.com/moment/moment)).
 
 Installation notes:
 
 * Many Giu components (including all inputs) require that you **include the `<Floats />` component at (or near) the root level of your React tree**. No props are required. If you forget it, you'll see a warning in the console and the components will not work correctly. Other components you might need to add, depending on whether you use them: `<Modals />`, `<Notifications />`, `<Hints />`. More about them below.
 
 * Why is *moment* part of `peerDependencies` and not `dependencies`? For i18n reasons: we want to make sure the user's `moment` object and the one used internally by Giu are exactly the same, so that `DateInput`'s strings and other locale-specific attributes (e.g. first day of the week) are shown correctly. If the version specified by the user and by Giu were incompatible, we would end up with two different `moment` objects.
-
-* *Moment* drags into your production bundle a lot of i18n resources which you probably don't need. Whitelist the languages bundled by Webpack doing something like this (webpack.config.js):
-
-    ```js
-    const MOMENT_LANGS = ['en-us', 'ca', 'es', 'de'];
-    module.exports = {
-      // ...
-      plugins: [
-        // ..
-        new webpack.ContextReplacementPlugin(
-          /moment[\\\/]locale$/,
-          new RegExp(`.[\\\/](${MOMENT_LANGS.join('|')})`)
-        ),
-      ],
-    }
-    ```
 
 ## Inputs
 
