@@ -88,12 +88,11 @@ const INITIAL_STATE = {
 function initStore() {
   const storeEnhancers = applyMiddleware(thunk);
   const initialState = merge({}, INITIAL_STATE);
-  try {
-    initialState.fDisableAll = localGet('hints.fDisableAll');
-  } catch (err) { /* discard */ }
-  try {
-    initialState.disabled = localGet('hints.disabled');
-  } catch (err) { /* discard */ }
+  let tmp;
+  tmp = localGet('hints.fDisableAll');
+  if (tmp != null) initialState.fDisableAll = tmp;
+  tmp = localGet('hints.disabled');
+  if (tmp != null) initialState.disabled = tmp;
   store = createStore(reducer, initialState, storeEnhancers);
 }
 
