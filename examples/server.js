@@ -5,6 +5,7 @@ import express              from 'express';
 
 const PORT = 8080;
 const expressApp = express();
+expressApp.use('/api', (req, res) => { res.json({}); });
 expressApp.use(express.static(path.join(process.cwd(), 'docs')));
 const httpServer = http.createServer(expressApp);
 httpServer.listen(PORT);

@@ -37,6 +37,7 @@ const PROP_TYPES = {
   disabled:               React.PropTypes.bool,   // also passed through
   floatZ:                 React.PropTypes.number, // also passed through
   floatPosition:          React.PropTypes.string, // also passed through
+  focusOnChange:          React.PropTypes.bool,
   errorZ:                 React.PropTypes.number,
   errorPosition:          React.PropTypes.string,
   errorAlign:             React.PropTypes.string,
@@ -73,6 +74,7 @@ function input(ComposedComponent, {
     static displayName = hocDisplayName;
     static propTypes = PROP_TYPES;
     static defaultProps = {
+      focusOnChange:          true,
       errors:                 [],
       validators:             [],
     };
@@ -163,7 +165,7 @@ function input(ComposedComponent, {
             this.setState({ curValue: toInternalValue(nextProps.value, nextProps) });
             break;
           case 'VALIDATE':
-            this._validate();
+            this._validate().catch(() => {});
             break;
           case 'FOCUS':
             this.pendingFocusBlur = '_focus';
@@ -317,7 +319,9 @@ function input(ComposedComponent, {
       }
       this.setState({ curValue });
       if (onChange) onChange(ev, toExternalValue(curValue, this.props));
-      if (!this.state.fFocused && !options.fDontFocus) this._focus();
+      if (this.props.focusOnChange && !this.state.fFocused && !options.fDontFocus) {
+        this._focus();
+      }
     }
 
     onFocus(ev) {
@@ -333,7 +337,7 @@ function input(ComposedComponent, {
 
     onBlur(ev) {
       const { onBlur } = this.props;
-      this._validate();
+      this._validate().catch(() => {});
       this.setState({ fFocused: false });
       if (onBlur) onBlur(ev);
     }
