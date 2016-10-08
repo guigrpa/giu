@@ -2,6 +2,8 @@
 
 *[M]: major change; [m]: minor change*
 
+* [m] Pass through disabled property to native checkbox
+
 ## 0.8.1 (September 21, 2016)
 
 * [m] **Bugfix**: Hints: fix incorrect initialisation

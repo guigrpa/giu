@@ -66,6 +66,7 @@ class Checkbox extends React.Component {
         checked={curValue}
         tabIndex={disabled ? -1 : undefined}
         {...inputProps}
+        disabled={disabled}
       />
     );
   }
