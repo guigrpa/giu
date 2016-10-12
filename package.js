@@ -165,6 +165,9 @@ const specs = {
     moment: '^2.0.0',
     faker: '3.0.1',
 
+    // Bug yarn #629
+    chokidar: '1.6.0',
+
     // React
     react:                              '^15.3.0',
     'react-dom':                        '^15.3.0',
