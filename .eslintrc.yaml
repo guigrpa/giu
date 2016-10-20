@@ -1,5 +1,7 @@
 parser: babel-eslint
 extends: airbnb
+plugins:
+  - flowtype
 rules:
   eqeqeq:
     - error
@@ -21,3 +23,12 @@ rules:
       mode: 'minimum'
   react/sort-comp: off
   react/jsx-first-prop-new-line: off
+globals:
+  # Flow
+  SyntheticEvent: false
+  SyntheticWheelEvent: false
+  WheelEvent: false
+  Event: false
+  KeyboardEvent: false
+  HTMLElement: false
+  HTMLInputElement: false
