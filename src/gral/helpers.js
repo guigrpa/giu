@@ -1,3 +1,5 @@
+// @flow
+
 import {
   merge,
   addDefaults,
@@ -12,9 +14,9 @@ import {
 // -- Binds a list of object methods to the object with `Function#bind()`.
 // -- Especially useful for ES6-style React components.
 // --
-// -- * **self** *object*: methods will be bound to this object
-// -- * **fnNames** *array<string>*: list of method names
-function bindAll(self, fnNames) {
+// -- * **self** *Object*: methods will be bound to this object
+// -- * **fnNames** *Array<string>*: list of method names
+function bindAll(self: Object, fnNames: Array<string>) {
   fnNames.forEach(name => {
     /* eslint-disable no-param-reassign */
     self[name] = self[name].bind(self);
@@ -26,8 +28,8 @@ function bindAll(self, fnNames) {
 // --
 // -- Calls `preventDefault()` and `stopPropagation()` on the provided event.
 // --
-// -- * **ev** *object?*: event to be cancelled
-function cancelEvent(ev) {
+// -- * **ev** *?SyntheticEvent*: event to be cancelled
+function cancelEvent(ev: ?SyntheticEvent) {
   if (!ev) return;
   ev.preventDefault && ev.preventDefault();
   ev.stopPropagation && ev.stopPropagation();
@@ -37,8 +39,8 @@ function cancelEvent(ev) {
 // --
 // -- Calls `preventDefault()` on the provided event.
 // --
-// -- * **ev** *object?*: event for which default behaviour is to be prevented
-function preventDefault(ev) {
+// -- * **ev** *?SyntheticEvent*: event for which default behaviour is to be prevented
+function preventDefault(ev: ?SyntheticEvent) {
   if (!ev) return;
   ev.preventDefault && ev.preventDefault();
 }
@@ -47,8 +49,8 @@ function preventDefault(ev) {
 // --
 // -- Calls `stopPropagation()` on the provided event.
 // --
-// -- * **ev** *object?*: event for which default behaviour is to be prevented
-function stopPropagation(ev) {
+// -- * **ev** *?SyntheticEvent*: event for which default behaviour is to be prevented
+function stopPropagation(ev: ?SyntheticEvent) {
   if (!ev) return;
   ev.stopPropagation && ev.stopPropagation();
 }
@@ -59,10 +61,13 @@ function stopPropagation(ev) {
 // -- in order to prevent `wheel` events to cause document scrolling when
 // -- the scroller reaches the top/bottom of its contents.
 // --
-// -- * **ev** *object*: `wheel` event
-function cancelBodyScrolling(ev) {
+// -- * **ev** *SyntheticWheelEvent*: `wheel` event
+function cancelBodyScrolling(ev: SyntheticWheelEvent) {
   const el = ev.currentTarget;
-  if (ev.nativeEvent.deltaY <= 0) {
+  if (!(el instanceof Element)) return;
+  const { nativeEvent } = ev;
+  if (!(nativeEvent instanceof WheelEvent)) return;
+  if (nativeEvent.deltaY <= 0) {
     if (el.scrollTop <= 0) cancelEvent(ev);
   } else {
     if (el.scrollTop + el.clientHeight + 0.5 >= el.scrollHeight) cancelEvent(ev);
@@ -73,7 +78,7 @@ function cancelBodyScrolling(ev) {
 // ==========================================
 // Widths, heights...
 // ==========================================
-function windowBottomScrollbarHeight() {
+function windowBottomScrollbarHeight(): number {
   let out = 0;
   // May be SSR, hence try
   try {
@@ -82,7 +87,7 @@ function windowBottomScrollbarHeight() {
   return out;
 }
 
-function windowRightScrollbarWidth() {
+function windowRightScrollbarWidth(): number {
   let out = 0;
   // May be SSR, hence try
   try {
@@ -97,7 +102,7 @@ function windowRightScrollbarWidth() {
 // -- excluding scrollbars (if any).
 // --
 // -- * **Returns** *number*: inner height (width) in pixels
-function windowHeightWithoutScrollbar() {
+function windowHeightWithoutScrollbar(): number {
   // May be SSR, hence try
   try {
     return window.innerHeight - windowBottomScrollbarHeight();
@@ -106,7 +111,7 @@ function windowHeightWithoutScrollbar() {
   }
 }
 
-function windowWidthWithoutScrollbar() {
+function windowWidthWithoutScrollbar(): number {
   // May be SSR, hence try
   try {
     return window.innerWidth - windowRightScrollbarWidth();
@@ -115,12 +120,16 @@ function windowWidthWithoutScrollbar() {
   }
 }
 
-function propsWithDefaultsAndOverrides(props, defaults, overrides) {
+function propsWithDefaultsAndOverrides(
+  props: Object,
+  defaults: ?Object,
+  overrides?: ?Object,
+): Object {
   return merge(addDefaults(props, defaults), overrides);
 }
 
 const COMBINING_CODEPOINTS = /[\u0300-\u036F]/g;
-function simplifyString(str) {
+function simplifyString(str: string): string {
   if (str == null) return str;
   return unorm.nfkd(str).replace(COMBINING_CODEPOINTS, '').toLowerCase();
 }

@@ -1,3 +1,5 @@
+// @flow
+
 const COLORS = {
   // Text
   dim: '#999999',
@@ -81,8 +83,8 @@ const NULL_STRING = '__NULL__';
 // -- Note that the returned value might be zero,
 // -- e.g. on OS X with overlaid scrollbars.
 // --
-// -- * **Returns** *number*: scrollbar width in pixels
-let scrollbarWidth = null;
+// -- * **Returns** *?number*: scrollbar width in pixels
+let scrollbarWidth: number;
 function updateScrollbarWidth() {
   // May be SSR, hence try
   try {
@@ -102,7 +104,7 @@ function updateScrollbarWidth() {
     scrollbarWidth = 0;
   }
 }
-function getScrollbarWidth() {
+function getScrollbarWidth(): number {
   if (scrollbarWidth == null) updateScrollbarWidth();
   return scrollbarWidth;
 }

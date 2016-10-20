@@ -1,38 +1,56 @@
-import moment               from 'moment';
+// @flow
 
-function getUtcFlag(fDate, fTime, fUtc) {
+import moment               from 'moment';
+import type {
+  MomentT,
+}                           from '../gral/types';
+
+function getUtcFlag(
+  fDate: boolean,
+  fTime: boolean,
+  fUtc: ?boolean,
+): boolean {
   return fUtc != null ? fUtc : !(fDate && fTime);
 }
 
-function startOfToday(fUtc) {
+function startOfToday(fUtc: boolean): MomentT {
   const out = moment().startOf('day'); // local
   if (fUtc) {
-    const mins = out.utcOffset();
+    const mins: number = (out.utcOffset(): any);
     out.utc().add(mins, 'minutes');
   }
   return out;
 }
 
-function startOfDefaultDay(fUtc) {
+function startOfDefaultDay(fUtc: boolean): MomentT {
   const fnMoment = fUtc ? moment.utc : moment;
   return fnMoment({ year: 2013, month: 3, date: 27 }); // ;)
 }
 
-function getTimeInSecs(mom) {
+function getTimeInSecs(mom: MomentT): ?number {
   if (!mom) return null;
   return mom.hours() * 3600 + mom.minutes() * 60 + mom.seconds();
 }
 
 // Date formatting
-const dateFormat = () => moment.localeData().longDateFormat('L');
-const timeFormat = fSeconds => `HH:mm${fSeconds ? ':ss' : ''}`;
-function dateTimeFormat(fDate, fTime, fSeconds) {
+const dateFormat = (): string =>
+  moment.localeData().longDateFormat('L');
+const timeFormat = (fSeconds: boolean): string =>
+  `HH:mm${fSeconds ? ':ss' : ''}`;
+function dateTimeFormat(
+  fDate: boolean,
+  fTime: boolean,
+  fSeconds: boolean,
+): string {
   if (!fTime) return dateFormat();
   if (!fDate) return timeFormat(fSeconds);
   return `${dateFormat()} ${timeFormat(fSeconds)}`;
 }
 
-function dateTimeFormatNative(fDate, fTime) {
+function dateTimeFormatNative(
+  fDate: boolean,
+  fTime: boolean,
+): string {
   let out;
   if (fDate && fTime) {
     out = 'YYYY-MM-DDTHH:mm:ss';
