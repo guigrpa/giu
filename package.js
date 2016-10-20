@@ -50,18 +50,20 @@ const specs = {
     // Top-level
     start:                      'babel-node examples/server',
     compile:                    runMultiple([
-                                  'node package',
-                                  'rm -rf ./lib ./libEs6',
-                                  'babel -d lib src',
+                                  'rm -rf ./lib',
+                                  'mkdir lib',
+                                  'babel --out-dir lib --ignore "**/__mocks__/**","**/__tests__/**" src',
                                   'cp src/*.css lib',
                                   'cp src/components/*.css lib/components',
                                   'cp src/inputs/*.css lib/inputs',
                                   'cp -r src/fonts lib/fonts',
-                                  'cp -r src libEs6',
+                                  'cp src/api.js.flow lib/',
                                 ]),
     docs:                       'extract-docs --template docs/templates/README.md --output README.md',
     build:                      runMultiple([
+                                  'node package',
                                   'npm run lint',
+                                  'npm run flow',
                                   'npm run compile',
                                   'npm run docs',
                                   'npm run buildExamplesSsr',
@@ -95,6 +97,7 @@ const specs = {
 
     // Static analysis
     lint:                       'eslint src',
+    flow:                       'flow check || exit 0',
     xxl:                        "xxl --src \"[\\\"src\\\"]\"",
 
     // Testing - general
@@ -140,7 +143,7 @@ const specs = {
   },
 
   dependencies: {
-    timm: '1.0.0',
+    timm: '1.1.3',
 
     redux: '3.5.2',
     'redux-thunk': '2.1.0',
@@ -195,10 +198,11 @@ const specs = {
     // Linting
     'eslint': '^2.13.1',
     'eslint-config-airbnb': '^9.0.0',
+    'eslint-plugin-flowtype': '2.20.0',
+    'eslint-plugin-import': '1.16.0',
+    'eslint-plugin-jsx-a11y': '2.2.3',
     'eslint-plugin-react': '^5.2.2',
-    'eslint-plugin-jsx-a11y': '^1.5.3',
-    'eslint-plugin-import': '^1.9.2',
-    'babel-eslint': '^6.1.2',
+    'babel-eslint': '7.0.0',
 
     // Documentation
     'extract-docs': '^1.2.0',
@@ -209,6 +213,9 @@ const specs = {
     // Testing
     'ava': '0.15.2',
     'nyc': '^6.1.1',
+
+    // Other tools
+    'flow-bin': '0.33.0',
   },
 
   // -----------------------------------------------
