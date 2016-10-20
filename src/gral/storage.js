@@ -1,18 +1,23 @@
+// @flow
+
 let namespace = 'giu';
 
-function setLocalStorageNamespace(newNamespace) {
+function setLocalStorageNamespace(newNamespace: string) {
   namespace = newNamespace;
 }
 
-function localGet(key, options = {}) {
-  let out = options.defaultValue;
+function localGet(key: string, { defaultValue }: {|
+  defaultValue?: any,
+|} = {}): any {
+  let out = defaultValue;
   try {
-    out = JSON.parse(localStorage[`${namespace}_${key}`]);
+    const str: any = localStorage[`${namespace}_${key}`];
+    out = JSON.parse(str);
   } catch (err) { /* ignore */ }
   return out;
 }
 
-function localSet(key, val) {
+function localSet(key: string, val: any) {
   try {
     localStorage[`${namespace}_${key}`] = JSON.stringify(val);
   } catch (err) { /* ignore */ }

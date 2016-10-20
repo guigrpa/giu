@@ -17,7 +17,7 @@ import {
 // -- * **self** *Object*: methods will be bound to this object
 // -- * **fnNames** *Array<string>*: list of method names
 function bindAll(self: Object, fnNames: Array<string>) {
-  fnNames.forEach(name => {
+  fnNames.forEach((name) => {
     /* eslint-disable no-param-reassign */
     self[name] = self[name].bind(self);
     /* eslint-enable no-param-reassign */

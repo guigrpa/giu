@@ -29,7 +29,7 @@ function startOfDefaultDay(fUtc: boolean): MomentT {
 
 function getTimeInSecs(mom: MomentT): ?number {
   if (!mom) return null;
-  return mom.hours() * 3600 + mom.minutes() * 60 + mom.seconds();
+  return (mom.hours() * 3600) + (mom.minutes() * 60) + mom.seconds();
 }
 
 // Date formatting

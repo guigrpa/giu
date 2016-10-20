@@ -5,7 +5,7 @@ import type {
 }                           from '../gral/types';
 
 const vectorNorm = (V: Point2T): number =>
-  Math.sqrt(V.x * V.x + V.y * V.y);
+  Math.sqrt((V.x * V.x) + (V.y * V.y));
 
 const vectorNormalize = (V: Point2T): Point2T => {
   const v = vectorNorm(V);
@@ -13,8 +13,8 @@ const vectorNormalize = (V: Point2T): Point2T => {
 };
 
 const vectorCompose = (V1: Point2T, alpha: number, V2: Point2T, beta: number): Point2T => ({
-  x: alpha * V1.x + beta * V2.x,
-  y: alpha * V1.y + beta * V2.y,
+  x: (alpha * V1.x) + (beta * V2.x),
+  y: (alpha * V1.y) + (beta * V2.y),
 });
 
 const vectorAdd = (V1: Point2T, V2: Point2T): Point2T => ({ x: V1.x + V2.x, y: V1.y + V2.y });
@@ -25,8 +25,8 @@ const vectorRotate = (V: Point2T, radians: number): Point2T => {
   const cos = Math.cos(radians);
   const sin = Math.sin(radians);
   return {
-    x: cos * V.x - sin * V.y,
-    y: sin * V.x + cos * V.y,
+    x: (cos * V.x) - (sin * V.y),
+    y: (sin * V.x) + (cos * V.y),
   };
 };
 

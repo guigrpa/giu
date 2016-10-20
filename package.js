@@ -196,12 +196,12 @@ const specs = {
     'static-site-generator-webpack-plugin': '2.1.0',
 
     // Linting
-    'eslint': '^2.13.1',
-    'eslint-config-airbnb': '^9.0.0',
+    'eslint': '3.8.1',
+    'eslint-config-airbnb': '12.0.0',
     'eslint-plugin-flowtype': '2.20.0',
     'eslint-plugin-import': '1.16.0',
     'eslint-plugin-jsx-a11y': '2.2.3',
-    'eslint-plugin-react': '^5.2.2',
+    'eslint-plugin-react': '6.4.1',
     'babel-eslint': '7.0.0',
 
     // Documentation
