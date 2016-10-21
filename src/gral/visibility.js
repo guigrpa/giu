@@ -1,9 +1,16 @@
+// @flow
+
 /* eslint-disable no-underscore-dangle */
 import { set as timmSet }   from 'timm';
 import {
   windowHeightWithoutScrollbar, windowWidthWithoutScrollbar,
 }                           from '../gral/helpers';
 import { MISC }             from '../gral/constants';
+
+type GetCroppingAncestorOptionsT = {
+  fHoriz?: ?boolean,
+  topAncestor?: ?Node,
+};
 
 // ==========================================
 // Get-cropping-ancestor algorithm (recursive)
@@ -14,20 +21,25 @@ import { MISC }             from '../gral/constants';
 // -- Determines whether the provided node is *fully* visible
 // -- in the browser window.
 // --
-// -- * **node** *object?*: DOM node; if unspecified, the function returns `false`
-// -- * **bcr** *object?*: bounding client rectangle for `node`; if not specified,
+// -- * **node** *?Node*: DOM node; if unspecified, the function returns `false`
+// -- * **bcr?** *ClientRect*: bounding client rectangle for `node`; if not specified,
 // --   `getBoundingClientRect()` will be called on `node`
 // -- * **Returns** *boolean*
-function isVisible(node, bcr0) {
+function isVisible(node: ?Node, bcr0?: ClientRect): boolean {
   if (!node) return false;
+  if (!(node instanceof Element)) return true;
   const bcr = bcr0 || node.getBoundingClientRect();
   const croppingAncestor = _getCroppingAncestor(bcr, node.parentNode);
   return !croppingAncestor;
 }
 
-function _getCroppingAncestor(refBcr, ancestor, options = {}) {
+function _getCroppingAncestor(
+  refBcr: ClientRect,
+  ancestor: ?Node,
+  options?: GetCroppingAncestorOptionsT = {},
+): ?Node {
   const { fHoriz, topAncestor } = options;
-  if (!ancestor || !ancestor.getBoundingClientRect) {
+  if (!ancestor || !(ancestor instanceof HTMLElement)) {
     let fCropped = false;
     if (fHoriz == null || fHoriz === false) {
       if (refBcr.top < 0 || refBcr.bottom > windowHeightWithoutScrollbar()) fCropped = true;
@@ -75,25 +87,26 @@ function _getCroppingAncestor(refBcr, ancestor, options = {}) {
 // -- Implemented as a recursive algorithm that is first run
 // -- vertically and then horizontally.
 // --
-// -- * **node** *object?*: DOM node
-// -- * **options** *object? = {}*: the following options are allowed:
-// --   - **topAncestor** *object*: stop the recursive algorithm at this
+// -- * **node** *?Node*: DOM node
+// -- * **options?** *object = {}*: the following options are allowed:
+// --   - **topAncestor?** *?Node*: stop the recursive algorithm at this
 // --     ancestor (otherwise stops at the root level or when a `Modal`
 // --     ancestor is reached)
-function scrollIntoView(node, options = {}) {
+function scrollIntoView(node: ?Node, options?: GetCroppingAncestorOptionsT = {}) {
   if (!node) return;
+  if (!(node instanceof Element)) return;
   _scrollIntoView(node, timmSet(options, 'fHoriz', false));
   _scrollIntoView(node, timmSet(options, 'fHoriz', true));
 }
 
-function _scrollIntoView(node, options) {
+function _scrollIntoView(node: Element, options: GetCroppingAncestorOptionsT) {
   let bcr = node.getBoundingClientRect();
   const { fHoriz, topAncestor } = options;
   let ancestor = _getCroppingAncestor(bcr, node.parentNode, options);
-  while (ancestor) {
+  while (ancestor && (ancestor instanceof Element)) {
     const fWindowLevel = ancestor === window;
-    const node1 = bcr[fHoriz ? 'left' : 'top'];
-    const node2 = bcr[fHoriz ? 'right' : 'bottom'];
+    const node1 = fHoriz ? bcr.left : bcr.top;
+    const node2 = fHoriz ? bcr.right : bcr.bottom;
     const nodeD = node2 - node1;
     let ancestor1;
     let ancestor2;
@@ -102,8 +115,8 @@ function _scrollIntoView(node, options) {
       ancestor2 = fHoriz ? windowWidthWithoutScrollbar() : windowHeightWithoutScrollbar();
     } else {
       const bcr2 = ancestor.getBoundingClientRect();
-      ancestor1 = bcr2[fHoriz ? 'left' : 'top'];
-      ancestor2 = bcr2[fHoriz ? 'right' : 'bottom'];
+      ancestor1 = fHoriz ? bcr2.left : bcr2.top;
+      ancestor2 = fHoriz ? bcr2.right : bcr2.bottom;
     }
     const ancestorD = ancestor2 - ancestor1;
 
@@ -123,7 +136,11 @@ function _scrollIntoView(node, options) {
       const deltaY = fHoriz ? 0 : delta;
       window.scrollBy(deltaX, deltaY);
     } else {
-      ancestor[fHoriz ? 'scrollLeft' : 'scrollTop'] += delta;
+      if (fHoriz) {
+        ancestor.scrollLeft += delta;
+      } else {
+        ancestor.scrollTop += delta;
+      }
     }
 
     // Update before iterating: BCR may have changed, and we may still not be visible
