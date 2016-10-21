@@ -1,21 +1,48 @@
+// @flow
+
 import keycode              from 'keycode';
 import { UNICODE, IS_MAC }  from '../gral/constants';
 import { cancelEvent }      from '../gral/helpers';
 
-const shortcuts = {};
+export type KeyboardShortcutT = {
+  altKey: boolean,
+  metaKey: boolean,
+  ctrlKey: boolean,
+  shiftKey: boolean,
+  keyCodes: Array<number>,
+  keyNames: Array<string>,
+  hash: string,
+};
 
-function getHash({ keyCode, altKey, metaKey, ctrlKey, shiftKey }) {
-  return `${keyCode},alt=${!!altKey},meta=${!!metaKey},ctrl=${!!ctrlKey},shift=${!!shiftKey}`;
+type KeyboardShortcutCallbackT = (ev: SyntheticKeyboardEvent) => void;
+
+const shortcuts: {[key: string]: KeyboardShortcutCallbackT} = {};
+
+function getHash({ keyCode, altKey, metaKey, ctrlKey, shiftKey }: {
+  keyCode: number,
+  altKey: boolean,
+  metaKey: boolean,
+  ctrlKey: boolean,
+  shiftKey: boolean,
+}) {
+  return `${String(keyCode)},alt=${String(altKey)},` +
+    `meta=${String(metaKey)},ctrl=${String(ctrlKey)},` +
+    `shift=${String(shiftKey)}`;
 }
 
-function createShortcut(keySpec) {
+function createShortcut(keySpec: string): KeyboardShortcutT {
   const shortcut = {};
-  shortcut.keyCodes = keySpec.split('+').map(extName0 => {
+  shortcut.keyCode = -1;
+  shortcut.altKey = false;
+  shortcut.metaKey = false;
+  shortcut.ctrlKey = false;
+  shortcut.shiftKey = false;
+  shortcut.keyCodes = keySpec.split('+').map((extName0) => {
     let extName = extName0;
     if (extName === 'mod') extName = IS_MAC ? 'cmd' : 'ctrl';
     return keycode(extName);
   });
-  shortcut.keyNames = shortcut.keyCodes.map(keyCode => keycode(keyCode));
+  shortcut.keyNames = shortcut.keyCodes.map((keyCode) => keycode(keyCode));
   for (const keyName of shortcut.keyNames) {
     switch (keyName) {
       case 'alt':       shortcut.altKey = true;  break;
@@ -25,7 +52,7 @@ function createShortcut(keySpec) {
       default:          shortcut.keyCode = keycode(keyName); break;
     }
   }
-  shortcut.description = shortcut.keyNames.map(keyName => {
+  shortcut.description = shortcut.keyNames.map((keyName) => {
     let c;
     switch (keyName) {
       case 'alt':       c = IS_MAC ? UNICODE.altKey : 'Alt-'; break;
@@ -46,17 +73,18 @@ function createShortcut(keySpec) {
   return shortcut;
 }
 
-function registerShortcut(shortcut, cb) {
+function registerShortcut(shortcut: KeyboardShortcutT, cb: KeyboardShortcutCallbackT) {
   shortcuts[shortcut.hash] = cb;
 }
 
-function unregisterShortcut(shortcut) { delete shortcuts[shortcut.hash]; }
+function unregisterShortcut(shortcut: KeyboardShortcutT) { delete shortcuts[shortcut.hash]; }
 
-function isAnyModifierPressed(ev) {
+function isAnyModifierPressed(ev: SyntheticKeyboardEvent): boolean {
   return ev.altKey || ev.metaKey || ev.ctrlKey || ev.shiftKey;
 }
 
-function onKeyDown(ev) {
+// Global key-down handler (a single one)
+function onKeyDown(ev: SyntheticKeyboardEvent) {
   const hash = getHash(ev);
   const shortcut = shortcuts[hash];
   if (!shortcut) return;

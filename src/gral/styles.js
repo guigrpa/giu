@@ -53,7 +53,7 @@ const boxWithShadow = (style?: Object): Object =>
 // -- Can be used to decide whether text on this background color should be light
 // -- or dark, respectively, for good readability.
 // --
-// -- * **color** *string/Object*: parameter describing the color (anything that
+// -- * **color** *string|Object*: parameter describing the color (anything that
 // --   can be processed by [tinycolor](https://github.com/bgrins/TinyColor))
 // -- * **Returns** *boolean*: whether the color is dark (light)
 const isDark = (color: string|Object): boolean =>
@@ -65,7 +65,7 @@ const isLight = (color: string|Object): boolean =>
 // --
 // -- Darkens or lightens a given color by a given percentage.
 // --
-// -- * **color** *string/Object*: parameter describing the color (anything that
+// -- * **color** *string|Object*: parameter describing the color (anything that
 // --   can be processed by [tinycolor](https://github.com/bgrins/TinyColor))
 // -- * **percentage?** *number = 10*: percentage by which the color will be modified
 // -- * **Returns** *string*: hex string for the new color, e.g. `#ffaadd`

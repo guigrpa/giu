@@ -1,8 +1,9 @@
 // @flow
 
-import type {
-  Point2T,
-}                           from '../gral/types';
+export type Point2T = {
+  x: number,
+  y: number,
+};
 
 const vectorNorm = (V: Point2T): number =>
   Math.sqrt((V.x * V.x) + (V.y * V.y));

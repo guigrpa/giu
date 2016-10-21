@@ -13,7 +13,3 @@ export type MomentT = moment$Moment;
 // ========================================
 // Other
 // ========================================
-export type Point2T = {
-  x: number,
-  y: number,
-};

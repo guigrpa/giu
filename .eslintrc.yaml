@@ -50,6 +50,7 @@ globals:
   # Flow
   SyntheticEvent: false
   SyntheticWheelEvent: false
+  SyntheticKeyboardEvent: false
   WheelEvent: false
   Event: false
   KeyboardEvent: false

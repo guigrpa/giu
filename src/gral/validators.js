@@ -1,3 +1,5 @@
+// @flow
+
 import { dateTimeFormat }   from '../gral/dates';
 
 /* --
@@ -26,19 +28,34 @@ isDate()
 ```
 -- */
 
+type ValidatorT = {
+  fInternal?: boolean,
+  id?: string,
+  validate?: (
+    val: any,
+  ) => ?string,
+  getErrorMessage?: (
+    val: any,
+  ) => string,
+};
+
 // ==========================================
 // Special `isRequired`
 // ==========================================
-const isRequired = (msg) => ({
+const isRequired = (msg?: string): ValidatorT => ({
   fInternal: true,
   id: 'isRequired',
-  getErrorMessage: _val => buildError(msg, 'is required', _val),
+  getErrorMessage: (_val) => buildError(msg, 'is required', _val),
 });
 
-const isEqualTo = (anotherAttrVal, anotherAttrName, msg) => ({
+const isEqualTo = (
+  anotherAttrVal: any,
+  anotherAttrName: string,
+  msg?: string,
+): ValidatorT => ({
   fInternal: false,
   id: 'isEqualTo',
-  validate: val => (
+  validate: (val) => (
     val === anotherAttrVal
       ? undefined
       : buildError(msg, `must be equal to ${anotherAttrName}`, val)
