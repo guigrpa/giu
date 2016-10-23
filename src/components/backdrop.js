@@ -1,3 +1,5 @@
+// @flow
+
 import React                from 'react';
 import { merge }            from 'timm';
 import { cancelEvent }      from '../gral/helpers';
@@ -6,12 +8,14 @@ import { IS_IOS }           from '../gral/constants';
 // ==========================================
 // Component
 // ==========================================
-class Backdrop extends React.PureComponent {
-  static propTypes = {
-    style:                  React.PropTypes.object,
-  };
+// All props are forwarded to the child `<div>`
+type PropsT = {
+  style?: Object,
+};
 
-  // All props are forwarded to the child `<div>`
+class Backdrop extends React.PureComponent {
+  props: PropsT;
+
   render() {
     return (
       <div

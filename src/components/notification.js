@@ -1,3 +1,5 @@
+// @flow
+
 import React                from 'react';
 import { merge }            from 'timm';
 import {
@@ -7,28 +9,29 @@ import {
 }                           from '../gral/styles';
 import { COLORS }           from '../gral/constants';
 import hoverable            from '../hocs/hoverable';
+import type { HoverablePropsT } from '../hocs/hoverable';
 import Icon                 from './icon';
 
 // ==========================================
 // Component
 // ==========================================
+type PublicPropsT = {
+  id?: string,
+  type?: ('info' | 'success' | 'warn' | 'error'),
+  icon?: string,
+  iconSpin?: boolean,
+  title?: string,
+  msg?: string,
+  onClick?: (ev: SyntheticMouseEvent) => void,
+  style?: Object,
+  noStylePosition?: boolean,
+  noStyleShadow?: boolean,
+};
+type PropsT = PublicPropsT & HoverablePropsT;
+
 class Notification extends React.PureComponent {
-  static propTypes = {
-    id:                     React.PropTypes.string,
-    type:                   React.PropTypes.string,
-    icon:                   React.PropTypes.string,
-    iconSpin:               React.PropTypes.bool,
-    title:                  React.PropTypes.string,
-    msg:                    React.PropTypes.string,
-    onClick:                React.PropTypes.func,
-    style:                  React.PropTypes.object,
-    noStylePosition:        React.PropTypes.bool,
-    noStyleShadow:          React.PropTypes.bool,
-    // From Hoverable:
-    hovering:               React.PropTypes.any,
-    onHoverStart:           React.PropTypes.func.isRequired,
-    onHoverStop:            React.PropTypes.func.isRequired,
-  };
+  props: PropsT;
+
   static defaultProps = {
     type:                   'info',
     icon:                   'exclamation',
@@ -114,4 +117,5 @@ const style = {
 // ==========================================
 // Public API
 // ==========================================
+// export default Notification;
 export default hoverable(Notification);

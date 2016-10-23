@@ -1,9 +1,16 @@
+// @flow
+
 import React                from 'react';
 import { omit, merge }      from 'timm';
+import type {
+  ChoiceT,
+  CommandT,
+}                           from '../gral/types';
 import { COLORS }           from '../gral/constants';
 import { bindAll }          from '../gral/helpers';
 import { isDark }           from '../gral/styles';
 import hoverable            from '../hocs/hoverable';
+import type { HoverablePropsT } from '../hocs/hoverable';
 import Select               from '../inputs/select';
 
 // ==========================================
@@ -11,41 +18,50 @@ import Select               from '../inputs/select';
 // ==========================================
 // -- Props:
 // --
-// -- * **items** *array(object)*: menu items, similar to [Select](#select)
+// -- * **items** *Array<ChoiceT>*: menu items, similar to [Select](#select)
 // --   but with the inclusion of an `onClick` callback:
 // --   - **value** *any*: any value that can be converted to JSON. Values should be unique
-// --   - **label** *string*: descriptive string that will be shown to the user
-// --   - **keys** *array(string)?*: keyboard shortcuts for this option, e.g.
+// --   - **label?** *string*: descriptive string that will be shown to the user
+// --   - **keys?** *Array<string>*: keyboard shortcuts for this option, e.g.
 // --     `mod+a` (= `cmd+a` in OS X, `ctrl+a` in Windows), `alt+backspace`, `shift+up`...
-// --   - **onClick** *function?*: called when the item is clicked with the event as argument
-// -- * **lang** *string?*: current language (NB: just used to make sure the component is refreshed)
+// --   - **onClick?** *(ev: SyntheticEvent) => void*: called when the item is clicked
+// --     with the event as argument
+// -- * **lang?** *string*: current language (NB: just used to make sure the component is refreshed)
 // -- * **children** *any*: React elements that will be shown as the menu's title
-// -- * **onClickItem** *function?*: called when an item is clicked
+// -- * **onClickItem?** *Function*: called when an item is clicked
 // --   with the following arguments:
-// --   - **ev** *object*: `click` event
+// --   - **ev** *SyntheticMouseEvent*: `click` event
 // --   - **value** *any*: the item's `value` (as specified in the `items` prop)
-// -- * **style** *object?*: will be merged with the menu title's `div` wrapper
-// -- * **accentColor** *string?*: CSS color descriptor (e.g. `darkgray`, `#ccffaa`...)
+// -- * **style?** *Object*: will be merged with the menu title's `div` wrapper
+// -- * **accentColor?** *string*: CSS color descriptor (e.g. `darkgray`, `#ccffaa`...)
 // -- * *All other props are passed through to the Select input component*
+
+type PublicPropsT = {
+  items: Array<ChoiceT>,
+  lang?: string,
+  children: any,
+  onClickItem?: (ev: SyntheticMouseEvent, val: any) => void,
+  style?: Object,
+  accentColor?: string,
+  // all others are passed through unchanged
+};
+type PropsT = PublicPropsT & HoverablePropsT;
+const FILTERED_PROPS = [
+  'items', 'lang', 'children', 'onClickItem', 'style', 'accentColor',
+];
+
 class DropDownMenu extends React.PureComponent {
-  static propTypes = {
-    items:                  React.PropTypes.array.isRequired,
-    lang:                   React.PropTypes.string,
-    children:               React.PropTypes.any.isRequired,
-    onClickItem:            React.PropTypes.func,
-    style:                  React.PropTypes.object,
-    accentColor:            React.PropTypes.string,
-    // Hoverable HOC
-    hovering:               React.PropTypes.any,
-    onHoverStart:           React.PropTypes.func.isRequired,
-    onHoverStop:            React.PropTypes.func.isRequired,
-    // all others are passed through unchanged
+  props: PropsT;
+  state: {
+    fFocused: boolean,
+    cmds: ?Array<CommandT>,
   };
+
   static defaultProps = {
     accentColor:            COLORS.accent,
   };
 
-  constructor(props) {
+  constructor(props: PropsT) {
     super(props);
     this.state = {
       fFocused: false,
@@ -64,7 +80,7 @@ class DropDownMenu extends React.PureComponent {
   // Render
   // ==========================================
   render() {
-    const props = omit(this.props, PROP_KEYS);
+    const props = omit(this.props, FILTERED_PROPS);
     return (
       <Select
         type="dropDownPicker"
@@ -108,9 +124,9 @@ class DropDownMenu extends React.PureComponent {
 
   // Run the `onClick` function (if any) associated to the clicked item,
   // and run the `onClickItem` prop.
-  onClickItem(ev, value) {
+  onClickItem(ev: SyntheticMouseEvent, value: any) {
     const { items, onClickItem } = this.props;
-    items.forEach(item => {
+    items.forEach((item) => {
       if (item.value === value && item.onClick) item.onClick(ev);
     });
     onClickItem && onClickItem(ev, value);
@@ -157,11 +173,6 @@ const style = {
     return merge(out, baseStyle);
   },
 };
-
-// ==========================================
-// Miscellaneous
-// ==========================================
-const PROP_KEYS = Object.keys(DropDownMenu.propTypes);
 
 // ==========================================
 // Public API

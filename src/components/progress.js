@@ -1,5 +1,6 @@
+// @flow
+
 import React                from 'react';
-import { omit }             from 'timm';
 
 // ==========================================
 // Component
@@ -9,13 +10,9 @@ import { omit }             from 'timm';
 // -- Remember that an indeterminate progress bar will be shown if you
 // -- don't specify the `value` prop (native HTML behaviour).*
 class Progress extends React.PureComponent {
-  static propTypes = {
-    // all other props are passed through
-  };
-
+  props: Object;
   render() {
-    const otherProps = omit(this.props, PROP_KEYS);
-    return <progress {...otherProps} style={style.progress} />;
+    return <progress {...this.props} style={style.progress} />;
   }
 }
 
@@ -27,11 +24,6 @@ const style = {
     width: '100%',
   },
 };
-
-// ==========================================
-// Miscellaneous
-// ==========================================
-const PROP_KEYS = Object.keys(Progress.propTypes);
 
 // ==========================================
 // Public API

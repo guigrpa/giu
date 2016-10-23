@@ -1,3 +1,5 @@
+// @flow
+
 import React                from 'react';
 import { omit, merge }      from 'timm';
 import { COLORS }           from '../gral/constants';
@@ -7,29 +9,29 @@ import { COLORS }           from '../gral/constants';
 // ==========================================
 // -- An inconspicuous-looking button-in-a-`span`. Props:
 // --
-// -- * **plain** *boolean?*: removes most button styles
-// -- * **children** *any*: button contents (can include `Icon`
+// -- * **plain?** *boolean*: removes most button styles
+// -- * **children?** *any*: button contents (can include `Icon`
 // --   components, etc.)
-// -- * **onClick** *function?*: `click` handler
-// -- * **disabled** *boolean?*
-// -- * **style** *object?*: merged with the `span` style
+// -- * **onClick?** *(ev: SyntheticMouseEvent) => void*: `click` handler
+// -- * **disabled?** *boolean*
+// -- * **style?** *Object*: merged with the `span` style
 // -- * *All other props are passed through to the `span` element*
-class Button extends React.PureComponent {
-  static propTypes = {
-    plain:                  React.PropTypes.bool,
-    children:               React.PropTypes.any,
-    onClick:                React.PropTypes.func,
-    disabled:               React.PropTypes.bool,
-    style:                  React.PropTypes.object,
-    // all other props are passed through
-  };
+type PropsT = {
+  plain?: boolean,
+  children?: any,
+  onClick?: (ev: SyntheticMouseEvent) => void,
+  disabled?: boolean,
+  style?: Object,
+  // all other props are passed through
+};
+const FILTERED_PROPS = ['plain', 'children', 'onClick', 'disabled', 'style'];
 
-  // ==========================================
-  // Render
-  // ==========================================
+class Button extends React.PureComponent {
+  props: PropsT;
+
   render() {
     const { children, disabled, onClick } = this.props;
-    const otherProps = omit(this.props, PROP_KEYS);
+    const otherProps = omit(this.props, FILTERED_PROPS);
     return (
       <span
         className="giu-button"
@@ -74,11 +76,6 @@ const style = {
     return out;
   },
 };
-
-// ==========================================
-// Miscellaneous
-// ==========================================
-const PROP_KEYS = Object.keys(Button.propTypes);
 
 // ==========================================
 // Public API

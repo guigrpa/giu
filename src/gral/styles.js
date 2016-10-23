@@ -28,7 +28,7 @@ const flexContainer = (
 // -- * **Returns** *Object*: Flex item style
 const flexItem = (
   flex: string|number,
-  style: Object,
+  style?: Object,
 ): Object => merge({
   flex,
   WebkitFlex: flex,

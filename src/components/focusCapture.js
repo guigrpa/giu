@@ -1,3 +1,5 @@
+// @flow
+
 import React                from 'react';
 import { omit }             from 'timm';
 import { IS_IOS }           from '../gral/constants';
@@ -9,15 +11,18 @@ import {
 // ==========================================
 // Component
 // ==========================================
+type PropsT = {
+  disabled?: boolean,
+  registerRef?: (ref: any) => void,
+};
+const FILTERED_PROPS = ['disabled, registerRef'];
+
 class FocusCapture extends React.Component {
-  static propTypes = {
-    disabled:               React.PropTypes.bool,
-    registerRef:            React.PropTypes.func,
-  };
+  props: PropsT;
 
   render() {
     const { registerRef, disabled } = this.props;
-    const otherProps = omit(this.props, PROP_KEYS);
+    const otherProps = omit(this.props, FILTERED_PROPS);
     const el = (
       <input ref={registerRef}
         style={style.input}
@@ -38,11 +43,6 @@ const style = {
   input: IS_IOS ? HIDDEN_FOCUS_CAPTURE_IOS : HIDDEN_FOCUS_CAPTURE,
   iosWrapper: { position: 'relative' },
 };
-
-// ==========================================
-// Miscellaneous
-// ==========================================
-const PROP_KEYS = Object.keys(FocusCapture.propTypes);
 
 // ==========================================
 // Public API

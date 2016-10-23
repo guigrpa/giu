@@ -102,8 +102,8 @@ function scrollIntoView(node: ?Node, options?: GetCroppingAncestorOptionsT = {})
 function _scrollIntoView(node: Element, options: GetCroppingAncestorOptionsT) {
   let bcr = node.getBoundingClientRect();
   const { fHoriz, topAncestor } = options;
-  let ancestor = _getCroppingAncestor(bcr, node.parentNode, options);
-  while (ancestor && (ancestor instanceof Element)) {
+  let ancestor: ?Object = _getCroppingAncestor(bcr, node.parentNode, options);
+  while (ancestor) {
     const fWindowLevel = ancestor === window;
     const node1 = fHoriz ? bcr.left : bcr.top;
     const node2 = fHoriz ? bcr.right : bcr.bottom;
