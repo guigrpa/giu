@@ -15,9 +15,11 @@ import Icon                 from './icon';
 // ==========================================
 // Component
 // ==========================================
+type NotificationTypeT = string; // 'info' | 'success' | 'warn' | 'error';
+
 type PublicPropsT = {
   id?: string,
-  type?: ('info' | 'success' | 'warn' | 'error'),
+  type?: NotificationTypeT,
   icon?: string,
   iconSpin?: boolean,
   title?: string,
@@ -29,8 +31,14 @@ type PublicPropsT = {
 };
 type PropsT = PublicPropsT & HoverablePropsT;
 
+type DefaultPropsT = {
+  type: NotificationTypeT,
+  icon: string,
+};
+
 class Notification extends React.PureComponent {
   props: PropsT;
+  static defaultProps: DefaultPropsT;
 
   static defaultProps = {
     type:                   'info',
@@ -117,5 +125,8 @@ const style = {
 // ==========================================
 // Public API
 // ==========================================
-// export default Notification;
-export default hoverable(Notification);
+const HoverableNotification = hoverable(Notification);
+export default HoverableNotification;
+
+/* eslint-disable */
+const a = <HoverableNotification />;

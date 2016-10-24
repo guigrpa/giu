@@ -73,9 +73,11 @@ function hoc<DP, P, St>(
   return Derived;
 }
 
+const dict = { one: 1, two: 2, three: 3 };
+
 class Foo extends React.Component {
   props: {
-    a?: string,
+    a: string,
     b: string,
     c: string,
     opt?: string,
@@ -83,7 +85,7 @@ class Foo extends React.Component {
   defaultProps: { a: 'string' };
   static defaultProps = { a: 'defaultA' };
   render() {
-    return <div>{this.props.a}</div>;
+    return <div>{dict[this.props.a]}</div>;
   }
 }
 const HoverableFoo = hoc(Foo);

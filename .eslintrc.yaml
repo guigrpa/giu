@@ -52,6 +52,7 @@ rules:
 globals:
   # Flow
   Class: false
+  $Diff: false
   ReactClass: false
   React$Component: false
   SyntheticEvent: false

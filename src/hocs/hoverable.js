@@ -33,27 +33,44 @@ import { bindAll }          from '../gral/helpers';
 // --   you can attach to your target DOM elements
 // -- * **onHoverStop** *(ev: SyntheticMouseEvent) => void*: `onMouseLeave` event handler
 // --   you can attach to your target DOM elements
-type PropsT = {
-  onHoverStart?: (ev: SyntheticMouseEvent) => void,
-  onHoverStop?: (ev: SyntheticMouseEvent) => void,
+type HoverEventHandlerT = (ev: SyntheticMouseEvent) => void;
+type HoveringT = ?(string|number|boolean);
+
+type OwnPropsT = {
+  hovering: HoveringT,
+  onHoverStart: HoverEventHandlerT,
+  onHoverStop: HoverEventHandlerT,
+};
+type PropsT<P> = OwnPropsT & $Diff<P, OwnPropsT>;
+
+type OwnDefaultProps = {
+  hovering: any,
+  onHoverStart: any,
+  onHoverStop: any,
+};
+type DefaultPropsT<DP> = OwnDefaultProps & $Diff<DP, OwnDefaultProps>;
+
+type StateT = {
+  hovering: ?(string|number|boolean),
 };
 
 export type HoverablePropsT = {
-  hovering: ?(string|number|boolean),
-  onHoverStart: (ev: SyntheticMouseEvent) => void,
-  onHoverStop: (ev: SyntheticMouseEvent) => void,
+  hovering: HoveringT,
+  onHoverStart: HoverEventHandlerT,
+  onHoverStop: HoverEventHandlerT,
 };
 
-function hoverable(ComposedComponent: ReactClass<*>): ReactClass<*> {
+function hoverable<DP, P, St>(
+  ComposedComponent: Class<React$Component<DP, P, St>>
+): Class<React$Component<DefaultPropsT<DP>, PropsT<P>, StateT>> {
   const composedComponentName = ComposedComponent.displayName ||
     ComposedComponent.name || 'Component';
   const hocDisplayName = `Hoverable(${composedComponentName})`;
 
-  return class extends React.Component {
-    props: PropsT;
-    state: {
-      hovering: ?(string|number|boolean),
-    };
+  class Derived extends React.Component {
+    props: PropsT<P>
+    static defaultProps: DefaultPropsT<DP>;
+    state: StateT;
 
     static displayName = hocDisplayName;
     static propTypes = {
@@ -61,7 +78,7 @@ function hoverable(ComposedComponent: ReactClass<*>): ReactClass<*> {
       onHoverStop:            React.PropTypes.func,
     };
 
-    constructor(props: PropsT) {
+    constructor(props: PropsT<P>) {
       super(props);
       this.state = { hovering: null };
       bindAll(this, [
@@ -71,7 +88,7 @@ function hoverable(ComposedComponent: ReactClass<*>): ReactClass<*> {
     }
 
     render() {
-      const otherProps = omit(this.props, [
+      const otherProps: any = omit(this.props, [
         'onHoverStart', 'onHoverStop',
       ]);
       return (
@@ -98,7 +115,9 @@ function hoverable(ComposedComponent: ReactClass<*>): ReactClass<*> {
       this.setState({ hovering: null });
       if (this.props.onHoverStop) this.props.onHoverStop(ev);
     }
-  };
+  }
+
+  return Derived;
 }
 
 // ==========================================
