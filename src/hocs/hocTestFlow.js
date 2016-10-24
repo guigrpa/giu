@@ -48,3 +48,73 @@ export const g2 = () => <HoverableFoo a={'3'} b={7} />;
 export const g3 = () => <SLFoo a={'3'} />;
 export const g4 = () => <HoverableSLFoo a={'3'} />;
 */
+
+type HocProps = {
+  hocProp?: string,
+  c: string,
+};
+
+type HocDefaultProps = {
+  c: string,
+};
+
+function hoc<DP, P, St>(
+  ComposedComponent: Class<React$Component<DP, P, St>>
+): Class<React$Component<(HocDefaultProps & $Diff<DP, HocDefaultProps>), (HocProps & $Diff<P, HocProps>), void>> {
+  class Derived extends React.Component {
+    props: (HocProps & $Diff<P, HocProps>);
+    static defaultProps: HocDefaultProps & $Diff<DP, HocDefaultProps>;
+    static defaultProps: any = { c: 'defaultC' };
+    render() {
+      const otherProps: P = (omit(this.props, ['hocProp']): any);
+      return <ComposedComponent {...otherProps} />;
+    }
+  };
+  return Derived;
+}
+
+class Foo extends React.Component {
+  props: {
+    a?: string,
+    b: string,
+    c: string,
+    opt?: string,
+  }
+  defaultProps: { a: 'string' };
+  static defaultProps = { a: 'defaultA' };
+  render() {
+    return <div>{this.props.a}</div>;
+  }
+}
+const HoverableFoo = hoc(Foo);
+
+export const ok1 = <Foo a="a" b="b" c="c" />;
+export const ok1b = <HoverableFoo a="a" b="b" c="c" />;
+export const ok2 = <Foo b="b" c="c" />;
+export const ok2b = <HoverableFoo b="b" c="c" />;
+export const ok3 = <Foo b="b" c="c" opt="hi" />;
+export const ok3b = <HoverableFoo b="b" c="c" opt="hi" />;
+// $FlowFixMe
+export const nok1 = <Foo a="a" b="b" />;
+// $FlowFixMe
+export const nok2 = <Foo a="a" />;
+// $FlowFixMe
+export const nok2b = <HoverableFoo a="a" />;
+// $FlowFixMe
+export const nok3 = <Foo a="a" b={2} />;
+// $FlowFixMe
+export const nok3b = <HoverableFoo a="a" b={2} />;
+
+
+
+type T1 = {
+  c: string,
+  a: string,
+};
+type T2 = {
+  c: string,
+};
+type T3 = $Diff<T1, T2>;
+const a: T3 = {
+  a: 'hello',
+};
