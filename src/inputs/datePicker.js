@@ -1,3 +1,5 @@
+// @flow
+
 import React                from 'react';
 import moment               from 'moment';
 import { bindAll }          from '../gral/helpers';
@@ -9,8 +11,11 @@ import {
   flexContainer,
   isDark,
 }                           from '../gral/styles';
+import type { MomentT }     from '../gral/types';
+import type { KeyboardEventParsT } from '../gral/keys';
 import { COLORS, KEYS }     from '../gral/constants';
 import hoverable            from '../hocs/hoverable';
+import type { HoverablePropsT } from '../hocs/hoverable';
 import Button               from '../components/button';
 import Icon                 from '../components/icon';
 
@@ -20,24 +25,28 @@ const DAY_WIDTH = '2em';
 // ==========================================
 // Component
 // ==========================================
+type PublicPropsT = {
+  disabled: boolean,
+  curValue: ?MomentT,
+  onChange: (ev: SyntheticEvent, nextValue: MomentT) => void,
+  utc: boolean,
+  todayName: string,
+  keyDown: ?KeyboardEventParsT,
+  accentColor: string,
+};
+type PropsT = PublicPropsT & HoverablePropsT;
+
 class DatePicker extends React.Component {
-  static propTypes = {
-    disabled:               React.PropTypes.bool.isRequired,
-    curValue:               React.PropTypes.object,  // moment object, not start of day
-    onChange:               React.PropTypes.func.isRequired,
-    utc:                    React.PropTypes.bool.isRequired,
-    todayName:              React.PropTypes.string.isRequired,
-    keyDown:                React.PropTypes.object,
-    accentColor:            React.PropTypes.string.isRequired,
-    // Hoverable HOC
-    hovering:               React.PropTypes.any,
-    onHoverStart:           React.PropTypes.func.isRequired,
-    onHoverStop:            React.PropTypes.func.isRequired,
+  props: PropsT;
+  state: {
+    shownMonthStart: MomentT,
   };
+  startOfCurValue: ?MomentT;
+  shownMonthNumber: number;
 
   constructor(props) {
     super(props);
-    this.state = { shownMonthStart: null };
+    this.state = ({ shownMonthStart: null }: any);
     bindAll(this, [
       'onClickMonthName',
       'onClickDay',
@@ -48,7 +57,7 @@ class DatePicker extends React.Component {
   }
 
   componentWillMount() { this.updateShownMonth(this.props); }
-  componentWillReceiveProps(nextProps) {
+  componentWillReceiveProps(nextProps: PropsT) {
     const prevValue = this.props.curValue;
     const nextValue = nextProps.curValue;
     if (prevValue != null || nextValue != null) {
@@ -60,7 +69,7 @@ class DatePicker extends React.Component {
     if (keyDown && keyDown !== this.props.keyDown) this.doKeyDown(keyDown);
   }
 
-  updateShownMonth(props) {
+  updateShownMonth(props: PropsT) {
     const { curValue, utc } = props;
     const refMoment = curValue != null ? curValue.clone() : startOfToday(utc);
     const shownMonthStart = refMoment.startOf('month');
@@ -89,7 +98,7 @@ class DatePicker extends React.Component {
     );
   }
 
-  renderMonth(shownMonthStart) {
+  renderMonth(shownMonthStart: MomentT) {
     const { disabled } = this.props;
     return (
       <div style={style.monthRow}>
@@ -121,7 +130,7 @@ class DatePicker extends React.Component {
     return <div style={style.dayNamesRow}>{els}</div>;
   }
 
-  renderWeeks(shownMonthStart) {
+  renderWeeks(shownMonthStart: MomentT) {
     const curDate = shownMonthStart.clone();
     const endDate = moment(curDate).add(1, 'month');
     curDate.subtract(curDate.weekday(), 'days');
@@ -130,7 +139,7 @@ class DatePicker extends React.Component {
     while (curDate < endDate) {
       weeks.push(this.renderWeek(curDate, i));
       curDate.add(1, 'week');
-      i++;
+      i += 1;
     }
     return <div>{weeks}</div>;
   }

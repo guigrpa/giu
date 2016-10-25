@@ -4,6 +4,14 @@ import keycode              from 'keycode';
 import { UNICODE, IS_MAC }  from '../gral/constants';
 import { cancelEvent }      from '../gral/helpers';
 
+export type KeyboardEventParsT = {
+  altKey: boolean,
+  metaKey: boolean,
+  ctrlKey: boolean,
+  shiftKey: boolean,
+  keyCode: number,
+  which: number,
+};
 export type KeyboardShortcutT = {
   altKey: boolean,
   metaKey: boolean,
