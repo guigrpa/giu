@@ -1,19 +1,26 @@
+// @flow
+
 import React                from 'react';
 import { merge }            from 'timm';
 
 // ==========================================
 // Component
 // ==========================================
+type AlignTypeT = 'left' | 'right' | 'center';
+type PropsT = {
+  x: number,
+  y: number,
+  align: AlignTypeT,
+  children?: any,
+  fontSize: number,
+  style?: Object,
+};
+export type HintLabelPropsT = PropsT;
+
 class HintLabel extends React.Component {
-  static propTypes = {
-    x:                      React.PropTypes.number.isRequired,
-    y:                      React.PropTypes.number.isRequired,
-    align:                  React.PropTypes.oneOf(['left', 'right', 'center']),
-    children:               React.PropTypes.any,
-    fontSize:               React.PropTypes.number.isRequired,
-  };
+  props: PropsT;
   static defaultProps = {
-    align:                  'left',
+    align: ('left': AlignTypeT),
   }
 
   // ==========================================

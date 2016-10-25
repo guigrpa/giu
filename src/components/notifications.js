@@ -1,3 +1,7 @@
+// @flow
+
+/* eslint-disable no-plusplus */
+
 import React                from 'react';
 import {
   createStore,
@@ -13,6 +17,7 @@ import {
 import { MISC }             from '../gral/constants';
 import { bindAll }          from '../gral/helpers';
 import Notification         from './notification';
+import type { NotificationParsT } from './notification';
 
 /* --
 **Include the `<Notifications />` component at (or near)
@@ -30,16 +35,17 @@ const NotifExample = () =>
 API reference:
 
 * **notify()**: creates a notification:
-  - **pars** *object*: notification parameters:
-    + **sticky** *boolean?*: never delete this notification
-    + **timeOut** *number? = 4000*: time [ms] after which it's deleted
-    + **type** *string(`info` | `success` | `warn` | `error`)? = `info`*
-    + **icon** *string? = `exclamation`*
-    + **iconSpin** *boolean?*
-    + **title** *string?*: highlighted text at the top of the notification
+  - **pars** *NotificationParsT*: notification parameters:
+    + **sticky?** *boolean*: never delete this notification
+    + **timeOut?** *number = 4000*: time [ms] after which it's deleted
+    + **name?** *string*: a user-provided name for the notification
+    + **type?** *info|success|warn|error = `info`*
+    + **icon?** *string = `exclamation`*
+    + **iconSpin?** *boolean*
+    + **title?** *string*: highlighted text at the top of the notification
     + **msg** *string*: notification text
-    + **onClick** *function?*: `click` handler
-    + **style** *object?*: merged with the outermost `div` style
+    + **onClick?** *(ev: SyntheticMouseEvent) => void*: `click` handler
+    + **style?** *Object*: merged with the outermost `div` style
   - **Returns** *string*: notification ID
 * **notifRetain()**: marks a notification as retained
   (it will not be automatically deleted, even if it's `sticky`):
@@ -49,18 +55,29 @@ API reference:
 * **notifDeleteByName()**: deletes a notification:
   - **name** *string*: name of the notification to be deleted
 -- */
+type NotificationHandleParsT = {
+  sticky?: boolean,
+  timeout?: number,
+};
+type NotificationUserParsT = NotificationParsT & NotificationHandleParsT;
+type NotificationStateParsT = NotificationUserParsT & {
+  retained?: boolean
+};
+
+type StateT = Array<NotificationStateParsT>;
+type ActionT = Object;
 
 // ==========================================
 // Store, reducer
 // ==========================================
-let store = null;
+let store: Object;
 function initStore() {
   const storeEnhancers = applyMiddleware(thunk);
   store = createStore(reducer, storeEnhancers);
 }
 
-const INITIAL_STATE = [];
-function reducer(state0 = INITIAL_STATE, action) {
+const INITIAL_STATE: StateT = [];
+function reducer(state0: StateT = INITIAL_STATE, action: ActionT): StateT {
   let state = state0;
   let id;
   let name;
@@ -71,21 +88,21 @@ function reducer(state0 = INITIAL_STATE, action) {
       break;
     case 'NOTIF_RETAIN':
       id = action.id;
-      idx = state.findIndex(o => o.id === id);
+      idx = state.findIndex((o) => o.id === id);
       if (idx >= 0) {
         state = updateIn(state, [idx, 'retained'], () => true);
       }
       break;
     case 'NOTIF_DELETE':
       id = action.id;
-      idx = state.findIndex(o => o.id === id);
+      idx = state.findIndex((o) => o.id === id);
       if (idx >= 0 && !(action.fAuto && state[idx].retained)) {
         state = removeAt(state, idx);
       }
       break;
     case 'NOTIF_DELETE_BY_NAME':
       name = action.name;
-      idx = state.findIndex(o => o.name === name);
+      idx = state.findIndex((o) => o.name === name);
       if (idx >= 0) {
         state = removeAt(state, idx);
       }
@@ -112,7 +129,7 @@ const DEFAULT_NOTIF_PARS = {
   msg:        '',
 };
 const actions = {
-  notify: initialPars => dispatch => {
+  notify: (initialPars: NotificationUserParsT) => (dispatch: Function) => {
     const id = `notif_${cntId++}`;
     const pars = addDefaults(initialPars, DEFAULT_NOTIF_PARS, { id });
     dispatch({ type: 'NOTIFY', pars });
@@ -123,29 +140,32 @@ const actions = {
     }
     return pars;
   },
-  notifRetain: id => ({ type: 'NOTIF_RETAIN', id }),
-  notifDelete: id => ({ type: 'NOTIF_DELETE', id }),
-  notifDeleteByName: name => ({ type: 'NOTIF_DELETE_BY_NAME', name }),
+  notifRetain: (id: string) => ({ type: 'NOTIF_RETAIN', id }),
+  notifDelete: (id: string) => ({ type: 'NOTIF_DELETE', id }),
+  notifDeleteByName: (name: string) => ({ type: 'NOTIF_DELETE_BY_NAME', name }),
 };
 
 // Imperative dispatching
-const notify = initialPars => {
+const notify = (initialPars: NotificationUserParsT): string => {
   const pars = store.dispatch(actions.notify(initialPars));
   return pars.id;
 };
-const notifRetain = id => store.dispatch(actions.notifRetain(id));
-const notifDelete = id => store.dispatch(actions.notifDelete(id));
-const notifDeleteByName = name => store.dispatch(actions.notifDeleteByName(name));
+const notifRetain = (id: string) => store.dispatch(actions.notifRetain(id));
+const notifDelete = (id: string) => store.dispatch(actions.notifDelete(id));
+const notifDeleteByName = (name: string) => store.dispatch(actions.notifDeleteByName(name));
 
 // ==========================================
 // Notifications component
 // ==========================================
-class Notifications extends React.PureComponent {
-  static propTypes = {
-    notifs:                 React.PropTypes.array,
-  };
+type PropsT = {
+  notifs: StateT,
+};
 
-  constructor(props) {
+class Notifications extends React.PureComponent {
+  props: PropsT;
+  storeUnsubscribe: () => void;
+
+  constructor(props: PropsT) {
     super(props);
     bindAll(this, [
       'onRetain',
@@ -167,13 +187,13 @@ class Notifications extends React.PureComponent {
         className="giu-notifications"
         style={style.outer}
       >
-        {notifs.map(props =>
+        {notifs.map((props) =>
           <Notification key={props.id}
             {...props}
             onHoverStart={this.onRetain}
             onHoverStop={this.onDismiss}
             onClick={this.onDismiss}
-            noStylePosition
+            noStylePosition={true}
           />
         )}
       </div>
@@ -181,8 +201,14 @@ class Notifications extends React.PureComponent {
   }
 
   // ==========================================
-  onRetain(ev) { store.dispatch(actions.notifRetain(ev.currentTarget.id)); }
-  onDismiss(ev) { store.dispatch(actions.notifDelete(ev.currentTarget.id)); }
+  onRetain(ev: SyntheticEvent) {
+    if (!(ev.currentTarget instanceof Element)) return;
+    store.dispatch(actions.notifRetain(ev.currentTarget.id));
+  }
+  onDismiss(ev: SyntheticEvent) {
+    if (!(ev.currentTarget instanceof Element)) return;
+    store.dispatch(actions.notifDelete(ev.currentTarget.id));
+  }
 }
 
 // ==========================================

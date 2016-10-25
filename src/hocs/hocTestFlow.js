@@ -1,79 +1,50 @@
 // @flow
 
 import React                from 'react';
-import { omit }             from 'timm';
 
 /* eslint-disable react/no-multi-comp */
 /* eslint-disable */
 
-// declare class DerivedComponent<P, Def, St> extends React$Component<void, P, void> {
-//   static defaultProps: void;
-//   props: P;
-//   state: void;
-// }
-// declare type DerivedComponentClass<P, Def, St> = Class<DerivedComponent<P, Def, St>>;
+type NamesT = 'juan' | 'pedro';
 
-// <Def, St>(component: Class<React$Component<Def, P, St>>): ConnectedComponentClass<OP, P, Def, St>;
+type OwnPropsT = {
+  c: string,
+  d: string,
+};
+// type PropsT<P> = OwnPropsT & $Diff<P, OwnPropsT>;
+// type PropsT<P> = P;
 
-/*
-type ExtraProps = { b?: number };
-
-type StatelessComponent<P> = (props: P) => ?React$Element<any>;
-
-function hoc<P>(
-  ComposedComponent: StatelessComponent<P> | Class<React$Component<any, P, any>>
-): Class<React$Component<void, $SuperType<P & ExtraProps>, void>> {
-  class Derived extends React.Component {
-    props: P & ExtraProps;
-    render() {
-      const otherProps = omit(this.props, ['b']);
-      return <ComposedComponent {...this.props} />;
-    }
-  };
-  return Derived;
-}
-
-class Foo extends React.Component {
-  props: { a: string };
-  render() {
-    return <div>{this.props.a}</div>;
-  }
-}
-const HoverableFoo = hoc(Foo);
-const SLFoo = ({ a }: { a: string }) => <div>{a}</div>
-const HoverableSLFoo = hoc(SLFoo);
-
-export const g1 = () => <Foo a={'3'} />;
-export const g2 = () => <HoverableFoo a={'3'} b={7} />;
-export const g3 = () => <SLFoo a={'3'} />;
-export const g4 = () => <HoverableSLFoo a={'3'} />;
-*/
-
-type HocProps = {
-  hocProp?: string,
+type OwnDefaultPropsT = {
   c: string,
 };
-
-type HocDefaultProps = {
-  c: string,
-};
+// type HocDefaultPropsT<DP> = OwnDefaultPropsT & $Diff<DP, OwnDefaultPropsT>;
+// type HocDefaultPropsT<DP> = DP;
+// type HocDefaultPropsT<DP> = OwnDefaultPropsT & DefaultPropsT;
+type PropsT<P, DP> = $Subtype<$Diff<$Diff<P & OwnPropsT, DP>, OwnDefaultPropsT>>;
 
 function hoc<DP, P, St>(
   ComposedComponent: Class<React$Component<DP, P, St>>
-): Class<React$Component<(HocDefaultProps & $Diff<DP, HocDefaultProps>), (HocProps & $Diff<P, HocProps>), void>> {
+): Class<React$Component<void, PropsT<P, DP>, void>> {
   class Derived extends React.Component {
-    props: (HocProps & $Diff<P, HocProps>);
-    static defaultProps: HocDefaultProps & $Diff<DP, HocDefaultProps>;
-    static defaultProps: any = { c: 'defaultC' };
+    props: PropsT<P, DP>;
+    // static defaultProps: HocDefaultPropsT<DP>;  // outward-facing interface
+    static defaultProps: any = { c: 'defaultC' };  // `any`, since we are not respecting the inner interface here
     render() {
-      const otherProps: P = (omit(this.props, ['hocProp']): any);
-      return <ComposedComponent {...otherProps} />;
+      const props: any = this;
+      return <ComposedComponent {...props} c={props.c} />;
     }
   };
   return Derived;
 }
 
+// ------------------------------------
+// Examples
+// ------------------------------------
 const dict = { one: 1, two: 2, three: 3 };
+
+type FooDefaultPropsT = {
+  a: string,
+};
 
 class Foo extends React.Component {
   props: {
@@ -81,42 +52,85 @@ class Foo extends React.Component {
     b: string,
     c: string,
     opt?: string,
-  }
-  defaultProps: { a: 'string' };
-  static defaultProps = { a: 'defaultA' };
+  };
+  static defaultProps: FooDefaultPropsT = { a: 'two' };
   render() {
     return <div>{dict[this.props.a]}</div>;
   }
 }
 const HoverableFoo = hoc(Foo);
 
-export const ok1 = <Foo a="a" b="b" c="c" />;
-export const ok1b = <HoverableFoo a="a" b="b" c="c" />;
-export const ok2 = <Foo b="b" c="c" />;
-export const ok2b = <HoverableFoo b="b" c="c" />;
-export const ok3 = <Foo b="b" c="c" opt="hi" />;
-export const ok3b = <HoverableFoo b="b" c="c" opt="hi" />;
-// $FlowFixMe
-export const nok1 = <Foo a="a" b="b" />;
-// $FlowFixMe
-export const nok2 = <Foo a="a" />;
-// $FlowFixMe
-export const nok2b = <HoverableFoo a="a" />;
-// $FlowFixMe
-export const nok3 = <Foo a="a" b={2} />;
-// $FlowFixMe
-export const nok3b = <HoverableFoo a="a" b={2} />;
+// Passing everything
+const a1 = <Foo a="one" b="b" c="c" d="d" />;
+const a2 = <HoverableFoo a="one" b="b" c="c" d="d" />;
 
+// Omitting `a` (there is a default prop for it in `Foo`)
+const b1 = <Foo b="b" c="c" d="d" />;
+const b2 = <HoverableFoo b="b" c="c" d="d" />;
 
+// Passing an invalid value in `a` (should be a string)
+// $FlowFixMe
+const bb1 = <Foo a={1} b="b" c="c" d="d" />;
+// $FlowFixMe
+const bb2 = <HoverableFoo a={1} b="b" c="c" d="d" />;
 
-type T1 = {
-  c: string,
-  a: string,
+// Omitting `b` (no default prop)
+// $FlowFixMe
+const c1 = <Foo a="one" c="c" d="d" />;
+// $FlowFixMe
+const c2 = <HoverableFoo a="one" c="c" d="d" />;
+
+// Passing an invalid value in `b` (should be a string)
+// $FlowFixMe
+const d1 = <Foo a="one" b={2} c="c" d="d" />;
+// $FlowFixMe
+const d2 = <HoverableFoo a="one" b={2} c="c" d="d" />;
+
+// Omitting `c` (there is a default prop for it in `HoverableFoo`)
+// $FlowFixMe
+const e1 = <Foo a="one" b="b" d="d" />;
+const e2 = <HoverableFoo a="one" b="b" d="d" />;
+
+// Passing an invalid value in `c` (should be a string)
+// $FlowFixMe
+const ee1 = <Foo a="one" b="b" c={2} d="d" />;
+// $FlowFixMe
+const ee2 = <HoverableFoo a="one" b="b" c={2} d="d" />;
+
+// Omitting `d` (required by the HOC)
+const f1 = <Foo a="one" b="b" c="c" />;
+// $FlowFixMe
+const f2 = <HoverableFoo a="one" b="b" c="c" />;
+
+// Passing an invalid value in `d` (should be a string)
+const g1 = <Foo a="one" b="b" c="c" d={2} />;
+// $FlowFixMe
+const g2 = <HoverableFoo a="one" b="b" c="c" d={2} />;
+
+// ------------------------------------
+type BarDefaultPropsT = {
+  name: NamesT,
 };
-type T2 = {
-  c: string,
-};
-type T3 = $Diff<T1, T2>;
-const a: T3 = {
-  a: 'hello',
-};
+
+class Bar extends React.Component {
+  props: {
+    name: NamesT,
+  };
+  static defaultProps: BarDefaultPropsT = {
+    name: 'juan',
+  }
+  render() {
+    return <div>{this.props.name}</div>;
+  }
+}
+const HoverableBar = hoc(Bar);
+
+// Passing everything
+const z1 = <Bar name="juan" d="d" />
+const z2 = <HoverableBar name="juan" d="d" />
+
+// Passing a wrong prop
+// $FlowFixMe
+const y1 = <Bar name="manolo" d="d" />
+// $FlowFixMe
+const y2 = <HoverableBar name="manolo" d="d" />

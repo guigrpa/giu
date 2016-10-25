@@ -41,14 +41,14 @@ type OwnPropsT = {
   onHoverStart: HoverEventHandlerT,
   onHoverStop: HoverEventHandlerT,
 };
-type PropsT<P> = OwnPropsT & $Diff<P, OwnPropsT>;
 
-type OwnDefaultProps = {
-  hovering: any,
-  onHoverStart: any,
-  onHoverStop: any,
+type OwnDefaultPropsT = {
+  hovering: HoveringT,
+  onHoverStart: HoverEventHandlerT,
+  onHoverStop: HoverEventHandlerT,
 };
-type DefaultPropsT<DP> = OwnDefaultProps & $Diff<DP, OwnDefaultProps>;
+
+type PropsT<P, DP> = $Subtype<$Diff<$Diff<P & OwnPropsT, DP>, OwnDefaultPropsT>>;
 
 type StateT = {
   hovering: ?(string|number|boolean),
@@ -62,23 +62,18 @@ export type HoverablePropsT = {
 
 function hoverable<DP, P, St>(
   ComposedComponent: Class<React$Component<DP, P, St>>
-): Class<React$Component<DefaultPropsT<DP>, PropsT<P>, StateT>> {
+): Class<React$Component<void, PropsT<P, DP>, StateT>> {
   const composedComponentName = ComposedComponent.displayName ||
     ComposedComponent.name || 'Component';
   const hocDisplayName = `Hoverable(${composedComponentName})`;
 
   class Derived extends React.Component {
-    props: PropsT<P>
-    static defaultProps: DefaultPropsT<DP>;
+    props: PropsT<P, DP>
     state: StateT;
 
     static displayName = hocDisplayName;
-    static propTypes = {
-      onHoverStart:           React.PropTypes.func,
-      onHoverStop:            React.PropTypes.func,
-    };
 
-    constructor(props: PropsT<P>) {
+    constructor(props: PropsT<P, DP>) {
       super(props);
       this.state = { hovering: null };
       bindAll(this, [

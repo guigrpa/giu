@@ -143,7 +143,7 @@ const specs = {
   },
 
   dependencies: {
-    timm: '1.1.3',
+    timm: '1.2.0',
 
     redux: '3.5.2',
     'redux-thunk': '2.1.0',

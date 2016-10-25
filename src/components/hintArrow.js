@@ -1,3 +1,5 @@
+// @flow
+
 import React                from 'react';
 import {
   vectorAdd as add,
@@ -7,25 +9,29 @@ import {
   vectorNormalize as normalize,
   degToRad,
 }                           from '../gral/math';
+import type { Point2T }     from '../gral/math';
 
-const vec = V => `${V.x},${V.y}`;
+const vec = (V: Point2T) => `${V.x},${V.y}`;
 
 // ==========================================
 // Component
 // ==========================================
+type PropsT = {
+  from: Point2T,
+  to: Point2T,
+  curveFactor: number,
+  arrowSize: number,
+  arrowAngle: number,
+  counterclockwise: boolean,
+}
+export type HintArrowPropsT = PropsT;
+
 class HintArrow extends React.Component {
-  static propTypes = {
-    from:                   React.PropTypes.object.isRequired,
-    to:                     React.PropTypes.object.isRequired,
-    curveFactor:            React.PropTypes.number,
-    arrowSize:              React.PropTypes.number,
-    arrowAngle:             React.PropTypes.number,
-    counterclockwise:       React.PropTypes.bool,
-  };
+  props: PropsT;
   static defaultProps = {
-    curveFactor:            0.7,  // 0.6...2
-    arrowSize:              10,
-    arrowAngle:             30,
+    curveFactor: 0.7,  // 0.6...2
+    arrowSize: 10,
+    arrowAngle: 30,
   };
 
   // ==========================================

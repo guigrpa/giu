@@ -1,3 +1,5 @@
+// @flow
+
 import React                from 'react';
 import { merge }            from 'timm';
 import {
@@ -60,22 +62,35 @@ class ModalExample extends React.Component {
 }
 ```
 -- */
+export type ModalButtonT = {
+  left?: boolean,
+  label?: any,
+  defaultButton?: boolean,
+  onClick?: (ev: SyntheticEvent) => void,
+  style?: Object,
+};
+
+type PropsT = {
+  id?: string,
+  title?: string,
+  children?: any,
+  buttons: Array<ModalButtonT>,
+  onClickBackdrop?: (ev: SyntheticMouseEvent) => void,
+  onEsc?: (ev: SyntheticKeyboardEvent) => void,
+  style?: Object,
+  zIndex: number,
+};
+export type ModalParsT = $Shape<PropsT>;  // all are optional
+
 class Modal extends React.PureComponent {
-  static propTypes = {
-    id:                     React.PropTypes.string,
-    title:                  React.PropTypes.string,
-    children:               React.PropTypes.any,
-    buttons:                React.PropTypes.array,
-    onClickBackdrop:        React.PropTypes.func,
-    onEsc:                  React.PropTypes.func,
-    style:                  React.PropTypes.object,
-    zIndex:                 React.PropTypes.number,
-  };
+  props: PropsT;
   static defaultProps = {
+    buttons:                ([]: Array<ModalButtonT>),
     zIndex:                 MISC.zModalBase,
   }
+  refFocusCapture: any;
 
-  constructor(props) {
+  constructor(props: PropsT) {
     super(props);
     bindAll(this, [
       'onKeyDown',
@@ -121,7 +136,7 @@ class Modal extends React.PureComponent {
           style={merge(style.modal, baseStyle)}
         >
           <FocusCapture
-            registerRef={c => { this.refFocusCapture = c; }}
+            registerRef={(c) => { this.refFocusCapture = c; }}
             autoFocus
           />
           {title && this.renderTitle(title)}
@@ -133,7 +148,7 @@ class Modal extends React.PureComponent {
     );
   }
 
-  renderTitle(title) {
+  renderTitle(title: string) {
     return <div style={style.title}>{title}</div>;
   }
 
@@ -148,17 +163,17 @@ class Modal extends React.PureComponent {
     );
   }
 
-  renderButtons(buttons) {
+  renderButtons(buttons: Array<ModalButtonT>) {
     return (
       <div style={style.buttons}>
-        {buttons.filter(o => !!o.left).map(this.renderButton)}
+        {buttons.filter((o) => !!o.left).map(this.renderButton)}
         <div style={flexItem(1)} />
-        {buttons.filter(o => !o.left).map(this.renderButton)}
+        {buttons.filter((o) => !o.left).map(this.renderButton)}
       </div>
     );
   }
 
-  renderButton(btn, idx) {
+  renderButton(btn: ModalButtonT, idx: number) {
     const { label, onClick } = btn;
     return (
       <Button key={idx}
@@ -173,7 +188,7 @@ class Modal extends React.PureComponent {
   // ==========================================
   // Handlers
   // ==========================================
-  onKeyDown(ev) {
+  onKeyDown(ev: SyntheticKeyboardEvent) {
     const { which } = ev;
     let buttons;
     switch (which) {
@@ -202,9 +217,12 @@ class Modal extends React.PureComponent {
   }
 
   // Except when clicking on an embedded focusable node, refocus on this modal
-  onClickOuter(ev) {
-    const { tagName, disabled } = ev.target;
-    if (FOCUSABLE.indexOf(tagName.toLowerCase()) >= 0 && !disabled) return;
+  onClickOuter(ev: SyntheticMouseEvent) {
+    if (ev.target instanceof Element) {
+      const target: any = ev.target;
+      const { tagName, disabled } = target;
+      if (FOCUSABLE.indexOf(tagName.toLowerCase()) >= 0 && !disabled) return;
+    }
     this.focus();
   }
 }

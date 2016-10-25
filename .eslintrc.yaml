@@ -37,6 +37,7 @@ rules:
   react/jsx-indent-props: off
   react/jsx-closing-bracket-location: off
   react/jsx-filename-extension: off
+  react/jsx-boolean-value: off
   react/forbid-prop-types: off
   react/prop-types: off
   react/no-unused-prop-types: off
@@ -53,6 +54,8 @@ globals:
   # Flow
   Class: false
   $Diff: false
+  $Subtype: false
+  $Shape: false
   ReactClass: false
   React$Component: false
   SyntheticEvent: false

@@ -1,3 +1,5 @@
+// @flow
+
 import React                from 'react';
 import {
   createStore,
@@ -10,6 +12,7 @@ import {
   set as timmSet,
 }                           from 'timm';
 import HintScreen           from './hintScreen';
+import type { HintScreenParsT } from './hintScreen';
 import { localGet, localSet } from '../gral/storage';
 
 /* --
@@ -48,37 +51,46 @@ API reference:
 
 * **hintDefine()**: defines a hint screen:
   - **id** *string*: ID of the hint to be created
-  - **pars** *object*: hint parameters:
-    + **elements** *array(object)|function?*: either an array of elements,
+  - **pars** *HintScreenParsT*: hint parameters:
+    + **elements** *Array<ElementT> | () => Array<ElementT>*: either an array of elements,
       or a function returning such an element (for dynamic positioning).
       Elements have these attributes:
-      - **type** *string(`LABEL` | `ARROW`)*
+      - **type** *LABEL|ARROW*
       - Arrows:
-        - **from** *object*: coordinates, e.g. `{ x: 5, y: 10 }`
-        - **to** *object*: coordinates
+        - **from** *{x: number, y: number}*: coordinates, e.g. `{ x: 5, y: 10 }`
+        - **to** *{x: number, y: number}*: coordinates
         - **counterclockwise** *boolean*
       - Labels:
         - **x** and **y** *number*: coordinates
-        - **align** *string(`left` | `center` | `right`)? = `left`*
-        - **children** *any*: React elements that comprise the label
-    + **closeLabel** *string? = `Got it!`*: label of the close button
-    + **onClose** *function?*: called when the hint screen is closed
+        - **align?** *left|center|right = left*
+        - **children?** *any*: React elements that comprise the label
+    + **closeLabel?** *string = `Got it!`*: label of the close button
+    + **zIndex?** *number*
 * **hintDisableAll()**: disables all hints
 * **hintReset()**: clears the list of disabled hints
 * **hintShow()**: shows a hint
   - **id** *string*: ID of the hint to be shown
-  - **force** *boolean?*: if not enabled, the hint will only be shown if
+  - **force?** *boolean*: if not enabled, the hint will only be shown if
     hints are enabled (no previous call to `hintDisableAll()` and it has not
     already been shown)
 * **hintHide()**: hides the currently shown hint, if any
 -- */
 
+type StateT = {
+  fDisableAll: boolean,
+  disabled: Array<string>,
+  shown: ?string,
+  catalogue: { [id: string]: HintScreenParsT },
+};
+
+type ActionT = Object;
+
 // ==========================================
 // Store, reducer
 // ==========================================
-let store = null;
+let store: Object;
 
-const INITIAL_STATE = {
+const INITIAL_STATE: StateT = {
   fDisableAll: false,
   disabled: [],
   shown: null,
@@ -96,12 +108,12 @@ function initStore() {
   store = createStore(reducer, initialState, storeEnhancers);
 }
 
-function reducer(state0 = INITIAL_STATE, action) {
+function reducer(state0: StateT = INITIAL_STATE, action: ActionT): StateT {
   let state = state0;
   let id;
   switch (action.type) {
     case 'HINT_DEFINE':
-      state = updateIn(state, ['catalogue'], catalogue =>
+      state = updateIn(state, ['catalogue'], (catalogue) =>
         timmSet(catalogue, action.id, action.pars));
       break;
     case 'HINT_DISABLE_ALL':
@@ -137,19 +149,19 @@ function reducer(state0 = INITIAL_STATE, action) {
 // Action creators
 // ==========================================
 const actions = {
-  hintDefine: (id, pars) => ({ type: 'HINT_DEFINE', id, pars }),
-  hintDisableAll: () => (dispatch, getState) => {
+  hintDefine: (id: string, pars: HintScreenParsT) => ({ type: 'HINT_DEFINE', id, pars }),
+  hintDisableAll: () => (dispatch: Function, getState: Function) => {
     dispatch({ type: 'HINT_DISABLE_ALL' });
     const { fDisableAll } = getState();
     localSet('hints.fDisableAll', fDisableAll);
   },
-  hintReset: () => (dispatch, getState) => {
+  hintReset: () => (dispatch: Function, getState: Function) => {
     dispatch({ type: 'HINT_RESET' });
     const { fDisableAll, disabled } = getState();
     localSet('hints.fDisableAll', fDisableAll);
     localSet('hints.disabled', disabled);
   },
-  hintShow: (id, force) => (dispatch, getState) => {
+  hintShow: (id: string, force: boolean) => (dispatch: Function, getState: Function) => {
     dispatch({ type: 'HINT_SHOW', id, force });
     const { disabled } = getState();
     localSet('hints.disabled', disabled);
@@ -158,21 +170,26 @@ const actions = {
 };
 
 // Imperative dispatching
-const hintDefine = (id, pars) => store.dispatch(actions.hintDefine(id, pars));
+const hintDefine = (id: string, pars: HintScreenParsT) =>
+  store.dispatch(actions.hintDefine(id, pars));
 const hintDisableAll = () => store.dispatch(actions.hintDisableAll());
 const hintReset = () => store.dispatch(actions.hintReset());
-const hintShow = (id, force) => store.dispatch(actions.hintShow(id, force));
+const hintShow = (id: string, force: boolean) => store.dispatch(actions.hintShow(id, force));
 const hintHide = () => store.dispatch(actions.hintHide());
 
 // ==========================================
 // Hints component
 // ==========================================
-class Hints extends React.PureComponent {
-  static propTypes = {
-    storeState:             React.PropTypes.object,
-  };
+type PropsT = {
+  storeState: StateT,
+};
 
-  constructor(props) {
+class Hints extends React.PureComponent {
+  props: PropsT;
+  storeUnsubscribe: () => void;
+  storeState: StateT;
+
+  constructor(props: PropsT) {
     super(props);
     if (props.storeState == null) {
       if (!store) initStore();

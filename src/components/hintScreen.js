@@ -1,3 +1,5 @@
+// @flow
+
 import React                from 'react';
 import {
   COLORS,
@@ -8,7 +10,10 @@ import {
 }                           from '../gral/helpers';
 import Backdrop             from '../components/backdrop';
 import HintLabel            from '../components/hintLabel';
+import type { HintLabelPropsT } from '../components/hintLabel';
 import HintArrow            from '../components/hintArrow';
+import type { HintArrowPropsT } from '../components/hintArrow';
+
 require('./hintScreen.css');
 
 const FONT_SIZE = 20;
@@ -17,27 +22,32 @@ const FONT_FAMILY = '"Gloria Hallelujah", sans-serif';
 // ==========================================
 // Component
 // ==========================================
+type ArrowT = HintArrowPropsT & { type: 'ARROW' };
+type LabelT = HintLabelPropsT & { type: 'LABEL' };
+type ElementT = ArrowT | LabelT;
+type ElementsWrapperT = Array<ElementT> | () => Array<ElementT>;
+export type HintScreenParsT = {
+  elements: ElementsWrapperT,
+  closeLabel?: string,
+  zIndex?: number,
+};
+type PropsT = HintScreenParsT & {
+  onClose: (ev: SyntheticMouseEvent) => void,
+};
+
 // **Warning**: an embedded `HintScreen` in a component
 // with `translateZ(0)` or similar (which creates a stacking context and
 // a containing block) will not be properly positioned and may even be cropped.
 // In such a case, use `Hints` instead.
 class HintScreen extends React.PureComponent {
-  static propTypes = {
-    elements:               React.PropTypes.oneOfType([
-      React.PropTypes.array,
-      React.PropTypes.func,
-    ]),
-    closeLabel:             React.PropTypes.string,
-    onClose:                React.PropTypes.func,
-    zIndex:                 React.PropTypes.number,
-  };
-  static defaultProps = {
-    elements:               [],
+  props: PropsT;
+  static defaultProps: HintScreenParsT = {
+    elements:               ([]: ElementsWrapperT),
     closeLabel:             'Got it!',
     zIndex:                 MISC.zHintBase,
   }
 
-  constructor(props) {
+  constructor(props: PropsT) {
     super(props);
     bindAll(this, ['onResize']);
   }
@@ -69,8 +79,9 @@ class HintScreen extends React.PureComponent {
 
   renderBackdrop() { return <Backdrop style={style.backdrop} />; }
 
-  renderArrows(elements) {
-    const arrows = elements.filter(o => o.type === 'ARROW');
+  renderArrows(elements: Array<ElementT>) {
+    const arrows: Array<ArrowT> =
+      (elements.filter((o) => o.type === 'ARROW'): Array<any>);
     if (!arrows || !arrows.length) return null;
     return (
       <svg style={style.svg}>
@@ -79,8 +90,9 @@ class HintScreen extends React.PureComponent {
     );
   }
 
-  renderLabels(elements) {
-    const labels = elements.filter(o => o.type === 'LABEL');
+  renderLabels(elements: Array<ElementT>) {
+    const labels: Array<LabelT> =
+      (elements.filter((o) => o.type === 'LABEL'): Array<any>);
     if (!labels || !labels.length) return null;
     return labels.map((label, idx) => (
       <HintLabel key={idx}

@@ -42,7 +42,7 @@ type PublicPropsT = {
   children: any,
   onClickItem?: (ev: SyntheticMouseEvent, val: any) => void,
   style?: Object,
-  accentColor?: string,
+  accentColor: string,
   // all others are passed through unchanged
 };
 type PropsT = PublicPropsT & HoverablePropsT;
