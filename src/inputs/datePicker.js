@@ -28,7 +28,7 @@ const DAY_WIDTH = '2em';
 type PublicPropsT = {
   disabled: boolean,
   curValue: ?MomentT,
-  onChange: (ev: SyntheticEvent, nextValue: MomentT) => void,
+  onChange: (ev: ?SyntheticEvent, nextValue: ?MomentT) => void,
   utc: boolean,
   todayName: string,
   keyDown: ?KeyboardEventParsT,
@@ -136,7 +136,7 @@ class DatePicker extends React.Component {
     curDate.subtract(curDate.weekday(), 'days');
     const weeks = [];
     let i = 0;
-    while (curDate < endDate) {
+    while (curDate.isBefore(endDate)) {
       weeks.push(this.renderWeek(curDate, i));
       curDate.add(1, 'week');
       i += 1;
@@ -144,7 +144,7 @@ class DatePicker extends React.Component {
     return <div>{weeks}</div>;
   }
 
-  renderWeek(weekStartDate, idx) {
+  renderWeek(weekStartDate: MomentT, idx: number) {
     const curDate = moment(weekStartDate);
     const els = new Array(7);
     for (let i = 0; i < 7; i++) {
@@ -154,11 +154,11 @@ class DatePicker extends React.Component {
     return <div key={idx} style={style.week}>{els}</div>;
   }
 
-  renderDay(mom, idx) {
+  renderDay(mom: MomentT, idx: number) {
     const { hovering, onHoverStart, onHoverStop } = this.props;
     const id = mom.toISOString();
     const fHovered = hovering === id;
-    const fSelected = this.startOfCurValue && this.startOfCurValue.isSame(mom);
+    const fSelected = !!this.startOfCurValue && this.startOfCurValue.isSame(mom);
     const fInShownMonth = mom.month() === this.shownMonthNumber;
     return (
       <div key={idx}
@@ -196,26 +196,31 @@ class DatePicker extends React.Component {
 
   onClickPrevMonth() { this.changeShownMonth('subtract'); }
   onClickNextMonth() { this.changeShownMonth('add'); }
-  changeShownMonth(op) {
+  changeShownMonth(op: 'subtract'|'add') {
     const shownMonthStart = this.state.shownMonthStart.clone();
-    shownMonthStart[op](1, 'month');
+    if (op === 'add') {
+      shownMonthStart.add(1, 'month');
+    } else {
+      shownMonthStart.subtract(1, 'month');
+    }
     this.setState({ shownMonthStart });
   }
 
-  onClickDay(ev) {
+  onClickDay(ev: SyntheticEvent) {
     const { utc } = this.props;
+    if (!(ev.target instanceof Element)) return;
     const startOfDay = moment(ev.target.id);
     if (utc) startOfDay.utc();
     this.changeDateTo(ev, startOfDay);
   }
 
-  onClickToday(ev) {
+  onClickToday(ev: SyntheticEvent) {
     const { utc } = this.props;
     const startOfDay = startOfToday(utc);
     this.changeDateTo(ev, startOfDay);
   }
 
-  doKeyDown({ which, shiftKey, ctrlKey, altKey, metaKey }) {
+  doKeyDown({ which, shiftKey, ctrlKey, altKey, metaKey }: KeyboardEventParsT) {
     if (shiftKey || ctrlKey || altKey || metaKey) return;
     switch (which) {
       case KEYS.pageUp:   this.onClickPrevMonth();           break;
@@ -237,13 +242,13 @@ class DatePicker extends React.Component {
   // ==========================================
   // Helpers
   // ==========================================
-  goToStartEndOfMonth(op) {
+  goToStartEndOfMonth(op: 'start'|'end') {
     const startOfDay = this.state.shownMonthStart.clone();
     if (op === 'end') startOfDay.add(1, 'month').subtract(1, 'day');
     this.changeDateTo(null, startOfDay);
   }
 
-  changeDateTo(ev, startOfDay) {
+  changeDateTo(ev: ?SyntheticEvent, startOfDay: MomentT) {
     const { curValue } = this.props;
     const nextValue = startOfDay.clone();
     if (curValue != null) {
@@ -253,7 +258,7 @@ class DatePicker extends React.Component {
     this.doChange(ev, nextValue);
   }
 
-  changeDateByDays(days) {
+  changeDateByDays(days: number) {
     const { curValue } = this.props;
     if (curValue == null) {
       this.goToStartEndOfMonth(days >= 0 ? 'start' : 'end');
@@ -264,7 +269,7 @@ class DatePicker extends React.Component {
     this.doChange(null, nextValue);
   }
 
-  doChange(ev, nextValue) {
+  doChange(ev: ?SyntheticEvent, nextValue) {
     this.props.onChange(ev, nextValue);
   }
 }
@@ -303,7 +308,12 @@ const style = {
     alignItems: 'baseline',
     height: ROW_HEIGHT,
   }),
-  day: (fSelected, fHovered, fInShownMonth, { disabled, accentColor }) => {
+  day: (
+    fSelected: boolean,
+    fHovered: boolean,
+    fInShownMonth: boolean,
+    { disabled, accentColor }: { disabled: boolean, accentColor: string }
+  ) => {
     const fHighlightBorder = fSelected || (!disabled && fHovered);
     const border = `1px solid ${fHighlightBorder ? accentColor : 'transparent'}`;
     const backgroundColor = fSelected ? accentColor : undefined;

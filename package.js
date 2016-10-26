@@ -1,4 +1,5 @@
 /* eslint-disable strict, indent, max-len, quote-props, quotes, no-underscore-dangle */
+
 'use strict';
 
 // ===============================================
@@ -12,8 +13,8 @@ const KEYWORDS = ['React', 'components', 'collection', 'forms', 'inputs', 'ssr',
 // ===============================================
 // Helpers
 // ===============================================
-const runMultiple = arr => arr.join(' && ');
-const runTestCov = env => {
+const runMultiple = (arr) => arr.join(' && ');
+const runTestCov = (env) => {
   const envStr = env != null ? `${env} ` : '';
   return runMultiple([
     `cross-env ${envStr}nyc ava`,
@@ -57,7 +58,7 @@ const specs = {
                                   'cp src/components/*.css lib/components',
                                   'cp src/inputs/*.css lib/inputs',
                                   'cp -r src/fonts lib/fonts',
-                                  'cp src/api.js.flow lib/',
+                                  'cp src/api.js.flow lib/index.js.flow',
                                 ]),
     docs:                       'extract-docs --template docs/templates/README.md --output README.md',
     build:                      runMultiple([
@@ -177,20 +178,20 @@ const specs = {
     'react-addons-perf':                '^15.3.0',
 
     // Babel (except babel-eslint)
-    'babel-cli': '6.11.4',
-    'babel-core': '6.11.4',
-    'babel-polyfill': '6.9.1',
-    'babel-preset-es2015': '6.9.0',
-    'babel-preset-stage-0': '6.5.0',
-    'babel-preset-react': '6.11.1',
+    'babel-cli': '6.16.0',
+    'babel-core': '6.17.0',
+    'babel-polyfill': '6.16.0',
+    'babel-preset-es2015': '6.16.0',
+    'babel-preset-stage-0': '6.16.0',
+    'babel-preset-react': '6.16.0',
 
     // Webpack + loaders (+ related stuff)
-    webpack: '1.13.1',
-    'webpack-dev-middleware': '1.6.1',
-    'webpack-hot-middleware': '2.12.2',
-    'babel-loader': '6.2.4',
-    'file-loader': '0.8.5',
-    'css-loader': '0.23.1',
+    webpack: '1.13.2',
+    'webpack-dev-middleware': '1.8.4',
+    'webpack-hot-middleware': '2.13.0',
+    'babel-loader': '6.2.5',
+    'file-loader': '0.9.0',
+    'css-loader': '0.25.0',
     'style-loader': '0.13.1',
     // 'extract-text-webpack-plugin': '1.0.1',
     'static-site-generator-webpack-plugin': '2.1.0',
@@ -232,7 +233,7 @@ const specs = {
 // ===============================================
 // Build package.json
 // ===============================================
-const _sortDeps = deps => {
+const _sortDeps = (deps) => {
   const newDeps = {};
   for (const key of Object.keys(deps).sort()) {
     newDeps[key] = deps[key];

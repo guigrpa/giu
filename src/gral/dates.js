@@ -25,8 +25,7 @@ function startOfDefaultDay(fUtc: boolean): MomentT {
   return fnMoment({ year: 2013, month: 3, date: 27 }); // ;)
 }
 
-function getTimeInSecs(mom: MomentT): ?number {
-  if (!mom) return null;
+function getTimeInSecs(mom: MomentT): number {
   return (mom.hours() * 3600) + (mom.minutes() * 60) + mom.seconds();
 }
 

@@ -1,0 +1,17 @@
+// @flow
+
+import * as giu from '../src/';  // this file will be used from <PROJECT>/lib
+
+// Components
+declare export var Select: typeof(giu.Select);
+declare export var LIST_SEPARATOR: typeof(giu.LIST_SEPARATOR);
+declare export var TextInput: typeof(giu.TextInput);
+declare export var PasswordInput: typeof(giu.PasswordInput);
+declare export var NumberInput: typeof(giu.NumberInput);
+declare export var RangeInput: typeof(giu.RangeInput);
+declare export var DateInput: typeof(giu.DateInput);
+declare export var Textarea: typeof(giu.Textarea);
+declare export var Checkbox: typeof(giu.Checkbox);
+declare export var FileInput: typeof(giu.FileInput);
+declare export var RadioGroup: typeof(giu.RadioGroup);
+declare export var ColorInput: typeof(giu.ColorInput);

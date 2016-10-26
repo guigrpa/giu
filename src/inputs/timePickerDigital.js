@@ -97,10 +97,10 @@ class TimePickerDigital extends React.Component {
 
   getSeconds() {
     const { curValue, stepMinutes } = this.props;
+    if (curValue == null) return NULL_STRING;
     let secs = getTimeInSecs(curValue);
-    if (secs == null) return NULL_STRING;
     secs = Math.round(secs / 60 / stepMinutes) * stepMinutes * 60;
-    if (secs === 24 * 3600) secs = secs - stepMinutes * 60;
+    if (secs === 24 * 3600) secs -= stepMinutes * 60;
     return String(secs);
   }
 }
