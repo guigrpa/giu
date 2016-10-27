@@ -101,7 +101,7 @@ function hoverable<DP, P, St>(
       if (ev.currentTarget instanceof Element) {
         id = ev.currentTarget.id;
       }
-      if (id == null) id = true;
+      if (!id) id = true;
       this.setState({ hovering: id });
       if (this.props.onHoverStart) this.props.onHoverStart(ev);
     }
