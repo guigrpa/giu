@@ -158,7 +158,7 @@ const notifDeleteByName = (name: string) => store.dispatch(actions.notifDeleteBy
 // Notifications component
 // ==========================================
 type PropsT = {
-  notifs: StateT,
+  notifs?: StateT,
 };
 
 class Notifications extends React.PureComponent {

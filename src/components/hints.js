@@ -181,7 +181,7 @@ const hintHide = () => store.dispatch(actions.hintHide());
 // Hints component
 // ==========================================
 type PropsT = {
-  storeState: StateT,
+  storeState?: StateT,
 };
 
 class Hints extends React.PureComponent {

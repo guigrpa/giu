@@ -32,6 +32,7 @@ class HintArrow extends React.Component {
     curveFactor: 0.7,  // 0.6...2
     arrowSize: 10,
     arrowAngle: 30,
+    counterClockwise: false,
   };
 
   // ==========================================

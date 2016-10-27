@@ -6,10 +6,21 @@
  * @copyright Guillermo Grau Panea 2016
  * @license MIT
  */
+
+// @flow
+
+/* eslint-disable import/newline-after-import, import/imports-first */
+
 require('./index.css');
 
+// NB: Flow complains when we take a default export from another module
+// and reexport as a named export from this main API,
+// e.g. export Select from './inputs/select';
+// That's why we do it in two steps here
+
 // Components
-export Select             from './inputs/select';
+import Select             from './inputs/select';
+export { Select };
 export { LIST_SEPARATOR } from './inputs/selectCustom';
 export {
   TextInput,
@@ -17,12 +28,18 @@ export {
   NumberInput,
   RangeInput,
 }                         from './inputs/textNumberRangeInput';
-export DateInput          from './inputs/dateInput';
-export Textarea           from './inputs/textarea';
-export Checkbox           from './inputs/checkbox';
-export FileInput          from './inputs/fileInput';
-export RadioGroup         from './inputs/radioGroup';
-export ColorInput         from './inputs/colorInput';
+import DateInput          from './inputs/dateInput';
+export { DateInput };
+import Textarea           from './inputs/textarea';
+export { Textarea };
+import Checkbox           from './inputs/checkbox';
+export { Checkbox };
+import FileInput          from './inputs/fileInput';
+export { FileInput };
+import RadioGroup         from './inputs/radioGroup';
+export { RadioGroup };
+import ColorInput         from './inputs/colorInput';
+export { ColorInput };
 
 export {
   Modals,
@@ -30,14 +47,16 @@ export {
   actions as modalActions,
   modalPush, modalPop, isModalActive,
 }                         from './components/modals';
-export Modal              from './components/modal';
+import Modal              from './components/modal';
+export { Modal };
 export {
   Notifications,
   reducer as notifReducer,
   actions as notifActions,
   notify, notifRetain, notifDelete, notifDeleteByName,
 }                         from './components/notifications';
-export Notification       from './components/notification';
+import Notification       from './components/notification';
+export { Notification };
 export {
   Floats,
   floatAdd, floatDelete, floatUpdate, floatReposition,
@@ -48,20 +67,31 @@ export {
   actions,
   hintDefine, hintDisableAll, hintReset, hintShow, hintHide, isHintShown,
 }                         from './components/hints';
-export HintScreen         from './components/hintScreen';
+import HintScreen         from './components/hintScreen';
+export { HintScreen };
 
-export DataTable, { SORT_MANUALLY } from './components/dataTable';
-export VirtualScroller    from './components/virtualScroller';
-export DropDownMenu       from './components/dropDownMenu';
-export Button             from './components/button';
-export Icon               from './components/icon';
-export Spinner            from './components/spinner';
-export LargeMessage       from './components/largeMessage';
-export Progress           from './components/progress';
+import DataTable, { SORT_MANUALLY } from './components/dataTable';
+export { DataTable, SORT_MANUALLY };
+import VirtualScroller    from './components/virtualScroller';
+export { VirtualScroller };
+import DropDownMenu       from './components/dropDownMenu';
+export { DropDownMenu };
+import Button             from './components/button';
+export { Button };
+import Icon               from './components/icon';
+export { Icon };
+import Spinner            from './components/spinner';
+export { Spinner };
+import LargeMessage       from './components/largeMessage';
+export { LargeMessage };
+import Progress           from './components/progress';
+export { Progress };
 
 // HOCs
-export hoverable          from './hocs/hoverable';
-export input              from './hocs/input';
+import hoverable          from './hocs/hoverable';
+export { hoverable };
+import input              from './hocs/input';
+export { input };
 
 // Styles
 export {
