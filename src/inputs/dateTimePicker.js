@@ -1,6 +1,6 @@
 import React                from 'react';
 import { merge }            from 'timm';
-import moment               from 'moment';
+import moment               from '../vendor/moment';
 import { bindAll }          from '../gral/helpers';
 import {
   getTimeInSecs,

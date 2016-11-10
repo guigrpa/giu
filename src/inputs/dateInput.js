@@ -4,7 +4,7 @@ import {
   set as timmSet,
   addDefaults,
 }                           from 'timm';
-import moment               from 'moment';
+import moment               from '../vendor/moment';
 import {
   bindAll,
   cancelEvent,

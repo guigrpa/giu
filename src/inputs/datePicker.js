@@ -1,7 +1,7 @@
 // @flow
 
 import React                from 'react';
-import moment               from 'moment';
+import moment               from '../vendor/moment';
 import { bindAll }          from '../gral/helpers';
 import {
   startOfToday,

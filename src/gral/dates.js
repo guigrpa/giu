@@ -1,6 +1,6 @@
 // @flow
 
-import moment               from 'moment';
+import moment from '../vendor/moment';
 import type { MomentT }     from '../gral/types';
 
 function getUtcFlag(

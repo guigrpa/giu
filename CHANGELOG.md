@@ -2,6 +2,7 @@
 
 *[M]: major change; [m]: minor change*
 
+* [M] Makes **moment an optional dependency**. Only include it in your project if you use DateInput or the date utilities
 * [m] Pass through disabled property to native checkbox
 
 ## 0.8.1 (September 21, 2016)
