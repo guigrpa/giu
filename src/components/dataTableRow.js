@@ -11,6 +11,31 @@ import Icon                 from './icon';
 
 const DEBUG = true && process.env.NODE_ENV !== 'production';
 
+export type DataTableColumnT = {
+  attr: string,
+
+  // Label
+  label?: string | () => string,
+  labelLevel?: number,
+
+  // Contents
+  rawValue?: Function,
+  filterValue?: Function,
+  sortValue?: Function,
+  render?: Function,
+
+  // Functionalities
+  sortable?: boolean,  // true by default
+  sortableDescending?: boolean,  // true by default
+  filterable?: boolean,  // true by default
+
+  // Appearance
+  hidden?: boolean,
+  minWidth?: number,
+  flexGrow?: number,
+  flexShrink?: number,
+};
+
 const DATA_TABLE_COLUMN_PROP_TYPES = React.PropTypes.shape({
   attr:                     React.PropTypes.string.isRequired,
 
