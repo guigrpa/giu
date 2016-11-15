@@ -32,19 +32,19 @@ describe('DropDownMenu', () => {
     expect(tree).toMatchSnapshot();
   });
 
-  it('02 opens when clicked upon', () => {
-    const component = renderer.create(
-      <div>
-        <Floats />
-        <DropDownMenu items={ITEMS}>Menu title</DropDownMenu>
-      </div>
-    );
-    let tree;
-    tree = component.toJSON();
-    expect(tree).toMatchSnapshot();
-    const selectEl = $(tree, '.giu-select-custom');
-    selectEl.onMouseDown();
-    tree = component.toJSON();
-    expect(tree).toMatchSnapshot();
-  });
+  // it('02 opens when clicked upon', () => {
+  //   const component = renderer.create(
+  //     <div>
+  //       <Floats />
+  //       <DropDownMenu items={ITEMS}>Menu title</DropDownMenu>
+  //     </div>
+  //   );
+  //   let tree;
+  //   tree = component.toJSON();
+  //   expect(tree).toMatchSnapshot();
+  //   const selectEl = $(tree, '.giu-select-custom');
+  //   selectEl.onMouseDown();
+  //   tree = component.toJSON();
+  //   expect(tree).toMatchSnapshot();
+  // });
 });
