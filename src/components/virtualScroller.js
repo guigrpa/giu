@@ -1,3 +1,5 @@
+// @flow
+
 /* eslint-disable no-console */
 import { merge }            from 'timm';
 import React                from 'react';
@@ -8,6 +10,7 @@ import {
 }                           from '../gral/helpers';
 import { getScrollbarWidth } from '../gral/constants';
 import { scrollIntoView }   from '../gral/visibility';
+import type { ScrollIntoViewOptionsT } from '../gral/visibility';
 import VerticalManager      from './verticalManager';
 
 const MAX_ROWS_INITIAL_RENDER = 20;
@@ -20,43 +23,64 @@ const DEBUG = false && process.env.NODE_ENV !== 'production';
 // ===============================================================
 // Component
 // ===============================================================
+type PropsT = {
+  itemsById: Object,
+  shownIds: Array<string>,
+  alwaysRenderIds: Array<string>,
+  RowComponents: { [key: string]: ReactClass<*> },
+  commonRowProps: Object,
+
+  height: number,
+  width?: number,
+  rowHeight?: number,  // auto-calculated if unspecified
+  uniformRowHeight: boolean,
+
+  onRenderLastRow?: (lastRowId: string) => void,
+  onChangeScrollbarWidth?: (scrollbarWidth: number) => void,
+
+  // Related to calculating the number of rows to render in a batch
+  numRowsInitialRender?: number,
+  estimatedMinRowHeight: number,
+  maxRowsToRenderInOneGo: number,
+
+  style?: Object,
+};
+
 class VirtualScroller extends React.PureComponent {
-  static propTypes = {
-    itemsById:              React.PropTypes.object,
-    shownIds:               React.PropTypes.arrayOf(React.PropTypes.string),
-    alwaysRenderIds:        React.PropTypes.arrayOf(React.PropTypes.string),
-    RowComponents:          React.PropTypes.object.isRequired,
-    commonRowProps:         React.PropTypes.any,
-
-    height:                 React.PropTypes.number.isRequired,
-    width:                  React.PropTypes.number,
-    rowHeight:              React.PropTypes.number,   // auto-calculated if unspecified
-    uniformRowHeight:       React.PropTypes.bool,
-
-    onRenderLastRow:        React.PropTypes.func,
-
-    onChangeScrollbarWidth: React.PropTypes.func,
-
-    // Related to calculating the number of rows to render in a batch
-    numRowsInitialRender:   React.PropTypes.number,
-    estimatedMinRowHeight:  React.PropTypes.number,
-    maxRowsToRenderInOneGo: React.PropTypes.number,
-
-    style:                  React.PropTypes.object,
-  };
-
+  static propTypes: PropsT;
   static defaultProps = {
     itemsById:              {},
-    shownIds:               [],
-    alwaysRenderIds:        [],
+    shownIds:               ([]: Array<string>),
+    alwaysRenderIds:        ([]: Array<string>),
 
     uniformRowHeight:       false,
 
     estimatedMinRowHeight:  Infinity,
     maxRowsToRenderInOneGo: 1000,
   };
+  rowHeight: ?number;
+  idxFirst: ?number;
+  idxLast: ?number;
+  reportedLastRowRendered: ?number;
+  rowTops: { [key: string]: number };
+  cachedHeights: { [key: string]: number };
+  totalHeight: ?number;
+  pendingHeights: Array<string>;
+  pendingScrollToId: ?string;
+  pendingScrollToIdOptions: ?ScrollIntoViewOptionsT;
+  minHeight: number;
+  avgHeight: ?number;
+  scrollTop: number;
+  scrollBottom: number;
+  clientHeight: number;
+  fHasScrollbar: boolean;
+  scrollbarWidth: number;
+  timerCheckScrollbar: ?number;
+  throttledRecalcViewport: (ev: Object) => void;
+  refItems: { [key: string]: ?Object };
+  refScroller: ?Object;
 
-  constructor(props) {
+  constructor(props: PropsT) {
     super(props);
 
     // If the row height is specified (and hence uniform), important optimisations apply.
@@ -109,7 +133,7 @@ class VirtualScroller extends React.PureComponent {
     if (this.timerCheckScrollbar != null) clearInterval(this.timerCheckScrollbar);
   }
 
-  componentWillReceiveProps(nextProps) {
+  componentWillReceiveProps(nextProps: PropsT) {
     if (nextProps.shownIds !== this.props.shownIds) {
       this.recalcTops(nextProps);
     }
@@ -124,7 +148,7 @@ class VirtualScroller extends React.PureComponent {
     }
   }
 
-  recalcViewport(ev = {}) {
+  recalcViewport(ev: Object = {}) {
     if (!this.refScroller) return;
     const { scrollTop, clientHeight } = this.refScroller;
     if (scrollTop !== this.scrollTop || clientHeight !== this.clientHeight) {
@@ -192,16 +216,16 @@ class VirtualScroller extends React.PureComponent {
     this.recalcViewport();
   }
 
-  scrollPageUpDown(sign) {
+  scrollPageUpDown(sign: number) {
     const { refScroller } = this;
-    if (!refScroller) return;
+    if (refScroller == null) return;
     const delta = sign * Math.max(this.clientHeight - 15, 0);
-    this.refScroller.scrollTop += delta;
+    refScroller.scrollTop += delta;
     this.initPendingScroll();
     this.recalcViewport();
   }
 
-  scrollIntoView(id, options) {
+  scrollIntoView(id: string, options: ?ScrollIntoViewOptionsT) {
     if (id == null) return;
     if (!this.doScrollToId(id, options)) {
       const idx = this.props.shownIds.indexOf(id);
@@ -216,7 +240,7 @@ class VirtualScroller extends React.PureComponent {
     }
   }
 
-  doScrollToId(id, options) {
+  doScrollToId(id: string, options: ?ScrollIntoViewOptionsT) {
     // Check whether the node is correctly positioned (in case of unknown rowHeight)
     if (this.rowHeight == null) {
       const top = this.rowTops[id];
@@ -240,9 +264,10 @@ class VirtualScroller extends React.PureComponent {
     this.determineRenderInterval();
     DEBUG && console.log('VirtualScroller: RENDERING ' +
       `[top=${this.scrollTop}, bottom=${this.scrollBottom}, ` +
+      // $FlowFixMe
       `idxFirst=${this.idxFirst}, idxLast=${this.idxLast}]...`);
     return (
-      <div ref={c => { this.refScroller = c; }}
+      <div ref={(c) => { this.refScroller = c; }}
         className="giu-virtual-scroller"
         onWheel={cancelBodyScrolling}
         onScroll={this.recalcViewport}
@@ -259,7 +284,7 @@ class VirtualScroller extends React.PureComponent {
       this.rowHeight * this.props.shownIds.length :
       this.totalHeight;
     // DEBUG && console.log(`VirtualScroller: totalHeight: ${totalHeight}`);
-    return <div style={style.sizer(totalHeight)}></div>;
+    return <div style={style.sizer(totalHeight)} />;
   }
 
   renderRows() {
@@ -287,14 +312,14 @@ class VirtualScroller extends React.PureComponent {
         } else if (idx > idxLast) {
           targetArray = after;
         } else continue;
-        targetArray.push(this.renderRow(idx, id));
+        targetArray && targetArray.push(this.renderRow(idx, id));
       }
       rows = before.concat(rows, after);
     }
     return rows;
   }
 
-  renderRow(idx, id) {
+  renderRow(idx: number, id: string) {
     // DEBUG && console.log(`VirtualScroller: rendering row ${id} (idx: ${idx})`);
     const { itemsById, RowComponents, commonRowProps } = this.props;
     const { rowHeight } = this;
@@ -312,7 +337,7 @@ class VirtualScroller extends React.PureComponent {
     const RowComponent = RowComponents[id] || RowComponents[DEFAULT_ROW];
     return (
       <VerticalManager key={id}
-        registerOuterRef={c => { this.refItems[id] = c; }}
+        registerOuterRef={(c) => { this.refItems[id] = c; }}
         id={id}
         index={idx}
         ChildComponent={RowComponent}
@@ -326,7 +351,7 @@ class VirtualScroller extends React.PureComponent {
   // ===============================================================
   // Event handlers
   // ===============================================================
-  onChangeRowHeight(id, height) {
+  onChangeRowHeight(id: string, height: number) {
     const prevCachedHeight = this.cachedHeights[id];
     if (prevCachedHeight === height) return;
     DEBUG && console.log(`VirtualScroller: received new height for row ${id}: ${height}`);
@@ -338,7 +363,7 @@ class VirtualScroller extends React.PureComponent {
       return;
     }
     if (prevCachedHeight == null) {
-      this.pendingHeights = this.pendingHeights.filter(o => o !== id);
+      this.pendingHeights = this.pendingHeights.filter((o) => o !== id);
     }
     this.cachedHeights[id] = height;
     if (!this.pendingHeights.length) {
@@ -412,7 +437,7 @@ class VirtualScroller extends React.PureComponent {
       if (rowTop >= scrollTop) break;
       rowTopFirst = rowTop;
     }
-    idxFirst--;
+    idxFirst -= 1;
 
     if (fFirstRowIsCached) {
       // Look for `idxLast`, first row after `idxFirst` that either:
@@ -430,7 +455,7 @@ class VirtualScroller extends React.PureComponent {
         if (rowTop > scrollBottom) break;
         rowTopLast = rowTop;
       }
-      idxLast--;
+      idxLast -= 1;
       if (fLastRowIsCached) {
         this.trimAndSetRenderInterval(idxFirst, idxLast);
         return;
@@ -444,29 +469,31 @@ class VirtualScroller extends React.PureComponent {
     this.trimAndSetRenderInterval(idxFirst, idxFirst + numRowsToRender);
   }
 
-  calcNumRowsToRender(diffHeight, limit) {
+  calcNumRowsToRender(diffHeight: number, limit: number) {
     const { minHeight, avgHeight } = this;
     let numRowsToRender;
     if (minHeight != null && minHeight !== Infinity) {
-      numRowsToRender = Math.ceil(diffHeight / minHeight + 1);
+      numRowsToRender = Math.ceil((diffHeight / minHeight) + 1);
     }
     if ((numRowsToRender == null || numRowsToRender > 100) && avgHeight != null) {
-      numRowsToRender = Math.ceil(diffHeight / avgHeight + 1);
+      numRowsToRender = Math.ceil((diffHeight / avgHeight) + 1);
     }
     if (numRowsToRender == null) numRowsToRender = limit;
     return Math.min(numRowsToRender, limit);
   }
 
-  trimAndSetRenderInterval(idxFirst, idxLast) {
-    if (idxFirst == null || idxLast == null) {
+  trimAndSetRenderInterval(idxFirst0: ?number, idxLast0: ?number) {
+    if (idxFirst0 == null || idxLast0 == null) {
       this.idxFirst = this.idxLast = undefined;
       return;
     }
 
     // Trim
     const numRows = this.props.shownIds.length;
-    this.idxFirst = Math.max(idxFirst, 0);
-    this.idxLast = Math.min(idxLast, numRows - 1);
+    const idxFirst: number = Math.max(idxFirst0, 0);
+    const idxLast: number = Math.min(idxLast0, numRows - 1);
+    this.idxFirst = idxFirst;
+    this.idxLast = idxLast;
 
     // If a scroll is pending:
     // - If it is above the selected interval, shift it
@@ -475,13 +502,14 @@ class VirtualScroller extends React.PureComponent {
     const { pendingScrollToId } = this;
     const pendingScrollToIdx = pendingScrollToId != null ?
       this.props.shownIds.indexOf(pendingScrollToId) : undefined;
-    if (pendingScrollToIdx >= 0) {
-      const intervalLength = this.idxLast - this.idxFirst;
-      if (pendingScrollToIdx < this.idxFirst) {
+    if (pendingScrollToIdx != null && pendingScrollToIdx >= 0) {
+      const intervalLength = idxLast - idxFirst;
+      if (pendingScrollToIdx < idxFirst) {
         this.idxFirst = pendingScrollToIdx;
         this.idxLast = pendingScrollToIdx + intervalLength;
-      } else if (pendingScrollToIdx > this.idxLast) {
+      } else if (pendingScrollToIdx > idxLast) {
         this.idxLast = pendingScrollToIdx;
+        // $FlowFixMe
         if (this.rowTops[pendingScrollToId] != null) {
           this.idxFirst = this.idxLast - intervalLength;
         }
@@ -489,7 +517,7 @@ class VirtualScroller extends React.PureComponent {
     }
   }
 
-  recalcTops(props) {
+  recalcTops(props: PropsT) {
     // console.log('Recalculating tops...');
     const { shownIds } = props;
     let top = 0;
@@ -509,7 +537,7 @@ class VirtualScroller extends React.PureComponent {
     }
     if (i > 0) {
       this.avgHeight = top / i;
-      this.totalHeight = top + (numRows - i) * this.avgHeight;
+      this.totalHeight = top + ((numRows - i) * this.avgHeight);
     }
   }
 }
@@ -524,7 +552,7 @@ const style = {
     overflowY: 'auto',
     overflowX: 'hidden',
   }, baseStyle),
-  sizer: totalHeight => ({
+  sizer: (totalHeight) => ({
     position: 'absolute',
     top: 0,
     left: 0,

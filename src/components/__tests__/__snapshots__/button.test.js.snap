@@ -1,0 +1,103 @@
+exports[`Button 01 renders with default style 1`] = `
+<span
+  className="giu-button"
+  onClick={undefined}
+  style={
+    Object {
+      "WebkitUserSelect": "none",
+      "border": "1px solid #999999",
+      "borderRadius": 5,
+      "cursor": "pointer",
+      "display": "inline-block",
+      "padding": "1px 5px",
+      "userSelect": "none",
+    }
+  }>
+  This is a button
+</span>
+------------HTML PREVIEW---------------
+<span
+  class="giu-button"
+  style="-webkit-user-select:none;border:1px solid #999999;border-radius:5px;cursor:pointer;display:inline-block;padding:1px 5px;user-select:none;"
+>
+  This is a button
+</span>
+`;
+
+exports[`Button 02 renders with plain style 1`] = `
+<span
+  className="giu-button"
+  onClick={undefined}
+  style={
+    Object {
+      "WebkitUserSelect": "none",
+      "cursor": "pointer",
+      "userSelect": "none",
+    }
+  }>
+  This is a button
+</span>
+------------HTML PREVIEW---------------
+<span
+  class="giu-button"
+  style="-webkit-user-select:none;cursor:pointer;user-select:none;"
+>
+  This is a button
+</span>
+`;
+
+exports[`Button 03 renders disabled 1`] = `
+<span
+  className="giu-button"
+  onClick={false}
+  style={
+    Object {
+      "WebkitUserSelect": "none",
+      "border": "1px solid #999999",
+      "borderRadius": 5,
+      "color": "#999999",
+      "cursor": "default",
+      "display": "inline-block",
+      "padding": "1px 5px",
+      "pointerEvents": "none",
+      "userSelect": "none",
+    }
+  }>
+  This is disabled
+</span>
+------------HTML PREVIEW---------------
+<span
+  class="giu-button"
+  style="-webkit-user-select:none;border:1px solid #999999;border-radius:5px;color:#999999;cursor:default;display:inline-block;padding:1px 5px;pointer-events:none;user-select:none;"
+>
+  This is disabled
+</span>
+`;
+
+exports[`Button 04 renders with custom style 1`] = `
+<span
+  className="giu-button"
+  onClick={undefined}
+  style={
+    Object {
+      "WebkitUserSelect": "none",
+      "background": "blue",
+      "border": "0px solid black",
+      "borderRadius": 5,
+      "color": "white",
+      "cursor": "pointer",
+      "display": "inline-block",
+      "padding": "1px 5px",
+      "userSelect": "none",
+    }
+  }>
+  This button is blue
+</span>
+------------HTML PREVIEW---------------
+<span
+  class="giu-button"
+  style="-webkit-user-select:none;background:blue;border:0px solid black;border-radius:5px;color:white;cursor:pointer;display:inline-block;padding:1px 5px;user-select:none;"
+>
+  This button is blue
+</span>
+`;

@@ -1,3 +1,5 @@
+// @flow
+
 import React                from 'react';
 import { createStore }      from 'redux';
 import {
@@ -21,17 +23,45 @@ const PROP_KEYS_TO_REMOVE_FROM_FLOAT_DIV = [
   'position', 'align', 'zIndex', 'limitSize', 'getAnchorNode',
 ];
 
+type PositionT = 'above' | 'below';
+type AlignT = 'left' | 'right';
+type FloatUserParsT = {
+  id: string,
+  position?: ?PositionT,
+  align?: ?AlignT,
+  zIndex?: number,
+  limitSize?: boolean,
+  getAnchorNode: () => ?Node,
+  style?: Object,
+  noStyleShadow?: boolean,
+};
+type FloatStateParsT = {
+  id: string,
+  position?: ?PositionT,
+  align?: ?AlignT,
+  zIndex: number,
+  limitSize: boolean,
+  getAnchorNode: () => ?Node,
+  style?: Object,
+  noStyleShadow?: boolean,
+};
+type StateT = {
+  cntReposition: number,
+  floats: Array<FloatStateParsT>,
+};
+type ActionT = Object;
+
 // ==========================================
 // Store, reducer
 // ==========================================
-let store = null;
+let store: Object;
 function initStore() { store = createStore(reducer); }
 
-const INITIAL_STATE = {
+const INITIAL_STATE: StateT = {
   cntReposition: 0,
   floats: [],
 };
-function reducer(state0 = INITIAL_STATE, action) {
+function reducer(state0: StateT = INITIAL_STATE, action: ActionT): StateT {
   let state = state0;
   let idx;
   let id;
@@ -42,14 +72,14 @@ function reducer(state0 = INITIAL_STATE, action) {
       break;
     case 'FLOAT_DELETE':
       id = action.id;
-      idx = state.floats.findIndex(o => o.id === id);
+      idx = state.floats.findIndex((o) => o.id === id);
       if (idx >= 0) {
         state = timmSet(state, 'floats', removeAt(state.floats, idx));
       }
       break;
     case 'FLOAT_UPDATE':
       id = action.id;
-      idx = state.floats.findIndex(o => o.id === id);
+      idx = state.floats.findIndex((o) => o.id === id);
       if (idx >= 0) {
         state = mergeIn(state, ['floats', idx], action.pars);
       }
@@ -72,24 +102,26 @@ const DEFAULT_FLOAT_PARS = {
   limitSize: false,
 };
 const actions = {
-  floatAdd: initialPars => {
-    const id = `float_${cntId++}`;
+  floatAdd: (initialPars: FloatUserParsT) => {
+    const id = `float_${cntId}`;
+    cntId += 1;
     const pars = addDefaults(initialPars, DEFAULT_FLOAT_PARS, { id });
     return { type: 'FLOAT_ADD', pars };
   },
-  floatDelete: id => ({ type: 'FLOAT_DELETE', id }),
-  floatUpdate: (id, pars) => ({ type: 'FLOAT_UPDATE', id, pars }),
+  floatDelete: (id: string) => ({ type: 'FLOAT_DELETE', id }),
+  floatUpdate: (id: string, pars: FloatUserParsT) => ({ type: 'FLOAT_UPDATE', id, pars }),
   floatReposition: () => ({ type: 'FLOAT_REPOSITION' }),
 };
 
 // Imperative dispatching
-const floatAdd = pars => {
+const floatAdd = (pars: FloatUserParsT): string => {
   const action = actions.floatAdd(pars);
   store.dispatch(action);
   return action.pars.id;
 };
-const floatDelete = (id) => store.dispatch(actions.floatDelete(id));
-const floatUpdate = (id, pars) => store.dispatch(actions.floatUpdate(id, pars));
+const floatDelete = (id: string) => store.dispatch(actions.floatDelete(id));
+const floatUpdate = (id: string, pars: FloatUserParsT) =>
+  store.dispatch(actions.floatUpdate(id, pars));
 const floatReposition = () => store && store.dispatch(actions.floatReposition());
 
 // ==========================================
@@ -108,7 +140,7 @@ try {
 // ==========================================
 // Position and visibility calculation
 // ==========================================
-function isAnchorVisible({ getAnchorNode }) {
+function isAnchorVisible({ getAnchorNode }: FloatStateParsT) {
   const anchorNode = getAnchorNode();
   if (!anchorNode) return null;
   return isVisible(anchorNode);
@@ -120,9 +152,17 @@ function isAnchorVisible({ getAnchorNode }) {
 let fFloatsMounted = false;
 const isFloatsMounted = () => fFloatsMounted;
 
-class Floats extends React.PureComponent {
+type PropsT = {};
 
-  constructor(props) {
+class Floats extends React.PureComponent {
+  props: PropsT;
+  prevState: StateT;
+  curState: StateT;
+  floats: Array<FloatStateParsT>;
+  storeUnsubscribe: () => void;
+  refFloats: Array<?Object>;
+
+  constructor(props: PropsT) {
     super(props);
     bindAll(this, [
       'forceUpdate',
@@ -164,7 +204,7 @@ class Floats extends React.PureComponent {
     );
   }
 
-  renderFloat(props, idx) {
+  renderFloat(props: FloatStateParsT, idx: number) {
     if (!isAnchorVisible(props)) return null;
     const { id, zIndex } = props;
     return (
@@ -173,7 +213,7 @@ class Floats extends React.PureComponent {
         onMouseDown={cancelEvent}
         style={style.wrapper(zIndex)}
       >
-        <div ref={c => { this.refFloats[idx] = c; }}
+        <div ref={(c) => { this.refFloats[idx] = c; }}
           {...omit(props, PROP_KEYS_TO_REMOVE_FROM_FLOAT_DIV)}
           style={style.floatInitial(props)}
         />
@@ -197,7 +237,7 @@ class Floats extends React.PureComponent {
     });
   }
 
-  repositionFloat(float, idx) {
+  repositionFloat(float: FloatStateParsT, idx: number) {
     const ref = this.refFloats[idx];
     if (!ref) return;
 
@@ -220,6 +260,7 @@ class Floats extends React.PureComponent {
 
     // Preparations
     const anchorNode = float.getAnchorNode();
+    if (!(anchorNode instanceof Element)) return;
     const bcr = anchorNode && anchorNode.getBoundingClientRect();
     if (!bcr) return;
     const styleAttrs = {};
@@ -277,7 +318,7 @@ class Floats extends React.PureComponent {
     }
 
     // Apply style
-    Object.keys(styleAttrs).forEach(attr => {
+    Object.keys(styleAttrs).forEach((attr) => {
       ref.style[attr] = styleAttrs[attr];
     });
     ref.style.opacity = 1;
@@ -295,7 +336,7 @@ const style = {
     width: 0,
     height: 0,
   },
-  wrapper: zIndex => ({
+  wrapper: (zIndex) => ({
     position: 'fixed',
     top: 0,
     left: 0,
@@ -303,7 +344,7 @@ const style = {
     height: 0,
     zIndex,
   }),
-  floatInitial: ({ style: baseStyle, noStyleShadow }) => {
+  floatInitial: ({ style: baseStyle, noStyleShadow }: FloatStateParsT) => {
     let out = {
       position: 'fixed',
       top: 0,
@@ -320,11 +361,11 @@ const style = {
 // Warnings
 // ==========================================
 let fCheckedFloats = false;
-const floatsWarning = name => `<${name}> requires a <Floats> component to be \
+const floatsWarning = (name: string) => `<${name}> requires a <Floats> component to be \
 included in your application. It will not work properly otherwise. Please add it \
 as close as possible to the application root; no props are needed.`;
 
-function warnFloats(componentName) {
+function warnFloats(componentName: string) {
   if (fCheckedFloats) return;
   fCheckedFloats = true;
   /* eslint-disable no-console */

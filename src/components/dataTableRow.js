@@ -1,9 +1,11 @@
+// @flow
+
 /* eslint-disable no-console */
+/* eslint-disable react/no-multi-comp */
 import React                from 'react';
 import { merge }            from 'timm';
 import upperFirst           from 'lodash/upperFirst';
 import isFunction           from 'lodash/isFunction';
-import { bindAll }          from '../gral/helpers';
 import { flexContainer }    from '../gral/styles';
 import { COLORS }           from '../gral/constants';
 import Spinner              from './spinner';
@@ -14,15 +16,16 @@ const DEBUG = true && process.env.NODE_ENV !== 'production';
 export type DataTableColumnT = {
   attr: string,
 
-  // Label
-  label?: string | () => string,
-  labelLevel?: number,
+  // Label (as a function, it will be called with the `commonCellProps`,
+  // if defined, or otherwise with the `lang` property)
+  label?: string | (commonCellPropsOrLang: any) => string,
+  labelLevel?: number,  // useful for very narrow cols
 
   // Contents
-  rawValue?: Function,
-  filterValue?: Function,
-  sortValue?: Function,
-  render?: Function,
+  rawValue?: (item: Object) => any,
+  filterValue?: (item: Object) => any,
+  sortValue?: (item: Object) => any,
+  render?: (item: Object) => React$Element<any>,
 
   // Functionalities
   sortable?: boolean,  // true by default
@@ -34,56 +37,24 @@ export type DataTableColumnT = {
   minWidth?: number,
   flexGrow?: number,
   flexShrink?: number,
+  style?: ?Object,
 };
-
-const DATA_TABLE_COLUMN_PROP_TYPES = React.PropTypes.shape({
-  attr:                     React.PropTypes.string.isRequired,
-
-  // Label
-  label:                    React.PropTypes.oneOfType([
-    React.PropTypes.string,
-    React.PropTypes.func,
-  ]),
-  labelLevel:               React.PropTypes.number,  // useful for very narrow cols
-
-  // Contents
-  rawValue:                 React.PropTypes.func,
-  filterValue:              React.PropTypes.func,
-  sortValue:                React.PropTypes.func,
-  render:                   React.PropTypes.func,
-
-  // Functionalities
-  sortable:                 React.PropTypes.bool,  // true by default
-  sortableDescending:       React.PropTypes.bool,  // true by default
-  filterable:               React.PropTypes.bool,  // true by default
-
-  // Appearance
-  hidden:                   React.PropTypes.bool,
-  minWidth:                 React.PropTypes.number,
-  flexGrow:                 React.PropTypes.number,
-  flexShrink:               React.PropTypes.number,
-});
 
 // ===============================================================
 // Header
 // ===============================================================
 class DataTableHeader extends React.PureComponent {
-  static propTypes = {
-    cols:                   React.PropTypes.arrayOf(DATA_TABLE_COLUMN_PROP_TYPES),
-    lang:                   React.PropTypes.string,   // just to force-refresh upon update
-    commonCellProps:        React.PropTypes.object,
-    maxLabelLevel:          React.PropTypes.number.isRequired,
-    scrollbarWidth:         React.PropTypes.number.isRequired,
-    sortBy:                 React.PropTypes.string,
-    sortDescending:         React.PropTypes.bool,
-    onClick:                React.PropTypes.func,
-    style:                  React.PropTypes.object,
+  static propTypes: {
+    cols: Array<DataTableColumnT>,
+    lang?: string,  // just to force-refresh upon update
+    commonCellProps?: Object,
+    maxLabelLevel: number,
+    scrollbarWidth: number,
+    sortBy: ?string,
+    sortDescending: boolean,
+    onClick: (attr: string) => void,
+    style?: Object,
   };
-
-  constructor(props) {
-    super(props);
-    bindAll(this, ['onClick']);
-  }
 
   // ===============================================================
   // Render
@@ -96,12 +67,13 @@ class DataTableHeader extends React.PureComponent {
     );
   }
 
-  renderColHeader(col, idxCol) {
+  renderColHeader(col: DataTableColumnT, idxCol: number) {
     const { attr, label, labelLevel, sortable } = col;
     const { commonCellProps } = this.props;
     let finalLabel;
     if (label != null) {
       finalLabel = isFunction(label) ?
+        // $FlowFixMe
         label(commonCellProps != null ? commonCellProps : this.props.lang) :
         label;
     } else {
@@ -124,8 +96,8 @@ class DataTableHeader extends React.PureComponent {
     );
   }
 
-  renderCallOut(level) {
-    const h = 8 + 15 * level;
+  renderCallOut(level: number) {
+    const h = 8 + (15 * level);
     const w = 5;
     const d = `M0,${h} l0,-${h} l${w},0`;
     const { style: baseStyle } = this.props;
@@ -142,7 +114,7 @@ class DataTableHeader extends React.PureComponent {
     );
   }
 
-  renderSortIcon(fDescending) {
+  renderSortIcon(fDescending: boolean) {
     const icon = fDescending ? 'caret-down' : 'caret-up';
     return <Icon icon={icon} style={style.headerSortIcon} />;
   }
@@ -150,7 +122,8 @@ class DataTableHeader extends React.PureComponent {
   // ===============================================================
   // Event handlers
   // ===============================================================
-  onClick(ev) {
+  onClick = (ev: SyntheticEvent) => {
+    if (!(ev.currentTarget instanceof Element)) return;
     const attr = ev.currentTarget.id;
     this.props.onClick(attr);
   }
@@ -160,25 +133,19 @@ class DataTableHeader extends React.PureComponent {
 // Row
 // ===============================================================
 class DataTableRow extends React.PureComponent {
-  static propTypes = {
-    id:                     React.PropTypes.string.isRequired,
-    item:                   React.PropTypes.object,
-    cols:                   React.PropTypes.arrayOf(DATA_TABLE_COLUMN_PROP_TYPES),
-    selectedIds:            React.PropTypes.arrayOf(React.PropTypes.string).isRequired,
-    commonCellProps:        React.PropTypes.object,
-    fSortedManually:        React.PropTypes.bool,
-    onMayHaveChangedHeight: React.PropTypes.func,
-    onClick:                React.PropTypes.func,
-    style:                  React.PropTypes.object,
-    styleCell:              React.PropTypes.object,
-    selectedBgColor:        React.PropTypes.string.isRequired,
-    selectedFgColor:        React.PropTypes.string.isRequired,
+  static propTypes: {
+    id: string,
+    item: Object,
+    cols: Array<DataTableColumnT>,
+    selectedIds: Array<string>,
+    commonCellProps: ?Object,
+    fSortedManually: boolean,
+    onMayHaveChangedHeight: () => void,
+    onClick: (ev: SyntheticEvent, id: string) => void,
+    style: ?Object,
+    selectedBgColor: string,
+    selectedFgColor: string,
   };
-
-  constructor(props) {
-    super(props);
-    bindAll(this, ['onClick']);
-  }
 
   componentDidUpdate() {
     const { onMayHaveChangedHeight } = this.props;
@@ -202,7 +169,7 @@ class DataTableRow extends React.PureComponent {
     );
   }
 
-  renderCell(col, idxCol) {
+  renderCell(col: DataTableColumnT, idxCol: number) {
     const { attr, render } = col;
     const { id, item } = this.props;
     let value;
@@ -229,7 +196,7 @@ class DataTableRow extends React.PureComponent {
   // ===============================================================
   // Event handlers
   // ===============================================================
-  onClick(ev) {
+  onClick = (ev: SyntheticEvent) => {
     const { onClick } = this.props;
     if (onClick) onClick(ev, this.props.id);
   }
@@ -264,17 +231,17 @@ const style = {
   headerOuter: ({ maxLabelLevel, scrollbarWidth, style: baseStyle }) =>
     merge(flexContainer('row', {
       paddingRight: scrollbarWidth,
-      paddingTop: 2 + 15 * maxLabelLevel,
+      paddingTop: 2 + (15 * maxLabelLevel),
       paddingBottom: 2,
       borderBottom: `1px solid ${COLORS.line}`,
     }), baseStyle),
-  rowCell: (idxCol, {
+  rowCell: (idxCol: number, {
     hidden,
     minWidth = 50,
     flexGrow,
     flexShrink,
     style: baseStyle,
-  }) => {
+  }: DataTableColumnT) => {
     if (hidden) return { display: 'none' };
     const flexValue = `${flexGrow || 0} ${flexShrink || 0} ${minWidth}px`;
     return merge({
@@ -304,7 +271,7 @@ const style = {
     }
     return out;
   },
-  headerCallOut: base => merge({
+  headerCallOut: (base) => merge({
     position: 'absolute',
     right: '100%',
     top: 7,
@@ -324,5 +291,4 @@ export {
   DataTableHeader,
   DataTableRow,
   DataTableFetchingRow,
-  DATA_TABLE_COLUMN_PROP_TYPES,
 };

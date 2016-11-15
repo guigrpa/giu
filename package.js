@@ -14,15 +14,22 @@ const KEYWORDS = ['React', 'components', 'collection', 'forms', 'inputs', 'ssr',
 // Helpers
 // ===============================================
 const runMultiple = (arr) => arr.join(' && ');
-const runTestCov = (env) => {
+const runTestCov = (env, name) => {
   const envStr = env != null ? `${env} ` : '';
   return runMultiple([
-    `cross-env ${envStr}nyc ava`,
-    'mv .nyc_output/* .nyc_tmp/',
+    `cross-env ${envStr}jest --coverage`,
+    `mv .nyc_output/coverage-final.json .nyc_tmp/coverage-${name}.json`,
+    'rm -rf .nyc_output',
   ]);
 };
 
-const WEBPACK = 'webpack --config examples/webpackConfig.js --progress --display-chunks';
+const WEBPACK_OPTS = [
+  '--color',
+  '--progress',
+  // '--display-modules',
+  '--display-chunks',
+].join(' ');
+const WEBPACK = `webpack --config examples/webpackConfig.js ${WEBPACK_OPTS}`;
 
 // ===============================================
 // Specs
@@ -65,15 +72,15 @@ const specs = {
                                   'node package',
                                   'npm run lint',
                                   'npm run flow',
+                                  'npm run test',
                                   'npm run compile',
                                   'npm run docs',
                                   'npm run buildExamplesSsr',
-                                  // 'npm run test',
                                   'npm run xxl',
                                 ]),
     travis:                     runMultiple([
                                   'npm run compile',
-                                  // 'npm run testCovFull',
+                                  'npm run test',
                                 ]),
 
     // Examples
@@ -102,7 +109,10 @@ const specs = {
     xxl:                        "xxl --src \"[\\\"src\\\"]\"",
 
     // Testing - general
+    jest:                       'jest --watch --coverage',
+    'jest-html':                'jest-html --snapshot-patterns "src/**/*.snap"',
     test:                       'npm run testCovFull',
+    testFast:                   'jest',
     testCovFull:                runMultiple([
                                   'npm run testCovPrepare',
                                   'npm run testDev',
@@ -116,15 +126,14 @@ const specs = {
                                 ]),
 
     // Testing - steps
-    ava:                        'ava --watch',
     testCovPrepare:             runMultiple([
                                   'rm -rf ./coverage .nyc_output .nyc_tmp',
                                   'mkdir .nyc_tmp',
                                 ]),
-    testDev:                    runTestCov('NODE_ENV=development'),
-    testProd:                   runTestCov('NODE_ENV=production'),
+    testDev:                    runTestCov('NODE_ENV=development', 'dev'),
+    testProd:                   runTestCov('NODE_ENV=production', 'prod'),
     testCovReport:              runMultiple([
-                                  'cp .nyc_tmp/* .nyc_output/',
+                                  'cp -r .nyc_tmp .nyc_output',
                                   'nyc report --reporter=html --reporter=lcov --reporter=text',
                                 ]),
   },
@@ -144,7 +153,7 @@ const specs = {
   },
 
   dependencies: {
-    timm: '1.2.0',
+    timm: '^1.2.1',
 
     redux: '3.5.2',
     'redux-thunk': '2.1.0',
@@ -161,16 +170,16 @@ const specs = {
   },
 
   devDependencies: {
-    storyboard: '2.0.2',
-    'xxl': '^0.1.0',
+    storyboard: '2.2.0',
+    'xxl': '^0.1.1',
     'cross-env': '^1.0.8',
     // 'diveSync': '0.3.0',
 
     moment: '^2.0.0',
     faker: '3.0.1',
 
-    // Bug yarn #629
-    chokidar: '1.6.0',
+    // // Bug yarn #629
+    // chokidar: '1.6.0',
 
     // React
     react:                              '^15.3.0',
@@ -212,21 +221,41 @@ const specs = {
     'fontfaceobserver': '1.7.1',
 
     // Testing
-    'ava': '0.15.2',
-    'nyc': '^6.1.1',
+    'jest': '17.0.2',
+    'jest-html': '^1.2.1',
+    'react-test-renderer': '15.3.2',
+    'babel-jest': '17.0.2',
+
+    // Coverage testing
+    'nyc': '8.4.0',
+    coveralls: '2.11.15',
 
     // Other tools
-    'flow-bin': '0.33.0',
+    'flow-bin': '0.35.0',
   },
 
   // -----------------------------------------------
   // Other configs
   // -----------------------------------------------
-  ava: {
-    'files': [
-      './test/test.js',
+  jest: {
+    testRegex: 'src/.*__tests__/.*\\.(test|spec)\\.(js|jsx)$',
+    moduleNameMapper: {
+      '^.+\\.(css|less|sass)$': '<rootDir>/test/emptyObject.js',
+      '^.+\\.(gif|ttf|eot|svg)$': '<rootDir>/test/emptyString.js',
+    },
+    coverageDirectory: '.nyc_output',
+    coverageReporters: ['json', 'text', 'html'],
+    snapshotSerializers: ['<rootDir>/node_modules/jest-html'],
+    collectCoverageFrom: [
+      'src/**/*.js',
+      'src/vendor/**',
+      '!test/**',
+      '!**/webpack*',
+      '!**/node_modules/**',
+      '!**/__tests__/**',
+      '!**/__mocks__/**',
     ],
-    'babel': 'inherit',
+    setupTestFrameworkScriptFile: './test/setup.js',
   },
 };
 

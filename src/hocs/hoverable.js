@@ -41,12 +41,7 @@ type OwnPropsT = {
   onHoverStart: HoverEventHandlerT,
   onHoverStop: HoverEventHandlerT,
 };
-
-type OwnDefaultPropsT = {
-  hovering: HoveringT,
-  onHoverStart: HoverEventHandlerT,
-  onHoverStop: HoverEventHandlerT,
-};
+type OwnDefaultPropsT = OwnPropsT;  // all HOC props are optional
 
 type PropsT<P, DP> = $Subtype<$Diff<$Diff<P & OwnPropsT, DP>, OwnDefaultPropsT>>;
 

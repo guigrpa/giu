@@ -5,8 +5,6 @@ import React                from 'react';
 /* eslint-disable react/no-multi-comp */
 /* eslint-disable */
 
-type NamesT = 'juan' | 'pedro';
-
 type OwnPropsT = {
   c: string,
   d: string,
@@ -80,6 +78,10 @@ const c1 = <Foo a="one" c="c" d="d" />;
 // $FlowFixMe
 const c2 = <HoverableFoo a="one" c="c" d="d" />;
 
+// Passing an undefined value in `b` (should be a string)
+// $FlowFixMe -- bug described here: https://github.com/facebook/flow/issues/2372
+const cc1 = <Foo a="a" b={undefined} />;
+
 // Passing an invalid value in `b` (should be a string)
 // $FlowFixMe
 const d1 = <Foo a="one" b={2} c="c" d="d" />;
@@ -108,6 +110,7 @@ const g1 = <Foo a="one" b="b" c="c" d={2} />;
 const g2 = <HoverableFoo a="one" b="b" c="c" d={2} />;
 
 // ------------------------------------
+type NamesT = 'juan' | 'pedro';
 type BarDefaultPropsT = {
   name: NamesT,
 };

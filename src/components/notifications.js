@@ -55,11 +55,11 @@ API reference:
 * **notifDeleteByName()**: deletes a notification:
   - **name** *string*: name of the notification to be deleted
 -- */
-type NotificationHandleParsT = {
+type NotificationHandlingParsT = {
   sticky?: boolean,
   timeout?: number,
 };
-type NotificationUserParsT = NotificationParsT & NotificationHandleParsT;
+type NotificationUserParsT = NotificationParsT & NotificationHandlingParsT;
 type NotificationStateParsT = NotificationUserParsT & {
   retained?: boolean
 };

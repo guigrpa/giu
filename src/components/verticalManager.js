@@ -1,6 +1,8 @@
+// @flow
+
 import React                from 'react';
-import { bindAll }          from '../gral/helpers';
 import throttle             from 'lodash/throttle';
+import { bindAll }          from '../gral/helpers';
 
 // ===============================================================
 // VerticalManager
@@ -9,22 +11,27 @@ import throttle             from 'lodash/throttle';
 // it gets a `top` property passed from the top. Becoming visible does not
 // mean its child component gets re-rendered (this is more efficient than
 // react-virtualized when using its CellMeasurer component).
+
+type PropsT = {
+  registerOuterRef?: (ref: any) => void,
+  id: string,
+  index: number,
+  childProps: Object,
+  ChildComponent: ReactClass<*>,
+  onChangeHeight: ?(id: string, height: number) => void,
+  top: ?number,
+};
+
 class VerticalManager extends React.Component {
-  static propTypes = {
-    registerOuterRef:       React.PropTypes.func,
-    id:                     React.PropTypes.string.isRequired,
-    index:                  React.PropTypes.number.isRequired,
-    childProps:             React.PropTypes.object,
-    ChildComponent:         React.PropTypes.any.isRequired,
-    onChangeHeight:         React.PropTypes.func,
-    top:                    React.PropTypes.number,
-  };
-
+  static propTypes: PropsT;
   static defaultProps = {
-    childProps:             {},
+    childProps: {},
   };
+  height: number;
+  throttledMeasureHeight: () => void;
+  refVerticalManager: ?Object;
 
-  constructor(props) {
+  constructor(props: PropsT) {
     super(props);
     bindAll(this, [
       'measureHeight',
@@ -105,7 +112,7 @@ class VerticalManager extends React.Component {
   // ===============================================================
   // Event handlers
   // ===============================================================
-  registerOuterRef(c) {
+  registerOuterRef(c: ?Object) {
     this.refVerticalManager = c;
     if (this.props.registerOuterRef) this.props.registerOuterRef(c);
   }

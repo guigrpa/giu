@@ -1,5 +1,12 @@
 # Roadmap
 
+- FLOW conversion:
+    - [ ] Add support for Hoverable HOC on functional components
+    - [ ] Check status of https://github.com/facebook/flow/issues/1326 (Object type spread)
+    - [ ] Check status of https://github.com/facebook/flow/issues/2372 (incorrect handling of `undefined` for required React props) -- and also related: https://github.com/facebook/flow/issues/2781
+    - [ ] Add types to input HOC and derived components
+- [ ] Jest snapshots
+
 - [ ] *Bug* ListPicker on Windows incorrectly aligns (vertically) items and shortcuts (it *is* correct in the main doc page)
 - [ ] Stop scrollers (in ListPickers and DataTables) from scrolling the window! (seems to happen only on Chrome Mac)
 - [ ] Safari Mac: DataTables don't scroll smoothly

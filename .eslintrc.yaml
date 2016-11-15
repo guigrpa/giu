@@ -58,12 +58,16 @@ globals:
   $Shape: false
   ReactClass: false
   React$Component: false
+  React$Element: false
   SyntheticEvent: false
   SyntheticWheelEvent: false
   SyntheticKeyboardEvent: false
   SyntheticMouseEvent: false
+  SyntheticClipboardEvent: false
   WheelEvent: false
   Event: false
   KeyboardEvent: false
   HTMLElement: false
   HTMLInputElement: false
+  # Jest
+  $: false
