@@ -104,6 +104,7 @@ class DropDownMenu extends React.PureComponent {
   renderTitle() {
     return (
       <div
+        className="giu-drop-down-menu-title"
         onMouseDown={this.onMouseDownTitle}
         style={style.title(this.props, this.state)}
       >

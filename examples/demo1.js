@@ -1,19 +1,12 @@
 /* eslint-disable no-console, no-alert, max-len */
 /* eslint-disable react/prop-types, react/no-multi-comp, react/jsx-no-bind, react/jsx-boolean-value */
-/* eslint-disable react/prefer-stateless-function */
+/* eslint-disable react/prefer-stateless-function, react/jsx-no-target-blank */
 import React                from 'react';
 import ReactDOM             from 'react-dom';
 import ReactDOMServer       from 'react-dom/server';
-if (process.env.NODE_ENV !== 'production') {
-  try {
-    /*  eslint-disable global-require */
-    window.ReactPerf = require('react-addons-perf');
-    /*  eslint-enable global-require */
-  } catch (err) { /* ignore */ }
-}
 import { merge }            from 'timm';
 import moment               from 'moment';
-require('babel-polyfill');
+
 import {
   DateInput, TextInput, RangeInput, Select,
   DropDownMenu,
@@ -37,13 +30,23 @@ import {
   getLang, setLang,
 } from './demo1-common';
 
+require('babel-polyfill');
+
+if (process.env.NODE_ENV !== 'production') {
+  try {
+    /*  eslint-disable global-require */
+    window.ReactPerf = require('react-addons-perf');
+    /*  eslint-enable global-require */
+  } catch (err) { /* ignore */ }
+}
+
 const { floor, random } = Math;
 const randomInt = (min, max) => min + floor(random() * (max - min + 1));
 const sample = (arr) => arr[randomInt(0, arr.length - 1)];
 
 let cntNotif = 1;
 const notify = (msg) => createNotif({
-  msg: msg || `Notification #${cntNotif++}`,
+  msg: msg || `Notification #${cntNotif++}`, // eslint-disable-line no-plusplus
   type: sample(['info', 'success', 'warn', 'error']),
   icon: sample(['arrow-left', 'arrow-right', 'arrow-up', 'arrow-down']),
 });
@@ -397,7 +400,7 @@ const style = {
     overflow: 'auto',
     transform: 'translateZ(0)',
   },
-  hoverable: hovering => ({
+  hoverable: (hovering) => ({
     backgroundColor: hovering ? '#ccc' : undefined,
   }),
 };

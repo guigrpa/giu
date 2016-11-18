@@ -1,77 +1,426 @@
 exports[`DropDownMenu 01 renders (closed) 1`] = `
-<div>
-  <div
-    className="giu-floats"
+<span
+  className="giu-select-custom"
+  onClick={[Function]}
+  onMouseDown={[Function]}
+  style={
+    Object {
+      "display": "inline-block",
+      "position": "relative",
+    }
+  }>
+  <input
+    onBlur={[Function]}
+    onCopy={[Function]}
+    onCut={[Function]}
+    onFocus={[Function]}
+    onKeyDown={[Function]}
+    onPaste={[Function]}
     style={
       Object {
+        "cursor": "default",
         "height": 0,
-        "left": 0,
-        "position": "absolute",
-        "top": 0,
+        "left": 8,
+        "opacity": 0,
+        "padding": 0,
+        "pointerEvents": "none",
+        "position": "fixed",
+        "top": 8,
         "width": 0,
+        "zIndex": -80,
       }
-    } />
-  <span
-    className="giu-select-custom"
-    onClick={[Function]}
+    }
+    tabIndex={undefined} />
+  <div
+    className="giu-drop-down-menu-title"
     onMouseDown={[Function]}
     style={
       Object {
+        "backgroundColor": undefined,
+        "color": undefined,
+        "cursor": "pointer",
         "display": "inline-block",
-        "position": "relative",
       }
     }>
-    <input
-      onBlur={[Function]}
-      onCopy={[Function]}
-      onCut={[Function]}
-      onFocus={[Function]}
-      onKeyDown={[Function]}
-      onPaste={[Function]}
-      style={
-        Object {
-          "cursor": "default",
-          "height": 0,
-          "left": 8,
-          "opacity": 0,
-          "padding": 0,
-          "pointerEvents": "none",
-          "position": "fixed",
-          "top": 8,
-          "width": 0,
-          "zIndex": -80,
-        }
+    Menu title
+  </div>
+</span>
+------------HTML PREVIEW---------------
+<span
+  class="giu-select-custom"
+  style="display:inline-block;position:relative;"
+>
+  <input style="cursor:default;height:0;left:8px;opacity:0;padding:0;pointer-events:none;position:fixed;top:8px;width:0;z-index:-80;">
+  <div
+    class="giu-drop-down-menu-title"
+    style="cursor:pointer;display:inline-block;"
+  >
+    Menu title
+  </div>
+</span>
+`;
+
+exports[`DropDownMenu 02 toggles highlight on/off when clicked upon 1`] = `
+<span
+  className="giu-select-custom"
+  onClick={[Function]}
+  onMouseDown={[Function]}
+  style={
+    Object {
+      "display": "inline-block",
+      "position": "relative",
+    }
+  }>
+  <input
+    onBlur={[Function]}
+    onCopy={[Function]}
+    onCut={[Function]}
+    onFocus={[Function]}
+    onKeyDown={[Function]}
+    onPaste={[Function]}
+    style={
+      Object {
+        "cursor": "default",
+        "height": 0,
+        "left": 8,
+        "opacity": 0,
+        "padding": 0,
+        "pointerEvents": "none",
+        "position": "fixed",
+        "top": 8,
+        "width": 0,
+        "zIndex": -80,
       }
-      tabIndex={undefined} />
+    }
+    tabIndex={undefined} />
+  <div
+    className="giu-drop-down-menu-title"
+    onMouseDown={[Function]}
+    style={
+      Object {
+        "backgroundColor": undefined,
+        "color": undefined,
+        "cursor": "pointer",
+        "display": "inline-block",
+      }
+    }>
+    Menu title
+  </div>
+</span>
+------------HTML PREVIEW---------------
+<span
+  class="giu-select-custom"
+  style="display:inline-block;position:relative;"
+>
+  <input style="cursor:default;height:0;left:8px;opacity:0;padding:0;pointer-events:none;position:fixed;top:8px;width:0;z-index:-80;">
+  <div
+    class="giu-drop-down-menu-title"
+    style="cursor:pointer;display:inline-block;"
+  >
+    Menu title
+  </div>
+</span>
+`;
+
+exports[`DropDownMenu 02 toggles highlight on/off when clicked upon 2`] = `
+<span
+  className="giu-select-custom"
+  onClick={[Function]}
+  onMouseDown={[Function]}
+  style={
+    Object {
+      "display": "inline-block",
+      "position": "relative",
+    }
+  }>
+  <input
+    onBlur={[Function]}
+    onCopy={[Function]}
+    onCut={[Function]}
+    onFocus={[Function]}
+    onKeyDown={[Function]}
+    onPaste={[Function]}
+    style={
+      Object {
+        "cursor": "default",
+        "height": 0,
+        "left": 8,
+        "opacity": 0,
+        "padding": 0,
+        "pointerEvents": "none",
+        "position": "fixed",
+        "top": 8,
+        "width": 0,
+        "zIndex": -80,
+      }
+    }
+    tabIndex={undefined} />
+  <div
+    className="giu-drop-down-menu-title"
+    onMouseDown={[Function]}
+    style={
+      Object {
+        "backgroundColor": "#6600cc",
+        "color": "white",
+        "cursor": "pointer",
+        "display": "inline-block",
+      }
+    }>
+    Menu title
+  </div>
+</span>
+------------HTML PREVIEW---------------
+<span
+  class="giu-select-custom"
+  style="display:inline-block;position:relative;"
+>
+  <input style="cursor:default;height:0;left:8px;opacity:0;padding:0;pointer-events:none;position:fixed;top:8px;width:0;z-index:-80;">
+  <div
+    class="giu-drop-down-menu-title"
+    style="background-color:#6600cc;color:white;cursor:pointer;display:inline-block;"
+  >
+    Menu title
+  </div>
+</span>
+`;
+
+exports[`DropDownMenu 02 toggles highlight on/off when clicked upon 3`] = `
+<span
+  className="giu-select-custom"
+  onClick={[Function]}
+  onMouseDown={[Function]}
+  style={
+    Object {
+      "display": "inline-block",
+      "position": "relative",
+    }
+  }>
+  <input
+    onBlur={[Function]}
+    onCopy={[Function]}
+    onCut={[Function]}
+    onFocus={[Function]}
+    onKeyDown={[Function]}
+    onPaste={[Function]}
+    style={
+      Object {
+        "cursor": "default",
+        "height": 0,
+        "left": 8,
+        "opacity": 0,
+        "padding": 0,
+        "pointerEvents": "none",
+        "position": "fixed",
+        "top": 8,
+        "width": 0,
+        "zIndex": -80,
+      }
+    }
+    tabIndex={undefined} />
+  <div
+    className="giu-drop-down-menu-title"
+    onMouseDown={[Function]}
+    style={
+      Object {
+        "backgroundColor": undefined,
+        "color": undefined,
+        "cursor": "pointer",
+        "display": "inline-block",
+      }
+    }>
+    Menu title
+  </div>
+</span>
+------------HTML PREVIEW---------------
+<span
+  class="giu-select-custom"
+  style="display:inline-block;position:relative;"
+>
+  <input style="cursor:default;height:0;left:8px;opacity:0;padding:0;pointer-events:none;position:fixed;top:8px;width:0;z-index:-80;">
+  <div
+    class="giu-drop-down-menu-title"
+    style="cursor:pointer;display:inline-block;"
+  >
+    Menu title
+  </div>
+</span>
+`;
+
+exports[`DropDownMenu 03 shows/hides float when clicked upon 1`] = `
+<div
+  className="giu-list-picker"
+  onWheel={[Function]}
+  style={
+    Object {
+      "backgroundColor": "white",
+      "border": "1px solid #999999",
+      "color": "inherit",
+      "fontFamily": "inherit",
+      "fontSize": "inherit",
+      "fontWeight": "inherit",
+      "maxHeight": "inherit",
+      "overflowY": "auto",
+      "paddingBottom": 3,
+      "paddingTop": 3,
+    }
+  }>
+  <div
+    id="\"a\""
+    onClick={undefined}
+    onMouseDown={[Function]}
+    onMouseEnter={[Function]}
+    onMouseLeave={[Function]}
+    onMouseUp={[Function]}
+    style={
+      Object {
+        "alignItems": "center",
+        "border": "1px solid transparent",
+        "cursor": "default",
+        "display": "flex",
+        "flexDirection": "row",
+        "padding": "3px NaNpx 3px 10px",
+        "whiteSpace": "nowrap",
+      }
+    }>
+    Manzanas
+  </div>
+  <div
+    id="2"
+    onClick={undefined}
+    onMouseDown={[Function]}
+    onMouseEnter={[Function]}
+    onMouseLeave={[Function]}
+    onMouseUp={[Function]}
+    style={
+      Object {
+        "alignItems": "center",
+        "border": "1px solid transparent",
+        "cursor": "default",
+        "display": "flex",
+        "flexDirection": "row",
+        "padding": "3px NaNpx 3px 10px",
+        "whiteSpace": "nowrap",
+      }
+    }>
+    2
+  </div>
+  <div
+    onMouseEnter={[Function]}
+    onMouseLeave={[Function]}
+    style={
+      Object {
+        "cursor": "default",
+        "height": 7,
+        "paddingBottom": 3,
+        "paddingTop": 3,
+      }
+    }>
     <div
-      onMouseDown={[Function]}
       style={
         Object {
-          "backgroundColor": undefined,
-          "color": undefined,
-          "cursor": "pointer",
-          "display": "inline-block",
+          "borderTop": "1px solid #999999",
+          "height": 1,
         }
-      }>
-      Menu title
-    </div>
-  </span>
+      } />
+  </div>
+  <div
+    id="\"b\""
+    onClick={undefined}
+    onMouseDown={[Function]}
+    onMouseEnter={[Function]}
+    onMouseLeave={[Function]}
+    onMouseUp={[Function]}
+    style={
+      Object {
+        "alignItems": "center",
+        "border": "1px solid transparent",
+        "cursor": "default",
+        "display": "flex",
+        "flexDirection": "row",
+        "padding": "3px NaNpx 3px 10px",
+        "whiteSpace": "nowrap",
+      }
+    }>
+    Bayas
+  </div>
+  <div
+    id="true"
+    onClick={undefined}
+    onMouseDown={[Function]}
+    onMouseEnter={[Function]}
+    onMouseLeave={[Function]}
+    onMouseUp={[Function]}
+    style={
+      Object {
+        "alignItems": "center",
+        "border": "1px solid transparent",
+        "cursor": "default",
+        "display": "flex",
+        "flexDirection": "row",
+        "padding": "3px NaNpx 3px 10px",
+        "whiteSpace": "nowrap",
+      }
+    }>
+    true
+  </div>
+  <div
+    id="\"c\""
+    onClick={undefined}
+    onMouseDown={[Function]}
+    onMouseEnter={[Function]}
+    onMouseLeave={[Function]}
+    onMouseUp={[Function]}
+    style={
+      Object {
+        "alignItems": "center",
+        "border": "1px solid transparent",
+        "cursor": "default",
+        "display": "flex",
+        "flexDirection": "row",
+        "padding": "3px NaNpx 3px 10px",
+        "whiteSpace": "nowrap",
+      }
+    }>
+    C
+  </div>
 </div>
 ------------HTML PREVIEW---------------
-<div>
+<div
+  class="giu-list-picker"
+  style="background-color:white;border:1px solid #999999;color:inherit;font-family:inherit;font-size:inherit;font-weight:inherit;max-height:inherit;overflow-y:auto;padding-bottom:3px;padding-top:3px;"
+>
   <div
-    class="giu-floats"
-    style="height:0;left:0;position:absolute;top:0;width:0;"
+    id="\"a\""
+    style="align-items:center;border:1px solid transparent;cursor:default;display:flex;flex-direction:row;padding:3px NaNpx 3px 10px;white-space:nowrap;"
   >
+    Manzanas
   </div>
-  <span
-    class="giu-select-custom"
-    style="display:inline-block;position:relative;"
+  <div
+    id="2"
+    style="align-items:center;border:1px solid transparent;cursor:default;display:flex;flex-direction:row;padding:3px NaNpx 3px 10px;white-space:nowrap;"
   >
-    <input style="cursor:default;height:0;left:8px;opacity:0;padding:0;pointer-events:none;position:fixed;top:8px;width:0;z-index:-80;">
-    <div style="cursor:pointer;display:inline-block;">
-      Menu title
-    </div>
-  </span>
+    2
+  </div>
+  <div style="cursor:default;height:7px;padding-bottom:3px;padding-top:3px;">
+    <div style="border-top:1px solid #999999;height:1px;"></div>
+  </div>
+  <div
+    id="\"b\""
+    style="align-items:center;border:1px solid transparent;cursor:default;display:flex;flex-direction:row;padding:3px NaNpx 3px 10px;white-space:nowrap;"
+  >
+    Bayas
+  </div>
+  <div
+    id="true"
+    style="align-items:center;border:1px solid transparent;cursor:default;display:flex;flex-direction:row;padding:3px NaNpx 3px 10px;white-space:nowrap;"
+  >
+    true
+  </div>
+  <div
+    id="\"c\""
+    style="align-items:center;border:1px solid transparent;cursor:default;display:flex;flex-direction:row;padding:3px NaNpx 3px 10px;white-space:nowrap;"
+  >
+    C
+  </div>
 </div>
 `;

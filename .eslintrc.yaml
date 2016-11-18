@@ -71,3 +71,4 @@ globals:
   HTMLInputElement: false
   # Jest
   $: false
+  mockComponent: false

@@ -182,9 +182,9 @@ const specs = {
     // chokidar: '1.6.0',
 
     // React
-    react:                              '^15.3.0',
-    'react-dom':                        '^15.3.0',
-    'react-addons-perf':                '^15.3.0',
+    react:                              '^15.4.0',
+    'react-dom':                        '^15.4.0',
+    'react-addons-perf':                '^15.4.0',
 
     // Babel (except babel-eslint)
     'babel-cli': '6.16.0',
@@ -222,9 +222,9 @@ const specs = {
 
     // Testing
     'jest': '17.0.2',
-    'jest-html': '^1.2.1',
-    'react-test-renderer': '15.3.2',
     'babel-jest': '17.0.2',
+    'jest-html': '^1.2.1',
+    'react-test-renderer': '15.4.0',
 
     // Coverage testing
     'nyc': '8.4.0',
