@@ -33,42 +33,44 @@ import { bindAll }          from '../gral/helpers';
 // --   you can attach to your target DOM elements
 // -- * **onHoverStop** *(ev: SyntheticMouseEvent) => void*: `onMouseLeave` event handler
 // --   you can attach to your target DOM elements
-type HoverEventHandlerT = (ev: SyntheticMouseEvent) => void;
-type HoveringT = ?(string|number|boolean);
+type HoverEventHandler = (ev: SyntheticMouseEvent) => void;
+type Hovering = ?(string|number|boolean);
 
-type OwnPropsT = {
-  hovering: HoveringT,
-  onHoverStart: HoverEventHandlerT,
-  onHoverStop: HoverEventHandlerT,
+type OwnProps = {
+  // hovering: Hovering,
+  onHoverStart?: HoverEventHandler,
+  onHoverStop?: HoverEventHandler,
 };
-type OwnDefaultPropsT = OwnPropsT;  // all HOC props are optional
+// type OwnDefaultProps = OwnProps;  // all HOC props are optional
 
-type PropsT<P, DP> = $Subtype<$Diff<$Diff<P & OwnPropsT, DP>, OwnDefaultPropsT>>;
+// type Props<P, DP> = $Subtype<$Diff<$Diff<P & OwnProps, DP>, OwnDefaultProps>>;
+type Props<P, DP> = $Subtype<$Diff<P & OwnProps, DP>>;
 
-type StateT = {
-  hovering: ?(string|number|boolean),
+type State = {
+  hovering: Hovering,
 };
 
-export type HoverablePropsT = {
-  hovering: HoveringT,
-  onHoverStart: HoverEventHandlerT,
-  onHoverStop: HoverEventHandlerT,
+// Passed down by this HOC
+export type HoverableProps = {
+  hovering: Hovering,
+  onHoverStart: HoverEventHandler,
+  onHoverStop: HoverEventHandler,
 };
 
 function hoverable<DP, P, St>(
   ComposedComponent: Class<React$Component<DP, P, St>>
-): Class<React$Component<void, PropsT<P, DP>, StateT>> {
+): Class<React$Component<void, Props<P, DP>, State>> {
   const composedComponentName = ComposedComponent.displayName ||
     ComposedComponent.name || 'Component';
   const hocDisplayName = `Hoverable(${composedComponentName})`;
 
   class Derived extends React.Component {
-    props: PropsT<P, DP>
-    state: StateT;
+    props: Props<P, DP>
+    state: State;
 
     static displayName = hocDisplayName;
 
-    constructor(props: PropsT<P, DP>) {
+    constructor(props: Props<P, DP>) {
       super(props);
       this.state = { hovering: null };
       bindAll(this, [

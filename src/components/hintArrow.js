@@ -9,25 +9,25 @@ import {
   vectorNormalize as normalize,
   degToRad,
 }                           from '../gral/math';
-import type { Point2T }     from '../gral/math';
+import type { Point2 }     from '../gral/math';
 
-const vec = (V: Point2T) => `${V.x},${V.y}`;
+const vec = (V: Point2) => `${V.x},${V.y}`;
 
 // ==========================================
 // Component
 // ==========================================
-type PropsT = {
-  from: Point2T,
-  to: Point2T,
+type Props = {
+  from: Point2,
+  to: Point2,
   curveFactor: number,
   arrowSize: number,
   arrowAngle: number,
   counterclockwise: boolean,
 }
-export type HintArrowPropsT = PropsT;
+export type HintArrowProps = Props;
 
 class HintArrow extends React.Component {
-  props: PropsT;
+  props: Props;
   static defaultProps = {
     curveFactor: 0.7,  // 0.6...2
     arrowSize: 10,

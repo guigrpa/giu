@@ -2,6 +2,7 @@
 
 import React                from 'react';
 import { createStore }      from 'redux';
+import type { Reducer }     from 'redux';
 import {
   addLast, removeAt,
   set as timmSet,
@@ -18,38 +19,38 @@ import { MISC }             from '../gral/constants';
 import {
   boxWithShadow,
 }                           from '../gral/styles';
+import type { Action }      from '../gral/types';
 
 const PROP_KEYS_TO_REMOVE_FROM_FLOAT_DIV = [
   'position', 'align', 'zIndex', 'limitSize', 'getAnchorNode',
 ];
 
-type PositionT = 'above' | 'below';
-type AlignT = 'left' | 'right';
-type FloatUserParsT = {
+type Position = 'above' | 'below';
+type Align = 'left' | 'right';
+type FloatUserPars = {
   id: string,
-  position?: ?PositionT,
-  align?: ?AlignT,
+  position?: ?Position,
+  align?: ?Align,
   zIndex?: number,
   limitSize?: boolean,
   getAnchorNode: () => ?Node,
   style?: Object,
   noStyleShadow?: boolean,
 };
-type FloatStateParsT = {
+type FloatStatePars = {
   id: string,
-  position?: ?PositionT,
-  align?: ?AlignT,
+  position?: ?Position,
+  align?: ?Align,
   zIndex: number,
   limitSize: boolean,
   getAnchorNode: () => ?Node,
   style?: Object,
   noStyleShadow?: boolean,
 };
-type StateT = {
+type State = {
   cntReposition: number,
-  floats: Array<FloatStateParsT>,
+  floats: Array<FloatStatePars>,
 };
-type ActionT = Object;
 
 // ==========================================
 // Store, reducer
@@ -57,11 +58,11 @@ type ActionT = Object;
 let store: Object;
 function initStore() { store = createStore(reducer); }
 
-const INITIAL_STATE: StateT = {
+const INITIAL_STATE: State = {
   cntReposition: 0,
   floats: [],
 };
-function reducer(state0: StateT = INITIAL_STATE, action: ActionT): StateT {
+const reducer: Reducer<State, Action> = (state0 = INITIAL_STATE, action) => {
   let state = state0;
   let idx;
   let id;
@@ -91,7 +92,7 @@ function reducer(state0: StateT = INITIAL_STATE, action: ActionT): StateT {
       break;
   }
   return state;
-}
+};
 
 // ==========================================
 // Action creators
@@ -102,25 +103,25 @@ const DEFAULT_FLOAT_PARS = {
   limitSize: false,
 };
 const actions = {
-  floatAdd: (initialPars: FloatUserParsT) => {
+  floatAdd: (initialPars: FloatUserPars) => {
     const id = `float_${cntId}`;
     cntId += 1;
     const pars = addDefaults(initialPars, DEFAULT_FLOAT_PARS, { id });
     return { type: 'FLOAT_ADD', pars };
   },
   floatDelete: (id: string) => ({ type: 'FLOAT_DELETE', id }),
-  floatUpdate: (id: string, pars: FloatUserParsT) => ({ type: 'FLOAT_UPDATE', id, pars }),
+  floatUpdate: (id: string, pars: FloatUserPars) => ({ type: 'FLOAT_UPDATE', id, pars }),
   floatReposition: () => ({ type: 'FLOAT_REPOSITION' }),
 };
 
 // Imperative dispatching
-const floatAdd = (pars: FloatUserParsT): string => {
+const floatAdd = (pars: FloatUserPars): string => {
   const action = actions.floatAdd(pars);
   store.dispatch(action);
   return action.pars.id;
 };
 const floatDelete = (id: string) => store.dispatch(actions.floatDelete(id));
-const floatUpdate = (id: string, pars: FloatUserParsT) =>
+const floatUpdate = (id: string, pars: FloatUserPars) =>
   store.dispatch(actions.floatUpdate(id, pars));
 const floatReposition = () => store && store.dispatch(actions.floatReposition());
 
@@ -140,7 +141,7 @@ try {
 // ==========================================
 // Position and visibility calculation
 // ==========================================
-function isAnchorVisible({ getAnchorNode }: FloatStateParsT) {
+function isAnchorVisible({ getAnchorNode }: FloatStatePars) {
   const anchorNode = getAnchorNode();
   if (!anchorNode) return null;
   return isVisible(anchorNode);
@@ -156,9 +157,9 @@ type PropsT = {};
 
 class Floats extends React.PureComponent {
   props: PropsT;
-  prevState: StateT;
-  curState: StateT;
-  floats: Array<FloatStateParsT>;
+  prevState: State;
+  curState: State;
+  floats: Array<FloatStatePars>;
   storeUnsubscribe: () => void;
   refFloats: Array<?Object>;
 
@@ -204,7 +205,7 @@ class Floats extends React.PureComponent {
     );
   }
 
-  renderFloat(props: FloatStateParsT, idx: number) {
+  renderFloat(props: FloatStatePars, idx: number) {
     if (!isAnchorVisible(props)) return null;
     const { id, zIndex } = props;
     return (
@@ -237,7 +238,7 @@ class Floats extends React.PureComponent {
     });
   }
 
-  repositionFloat(float: FloatStateParsT, idx: number) {
+  repositionFloat(float: FloatStatePars, idx: number) {
     const ref = this.refFloats[idx];
     if (!ref) return;
 
@@ -344,7 +345,7 @@ const style = {
     height: 0,
     zIndex,
   }),
-  floatInitial: ({ style: baseStyle, noStyleShadow }: FloatStateParsT) => {
+  floatInitial: ({ style: baseStyle, noStyleShadow }: FloatStatePars) => {
     let out = {
       position: 'fixed',
       top: 0,
@@ -372,7 +373,6 @@ function warnFloats(componentName: string) {
   if (!isFloatsMounted()) console.warn(floatsWarning(componentName));
   /* eslint-enable no-console */
 }
-
 
 // ==========================================
 // Public API

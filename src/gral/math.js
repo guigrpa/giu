@@ -1,28 +1,28 @@
 // @flow
 
-export type Point2T = {
+export type Point2 = {
   x: number,
   y: number,
 };
 
-const vectorNorm = (V: Point2T): number =>
+const vectorNorm = (V: Point2): number =>
   Math.sqrt((V.x * V.x) + (V.y * V.y));
 
-const vectorNormalize = (V: Point2T): Point2T => {
+const vectorNormalize = (V: Point2): Point2 => {
   const v = vectorNorm(V);
   return vectorMult(V, (1 / v));
 };
 
-const vectorCompose = (V1: Point2T, alpha: number, V2: Point2T, beta: number): Point2T => ({
+const vectorCompose = (V1: Point2, alpha: number, V2: Point2, beta: number): Point2 => ({
   x: (alpha * V1.x) + (beta * V2.x),
   y: (alpha * V1.y) + (beta * V2.y),
 });
 
-const vectorAdd = (V1: Point2T, V2: Point2T): Point2T => ({ x: V1.x + V2.x, y: V1.y + V2.y });
-const vectorSub = (V1: Point2T, V2: Point2T): Point2T => ({ x: V1.x - V2.x, y: V1.y - V2.y });
-const vectorMult = (V: Point2T, alpha: number): Point2T => ({ x: alpha * V.x, y: alpha * V.y });
+const vectorAdd = (V1: Point2, V2: Point2): Point2 => ({ x: V1.x + V2.x, y: V1.y + V2.y });
+const vectorSub = (V1: Point2, V2: Point2): Point2 => ({ x: V1.x - V2.x, y: V1.y - V2.y });
+const vectorMult = (V: Point2, alpha: number): Point2 => ({ x: alpha * V.x, y: alpha * V.y });
 
-const vectorRotate = (V: Point2T, radians: number): Point2T => {
+const vectorRotate = (V: Point2, radians: number): Point2 => {
   const cos = Math.cos(radians);
   const sin = Math.sin(radians);
   return {

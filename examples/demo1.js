@@ -32,14 +32,6 @@ import {
 
 require('babel-polyfill');
 
-if (process.env.NODE_ENV !== 'production') {
-  try {
-    /*  eslint-disable global-require */
-    window.ReactPerf = require('react-addons-perf');
-    /*  eslint-enable global-require */
-  } catch (err) { /* ignore */ }
-}
-
 const { floor, random } = Math;
 const randomInt = (min, max) => min + floor(random() * (max - min + 1));
 const sample = (arr) => arr[randomInt(0, arr.length - 1)];

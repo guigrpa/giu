@@ -4,7 +4,7 @@ import keycode              from 'keycode';
 import { UNICODE, IS_MAC }  from '../gral/constants';
 import { cancelEvent }      from '../gral/helpers';
 
-export type KeyboardEventParsT = {
+export type KeyboardEventPars = {
   altKey: boolean,
   metaKey: boolean,
   ctrlKey: boolean,
@@ -12,7 +12,7 @@ export type KeyboardEventParsT = {
   keyCode: number,
   which: number,
 };
-export type KeyboardShortcutT = {
+export type KeyboardShortcut = {
   altKey: boolean,
   metaKey: boolean,
   ctrlKey: boolean,
@@ -38,7 +38,7 @@ function getHash({ keyCode, altKey, metaKey, ctrlKey, shiftKey }: {
     `shift=${String(shiftKey)}`;
 }
 
-function createShortcut(keySpec: string): KeyboardShortcutT {
+function createShortcut(keySpec: string): KeyboardShortcut {
   const shortcut = {};
   shortcut.keyCode = -1;
   shortcut.altKey = false;
@@ -81,11 +81,11 @@ function createShortcut(keySpec: string): KeyboardShortcutT {
   return shortcut;
 }
 
-function registerShortcut(shortcut: KeyboardShortcutT, cb: KeyboardShortcutCallbackT) {
+function registerShortcut(shortcut: KeyboardShortcut, cb: KeyboardShortcutCallbackT) {
   shortcuts[shortcut.hash] = cb;
 }
 
-function unregisterShortcut(shortcut: KeyboardShortcutT) { delete shortcuts[shortcut.hash]; }
+function unregisterShortcut(shortcut: KeyboardShortcut) { delete shortcuts[shortcut.hash]; }
 
 function isAnyModifierPressed(ev: SyntheticKeyboardEvent): boolean {
   return ev.altKey || ev.metaKey || ev.ctrlKey || ev.shiftKey;

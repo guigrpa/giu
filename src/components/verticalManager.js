@@ -12,7 +12,7 @@ import { bindAll }          from '../gral/helpers';
 // mean its child component gets re-rendered (this is more efficient than
 // react-virtualized when using its CellMeasurer component).
 
-type PropsT = {
+type Props = {
   registerOuterRef?: (ref: any) => void,
   id: string,
   index: number,
@@ -23,7 +23,7 @@ type PropsT = {
 };
 
 class VerticalManager extends React.Component {
-  static propTypes: PropsT;
+  static propTypes: Props;
   static defaultProps = {
     childProps: {},
   };
@@ -31,7 +31,7 @@ class VerticalManager extends React.Component {
   throttledMeasureHeight: () => void;
   refVerticalManager: ?Object;
 
-  constructor(props: PropsT) {
+  constructor(props: Props) {
     super(props);
     bindAll(this, [
       'measureHeight',

@@ -18,7 +18,7 @@ require('font-awesome/css/font-awesome.css');
 // -- * **disabled?** *boolean*
 // -- * **style?** *Object*: merged with the `i` element style
 // -- * *All other props are passed through to the `i` element*
-type PropsT = {
+type Props = {
   icon: string,
   size?: 'lg' | '2x' | '3x' | '4x' | '5x',
   fixedWidth?: boolean,
@@ -30,7 +30,7 @@ type PropsT = {
 const FILTERED_PROPS = ['icon', 'size', 'fixedWidth', 'spin', 'disabled', 'style'];
 
 class Icon extends React.PureComponent {
-  props: PropsT;
+  props: Props;
 
   render() {
     const { icon, size, fixedWidth, spin, disabled } = this.props;

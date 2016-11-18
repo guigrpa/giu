@@ -8,20 +8,22 @@
 // ----------------------------------------
 // Moment
 // ----------------------------------------
-export type MomentT = moment$Moment;
+export type Moment = moment$Moment;
 
 // ========================================
 // Other
 // ========================================
-export type ChoiceT = {|
+export type Choice = {|
   value: any,
   label?: string,
   keys?: Array<string>,
   onClick?: (ev: SyntheticEvent) => void,
 |};
 
-type CommandTypeT = 'FOCUS' | 'BLUR' | 'REVERT';
+type CommandType = 'FOCUS' | 'BLUR' | 'REVERT';
 
-export type CommandT = {|
-  type: CommandTypeT,
+export type Command = {|
+  type: CommandType,
 |};
+
+export type Action = $Subtype<{ type: string }>;

@@ -3,14 +3,14 @@
 import React                from 'react';
 import { omit, merge }      from 'timm';
 import type {
-  ChoiceT,
-  CommandT,
+  Choice,
+  Command,
 }                           from '../gral/types';
 import { COLORS }           from '../gral/constants';
 import { bindAll }          from '../gral/helpers';
 import { isDark }           from '../gral/styles';
 import hoverable            from '../hocs/hoverable';
-import type { HoverablePropsT } from '../hocs/hoverable';
+import type { HoverableProps } from '../hocs/hoverable';
 import Select               from '../inputs/select';
 
 // ==========================================
@@ -18,7 +18,7 @@ import Select               from '../inputs/select';
 // ==========================================
 // -- Props:
 // --
-// -- * **items** *Array<ChoiceT>*: menu items, similar to [Select](#select)
+// -- * **items** *Array<Choice>*: menu items, similar to [Select](#select)
 // --   but with the inclusion of an `onClick` callback:
 // --   - **value** *any*: any value that can be converted to JSON. Values should be unique
 // --   - **label?** *string*: descriptive string that will be shown to the user
@@ -36,8 +36,8 @@ import Select               from '../inputs/select';
 // -- * **accentColor?** *string*: CSS color descriptor (e.g. `darkgray`, `#ccffaa`...)
 // -- * *All other props are passed through to the Select input component*
 
-type PublicPropsT = {
-  items: Array<ChoiceT>,
+type PublicProps = {
+  items: Array<Choice>,
   lang?: string,
   children: any,
   onClickItem?: (ev: SyntheticMouseEvent, val: any) => void,
@@ -45,23 +45,23 @@ type PublicPropsT = {
   accentColor: string,
   // all others are passed through unchanged
 };
-type PropsT = PublicPropsT & HoverablePropsT;
+type Props = PublicProps & HoverableProps;
 const FILTERED_PROPS = [
   'items', 'lang', 'children', 'onClickItem', 'style', 'accentColor',
 ];
 
 class DropDownMenu extends React.PureComponent {
-  props: PropsT;
+  props: Props;
   state: {
     fFocused: boolean,
-    cmds: ?Array<CommandT>,
+    cmds: ?Array<Command>,
   };
 
   static defaultProps = {
     accentColor:            COLORS.accent,
   };
 
-  constructor(props: PropsT) {
+  constructor(props: Props) {
     super(props);
     this.state = {
       fFocused: false,

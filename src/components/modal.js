@@ -62,7 +62,7 @@ class ModalExample extends React.Component {
 }
 ```
 -- */
-export type ModalButtonT = {
+export type ModalButton = {
   left?: boolean,
   label?: any,
   defaultButton?: boolean,
@@ -70,27 +70,27 @@ export type ModalButtonT = {
   style?: Object,
 };
 
-type PropsT = {
+type Props = {
   id?: string,
   title?: string,
   children?: any,
-  buttons: Array<ModalButtonT>,
+  buttons: Array<ModalButton>,
   onClickBackdrop?: (ev: SyntheticMouseEvent) => void,
   onEsc?: (ev: SyntheticKeyboardEvent) => void,
   style?: Object,
   zIndex: number,
 };
-export type ModalParsT = $Shape<PropsT>;  // all are optional
+export type ModalPars = $Shape<Props>;  // all are optional
 
 class Modal extends React.PureComponent {
-  props: PropsT;
+  props: Props;
   static defaultProps = {
-    buttons:                ([]: Array<ModalButtonT>),
+    buttons:                ([]: Array<ModalButton>),
     zIndex:                 MISC.zModalBase,
   }
   refFocusCapture: any;
 
-  constructor(props: PropsT) {
+  constructor(props: Props) {
     super(props);
     bindAll(this, [
       'onKeyDown',
@@ -163,7 +163,7 @@ class Modal extends React.PureComponent {
     );
   }
 
-  renderButtons(buttons: Array<ModalButtonT>) {
+  renderButtons(buttons: Array<ModalButton>) {
     return (
       <div style={style.buttons}>
         {buttons.filter((o) => !!o.left).map(this.renderButton)}
@@ -173,7 +173,7 @@ class Modal extends React.PureComponent {
     );
   }
 
-  renderButton(btn: ModalButtonT, idx: number) {
+  renderButton(btn: ModalButton, idx: number) {
     const { label, onClick } = btn;
     return (
       <Button key={idx}

@@ -10,7 +10,7 @@ import {
 }                           from '../gral/helpers';
 import { getScrollbarWidth } from '../gral/constants';
 import { scrollIntoView }   from '../gral/visibility';
-import type { ScrollIntoViewOptionsT } from '../gral/visibility';
+import type { ScrollIntoViewOptions } from '../gral/visibility';
 import VerticalManager      from './verticalManager';
 
 const MAX_ROWS_INITIAL_RENDER = 20;
@@ -23,7 +23,7 @@ const DEBUG = false && process.env.NODE_ENV !== 'production';
 // ===============================================================
 // Component
 // ===============================================================
-type PropsT = {
+type Props = {
   itemsById: Object,
   shownIds: Array<string>,
   alwaysRenderIds: Array<string>,
@@ -47,7 +47,7 @@ type PropsT = {
 };
 
 class VirtualScroller extends React.PureComponent {
-  static propTypes: PropsT;
+  static propTypes: Props;
   static defaultProps = {
     itemsById:              {},
     shownIds:               ([]: Array<string>),
@@ -67,7 +67,7 @@ class VirtualScroller extends React.PureComponent {
   totalHeight: ?number;
   pendingHeights: Array<string>;
   pendingScrollToId: ?string;
-  pendingScrollToIdOptions: ?ScrollIntoViewOptionsT;
+  pendingScrollToIdOptions: ?ScrollIntoViewOptions;
   minHeight: number;
   avgHeight: ?number;
   scrollTop: number;
@@ -80,7 +80,7 @@ class VirtualScroller extends React.PureComponent {
   refItems: { [key: string]: ?Object };
   refScroller: ?Object;
 
-  constructor(props: PropsT) {
+  constructor(props: Props) {
     super(props);
 
     // If the row height is specified (and hence uniform), important optimisations apply.
@@ -133,7 +133,7 @@ class VirtualScroller extends React.PureComponent {
     if (this.timerCheckScrollbar != null) clearInterval(this.timerCheckScrollbar);
   }
 
-  componentWillReceiveProps(nextProps: PropsT) {
+  componentWillReceiveProps(nextProps: Props) {
     if (nextProps.shownIds !== this.props.shownIds) {
       this.recalcTops(nextProps);
     }
@@ -225,7 +225,7 @@ class VirtualScroller extends React.PureComponent {
     this.recalcViewport();
   }
 
-  scrollIntoView(id: string, options: ?ScrollIntoViewOptionsT) {
+  scrollIntoView(id: string, options: ?ScrollIntoViewOptions) {
     if (id == null) return;
     if (!this.doScrollToId(id, options)) {
       const idx = this.props.shownIds.indexOf(id);
@@ -240,7 +240,7 @@ class VirtualScroller extends React.PureComponent {
     }
   }
 
-  doScrollToId(id: string, options: ?ScrollIntoViewOptionsT) {
+  doScrollToId(id: string, options: ?ScrollIntoViewOptions) {
     // Check whether the node is correctly positioned (in case of unknown rowHeight)
     if (this.rowHeight == null) {
       const top = this.rowTops[id];
@@ -517,7 +517,7 @@ class VirtualScroller extends React.PureComponent {
     }
   }
 
-  recalcTops(props: PropsT) {
+  recalcTops(props: Props) {
     // console.log('Recalculating tops...');
     const { shownIds } = props;
     let top = 0;

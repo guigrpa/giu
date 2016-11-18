@@ -4,14 +4,16 @@
 
 import React                from 'react';
 import { createStore }      from 'redux';
+import type { Reducer }     from 'redux';
 import {
   addLast,
   removeAt,
   set as timmSet,
 }                           from 'timm';
 import { MISC }             from '../gral/constants';
+import type { Action }      from '../gral/types';
 import Modal                from './modal';
-import type { ModalParsT } from './modal';
+import type { ModalPars }   from './modal';
 
 /* --
 **Include the `<Modals />` component at (or near)
@@ -46,10 +48,10 @@ class ModalExample extends React.Component {
 API reference:
 
 * **modalPush()**: creates a modal and pushes it on top of the stack:
-  - **pars** *ModalParsT*: modal parameters:
+  - **pars** *ModalPars*: modal parameters:
     * **title?** *string*: modal title displayed to the user
     * **children?** *any*: body of the modal
-    * **buttons?** *Array<ModalButtonT>*: button objects:
+    * **buttons?** *Array<ModalButton>*: button objects:
       - **left?** *boolean = false*: align button left instead of right
       - **label?** *any*: button text or other contents
       - **defaultButton?** *boolean*: will be highlighted and
@@ -65,8 +67,7 @@ API reference:
 * **modalPop()**: removes the modal currently at the top of the stack
 -- */
 
-type StateT = Array<ModalParsT>;
-type ActionT = Object;
+type State = Array<ModalPars>;
 
 // ==========================================
 // Store, reducer
@@ -74,8 +75,8 @@ type ActionT = Object;
 let store: Object;
 function initStore() { store = createStore(reducer); }
 
-const INITIAL_STATE: StateT = [];
-function reducer(state0: StateT = INITIAL_STATE, action: ActionT): StateT {
+const INITIAL_STATE: State = [];
+const reducer: Reducer<State, Action> = (state0 = INITIAL_STATE, action) => {
   let state = state0;
   switch (action.type) {
     case 'MODAL_PUSH':
@@ -88,14 +89,14 @@ function reducer(state0: StateT = INITIAL_STATE, action: ActionT): StateT {
       break;
   }
   return state;
-}
+};
 
 // ==========================================
 // Action creators
 // ==========================================
 let cntId = 0;
 const actions = {
-  modalPush: (pars: ModalParsT) => ({
+  modalPush: (pars: ModalPars) => ({
     type: 'MODAL_PUSH',
     pars: timmSet(pars, 'id', `modal_${cntId++}`),
   }),
@@ -103,7 +104,7 @@ const actions = {
 };
 
 // Imperative dispatching
-const modalPush = (pars: ModalParsT) => {
+const modalPush = (pars: ModalPars) => {
   const action = actions.modalPush(pars);
   store.dispatch(action);
   return action.pars.id;
@@ -113,18 +114,18 @@ const modalPop = () => store.dispatch(actions.modalPop());
 // ==========================================
 // Modals component
 // ==========================================
-type PropsT = {
-  modals: StateT,
+type Props = {
+  modals: State,
 };
 
 class Modals extends React.PureComponent {
-  props: PropsT;
+  props: Props;
   storeUnsubscribe: () => void;
   refModals: Array<any>;
-  prevModals: StateT;
+  prevModals: State;
   fPopped: boolean;
 
-  constructor(props: PropsT) {
+  constructor(props: Props) {
     super(props);
     this.refModals = [];
     this.prevModals = [];

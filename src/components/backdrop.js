@@ -9,12 +9,12 @@ import { IS_IOS }           from '../gral/constants';
 // Component
 // ==========================================
 // All props are forwarded to the child `<div>`
-type PropsT = {
+type Props = {
   style?: Object,
 };
 
 class Backdrop extends React.PureComponent {
-  props: PropsT;
+  props: Props;
 
   render() {
     return (

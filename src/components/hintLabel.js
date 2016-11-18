@@ -6,21 +6,21 @@ import { merge }            from 'timm';
 // ==========================================
 // Component
 // ==========================================
-type AlignTypeT = 'left' | 'right' | 'center';
-type PropsT = {
+type AlignType = 'left' | 'right' | 'center';
+type Props = {
   x: number,
   y: number,
-  align: AlignTypeT,
+  align: AlignType,
   children?: any,
   fontSize: number,
   style?: Object,
 };
-export type HintLabelPropsT = PropsT;
+export type HintLabelProps = Props;
 
 class HintLabel extends React.Component {
-  props: PropsT;
+  props: Props;
   static defaultProps = {
-    align: ('left': AlignTypeT),
+    align: ('left': AlignType),
   }
 
   // ==========================================

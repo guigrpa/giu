@@ -11,14 +11,14 @@ import {
 // ==========================================
 // Component
 // ==========================================
-type PropsT = {
+type Props = {
   disabled?: boolean,
   registerRef?: (ref: any) => void,
 };
 const FILTERED_PROPS = ['disabled', 'registerRef'];
 
 class FocusCapture extends React.Component {
-  props: PropsT;
+  props: Props;
 
   render() {
     const { registerRef, disabled } = this.props;

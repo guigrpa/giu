@@ -16,7 +16,7 @@ import { COLORS }           from '../gral/constants';
 // -- * **disabled?** *boolean*
 // -- * **style?** *Object*: merged with the `span` style
 // -- * *All other props are passed through to the `span` element*
-type PropsT = {
+type Props = {
   plain?: boolean,
   children?: any,
   onClick?: (ev: SyntheticMouseEvent) => void,
@@ -27,7 +27,7 @@ type PropsT = {
 const FILTERED_PROPS = ['plain', 'children', 'onClick', 'disabled', 'style'];
 
 class Button extends React.PureComponent {
-  props: PropsT;
+  props: Props;
 
   render() {
     const { children, disabled, onClick } = this.props;

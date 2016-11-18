@@ -1,7 +1,7 @@
 // @flow
 
 import moment from '../vendor/moment';
-import type { MomentT }     from '../gral/types';
+import type { Moment }     from '../gral/types';
 
 function getUtcFlag(
   fDate: boolean,
@@ -11,7 +11,7 @@ function getUtcFlag(
   return fUtc != null ? fUtc : !(fDate && fTime);
 }
 
-function startOfToday(fUtc: boolean): MomentT {
+function startOfToday(fUtc: boolean): Moment {
   const out = moment().startOf('day'); // local
   if (fUtc) {
     const mins: number = (out.utcOffset(): any);
@@ -20,12 +20,12 @@ function startOfToday(fUtc: boolean): MomentT {
   return out;
 }
 
-function startOfDefaultDay(fUtc: boolean): MomentT {
+function startOfDefaultDay(fUtc: boolean): Moment {
   const fnMoment = fUtc ? moment.utc : moment;
   return fnMoment({ year: 2013, month: 3, date: 27 }); // ;)
 }
 
-function getTimeInSecs(mom: MomentT): number {
+function getTimeInSecs(mom: Moment): number {
   return (mom.hours() * 3600) + (mom.minutes() * 60) + mom.seconds();
 }
 

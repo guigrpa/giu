@@ -9,18 +9,18 @@ import {
 }                           from '../gral/styles';
 import { COLORS }           from '../gral/constants';
 import hoverable            from '../hocs/hoverable';
-import type { HoverablePropsT } from '../hocs/hoverable';
+import type { HoverableProps } from '../hocs/hoverable';
 import Icon                 from './icon';
 
 // ==========================================
 // Component
 // ==========================================
-export type NotificationTypeT = 'info' | 'success' | 'warn' | 'error';
+export type NotificationType = 'info' | 'success' | 'warn' | 'error';
 
-type PublicPropsT = {
+type PublicProps = {
   id?: string,
   name?: string,
-  type: NotificationTypeT,
+  type: NotificationType,
   icon: string,
   iconSpin?: boolean,
   title?: string,
@@ -30,14 +30,14 @@ type PublicPropsT = {
   noStylePosition?: boolean,
   noStyleShadow?: boolean,
 };
-type PropsT = PublicPropsT & HoverablePropsT;
-export type NotificationParsT = $Shape<PublicPropsT>;  // all are optional
+type Props = PublicProps & HoverableProps;
+export type NotificationPars = $Shape<PublicProps>;  // all are optional
 
 class Notification extends React.PureComponent {
-  props: PropsT;
+  props: Props;
 
   static defaultProps = {
-    type:                   ('info': NotificationTypeT),
+    type:                   ('info': NotificationType),
     icon:                   'exclamation',
   };
 

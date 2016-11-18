@@ -7,7 +7,7 @@ import {
 }                           from '../gral/helpers';
 import { MISC }             from '../gral/constants';
 
-export type ScrollIntoViewOptionsT = {
+export type ScrollIntoViewOptions = {
   fHoriz?: ?boolean,
   topAncestor?: ?Node,
 };
@@ -36,7 +36,7 @@ function isVisible(node: ?Node, bcr0?: ClientRect): boolean {
 function _getCroppingAncestor(
   refBcr: ClientRect,
   ancestor: ?Node,
-  options?: ScrollIntoViewOptionsT = {},
+  options?: ScrollIntoViewOptions = {},
 ): ?Node {
   const { fHoriz, topAncestor } = options;
   if (!ancestor || !(ancestor instanceof HTMLElement)) {
@@ -92,14 +92,14 @@ function _getCroppingAncestor(
 // --   - **topAncestor?** *?Node*: stop the recursive algorithm at this
 // --     ancestor (otherwise stops at the root level or when a `Modal`
 // --     ancestor is reached)
-function scrollIntoView(node: ?Node, options?: ?ScrollIntoViewOptionsT = {}) {
+function scrollIntoView(node: ?Node, options?: ?ScrollIntoViewOptions = {}) {
   if (!node) return;
   if (!(node instanceof Element)) return;
   _scrollIntoView(node, timmSet(options, 'fHoriz', false));
   _scrollIntoView(node, timmSet(options, 'fHoriz', true));
 }
 
-function _scrollIntoView(node: Element, options: ScrollIntoViewOptionsT) {
+function _scrollIntoView(node: Element, options: ScrollIntoViewOptions) {
   let bcr = node.getBoundingClientRect();
   const { fHoriz, topAncestor } = options;
   let ancestor: ?Object = _getCroppingAncestor(bcr, node.parentNode, options);

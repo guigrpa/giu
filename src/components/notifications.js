@@ -7,6 +7,7 @@ import {
   createStore,
   applyMiddleware,
 }                           from 'redux';
+import type { Reducer }     from 'redux';
 import thunk                from 'redux-thunk';
 import {
   updateIn,
@@ -16,8 +17,9 @@ import {
 }                           from 'timm';
 import { MISC }             from '../gral/constants';
 import { bindAll }          from '../gral/helpers';
+import type { Action }      from '../gral/types';
 import Notification         from './notification';
-import type { NotificationParsT } from './notification';
+import type { NotificationPars } from './notification';
 
 /* --
 **Include the `<Notifications />` component at (or near)
@@ -35,7 +37,7 @@ const NotifExample = () =>
 API reference:
 
 * **notify()**: creates a notification:
-  - **pars** *NotificationParsT*: notification parameters:
+  - **pars** *NotificationPars*: notification parameters:
     + **sticky?** *boolean*: never delete this notification
     + **timeOut?** *number = 4000*: time [ms] after which it's deleted
     + **name?** *string*: a user-provided name for the notification
@@ -55,17 +57,16 @@ API reference:
 * **notifDeleteByName()**: deletes a notification:
   - **name** *string*: name of the notification to be deleted
 -- */
-type NotificationHandlingParsT = {
+type NotificationHandlingPars = {
   sticky?: boolean,
   timeout?: number,
 };
-type NotificationUserParsT = NotificationParsT & NotificationHandlingParsT;
-type NotificationStateParsT = NotificationUserParsT & {
+type NotificationUserPars = NotificationPars & NotificationHandlingPars;
+type NotificationStatePars = NotificationUserPars & {
   retained?: boolean
 };
 
-type StateT = Array<NotificationStateParsT>;
-type ActionT = Object;
+type State = Array<NotificationStatePars>;
 
 // ==========================================
 // Store, reducer
@@ -76,8 +77,8 @@ function initStore() {
   store = createStore(reducer, storeEnhancers);
 }
 
-const INITIAL_STATE: StateT = [];
-function reducer(state0: StateT = INITIAL_STATE, action: ActionT): StateT {
+const INITIAL_STATE: State = [];
+const reducer: Reducer<State, Action> = (state0 = INITIAL_STATE, action) => {
   let state = state0;
   let id;
   let name;
@@ -111,7 +112,7 @@ function reducer(state0: StateT = INITIAL_STATE, action: ActionT): StateT {
       break;
   }
   return state;
-}
+};
 
 // ==========================================
 // Action creators
@@ -129,7 +130,7 @@ const DEFAULT_NOTIF_PARS = {
   msg:        '',
 };
 const actions = {
-  notify: (initialPars: NotificationUserParsT) => (dispatch: Function) => {
+  notify: (initialPars: NotificationUserPars) => (dispatch: Function) => {
     const id = `notif_${cntId++}`;
     const pars = addDefaults(initialPars, DEFAULT_NOTIF_PARS, { id });
     dispatch({ type: 'NOTIFY', pars });
@@ -146,7 +147,7 @@ const actions = {
 };
 
 // Imperative dispatching
-const notify = (initialPars: NotificationUserParsT): string => {
+const notify = (initialPars: NotificationUserPars): string => {
   const pars = store.dispatch(actions.notify(initialPars));
   return pars.id;
 };
@@ -157,15 +158,15 @@ const notifDeleteByName = (name: string) => store.dispatch(actions.notifDeleteBy
 // ==========================================
 // Notifications component
 // ==========================================
-type PropsT = {
-  notifs?: StateT,
+type Props = {
+  notifs?: State,
 };
 
 class Notifications extends React.PureComponent {
-  props: PropsT;
+  props: Props;
   storeUnsubscribe: () => void;
 
-  constructor(props: PropsT) {
+  constructor(props: Props) {
     super(props);
     bindAll(this, [
       'onRetain',
@@ -187,7 +188,7 @@ class Notifications extends React.PureComponent {
         className="giu-notifications"
         style={style.outer}
       >
-        {notifs.map((props) =>
+        {notifs.map((props: NotificationStatePars) =>
           <Notification key={props.id}
             {...props}
             onHoverStart={this.onRetain}

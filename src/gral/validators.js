@@ -28,31 +28,31 @@ isDate()
 ```
 -- */
 
-export type ValidationFunctionT = (
+export type ValidationFunction = (
   val: any,
   props: Object,
   context: Object
 ) => (Promise<?string> | ?string);
 
-type ErrorMessageFunctionT = (
+type ErrorMessageFunction = (
   defaultErrorMsg: string,
   val: any,
   ...args: any
 ) => string;
 
-type CustomErrorMessageT = string | ErrorMessageFunctionT;
+type CustomErrorMessage = string | ErrorMessageFunction;
 
-export type ValidatorT = {
+export type Validator = {
   fInternal?: boolean,
   id?: string,
-  validate?: ValidationFunctionT,
+  validate?: ValidationFunction,
   getErrorMessage?: (val: any) => string,
 };
 
 // ==========================================
 // Special `isRequired`
 // ==========================================
-const isRequired = (msg?: CustomErrorMessageT): ValidatorT => ({
+const isRequired = (msg?: CustomErrorMessage): Validator => ({
   fInternal: true,
   id: 'isRequired',
   getErrorMessage: (_val) => buildError(msg, 'is required', _val),
@@ -61,8 +61,8 @@ const isRequired = (msg?: CustomErrorMessageT): ValidatorT => ({
 const isEqualTo = (
   anotherAttrVal: any,
   anotherAttrName: string,
-  msg?: CustomErrorMessageT,
-): ValidatorT => ({
+  msg?: CustomErrorMessage,
+): Validator => ({
   fInternal: false,
   id: 'isEqualTo',
   validate: (val) => (
@@ -72,7 +72,7 @@ const isEqualTo = (
   ),
 });
 
-const isOneOf = (items: Array<any>, msg?: CustomErrorMessageT): ValidatorT => ({
+const isOneOf = (items: Array<any>, msg?: CustomErrorMessage): Validator => ({
   fInternal: false,
   id: 'isOneOf',
   validate: (val) => (
@@ -85,7 +85,7 @@ const isOneOf = (items: Array<any>, msg?: CustomErrorMessageT): ValidatorT => ({
 // ==========================================
 // Strings
 // ==========================================
-const hasAtLeastChars = (min: number, msg?: CustomErrorMessageT): ValidatorT => ({
+const hasAtLeastChars = (min: number, msg?: CustomErrorMessage): Validator => ({
   fInternal: false,
   id: 'hasAtLeastChars',
   validate: (val) => (
@@ -96,7 +96,7 @@ const hasAtLeastChars = (min: number, msg?: CustomErrorMessageT): ValidatorT => 
   ),
 });
 
-const hasAtMostChars = (max: number, msg?: CustomErrorMessageT): ValidatorT => ({
+const hasAtMostChars = (max: number, msg?: CustomErrorMessage): Validator => ({
   fInternal: false,
   id: 'hasAtMostChars',
   validate: (val) => (
@@ -110,8 +110,8 @@ const hasAtMostChars = (max: number, msg?: CustomErrorMessageT): ValidatorT => (
 const hasLengthWithinRange = (
   min: number,
   max: number,
-  msg?: CustomErrorMessageT,
-): ValidatorT => ({
+  msg?: CustomErrorMessage,
+): Validator => ({
   fInternal: false,
   id: 'hasLengthWithinRange',
   validate: (val) => (
@@ -122,7 +122,7 @@ const hasLengthWithinRange = (
   ),
 });
 
-const isEmail = (msg?: CustomErrorMessageT): ValidatorT => ({
+const isEmail = (msg?: CustomErrorMessage): Validator => ({
   fInternal: false,
   id: 'isEmail',
 /* eslint-disable max-len */
@@ -135,7 +135,7 @@ const isEmail = (msg?: CustomErrorMessageT): ValidatorT => ({
 /* eslint-enable max-len */
 });
 
-const isUrl = (msg?: CustomErrorMessageT): ValidatorT => ({
+const isUrl = (msg?: CustomErrorMessage): Validator => ({
   fInternal: false,
   id: 'isUrl',
 /* eslint-disable max-len, no-useless-escape */
@@ -148,7 +148,7 @@ const isUrl = (msg?: CustomErrorMessageT): ValidatorT => ({
 /* eslint-enable max-len, no-useless-escape */
 });
 
-const matchesPattern = (pattern: RegExp, msg?: CustomErrorMessageT): ValidatorT => ({
+const matchesPattern = (pattern: RegExp, msg?: CustomErrorMessage): Validator => ({
   fInternal: false,
   id: 'matchesPattern',
   validate: (val) => (
@@ -163,7 +163,7 @@ const matchesPattern = (pattern: RegExp, msg?: CustomErrorMessageT): ValidatorT 
 // ==========================================
 
 // Would really be useful only for text inputs
-const isNumber = (msg?: CustomErrorMessageT): ValidatorT => ({
+const isNumber = (msg?: CustomErrorMessage): Validator => ({
   fInternal: true,
   id: 'isNumber',
   validate: (_val) => (
@@ -173,7 +173,7 @@ const isNumber = (msg?: CustomErrorMessageT): ValidatorT => ({
   ),
 });
 
-const isGreaterThanOrEqual = (min: number, msg?: CustomErrorMessageT): ValidatorT => ({
+const isGreaterThanOrEqual = (min: number, msg?: CustomErrorMessage): Validator => ({
   fInternal: false,
   id: 'isGreaterThanOrEqual',
   validate: (val) => (
@@ -184,7 +184,7 @@ const isGreaterThanOrEqual = (min: number, msg?: CustomErrorMessageT): Validator
 });
 const isGte = isGreaterThanOrEqual;
 
-const isLowerThanOrEqual = (max: number, msg?: CustomErrorMessageT): ValidatorT => ({
+const isLowerThanOrEqual = (max: number, msg?: CustomErrorMessage): Validator => ({
   fInternal: false,
   id: 'isLowerThanOrEqual',
   validate: (val) => (
@@ -195,7 +195,7 @@ const isLowerThanOrEqual = (max: number, msg?: CustomErrorMessageT): ValidatorT 
 });
 const isLte = isLowerThanOrEqual;
 
-const isWithinRange = (min: number, max: number, msg?: CustomErrorMessageT): ValidatorT => ({
+const isWithinRange = (min: number, max: number, msg?: CustomErrorMessage): Validator => ({
   fInternal: false,
   id: 'isWithinRange',
   validate: (val) => (
@@ -209,7 +209,7 @@ const isWithinRange = (min: number, max: number, msg?: CustomErrorMessageT): Val
 // ==========================================
 // Date
 // ==========================================
-const isDate = (msg?: CustomErrorMessageT): ValidatorT => ({
+const isDate = (msg?: CustomErrorMessage): Validator => ({
   fInternal: true,
   id: 'isDate',
   validate: (_val, props, context) => {
@@ -227,7 +227,7 @@ const isDate = (msg?: CustomErrorMessageT): ValidatorT => ({
 // Helpers
 // ==========================================
 const buildError = (
-  msg0: ?CustomErrorMessageT,
+  msg0: ?CustomErrorMessage,
   defaultMsg: string,
   ...args: any
 ): string => {

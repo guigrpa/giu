@@ -13,7 +13,7 @@ import Icon                 from './icon';
 
 const DEBUG = true && process.env.NODE_ENV !== 'production';
 
-export type DataTableColumnT = {
+export type DataTableColumn = {
   attr: string,
 
   // Label (as a function, it will be called with the `commonCellProps`,
@@ -45,7 +45,7 @@ export type DataTableColumnT = {
 // ===============================================================
 class DataTableHeader extends React.PureComponent {
   static propTypes: {
-    cols: Array<DataTableColumnT>,
+    cols: Array<DataTableColumn>,
     lang?: string,  // just to force-refresh upon update
     commonCellProps?: Object,
     maxLabelLevel: number,
@@ -67,7 +67,7 @@ class DataTableHeader extends React.PureComponent {
     );
   }
 
-  renderColHeader(col: DataTableColumnT, idxCol: number) {
+  renderColHeader(col: DataTableColumn, idxCol: number) {
     const { attr, label, labelLevel, sortable } = col;
     const { commonCellProps } = this.props;
     let finalLabel;
@@ -136,7 +136,7 @@ class DataTableRow extends React.PureComponent {
   static propTypes: {
     id: string,
     item: Object,
-    cols: Array<DataTableColumnT>,
+    cols: Array<DataTableColumn>,
     selectedIds: Array<string>,
     commonCellProps: ?Object,
     fSortedManually: boolean,
@@ -169,7 +169,7 @@ class DataTableRow extends React.PureComponent {
     );
   }
 
-  renderCell(col: DataTableColumnT, idxCol: number) {
+  renderCell(col: DataTableColumn, idxCol: number) {
     const { attr, render } = col;
     const { id, item } = this.props;
     let value;
@@ -241,7 +241,7 @@ const style = {
     flexGrow,
     flexShrink,
     style: baseStyle,
-  }: DataTableColumnT) => {
+  }: DataTableColumn) => {
     if (hidden) return { display: 'none' };
     const flexValue = `${flexGrow || 0} ${flexShrink || 0} ${minWidth}px`;
     return merge({

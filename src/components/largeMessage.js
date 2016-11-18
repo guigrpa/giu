@@ -14,7 +14,7 @@ import { COLORS }           from '../gral/constants';
 // -- * **children?** *any*: the contents to be shown
 // -- * **style?** *Object*: merged with the outermost `div` style
 // -- * *All other props are passed through to the `div` element*
-type PropsT = {
+type Props = {
   children?: any,
   style?: Object,
   // all other props are passed through
@@ -22,7 +22,7 @@ type PropsT = {
 const FILTERED_PROPS = ['children', 'style'];
 
 class LargeMessage extends React.PureComponent {
-  props: PropsT;
+  props: Props;
 
   render() {
     const otherProps = omit(this.props, FILTERED_PROPS);

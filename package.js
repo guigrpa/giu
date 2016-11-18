@@ -178,13 +178,9 @@ const specs = {
     moment: '^2.0.0',
     faker: '3.0.1',
 
-    // // Bug yarn #629
-    // chokidar: '1.6.0',
-
     // React
-    react:                              '^15.4.0',
-    'react-dom':                        '^15.4.0',
-    'react-addons-perf':                '^15.4.0',
+    react: '^15.4.0',
+    'react-dom': '^15.4.0',
 
     // Babel (except babel-eslint)
     'babel-cli': '6.16.0',
@@ -221,7 +217,7 @@ const specs = {
     'fontfaceobserver': '1.7.1',
 
     // Testing
-    'jest': '17.0.2',
+    'jest': '17.0.3',
     'babel-jest': '17.0.2',
     'jest-html': '^1.2.1',
     'react-test-renderer': '15.4.0',

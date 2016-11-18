@@ -5,6 +5,7 @@ import {
   createStore,
   applyMiddleware,
 }                           from 'redux';
+import type { Reducer }     from 'redux';
 import thunk                from 'redux-thunk';
 import {
   merge,
@@ -12,8 +13,9 @@ import {
   set as timmSet,
 }                           from 'timm';
 import HintScreen           from './hintScreen';
-import type { HintScreenParsT } from './hintScreen';
+import type { HintScreenPars } from './hintScreen';
 import { localGet, localSet } from '../gral/storage';
+import type { Action }      from '../gral/types';
 
 /* --
 **Include the `<Hints />` component at (or near)
@@ -51,7 +53,7 @@ API reference:
 
 * **hintDefine()**: defines a hint screen:
   - **id** *string*: ID of the hint to be created
-  - **pars** *HintScreenParsT*: hint parameters:
+  - **pars** *HintScreenPars*: hint parameters:
     + **elements** *Array<ElementT> | () => Array<ElementT>*: either an array of elements,
       or a function returning such an element (for dynamic positioning).
       Elements have these attributes:
@@ -76,21 +78,19 @@ API reference:
 * **hintHide()**: hides the currently shown hint, if any
 -- */
 
-type StateT = {
+type State = {
   fDisableAll: boolean,
   disabled: Array<string>,
   shown: ?string,
-  catalogue: { [id: string]: HintScreenParsT },
+  catalogue: { [id: string]: HintScreenPars },
 };
-
-type ActionT = Object;
 
 // ==========================================
 // Store, reducer
 // ==========================================
 let store: Object;
 
-const INITIAL_STATE: StateT = {
+const INITIAL_STATE: State = {
   fDisableAll: false,
   disabled: [],
   shown: null,
@@ -108,7 +108,7 @@ function initStore() {
   store = createStore(reducer, initialState, storeEnhancers);
 }
 
-function reducer(state0: StateT = INITIAL_STATE, action: ActionT): StateT {
+const reducer: Reducer<State, Action> = (state0 = INITIAL_STATE, action) => {
   let state = state0;
   let id;
   switch (action.type) {
@@ -143,13 +143,13 @@ function reducer(state0: StateT = INITIAL_STATE, action: ActionT): StateT {
       break;
   }
   return state;
-}
+};
 
 // ==========================================
 // Action creators
 // ==========================================
 const actions = {
-  hintDefine: (id: string, pars: HintScreenParsT) => ({ type: 'HINT_DEFINE', id, pars }),
+  hintDefine: (id: string, pars: HintScreenPars) => ({ type: 'HINT_DEFINE', id, pars }),
   hintDisableAll: () => (dispatch: Function, getState: Function) => {
     dispatch({ type: 'HINT_DISABLE_ALL' });
     const { fDisableAll } = getState();
@@ -170,7 +170,7 @@ const actions = {
 };
 
 // Imperative dispatching
-const hintDefine = (id: string, pars: HintScreenParsT) =>
+const hintDefine = (id: string, pars: HintScreenPars) =>
   store.dispatch(actions.hintDefine(id, pars));
 const hintDisableAll = () => store.dispatch(actions.hintDisableAll());
 const hintReset = () => store.dispatch(actions.hintReset());
@@ -180,16 +180,16 @@ const hintHide = () => store.dispatch(actions.hintHide());
 // ==========================================
 // Hints component
 // ==========================================
-type PropsT = {
-  storeState?: StateT,
+type Props = {
+  storeState?: State,
 };
 
 class Hints extends React.PureComponent {
-  props: PropsT;
+  props: Props;
   storeUnsubscribe: () => void;
-  storeState: StateT;
+  storeState: State;
 
-  constructor(props: PropsT) {
+  constructor(props: Props) {
     super(props);
     if (props.storeState == null) {
       if (!store) initStore();

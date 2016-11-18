@@ -11,11 +11,11 @@ import {
   flexContainer,
   isDark,
 }                           from '../gral/styles';
-import type { MomentT }     from '../gral/types';
-import type { KeyboardEventParsT } from '../gral/keys';
+import type { Moment }     from '../gral/types';
+import type { KeyboardEventPars } from '../gral/keys';
 import { COLORS, KEYS }     from '../gral/constants';
 import hoverable            from '../hocs/hoverable';
-import type { HoverablePropsT } from '../hocs/hoverable';
+import type { HoverableProps } from '../hocs/hoverable';
 import Button               from '../components/button';
 import Icon                 from '../components/icon';
 
@@ -25,23 +25,23 @@ const DAY_WIDTH = '2em';
 // ==========================================
 // Component
 // ==========================================
-type PublicPropsT = {
+type PublicProps = {
   disabled: boolean,
-  curValue: ?MomentT,
-  onChange: (ev: ?SyntheticEvent, nextValue: ?MomentT) => void,
+  curValue: ?Moment,
+  onChange: (ev: ?SyntheticEvent, nextValue: ?Moment) => void,
   utc: boolean,
   todayName: string,
-  keyDown: ?KeyboardEventParsT,
+  keyDown: ?KeyboardEventPars,
   accentColor: string,
 };
-type PropsT = PublicPropsT & HoverablePropsT;
+type Props = PublicProps & HoverableProps;
 
 class DatePicker extends React.Component {
-  props: PropsT;
+  props: Props;
   state: {
-    shownMonthStart: MomentT,
+    shownMonthStart: Moment,
   };
-  startOfCurValue: ?MomentT;
+  startOfCurValue: ?Moment;
   shownMonthNumber: number;
 
   constructor(props) {
@@ -57,7 +57,7 @@ class DatePicker extends React.Component {
   }
 
   componentWillMount() { this.updateShownMonth(this.props); }
-  componentWillReceiveProps(nextProps: PropsT) {
+  componentWillReceiveProps(nextProps: Props) {
     const prevValue = this.props.curValue;
     const nextValue = nextProps.curValue;
     if (prevValue != null || nextValue != null) {
@@ -69,7 +69,7 @@ class DatePicker extends React.Component {
     if (keyDown && keyDown !== this.props.keyDown) this.doKeyDown(keyDown);
   }
 
-  updateShownMonth(props: PropsT) {
+  updateShownMonth(props: Props) {
     const { curValue, utc } = props;
     const refMoment = curValue != null ? curValue.clone() : startOfToday(utc);
     const shownMonthStart = refMoment.startOf('month');
@@ -98,7 +98,7 @@ class DatePicker extends React.Component {
     );
   }
 
-  renderMonth(shownMonthStart: MomentT) {
+  renderMonth(shownMonthStart: Moment) {
     const { disabled } = this.props;
     return (
       <div style={style.monthRow}>
@@ -130,7 +130,7 @@ class DatePicker extends React.Component {
     return <div style={style.dayNamesRow}>{els}</div>;
   }
 
-  renderWeeks(shownMonthStart: MomentT) {
+  renderWeeks(shownMonthStart: Moment) {
     const curDate = shownMonthStart.clone();
     const endDate = moment(curDate).add(1, 'month');
     curDate.subtract(curDate.weekday(), 'days');
@@ -144,7 +144,7 @@ class DatePicker extends React.Component {
     return <div>{weeks}</div>;
   }
 
-  renderWeek(weekStartDate: MomentT, idx: number) {
+  renderWeek(weekStartDate: Moment, idx: number) {
     const curDate = moment(weekStartDate);
     const els = new Array(7);
     for (let i = 0; i < 7; i++) {
@@ -154,7 +154,7 @@ class DatePicker extends React.Component {
     return <div key={idx} style={style.week}>{els}</div>;
   }
 
-  renderDay(mom: MomentT, idx: number) {
+  renderDay(mom: Moment, idx: number) {
     const { hovering, onHoverStart, onHoverStop } = this.props;
     const id = mom.toISOString();
     const fHovered = hovering === id;
@@ -220,7 +220,7 @@ class DatePicker extends React.Component {
     this.changeDateTo(ev, startOfDay);
   }
 
-  doKeyDown({ which, shiftKey, ctrlKey, altKey, metaKey }: KeyboardEventParsT) {
+  doKeyDown({ which, shiftKey, ctrlKey, altKey, metaKey }: KeyboardEventPars) {
     if (shiftKey || ctrlKey || altKey || metaKey) return;
     switch (which) {
       case KEYS.pageUp:   this.onClickPrevMonth();           break;
@@ -248,7 +248,7 @@ class DatePicker extends React.Component {
     this.changeDateTo(null, startOfDay);
   }
 
-  changeDateTo(ev: ?SyntheticEvent, startOfDay: MomentT) {
+  changeDateTo(ev: ?SyntheticEvent, startOfDay: Moment) {
     const { curValue } = this.props;
     const nextValue = startOfDay.clone();
     if (curValue != null) {

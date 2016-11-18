@@ -10,9 +10,9 @@ import {
 }                           from '../gral/helpers';
 import Backdrop             from '../components/backdrop';
 import HintLabel            from '../components/hintLabel';
-// import type { HintLabelPropsT } from '../components/hintLabel';
+// import type { HintLabelProps } from '../components/hintLabel';
 import HintArrow            from '../components/hintArrow';
-import type { HintArrowPropsT } from '../components/hintArrow';
+import type { HintArrowProps } from '../components/hintArrow';
 
 require('./hintScreen.css');
 
@@ -22,26 +22,26 @@ const FONT_FAMILY = '"Gloria Hallelujah", sans-serif';
 // ==========================================
 // Component
 // ==========================================
-type ArrowT = HintArrowPropsT & { type: 'ARROW' };
-// TODO: modify HintLabelPropsT when that becomes possible in Flow
-type AlignTypeT = 'left' | 'right' | 'center';
-type LabelT = {
+type Arrow = HintArrowProps & { type: 'ARROW' };
+// TODO: modify HintLabelProps when that becomes possible in Flow
+type AlignType = 'left' | 'right' | 'center';
+type Label = {
   x: number,
   y: number,
-  align?: AlignTypeT,
+  align?: AlignType,
   children?: any,
   fontSize?: number,
   style?: Object,
 } & { type: 'LABEL' };
-// type LabelT = HintLabelPropsT & { type: 'LABEL' };
-type ElementT = ArrowT | LabelT;
-type ElementsWrapperT = Array<ElementT> | () => Array<ElementT>;
-export type HintScreenParsT = {
-  elements: ElementsWrapperT,
+// type Label = HintLabelProps & { type: 'LABEL' };
+type Element = Arrow | Label;
+type ElementsWrapper = Array<Element> | () => Array<Element>;
+export type HintScreenPars = {
+  elements: ElementsWrapper,
   closeLabel?: string,
   zIndex?: number,
 };
-type PropsT = HintScreenParsT & {
+type Props = HintScreenPars & {
   onClose: (ev: SyntheticMouseEvent) => void,
 };
 
@@ -50,14 +50,14 @@ type PropsT = HintScreenParsT & {
 // a containing block) will not be properly positioned and may even be cropped.
 // In such a case, use `Hints` instead.
 class HintScreen extends React.PureComponent {
-  props: PropsT;
-  static defaultProps: HintScreenParsT = {
-    elements:               ([]: ElementsWrapperT),
+  props: Props;
+  static defaultProps: HintScreenPars = {
+    elements:               ([]: ElementsWrapper),
     closeLabel:             'Got it!',
     zIndex:                 MISC.zHintBase,
   }
 
-  constructor(props: PropsT) {
+  constructor(props: Props) {
     super(props);
     bindAll(this, ['onResize']);
   }
@@ -89,8 +89,8 @@ class HintScreen extends React.PureComponent {
 
   renderBackdrop() { return <Backdrop style={style.backdrop} />; }
 
-  renderArrows(elements: Array<ElementT>) {
-    const arrows: Array<ArrowT> =
+  renderArrows(elements: Array<Element>) {
+    const arrows: Array<Arrow> =
       (elements.filter((o) => o.type === 'ARROW'): Array<any>);
     if (!arrows || !arrows.length) return null;
     return (
@@ -100,8 +100,8 @@ class HintScreen extends React.PureComponent {
     );
   }
 
-  renderLabels(elements: Array<ElementT>) {
-    const labels: Array<LabelT> =
+  renderLabels(elements: Array<Element>) {
+    const labels: Array<Label> =
       (elements.filter((o) => o.type === 'LABEL'): Array<any>);
     if (!labels || !labels.length) return null;
     return labels.map((label, idx) => (
