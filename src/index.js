@@ -113,8 +113,9 @@ export {
   cancelEvent, preventDefault, stopPropagation,
   cancelBodyScrolling,
   windowHeightWithoutScrollbar, windowWidthWithoutScrollbar,
-  delay, waitUntil, isWaiting,
 }                         from './gral/helpers';
+// Disabled since it adds a polyfill dependency; might not be worth it now
+// export *                  from './gral/wait';
 export *                  from './gral/validators';
 export {
   isAnyModifierPressed,
