@@ -440,21 +440,22 @@ Props:
 
 Props:
 
-* **items** *array(object)*: menu items, similar to [Select](#select)
+* **items** *Array<Choice>*: menu items, similar to [Select](#select)
   but with the inclusion of an `onClick` callback:
   - **value** *any*: any value that can be converted to JSON. Values should be unique
-  - **label** *string*: descriptive string that will be shown to the user
-  - **keys** *array(string)?*: keyboard shortcuts for this option, e.g.
+  - **label?** *string*: descriptive string that will be shown to the user
+  - **keys?** *Array<string>*: keyboard shortcuts for this option, e.g.
     `mod+a` (= `cmd+a` in OS X, `ctrl+a` in Windows), `alt+backspace`, `shift+up`...
-  - **onClick** *function?*: called when the item is clicked with the event as argument
-* **lang** *string?*: current language (NB: just used to make sure the component is refreshed)
+  - **onClick?** *(ev: SyntheticEvent) => void*: called when the item is clicked
+    with the event as argument
+* **lang?** *string*: current language (NB: just used to make sure the component is refreshed)
 * **children** *any*: React elements that will be shown as the menu's title
-* **onClickItem** *function?*: called when an item is clicked
+* **onClickItem?** *Function*: called when an item is clicked
   with the following arguments:
-  - **ev** *object*: `click` event
+  - **ev** *SyntheticMouseEvent*: `click` event
   - **value** *any*: the item's `value` (as specified in the `items` prop)
-* **style** *object?*: will be merged with the menu title's `div` wrapper
-* **accentColor** *string?*: CSS color descriptor (e.g. `darkgray`, `#ccffaa`...)
+* **style?** *Object*: will be merged with the menu title's `div` wrapper
+* **accentColor?** *string*: CSS color descriptor (e.g. `darkgray`, `#ccffaa`...)
 * *All other props are passed through to the Select input component*
 
 ## Modals
@@ -495,21 +496,21 @@ class ModalExample extends React.Component {
 API reference:
 
 * **modalPush()**: creates a modal and pushes it on top of the stack:
-  - **pars** *object*: modal parameters:
-    * **title** *string?*: modal title displayed to the user
-    * **children** *any?*: body of the modal
-    * **buttons** *array(object)?*: button objects:
-      - **left** *boolean? = false*: align button left instead of right
-      - **label** *string*: button text
-      - **onClick** *function*: `click` handler for the button
-      - **defaultButton** *boolean?*: will be highlighted and
+  - **pars** *ModalPars*: modal parameters:
+    * **title?** *string*: modal title displayed to the user
+    * **children?** *any*: body of the modal
+    * **buttons?** *Array<ModalButton>*: button objects:
+      - **left?** *boolean = false*: align button left instead of right
+      - **label?** *any*: button text or other contents
+      - **defaultButton?** *boolean*: will be highlighted and
+      - **onClick?** *(ev: SyntheticEvent) => void*: `click` handler for the button
         automatically selected when RETURN is pressed
-      - **style** *object?*: merge with the button's style
-    * **onClickBackdrop** *function?*: called when the backdrop
+      - **style?** *Object*: merge with the button's style
+    * **onClickBackdrop?** *(ev: SyntheticMouseEvent) => void*: called when the backdrop
       (semi-transparent layer highlighting the modal in fron of other
       page contents) is clicked
-    * **onEsc** *function?*: called when ESC is pressed
-    * **style** *object?*: merge with the modal's `div` style, e.g. to
+    * **onEsc?** *(ev: SyntheticKeyboardEvent) => void*: called when ESC is pressed
+    * **style?** *Object*: merge with the modal's `div` style, e.g. to
       fix a modal width or background color
 * **modalPop()**: removes the modal currently at the top of the stack
 
@@ -534,16 +535,17 @@ const NotifExample = () =>
 API reference:
 
 * **notify()**: creates a notification:
-  - **pars** *object*: notification parameters:
-    + **sticky** *boolean?*: never delete this notification
-    + **timeOut** *number? = 4000*: time [ms] after which it's deleted
-    + **type** *string(`info` | `success` | `warn` | `error`)? = `info`*
-    + **icon** *string? = `exclamation`*
-    + **iconSpin** *boolean?*
-    + **title** *string?*: highlighted text at the top of the notification
+  - **pars** *NotificationPars*: notification parameters:
+    + **sticky?** *boolean*: never delete this notification
+    + **timeOut?** *number = 4000*: time [ms] after which it's deleted
+    + **name?** *string*: a user-provided name for the notification
+    + **type?** *info|success|warn|error = `info`*
+    + **icon?** *string = `exclamation`*
+    + **iconSpin?** *boolean*
+    + **title?** *string*: highlighted text at the top of the notification
     + **msg** *string*: notification text
-    + **onClick** *function?*: `click` handler
-    + **style** *object?*: merged with the outermost `div` style
+    + **onClick?** *(ev: SyntheticMouseEvent) => void*: `click` handler
+    + **style?** *Object*: merged with the outermost `div` style
   - **Returns** *string*: notification ID
 * **notifRetain()**: marks a notification as retained
   (it will not be automatically deleted, even if it's `sticky`):
@@ -599,26 +601,26 @@ API reference:
 
 * **hintDefine()**: defines a hint screen:
   - **id** *string*: ID of the hint to be created
-  - **pars** *object*: hint parameters:
-    + **elements** *array(object)|function?*: either an array of elements,
+  - **pars** *HintScreenPars*: hint parameters:
+    + **elements** *Array<ElementT> | () => Array<ElementT>*: either an array of elements,
       or a function returning such an element (for dynamic positioning).
       Elements have these attributes:
-      - **type** *string(`LABEL` | `ARROW`)*
+      - **type** *LABEL|ARROW*
       - Arrows:
-        - **from** *object*: coordinates, e.g. `{ x: 5, y: 10 }`
-        - **to** *object*: coordinates
+        - **from** *{x: number, y: number}*: coordinates, e.g. `{ x: 5, y: 10 }`
+        - **to** *{x: number, y: number}*: coordinates
         - **counterclockwise** *boolean*
       - Labels:
         - **x** and **y** *number*: coordinates
-        - **align** *string(`left` | `center` | `right`)? = `left`*
-        - **children** *any*: React elements that comprise the label
-    + **closeLabel** *string? = `Got it!`*: label of the close button
-    + **onClose** *function?*: called when the hint screen is closed
+        - **align?** *left|center|right = left*
+        - **children?** *any*: React elements that comprise the label
+    + **closeLabel?** *string = `Got it!`*: label of the close button
+    + **zIndex?** *number*
 * **hintDisableAll()**: disables all hints
 * **hintReset()**: clears the list of disabled hints
 * **hintShow()**: shows a hint
   - **id** *string*: ID of the hint to be shown
-  - **force** *boolean?*: if not enabled, the hint will only be shown if
+  - **force?** *boolean*: if not enabled, the hint will only be shown if
     hints are enabled (no previous call to `hintDisableAll()` and it has not
     already been shown)
 * **hintHide()**: hides the currently shown hint, if any
@@ -632,12 +634,12 @@ API reference:
 
 An inconspicuous-looking button-in-a-`span`. Props:
 
-* **plain** *boolean?*: removes most button styles
-* **children** *any*: button contents (can include `Icon`
+* **plain?** *boolean*: removes most button styles
+* **children?** *any*: button contents (can include `Icon`
   components, etc.)
-* **onClick** *function?*: `click` handler
-* **disabled** *boolean?*
-* **style** *object?*: merged with the `span` style
+* **onClick?** *(ev: SyntheticMouseEvent) => void*: `click` handler
+* **disabled?** *boolean*
+* **style?** *Object*: merged with the `span` style
 * *All other props are passed through to the `span` element*
 
 ### Icon and Spinner
@@ -647,11 +649,11 @@ An inconspicuous-looking button-in-a-`span`. Props:
 A wrapper for Font Awesome icons. Props:
 
 * **icon** *string*: e.g. `ambulance`, `cogs`...
-* **size** *string(`lg` | `2x` | `3x` | `4x` | `5x`)?*
-* **fixedWidth** *boolean?*
-* **spin** *boolean?*
-* **disabled** *boolean?*
-* **style** *object?*: merged with the `i` element style
+* **size?** *`lg` | `2x` | `3x` | `4x` | `5x`*
+* **fixedWidth?** *boolean*
+* **spin?** *boolean*
+* **disabled?** *boolean*
+* **style?** *Object*: merged with the `i` element style
 * *All other props are passed through to the `i` element*
 
 `Spinner` is a convenient shortcut for an `Icon` that, well, spins.
@@ -664,8 +666,8 @@ A simple `div` showing a centered message with a large font size.
 Ideal for *No matches found*, *Choose one of the options above*,
 that kind of thing. Props:
 
-* **children** *any*: the contents to be shown
-* **style** *object?*: merged with the outermost `div` style
+* **children?** *any*: the contents to be shown
+* **style?** *Object*: merged with the outermost `div` style
 * *All other props are passed through to the `div` element*
 
 ### Progress
@@ -712,19 +714,19 @@ just `true` (or `null`).
 Specific props received from the parent (all other props are
 passed through):
 
-* **onHoverStart** *function?*: relays the original event to
+* **onHoverStart?** *(ev: SyntheticMouseEvent) => void*: relays the original event to
   the parent component.
-* **onHoverStop** *function?*: relays the original event to
+* **onHoverStop?** *(ev: SyntheticMouseEvent) => void*: relays the original event to
   the parent component.
 
 Additional props passed to the base component:
 
-* **hovering** *string|number|boolean?*: identifies the
+* **hovering** *?(string|number|boolean)*: identifies the
   element that is hovered (see description above), or `null` if none
-* **onHoverStart** *function*: `onMouseEnter` event handler you can attach to
-  your target DOM elements
-* **onHoverStop** *function*: `onMouseLeave` event handler you can attach to
-  your target DOM elements
+* **onHoverStart** *(ev: SyntheticMouseEvent) => void*: `onMouseEnter` event handler
+  you can attach to your target DOM elements
+* **onHoverStop** *(ev: SyntheticMouseEvent) => void*: `onMouseLeave` event handler
+  you can attach to your target DOM elements
 
 
 ## Helpers
@@ -738,8 +740,8 @@ You can find here a wide variety of helper functions, from the very simple (`can
 Determines whether the provided node is *fully* visible
 in the browser window.
 
-* **node** *object?*: DOM node; if unspecified, the function returns `false`
-* **bcr** *object?*: bounding client rectangle for `node`; if not specified,
+* **node** *?Node*: DOM node; if unspecified, the function returns `false`
+* **bcr?** *ClientRect*: bounding client rectangle for `node`; if not specified,
   `getBoundingClientRect()` will be called on `node`
 * **Returns** *boolean*
 
@@ -750,9 +752,9 @@ in the browser window (or at least most of it, if it is too large).
 Implemented as a recursive algorithm that is first run
 vertically and then horizontally.
 
-* **node** *object?*: DOM node
-* **options** *object? = {}*: the following options are allowed:
-  - **topAncestor** *object*: stop the recursive algorithm at this
+* **node** *?Node*: DOM node
+* **options?** *object = {}*: the following options are allowed:
+  - **topAncestor?** *?Node*: stop the recursive algorithm at this
     ancestor (otherwise stops at the root level or when a `Modal`
     ancestor is reached)
 
@@ -762,24 +764,24 @@ vertically and then horizontally.
 
 Provides an inline style object for a Flex container.
 
-* **flexDirection** *string(`row` | `column`)? = `row`*
-* **style** *object?*: custom style (merged with the Flex style)
-* **Returns** *object*: Flex container style
+* **flexDirection** *('row' | 'column') = 'row'*
+* **style?** *Object*: custom style (merged with the Flex style)
+* **Returns** *Object*: Flex container style
 
 **flexItem()**
 
 Provides an inline style object for a Flex item.
 
 * **flex** *string|number*: value for the CSS `flex`/`-webkit-flex` attribute
-* **style** *object?*: custom style (merged with the Flex style)
-* **Returns** *object*: Flex item style
+* **style?** *Object*: custom style (merged with the Flex style)
+* **Returns** *Object*: Flex item style
 
 **boxWithShadow()**
 
 Provides an inline style object for a slightly rounded shadowed box.
 
-* **style** *object?*: custom style (merged with the base style)
-* **Returns** *object*: inline style
+* **style?** *Object*: custom style (merged with the base style)
+* **Returns** *Object*: inline style
 
 **isDark() / isLight()**
 
@@ -787,17 +789,17 @@ Determines whether the provided color is perceived as dark or light.
 Can be used to decide whether text on this background color should be light
 or dark, respectively, for good readability.
 
-* **color** *string/Color*: parameter describing the color (anything that
+* **color** *string|Object*: parameter describing the color (anything that
   can be processed by [tinycolor](https://github.com/bgrins/TinyColor))
-* **Returns** *bool*: whether the color is dark (light)
+* **Returns** *boolean*: whether the color is dark (light)
 
 **darken() / lighten()**
 
 Darkens or lightens a given color by a given percentage.
 
-* **color** *string/Color*: parameter describing the color (anything that
+* **color** *string|Object*: parameter describing the color (anything that
   can be processed by [tinycolor](https://github.com/bgrins/TinyColor))
-* **percentage** *number? = 10*: percentage by which the color will be modified
+* **percentage?** *number = 10*: percentage by which the color will be modified
 * **Returns** *string*: hex string for the new color, e.g. `#ffaadd`
 
 **addStylesToPage()**
@@ -814,26 +816,26 @@ attaches it to the page.
 Binds a list of object methods to the object with `Function#bind()`.
 Especially useful for ES6-style React components.
 
-* **self** *object*: methods will be bound to this object
-* **fnNames** *array<string>*: list of method names
+* **self** *Object*: methods will be bound to this object
+* **fnNames** *Array<string>*: list of method names
 
 **cancelEvent()**
 
 Calls `preventDefault()` and `stopPropagation()` on the provided event.
 
-* **ev** *object?*: event to be cancelled
+* **ev** *?SyntheticEvent*: event to be cancelled
 
 **preventDefault()**
 
 Calls `preventDefault()` on the provided event.
 
-* **ev** *object?*: event for which default behaviour is to be prevented
+* **ev** *?SyntheticEvent*: event for which default behaviour is to be prevented
 
 **stopPropagation()**
 
 Calls `stopPropagation()` on the provided event.
 
-* **ev** *object?*: event for which default behaviour is to be prevented
+* **ev** *?SyntheticEvent*: event for which default behaviour is to be prevented
 
 **cancelBodyScrolling()**
 
@@ -841,7 +843,7 @@ Calls `stopPropagation()` on the provided event.
 in order to prevent `wheel` events to cause document scrolling when
 the scroller reaches the top/bottom of its contents.
 
-* **ev** *object*: `wheel` event
+* **ev** *SyntheticWheelEvent*: `wheel` event
 
 **windowHeightWithoutScrollbar() / windowWidthWithoutScrollbar()**
 
@@ -849,6 +851,31 @@ Provides the inner height (width) of the window
 excluding scrollbars (if any).
 
 * **Returns** *number*: inner height (width) in pixels
+
+**delay()**
+
+Waits for a given number of milliseconds.
+
+* **delay** *number*: delay [ms]
+* **Returns** *Promise<void>*: resolves when the delay expires.
+
+**waitUntil()**
+
+Waits until a given condition is true, or until time runs out.
+
+* **cb** *() => boolean*: predicate
+* **timeout?** *number*: maximum wait time [ms]
+* **waiterId?** *string*: an ID for who's waiting (can be checked with `isWaiting()`)
+* **Returns** *Promise<void>*: resolves when the delay expires. Otherwise,
+  the function throws a `TIME_OUT` exception
+
+**isWaiting()**
+
+Returns whether a given (or any) waiter is waiting on `waitUntil()`.
+
+* **waiterId?** *string*: an ID for who's waiting (leave empty for *all*)
+* **Returns** *boolean*: whether the specified waiter (or anybody) is waiting
+  on `waitUntil()`
 
 **getScrollbarWidth()**
 
@@ -861,7 +888,7 @@ reliable way to detect zooming).
 Note that the returned value might be zero,
 e.g. on OS X with overlaid scrollbars.
 
-* **Returns** *number*: scrollbar width in pixels
+* **Returns** *?number*: scrollbar width in pixels
 
 
 ## [Changelog](https://github.com/guigrpa/giu/blob/master/CHANGELOG.md)

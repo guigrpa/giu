@@ -113,6 +113,7 @@ export {
   cancelEvent, preventDefault, stopPropagation,
   cancelBodyScrolling,
   windowHeightWithoutScrollbar, windowWidthWithoutScrollbar,
+  delay, waitUntil, isWaiting,
 }                         from './gral/helpers';
 export *                  from './gral/validators';
 export {
