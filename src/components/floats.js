@@ -116,14 +116,23 @@ const actions = {
 
 // Imperative dispatching
 const floatAdd = (pars: FloatUserPars): string => {
+  if (!store) initStore();
   const action = actions.floatAdd(pars);
   store.dispatch(action);
   return action.pars.id;
 };
-const floatDelete = (id: string) => store.dispatch(actions.floatDelete(id));
-const floatUpdate = (id: string, pars: FloatUserPars) =>
+const floatDelete = (id: string) => {
+  if (!store) initStore();
+  store.dispatch(actions.floatDelete(id));
+};
+const floatUpdate = (id: string, pars: FloatUserPars) => {
+  if (!store) initStore();
   store.dispatch(actions.floatUpdate(id, pars));
-const floatReposition = () => store && store.dispatch(actions.floatReposition());
+};
+const floatReposition = () => {
+  if (!store) initStore();
+  store.dispatch(actions.floatReposition());
+};
 
 // ==========================================
 // Inits

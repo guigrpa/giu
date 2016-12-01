@@ -148,12 +148,22 @@ const actions = {
 
 // Imperative dispatching
 const notify = (initialPars: NotificationUserPars): string => {
+  if (!store) initStore();
   const pars = store.dispatch(actions.notify(initialPars));
   return pars.id;
 };
-const notifRetain = (id: string) => store.dispatch(actions.notifRetain(id));
-const notifDelete = (id: string) => store.dispatch(actions.notifDelete(id));
-const notifDeleteByName = (name: string) => store.dispatch(actions.notifDeleteByName(name));
+const notifRetain = (id: string) => {
+  if (!store) initStore();
+  store.dispatch(actions.notifRetain(id));
+};
+const notifDelete = (id: string) => {
+  if (!store) initStore();
+  store.dispatch(actions.notifDelete(id));
+  };
+const notifDeleteByName = (name: string) => {
+  if (!store) initStore();
+  store.dispatch(actions.notifDeleteByName(name));
+};
 
 // ==========================================
 // Notifications component

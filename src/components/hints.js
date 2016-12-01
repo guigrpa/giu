@@ -170,12 +170,26 @@ const actions = {
 };
 
 // Imperative dispatching
-const hintDefine = (id: string, pars: HintScreenPars) =>
+const hintDefine = (id: string, pars: HintScreenPars) => {
+  if (!store) initStore();
   store.dispatch(actions.hintDefine(id, pars));
-const hintDisableAll = () => store.dispatch(actions.hintDisableAll());
-const hintReset = () => store.dispatch(actions.hintReset());
-const hintShow = (id: string, force: boolean) => store.dispatch(actions.hintShow(id, force));
-const hintHide = () => store.dispatch(actions.hintHide());
+}
+const hintDisableAll = () => {
+  if (!store) initStore();
+  store.dispatch(actions.hintDisableAll());
+};
+const hintReset = () => {
+  if (!store) initStore();
+  store.dispatch(actions.hintReset());
+};
+const hintShow = (id: string, force: boolean) => {
+  if (!store) initStore();
+  store.dispatch(actions.hintShow(id, force));
+};
+const hintHide = () => {
+  if (!store) initStore();
+  store.dispatch(actions.hintHide());
+};
 
 // ==========================================
 // Hints component
