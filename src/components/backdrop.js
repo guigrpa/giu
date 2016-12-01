@@ -5,6 +5,8 @@ import { merge }            from 'timm';
 import { cancelEvent }      from '../gral/helpers';
 import { IS_IOS }           from '../gral/constants';
 
+require('./backdrop.css');
+
 // ==========================================
 // Component
 // ==========================================
@@ -40,7 +42,6 @@ const style = {
     width: IS_IOS ? '110vw' : '100vw',
     height: IS_IOS ? '110vh' : '100vh',
     backgroundColor: 'white',
-    opacity: 0.7,
   }, baseStyle),
 };
 

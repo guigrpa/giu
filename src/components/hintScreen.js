@@ -153,7 +153,6 @@ const style = {
   backdrop: {
     cursor: 'pointer',
     backgroundColor: 'black',
-    opacity: 0.6,
   },
   closeButton: {
     position: 'fixed',
