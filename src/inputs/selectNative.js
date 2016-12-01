@@ -50,7 +50,7 @@ class SelectNative extends React.Component {
     } = this.props;
     const finalItems = [];
     if (!required) finalItems.push({ value: NULL_STRING, label: '' });
-    items.forEach(option => {
+    items.forEach((option) => {
       if (option.label !== LIST_SEPARATOR_KEY) finalItems.push(option);
     });
     const otherProps = omit(this.props, PROP_KEYS_TO_REMOVE_FROM_INPUT);
@@ -62,7 +62,7 @@ class SelectNative extends React.Component {
         tabIndex={disabled ? -1 : undefined}
         style={style.field(this.props)}
       >
-        {finalItems.map(o => {
+        {finalItems.map((o) => {
           const value = o.value === NULL_STRING ? o.value : toInternalValue(o.value);
           const label = isFunction(o.label) ? o.label(lang) : o.label;
           return <option key={value} id={value} value={value}>{label}</option>;

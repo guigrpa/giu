@@ -76,7 +76,7 @@ class Textarea extends React.Component {
         className="giu-textarea"
         style={style.taWrapper}
       >
-        <div ref={c => { this.refTaPlaceholder = c; }}
+        <div ref={(c) => { this.refTaPlaceholder = c; }}
           style={merge(style.hiddenPlaceholder, styleField)}
         >
           {getPlaceHolderText(curValue)}

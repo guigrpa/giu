@@ -124,7 +124,7 @@ class BaseListPicker extends React.PureComponent {
     } = this.props;
     if (label === LIST_SEPARATOR_KEY) {
       return (
-        <div key={`separator_${idx}`} ref={c => { this.refItems[idx] = c; }}
+        <div key={`separator_${idx}`} ref={(c) => { this.refItems[idx] = c; }}
           onMouseEnter={!disabled && onHoverStart}
           onMouseLeave={!disabled && onHoverStop}
           style={style.separatorWrapper}
@@ -142,7 +142,7 @@ class BaseListPicker extends React.PureComponent {
     const keyEl = IS_IOS ? undefined : this.renderKeys(shortcuts);
     const finalLabel = (isFunction(label) ? label(this.props.lang) : label) || UNICODE.nbsp;
     return (
-      <div key={itemValue} ref={c => { this.refItems[idx] = c; }}
+      <div key={itemValue} ref={(c) => { this.refItems[idx] = c; }}
         id={itemValue}
         onMouseEnter={disabled ? undefined : onHoverStart}
         onMouseLeave={disabled ? undefined : onHoverStop}
@@ -160,7 +160,7 @@ class BaseListPicker extends React.PureComponent {
 
   renderKeys(shortcuts) {
     if (!shortcuts) return null;
-    const desc = shortcuts.map(o => o.description).join(', ');
+    const desc = shortcuts.map((o) => o.description).join(', ');
     if (!desc) return null;
     return <span style={style.shortcut}>{desc}</span>;
   }
@@ -228,7 +228,7 @@ class BaseListPicker extends React.PureComponent {
 
   getCurIdx() {
     const { curValue, items } = this.props;
-    return items.findIndex(item => item.value === curValue);
+    return items.findIndex((item) => item.value === curValue);
   }
 
   scrollSelectedIntoView(options) {

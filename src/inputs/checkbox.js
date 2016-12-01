@@ -31,7 +31,8 @@ class Checkbox extends React.Component {
 
   constructor(props) {
     super(props);
-    this.labelId = this.props.id || `giu-checkbox_${cntId++}`;
+    this.labelId = this.props.id || `giu-checkbox_${cntId}`;
+    cntId += 1;
   }
 
   // ==========================================

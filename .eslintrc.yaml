@@ -19,9 +19,7 @@ rules:
     - allowForLoopAfterthoughts: true
   no-continue: off
   no-lonely-if: off
-  no-mixed-operators:
-    - error
-    - allowSamePrecedence: true
+  no-mixed-operators: off
   no-duplicate-imports: off
   key-spacing:
     - warn

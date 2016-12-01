@@ -12,25 +12,25 @@ import input                from '../hocs/input';
 const NULL_VALUE = '';
 const classOptions = {
   text: {
-    toInternalValue: val => (val != null ? val : NULL_VALUE),
-    toExternalValue: val => (val !== NULL_VALUE ? val : null),
-    isNull: val => val === NULL_VALUE,
+    toInternalValue: (val) => (val != null ? val : NULL_VALUE),
+    toExternalValue: (val) => (val !== NULL_VALUE ? val : null),
+    isNull: (val) => val === NULL_VALUE,
   },
   password: {
-    toInternalValue: val => (val != null ? val : NULL_VALUE),
-    toExternalValue: val => (val !== NULL_VALUE ? val : null),
-    isNull: val => val === NULL_VALUE,
+    toInternalValue: (val) => (val != null ? val : NULL_VALUE),
+    toExternalValue: (val) => (val !== NULL_VALUE ? val : null),
+    isNull: (val) => val === NULL_VALUE,
   },
   number: {
-    toInternalValue: val => (val != null ? String(val) : NULL_VALUE),
-    toExternalValue: val => (val !== NULL_VALUE ? Number(val) : null),
-    isNull: val => val === NULL_VALUE,
+    toInternalValue: (val) => (val != null ? String(val) : NULL_VALUE),
+    toExternalValue: (val) => (val !== NULL_VALUE ? Number(val) : null),
+    isNull: (val) => val === NULL_VALUE,
     defaultValidators: { isNumber: isNumber() },
   },
   range: {
-    toInternalValue: val => (val != null ? String(val) : NULL_VALUE),
-    toExternalValue: val => (val !== NULL_VALUE ? Number(val) : null),
-    isNull: val => val === NULL_VALUE,
+    toInternalValue: (val) => (val != null ? String(val) : NULL_VALUE),
+    toExternalValue: (val) => (val !== NULL_VALUE ? Number(val) : null),
+    isNull: (val) => val === NULL_VALUE,
   },
 };
 

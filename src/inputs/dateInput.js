@@ -128,7 +128,7 @@ const DEFAULT_PROPS = {
   accentColor:            COLORS.accent,
 };
 
-const DateInputWrapper = props0 => {
+const DateInputWrapper = (props0) => {
   let props = addDefaults(props0, DEFAULT_PROPS);
   if (IS_IOS && props.checkIos) {
     props = timmSet(props, 'analogTime', false);

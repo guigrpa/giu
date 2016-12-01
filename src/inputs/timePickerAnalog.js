@@ -17,7 +17,7 @@ const cos = Math.cos;
 const sin = Math.sin;
 const atan2 = Math.atan2;
 const round = Math.round;
-const sign = Math.sign || (o => {
+const sign = Math.sign || ((o) => {
   if (o > 0) return 1;
   if (o < 0) return -1;
   return 0;
@@ -99,7 +99,7 @@ class TimePickerAnalog extends React.PureComponent {
     this.translate = size / 2;
     return (
       <div className="giu-time-picker-analog" style={style.outer}>
-        <svg ref={c => { this.refSvg = c; }}
+        <svg ref={(c) => { this.refSvg = c; }}
           onClick={this.onClickBackground}
           onMouseMove={this.onMouseMoveBackground}
           onMouseLeave={this.onMouseLeaveBackground}
@@ -134,7 +134,7 @@ class TimePickerAnalog extends React.PureComponent {
       props.x2 = props.x1 * factor;
       props.y2 = props.y1 * factor;
       ticks.push(<line key={`tick-${phi}`} {...props} />);
-      idx++;
+      idx += 1;
       phi += PI2 / 60;
     }
     return <g>{ticks}</g>;
@@ -147,7 +147,7 @@ class TimePickerAnalog extends React.PureComponent {
     } = this.props;
     const { dragging } = this.state;
     const hands = [];
-    HAND_NAMES.forEach(name => {
+    HAND_NAMES.forEach((name) => {
       if (name === 'seconds' && !seconds) return;
       if (curValue) {
         const fHovered = hovering === name && !dragging;
@@ -395,7 +395,7 @@ class WatchFace extends React.PureComponent {
       props.x2 = props.x1 * factor;
       props.y2 = props.y1 * factor;
       ticks.push(<line key={`tick-${phi}`} {...props} />);
-      idx++;
+      idx += 1;
       phi += PI2 / 60;
     }
     return <g>{ticks}</g>;
@@ -417,7 +417,7 @@ const style = {
     marginBottom: -3,
     border: 'none',
   },
-  svg: size => ({
+  svg: (size) => ({
     width: size,
     height: size,
   }),

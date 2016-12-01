@@ -53,7 +53,8 @@ class RadioGroup extends React.Component {
 
   constructor(props) {
     super(props);
-    this.buttonGroupName = `giu-radio-group_${cntId++}`;
+    this.buttonGroupName = `giu-radio-group_${cntId}`;
+    cntId += 1;
     bindAll(this, [
       'renderItem',
       'onClickItem',
@@ -121,7 +122,7 @@ class RadioGroup extends React.Component {
   // ==========================================
   prepareItems(rawItems) {
     this.items = [];
-    rawItems.forEach(item => {
+    rawItems.forEach((item) => {
       if (item.label === LIST_SEPARATOR_KEY) return;
       this.items.push(timmSet(item, 'value', toInternalValue(item.value)));
     });

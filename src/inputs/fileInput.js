@@ -48,7 +48,7 @@ class FileInput extends React.Component {
   componentDidUpdate(prevProps) {
     const { cmds } = this.props;
     if (!cmds || cmds === prevProps.cmds) return;
-    cmds.forEach(cmd => {
+    cmds.forEach((cmd) => {
       if (cmd.type === 'CLICK') this.onClickButton();
     });
   }

@@ -159,7 +159,7 @@ const notifRetain = (id: string) => {
 const notifDelete = (id: string) => {
   if (!store) initStore();
   store.dispatch(actions.notifDelete(id));
-  };
+};
 const notifDeleteByName = (name: string) => {
   if (!store) initStore();
   store.dispatch(actions.notifDeleteByName(name));

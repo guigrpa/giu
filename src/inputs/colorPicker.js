@@ -12,6 +12,7 @@ import {
   inputReset, INPUT_DISABLED,
   GLOW,
 }                           from '../gral/styles';
+
 require('./colorPicker.css');
 
 const SIZE = 190;
@@ -19,7 +20,7 @@ const ALPHA_SLIDER_SIZE = 100;
 const SLIDER_WIDTH = 10;
 const SWATCH_RADIUS = 6;
 
-const hueBg = h => tinycolor({ h, s: 1, v: 1 }).toHexString();
+const hueBg = (h) => tinycolor({ h, s: 1, v: 1 }).toHexString();
 const clamp = (x, min, max) => Math.min(Math.max(x, min), max);
 
 const normalize = (x, attr) => {
@@ -89,8 +90,8 @@ const GRADIENTS = {
   r: 'linear-gradient(to bottom, #ff0000 0%, #000000 100%)',
   g: 'linear-gradient(to bottom, #00ff00 0%, #000000 100%)',
   b: 'linear-gradient(to bottom, #0000ff 0%, #000000 100%)',
-  v: h => `linear-gradient(to bottom, ${hueBg(h)} 0%, #000 100%)`,
-  s: h => `linear-gradient(to bottom, ${hueBg(h)} 0%, #bbb 100%)`,
+  v: (h) => `linear-gradient(to bottom, ${hueBg(h)} 0%, #000 100%)`,
+  s: (h) => `linear-gradient(to bottom, ${hueBg(h)} 0%, #bbb 100%)`,
   alpha: ({ r, g, b }) =>
     `linear-gradient(to right, rgba(${r}, ${g}, ${b}, 0), rgb(${r}, ${g}, ${b}))`,
 };
@@ -185,7 +186,7 @@ class ColorPicker extends React.PureComponent {
       gradients = this.renderSVSelector(activeAttr);
     }
     return (
-      <div ref={c => { this.refColorSelector = c; }}
+      <div ref={(c) => { this.refColorSelector = c; }}
         onMouseDown={this.onMouseDownColorSelector}
         style={style.colorSelector}
       >
@@ -235,7 +236,7 @@ class ColorPicker extends React.PureComponent {
   // ------------------------------------------
   renderActiveAttrSlider() {
     return (
-      <div ref={c => { this.refAttrSlider = c; }}
+      <div ref={(c) => { this.refAttrSlider = c; }}
         onMouseDown={this.onMouseDownAttrSlider}
         style={style.activeAttrSlider(this.state, this.hsva)}
       >
@@ -260,7 +261,7 @@ class ColorPicker extends React.PureComponent {
   // ------------------------------------------
   renderControls() {
     const { mode, activeAttr } = this.state;
-    const colorAttrs = mode.split('').map(colorAttr => {
+    const colorAttrs = mode.split('').map((colorAttr) => {
       const fSelected = activeAttr === colorAttr;
       return (
         <div key={colorAttr}
@@ -304,7 +305,7 @@ class ColorPicker extends React.PureComponent {
 
   renderAlphaSlider() {
     return (
-      <div ref={c => { this.refAlphaSlider = c; }}
+      <div ref={(c) => { this.refAlphaSlider = c; }}
         onMouseDown={this.onMouseDownAlphaSlider}
         style={style.alphaSlider}
       >
@@ -459,7 +460,7 @@ const style = {
       opacity: fHigh ? normAttr : 1 - normAttr,
     });
   },
-  hSelectorBackground: h => ({ background: hueBg(h) }),
+  hSelectorBackground: (h) => ({ background: hueBg(h) }),
   hSelectorLightLeft: { background: GRADIENTS.lightLeft },
   hSelectorDarkBottom: { background: GRADIENTS.darkBottom },
   svSelector: (attr, normAttr, fHigh) => {
@@ -530,7 +531,7 @@ const style = {
     width: ALPHA_SLIDER_SIZE,
     cursor: 'pointer',
   },
-  alphaSliderGradient: rgba => ({
+  alphaSliderGradient: (rgba) => ({
     position: 'absolute',
     top: 0, right: 0, bottom: 0, left: 0,
     background: GRADIENTS.alpha(rgba),

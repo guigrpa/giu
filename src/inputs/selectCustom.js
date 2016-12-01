@@ -147,7 +147,7 @@ class SelectCustomBase extends React.Component {
     const { curValue, lang } = this.props;
     let label = UNICODE.nbsp;
     if (curValue !== NULL_STRING) {
-      const item = this.items.find(o => o.value === curValue);
+      const item = this.items.find((o) => o.value === curValue);
       if (item) label = isFunction(item.label) ? item.label(lang) : item.label;
     }
     const caretIcon = this.state.fFloat ? 'caret-up' : 'caret-down';
@@ -282,7 +282,7 @@ class SelectCustomBase extends React.Component {
         shortcuts: [],
       });
     }
-    rawItems.forEach(item => {
+    rawItems.forEach((item) => {
       const { value } = item;
       if (value === LIST_SEPARATOR_KEY) {
         this.items.push({
@@ -302,8 +302,8 @@ class SelectCustomBase extends React.Component {
   }
 
   registerShortcuts() {
-    this.items.forEach(item => item.shortcuts.forEach(shortcut => {
-      registerShortcut(shortcut, ev => {
+    this.items.forEach((item) => item.shortcuts.forEach((shortcut) => {
+      registerShortcut(shortcut, (ev) => {
         this.props.onChange(ev, item.value);
         this.onClickItem(ev, item.value);
       });
@@ -311,7 +311,7 @@ class SelectCustomBase extends React.Component {
   }
 
   unregisterShortcuts() {
-    this.items.forEach(item => item.shortcuts.forEach(unregisterShortcut));
+    this.items.forEach((item) => item.shortcuts.forEach(unregisterShortcut));
   }
 }
 

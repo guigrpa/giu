@@ -52,8 +52,8 @@ const PROP_KEYS = Object.keys(PROP_TYPES);
 // **IMPORTANT**: must be the outermost HOC (i.e. closest to the
 // user), for the imperative API to work.
 function input(ComposedComponent, {
-  toInternalValue = (o => o),
-  toExternalValue = (o => o),
+  toInternalValue = ((o) => o),
+  toExternalValue = ((o) => o),
   isNull,
   valueAttr = 'value',
   fIncludeFocusCapture = false,
@@ -156,7 +156,7 @@ function input(ComposedComponent, {
     // ==========================================
     processCmds(cmds, nextProps) {
       if (cmds == null) return;
-      cmds.forEach(cmd => {
+      cmds.forEach((cmd) => {
         switch (cmd.type) {
           case 'SET_VALUE':
             this.setState({ curValue: toInternalValue(cmd.value, nextProps) });
@@ -395,8 +395,9 @@ function input(ComposedComponent, {
       if (this.props.validators.length) {
         validators = merge({}, defaultValidators);
         let cnt = 0;
-        this.props.validators.forEach(validator => {
-          validators[validator.id || `anon_${cnt++}`] = validator;
+        this.props.validators.forEach((validator) => {
+          validators[validator.id || `anon_${cnt}`] = validator;
+          cnt += 1;
         });
       } else {
         validators = defaultValidators;
@@ -419,7 +420,7 @@ function input(ComposedComponent, {
       // Otherwise, collect all validator errors (skipping `isRequired`)
       } else {
         pErrors = [];
-        Object.keys(validators).forEach(id => {
+        Object.keys(validators).forEach((id) => {
           if (id === 'isRequired') return;
           const validator = validators[id];
           const validate = validator.validate || validator;
@@ -430,8 +431,8 @@ function input(ComposedComponent, {
       }
 
       // When all promises have resolved, changed the current state
-      return Promise.all(pErrors).then(validationErrors0 => {
-        const validationErrors = validationErrors0.filter(o => o != null);
+      return Promise.all(pErrors).then((validationErrors0) => {
+        const validationErrors = validationErrors0.filter((o) => o != null);
         this && this.setState && this.setState({
           validationErrors,
           lastValidatedValue: internalValue,
@@ -478,7 +479,7 @@ const style = {
     });
     return out;
   },
-  errors: fModified => ({
+  errors: (fModified) => ({
     padding: '1px 3px',
     backgroundColor: fModified ? errorBgColorModified : errorBgColorBase,
     color: fModified ? errorFgColorModified : errorFgColorBase,

@@ -173,7 +173,7 @@ const actions = {
 const hintDefine = (id: string, pars: HintScreenPars) => {
   if (!store) initStore();
   store.dispatch(actions.hintDefine(id, pars));
-}
+};
 const hintDisableAll = () => {
   if (!store) initStore();
   store.dispatch(actions.hintDisableAll());
