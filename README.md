@@ -852,31 +852,6 @@ excluding scrollbars (if any).
 
 * **Returns** *number*: inner height (width) in pixels
 
-**delay()**
-
-Waits for a given number of milliseconds.
-
-* **delay** *number*: delay [ms]
-* **Returns** *Promise<void>*: resolves when the delay expires.
-
-**waitUntil()**
-
-Waits until a given condition is true, or until time runs out.
-
-* **cb** *() => boolean*: predicate
-* **timeout?** *number*: maximum wait time [ms]
-* **waiterId?** *string*: an ID for who's waiting (can be checked with `isWaiting()`)
-* **Returns** *Promise<void>*: resolves when the delay expires. Otherwise,
-  the function throws a `TIME_OUT` exception
-
-**isWaiting()**
-
-Returns whether a given (or any) waiter is waiting on `waitUntil()`.
-
-* **waiterId?** *string*: an ID for who's waiting (leave empty for *all*)
-* **Returns** *boolean*: whether the specified waiter (or anybody) is waiting
-  on `waitUntil()`
-
 **getScrollbarWidth()**
 
 Measures and returns the scrollbar width.

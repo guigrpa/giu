@@ -6,7 +6,7 @@
 // Basic config
 // ===============================================
 const NAME = 'giu';
-const VERSION = '0.8.1';
+const VERSION = '0.9.0';
 const DESCRIPTION = 'A collection of React components and utilities';
 const KEYWORDS = ['React', 'components', 'collection', 'forms', 'inputs', 'ssr', 'i18n'];
 

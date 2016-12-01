@@ -2,8 +2,13 @@
 
 *[M]: major change; [m]: minor change*
 
+## 0.9.0 (December 1, 2016)
+
 * [M] Makes **moment an optional dependency**. Only include it in your project if you use DateInput or the date utilities
+* [M] **Bugfix**: Redux stores (Notifications, Hints, Floats) are now lazily initialised
 * [m] Pass through disabled property to native checkbox
+* [m] Backdrop: add small transition when it appears
+- [M] Ongoing internal work adding Flow types
 
 ## 0.8.1 (September 21, 2016)
 

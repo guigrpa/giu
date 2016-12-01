@@ -199,6 +199,7 @@ class Notifications extends React.PureComponent {
         style={style.outer}
       >
         {notifs.map((props: NotificationStatePars) =>
+          /* $FlowFixMe */
           <Notification key={props.id}
             {...props}
             onHoverStart={this.onRetain}
