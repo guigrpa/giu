@@ -10,7 +10,7 @@ import {
 }                           from '../gral/helpers';
 import Backdrop             from '../components/backdrop';
 import HintLabel            from '../components/hintLabel';
-// import type { HintLabelProps } from '../components/hintLabel';
+import type { HintLabelProps } from '../components/hintLabel';
 import HintArrow            from '../components/hintArrow';
 import type { HintArrowProps } from '../components/hintArrow';
 
@@ -23,17 +23,7 @@ const FONT_FAMILY = '"Gloria Hallelujah", sans-serif';
 // Component
 // ==========================================
 type Arrow = HintArrowProps & { type: 'ARROW' };
-// TODO: modify HintLabelProps when that becomes possible in Flow
-type AlignType = 'left' | 'right' | 'center';
-type Label = {
-  x: number,
-  y: number,
-  align?: AlignType,
-  children?: any,
-  fontSize?: number,
-  style?: Object,
-} & { type: 'LABEL' };
-// type Label = HintLabelProps & { type: 'LABEL' };
+type Label = HintLabelProps & { type: 'LABEL' };
 type Element = Arrow | Label;
 type ElementsWrapper = Array<Element> | () => Array<Element>;
 export type HintScreenPars = {

@@ -10,18 +10,22 @@ type AlignType = 'left' | 'right' | 'center';
 type Props = {
   x: number,
   y: number,
-  align: AlignType,
+  align?: AlignType,
   children?: any,
   fontSize: number,
   style?: Object,
 };
-export type HintLabelProps = Props;
+export type HintLabelProps = {
+  x: number,
+  y: number,
+  align?: AlignType,
+  children?: any,
+  fontSize?: number,  // will be initialised by the HintScreen
+  style?: Object,
+};
 
 class HintLabel extends React.Component {
   props: Props;
-  static defaultProps = {
-    align: ('left': AlignType),
-  }
 
   // ==========================================
   // Render
@@ -51,7 +55,7 @@ const style = {
     width: 0,
     pointerEvents: 'none',
   }),
-  label: ({ align, fontSize, style: baseStyle }) => {
+  label: ({ align = 'left', fontSize, style: baseStyle }) => {
     const width = style.width || 200;
     let out = {
       position: 'absolute',

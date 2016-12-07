@@ -1,5 +1,9 @@
 // @flow
 
+// Instead of this, copy sources to /lib following the approach in:
+// https://medium.com/@ryyppy/shipping-flowtype-definitions-in-npm-packages-c987917efb65#.jeydh13kw
+// https://github.com/AgentME/flow-copy-source
+
 import * as giu from '../src/';  // this file will be used from <PROJECT>/lib
 
 // Components

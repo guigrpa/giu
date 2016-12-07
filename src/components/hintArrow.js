@@ -19,21 +19,15 @@ const vec = (V: Point2) => `${V.x},${V.y}`;
 type Props = {
   from: Point2,
   to: Point2,
-  curveFactor: number,
-  arrowSize: number,
-  arrowAngle: number,
-  counterclockwise: boolean,
-}
+  curveFactor?: number,
+  arrowSize?: number,
+  arrowAngle?: number,
+  counterclockwise?: boolean,
+};
 export type HintArrowProps = Props;
 
 class HintArrow extends React.Component {
   props: Props;
-  static defaultProps = {
-    curveFactor: 0.7,  // 0.6...2
-    arrowSize: 10,
-    arrowAngle: 30,
-    counterClockwise: false,
-  };
 
   // ==========================================
   // Render
@@ -41,9 +35,10 @@ class HintArrow extends React.Component {
   render() {
     const {
       from: A, to: B,
-      curveFactor,
-      arrowSize, arrowAngle,
-      counterclockwise,
+      curveFactor = 0.7,
+      arrowSize = 10,
+      arrowAngle = 30,
+      counterclockwise = false,
     } = this.props;
 
     // From, to
