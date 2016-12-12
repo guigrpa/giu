@@ -8,7 +8,6 @@ exports[`Backdrop 01 renders with default style 1`] = `
       "backgroundColor": "white",
       "height": "100vh",
       "left": 0,
-      "opacity": 0.7,
       "position": "fixed",
       "top": 0,
       "width": "100vw",
@@ -17,7 +16,7 @@ exports[`Backdrop 01 renders with default style 1`] = `
 ------------HTML PREVIEW---------------
 <div
   class="giu-backdrop"
-  style="background-color:white;height:100vh;left:0;opacity:0.7;position:fixed;top:0;width:100vw;"
+  style="background-color:white;height:100vh;left:0;position:fixed;top:0;width:100vw;"
 >
 </div>
 `;
@@ -32,7 +31,6 @@ exports[`Backdrop 02 renders with custom style 1`] = `
       "backgroundColor": "black",
       "height": "100vh",
       "left": 0,
-      "opacity": 0.7,
       "position": "fixed",
       "top": 0,
       "width": "100vw",
@@ -41,7 +39,7 @@ exports[`Backdrop 02 renders with custom style 1`] = `
 ------------HTML PREVIEW---------------
 <div
   class="giu-backdrop"
-  style="background-color:black;height:100vh;left:0;opacity:0.7;position:fixed;top:0;width:100vw;"
+  style="background-color:black;height:100vh;left:0;position:fixed;top:0;width:100vw;"
 >
 </div>
 `;

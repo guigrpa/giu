@@ -11,7 +11,6 @@
 - [ ] Stop scrollers (in ListPickers and DataTables) from scrolling the window! (seems to happen only on Chrome Mac)
 - [ ] Safari Mac: DataTables don't scroll smoothly
 - [ ] Check DataTable behaviour on iOS, especially dragging
-- [ ] Cut v0.8.1
 
 - [ ] Use SVG icons: https://css-tricks.com/icon-fonts-vs-svg/
 - [ ] Combo input (free-text, typeahead, list)

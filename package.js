@@ -6,7 +6,7 @@
 // Basic config
 // ===============================================
 const NAME = 'giu';
-const VERSION = '0.9.0';
+const VERSION = '0.9.1';
 const DESCRIPTION = 'A collection of React components and utilities';
 const KEYWORDS = ['React', 'components', 'collection', 'forms', 'inputs', 'ssr', 'i18n'];
 
@@ -62,10 +62,11 @@ const specs = {
                                   'mkdir lib',
                                   'babel --out-dir lib --ignore "**/__mocks__/**","**/__tests__/**" src',
                                   'cp src/*.css lib',
+                                  'flow-copy-source -i "**/__mocks__/**" -i "**/__tests__/**" src lib',
                                   'cp src/components/*.css lib/components',
                                   'cp src/inputs/*.css lib/inputs',
                                   'cp -r src/fonts lib/fonts',
-                                  'cp src/api.js.flow lib/index.js.flow',
+                                  // 'cp src/api.js.flow lib/index.js.flow',
                                 ]),
     docs:                       'extract-docs --template docs/templates/README.md --output README.md',
     build:                      runMultiple([
@@ -219,7 +220,7 @@ const specs = {
     // Testing
     'jest': '17.0.3',
     'babel-jest': '17.0.2',
-    'jest-html': '^1.2.1',
+    'jest-html': '^1.3.2',
     'react-test-renderer': '15.4.0',
 
     // Coverage testing
@@ -228,6 +229,7 @@ const specs = {
 
     // Other tools
     'flow-bin': '0.36.0',
+    'flow-copy-source': '1.1.0',
   },
 
   // -----------------------------------------------

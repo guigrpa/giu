@@ -2,6 +2,10 @@
 
 *[M]: major change; [m]: minor change*
 
+## 0.9.1 (December 12, 2016)
+
+* *Internal*: publish source in order to support always-up-to-date Flow types, using flow-copy-source
+
 ## 0.9.0 (December 1, 2016)
 
 * [M] Makes **moment an optional dependency**. Only include it in your project if you use DateInput or the date utilities
