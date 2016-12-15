@@ -2,6 +2,10 @@
 
 *[M]: major change; [m]: minor change*
 
+## 0.9.2 (December 15, 2016)
+
+* Remove external-facing Flow types for the time being
+
 ## 0.9.1 (December 12, 2016)
 
 * *Internal*: publish source in order to support always-up-to-date Flow types, using flow-copy-source

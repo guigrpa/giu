@@ -33,3 +33,4 @@ node_modules
 
 # Project-specific
 /docs
+/src

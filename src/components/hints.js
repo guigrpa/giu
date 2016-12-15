@@ -161,7 +161,7 @@ const actions = {
     localSet('hints.fDisableAll', fDisableAll);
     localSet('hints.disabled', disabled);
   },
-  hintShow: (id: string, force: boolean) => (dispatch: Function, getState: Function) => {
+  hintShow: (id: string, force?: boolean = false) => (dispatch: Function, getState: Function) => {
     dispatch({ type: 'HINT_SHOW', id, force });
     const { disabled } = getState();
     localSet('hints.disabled', disabled);
@@ -182,7 +182,7 @@ const hintReset = () => {
   if (!store) initStore();
   store.dispatch(actions.hintReset());
 };
-const hintShow = (id: string, force: boolean) => {
+const hintShow = (id: string, force?: boolean = false) => {
   if (!store) initStore();
   store.dispatch(actions.hintShow(id, force));
 };

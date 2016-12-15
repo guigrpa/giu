@@ -6,7 +6,7 @@
 // Basic config
 // ===============================================
 const NAME = 'giu';
-const VERSION = '0.9.1';
+const VERSION = '0.9.2';
 const DESCRIPTION = 'A collection of React components and utilities';
 const KEYWORDS = ['React', 'components', 'collection', 'forms', 'inputs', 'ssr', 'i18n'];
 
@@ -62,7 +62,7 @@ const specs = {
                                   'mkdir lib',
                                   'babel --out-dir lib --ignore "**/__mocks__/**","**/__tests__/**" src',
                                   'cp src/*.css lib',
-                                  'flow-copy-source -i "**/__mocks__/**" -i "**/__tests__/**" src lib',
+                                  // 'flow-copy-source -i "**/__mocks__/**" -i "**/__tests__/**" src lib',
                                   'cp src/components/*.css lib/components',
                                   'cp src/inputs/*.css lib/inputs',
                                   'cp -r src/fonts lib/fonts',
