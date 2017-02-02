@@ -1,5 +1,6 @@
 // @flow
 
+import 'typeface-gloria-hallelujah';  // eslint-disable-line import/extensions
 import React                from 'react';
 import {
   COLORS,
@@ -13,8 +14,6 @@ import HintLabel            from '../components/hintLabel';
 import type { HintLabelProps } from '../components/hintLabel';
 import HintArrow            from '../components/hintArrow';
 import type { HintArrowProps } from '../components/hintArrow';
-
-require('./hintScreen.css');
 
 const FONT_SIZE = 20;
 const FONT_FAMILY = '"Gloria Hallelujah", sans-serif';

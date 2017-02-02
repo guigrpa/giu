@@ -65,7 +65,6 @@ const specs = {
                                   // 'flow-copy-source -i "**/__mocks__/**" -i "**/__tests__/**" src lib',
                                   'cp src/components/*.css lib/components',
                                   'cp src/inputs/*.css lib/inputs',
-                                  'cp -r src/fonts lib/fonts',
                                   // 'cp src/api.js.flow lib/index.js.flow',
                                 ]),
     docs:                       'extract-docs --template docs/templates/README.md --output README.md',
@@ -162,6 +161,7 @@ const specs = {
     'lodash': '4.15.0',  // only parts of it will be included
 
     'font-awesome': '4.6.3',
+    'typeface-gloria-hallelujah': '0.0.21',
     'react-sortable-hoc': '0.0.8',
 
     tinycolor2: '1.4.1',
@@ -172,7 +172,7 @@ const specs = {
 
   devDependencies: {
     storyboard: '2.2.0',
-    'xxl': '^0.1.1',
+    'xxl': '1.0.0',
     'cross-env': '^1.0.8',
     // 'diveSync': '0.3.0',
 
@@ -212,7 +212,7 @@ const specs = {
     'babel-eslint': '7.0.0',
 
     // Documentation
-    'extract-docs': '^1.2.0',
+    'extract-docs': '1.4.0',
     'marked': '0.3.5',
     'highlight.js': '9.5.0',
     'fontfaceobserver': '1.7.1',

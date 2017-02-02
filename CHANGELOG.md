@@ -2,6 +2,8 @@
 
 *[M]: major change; [m]: minor change*
 
+* Use Typefaces to include fonts as a package
+
 ## 0.9.2 (December 15, 2016)
 
 * Remove external-facing Flow types for the time being

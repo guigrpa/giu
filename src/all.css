@@ -1,6 +1,7 @@
+/* used only for Giu's examples, not to be used externally */
 @import 'index.css';
 @import 'components/backdrop.css';
-@import 'components/hintScreen.css';
 @import 'components/dataTable.css';
 @import 'inputs/colorPicker.css';
+@import '../node_modules/typeface-gloria-hallelujah/index.css';
 @import '../node_modules/font-awesome/css/font-awesome.css';
