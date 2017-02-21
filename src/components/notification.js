@@ -7,7 +7,7 @@ import {
   boxWithShadow,
   isDark, darken,
 }                           from '../gral/styles';
-import { COLORS }           from '../gral/constants';
+import { COLORS, FONTS }    from '../gral/constants';
 import hoverable            from '../hocs/hoverable';
 import type { HoverableProps } from '../hocs/hoverable';
 import Icon                 from './icon';
@@ -57,7 +57,7 @@ class Notification extends React.PureComponent {
         onMouseEnter={onHoverStart}
         onMouseLeave={onHoverStop}
         onClick={onClick}
-        style={style.outer(this.props)}
+        style={style.outer(this.props, this.context.theme)}
       >
         <div style={style.icon}>
           <Icon icon={icon} size="2x" spin={iconSpin} />
@@ -71,6 +71,8 @@ class Notification extends React.PureComponent {
   }
 }
 
+Notification.contextTypes = { theme: React.PropTypes.any };
+
 // ==========================================
 // Styles
 // ==========================================
@@ -80,7 +82,7 @@ const style = {
     hovering,
     onClick,
     style: baseStyle, noStylePosition, noStyleShadow,
-  }) => {
+  }, theme) => {
     let bgColor = COLORS.notifs[type] || COLORS.notifs.info;
     if (hovering && onClick) bgColor = darken(bgColor, 10);
     const fgColor = COLORS[isDark(bgColor) ? 'lightText' : 'darkText'];
@@ -92,6 +94,7 @@ const style = {
       cursor: onClick ? 'pointer' : undefined,
       backgroundColor: bgColor,
       color: fgColor,
+      fontFamily: theme === 'mdl' ? FONTS.mdl : undefined,
     });
     if (!noStyleShadow) out = boxWithShadow(out);
     if (!noStylePosition) {

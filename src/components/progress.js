@@ -12,9 +12,16 @@ import React                from 'react';
 class Progress extends React.PureComponent {
   props: Object;
   render() {
+    if (this.props.value == null && this.context.theme === 'mdl') return this.renderMdl();
     return <progress {...this.props} style={style.progress} />;
   }
+
+  renderMdl() {
+    return <div className="mdl-progress mdl-js-progress mdl-progress--indeterminate" />;
+  }
 }
+
+Progress.contextTypes = { theme: React.PropTypes.any };
 
 // ==========================================
 // Styles

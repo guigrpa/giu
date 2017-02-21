@@ -3,6 +3,7 @@ const path = require('path');
 const webpack = require('webpack');
 const extractDocs = require('extract-docs');
 const StaticSiteGeneratorPlugin = require('static-site-generator-webpack-plugin');
+
 const fProduction = process.env.NODE_ENV === 'production';
 const fSsr = !!process.env.SERVER_SIDE_RENDERING;
 
@@ -20,6 +21,7 @@ module.exports = {
   // -------------------------------------------------
   entry: {
     demo1: prepareEntry('./examples/demo1.js'),
+    demo2: prepareEntry('./examples/demo2.js'),
     index: prepareEntry('./examples/index.js'),
   },
 

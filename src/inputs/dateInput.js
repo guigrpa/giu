@@ -208,6 +208,10 @@ class BaseDateInput extends React.Component {
     }
   }
 
+  componentDidMount() {
+    if (this.context.theme === 'mdl' && this.refMdl) window.componentHandler.upgradeElement(this.refMdl);
+  }
+
   componentDidUpdate(prevProps) {
     this.renderFloat();
     const { lang, onChange } = this.props;
@@ -290,6 +294,7 @@ class BaseDateInput extends React.Component {
   }
 
   renderField(fHidden) {
+    if (!fHidden && this.context.theme === 'mdl') return this.renderFieldMdl();
     const {
       curValue, onChange, placeholder,
       date, time, seconds,
@@ -314,6 +319,38 @@ class BaseDateInput extends React.Component {
         tabIndex={disabled ? -1 : undefined}
         style={fHidden ? style.fieldHidden : style.field(this.props)}
       />
+    );
+  }
+
+  renderFieldMdl() {
+    const {
+      curValue, onChange, placeholder,
+      date, time, seconds,
+      disabled, fFocused,
+    } = this.props;
+    const otherProps = omit(this.props, PROP_KEYS_TO_REMOVE_FROM_INPUT_MDL);
+    const id = this.props.id || String(Math.random());
+    let className = 'giu-date-input mdl-textfield mdl-js-textfield mdl-textfield--floating-label';
+    if (curValue !== '' || fFocused) className += ' is-dirty';
+    return (
+      <div ref={(c) => { this.refMdl = c; }}
+        className={className}
+        style={style.mdlField(this.props)}
+      >
+        <input ref={this.registerInputRef}
+          className="mdl-textfield__input"
+          type="text"
+          value={curValue}
+          id={id}
+          {...otherProps}
+          onFocus={this.onFocus}
+          onBlur={this.onBlur}
+          onChange={onChange}
+          onKeyDown={this.onKeyDown}
+          tabIndex={disabled ? -1 : undefined}
+        />
+        <label className="mdl-textfield__label" htmlFor={id}>{placeholder || dateTimeFormat(date, time, seconds)}</label>
+      </div>
     );
   }
 
@@ -452,6 +489,8 @@ class BaseDateInput extends React.Component {
   }
 }
 
+BaseDateInput.contextTypes = { theme: React.PropTypes.any };
+
 // ==========================================
 // Styles
 // ==========================================
@@ -468,6 +507,12 @@ const style = {
     out = merge(out, styleField);
     return out;
   },
+  mdlField: ({ style: styleField, disabled }) => {
+    let out = { width: 150 };
+    if (disabled) out = merge(out, { cursor: 'default', pointerEvents: 'none' });
+    out = merge(out, styleField);
+    return out;
+  },
   fieldHidden: IS_IOS ? HIDDEN_FOCUS_CAPTURE_IOS : HIDDEN_FOCUS_CAPTURE,
   wrapperForIos: { position: 'relative' },
 };
@@ -478,6 +523,7 @@ const style = {
 const PROP_KEYS_TO_REMOVE_FROM_INPUT = Object.keys(BaseDateInput.propTypes).concat([
   'cmds', 'keyDown', 'onResizeOuter', 'required',
 ]);
+const PROP_KEYS_TO_REMOVE_FROM_INPUT_MDL = PROP_KEYS_TO_REMOVE_FROM_INPUT.concat(['placeholder']);
 
 // ==========================================
 // Public API

@@ -116,7 +116,7 @@ class DataTableHeader extends React.PureComponent {
 
   renderSortIcon(fDescending: boolean) {
     const icon = fDescending ? 'caret-down' : 'caret-up';
-    return <Icon icon={icon} style={style.headerSortIcon} />;
+    return <Icon icon={icon} style={style.headerSortIcon} skipTheme />;
   }
 
   // ===============================================================

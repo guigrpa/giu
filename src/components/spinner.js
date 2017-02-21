@@ -1,7 +1,7 @@
 // @flow
 
-import React                from 'react';
-import Icon                 from './icon';
+import React from 'react';
+import Icon, { SPINNER_ICON } from './icon';
 
 // ==========================================
 // Component
@@ -9,7 +9,7 @@ import Icon                 from './icon';
 class Spinner extends React.PureComponent {
   props: Object;
   render() {
-    return <Icon icon="circle-o-notch" {...this.props} />;
+    return <Icon icon={SPINNER_ICON} {...this.props} />;
   }
 }
 

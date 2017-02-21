@@ -103,13 +103,13 @@ class DatePicker extends React.Component {
     return (
       <div style={style.monthRow}>
         <div style={style.monthChange}>
-          {!disabled && <Icon icon="arrow-left" onClick={this.onClickPrevMonth} />}
+          {!disabled && <Icon icon="arrow-left" onClick={this.onClickPrevMonth} skipTheme />}
         </div>
-        <Button onClick={this.onClickMonthName} plain style={style.monthName}>
+        <Button onClick={this.onClickMonthName} skipTheme plain style={style.monthName}>
           {shownMonthStart.format('MMMM YYYY')}
         </Button>
         <div style={style.monthChange}>
-          {!disabled && <Icon icon="arrow-right" onClick={this.onClickNextMonth} />}
+          {!disabled && <Icon icon="arrow-right" onClick={this.onClickNextMonth} skipTheme />}
         </div>
       </div>
     );

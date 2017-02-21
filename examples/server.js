@@ -1,7 +1,8 @@
-import http                 from 'http';
-import path                 from 'path';
-import { mainStory, chalk } from 'storyboard/lib/withConsoleListener';
-import express              from 'express';
+import http from 'http';
+import path from 'path';
+import { mainStory, chalk } from 'storyboard';
+import 'storyboard-preset-console';
+import express from 'express';
 
 const PORT = 8080;
 const expressApp = express();

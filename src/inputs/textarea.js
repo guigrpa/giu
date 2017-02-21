@@ -34,11 +34,13 @@ function getPlaceHolderText(val) {
 class Textarea extends React.Component {
   static propTypes = {
     style:                  React.PropTypes.object,
+    skipTheme:              React.PropTypes.bool,
     // Input HOC
     curValue:               React.PropTypes.any.isRequired,
     errors:                 React.PropTypes.array.isRequired,
     registerOuterRef:       React.PropTypes.func.isRequired,
     registerFocusableRef:   React.PropTypes.func.isRequired,
+    fFocused:               React.PropTypes.bool.isRequired,
     onResizeOuter:          React.PropTypes.func.isRequired,
     // all others are passed through unchanged
   };
@@ -46,6 +48,7 @@ class Textarea extends React.Component {
   constructor(props) {
     super(props);
     bindAll(this, [
+      'registerOuterRef',
       'registerInputRef',
       'resize',
       'onKeyDown',
@@ -55,6 +58,7 @@ class Textarea extends React.Component {
   componentDidMount() {
     this.resize();
     window.addEventListener('resize', this.resize);
+    if (this.context.theme === 'mdl' && this.refOuter) window.componentHandler.upgradeElement(this.refOuter);
   }
   componentDidUpdate() { this.resize(); }
   componentWillUnmount() {
@@ -65,14 +69,14 @@ class Textarea extends React.Component {
   // Render
   // ==========================================
   render() {
+    if (!this.props.skipTheme && this.context.theme === 'mdl') return this.renderMdl();
     const {
       curValue, disabled,
-      registerOuterRef,
       style: styleField,
     } = this.props;
     const otherProps = omit(this.props, PROP_KEYS_TO_REMOVE_FROM_INPUT);
     return (
-      <div ref={registerOuterRef}
+      <div ref={this.registerOuterRef}
         className="giu-textarea"
         style={style.taWrapper}
       >
@@ -92,9 +96,39 @@ class Textarea extends React.Component {
     );
   }
 
+  renderMdl() {
+    const {
+      curValue, disabled,
+      fFocused,
+    } = this.props;
+    const otherProps = omit(this.props, PROP_KEYS_TO_REMOVE_FROM_INPUT_MDL);
+    let className = 'giu-textarea mdl-textfield mdl-js-textfield mdl-textfield--floating-label';
+    if (curValue !== '' || fFocused) className += ' is-dirty';
+    const id = this.props.id || String(Math.random());
+    return (
+      <div ref={this.registerOuterRef} className={className}>
+        <textarea ref={this.registerInputRef}
+          className="mdl-textfield__input"
+          value={curValue}
+          id={id}
+          onKeyDown={this.onKeyDown}
+          rows={3}
+          {...otherProps}
+          tabIndex={disabled ? -1 : undefined}
+        />
+        <label className="mdl-textfield__label" htmlFor={id}>{this.props.placeholder || ''}</label>
+      </div>
+    );
+  }
+
   // ==========================================
   // Handlers
   // ==========================================
+  registerOuterRef(c) {
+    this.refOuter = c;
+    this.props.registerOuterRef(c);
+  }
+
   registerInputRef(c) {
     this.refInput = c;
     this.props.registerFocusableRef(c);
@@ -102,6 +136,7 @@ class Textarea extends React.Component {
 
   resize() {
     if (!this.refTaPlaceholder) return;
+    if (!this.props.skipTheme && this.context.theme === 'mdl') return;
     const height = this.refTaPlaceholder.offsetHeight;
     if (!this.refInput) return;
     this.refInput.style.height = `${height}px`;
@@ -120,6 +155,8 @@ class Textarea extends React.Component {
     }
   }
 }
+
+Textarea.contextTypes = { theme: React.PropTypes.any };
 
 // ==========================================
 // Styles
@@ -140,6 +177,17 @@ const style = {
   field: ({ disabled, style: styleField }) => {
     let out = style.fieldBase;
     if (disabled) out = merge(out, INPUT_DISABLED);
+    out = merge(out, styleField);
+    return out;
+  },
+  mdlField: ({ disabled, style: styleField }) => {
+    let out = {
+      width: '100%',
+      lineHeight: 'inherit',
+      cursor: 'beam',
+      padding: 2,
+    };
+    if (disabled) out = merge(out, { cursor: 'default', pointerEvents: 'none' });
     out = merge(out, styleField);
     return out;
   },
@@ -168,8 +216,9 @@ const style = {
 // Miscellaneous
 // ==========================================
 const PROP_KEYS_TO_REMOVE_FROM_INPUT = Object.keys(Textarea.propTypes).concat([
-  'cmds', 'keyDown', 'fFocused', 'floatZ', 'floatPosition', 'styleOuter',
+  'cmds', 'keyDown', 'floatZ', 'floatPosition', 'styleOuter',
 ]);
+const PROP_KEYS_TO_REMOVE_FROM_INPUT_MDL = PROP_KEYS_TO_REMOVE_FROM_INPUT.concat(['placeholder']);
 
 // ==========================================
 // Public API

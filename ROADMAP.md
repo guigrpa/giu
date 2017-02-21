@@ -1,5 +1,15 @@
 # Roadmap
 
+* MDL support:
+    - [ ] Roboto all over the place
+    - [ ] Fix required error in embedded modal (demo 2) upon opening
+    - [ ] Bug: text fields that appear afterwards! https://getmdl.io/started/index.html#dynamic
+    - [ ] Expandable text input (see https://getmdl.io/components/index.html#textfields-section)
+    - [ ] Selects
+    - [ ] Radio buttons
+    - [ ] Checkboxes
+    - [ ] Progress bar (determinate)
+
 - FLOW conversion:
     - [ ] Add support for Hoverable HOC on functional components
     - [ ] Check status of https://github.com/facebook/flow/issues/1326 (Object type spread)

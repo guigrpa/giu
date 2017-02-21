@@ -40,6 +40,10 @@ const KEYS = {
   del: 46,
 };
 
+const FONTS = {
+  mdl: '"Roboto", "Helvetica", "Arial", sans-serif',
+};
+
 // For more: http://www.fileformat.info/info/unicode/char/search.html
 const UNICODE = {
   shiftKey: '\u21E7',
@@ -130,7 +134,7 @@ try {
 // Public API
 // ==========================================
 export {
-  COLORS, KEYS, UNICODE, MISC,
+  COLORS, KEYS, UNICODE, MISC, FONTS,
   NULL_STRING,
   getScrollbarWidth,
   IS_MAC, IS_IOS,

@@ -48,12 +48,14 @@ const PROP_TYPES = {
   errors:                 React.PropTypes.array.isRequired,
   registerOuterRef:       React.PropTypes.func.isRequired,
   registerFocusableRef:   React.PropTypes.func.isRequired,
+  fFocused:               React.PropTypes.bool.isRequired,
   // all others are passed through unchanged
 };
 const PROP_KEYS_TO_REMOVE_FROM_INPUT = Object.keys(PROP_TYPES).concat([
-  'cmds', 'keyDown', 'fFocused', 'floatZ', 'floatPosition', 'onResizeOuter', 'styleOuter',
+  'cmds', 'keyDown', 'floatZ', 'floatPosition', 'onResizeOuter', 'styleOuter',
   'required',
 ]);
+const PROP_KEYS_TO_REMOVE_FROM_INPUT_MDL = PROP_KEYS_TO_REMOVE_FROM_INPUT.concat(['placeholder']);
 
 // ==========================================
 // Component
@@ -63,10 +65,15 @@ function createClass(name, inputType) {
     static displayName = name;
     static propTypes = PROP_TYPES;
 
+    componentDidMount() {
+      if (this.context.theme === 'mdl' && this.refMdl) window.componentHandler.upgradeElement(this.refMdl);
+    }
+
     // ==========================================
     // Render
     // ==========================================
     render() {
+      if (this.context.theme === 'mdl' && !this.props.vertical) return this.renderMdl();
       const {
         curValue, disabled,
         registerFocusableRef,
@@ -86,7 +93,56 @@ function createClass(name, inputType) {
         />
       );
     }
+
+    renderMdl() {
+      if (inputType === 'range') return this.renderMdlSlider();
+      const {
+        curValue, disabled,
+        registerFocusableRef,
+        fFocused,
+      } = this.props;
+      const otherProps = omit(this.props, PROP_KEYS_TO_REMOVE_FROM_INPUT_MDL);
+      const id = this.props.id || String(Math.random());
+      let className = `giu-${inputType}-input mdl-textfield mdl-js-textfield mdl-textfield--floating-label`;
+      if (curValue !== '' || fFocused) className += ' is-dirty';
+      return (
+        <div ref={(c) => { this.refMdl = c; }}
+          className={className}
+          style={style.mdlField(this.props)}
+        >
+          <input ref={registerFocusableRef}
+            className="mdl-textfield__input"
+            type={inputType === 'password' ? 'password' : 'text'}
+            value={curValue}
+            id={id}
+            {...otherProps}
+            tabIndex={disabled ? -1 : undefined}
+          />
+          <label className="mdl-textfield__label" htmlFor={id}>{this.props.placeholder || ''}</label>
+        </div>
+      );
+    }
+
+    renderMdlSlider() {
+      const {
+        curValue, disabled,
+        registerFocusableRef,
+      } = this.props;
+      const otherProps = omit(this.props, PROP_KEYS_TO_REMOVE_FROM_INPUT);
+      return (
+        <input ref={registerFocusableRef}
+          className={`giu-${inputType}-input mdl-slider mdl-js-slider`}
+          type={inputType}
+          value={curValue}
+          {...otherProps}
+          tabIndex={disabled ? -1 : undefined}
+          style={style.mdlField(this.props)}
+        />
+      );
+    }
   };
+
+  Klass.contextTypes = { theme: React.PropTypes.any };
 
   return input(Klass, classOptions[inputType]);
 }
@@ -101,6 +157,12 @@ const style = {
     if (disabled) out = merge(out, INPUT_DISABLED);
     out = merge(out, styleField);
     if (vertical) out = timmSet(out, 'WebkitAppearance', 'slider-vertical');
+    return out;
+  },
+  mdlField: ({ style: styleField, disabled }) => {
+    let out = { width: 150 };
+    if (disabled) out = merge(out, { cursor: 'default', pointerEvents: 'none' });
+    out = merge(out, styleField);
     return out;
   },
 };

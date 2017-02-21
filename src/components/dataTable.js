@@ -60,6 +60,7 @@ const DragHandle = sortableHandle(({ disabled }) =>
     icon="bars"
     disabled={disabled}
     style={style.dragHandle}
+    skipTheme
   />
 );
 

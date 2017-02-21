@@ -68,6 +68,7 @@ const DATA_TABLE_COLS = [
           backgroundColor: 'rgba(255, 255, 255, 0.6)',
           marginBottom: -2,
         }}
+        skipTheme
       />,
     sortable: false,
     filterable: false,
@@ -178,13 +179,14 @@ class DevelopmentExample extends React.Component {
     return (
       <div style={flexContainer('row', { alignItems: 'baseline', marginTop: 4, marginBottom: 4 })}>
         <div>
-          Quick find:
-          {' '}
-          <TextInput onChange={(ev, filterValue) => this.setState({ filterValue })} />
+          <TextInput
+            onChange={(ev, filterValue) => this.setState({ filterValue })}
+            placeholder="Quick find"
+          />
           {' '}
           <Button onClick={() => this.selectRandomRow()}>Select random row</Button>
         </div>
-        <div style={flexItem(1)}></div>
+        <div style={flexItem(1)} />
         <div>Items: {this.state.numShownIds}</div>
       </div>
     );
@@ -347,7 +349,7 @@ class CustomSortPaginateExample extends React.Component {
             required
           />
         </div>
-        <div style={{ width: 10 }}></div>
+        <div style={{ width: 10 }} />
         <div>
           Page:
           {' '}
@@ -355,6 +357,7 @@ class CustomSortPaginateExample extends React.Component {
             icon="arrow-left"
             disabled={page === 0}
             onClick={() => this.setState({ page: this.state.page - 1 })}
+            skipTheme
           />
           {' '}
           <b style={{ display: 'inline-block', width: 25, textAlign: 'center' }}>{page + 1}</b>
@@ -363,6 +366,7 @@ class CustomSortPaginateExample extends React.Component {
             icon="arrow-right"
             disabled={page === this.numPages - 1}
             onClick={() => this.setState({ page: this.state.page + 1 })}
+            skipTheme
           />
         </div>
       </div>
@@ -474,10 +478,7 @@ class DataTableExample extends React.PureComponent {
         <p>
           Finally, you can also <b>embed a DataTable in a Modal</b>:
           {' '}
-          <Button
-            onClick={() => this.setState({ fModal: true })}
-            className="giu-data-table-dragged-row"
-          >
+          <Button onClick={() => this.setState({ fModal: true })}>
             Show me!
           </Button>
         </p>

@@ -84,7 +84,7 @@ class FormExample extends React.Component {
                       { value: 1, label: 'A simple text label' },
                       { value: 2, label: <span><i>Some</i> <b>formatting</b></span> },
                       { value: 3, label: <span>A multiline label</span>,
-                        labelExtra: <div>because yes, we can <Icon icon="smile-o" /></div>,
+                        labelExtra: <div>because yes, we can ;)</div>,
                       },
                       { value: 4, label: 'Another normal label' },
                       { value: 5, label: <span>A label with a <Button onClick={() => console.log('hi!')}>button</Button></span> },

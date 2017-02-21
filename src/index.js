@@ -19,6 +19,9 @@ require('./index.css');
 // That's why we do it in two steps here
 
 // Components
+import Giu                from './components/giu';
+export { Giu };
+
 import Select             from './inputs/select';
 export { Select };
 export { LIST_SEPARATOR } from './inputs/selectCustom';
@@ -102,7 +105,7 @@ export {
   addStylesToPage,
 }                         from './gral/styles';
 export {
-  COLORS, KEYS,
+  COLORS, KEYS, FONTS,
   getScrollbarWidth,
   IS_MAC, IS_IOS,
 }                         from './gral/constants';

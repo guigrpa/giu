@@ -159,7 +159,7 @@ class SelectCustomBase extends React.Component {
       >
         {label}
         <span style={flexItem(1)} />
-        <Icon icon={caretIcon} style={style.caret} />
+        <Icon icon={caretIcon} skipTheme style={style.caret} />
         {IS_IOS && this.renderFloatForIos()}
       </span>
     );

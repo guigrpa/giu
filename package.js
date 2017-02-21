@@ -106,7 +106,7 @@ const specs = {
     // Static analysis
     lint:                       'eslint src',
     flow:                       'flow check || exit 0',
-    xxl:                        "xxl --src \"[\\\"src\\\"]\"",
+    xxl:                        'xxl',
 
     // Testing - general
     jest:                       'jest --watch --coverage',
@@ -161,7 +161,9 @@ const specs = {
     'lodash': '4.15.0',  // only parts of it will be included
 
     'font-awesome': '4.6.3',
-    'typeface-gloria-hallelujah': '0.0.21',
+    'typeface-gloria-hallelujah': '0.0.22',
+    'typeface-roboto': '0.0.22',
+
     'react-sortable-hoc': '0.0.8',
 
     tinycolor2: '1.4.1',
@@ -171,8 +173,9 @@ const specs = {
   },
 
   devDependencies: {
-    storyboard: '2.2.0',
-    'xxl': '1.0.0',
+    storyboard: '^3.0.0',
+    'storyboard-preset-console': '^3.0.0',
+    'xxl': '^1.0.0',
     'cross-env': '^1.0.8',
     // 'diveSync': '0.3.0',
 
@@ -184,12 +187,13 @@ const specs = {
     'react-dom': '^15.4.0',
 
     // Babel (except babel-eslint)
-    'babel-cli': '6.16.0',
-    'babel-core': '6.17.0',
-    'babel-polyfill': '6.16.0',
-    'babel-preset-es2015': '6.16.0',
-    'babel-preset-stage-0': '6.16.0',
-    'babel-preset-react': '6.16.0',
+    'babel-cli': '6.22.2',
+    'babel-core': '6.22.1',
+    'babel-eslint': '7.0.0',
+    'babel-polyfill': '6.22.0',
+    'babel-preset-es2015': '6.22.0',
+    'babel-preset-stage-0': '6.22.0',
+    'babel-preset-react': '6.22.0',
 
     // Webpack + loaders (+ related stuff)
     webpack: '1.13.2',
@@ -209,7 +213,6 @@ const specs = {
     'eslint-plugin-import': '1.16.0',
     'eslint-plugin-jsx-a11y': '2.2.3',
     'eslint-plugin-react': '6.4.1',
-    'babel-eslint': '7.0.0',
 
     // Documentation
     'extract-docs': '1.4.0',

@@ -173,14 +173,16 @@ class Modal extends React.PureComponent {
     );
   }
 
-  renderButton(btn: ModalButton, idx: number) {
-    const { label, onClick } = btn;
+  renderButton = (btn: ModalButton, idx: number) => {
+    const { theme } = this.context;
     return (
       <Button key={idx}
-        onClick={onClick}
-        style={style.button(btn)}
+        onClick={btn.onClick}
+        style={style.button(btn, theme)}
+        colored
+        accent={theme && btn.defaultButton ? true : undefined}
       >
-        {label}
+        {btn.label}
       </Button>
     );
   }
@@ -227,6 +229,7 @@ class Modal extends React.PureComponent {
   }
 }
 
+Modal.contextTypes = { theme: React.PropTypes.any };
 
 // ==========================================
 // Styles
@@ -263,10 +266,10 @@ const style = {
     borderTop: `1px solid ${COLORS.line}`,
     paddingTop: 10,
   }),
-  button: ({ left, defaultButton, style: baseStyle }) => merge({
+  button: ({ left, defaultButton, style: baseStyle }, theme) => merge({
     marginRight: left ? 5 : undefined,
     marginLeft: left ? undefined : 5,
-    border: defaultButton ? '1px solid black' : undefined,
+    border: !theme && defaultButton ? '1px solid black' : undefined,
   }, baseStyle),
 };
 
