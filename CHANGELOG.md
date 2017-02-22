@@ -2,6 +2,8 @@
 
 *[M]: major change; [m]: minor change*
 
+## 0.10.0 (February 22, 2017)
+
 * [M] Add partial **Material Design Lite** support
 * [m] DatePicker: when clicking on Today button, always change to the current month (even if today is already selected)
 * Internal:
