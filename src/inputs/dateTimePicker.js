@@ -1,7 +1,6 @@
 import React                from 'react';
 import { merge }            from 'timm';
 import moment               from '../vendor/moment';
-import { bindAll }          from '../gral/helpers';
 import {
   getTimeInSecs,
   getUtcFlag,
@@ -62,10 +61,6 @@ class DateTimePicker extends React.Component {
       focusedSubpicker: props.date ? 'date' : 'time',
     };
     this.keyDown = null;
-    bindAll(this, [
-      'registerOuterRef',
-      'onChange',
-    ]);
   }
 
   // In order to route the `keyDown` to the DatePicker or
@@ -165,27 +160,25 @@ class DateTimePicker extends React.Component {
   // ==========================================
   // Event handlers
   // ==========================================
-  registerOuterRef(c) {
+  registerOuterRef = (c) => {
     this.refOuter = c;
     this.props.registerOuterRef && this.props.registerOuterRef(c);
   }
 
-  onChange(focusedSubpicker) {
-    return (ev, nextValue0) => {
-      const { date, time } = this.props;
-      let nextValue = nextValue0;
-      if (nextValue != null && !(date && time)) {
-        if (!time) {
-          nextValue = nextValue.clone().startOf('day');
-        }
-        if (!date) {
-          nextValue = startOfDefaultDay(this.utc);
-          nextValue.add(moment.duration(getTimeInSecs(nextValue0), 'seconds'));
-        }
+  onChange = (focusedSubpicker) => (ev, nextValue0) => {
+    const { date, time } = this.props;
+    let nextValue = nextValue0;
+    if (nextValue != null && !(date && time)) {
+      if (!time) {
+        nextValue = nextValue.clone().startOf('day');
       }
-      this.props.onChange(ev, nextValue);
-      this.changeFocusedSubpicker(focusedSubpicker);
-    };
+      if (!date) {
+        nextValue = startOfDefaultDay(this.utc);
+        nextValue.add(moment.duration(getTimeInSecs(nextValue0), 'seconds'));
+      }
+    }
+    this.props.onChange(ev, nextValue);
+    this.changeFocusedSubpicker(focusedSubpicker);
   }
 
   changeFocusedSubpicker(focusedSubpicker) {

@@ -92,6 +92,8 @@ function displayToMoment(str, props) {
   return mom.isValid() ? mom : null;
 }
 
+let cntId = 0;
+
 // ==========================================
 // Wrapper
 // ==========================================
@@ -191,6 +193,8 @@ class BaseDateInput extends React.Component {
     this.cmdsToPicker = null;
     this.keyDown = undefined;
     this.lastExtValue = toExternalValue(props.curValue, props);
+    this.labelId = this.props.id || `giu-date-input_${cntId}`;
+    cntId += 1;
     bindAll(this, [
       'registerInputRef',
       'onMouseDown',
@@ -329,7 +333,6 @@ class BaseDateInput extends React.Component {
       disabled, fFocused,
     } = this.props;
     const otherProps = omit(this.props, PROP_KEYS_TO_REMOVE_FROM_INPUT_MDL);
-    const id = this.props.id || String(Math.random());
     let className = 'giu-date-input mdl-textfield mdl-js-textfield mdl-textfield--floating-label';
     if (curValue !== '' || fFocused) className += ' is-dirty';
     return (
@@ -341,7 +344,7 @@ class BaseDateInput extends React.Component {
           className="mdl-textfield__input"
           type="text"
           value={curValue}
-          id={id}
+          id={this.labelId}
           {...otherProps}
           onFocus={this.onFocus}
           onBlur={this.onBlur}
@@ -349,7 +352,7 @@ class BaseDateInput extends React.Component {
           onKeyDown={this.onKeyDown}
           tabIndex={disabled ? -1 : undefined}
         />
-        <label className="mdl-textfield__label" htmlFor={id}>{placeholder || dateTimeFormat(date, time, seconds)}</label>
+        <label className="mdl-textfield__label" htmlFor={this.labelId}>{placeholder || dateTimeFormat(date, time, seconds)}</label>
       </div>
     );
   }

@@ -61,7 +61,7 @@ class ModalExample extends React.Component {
         style={{ width: 500 }}
       >
         What&#39;s your name?{' '}
-        <TextInput ref={o => { this.refInput = o; }}
+        <TextInput ref={(o) => { this.refInput = o; }}
           autoFocus
           required
           errorZ={52}
@@ -76,7 +76,8 @@ class ModalExample extends React.Component {
           required
           errorZ={52}
           style={{ maxHeight: 100 }}
-        />
+        /><br />
+        <TextInput required errorZ={52} placeholder="Another text input" />
         <br />
         <br />
         <br />
@@ -89,7 +90,7 @@ class ModalExample extends React.Component {
           <Select floatZ={55} type="dropDownPicker" value="a" items={NORMAL_OPTIONS} />
           <Select floatZ={55} type="dropDownPicker" value="a" items={NORMAL_OPTIONS} disabled />
           <DropDownMenu floatZ={55} items={NORMAL_OPTIONS} onClickItem={onChange}>
-            <Icon icon="bars" /> Menu
+            <Icon icon={this.context.theme === 'mdl' ?  'menu' : 'bars'} /> Menu
           </DropDownMenu>
         </div>
       </Modal>
@@ -100,7 +101,7 @@ class ModalExample extends React.Component {
     const title = 'Hello, what\'s your name?';
     const children = (
       <div>
-        <TextInput ref={o => { this.refName = o; }}
+        <TextInput ref={(o) => { this.refName = o; }}
           autoFocus
           required
           errorZ={52}
@@ -147,5 +148,7 @@ class ModalExample extends React.Component {
     });
   }
 }
+
+ModalExample.contextTypes = { theme: React.PropTypes.any };
 
 export default ModalExample;

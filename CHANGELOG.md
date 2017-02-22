@@ -2,7 +2,10 @@
 
 *[M]: major change; [m]: minor change*
 
-* Use Typefaces to include fonts as a package
+* [M] Add partial **Material Design Lite** support
+* [m] DatePicker: when clicking on Today button, always change to the current month (even if today is already selected)
+* Internal:
+    - Use Typefaces to include fonts as a package
 
 ## 0.9.2 (December 15, 2016)
 

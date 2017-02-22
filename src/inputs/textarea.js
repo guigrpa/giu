@@ -28,6 +28,8 @@ function getPlaceHolderText(val) {
   return out;
 }
 
+let cntId = 0;
+
 // ==========================================
 // Component
 // ==========================================
@@ -47,6 +49,8 @@ class Textarea extends React.Component {
 
   constructor(props) {
     super(props);
+    this.labelId = this.props.id || `giu-textarea_${cntId}`;
+    cntId += 1;
     bindAll(this, [
       'registerOuterRef',
       'registerInputRef',
@@ -104,19 +108,18 @@ class Textarea extends React.Component {
     const otherProps = omit(this.props, PROP_KEYS_TO_REMOVE_FROM_INPUT_MDL);
     let className = 'giu-textarea mdl-textfield mdl-js-textfield mdl-textfield--floating-label';
     if (curValue !== '' || fFocused) className += ' is-dirty';
-    const id = this.props.id || String(Math.random());
     return (
       <div ref={this.registerOuterRef} className={className}>
         <textarea ref={this.registerInputRef}
           className="mdl-textfield__input"
           value={curValue}
-          id={id}
+          id={this.labelId}
           onKeyDown={this.onKeyDown}
           rows={3}
           {...otherProps}
           tabIndex={disabled ? -1 : undefined}
         />
-        <label className="mdl-textfield__label" htmlFor={id}>{this.props.placeholder || ''}</label>
+        <label className="mdl-textfield__label" htmlFor={this.labelId}>{this.props.placeholder || ''}</label>
       </div>
     );
   }
@@ -216,7 +219,7 @@ const style = {
 // Miscellaneous
 // ==========================================
 const PROP_KEYS_TO_REMOVE_FROM_INPUT = Object.keys(Textarea.propTypes).concat([
-  'cmds', 'keyDown', 'floatZ', 'floatPosition', 'styleOuter',
+  'cmds', 'keyDown', 'floatZ', 'floatPosition', 'styleOuter', 'required',
 ]);
 const PROP_KEYS_TO_REMOVE_FROM_INPUT_MDL = PROP_KEYS_TO_REMOVE_FROM_INPUT.concat(['placeholder']);
 

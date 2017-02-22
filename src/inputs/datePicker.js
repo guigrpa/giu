@@ -2,7 +2,6 @@
 
 import React                from 'react';
 import moment               from '../vendor/moment';
-import { bindAll }          from '../gral/helpers';
 import {
   startOfToday,
   getTimeInSecs,
@@ -47,13 +46,6 @@ class DatePicker extends React.Component {
   constructor(props) {
     super(props);
     this.state = ({ shownMonthStart: null }: any);
-    bindAll(this, [
-      'onClickMonthName',
-      'onClickDay',
-      'onClickToday',
-      'onClickPrevMonth',
-      'onClickNextMonth',
-    ]);
   }
 
   componentWillMount() { this.updateShownMonth(this.props); }
@@ -188,14 +180,14 @@ class DatePicker extends React.Component {
   // ==========================================
   // Event handlers
   // ==========================================
-  onClickMonthName() {
+  onClickMonthName = () => {
     const { utc } = this.props;
     const shownMonthStart = startOfToday(utc).startOf('month');
     this.setState({ shownMonthStart });
   }
 
-  onClickPrevMonth() { this.changeShownMonth('subtract'); }
-  onClickNextMonth() { this.changeShownMonth('add'); }
+  onClickPrevMonth = () => { this.changeShownMonth('subtract'); }
+  onClickNextMonth = () => { this.changeShownMonth('add'); }
   changeShownMonth(op: 'subtract'|'add') {
     const shownMonthStart = this.state.shownMonthStart.clone();
     if (op === 'add') {
@@ -206,7 +198,7 @@ class DatePicker extends React.Component {
     this.setState({ shownMonthStart });
   }
 
-  onClickDay(ev: SyntheticEvent) {
+  onClickDay = (ev: SyntheticEvent) => {
     const { utc } = this.props;
     if (!(ev.target instanceof Element)) return;
     const startOfDay = moment(ev.target.id);
@@ -214,10 +206,11 @@ class DatePicker extends React.Component {
     this.changeDateTo(ev, startOfDay);
   }
 
-  onClickToday(ev: SyntheticEvent) {
+  onClickToday = (ev: SyntheticEvent) => {
     const { utc } = this.props;
     const startOfDay = startOfToday(utc);
     this.changeDateTo(ev, startOfDay);
+    this.onClickMonthName();
   }
 
   doKeyDown({ which, shiftKey, ctrlKey, altKey, metaKey }: KeyboardEventPars) {

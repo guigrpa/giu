@@ -133,6 +133,12 @@ const NotificationExample = () =>
       msg="Notification message"
       noStylePosition
     />
+    <ul className="">
+      <li className="mdl-menu__item">Some Action</li>
+      <li className="mdl-menu__item">Another Action</li>
+      <li disabled className="mdl-menu__item">Disabled Action</li>
+      <li className="mdl-menu__item">Yet Another Action</li>
+    </ul>
   </div>;
 
 const MessageExample = () =>
@@ -227,18 +233,18 @@ const ScrollingExample = () =>
       onScroll={floatReposition}
       style={style.scrolling}
     >
-      <DateInput placeholder="date" date time />
+      <DateInput placeholder="date" date time required />
       <br />
       {LONG_TEXT}<br />
       {LONG_TEXT}<br />
       {LONG_TEXT}<br />
-      <DateInput placeholder="date" />
+      <DateInput placeholder="date" required />
       <br />
       {LONG_TEXT}<br />
       {LONG_TEXT}<br />
       {LONG_TEXT}<br />
       {LONG_TEXT}<br />
-      <DateInput placeholder="date" />
+      <DateInput placeholder="date" required />
     </div>
   </div>;
 

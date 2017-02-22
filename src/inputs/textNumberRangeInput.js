@@ -34,6 +34,8 @@ const classOptions = {
   },
 };
 
+let cntId = 0;
+
 // -- Props:
 // --
 // -- * **style** *object?*: merged with the `input`/`textarea` style
@@ -65,8 +67,16 @@ function createClass(name, inputType) {
     static displayName = name;
     static propTypes = PROP_TYPES;
 
+    constructor(props) {
+      super(props);
+      this.labelId = this.props.id || `giu-${inputType}-input_${cntId}`;
+      cntId += 1;
+    }
+
     componentDidMount() {
-      if (this.context.theme === 'mdl' && this.refMdl) window.componentHandler.upgradeElement(this.refMdl);
+      if (this.context.theme === 'mdl' && this.refMdl) {
+        window.componentHandler.upgradeElement(this.refMdl);
+      }
     }
 
     // ==========================================
@@ -102,7 +112,6 @@ function createClass(name, inputType) {
         fFocused,
       } = this.props;
       const otherProps = omit(this.props, PROP_KEYS_TO_REMOVE_FROM_INPUT_MDL);
-      const id = this.props.id || String(Math.random());
       let className = `giu-${inputType}-input mdl-textfield mdl-js-textfield mdl-textfield--floating-label`;
       if (curValue !== '' || fFocused) className += ' is-dirty';
       return (
@@ -114,11 +123,11 @@ function createClass(name, inputType) {
             className="mdl-textfield__input"
             type={inputType === 'password' ? 'password' : 'text'}
             value={curValue}
-            id={id}
+            id={this.labelId}
             {...otherProps}
             tabIndex={disabled ? -1 : undefined}
           />
-          <label className="mdl-textfield__label" htmlFor={id}>{this.props.placeholder || ''}</label>
+          <label className="mdl-textfield__label" htmlFor={this.labelId}>{this.props.placeholder || ''}</label>
         </div>
       );
     }

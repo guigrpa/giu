@@ -11,13 +11,40 @@ import React                from 'react';
 // -- don't specify the `value` prop (native HTML behaviour).*
 class Progress extends React.PureComponent {
   props: Object;
+  refMdl: ?Object;
+
+  componentDidMount() {
+    if (this.context.theme === 'mdl' && this.refMdl) {
+      this.refMdl.addEventListener('mdl-componentupgraded', this.mdlRefresh);
+      window.componentHandler.upgradeElement(this.refMdl);
+    }
+  }
+
+  componentDidUpdate() { this.mdlRefresh(); }
+
+  // ==========================================
   render() {
-    if (this.props.value == null && this.context.theme === 'mdl') return this.renderMdl();
+    if (this.context.theme === 'mdl') return this.renderMdl();
     return <progress {...this.props} style={style.progress} />;
   }
 
   renderMdl() {
-    return <div className="mdl-progress mdl-js-progress mdl-progress--indeterminate" />;
+    let className = 'mdl-progress mdl-js-progress';
+    if (this.props.value == null) className += ' mdl-progress--indeterminate';
+    return (
+      <div ref={(c) => { this.refMdl = c; }}
+        className={className}
+        style={style.progress}
+      />
+    );
+  }
+
+  // ==========================================
+  mdlRefresh = () => {
+    if (!this.refMdl) return;
+    const { value } = this.props;
+    if (value == null) return;
+    this.refMdl.MaterialProgress.setProgress(value * 100);
   }
 }
 
