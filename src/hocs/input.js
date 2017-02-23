@@ -1,31 +1,17 @@
 /* eslint-disable no-underscore-dangle */
-import React                from 'react';
+import React from 'react';
+import { omit, merge } from 'timm';
+import { cancelEvent, stopPropagation } from '../gral/helpers';
+import { COLORS, MISC, IS_IOS } from '../gral/constants';
+import { scrollIntoView } from '../gral/visibility';
+import { isDark } from '../gral/styles';
+import { isRequired } from '../gral/validators';
 import {
-  omit,
-  merge,
-}                           from 'timm';
-import {
-  bindAll,
-  cancelEvent,
-  stopPropagation,
-}                           from '../gral/helpers';
-import {
-  COLORS,
-  MISC,
-  IS_IOS,
-}                           from '../gral/constants';
-import { scrollIntoView }   from '../gral/visibility';
-import { isDark }           from '../gral/styles';
-import { isRequired }       from '../gral/validators';
-import {
-  floatAdd,
-  floatDelete,
-  floatUpdate,
-  floatReposition,
+  floatAdd, floatDelete, floatUpdate, floatReposition,
   warnFloats,
-}                           from '../components/floats';
-import FocusCapture         from '../components/focusCapture';
-import IosFloatWrapper      from '../inputs/iosFloatWrapper';
+} from '../components/floats';
+import FocusCapture from '../components/focusCapture';
+import IosFloatWrapper from '../inputs/iosFloatWrapper';
 
 const PROP_TYPES = {
   value:                  React.PropTypes.any,
@@ -85,26 +71,14 @@ function input(ComposedComponent, {
       // NOTE: this.errors = this.props.errors + this.state.validationErrors
       this.errors = props.errors;
       this.prevErrors = this.errors;
+      this.curValue = toInternalValue(props.value, props);
+      this.prevValue = this.curValue;
+      this.lastValidatedValue = toInternalValue(props.value, props);
       this.state = {
-        curValue: toInternalValue(props.value, props),
         fFocused: false,
         keyDown: null,
         validationErrors: [],
-        lastValidatedValue: toInternalValue(props.value, props),
       };
-      bindAll(this, [
-        'registerOuterRef',
-        'registerFocusableRef',
-        'renderErrorFloat',
-        'onChange',
-        'onFocus',
-        'onBlur',
-        'onCopyCut',
-        'onPaste',
-        'onMouseDownWrapper',
-        'onClickWrapper',
-        'onKeyDown',
-      ]);
     }
 
     componentDidMount() {
@@ -114,9 +88,7 @@ function input(ComposedComponent, {
 
     componentWillReceiveProps(nextProps) {
       const { value, cmds } = nextProps;
-      if (value !== this.props.value) {
-        this.setState({ curValue: toInternalValue(value, nextProps) });
-      }
+      if (value !== this.props.value) this.setCurValue(toInternalValue(value, nextProps));
       if (cmds !== this.props.cmds) this.processCmds(cmds, nextProps);
     }
 
@@ -129,12 +101,12 @@ function input(ComposedComponent, {
       }
     }
 
-    componentDidUpdate(prevProps, prevState) {
+    componentDidUpdate(prevProps) {
       const { value } = this.props;
-      const { curValue } = this.state;
+      const { curValue, prevValue } = this;
       if (this.errors !== this.prevErrors ||
           value !== prevProps.value ||
-          curValue !== prevState.curValue) {
+          curValue !== prevValue) {
         this.renderErrorFloat();
       }
       if (this.pendingFocusBlur) {
@@ -159,10 +131,10 @@ function input(ComposedComponent, {
       cmds.forEach((cmd) => {
         switch (cmd.type) {
           case 'SET_VALUE':
-            this.setState({ curValue: toInternalValue(cmd.value, nextProps) });
+            this.setCurValue(toInternalValue(cmd.value, nextProps));
             break;
           case 'REVERT':
-            this.setState({ curValue: toInternalValue(nextProps.value, nextProps) });
+            this.setCurValue(toInternalValue(nextProps.value, nextProps));
             break;
           case 'VALIDATE':
             this._validate().catch(() => {});
@@ -179,9 +151,16 @@ function input(ComposedComponent, {
       });
     }
 
+    setCurValue(curValue) {
+      if (curValue === this.curValue) return;
+      this.prevValue = this.curValue;
+      this.curValue = curValue;
+      this.forceUpdate();
+    }
+
     // Alternative to using the `onChange` prop (e.g. if we want to delegate
     // state handling to the input and only want to retrieve the value when submitting a form)
-    getValue() { return toExternalValue(this.state.curValue, this.props); }
+    getValue() { return toExternalValue(this.curValue, this.props); }
     getErrors() { return this.errors; }
     validateAndGetValue() { return this._validate().then(() => this.getValue()); }
 
@@ -195,7 +174,7 @@ function input(ComposedComponent, {
           registerOuterRef={this.registerOuterRef}
           registerFocusableRef={fIncludeFocusCapture ? undefined : this.registerFocusableRef}
           {...otherProps}
-          curValue={this.state.curValue}
+          curValue={this.curValue}
           errors={this.errors}
           required={this.props.required}
           cmds={this.props.cmds}
@@ -264,7 +243,7 @@ function input(ComposedComponent, {
       return out;
     }
 
-    renderErrorFloat() {
+    renderErrorFloat = () => {
       if (IS_IOS) return;
       const { errors } = this;
 
@@ -294,7 +273,7 @@ function input(ComposedComponent, {
     }
 
     renderErrors(errors) {
-      const { curValue, lastValidatedValue } = this.state;
+      const { curValue, lastValidatedValue } = this;
       let fModified = false;
       if (curValue != null) fModified = curValue !== lastValidatedValue;
       return (
@@ -307,24 +286,22 @@ function input(ComposedComponent, {
     // ==========================================
     // Handlers
     // ==========================================
-    registerOuterRef(c) { this.refOuter = c; }
-    registerFocusableRef(c) { this.refFocusable = c; }
+    registerOuterRef = (c) => { this.refOuter = c; }
+    registerFocusableRef = (c) => { this.refFocusable = c; }
 
-    onChange(ev, providedValue, options = {}) {
+    onChange = (ev, providedValue, options = {}) => {
       const { onChange, disabled } = this.props;
       if (disabled) return;
       let curValue = providedValue;
-      if (curValue === undefined) {
-        curValue = ev.currentTarget[valueAttr];
-      }
-      this.setState({ curValue });
+      if (curValue === undefined) curValue = ev.currentTarget[valueAttr];
+      this.setCurValue(curValue);
       if (onChange) onChange(ev, toExternalValue(curValue, this.props));
       if (this.props.focusOnChange && !this.state.fFocused && !options.fDontFocus) {
         this._focus();
       }
     }
 
-    onFocus(ev) {
+    onFocus = (ev) => {
       const { onFocus, disabled } = this.props;
       if (disabled) {
         this._blur();
@@ -335,14 +312,14 @@ function input(ComposedComponent, {
       if (onFocus) onFocus(ev);
     }
 
-    onBlur(ev) {
+    onBlur = (ev) => {
       const { onBlur } = this.props;
       this._validate().catch(() => {});
       this.setState({ fFocused: false });
       if (onBlur) onBlur(ev);
     }
 
-    onMouseDownWrapper(ev) {
+    onMouseDownWrapper = (ev) => {
       // Always cancel mousedowns: they blur the component. If they are interesting,
       // capture them at a lower level
       cancelEvent(ev);
@@ -355,22 +332,22 @@ function input(ComposedComponent, {
     // Cancel bubbling of click events; they may reach Modals
     // on their way up and cause the element to blur.
     // Allow free propagation if the element is disabled.
-    onClickWrapper(ev) {
+    onClickWrapper = (ev) => {
       if (!this.props.disabled) stopPropagation(ev);
     }
 
-    onKeyDown(ev) {
+    onKeyDown = (ev) => {
       const { which, keyCode, metaKey, shiftKey, altKey, ctrlKey } = ev;
       if (trappedKeys.indexOf(which) < 0) return;
       this.setState({ keyDown: { which, keyCode, metaKey, shiftKey, altKey, ctrlKey } });
     }
 
-    onCopyCut(ev) {
-      ev.clipboardData.setData('text/plain', this.state.curValue);
+    onCopyCut = (ev) => {
+      ev.clipboardData.setData('text/plain', this.curValue);
       ev.preventDefault();
     }
 
-    onPaste(ev) {
+    onPaste = (ev) => {
       const nextValue = ev.clipboardData.getData('text/plain');
       ev.preventDefault();
       this.onChange(ev, nextValue);
@@ -402,7 +379,7 @@ function input(ComposedComponent, {
       } else {
         validators = defaultValidators;
       }
-      const { curValue: internalValue } = this.state;
+      const { curValue: internalValue } = this;
       const externalValue = toExternalValue(internalValue, this.props);
       const fRequired = this.props.required || validators.isRequired != null;
       const fIsNull = isNull(internalValue);
@@ -433,10 +410,8 @@ function input(ComposedComponent, {
       // When all promises have resolved, changed the current state
       return Promise.all(pErrors).then((validationErrors0) => {
         const validationErrors = validationErrors0.filter((o) => o != null);
-        this && this.setState && this.setState({
-          validationErrors,
-          lastValidatedValue: internalValue,
-        });
+        this && this.setState && this.setState({ validationErrors });
+        this.lastValidatedValue = internalValue;
         if (validationErrors.length) {
           const exception = new Error('VALIDATION_ERROR');
           exception.errors = validationErrors;

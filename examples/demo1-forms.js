@@ -6,7 +6,7 @@ import {
   TextInput, PasswordInput, NumberInput, RangeInput,
   FileInput, RadioGroup, ColorInput, DateInput, Checkbox,
   Textarea, Select,
-  Button, Icon,
+  Button,
   flexContainer, flexItem,
   isRequired, isEmail, isDate,
   cancelEvent,
