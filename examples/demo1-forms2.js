@@ -21,6 +21,7 @@ class FormExample extends React.Component {
         <NumberInput ref="a"
           value={this.state.a}
           onChange={this.onChange}
+          errors={['multiple', 'errors']}
           required
         />
         <NumberInput ref="b"

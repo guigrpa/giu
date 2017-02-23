@@ -48,7 +48,7 @@ const notify = (msg) => createNotif({
 // Examples
 // -----------------------------------------------
 const TEST = 0;
-const EVERYTHING = true;
+const EVERYTHING = false;
 class App extends React.Component {
   render() {
     let out;
@@ -171,7 +171,7 @@ class App extends React.Component {
               </div>
               <div style={flexItem('1 0 500px')}>
                 {EVERYTHING && <FormExample lang={lang} />}
-                {EVERYTHING && <FormExample2 />}
+                {true && <FormExample2 />}
               </div>
             </div>
             <div style={{ textAlign: 'right', padding: 10, fontSize: '1.2em' }}>
