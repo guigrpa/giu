@@ -6,7 +6,6 @@ import {
 }                           from 'timm';
 import moment               from '../vendor/moment';
 import {
-  bindAll,
   cancelEvent,
   stopPropagation,
 }                           from '../gral/helpers';
@@ -195,15 +194,6 @@ class BaseDateInput extends React.Component {
     this.lastExtValue = toExternalValue(props.curValue, props);
     this.labelId = this.props.id || `giu-date-input_${cntId}`;
     cntId += 1;
-    bindAll(this, [
-      'registerInputRef',
-      'onMouseDown',
-      'onClick',
-      'onFocus',
-      'onBlur',
-      'onKeyDown',
-      'onChangePicker',
-    ]);
   }
 
   componentWillReceiveProps(nextProps) {
@@ -439,12 +429,12 @@ class BaseDateInput extends React.Component {
   // ==========================================
   // Handlers
   // ==========================================
-  registerInputRef(c) {
+  registerInputRef = (c) => {
     this.refInput = c;
     this.props.registerFocusableRef(c);
   }
 
-  onMouseDown(ev) {
+  onMouseDown = (ev) => {
     cancelEvent(ev);
     if (!this.props.fFocused) this.refInput.focus();
   }
@@ -452,21 +442,21 @@ class BaseDateInput extends React.Component {
   // Cancel bubbling of click events; they may reach Modals
   // on their way up and cause the element to blur.
   // Allow free propagation if the element is disabled.
-  onClick(ev) {
+  onClick = (ev) => {
     if (!this.props.disabled) stopPropagation(ev);
   }
 
-  onFocus(ev) {
+  onFocus = (ev) => {
     this.setState({ fFloat: true });
     this.props.onFocus(ev);
   }
 
-  onBlur(ev) {
+  onBlur = (ev) => {
     this.setState({ fFloat: false });
     this.props.onBlur(ev);
   }
 
-  onKeyDown(ev) {
+  onKeyDown = (ev) => {
     const { type } = this.props;
     if (type === 'onlyField') return;
     const { which } = ev;
@@ -487,7 +477,7 @@ class BaseDateInput extends React.Component {
     }
   }
 
-  onChangePicker(ev, nextValue) {
+  onChangePicker = (ev, nextValue) => {
     this.props.onChange(ev, momentToDisplay(nextValue, this.props));
   }
 }

@@ -17,7 +17,6 @@ import type { ScrollIntoViewOptions } from '../gral/visibility';
 import { COLORS, KEYS }     from '../gral/constants';
 import { isDark }           from '../gral/styles';
 import {
-  bindAll,
   cancelEvent,
   stopPropagation,
   simplifyString,
@@ -195,18 +194,6 @@ class DataTable extends React.PureComponent {
     this.recalcShownIds(props);
     this.recalcRowComponents(props);
     this.recalcColors(props);
-    bindAll(this, [
-      'onRenderLastRow',
-      'onChangeScrollbarWidth',
-      'onKeyDown',
-      'onClickOuter',
-      'onClickHeader',
-      'onClickRow',
-      'onDragStart',
-      'onDragEnd',
-      'onCopyCut',
-      'onPaste',
-    ]);
     this.commonRowProps = {};
   }
 
@@ -413,7 +400,7 @@ class DataTable extends React.PureComponent {
   // ===============================================================
   // Event handlers
   // ===============================================================
-  onKeyDown(ev: SyntheticKeyboardEvent) {
+  onKeyDown = (ev: SyntheticKeyboardEvent) => {
     switch (ev.which) {
       case KEYS.up:
       case KEYS.down:
@@ -432,7 +419,7 @@ class DataTable extends React.PureComponent {
   // Except when clicking on an embedded focusable node, refocus on this table
   // Prevent bubbling of click events; they may reach Modals
   // on their way up and cause the element to blur.
-  onClickOuter(ev: SyntheticEvent) {
+  onClickOuter = (ev: SyntheticEvent) => {
     if (!(ev.target instanceof Element)) return;
     const { tagName, disabled } = (ev.target: any);
     if (FOCUSABLE.indexOf(tagName.toLowerCase()) >= 0 && !disabled) return;
@@ -440,20 +427,20 @@ class DataTable extends React.PureComponent {
     stopPropagation(ev);
   }
 
-  onRenderLastRow(id: string) {
+  onRenderLastRow = (id: string) => {
     if (id === FETCHING_MORE_ITEMS_ROW) return;
     const { fetchMoreItems } = this.props;
     if (!fetchMoreItems) return;
     fetchMoreItems(id);
   }
 
-  onChangeScrollbarWidth(scrollbarWidth: number) {
+  onChangeScrollbarWidth = (scrollbarWidth: number) => {
     this.scrollbarWidth = scrollbarWidth;
     DEBUG && console.log('DataTable: scrollbarWidth has changed. Re-rendering...');
     this.forceUpdate();
   }
 
-  onClickHeader(attr: string) {
+  onClickHeader = (attr: string) => {
     const { sortBy, sortDescending } = this;
     if (attr !== sortBy) {
       this.changeSort(attr, false);
@@ -471,7 +458,7 @@ class DataTable extends React.PureComponent {
     }
   }
 
-  onClickRow(ev: SyntheticMouseEvent, id: string) {
+  onClickRow = (ev: SyntheticMouseEvent, id: string) => {
     const fMultiSelect = (ev.metaKey || ev.ctrlKey) && this.props.multipleSelection;
     if (fMultiSelect) {
       this.selectToggleSingle(id);
@@ -480,15 +467,15 @@ class DataTable extends React.PureComponent {
     }
   }
 
-  onDragStart() {
+  onDragStart = () => {
     this.fDragging = true;
     this.forceUpdate();
   }
 
-  onDragEnd({ oldIndex, newIndex }: {
+  onDragEnd = ({ oldIndex, newIndex }: {
     oldIndex: number,
     newIndex: number,
-  }) {
+  }) => {
     // Convert indices in `shownIds` to indices in `manuallyOrderedIds`
     const { shownIds, manuallyOrderedIds } = this;
     if (manuallyOrderedIds == null) return;
@@ -519,7 +506,7 @@ class DataTable extends React.PureComponent {
   // ===============================================================
   // Clipboard
   // ===============================================================
-  onCopyCut(ev: SyntheticClipboardEvent) {
+  onCopyCut = (ev: SyntheticClipboardEvent) => {
     const json = this.getJsonForClipboard();
     ev.clipboardData.setData('text/plain', json);
     ev.preventDefault();
@@ -528,7 +515,7 @@ class DataTable extends React.PureComponent {
     }
   }
 
-  onPaste(ev: SyntheticClipboardEvent) {
+  onPaste = (ev: SyntheticClipboardEvent) => {
     const json = ev.clipboardData.getData('text/plain');
     ev.preventDefault();
     if (this.props.onClipboardAction) {

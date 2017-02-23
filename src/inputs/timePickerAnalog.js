@@ -3,10 +3,7 @@ import {
   merge,
   set as timmSet,
 }                           from 'timm';
-import {
-  bindAll,
-  cancelEvent,
-}                           from '../gral/helpers';
+import { cancelEvent }      from '../gral/helpers';
 import { startOfToday }     from '../gral/dates';
 import { COLORS, KEYS }     from '../gral/constants';
 import hoverable            from '../hocs/hoverable';
@@ -62,15 +59,6 @@ class TimePickerAnalog extends React.PureComponent {
       dragging: null,
       hint: null,
     };
-    bindAll(this, [
-      'onClickBackground',
-      'onMouseLeaveBackground',
-      'onMouseMoveBackground',
-      'onMouseDownHand',
-      'onMouseMoveHand',
-      'onMouseUpHand',
-      'onClickAmPm',
-    ]);
   }
 
   componentWillUnmount() {
@@ -223,12 +211,12 @@ class TimePickerAnalog extends React.PureComponent {
   // ==========================================
   // Event handlers
   // ==========================================
-  onMouseLeaveBackground() {
+  onMouseLeaveBackground = () => {
     if (!this.state.hint) return;
     this.setState({ hint: null });
   }
 
-  onMouseMoveBackground(ev) {
+  onMouseMoveBackground = (ev) => {
     if (this.props.curValue) return;
     const phi = this.getPhiFromMousePosition(ev);
     if (phi == null) return;
@@ -240,7 +228,7 @@ class TimePickerAnalog extends React.PureComponent {
     });
   }
 
-  onClickBackground(ev) {
+  onClickBackground = (ev) => {
     if (this.props.disabled || this.hours != null) return;
     const phi = this.getPhiFromMousePosition(ev);
     if (phi == null) return;
@@ -253,7 +241,7 @@ class TimePickerAnalog extends React.PureComponent {
     this.setUnits(ev, hours, 'hours');
   }
 
-  onMouseDownHand(ev) {
+  onMouseDownHand = (ev) => {
     cancelEvent(ev);
     if (this.props.disabled) return;
     const name = ev.target.id;
@@ -265,7 +253,7 @@ class TimePickerAnalog extends React.PureComponent {
     window.addEventListener('mouseup', this.onMouseUpHand);
   }
 
-  onMouseMoveHand(ev) {
+  onMouseMoveHand = (ev) => {
     cancelEvent(ev);
     const { dragUnits, dragDeltaPhi, dragSteps } = this;
     const phi = this.getPhiFromMousePosition(ev) - dragDeltaPhi;
@@ -278,14 +266,14 @@ class TimePickerAnalog extends React.PureComponent {
     if (val !== curVal) this.setUnits(ev, val, dragUnits);
   }
 
-  onMouseUpHand(ev) {
+  onMouseUpHand = (ev) => {
     cancelEvent(ev);
     window.removeEventListener('mousemove', this.onMouseMoveHand);
     window.removeEventListener('mouseup', this.onMouseUpHand);
     this.setState({ dragging: null });
   }
 
-  onClickAmPm(ev) {
+  onClickAmPm = (ev) => {
     const nextHours = this.hours >= 12 ? this.hours - 12 : this.hours + 12;
     this.setUnits(ev, nextHours, 'hours');
   }

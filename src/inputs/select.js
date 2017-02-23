@@ -1,6 +1,5 @@
 import React                from 'react';
 import { omit }             from 'timm';
-import { bindAll }          from '../gral/helpers';
 import SelectNative         from '../inputs/selectNative';
 import { SelectCustom }     from '../inputs/selectCustom';
 
@@ -55,11 +54,6 @@ class Select extends React.Component {
     type:                   'native',
   };
 
-  constructor(props) {
-    super(props);
-    bindAll(this, ['registerInputRef']);
-  }
-
   // ==========================================
   // Imperative API
   // ==========================================
@@ -84,7 +78,7 @@ class Select extends React.Component {
   // ==========================================
   // Event handlers
   // ==========================================
-  registerInputRef(c) { this.refInput = c; }
+  registerInputRef = (c) => { this.refInput = c; }
 }
 
 // ==========================================

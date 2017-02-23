@@ -10,6 +10,7 @@ class FormExample extends React.Component {
     this.state = {
       a: 3,
       b: 4,
+      c: 5
     };
   }
 
@@ -25,6 +26,11 @@ class FormExample extends React.Component {
         <NumberInput ref="b"
           value={this.state.b}
           onChange={this.onChange}
+          required
+        />
+        <NumberInput ref="c"
+          value={this.state.c}
+          onChange={(ev, c) => this.setState({ c })}
           required
         />
       </div>

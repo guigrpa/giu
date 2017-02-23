@@ -8,7 +8,6 @@ import {
   MISC,
 }                           from '../gral/constants';
 import {
-  bindAll,
   cancelEvent,
   cancelBodyScrolling,
 }                           from '../gral/helpers';
@@ -89,14 +88,6 @@ class Modal extends React.PureComponent {
     zIndex:                 MISC.zModalBase,
   }
   refFocusCapture: any;
-
-  constructor(props: Props) {
-    super(props);
-    bindAll(this, [
-      'onKeyDown',
-      'onClickOuter',
-    ]);
-  }
 
   // ==========================================
   // Imperative API
@@ -190,7 +181,7 @@ class Modal extends React.PureComponent {
   // ==========================================
   // Handlers
   // ==========================================
-  onKeyDown(ev: SyntheticKeyboardEvent) {
+  onKeyDown = (ev: SyntheticKeyboardEvent) => {
     const { which } = ev;
     let buttons;
     switch (which) {
@@ -219,7 +210,7 @@ class Modal extends React.PureComponent {
   }
 
   // Except when clicking on an embedded focusable node, refocus on this modal
-  onClickOuter(ev: SyntheticMouseEvent) {
+  onClickOuter = (ev: SyntheticMouseEvent) => {
     if (ev.target instanceof Element) {
       const target: any = ev.target;
       const { tagName, disabled } = target;

@@ -1,7 +1,6 @@
 import React                from 'react';
 import { omit, merge }      from 'timm';
 import {
-  bindAll,
   preventDefault, stopPropagation,
 }                           from '../gral/helpers';
 import { KEYS }             from '../gral/constants';
@@ -51,12 +50,6 @@ class Textarea extends React.Component {
     super(props);
     this.labelId = this.props.id || `giu-textarea_${cntId}`;
     cntId += 1;
-    bindAll(this, [
-      'registerOuterRef',
-      'registerInputRef',
-      'resize',
-      'onKeyDown',
-    ]);
   }
 
   componentDidMount() {
@@ -127,17 +120,17 @@ class Textarea extends React.Component {
   // ==========================================
   // Handlers
   // ==========================================
-  registerOuterRef(c) {
+  registerOuterRef = (c) => {
     this.refOuter = c;
     this.props.registerOuterRef(c);
   }
 
-  registerInputRef(c) {
+  registerInputRef = (c) => {
     this.refInput = c;
     this.props.registerFocusableRef(c);
   }
 
-  resize() {
+  resize = () => {
     if (!this.refTaPlaceholder) return;
     if (!this.props.skipTheme && this.context.theme === 'mdl') return;
     const height = this.refTaPlaceholder.offsetHeight;
@@ -148,7 +141,7 @@ class Textarea extends React.Component {
 
   // shift-enter should not insert a new line (it should be bubbled up);
   // enter (with no modifier) should insert a new line (and not bubble)
-  onKeyDown(ev) {
+  onKeyDown = (ev) => {
     if (ev.which === KEYS.return) {
       if (isAnyModifierPressed(ev)) {
         preventDefault(ev);

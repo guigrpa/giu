@@ -67,7 +67,6 @@ function input(ComposedComponent, {
 
     constructor(props) {
       super(props);
-
       // NOTE: this.errors = this.props.errors + this.state.validationErrors
       this.errors = props.errors;
       this.prevErrors = this.errors;
@@ -149,13 +148,6 @@ function input(ComposedComponent, {
             break;
         }
       });
-    }
-
-    setCurValue(curValue) {
-      if (curValue === this.curValue) return;
-      this.prevValue = this.curValue;
-      this.curValue = curValue;
-      this.forceUpdate();
     }
 
     // Alternative to using the `onChange` prop (e.g. if we want to delegate
@@ -289,6 +281,13 @@ function input(ComposedComponent, {
     registerOuterRef = (c) => { this.refOuter = c; }
     registerFocusableRef = (c) => { this.refFocusable = c; }
 
+    setCurValue(curValue) {
+      if (curValue === this.curValue) return;
+      this.prevValue = this.curValue;
+      this.curValue = curValue;
+      this.forceUpdate();
+    }
+
     onChange = (ev, providedValue, options = {}) => {
       const { onChange, disabled } = this.props;
       if (disabled) return;
@@ -353,7 +352,6 @@ function input(ComposedComponent, {
       this.onChange(ev, nextValue);
     }
 
-
     // ==========================================
     // Helpers
     // ==========================================
@@ -407,7 +405,7 @@ function input(ComposedComponent, {
         });
       }
 
-      // When all promises have resolved, changed the current state
+      // When all promises have resolved, change the current state
       return Promise.all(pErrors).then((validationErrors0) => {
         const validationErrors = validationErrors0.filter((o) => o != null);
         this && this.setState && this.setState({ validationErrors });

@@ -16,7 +16,6 @@ import {
   addDefaults,
 }                           from 'timm';
 import { MISC }             from '../gral/constants';
-import { bindAll }          from '../gral/helpers';
 import type { Action }      from '../gral/types';
 import Notification         from './notification';
 import type { NotificationPars } from './notification';
@@ -178,10 +177,6 @@ class Notifications extends React.PureComponent {
 
   constructor(props: Props) {
     super(props);
-    bindAll(this, [
-      'onRetain',
-      'onDismiss',
-    ]);
     if (props.notifs == null) {
       if (!store) initStore();
       this.storeUnsubscribe = store.subscribe(this.forceUpdate.bind(this));
@@ -213,11 +208,11 @@ class Notifications extends React.PureComponent {
   }
 
   // ==========================================
-  onRetain(ev: SyntheticEvent) {
+  onRetain = (ev: SyntheticEvent) => {
     if (!(ev.currentTarget instanceof Element)) return;
     store.dispatch(actions.notifRetain(ev.currentTarget.id));
   }
-  onDismiss(ev: SyntheticEvent) {
+  onDismiss = (ev: SyntheticEvent) => {
     if (!(ev.currentTarget instanceof Element)) return;
     store.dispatch(actions.notifDelete(ev.currentTarget.id));
   }

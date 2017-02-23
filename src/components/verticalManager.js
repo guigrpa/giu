@@ -2,7 +2,6 @@
 
 import React                from 'react';
 import throttle             from 'lodash/throttle';
-import { bindAll }          from '../gral/helpers';
 
 // ===============================================================
 // VerticalManager
@@ -33,11 +32,6 @@ class VerticalManager extends React.Component {
 
   constructor(props: Props) {
     super(props);
-    bindAll(this, [
-      'measureHeight',
-      'asyncMeasureHeight',
-      'registerOuterRef',
-    ]);
     this.throttledMeasureHeight = throttle(this.measureHeight.bind(this), 200);
   }
 
@@ -54,7 +48,7 @@ class VerticalManager extends React.Component {
     window.removeEventListener('resize', this.throttledMeasureHeight);
   }
 
-  measureHeight() {
+  measureHeight = () => {
     const { onChangeHeight } = this.props;
     if (!onChangeHeight) return;
     const { refVerticalManager } = this;
@@ -73,7 +67,7 @@ class VerticalManager extends React.Component {
   // they have changed, before the DOM has actually been updated
   // and the new height can be measured. Wait for the next tick
   // for things to stabilise before measuring.
-  asyncMeasureHeight() {
+  asyncMeasureHeight = () => {
     setImmediate(this.measureHeight);
   }
 
@@ -112,7 +106,7 @@ class VerticalManager extends React.Component {
   // ===============================================================
   // Event handlers
   // ===============================================================
-  registerOuterRef(c: ?Object) {
+  registerOuterRef = (c: ?Object) => {
     this.refVerticalManager = c;
     if (this.props.registerOuterRef) this.props.registerOuterRef(c);
   }

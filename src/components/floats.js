@@ -10,7 +10,6 @@ import {
   omit,
 }                           from 'timm';
 import {
-  bindAll,
   cancelEvent,
   windowHeightWithoutScrollbar, windowWidthWithoutScrollbar,
 }                           from '../gral/helpers';
@@ -174,12 +173,8 @@ class Floats extends React.PureComponent {
 
   constructor(props: PropsT) {
     super(props);
-    bindAll(this, [
-      'forceUpdate',
-      'renderFloat',
-    ]);
     if (!store) initStore();
-    this.storeUnsubscribe = store.subscribe(this.forceUpdate);
+    this.storeUnsubscribe = store.subscribe(this.forceUpdate.bind(this));
   }
 
   componentWillMount() {
@@ -214,7 +209,7 @@ class Floats extends React.PureComponent {
     );
   }
 
-  renderFloat(props: FloatStatePars, idx: number) {
+  renderFloat = (props: FloatStatePars, idx: number) => {
     if (!isAnchorVisible(props)) return null;
     const { id, zIndex } = props;
     return (

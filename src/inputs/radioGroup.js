@@ -4,10 +4,7 @@ import {
   set as timmSet,
 }                           from 'timm';
 import isFunction           from 'lodash/isFunction';
-import {
-  bindAll,
-  preventDefault,
-}                           from '../gral/helpers';
+import { preventDefault }   from '../gral/helpers';
 import { NULL_STRING }      from '../gral/constants';
 import { LIST_SEPARATOR_KEY } from '../inputs/listPicker';
 import { GLOW }             from '../gral/styles';
@@ -55,10 +52,6 @@ class RadioGroup extends React.Component {
     super(props);
     this.buttonGroupName = `giu-radio-group_${cntId}`;
     cntId += 1;
-    bindAll(this, [
-      'renderItem',
-      'onClickItem',
-    ]);
   }
 
   componentWillMount() { this.prepareItems(this.props.items); }
@@ -81,7 +74,7 @@ class RadioGroup extends React.Component {
     );
   }
 
-  renderItem(item, idx) {
+  renderItem = (item, idx) => {
     const { curValue } = this.props;
     const { value, label, labelExtra } = item;
     const id = `${this.buttonGroupName}_${idx}`;
@@ -110,7 +103,7 @@ class RadioGroup extends React.Component {
   // ==========================================
   // Event handlers
   // ==========================================
-  onClickItem(ev) {
+  onClickItem = (ev) => {
     const idx = Number(ev.currentTarget.id);
     const item = this.items[idx];
     if (!item) return;

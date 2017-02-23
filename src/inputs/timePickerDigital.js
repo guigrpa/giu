@@ -1,6 +1,5 @@
 import React                from 'react';
 import moment               from '../vendor/moment';
-import { bindAll }          from '../gral/helpers';
 import {
   startOfToday,
   getTimeInSecs,
@@ -30,13 +29,6 @@ class TimePickerDigital extends React.Component {
     stepMinutes:            30,
   };
 
-  constructor(props) {
-    super(props);
-    bindAll(this, [
-      'onChange',
-    ]);
-  }
-
   componentWillMount() { this.initTimeItems(); }
 
   // ==========================================
@@ -62,7 +54,7 @@ class TimePickerDigital extends React.Component {
   // ==========================================
   // Event handlers
   // ==========================================
-  onChange(ev, secsStr) {
+  onChange = (ev, secsStr) => {
     const { curValue, utc, onChange } = this.props;
     if (secsStr === NULL_STRING) {
       onChange(ev, null);

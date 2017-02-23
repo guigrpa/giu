@@ -7,7 +7,6 @@ import type {
   Command,
 }                           from '../gral/types';
 import { COLORS }           from '../gral/constants';
-import { bindAll }          from '../gral/helpers';
 import { isDark }           from '../gral/styles';
 import hoverable            from '../hocs/hoverable';
 import type { HoverableProps } from '../hocs/hoverable';
@@ -67,13 +66,6 @@ class DropDownMenu extends React.PureComponent {
       fFocused: false,
       cmds: null,
     };
-    bindAll(this, [
-      'onMouseDownTitle',
-      'onClickItem',
-      'onFocus',
-      'onBlur',
-      'closeMenu',
-    ]);
   }
 
   // ==========================================
@@ -118,14 +110,14 @@ class DropDownMenu extends React.PureComponent {
   // ==========================================
   // If the menu is not focused, ignore it: it will be handled by the `input` HOC.
   // ...but if it is focused, we want it to close
-  onMouseDownTitle() {
+  onMouseDownTitle = () => {
     if (!this.state.fFocused) return;
     this.closeMenu();
   }
 
   // Run the `onClick` function (if any) associated to the clicked item,
   // and run the `onClickItem` prop.
-  onClickItem(ev: SyntheticMouseEvent, value: any) {
+  onClickItem = (ev: SyntheticMouseEvent, value: any) => {
     const { items, onClickItem } = this.props;
     items.forEach((item) => {
       if (item.value === value && item.onClick) item.onClick(ev);
@@ -134,10 +126,10 @@ class DropDownMenu extends React.PureComponent {
     this.closeMenu();
   }
 
-  onFocus() { this.setState({ fFocused: true }); }
+  onFocus = () => { this.setState({ fFocused: true }); }
 
   // On blur, remove the stored value from the select
-  onBlur() {
+  onBlur = () => {
     this.setState({
       fFocused: false,
       cmds: [{ type: 'REVERT' }],
@@ -147,7 +139,7 @@ class DropDownMenu extends React.PureComponent {
   // ==========================================
   // Helpers
   // ==========================================
-  closeMenu() {
+  closeMenu = () => {
     this.setState({ cmds: [{ type: 'BLUR' }, { type: 'REVERT' }] });
   }
 }

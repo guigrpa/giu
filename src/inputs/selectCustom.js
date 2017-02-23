@@ -1,7 +1,6 @@
 import React                from 'react';
 import { merge }            from 'timm';
 import isFunction           from 'lodash/isFunction';
-import { bindAll }          from '../gral/helpers';
 import {
   COLORS, KEYS,
   UNICODE,
@@ -83,11 +82,6 @@ class SelectCustomBase extends React.Component {
     super(props);
     this.state = { fFloat: false };
     this.keyDown = undefined;
-    bindAll(this, [
-      'registerTitleRef',
-      'onMouseDownTitle',
-      'onClickItem',
-    ]);
   }
 
   componentWillMount() {
@@ -243,19 +237,19 @@ class SelectCustomBase extends React.Component {
   // ==========================================
   // Event handlers
   // ==========================================
-  registerTitleRef(c) {
+  registerTitleRef = (c) => {
     this.refTitle = c;
     this.props.registerOuterRef(c);
   }
 
   // If the menu is not focused, ignore it: it will be handled by the `input` HOC.
   // ...but if it is focused, we want to toggle it
-  onMouseDownTitle() {
+  onMouseDownTitle = () => {
     if (!this.props.fFocused) return;
     this.setState({ fFloat: !this.state.fFloat });
   }
 
-  onClickItem(ev, nextValue) {
+  onClickItem = (ev, nextValue) => {
     const { inlinePicker } = this.props;
     if (!inlinePicker) this.setState({ fFloat: false });
     this.props.onClickItem && this.props.onClickItem(ev, toExternalValue(nextValue));

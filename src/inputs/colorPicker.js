@@ -2,10 +2,7 @@ import React                from 'react';
 import tinycolor            from 'tinycolor2';
 import { merge }            from 'timm';
 import { COLORS }           from '../gral/constants';
-import {
-  bindAll,
-  cancelEvent,
-}                           from '../gral/helpers';
+import { cancelEvent }      from '../gral/helpers';
 import {
   isDark,
   flexContainer, flexItem,
@@ -118,22 +115,6 @@ class ColorPicker extends React.PureComponent {
       mode: 'hsv',
       activeAttr: 'h',
     };
-    bindAll(this, [
-      'onMouseDownMode',
-      'onMouseDownAttrSelector',
-
-      'onMouseDownColorSelector',
-      'onMouseMoveColorSelector',
-      'onMouseUpColorSelector',
-
-      'onMouseDownAttrSlider',
-      'onMouseMoveAttrSlider',
-      'onMouseUpAttrSlider',
-
-      'onMouseDownAlphaSlider',
-      'onMouseMoveAlphaSlider',
-      'onMouseUpAlphaSlider',
-    ]);
   }
 
   componentWillUnmount() {
@@ -346,58 +327,58 @@ class ColorPicker extends React.PureComponent {
   // ==========================================
   // Event handlers
   // ==========================================
-  onMouseDownMode(ev) {
+  onMouseDownMode = (ev) => {
     const mode = ev.target.id;
     if (mode === this.state.mode) return;
     const activeAttr = mode[0];
     this.setState({ mode, activeAttr });
   }
-  onMouseDownAttrSelector(ev) { this.setState({ activeAttr: ev.target.id }); }
+  onMouseDownAttrSelector = (ev) => { this.setState({ activeAttr: ev.target.id }); }
 
-  onMouseDownColorSelector(ev) {
+  onMouseDownColorSelector = (ev) => {
     window.addEventListener('mousemove', this.onMouseMoveColorSelector);
     window.addEventListener('mouseup', this.onMouseUpColorSelector);
     this.onMouseMoveColorSelector(ev);
   }
-  onMouseMoveColorSelector(ev) {
+  onMouseMoveColorSelector = (ev) => {
     const bcr = this.refColorSelector.getBoundingClientRect();
     const xNorm = clamp((ev.clientX - bcr.left) / SIZE, 0, 1);
     const yNorm = 1 - clamp((ev.clientY - bcr.top) / SIZE, 0, 1);
     const attrs = xyToCol(this.state.activeAttr, xNorm, yNorm);
     this.onChange(ev, attrs);
   }
-  onMouseUpColorSelector() {
+  onMouseUpColorSelector = () => {
     window.removeEventListener('mousemove', this.onMouseMoveColorSelector);
     window.removeEventListener('mouseup', this.onMouseUpColorSelector);
   }
 
-  onMouseDownAttrSlider(ev) {
+  onMouseDownAttrSlider = (ev) => {
     window.addEventListener('mousemove', this.onMouseMoveAttrSlider);
     window.addEventListener('mouseup', this.onMouseUpAttrSlider);
     this.onMouseMoveAttrSlider(ev);
   }
-  onMouseMoveAttrSlider(ev) {
+  onMouseMoveAttrSlider = (ev) => {
     const bcr = this.refAttrSlider.getBoundingClientRect();
     const attrNorm = 1 - clamp((ev.clientY - bcr.top) / SIZE, 0, 1);
     const attr = this.state.activeAttr;
     this.onChange(ev, { [attr]: denormalize(attrNorm, attr) });
   }
-  onMouseUpAttrSlider() {
+  onMouseUpAttrSlider = () => {
     window.removeEventListener('mousemove', this.onMouseMoveAttrSlider);
     window.removeEventListener('mouseup', this.onMouseUpAttrSlider);
   }
 
-  onMouseDownAlphaSlider(ev) {
+  onMouseDownAlphaSlider = (ev) => {
     window.addEventListener('mousemove', this.onMouseMoveAlphaSlider);
     window.addEventListener('mouseup', this.onMouseUpAlphaSlider);
     this.onMouseMoveAlphaSlider(ev);
   }
-  onMouseMoveAlphaSlider(ev) {
+  onMouseMoveAlphaSlider = (ev) => {
     const bcr = this.refAlphaSlider.getBoundingClientRect();
     const attrNorm = clamp((ev.clientX - bcr.left) / ALPHA_SLIDER_SIZE, 0, 1);
     this.onChange(ev, { a: attrNorm });
   }
-  onMouseUpAlphaSlider() {
+  onMouseUpAlphaSlider = () => {
     window.removeEventListener('mousemove', this.onMouseMoveAlphaSlider);
     window.removeEventListener('mouseup', this.onMouseUpAlphaSlider);
   }

@@ -1,7 +1,6 @@
 import React                from 'react';
 import { merge }            from 'timm';
 import tinycolor            from 'tinycolor2';
-import { bindAll }          from '../gral/helpers';
 import {
   COLORS,
   KEYS,
@@ -56,10 +55,6 @@ class ColorInput extends React.Component {
   constructor(props) {
     super(props);
     this.state = { fFloat: false };
-    bindAll(this, [
-      'registerTitleRef',
-      'onMouseDownTitle',
-    ]);
   }
 
   componentWillReceiveProps(nextProps) {
@@ -172,14 +167,14 @@ class ColorInput extends React.Component {
   // ==========================================
   // Event handlers
   // ==========================================
-  registerTitleRef(c) {
+  registerTitleRef = (c) => {
     this.refTitle = c;
     this.props.registerOuterRef(c);
   }
 
   // If the menu is not focused, ignore it: it will be handled by the `input` HOC.
   // ...but if it is focused, we want to toggle it
-  onMouseDownTitle() {
+  onMouseDownTitle = () => {
     if (!this.props.fFocused) return;
     this.setState({ fFloat: !this.state.fFloat });
   }

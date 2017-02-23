@@ -10,7 +10,6 @@ import {
   getScrollbarWidth,
 }                           from '../gral/constants';
 import {
-  bindAll,
   cancelEvent,
   cancelBodyScrolling,
 }                           from '../gral/helpers';
@@ -54,15 +53,6 @@ class BaseListPicker extends React.PureComponent {
     emptyText:              'Ø',
     accentColor:            COLORS.accent,
   };
-
-  constructor(props) {
-    super(props);
-    bindAll(this, [
-      'registerOuterRef',
-      'renderItem',
-      'onClickItem',
-    ]);
-  }
 
   componentWillReceiveProps(nextProps) {
     const { keyDown } = nextProps;
@@ -114,7 +104,7 @@ class BaseListPicker extends React.PureComponent {
     return items.map(this.renderItem);
   }
 
-  renderItem(item, idx) {
+  renderItem = (item, idx) => {
     const { value: itemValue, label, shortcuts } = item;
     const {
       curValue,
@@ -168,12 +158,12 @@ class BaseListPicker extends React.PureComponent {
   // ==========================================
   // Event handlers
   // ==========================================
-  registerOuterRef(c) {
+  registerOuterRef = (c) => {
     this.refOuter = c;
     this.props.registerOuterRef && this.props.registerOuterRef(c);
   }
 
-  onClickItem(ev) {
+  onClickItem = (ev) => {
     const { onClickItem, onChange } = this.props;
     onChange(ev, ev.currentTarget.id);
     if (onClickItem) onClickItem(ev, ev.currentTarget.id);

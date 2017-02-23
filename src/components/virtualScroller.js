@@ -4,10 +4,7 @@
 import { merge }            from 'timm';
 import React                from 'react';
 import throttle             from 'lodash/throttle';
-import {
-  bindAll,
-  cancelBodyScrolling,
-}                           from '../gral/helpers';
+import { cancelBodyScrolling } from '../gral/helpers';
 import { getScrollbarWidth } from '../gral/constants';
 import { scrollIntoView }   from '../gral/visibility';
 import type { ScrollIntoViewOptions } from '../gral/visibility';
@@ -112,12 +109,6 @@ class VirtualScroller extends React.PureComponent {
     this.avgHeight = undefined;
     this.fHasScrollbar = false;
     this.scrollbarWidth = 0;
-
-    bindAll(this, [
-      'onChangeRowHeight',
-      'recalcViewport',
-      'checkScrollbar',
-    ]);
     this.throttledRecalcViewport = throttle(this.recalcViewport, 200);
   }
 
@@ -148,7 +139,7 @@ class VirtualScroller extends React.PureComponent {
     }
   }
 
-  recalcViewport(ev: Object = {}) {
+  recalcViewport = (ev: Object = {}) => {
     if (!this.refScroller) return;
     const { scrollTop, clientHeight } = this.refScroller;
     if (scrollTop !== this.scrollTop || clientHeight !== this.clientHeight) {
@@ -166,7 +157,7 @@ class VirtualScroller extends React.PureComponent {
     }
   }
 
-  checkScrollbar() {
+  checkScrollbar = () => {
     if (!this.refScroller) return;
     const { scrollHeight, clientHeight } = this.refScroller;
     const { onChangeScrollbarWidth } = this.props;
@@ -351,7 +342,7 @@ class VirtualScroller extends React.PureComponent {
   // ===============================================================
   // Event handlers
   // ===============================================================
-  onChangeRowHeight(id: string, height: number) {
+  onChangeRowHeight = (id: string, height: number) => {
     const prevCachedHeight = this.cachedHeights[id];
     if (prevCachedHeight === height) return;
     DEBUG && console.log(`VirtualScroller: received new height for row ${id}: ${height}`);

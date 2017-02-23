@@ -6,9 +6,6 @@ import {
   COLORS,
   MISC,
 }                           from '../gral/constants';
-import {
-  bindAll,
-}                           from '../gral/helpers';
 import Backdrop             from '../components/backdrop';
 import HintLabel            from '../components/hintLabel';
 import type { HintLabelProps } from '../components/hintLabel';
@@ -44,11 +41,6 @@ class HintScreen extends React.PureComponent {
     elements:               ([]: ElementsWrapper),
     closeLabel:             'Got it!',
     zIndex:                 MISC.zHintBase,
-  }
-
-  constructor(props: Props) {
-    super(props);
-    bindAll(this, ['onResize']);
   }
 
   componentDidMount() { window.addEventListener('resize', this.onResize); }
@@ -109,7 +101,7 @@ class HintScreen extends React.PureComponent {
   // ==========================================
   // Event handlers
   // ==========================================
-  onResize() { this.forceUpdate(); }
+  onResize = () => { this.forceUpdate(); }
 }
 
 

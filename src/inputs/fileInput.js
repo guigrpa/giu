@@ -1,7 +1,6 @@
 import React                from 'react';
 import { omit, merge }      from 'timm';
 import filesize             from 'filesize';
-import { bindAll }          from '../gral/helpers';
 import {
   GLOW,
   HIDDEN_FOCUS_CAPTURE,
@@ -34,16 +33,6 @@ class FileInput extends React.Component {
     errors:                 React.PropTypes.array.isRequired,
     fFocused:               React.PropTypes.bool.isRequired,
   };
-
-  constructor(props) {
-    super(props);
-    bindAll(this, [
-      'registerInputRef',
-      'onClickButton',
-      'onClickClear',
-      'onChange',
-    ]);
-  }
 
   componentDidUpdate(prevProps) {
     const { cmds } = this.props;
@@ -104,15 +93,15 @@ class FileInput extends React.Component {
   // ==========================================
   // Event handlers
   // ==========================================
-  registerInputRef(c) {
+  registerInputRef = (c) => {
     this.refInput = c;
     this.props.registerFocusableRef(c);
   }
 
-  onClickButton() { if (this.refInput) this.refInput.click(); }
-  onClickClear(ev) { this.props.onChange(ev, null); }
+  onClickButton = () => { if (this.refInput) this.refInput.click(); }
+  onClickClear = (ev) => { this.props.onChange(ev, null); }
 
-  onChange(ev) {
+  onChange = (ev) => {
     const { files } = ev.target;
     if (!files || !files.length) return;
     this.props.onChange(ev, files);

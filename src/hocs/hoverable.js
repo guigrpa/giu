@@ -2,7 +2,6 @@
 
 import React                from 'react';
 import { omit }             from 'timm';
-import { bindAll }          from '../gral/helpers';
 
 // ==========================================
 // HOC
@@ -73,10 +72,6 @@ function hoverable<DP, P, St>(
     constructor(props: Props<P, DP>) {
       super(props);
       this.state = { hovering: null };
-      bindAll(this, [
-        'onHoverStart',
-        'onHoverStop',
-      ]);
     }
 
     render() {
@@ -93,7 +88,7 @@ function hoverable<DP, P, St>(
       );
     }
 
-    onHoverStart(ev: SyntheticMouseEvent) {
+    onHoverStart = (ev: SyntheticMouseEvent) => {
       let id;
       if (ev.currentTarget instanceof Element) {
         id = ev.currentTarget.id;
@@ -103,7 +98,7 @@ function hoverable<DP, P, St>(
       if (this.props.onHoverStart) this.props.onHoverStart(ev);
     }
 
-    onHoverStop(ev: SyntheticMouseEvent) {
+    onHoverStop = (ev: SyntheticMouseEvent) => {
       this.setState({ hovering: null });
       if (this.props.onHoverStop) this.props.onHoverStop(ev);
     }
