@@ -2,6 +2,8 @@
 
 *[M]: major change; [m]: minor change*
 
+## 0.10.1 (February 24, 2017)
+
 * [M] Input HOC: multiple bugfixes (esp. concerning validation lifecycles)
 
 ## 0.10.0 (February 22, 2017)

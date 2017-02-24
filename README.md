@@ -636,11 +636,16 @@ An inconspicuous-looking button-in-a-`span`. Props:
 
 * **plain?** *boolean*: removes most button styles
 * **children?** *any*: button contents (can include `Icon`
-  components, etc.)
+ components, etc.)
 * **onClick?** *(ev: SyntheticMouseEvent) => void*: `click` handler
 * **disabled?** *boolean*
 * **style?** *Object*: merged with the `span` style
 * *All other props are passed through to the `span` element*
+* Additional props with `mdl` theme:
+  + **colored?** *boolean*
+  + **primary?** *boolean*
+  + **accent?** *boolean*
+  + **fab?** *boolean*
 
 ### Icon and Spinner
 
