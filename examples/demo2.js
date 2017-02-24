@@ -24,6 +24,7 @@ import DataTableExample from './demo1-dataTables';
 import ModalExample from './demo1-modals';
 import HintExample from './demo1-hints';
 import FormExample from './demo1-forms';
+import FormExample2 from './demo1-forms2';
 import {
   ExampleLabel, exampleStyle,
   NORMAL_OPTIONS, TALL_OPTIONS, WIDE_OPTIONS,
@@ -94,6 +95,7 @@ class App extends React.Component {
               </div>
               <div style={flexItem('1 0 500px')}>
                 {EVERYTHING && <FormExample lang={lang} />}
+                {EVERYTHING && <FormExample2 />}
               </div>
             </div>
             <div style={{ textAlign: 'right', padding: 10, fontSize: '1.2em' }}>
@@ -133,12 +135,6 @@ const NotificationExample = () =>
       msg="Notification message"
       noStylePosition
     />
-    <ul className="">
-      <li className="mdl-menu__item">Some Action</li>
-      <li className="mdl-menu__item">Another Action</li>
-      <li disabled className="mdl-menu__item">Disabled Action</li>
-      <li className="mdl-menu__item">Yet Another Action</li>
-    </ul>
   </div>;
 
 const MessageExample = () =>

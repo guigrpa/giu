@@ -2,6 +2,8 @@
 
 *[M]: major change; [m]: minor change*
 
+* [M] Input HOC: multiple bugfixes (esp. concerning validation lifecycles)
+
 ## 0.10.0 (February 22, 2017)
 
 * [M] Add partial **Material Design Lite** support

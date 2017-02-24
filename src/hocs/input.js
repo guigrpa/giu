@@ -2,7 +2,7 @@
 import React from 'react';
 import { omit, merge } from 'timm';
 import { cancelEvent, stopPropagation } from '../gral/helpers';
-import { COLORS, MISC, IS_IOS } from '../gral/constants';
+import { COLORS, MISC, IS_IOS, FONTS } from '../gral/constants';
 import { scrollIntoView } from '../gral/visibility';
 import { isDark } from '../gral/styles';
 import { isRequired } from '../gral/validators';
@@ -56,7 +56,7 @@ function input(ComposedComponent, {
     ComposedComponent.name || 'Component';
   const hocDisplayName = `Input(${composedComponentName})`;
 
-  return class extends React.PureComponent {
+  class Klass extends React.PureComponent {
     static displayName = hocDisplayName;
     static propTypes = PROP_TYPES;
     static defaultProps = {
@@ -67,17 +67,15 @@ function input(ComposedComponent, {
 
     constructor(props) {
       super(props);
-      // NOTE: this.errors = this.props.errors + this.state.validationErrors
-      this.errors = props.errors;
-      this.prevErrors = this.errors;
       this.curValue = toInternalValue(props.value, props);
       this.prevValue = this.curValue;
-      this.lastValidatedValue = toInternalValue(props.value, props);
-      this.state = {
-        fFocused: false,
-        keyDown: null,
-        validationErrors: [],
-      };
+      this.validationErrors = [];
+      this.lastValidatedValue = undefined;
+      // NOTE: this.errors = this.props.errors (user-provided) + this.validationErrors
+      this.recalcErrors(props);
+      this.prevErrors = this.errors;
+      this.fFocused = false;
+      this.keyDown = null;
     }
 
     componentDidMount() {
@@ -86,18 +84,10 @@ function input(ComposedComponent, {
     }
 
     componentWillReceiveProps(nextProps) {
-      const { value, cmds } = nextProps;
+      const { value, errors, cmds } = nextProps;
       if (value !== this.props.value) this.setCurValue(toInternalValue(value, nextProps));
+      if (errors !== this.props.errors) this.recalcErrors(nextProps);
       if (cmds !== this.props.cmds) this.processCmds(cmds, nextProps);
-    }
-
-    componentWillUpdate(nextProps, nextState) {
-      const { errors } = nextProps;
-      const { validationErrors } = nextState;
-      if (errors !== this.props.errors ||
-          validationErrors !== this.state.validationErrors) {
-        this.errors = errors.concat(validationErrors);
-      }
     }
 
     componentDidUpdate(prevProps) {
@@ -118,6 +108,8 @@ function input(ComposedComponent, {
           this.pendingFocusBlur = null;
         });
       }
+      this.prevValue = this.curValue;
+      this.prevErrors = this.errors;
     }
 
     componentWillUnmount() { floatDelete(this.errorFloatId); }
@@ -161,6 +153,8 @@ function input(ComposedComponent, {
     // ==========================================
     render() {
       const otherProps = omit(this.props, PROP_KEYS);
+
+      // Render the basic wrapped component
       let out = (
         <ComposedComponent
           registerOuterRef={this.registerOuterRef}
@@ -170,9 +164,9 @@ function input(ComposedComponent, {
           errors={this.errors}
           required={this.props.required}
           cmds={this.props.cmds}
-          keyDown={this.state.keyDown}
+          keyDown={this.keyDown}
           disabled={this.props.disabled}
-          fFocused={this.state.fFocused}
+          fFocused={this.fFocused}
           floatZ={this.props.floatZ}
           floatPosition={this.props.floatPosition}
           onChange={this.onChange}
@@ -211,7 +205,7 @@ function input(ComposedComponent, {
             floatAlign={align}
             floatZ={zIndex}
           >
-            {this.renderErrors(this.errors)}
+            {this.renderErrors()}
           </IosFloatWrapper>
         );
       }
@@ -254,7 +248,7 @@ function input(ComposedComponent, {
       if (errors.length) {
         const floatOptions = merge(this.calcFloatPosition(), {
           getAnchorNode: () => this.refOuter || this.refFocusable,
-          children: this.renderErrors(errors),
+          children: this.renderErrors(),
         });
         if (this.errorFloatId == null) {
           this.errorFloatId = floatAdd(floatOptions);
@@ -264,12 +258,15 @@ function input(ComposedComponent, {
       }
     }
 
-    renderErrors(errors) {
-      const { curValue, lastValidatedValue } = this;
-      let fModified = false;
-      if (curValue != null) fModified = curValue !== lastValidatedValue;
+    renderErrors() {
+      const { errors, curValue, lastValidatedValue } = this;
+      // console.log(`Rendering; lastValidatedValue=${lastValidatedValue}, curValue=${curValue}, ` +
+      //   `internal value for props.value=${toInternalValue(this.props.value, this.props)}`);
+      const fModified = lastValidatedValue !== undefined ?
+        curValue !== lastValidatedValue :
+        curValue !== toInternalValue(this.props.value, this.props);
       return (
-        <div style={style.errors(fModified)}>
+        <div style={style.errors(fModified, this.context.theme)}>
           {errors.join(' | ')}
         </div>
       );
@@ -283,7 +280,6 @@ function input(ComposedComponent, {
 
     setCurValue(curValue) {
       if (curValue === this.curValue) return;
-      this.prevValue = this.curValue;
       this.curValue = curValue;
       this.forceUpdate();
     }
@@ -295,7 +291,7 @@ function input(ComposedComponent, {
       if (curValue === undefined) curValue = ev.currentTarget[valueAttr];
       this.setCurValue(curValue);
       if (onChange) onChange(ev, toExternalValue(curValue, this.props));
-      if (this.props.focusOnChange && !this.state.fFocused && !options.fDontFocus) {
+      if (this.props.focusOnChange && !this.fFocused && !options.fDontFocus) {
         this._focus();
       }
     }
@@ -307,14 +303,14 @@ function input(ComposedComponent, {
         return;
       }
       if (this.refOuter) scrollIntoView(this.refOuter);
-      this.setState({ fFocused: true });
+      this.changedFocus(true);
       if (onFocus) onFocus(ev);
     }
 
     onBlur = (ev) => {
       const { onBlur } = this.props;
       this._validate().catch(() => {});
-      this.setState({ fFocused: false });
+      this.changedFocus(false);
       if (onBlur) onBlur(ev);
     }
 
@@ -324,7 +320,7 @@ function input(ComposedComponent, {
       cancelEvent(ev);
 
       // If not focused, a mouse-down should focus the component and cancel the event
-      if (this.state.fFocused) return;
+      if (this.fFocused) return;
       this._focus();
     }
 
@@ -338,7 +334,8 @@ function input(ComposedComponent, {
     onKeyDown = (ev) => {
       const { which, keyCode, metaKey, shiftKey, altKey, ctrlKey } = ev;
       if (trappedKeys.indexOf(which) < 0) return;
-      this.setState({ keyDown: { which, keyCode, metaKey, shiftKey, altKey, ctrlKey } });
+      this.keyDown = { which, keyCode, metaKey, shiftKey, altKey, ctrlKey };
+      this.forceUpdate();
     }
 
     onCopyCut = (ev) => {
@@ -361,6 +358,12 @@ function input(ComposedComponent, {
 
     _blur() {
       if (this.refFocusable && this.refFocusable.blur) this.refFocusable.blur();
+    }
+
+    changedFocus(fFocused) {
+      if (fFocused === this.fFocused) return;
+      this.fFocused = fFocused;
+      this.forceUpdate();
     }
 
     _validate() {
@@ -408,14 +411,26 @@ function input(ComposedComponent, {
       // When all promises have resolved, change the current state
       return Promise.all(pErrors).then((validationErrors0) => {
         const validationErrors = validationErrors0.filter((o) => o != null);
-        this && this.setState && this.setState({ validationErrors });
+        const prevLastValidatedValue = this.lastValidatedValue;
         this.lastValidatedValue = internalValue;
+        if (
+          this.lastValidatedValue !== prevLastValidatedValue ||
+          validationErrors.join('') !== this.validationErrors.join('')  // string compare
+        ) {
+          this.validationErrors = validationErrors;
+          this.recalcErrors(this.props);
+          this.forceUpdate();
+        }
         if (validationErrors.length) {
           const exception = new Error('VALIDATION_ERROR');
           exception.errors = validationErrors;
           throw exception;
         }
       });
+    }
+
+    recalcErrors(props) {
+      this.errors = props.errors.concat(this.validationErrors);
     }
 
     calcFloatPosition() {
@@ -433,7 +448,11 @@ function input(ComposedComponent, {
       }
       return { position, align: errorAlign, zIndex };
     }
-  };
+  }
+
+  Klass.contextTypes = { theme: React.PropTypes.any };
+
+  return Klass;
 }
 
 // ==========================================
@@ -452,10 +471,11 @@ const style = {
     });
     return out;
   },
-  errors: (fModified) => ({
+  errors: (fModified, theme) => ({
     padding: '1px 3px',
     backgroundColor: fModified ? errorBgColorModified : errorBgColorBase,
     color: fModified ? errorFgColorModified : errorFgColorBase,
+    fontFamily: theme === 'mdl' ? FONTS.mdl : undefined,
   }),
 };
 

@@ -1,5 +1,8 @@
 # Roadmap
 
+- [ ] Add Roboto (in mdl theme) to dropdownmenus, colorpickers, datepickers, listpickers???
+- [ ] How will the user override MDL colors?
+
 - FLOW conversion:
     - [ ] Add support for Hoverable HOC on functional components
     - [ ] Check status of https://github.com/facebook/flow/issues/1326 (Object type spread)
