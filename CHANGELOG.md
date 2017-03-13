@@ -2,6 +2,8 @@
 
 *[M]: major change; [m]: minor change*
 
+* **Bugfix**: honor `onClick` props in notifications.
+
 ## 0.10.1 (February 24, 2017)
 
 * [M] Input HOC: multiple bugfixes (esp. concerning validation lifecycles)

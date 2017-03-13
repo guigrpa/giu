@@ -214,7 +214,11 @@ class Notifications extends React.PureComponent {
   }
   onDismiss = (ev: SyntheticEvent) => {
     if (!(ev.currentTarget instanceof Element)) return;
-    store.dispatch(actions.notifDelete(ev.currentTarget.id));
+    const { id } = ev.currentTarget;
+    const notifs = this.props.notifs || store.getState();
+    const notif = notifs.find((o) => o.id === id);
+    if (notif && notif.onClick) notif.onClick(ev);
+    store.dispatch(actions.notifDelete(id));
   }
 }
 

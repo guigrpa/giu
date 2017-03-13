@@ -42,6 +42,7 @@ const notify = (msg) => createNotif({
   msg: msg || `Notification #${cntNotif++}`, // eslint-disable-line no-plusplus
   type: sample(['info', 'success', 'warn', 'error']),
   icon: sample(['arrow-left', 'arrow-right', 'arrow-up', 'arrow-down']),
+  onClick: () => console.log('notification clicked'),
 });
 
 // -----------------------------------------------
