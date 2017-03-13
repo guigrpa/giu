@@ -18,6 +18,10 @@ require('./index.css');
 // e.g. export Select from './inputs/select';
 // That's why we do it in two steps here
 
+// Reexported libraries
+import tinycolor from 'tinycolor2';
+export { tinycolor };
+
 // Components
 import Giu                from './components/giu';
 export { Giu };

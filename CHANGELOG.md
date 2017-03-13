@@ -2,6 +2,9 @@
 
 *[M]: major change; [m]: minor change*
 
+## 0.10.2 (March 13, 2017)
+
+* Expose tinycolor in the public API.
 * **Bugfix**: honor `onClick` props in notifications.
 
 ## 0.10.1 (February 24, 2017)
