@@ -1,6 +1,6 @@
 {
   "name": "giu",
-  "version": "0.10.1",
+  "version": "0.10.2",
   "description": "A collection of React components and utilities",
   "main": "lib/index.js",
   "author": "Guillermo Grau Panea",
