@@ -1,14 +1,16 @@
 // @flow
 
-import React                from 'react';
+import React from 'react';
 
 // ==========================================
 // Component
 // ==========================================
-// -- A wrapper for the native HTML `progress` element (with 100% width).
-// -- *All props are passed through to the `progress` element.
-// -- Remember that an indeterminate progress bar will be shown if you
-// -- don't specify the `value` prop (native HTML behaviour).*
+/* --
+A wrapper for the native HTML `progress` element (with 100% width).
+*All props are passed through to the `progress` element.
+Remember that an indeterminate progress bar will be shown if you
+don't specify the `value` prop (native HTML behaviour).*
+-- */
 class Progress extends React.PureComponent {
   props: Object;
   refMdl: ?Object;
@@ -20,7 +22,9 @@ class Progress extends React.PureComponent {
     }
   }
 
-  componentDidUpdate() { this.mdlRefresh(); }
+  componentDidUpdate() {
+    this.mdlRefresh();
+  }
 
   // ==========================================
   render() {
@@ -32,7 +36,10 @@ class Progress extends React.PureComponent {
     let className = 'mdl-progress mdl-js-progress';
     if (this.props.value == null) className += ' mdl-progress--indeterminate';
     return (
-      <div ref={(c) => { this.refMdl = c; }}
+      <div
+        ref={c => {
+          this.refMdl = c;
+        }}
         className={className}
         style={style.progress}
       />
@@ -45,7 +52,7 @@ class Progress extends React.PureComponent {
     const { value } = this.props;
     if (value == null) return;
     this.refMdl.MaterialProgress.setProgress(value * 100);
-  }
+  };
 }
 
 Progress.contextTypes = { theme: React.PropTypes.any };

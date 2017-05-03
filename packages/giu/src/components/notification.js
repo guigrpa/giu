@@ -1,70 +1,95 @@
 // @flow
 
-import React                from 'react';
-import { merge }            from 'timm';
+import React from 'react';
+import { merge } from 'timm';
 import {
-  flexContainer, flexItem,
+  flexContainer,
+  flexItem,
   boxWithShadow,
-  isDark, darken,
-}                           from '../gral/styles';
-import { COLORS, FONTS }    from '../gral/constants';
-import hoverable            from '../hocs/hoverable';
-import type { HoverableProps } from '../hocs/hoverable';
-import Icon                 from './icon';
+  isDark,
+  darken,
+} from '../gral/styles';
+import { COLORS, FONTS } from '../gral/constants';
+import hoverable from '../hocs/hoverable';
+/* :: import type { HoverableProps } from '../hocs/hoverable'; */
+import Icon from './icon';
 
 // ==========================================
 // Component
 // ==========================================
-export type NotificationType = 'info' | 'success' | 'warn' | 'error';
+/* --
+**`NotificationPars` definition:**
 
-type PublicProps = {
+```js
+export type NotificationType = 'info' | 'success' | 'warn' | 'error';
+export type NotificationPars = {
+  sticky?: boolean,  // never delete this notification
+  timeOut?: number,  // time [ms] after which it's deleted [default: 4000]
   id?: string,
-  name?: string,
-  type: NotificationType,
-  icon: string,
+  name?: string,  // a user-provided name for the notification
+  type?: NotificationType, // default: `info`
+  icon?: string, // default: `exclamation`
   iconSpin?: boolean,
-  title?: string,
-  msg?: string,
-  onClick?: (ev: SyntheticMouseEvent) => void,
-  style?: Object,
+  title?: string,  // highlighted text at the top of the notification
+  msg?: string,  // notification text
+  onClick?: (ev: SyntheticMouseEvent) => void,  // `click` handler
+  style?: Object,  // merged with the outermost `div` style
   noStylePosition?: boolean,
   noStyleShadow?: boolean,
 };
-type Props = PublicProps & HoverableProps;
-export type NotificationPars = $Shape<PublicProps>;  // all are optional
+```
+-- */
+export type NotificationType = 'info' | 'success' | 'warn' | 'error';
+export type NotificationPars = {
+  sticky?: boolean,  // never delete this notification
+  timeOut?: number,  // time [ms] after which it's deleted [default: 4000]
+  id?: string,
+  name?: string,  // a user-provided name for the notification
+  type?: NotificationType, // default: `info`
+  icon?: string, // default: `exclamation`
+  iconSpin?: boolean,
+  title?: string,  // highlighted text at the top of the notification
+  msg?: string,  // notification text
+  onClick?: (ev: SyntheticMouseEvent) => void,  // `click` handler
+  style?: Object,  // merged with the outermost `div` style
+  noStylePosition?: boolean,
+  noStyleShadow?: boolean,
+};
+
+type Props = {
+  /* :: ...$Exact<NotificationPars>, */
+  /* :: ...$Exact<HoverableProps>, */
+  type: NotificationType,
+  icon: string,
+};
 
 class Notification extends React.PureComponent {
   props: Props;
 
   static defaultProps = {
-    type:                   ('info': NotificationType),
-    icon:                   'exclamation',
+    type: ('info': NotificationType),
+    icon: 'exclamation',
   };
 
   // ==========================================
   // Render
   // ==========================================
   render() {
-    const {
-      id,
-      icon, iconSpin, title, msg,
-      onClick, onHoverStart, onHoverStop,
-    } = this.props;
     return (
       <div
         className="giu-notification"
-        id={id}
-        onMouseEnter={onHoverStart}
-        onMouseLeave={onHoverStop}
-        onClick={onClick}
+        id={this.props.id}
+        onMouseEnter={this.props.onHoverStart}
+        onMouseLeave={this.props.onHoverStop}
+        onClick={this.props.onClick}
         style={style.outer(this.props, this.context.theme)}
       >
         <div style={style.icon}>
-          <Icon icon={icon} size="2x" spin={iconSpin} />
+          <Icon icon={this.props.icon} size="2x" spin={this.props.iconSpin} />
         </div>
         <div style={style.body}>
-          <div style={style.title}>{title}</div>
-          <div style={style.msg}>{msg}</div>
+          <div style={style.title}>{this.props.title}</div>
+          <div style={style.msg}>{this.props.msg}</div>
         </div>
       </div>
     );
@@ -77,12 +102,17 @@ Notification.contextTypes = { theme: React.PropTypes.any };
 // Styles
 // ==========================================
 const style = {
-  outer: ({
-    type,
-    hovering,
-    onClick,
-    style: baseStyle, noStylePosition, noStyleShadow,
-  }, theme) => {
+  outer: (
+    {
+      type,
+      hovering,
+      onClick,
+      style: baseStyle,
+      noStylePosition,
+      noStyleShadow,
+    },
+    theme,
+  ) => {
     let bgColor = COLORS.notifs[type] || COLORS.notifs.info;
     if (hovering && onClick) bgColor = darken(bgColor, 10);
     const fgColor = COLORS[isDark(bgColor) ? 'lightText' : 'darkText'];

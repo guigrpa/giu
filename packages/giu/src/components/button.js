@@ -1,53 +1,85 @@
 // @flow
 
-import React                from 'react';
-import { omit, merge }      from 'timm';
-import { COLORS }           from '../gral/constants';
+import React from 'react';
+import { omit, merge } from 'timm';
+import { COLORS } from '../gral/constants';
 
 // ==========================================
 // Component
 // ==========================================
 /* --
-An inconspicuous-looking button-in-a-`span`. Props:
+An inconspicuous-looking button-in-a-`span`.
 
-* **plain?** *boolean*: removes most button styles
-* **children?** *any*: button contents (can include `Icon`
- components, etc.)
-* **onClick?** *(ev: SyntheticMouseEvent) => void*: `click` handler
-* **disabled?** *boolean*
-* **style?** *Object*: merged with the `span` style
-* *All other props are passed through to the `span` element*
-* Additional props with `mdl` theme:
-  + **colored?** *boolean*
-  + **primary?** *boolean*
-  + **accent?** *boolean*
-  + **fab?** *boolean*
--- */
+```js
 type Props = {
-  plain?: boolean,
-  children?: any,
+  plain?: boolean,  // removes most button styles
+  children?: any,  // button contents (can include `Icon` components, etc.)
   onClick?: (ev: SyntheticMouseEvent) => void,
   disabled?: boolean,
-  style?: Object,
+  style?: Object,  // merged with the `span` style
   skipTheme?: boolean,
-  // MDL
+
+  // Additional props with `mdl` theme
   colored?: boolean,
   primary?: boolean,
   accent?: boolean,
-  // all other props are passed through
+  fab?: boolean,
+
+  // All other props are passed through to the `span` element
 };
-const FILTERED_PROPS = ['skipTheme', 'plain', 'colored', 'primary', 'accent', 'fab', 'children', 'onClick', 'disabled', 'style'];
-const FILTERED_PROPS_MDL = ['skipTheme', 'plain', 'colored', 'primary', 'accent', 'fab'];
+```
+-- */
+type Props = {
+  plain?: boolean, // removes most button styles
+  children?: any, // button contents (can include `Icon` components, etc.)
+  onClick?: (ev: SyntheticMouseEvent) => void,
+  disabled?: boolean,
+  style?: Object, // merged with the `span` style
+  skipTheme?: boolean,
+
+  // Additional props with `mdl` theme
+  colored?: boolean,
+  primary?: boolean,
+  accent?: boolean,
+  fab?: boolean,
+
+  // All other props are passed through to the `span` element
+};
+const FILTERED_PROPS = [
+  'skipTheme',
+  'plain',
+  'colored',
+  'primary',
+  'accent',
+  'fab',
+  'children',
+  'onClick',
+  'disabled',
+  'style',
+];
+const FILTERED_PROPS_MDL = [
+  'skipTheme',
+  'plain',
+  'colored',
+  'primary',
+  'accent',
+  'fab',
+];
 
 class Button extends React.PureComponent {
   props: Props;
+  refButton: ?Object;
 
   componentDidMount() {
-    if (this.context.theme === 'mdl' && this.refButton) window.componentHandler.upgradeElement(this.refButton);
+    if (this.context.theme === 'mdl' && this.refButton) {
+      window.componentHandler.upgradeElement(this.refButton);
+    }
   }
 
   render() {
-    if (!this.props.skipTheme && this.context.theme === 'mdl') return this.renderMdl();
+    if (!this.props.skipTheme && this.context.theme === 'mdl') {
+      return this.renderMdl();
+    }
     const { children, disabled, onClick } = this.props;
     const otherProps = omit(this.props, FILTERED_PROPS);
     return (
@@ -63,16 +95,26 @@ class Button extends React.PureComponent {
   }
 
   renderMdl() {
-    let classNames = ['giu-button', 'mdl-button', 'mdl-js-button', 'mdl-js-ripple-effect'];
+    let classNames = [
+      'giu-button',
+      'mdl-button',
+      'mdl-js-button',
+      'mdl-js-ripple-effect',
+    ];
     if (!this.props.plain) classNames.push('mdl-button--raised');
     if (this.props.colored) classNames.push('mdl-button--colored');
     if (this.props.primary) classNames.push('mdl-button--primary');
     if (this.props.accent) classNames.push('mdl-button--accent');
     if (this.props.fab) classNames.push('mdl-button--fab');
-    if (this.props.classNames) classNames = classNames.concat(this.props.classNames);
+    if (this.props.classNames) {
+      classNames = classNames.concat(this.props.classNames);
+    }
     const otherProps = omit(this.props, FILTERED_PROPS_MDL);
     return (
-      <button ref={(c) => { this.refButton = c; }}
+      <button
+        ref={c => {
+          this.refButton = c;
+        }}
         className={classNames.join(' ')}
         {...otherProps}
       />

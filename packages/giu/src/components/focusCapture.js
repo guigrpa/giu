@@ -1,12 +1,9 @@
 // @flow
 
-import React                from 'react';
-import { omit }             from 'timm';
-import { IS_IOS }           from '../gral/constants';
-import {
-  HIDDEN_FOCUS_CAPTURE,
-  HIDDEN_FOCUS_CAPTURE_IOS,
-}                           from '../gral/styles';
+import React from 'react';
+import { omit } from 'timm';
+import { IS_IOS } from '../gral/constants';
+import { HIDDEN_FOCUS_CAPTURE, HIDDEN_FOCUS_CAPTURE_IOS } from '../gral/styles';
 
 // ==========================================
 // Component
@@ -24,15 +21,14 @@ class FocusCapture extends React.Component {
     const { registerRef, disabled } = this.props;
     const otherProps = omit(this.props, FILTERED_PROPS);
     const el = (
-      <input ref={registerRef}
+      <input
+        ref={registerRef}
         style={style.input}
         tabIndex={disabled ? -1 : undefined}
         {...otherProps}
       />
     );
-    return IS_IOS ?
-      <span style={style.iosWrapper}>{el}</span> :
-      el;
+    return IS_IOS ? <span style={style.iosWrapper}>{el}</span> : el;
   }
 }
 

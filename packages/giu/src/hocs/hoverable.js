@@ -1,7 +1,7 @@
 // @flow
 
-import React                from 'react';
-import { omit }             from 'timm';
+import React from 'react';
+import { omit } from 'timm';
 
 // ==========================================
 // HOC
@@ -32,22 +32,6 @@ import { omit }             from 'timm';
 // --   you can attach to your target DOM elements
 // -- * **onHoverStop** *(ev: SyntheticMouseEvent) => void*: `onMouseLeave` event handler
 // --   you can attach to your target DOM elements
-type HoverEventHandler = (ev: SyntheticMouseEvent) => void;
-type Hovering = ?(string|number|boolean);
-
-type OwnProps = {
-  // hovering: Hovering,
-  onHoverStart?: HoverEventHandler,
-  onHoverStop?: HoverEventHandler,
-};
-// type OwnDefaultProps = OwnProps;  // all HOC props are optional
-
-// type Props<P, DP> = $Subtype<$Diff<$Diff<P & OwnProps, DP>, OwnDefaultProps>>;
-type Props<P, DP> = $Subtype<$Diff<P & OwnProps, DP>>;
-
-type State = {
-  hovering: Hovering,
-};
 
 // Passed down by this HOC
 export type HoverableProps = {
@@ -55,29 +39,39 @@ export type HoverableProps = {
   onHoverStart: HoverEventHandler,
   onHoverStop: HoverEventHandler,
 };
+type Hovering = ?(string | number | boolean);
+type HoverEventHandler = (ev: SyntheticMouseEvent) => void;
 
-function hoverable<DP, P, St>(
-  ComposedComponent: Class<React$Component<DP, P, St>>
-): Class<React$Component<void, Props<P, DP>, State>> {
-  const composedComponentName = ComposedComponent.displayName ||
-    ComposedComponent.name || 'Component';
+type DefaultProps<DP> = {  // eslint-disable-line
+  /* :: ...$Exact<DP>, */
+  /* :: ...$Exact<HoverableProps>, */
+};
+
+function hoverable<DP: any, P>(
+  ComposedComponent: Class<React$Component<DP, P, *>>,
+): Class<React$Component<DefaultProps<DP>, P, *>> {
+  const composedComponentName =
+    ComposedComponent.displayName || ComposedComponent.name || 'Component';
   const hocDisplayName = `Hoverable(${composedComponentName})`;
 
   class Derived extends React.Component {
-    props: Props<P, DP>
-    state: State;
+    props: {
+      onHoverStart?: HoverEventHandler,
+      onHoverStop?: HoverEventHandler,
+    };
+    state: {
+      hovering: Hovering,
+    };
 
     static displayName = hocDisplayName;
 
-    constructor(props: Props<P, DP>) {
+    constructor(props) {
       super(props);
       this.state = { hovering: null };
     }
 
     render() {
-      const otherProps: any = omit(this.props, [
-        'onHoverStart', 'onHoverStop',
-      ]);
+      const otherProps = omit(this.props, ['onHoverStart', 'onHoverStop']);
       return (
         <ComposedComponent
           {...otherProps}
@@ -96,15 +90,15 @@ function hoverable<DP, P, St>(
       if (!id) id = true;
       this.setState({ hovering: id });
       if (this.props.onHoverStart) this.props.onHoverStart(ev);
-    }
+    };
 
     onHoverStop = (ev: SyntheticMouseEvent) => {
       this.setState({ hovering: null });
       if (this.props.onHoverStop) this.props.onHoverStop(ev);
-    }
+    };
   }
 
-  return Derived;
+  return (Derived: any);
 }
 
 // ==========================================

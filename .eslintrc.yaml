@@ -14,11 +14,18 @@ rules:
   no-nested-ternary: off
   no-cond-assign: ['error', 'except-parens']
   no-underscore-dangle: off
+  comma-dangle:
+    - error
+    - arrays: always-multiline
+      objects: always-multiline
+      imports: always-multiline
+      exports: always-multiline
+      functions: ignore
   no-plusplus:
     - error
     - allowForLoopAfterthoughts: true
   no-continue: off
-  no-lonely-if: off
+  no-await-in-loop: off
   no-mixed-operators: off
   no-duplicate-imports: off
   key-spacing:
@@ -40,6 +47,7 @@ rules:
   react/prop-types: off
   react/no-unused-prop-types: off
   react/require-extension: off
+  react/require-default-props: off
   react/prefer-stateless-function: off
   import/no-extraneous-dependencies:
     - error

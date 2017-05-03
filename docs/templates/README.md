@@ -355,6 +355,8 @@ Shown below are some examples of ColorInput and its features: inline and drop-do
 
 [[[./src/components/notifications.js]]]
 
+[[[./src/components/notification.js]]]
+
 ## Hint screens
 
 Hint screens give tips on how to use your application, through

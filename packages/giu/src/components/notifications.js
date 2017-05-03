@@ -2,22 +2,14 @@
 
 /* eslint-disable no-plusplus */
 
-import React                from 'react';
-import {
-  createStore,
-  applyMiddleware,
-}                           from 'redux';
-import type { Reducer }     from 'redux';
-import thunk                from 'redux-thunk';
-import {
-  updateIn,
-  addLast,
-  removeAt,
-  addDefaults,
-}                           from 'timm';
-import { MISC }             from '../gral/constants';
-import type { Action }      from '../gral/types';
-import Notification         from './notification';
+import React from 'react';
+import { createStore, applyMiddleware } from 'redux';
+import type { Reducer } from 'redux';
+import thunk from 'redux-thunk';
+import { updateIn, addLast, removeAt, addDefaults } from 'timm';
+import { MISC } from '../gral/constants';
+import type { Action } from '../gral/types';
+import Notification from './notification';
 import type { NotificationPars } from './notification';
 
 /* --
@@ -36,17 +28,7 @@ const NotifExample = () =>
 API reference:
 
 * **notify()**: creates a notification:
-  - **pars** *NotificationPars*: notification parameters:
-    + **sticky?** *boolean*: never delete this notification
-    + **timeOut?** *number = 4000*: time [ms] after which it's deleted
-    + **name?** *string*: a user-provided name for the notification
-    + **type?** *info|success|warn|error = `info`*
-    + **icon?** *string = `exclamation`*
-    + **iconSpin?** *boolean*
-    + **title?** *string*: highlighted text at the top of the notification
-    + **msg** *string*: notification text
-    + **onClick?** *(ev: SyntheticMouseEvent) => void*: `click` handler
-    + **style?** *Object*: merged with the outermost `div` style
+  - **pars** *NotificationPars*: notification parameters (see below):
   - **Returns** *string*: notification ID
 * **notifRetain()**: marks a notification as retained
   (it will not be automatically deleted, even if it's `sticky`):
@@ -56,13 +38,9 @@ API reference:
 * **notifDeleteByName()**: deletes a notification:
   - **name** *string*: name of the notification to be deleted
 -- */
-type NotificationHandlingPars = {
-  sticky?: boolean,
-  timeout?: number,
-};
-type NotificationUserPars = NotificationPars & NotificationHandlingPars;
-type NotificationStatePars = NotificationUserPars & {
-  retained?: boolean
+type NotificationStatePars = {
+  /* :: ...$Exact<NotificationPars>, */
+  retained?: boolean,
 };
 
 type State = Array<NotificationStatePars>;
@@ -88,21 +66,21 @@ const reducer: Reducer<State, Action> = (state0 = INITIAL_STATE, action) => {
       break;
     case 'NOTIF_RETAIN':
       id = action.id;
-      idx = state.findIndex((o) => o.id === id);
+      idx = state.findIndex(o => o.id === id);
       if (idx >= 0) {
         state = updateIn(state, [idx, 'retained'], () => true);
       }
       break;
     case 'NOTIF_DELETE':
       id = action.id;
-      idx = state.findIndex((o) => o.id === id);
+      idx = state.findIndex(o => o.id === id);
       if (idx >= 0 && !(action.fAuto && state[idx].retained)) {
         state = removeAt(state, idx);
       }
       break;
     case 'NOTIF_DELETE_BY_NAME':
       name = action.name;
-      idx = state.findIndex((o) => o.name === name);
+      idx = state.findIndex(o => o.name === name);
       if (idx >= 0) {
         state = removeAt(state, idx);
       }
@@ -118,18 +96,18 @@ const reducer: Reducer<State, Action> = (state0 = INITIAL_STATE, action) => {
 // ==========================================
 let cntId = 0;
 const DEFAULT_NOTIF_PARS = {
-  name:       '',
-  retained:   false,
-  sticky:     false,
-  timeOut:    4000,
-  type:       undefined,
-  icon:       undefined,
-  iconSpin:   false,
-  title:      '',
-  msg:        '',
+  name: '',
+  retained: false,
+  sticky: false,
+  timeOut: 4000,
+  type: undefined,
+  icon: undefined,
+  iconSpin: false,
+  title: '',
+  msg: '',
 };
 const actions = {
-  notify: (initialPars: NotificationUserPars) => (dispatch: Function) => {
+  notify: (initialPars: NotificationPars) => (dispatch: Function) => {
     const id = `notif_${cntId++}`;
     const pars = addDefaults(initialPars, DEFAULT_NOTIF_PARS, { id });
     dispatch({ type: 'NOTIFY', pars });
@@ -146,7 +124,7 @@ const actions = {
 };
 
 // Imperative dispatching
-const notify = (initialPars: NotificationUserPars): string => {
+const notify = (initialPars: NotificationPars): string => {
   if (!store) initStore();
   const pars = store.dispatch(actions.notify(initialPars));
   return pars.id;
@@ -173,6 +151,7 @@ type Props = {
 
 class Notifications extends React.PureComponent {
   props: Props;
+  static defaultProps = { notifs: null };
   storeUnsubscribe: () => void;
 
   constructor(props: Props) {
@@ -183,43 +162,43 @@ class Notifications extends React.PureComponent {
     }
   }
 
-  componentWillUnmount() { if (this.storeUnsubscribe) this.storeUnsubscribe(); }
+  componentWillUnmount() {
+    if (this.storeUnsubscribe) this.storeUnsubscribe();
+  }
 
   // ==========================================
   render() {
     const notifs = this.props.notifs || store.getState();
     return (
-      <div
-        className="giu-notifications"
-        style={style.outer}
-      >
+      <div className="giu-notifications" style={style.outer}>
         {notifs.map((props: NotificationStatePars) =>
-          /* $FlowFixMe */
-          <Notification key={props.id}
+        (
+          <Notification
+            key={props.id}
             {...props}
             onHoverStart={this.onRetain}
             onHoverStop={this.onDismiss}
             onClick={this.onDismiss}
             noStylePosition={true}
           />
-        )}
+        ))}
       </div>
     );
   }
 
   // ==========================================
-  onRetain = (ev: SyntheticEvent) => {
+  onRetain = (ev: SyntheticMouseEvent) => {
     if (!(ev.currentTarget instanceof Element)) return;
     store.dispatch(actions.notifRetain(ev.currentTarget.id));
-  }
-  onDismiss = (ev: SyntheticEvent) => {
+  };
+  onDismiss = (ev: SyntheticMouseEvent) => {
     if (!(ev.currentTarget instanceof Element)) return;
     const { id } = ev.currentTarget;
     const notifs = this.props.notifs || store.getState();
-    const notif = notifs.find((o) => o.id === id);
+    const notif = notifs.find(o => o.id === id);
     if (notif && notif.onClick) notif.onClick(ev);
     store.dispatch(actions.notifDelete(id));
-  }
+  };
 }
 
 // ==========================================
@@ -238,9 +217,4 @@ const style = {
 // ==========================================
 // Public API
 // ==========================================
-export {
-  Notifications,
-  reducer,
-  actions,
-  notify, notifRetain, notifDelete, notifDeleteByName,
-};
+export { Notifications, reducer, actions, notify, notifRetain, notifDelete, notifDeleteByName };

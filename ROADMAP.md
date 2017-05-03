@@ -1,5 +1,8 @@
 # Roadmap
 
+- Monorepo migration:
+    - [ ] Build examples for SSR, static site
+    - [ ] Copy docs from giu-examples to the docs folder for publishing
 - [ ] Expose `delay()`, `waitUntil()` and `isWaiting()` (`gral/wait`) helpers again, using `babel-runtime` and `babel-plugin-transform-runtime`.
 
 - [ ] Add Roboto (in mdl theme) to dropdownmenus, colorpickers, datepickers, listpickers???

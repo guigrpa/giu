@@ -1,5 +1,3 @@
-// @flow
-
 const COLORS = {
   // Text
   dim: '#999999',
