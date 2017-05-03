@@ -1,18 +1,18 @@
-const fs = require('fs');
+// const fs = require('fs');
 const path = require('path');
 const webpack = require('webpack');
-const extractDocs = require('extract-docs');
-const StaticSiteGeneratorPlugin = require('static-site-generator-webpack-plugin');
+// const extractDocs = require('extract-docs');
+// const StaticSiteGeneratorPlugin = require('static-site-generator-webpack-plugin');
 
 const fProduction = process.env.NODE_ENV === 'production';
 const fSsr = !!process.env.SERVER_SIDE_RENDERING;
 
-const prepareEntry = (entry) => [
-  // 'webpack-hot-middleware/client?reload=true',
-  entry,
-];
+const cssLoader = {
+  loader: 'css-loader',
+  options: { minimize: fProduction },
+};
 
-const MOMENT_LANGS = ['en-us', 'en-gb', 'ca', 'es', 'fr', 'de'];
+const styleLoader = { loader: 'style-loader' };
 
 module.exports = {
 
@@ -20,9 +20,9 @@ module.exports = {
   // Input (entry point)
   // -------------------------------------------------
   entry: {
-    demo1: prepareEntry('./examples/demo1.js'),
-    demo2: prepareEntry('./examples/demo2.js'),
-    index: prepareEntry('./examples/index.js'),
+    demo1: ['./examples/demo1.js'],
+    demo2: ['./examples/demo2.js'],
+    index: ['./examples/index.js'],
   },
 
   // -------------------------------------------------
@@ -36,60 +36,50 @@ module.exports = {
 
     publicPath: '',
 
-    libraryTarget: fSsr ? 'umd' : undefined,
+    libraryTarget: fSsr ? 'commonjs2' : undefined,
   },
 
   // -------------------------------------------------
   // Configuration
   // -------------------------------------------------
-  // devtool: fProduction ? undefined : 'eval',
-
-  resolve: {
-    // Add automatically the following extensions to required modules
-    extensions: ['', '.jsx', '.js'],
-  },
+  devtool: fProduction || fSsr ? undefined : 'eval',
+  target: fSsr ? 'node' : undefined,
 
   plugins: (() => {
     const out = [
-      // new webpack.HotModuleReplacementPlugin(),
-      new webpack.NoErrorsPlugin(),
       new webpack.DefinePlugin({
         'process.env.NODE_ENV': JSON.stringify(fProduction ? 'production' : 'development'),
         'process.env.SERVER_SIDE_RENDERING': JSON.stringify(fSsr),
       }),
-      new webpack.ContextReplacementPlugin(
-        /moment[\\\/]locale$/,
-        new RegExp(`.[\\\/](${MOMENT_LANGS.join('|')})`)
-      ),
     ];
-    if (fSsr) {
-      const readme = extractDocs({
-        template: './docs/templates/README.md',
-        missingRefs: true,
-        skipConditional: true,
-      });
-      out.push(new StaticSiteGeneratorPlugin('index', ['index.html'], {
-        template: fs.readFileSync(path.join(__dirname, 'index.html'), 'utf8'),
-        readme,
-      }));
-      out.push(new StaticSiteGeneratorPlugin('demo1', ['demo1.html'], {
-        template: fs.readFileSync(path.join(__dirname, 'demo1.html'), 'utf8'),
-      }));
-    }
+    // if (fSsr) {
+    //   const readme = extractDocs({
+    //     template: './docs/templates/README.md',
+    //     missingRefs: true,
+    //     skipConditional: true,
+    //   });
+    //   out.push(new StaticSiteGeneratorPlugin('index', ['index.html'], {
+    //     template: fs.readFileSync(path.join(__dirname, 'index.html'), 'utf8'),
+    //     readme,
+    //   }));
+    //   out.push(new StaticSiteGeneratorPlugin('demo1', ['demo1.html'], {
+    //     template: fs.readFileSync(path.join(__dirname, 'demo1.html'), 'utf8'),
+    //   }));
+    // }
     return out;
   })(),
 
   module: {
-    loaders: [{
+    rules: [{
       test: /\.(js|jsx)$/,
-      loader: 'babel',
+      loader: 'babel-loader',
       exclude: path.resolve(process.cwd(), 'node_modules'),
     }, {
       test: /\.(otf|eot|svg|ttf|woff|woff2)(\?v=[0-9]\.[0-9]\.[0-9])?$/,
-      loader: 'file',
+      loader: 'file-loader',
     }, {
       test: /\.css$/,
-      loader: fSsr ? 'css' : 'style!css',
+      use: [styleLoader, cssLoader],
     }],
   },
 };

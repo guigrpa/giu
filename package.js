@@ -24,12 +24,13 @@ const runTestCov = (env, name) => {
 };
 
 const WEBPACK_OPTS = [
+  '--config examples/webpackConfig.js',
   '--color',
   '--progress',
   // '--display-modules',
   '--display-chunks',
 ].join(' ');
-const WEBPACK = `webpack --config examples/webpackConfig.js ${WEBPACK_OPTS}`;
+const WEBPACK = `webpack ${WEBPACK_OPTS}`;
 
 // ===============================================
 // Specs
@@ -153,85 +154,84 @@ const specs = {
   },
 
   dependencies: {
-    timm: '^1.2.1',
+    timm: '^1.2.5',
 
-    redux: '3.5.2',
-    'redux-thunk': '2.1.0',
+    redux: '3.6.0',
+    'redux-thunk': '2.2.0',
 
-    'lodash': '4.15.0',  // only parts of it will be included
+    'lodash': '4.17.4',  // only parts of it will be included
 
-    'font-awesome': '4.6.3',
+    'font-awesome': '4.7.0',
     'typeface-gloria-hallelujah': '0.0.22',
     'typeface-roboto': '0.0.22',
 
     'react-sortable-hoc': '0.0.8',
 
     tinycolor2: '1.4.1',
-    filesize: '3.3.0',
+    filesize: '3.5.9',
     keycode: '2.1.1',
     unorm: '1.4.1',
   },
 
   devDependencies: {
-    storyboard: '^3.0.0',
-    'storyboard-preset-console': '^3.0.0',
-    'xxl': '^1.0.0',
+    storyboard: '3.1.1',
+    'storyboard-preset-console': '3.1.1',
+    'xxl': '1.2.0',
     'cross-env': '^1.0.8',
-    // 'diveSync': '0.3.0',
 
-    moment: '^2.0.0',
+    moment: '2.18.1',
     faker: '3.0.1',
 
     // React
-    react: '^15.4.0',
-    'react-dom': '^15.4.0',
+    react: '^15.5.4',
+    'react-dom': '^15.5.4',
 
     // Babel (except babel-eslint)
-    'babel-cli': '6.22.2',
-    'babel-core': '6.22.1',
-    'babel-eslint': '7.0.0',
-    'babel-polyfill': '6.22.0',
-    'babel-preset-es2015': '6.22.0',
-    'babel-preset-stage-0': '6.22.0',
-    'babel-preset-react': '6.22.0',
+    'babel-cli': '6.24.1',
+    'babel-core': '6.24.1',
+    'babel-eslint': '7.2.3',
+    // "babel-runtime": "6.23.0",
+    // "babel-plugin-transform-runtime": "6.23.0",
+    'babel-polyfill': '6.23.0',
+    'babel-preset-es2015': '6.24.1',
+    'babel-preset-stage-0': '6.24.1',
+    'babel-preset-react': '6.24.1',
 
     // Webpack + loaders (+ related stuff)
-    webpack: '1.13.2',
-    'webpack-dev-middleware': '1.8.4',
-    'webpack-hot-middleware': '2.13.0',
-    'babel-loader': '6.2.5',
-    'file-loader': '0.9.0',
-    'css-loader': '0.25.0',
-    'style-loader': '0.13.1',
+    webpack: '2.4.1',
+    'babel-loader': '7.0.0',
+    'file-loader': '0.11.1',
+    'css-loader': '0.28.1',
+    'style-loader': '0.17.0',
     // 'extract-text-webpack-plugin': '1.0.1',
     'static-site-generator-webpack-plugin': '2.1.0',
 
     // Linting
-    'eslint': '3.8.1',
+    'eslint': '3.19.0',
     'eslint-config-airbnb': '12.0.0',
-    'eslint-plugin-flowtype': '2.20.0',
+    'eslint-plugin-flowtype': '2.32.1',
     'eslint-plugin-import': '1.16.0',
     'eslint-plugin-jsx-a11y': '2.2.3',
-    'eslint-plugin-react': '6.4.1',
+    'eslint-plugin-react': '6.10.3',
 
     // Documentation
     'extract-docs': '1.4.0',
-    'marked': '0.3.5',
-    'highlight.js': '9.5.0',
+    'marked': '0.3.6',
+    'highlight.js': '9.11.0',
     'fontfaceobserver': '1.7.1',
 
     // Testing
     'jest': '17.0.3',
     'babel-jest': '17.0.2',
-    'jest-html': '^1.3.2',
-    'react-test-renderer': '15.4.0',
+    'jest-html': '^1.3.4',
+    'react-test-renderer': '15.5.4',
 
     // Coverage testing
     'nyc': '8.4.0',
-    coveralls: '2.11.15',
+    coveralls: '2.13.1',
 
     // Other tools
-    'flow-bin': '0.36.0',
+    'flow-bin': '0.45.0',
     'flow-copy-source': '1.1.0',
   },
 
