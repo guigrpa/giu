@@ -1,6 +1,6 @@
 // const fs = require('fs');
 const path = require('path');
-const webpack = require('webpack');
+const webpack = require('webpack');  // eslint-disable-line
 // const extractDocs = require('extract-docs');
 // const StaticSiteGeneratorPlugin = require('static-site-generator-webpack-plugin');
 
@@ -20,9 +20,9 @@ module.exports = {
   // Input (entry point)
   // -------------------------------------------------
   entry: {
-    demo1: ['./examples/demo1.js'],
-    demo2: ['./examples/demo2.js'],
-    index: ['./examples/index.js'],
+    demo1: ['./src/demo1.js'],
+    demo2: ['./src/demo2.js'],
+    index: ['./src/index.js'],
   },
 
   // -------------------------------------------------
@@ -30,12 +30,8 @@ module.exports = {
   // -------------------------------------------------
   output: {
     filename: '[name].bundle.js',
-
-    // Where PRODUCTION bundles will be stored
-    path: path.resolve(process.cwd(), 'docs'),
-
+    path: path.resolve(process.cwd(), './lib/public'),
     publicPath: '',
-
     libraryTarget: fSsr ? 'commonjs2' : undefined,
   },
 

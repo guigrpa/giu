@@ -1,15 +1,14 @@
 /* eslint-disable no-console, no-alert, max-len */
 /* eslint-disable react/prop-types, react/no-multi-comp, react/jsx-no-bind, react/jsx-boolean-value */
 /* eslint-disable react/prefer-stateless-function, react/jsx-no-target-blank */
+import 'babel-polyfill';  // eslint-disable-line
 import React                from 'react';
 import ReactDOM             from 'react-dom';
 import ReactDOMServer       from 'react-dom/server';
 import { merge }            from 'timm';
 import moment               from 'moment';
-
 import {
-  Giu,
-  DateInput, Select,
+  DateInput, TextInput, RangeInput, Select,
   DropDownMenu,
   Button, Progress, Icon, Spinner, LargeMessage,
   Floats, floatReposition,
@@ -18,8 +17,7 @@ import {
   Hints,
   hoverable,
   flexContainer, flexItem, boxWithShadow,
-  TextInput,
-} from '../src';
+}                           from 'giu';
 import DataTableExample from './demo1-dataTables';
 import ModalExample from './demo1-modals';
 import HintExample from './demo1-hints';
@@ -29,14 +27,9 @@ import {
   ExampleLabel, exampleStyle,
   NORMAL_OPTIONS, TALL_OPTIONS, WIDE_OPTIONS,
   LONG_TEXT,
-  onChangeJson,
+  onChange, onChangeJson,
   getLang, setLang,
 } from './demo1-common';
-
-import '../src/vendor/material';
-import '../src/vendor/material.css';
-
-require('babel-polyfill');
 
 const { floor, random } = Math;
 const randomInt = (min, max) => min + floor(random() * (max - min + 1));
@@ -46,7 +39,8 @@ let cntNotif = 1;
 const notify = (msg) => createNotif({
   msg: msg || `Notification #${cntNotif++}`, // eslint-disable-line no-plusplus
   type: sample(['info', 'success', 'warn', 'error']),
-  icon: sample(['cached', 'favorite', 'lock']),
+  icon: sample(['arrow-left', 'arrow-right', 'arrow-up', 'arrow-down']),
+  onClick: () => console.log('notification clicked'),
 });
 
 // -----------------------------------------------
@@ -59,6 +53,88 @@ class App extends React.Component {
     let out;
     const lang = getLang();
     switch (TEST) {
+      case 1:
+        out = (
+          <div>
+            <Floats />
+            Test<br />Test<br />Test<br />Test<br />Test<br />Test<br />Test<br />Test<br />Test<br />
+            Test<br />Test<br />Test<br />Test<br />Test<br />Test<br />Test<br />Test<br />Test<br />
+            Test<br />Test<br />Test<br />Test<br />Test<br />Test<br />Test<br />Test<br />Test<br />
+            Test<br />Test<br />Test<br />Test<br />Test<br />Test<br />Test<br />Test<br />Test<br />
+            Test<br />Test<br />Test<br />Test<br />Test<br />Test<br />Test<br />Test<br />Test<br />
+            <TextInput
+              onChange={onChange}
+              errors={['Must be numeric']}
+              errorPosition="above" errorAlign="right"
+            /><br />
+            Test<br />Test<br />Test<br />Test<br />Test<br />Test<br />Test<br />Test<br />Test<br />
+            Test<br />Test<br />Test<br />Test<br />Test<br />Test<br />Test<br />Test<br />Test<br />
+            Test<br />Test<br />Test<br />Test<br />Test<br />Test<br />Test<br />Test<br />Test<br />
+            Test<br />Test<br />Test<br />Test<br />Test<br />Test<br />Test<br />Test<br />Test<br />
+            Test<br />Test<br />Test<br />Test<br />Test<br />Test<br />Test<br />Test<br />Test<br />
+          </div>
+        );
+        break;
+      case 2:
+        out = (
+          <div style={{ padding: 5 }}>
+            <Floats />
+            Date (UTC midnight - default): <DateInput onChange={onChange} /><br />
+            Date (local midnight): <DateInput onChange={onChange} utc={false} /><br />
+            Date-time (UTC midnight): <DateInput onChange={onChange} time utc value={new Date()} /><br />
+            Date-time (local midnight - default): <DateInput onChange={onChange} time value={new Date()} /><br />
+            Time (UTC midnight - default): <DateInput onChange={onChange} date={false} time value={new Date()} /><br />
+            Time (local midnight): <DateInput onChange={onChange} date={false} time utc={false} value={new Date()} /><br />
+          </div>
+        );
+        break;
+      case 3:
+        out = (
+          <div>
+            <Floats />
+            <DropDownMenu
+              items={NORMAL_OPTIONS}
+              onClickItem={onChange}
+            >
+              <Icon icon="bars" /> Menu
+            </DropDownMenu>
+          </div>
+        );
+        break;
+      case 4:
+        out = (
+          <div>
+            <Floats />
+            <DateInput date={false} time onChange={onChange} type="inlinePicker" />
+          </div>
+        );
+        break;
+      case 5:
+        out = (
+          <div>
+            <Floats />
+            <RangeInput value="55" min={0} max={100} step={5} onChange={onChange} />
+            <RangeInput disabled value="34" min={0} max={100} step={5} onChange={onChange} />
+          </div>
+        );
+        break;
+      case 6:
+        out = (
+          <div>
+            <NativeDateInput />
+          </div>
+        );
+        break;
+      case 7:
+        out = (
+          <div>
+            <Floats />
+            <Modals />
+            <DataTableExample />
+            <ModalExample />
+          </div>
+        );
+        break;
       default:
         out = (
           <div style={style.outer}>
@@ -91,7 +167,6 @@ class App extends React.Component {
                 {EVERYTHING && <ScrollingExample />}
                 {EVERYTHING && <ProgressExample />}
                 {EVERYTHING && <DataTableExample lang={lang} />}
-                {EVERYTHING && <DeferredExample />}
               </div>
               <div style={flexItem('1 0 500px')}>
                 {EVERYTHING && <FormExample lang={lang} />}
@@ -105,8 +180,7 @@ class App extends React.Component {
         );
         break;
     }
-    // return out;
-    return <Giu theme="mdl">{out}</Giu>;
+    return out;
   }
 }
 
@@ -126,11 +200,46 @@ const LangSelector = ({ lang, onChange: onValueChange }) =>
     />
   </span>;
 
+class NativeDateInput extends React.Component {
+  constructor(props) {
+    super(props);
+    this.state = { value: new Date() };
+  }
+
+  render() {
+    return (
+      <div>
+        <DateInput type="native"
+          value={this.state.value}
+          onChange={(ev, value) => this.setState({ value })}
+        />
+        <DateInput type="native" utc={false}
+          value={this.state.value}
+          onChange={(ev, value) => this.setState({ value })}
+        />
+        <DateInput type="native" time
+          value={this.state.value}
+          onChange={(ev, value) => this.setState({ value })}
+        />
+        <DateInput type="native" date={false} time
+          value={this.state.value}
+          onChange={(ev, value) => this.setState({ value })}
+        />
+        <DateInput type="native" date={false} time utc={false}
+          value={this.state.value}
+          onChange={(ev, value) => this.setState({ value })}
+        />
+        <span>{this.state.value ? this.state.value.toString() : 'none'}</span>
+      </div>
+    );
+  }
+}
+
 const NotificationExample = () =>
   <div style={style.example}>
     <ExampleLabel>Notification (embedded)</ExampleLabel>
     <Notification
-      icon="favorite"
+      icon="cog" iconSpin
       title="Title"
       msg="Notification message"
       noStylePosition
@@ -146,18 +255,25 @@ const MessageExample = () =>
 const IconExample = () =>
   <div style={style.example}>
     <ExampleLabel>Icon</ExampleLabel>
-    <Icon icon="cached" id="a" size="lg" />{' '}
-    <Spinner size="lg" />{' '}
-    <Icon icon="favorite" id="a" size="lg" />{' '}
-    <Icon icon="lock" size="lg" onClick={() => notify()} />
+    <Icon icon="heart" id="a" />
+    {' '}
+    <Spinner />
+    {' '}
+    <Icon icon="spinner" spin />
+    {' '}
+    <Icon icon="arrow-left" id="a" />
+    {' '}
+    <Icon
+      icon="arrow-right"
+      onClick={() => notify()}
+    />
   </div>;
 
 const ButtonExample = () =>
   <div style={style.example}>
     <ExampleLabel>Button</ExampleLabel>
-    <Button onClick={() => notify('Normal button pressed')} colored>Notify me!</Button>{' '}
-    <Button onClick={() => notify('Plain button pressed')} plain>Notify me!</Button>{' '}
-    <Button onClick={() => notify('Plain button pressed')} disabled>Disabled</Button>
+    <Button onClick={() => notify('Normal button pressed')}>Notify me!</Button>{' '}
+    <Button onClick={() => notify('Plain button pressed')} plain>Notify me!</Button>
   </div>;
 
 const HoverableExample = hoverable(({ hovering, onHoverStart, onHoverStop }) => (
@@ -201,7 +317,7 @@ const DropDownExample = ({ lang }) =>
       onClickItem={onChangeJson}
       style={{ padding: '3px 8px' }}
     >
-      <Icon icon="build" /> Menu
+      <Icon icon="bars" /> Menu
     </DropDownMenu>
     <DropDownMenu
       items={TALL_OPTIONS}
@@ -209,7 +325,7 @@ const DropDownExample = ({ lang }) =>
       accentColor="darkgreen"
       style={{ padding: '3px 8px' }}
     >
-      <Icon icon="cached" /> Long menu
+      <Icon icon="bullseye" /> Long menu
     </DropDownMenu>
     <DropDownMenu
       items={WIDE_OPTIONS}
@@ -218,7 +334,7 @@ const DropDownExample = ({ lang }) =>
       accentColor="darkblue"
       style={{ padding: '3px 8px' }}
     >
-      <Icon icon="lock" /> Menu to the left
+      <Icon icon="cube" /> Menu to the left
     </DropDownMenu>
   </div>;
 
@@ -229,18 +345,18 @@ const ScrollingExample = () =>
       onScroll={floatReposition}
       style={style.scrolling}
     >
-      <DateInput placeholder="date" date time required />
+      <DateInput placeholder="date" date time />
       <br />
       {LONG_TEXT}<br />
       {LONG_TEXT}<br />
       {LONG_TEXT}<br />
-      <DateInput placeholder="date" required />
+      <DateInput placeholder="date" />
       <br />
       {LONG_TEXT}<br />
       {LONG_TEXT}<br />
       {LONG_TEXT}<br />
       {LONG_TEXT}<br />
-      <DateInput placeholder="date" required />
+      <DateInput placeholder="date" />
     </div>
   </div>;
 
@@ -258,26 +374,6 @@ class ProgressExample extends React.Component {
         <ExampleLabel>Progress</ExampleLabel>
         <Progress value={this.state.value} />
         <Progress />
-      </div>
-    );
-  }
-}
-
-class DeferredExample extends React.Component {
-  constructor(props) {
-    super(props);
-    this.state = { shown: false };
-  }
-  componentDidMount() {
-    setTimeout(() => { this.setState({ shown: true }); }, 2000);
-  }
-  render() {
-    if (!this.state.shown) return null;
-    return (
-      <div style={style.example}>
-        <ExampleLabel>Deferred example</ExampleLabel>
-        <TextInput placeholder="Write something" />
-        <Button>Example button</Button>
       </div>
     );
   }
@@ -316,7 +412,7 @@ if (typeof document !== 'undefined') {
   module.exports = function render(locals, callback) {
     const ssrHtml = ReactDOMServer.renderToString(mainEl);
     /* eslint-disable global-require */
-    const ssrCss = require('../src/all.css');
+    const ssrCss = require('giu/lib/all.css');
     /* eslint-enable global-require */
     let rendered = locals.template;
     rendered = rendered.replace('<!-- ssrHtml -->', ssrHtml);

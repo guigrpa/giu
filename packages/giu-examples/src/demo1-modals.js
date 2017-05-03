@@ -6,7 +6,7 @@ import {
   Modal, modalPush, modalPop,
   TextInput, DateInput, ColorInput, Textarea, Select,
   Button, Icon, DropDownMenu,
-} from '../src';
+} from 'giu';
 import {
   ExampleLabel, exampleStyle,
   NORMAL_OPTIONS, LONG_TEXT,

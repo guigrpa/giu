@@ -1,6 +1,4 @@
-# Changelog
-
-*[M]: major change; [m]: minor change*
+* Converted to a monorepo (with [oao](https://github.com/guigrpa/oao)) with `giu` and `giu-examples`.
 
 ## 0.10.2 (March 13, 2017)
 

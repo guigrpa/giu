@@ -11,7 +11,7 @@ import {
   bindAll,
   flexContainer, flexItem,
   COLORS,
-} from '../src';
+} from 'giu';
 import { ExampleLabel, exampleStyle } from './demo1-common';
 
 const DEBUG = false && process.env.NODE_ENV !== 'production';

@@ -10,7 +10,7 @@ import {
   flexContainer, flexItem,
   isRequired, isEmail, isDate,
   cancelEvent,
-} from '../src';
+} from 'giu';
 import {
   ExampleLabel, exampleStyle,
   NORMAL_OPTIONS, TALL_OPTIONS,

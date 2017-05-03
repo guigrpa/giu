@@ -1,0 +1,32 @@
+{
+  "name": "giu-examples",
+  "private": true,
+  "version": "0.10.2",
+  "scripts": {
+    "compile": "yarn compile:clean && yarn compile:run",
+    "compileWatch": "yarn compile:clean && yarn compile:runWatch",
+    "compile:clean": "rm -rf ./lib",
+    "compile:run": "../../node_modules/.bin/babel src -d lib --ignore \"**/__mocks__/**\",\"**/__tests__/**\"",
+    "compile:runWatch": "yarn compile:run -- --watch",
+    "build": "yarn build:copyPublic && yarn build:webpack -- -p",
+    "buildWatch": "yarn build:copyPublic && yarn build:webpack -- -w",
+    "build:copyPublic": "cp -r src/public lib",
+    "build:webpack": "../../node_modules/.bin/webpack --config ./webpackConfig.js --color --progress --display-chunks",
+    "start": "yarn example",
+    "example": "node lib/server"
+  },
+  "_dependencies": "Hoisted (to avoid dep conflicts): moment, react, react-dom",
+  "dependencies": {
+    "express": "^4.15.2",
+    "faker": "3.0.1",
+    "fontfaceobserver": "1.7.1",
+    "highlight.js": "^9.11.0",
+    "lodash": "^4.17.4",
+    "marked": "^0.3.6",
+    "storyboard": "^3.0.0",
+    "storyboard-preset-console": "^3.0.0",
+    "timm": "^1.2.1",
+    "giu": "*"
+  },
+  "devDependencies": {}
+}

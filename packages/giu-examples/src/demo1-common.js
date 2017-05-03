@@ -3,7 +3,7 @@
 /* eslint-disable react/prefer-stateless-function */
 import React                from 'react';
 import faker                from 'faker';
-import { LIST_SEPARATOR }   from '../src';
+import { LIST_SEPARATOR }   from 'giu';
 
 const ExampleLabel = ({ children }) => <div style={style.label}>{children}</div>;
 

@@ -20,7 +20,6 @@ node_modules
 # GIT-specific
 # ------------
 # All projects
-/lib
-/libEs6
+lib
 
 # Project-specific

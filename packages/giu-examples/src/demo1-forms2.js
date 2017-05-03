@@ -5,7 +5,7 @@ import {
   NumberInput, isLte,
   Button,
   notify,
-} from '../src';
+} from 'giu';
 import {
   ExampleLabel, exampleStyle,
 } from './demo1-common';
