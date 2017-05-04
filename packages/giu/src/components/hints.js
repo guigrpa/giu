@@ -1,21 +1,14 @@
 // @flow
 
-import React                from 'react';
-import {
-  createStore,
-  applyMiddleware,
-}                           from 'redux';
-import type { Reducer }     from 'redux';
-import thunk                from 'redux-thunk';
-import {
-  merge,
-  updateIn,
-  set as timmSet,
-}                           from 'timm';
-import HintScreen           from './hintScreen';
+import React from 'react';
+import { createStore, applyMiddleware } from 'redux';
+import type { Reducer } from 'redux';
+import thunk from 'redux-thunk';
+import { merge, updateIn, set as timmSet } from 'timm';
+import HintScreen from './hintScreen';
 import type { HintScreenPars } from './hintScreen';
 import { localGet, localSet } from '../gral/storage';
-import type { Action }      from '../gral/types';
+import type { Action } from '../gral/types';
 
 /* --
 **Include the `<Hints />` component at (or near)
@@ -53,21 +46,7 @@ API reference:
 
 * **hintDefine()**: defines a hint screen:
   - **id** *string*: ID of the hint to be created
-  - **pars** *HintScreenPars*: hint parameters:
-    + **elements** *Array<ElementT> | () => Array<ElementT>*: either an array of elements,
-      or a function returning such an element (for dynamic positioning).
-      Elements have these attributes:
-      - **type** *LABEL|ARROW*
-      - Arrows:
-        - **from** *{x: number, y: number}*: coordinates, e.g. `{ x: 5, y: 10 }`
-        - **to** *{x: number, y: number}*: coordinates
-        - **counterclockwise** *boolean*
-      - Labels:
-        - **x** and **y** *number*: coordinates
-        - **align?** *left|center|right = left*
-        - **children?** *any*: React elements that comprise the label
-    + **closeLabel?** *string = `Got it!`*: label of the close button
-    + **zIndex?** *number*
+  - **pars** *HintScreenPars* (see below)
 * **hintDisableAll()**: disables all hints
 * **hintReset()**: clears the list of disabled hints
 * **hintShow()**: shows a hint
@@ -113,8 +92,9 @@ const reducer: Reducer<State, Action> = (state0 = INITIAL_STATE, action) => {
   let id;
   switch (action.type) {
     case 'HINT_DEFINE':
-      state = updateIn(state, ['catalogue'], (catalogue) =>
-        timmSet(catalogue, action.id, action.pars));
+      state = updateIn(state, ['catalogue'], catalogue =>
+        timmSet(catalogue, action.id, action.pars),
+      );
       break;
     case 'HINT_DISABLE_ALL':
       state = timmSet(state, 'fDisableAll', true);
@@ -128,8 +108,10 @@ const reducer: Reducer<State, Action> = (state0 = INITIAL_STATE, action) => {
       break;
     case 'HINT_SHOW':
       id = action.id;
-      if (action.force ||
-          (!state.fDisableAll && state.disabled.indexOf(id) < 0)) {
+      if (
+        action.force ||
+        (!state.fDisableAll && state.disabled.indexOf(id) < 0)
+      ) {
         state = timmSet(state, 'shown', id);
         if (state.disabled.indexOf(id) < 0) {
           state = timmSet(state, 'disabled', state.disabled.concat(id));
@@ -149,7 +131,11 @@ const reducer: Reducer<State, Action> = (state0 = INITIAL_STATE, action) => {
 // Action creators
 // ==========================================
 const actions = {
-  hintDefine: (id: string, pars: HintScreenPars) => ({ type: 'HINT_DEFINE', id, pars }),
+  hintDefine: (id: string, pars: HintScreenPars) => ({
+    type: 'HINT_DEFINE',
+    id,
+    pars,
+  }),
   hintDisableAll: () => (dispatch: Function, getState: Function) => {
     dispatch({ type: 'HINT_DISABLE_ALL' });
     const { fDisableAll } = getState();
@@ -161,7 +147,10 @@ const actions = {
     localSet('hints.fDisableAll', fDisableAll);
     localSet('hints.disabled', disabled);
   },
-  hintShow: (id: string, force?: boolean = false) => (dispatch: Function, getState: Function) => {
+  hintShow: (id: string, force?: boolean = false) => (
+    dispatch: Function,
+    getState: Function,
+  ) => {
     dispatch({ type: 'HINT_SHOW', id, force });
     const { disabled } = getState();
     localSet('hints.disabled', disabled);
@@ -211,7 +200,9 @@ class Hints extends React.PureComponent {
     }
   }
 
-  componentWillUnmount() { if (this.storeUnsubscribe) this.storeUnsubscribe(); }
+  componentWillUnmount() {
+    if (this.storeUnsubscribe) this.storeUnsubscribe();
+  }
 
   // ==========================================
   render() {
@@ -240,5 +231,10 @@ export {
   Hints,
   reducer,
   actions,
-  hintDefine, hintDisableAll, hintReset, hintShow, hintHide, isHintShown,
+  hintDefine,
+  hintDisableAll,
+  hintReset,
+  hintShow,
+  hintHide,
+  isHintShown,
 };

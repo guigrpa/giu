@@ -1,25 +1,15 @@
 // @flow
 
-import React                from 'react';
-import { merge }            from 'timm';
-import {
-  COLORS,
-  KEYS,
-  MISC,
-}                           from '../gral/constants';
-import {
-  cancelEvent,
-  cancelBodyScrolling,
-}                           from '../gral/helpers';
-import {
-  flexContainer,
-  flexItem,
-  boxWithShadow,
-}                           from '../gral/styles';
-import Button               from './button';
-import Backdrop             from './backdrop';
-import FocusCapture         from './focusCapture';
-import { floatReposition }  from './floats';
+import React from 'react';
+import { merge } from 'timm';
+import { COLORS, KEYS, MISC } from '../gral/constants';
+import { cancelEvent, cancelBodyScrolling } from '../gral/helpers';
+import { flexContainer, flexItem, boxWithShadow } from '../gral/styles';
+import Button from './button';
+import Backdrop from './backdrop';
+import FocusCapture from './focusCapture';
+import { floatReposition } from './floats';
+import type { ModalPars, ModalButton } from './modalTypes'; // eslint-disable-line
 
 const FOCUSABLE = ['input', 'textarea', 'select'];
 
@@ -61,38 +51,31 @@ class ModalExample extends React.Component {
 }
 ```
 -- */
-export type ModalButton = {
-  left?: boolean,
-  label?: any,
-  defaultButton?: boolean,
-  onClick?: (ev: SyntheticEvent) => void,
-  style?: Object,
-};
+
+type DefaultProps = {|
+  buttons: Array<ModalButton>,
+  zIndex: number,
+|};
 
 type Props = {
-  id?: string,
-  title?: string,
-  children?: any,
-  buttons: Array<ModalButton>,
-  onClickBackdrop?: (ev: SyntheticMouseEvent) => void,
-  onEsc?: (ev: SyntheticKeyboardEvent) => void,
-  style?: Object,
-  zIndex: number,
+  /* :: ...ModalPars, */
+  /* :: ...DefaultProps, */
 };
-export type ModalPars = $Shape<Props>;  // all are optional
 
 class Modal extends React.PureComponent {
   props: Props;
-  static defaultProps = {
-    buttons:                ([]: Array<ModalButton>),
-    zIndex:                 MISC.zModalBase,
-  }
+  static defaultProps: DefaultProps = {
+    buttons: ([]: Array<ModalButton>),
+    zIndex: MISC.zModalBase,
+  };
   refFocusCapture: any;
 
   // ==========================================
   // Imperative API
   // ==========================================
-  focus() { this.refFocusCapture && this.refFocusCapture.focus(); }
+  focus() {
+    this.refFocusCapture && this.refFocusCapture.focus();
+  }
 
   // ==========================================
   // Render
@@ -127,7 +110,9 @@ class Modal extends React.PureComponent {
           style={merge(style.modal, baseStyle)}
         >
           <FocusCapture
-            registerRef={(c) => { this.refFocusCapture = c; }}
+            registerRef={c => {
+              this.refFocusCapture = c;
+            }}
             autoFocus
           />
           {title && this.renderTitle(title)}
@@ -157,9 +142,9 @@ class Modal extends React.PureComponent {
   renderButtons(buttons: Array<ModalButton>) {
     return (
       <div style={style.buttons}>
-        {buttons.filter((o) => !!o.left).map(this.renderButton)}
+        {buttons.filter(o => !!o.left).map(this.renderButton)}
         <div style={flexItem(1)} />
-        {buttons.filter((o) => !o.left).map(this.renderButton)}
+        {buttons.filter(o => !o.left).map(this.renderButton)}
       </div>
     );
   }
@@ -167,7 +152,8 @@ class Modal extends React.PureComponent {
   renderButton = (btn: ModalButton, idx: number) => {
     const { theme } = this.context;
     return (
-      <Button key={idx}
+      <Button
+        key={idx}
         onClick={btn.onClick}
         style={style.button(btn, theme)}
         colored
@@ -176,7 +162,7 @@ class Modal extends React.PureComponent {
         {btn.label}
       </Button>
     );
-  }
+  };
 
   // ==========================================
   // Handlers
@@ -207,7 +193,7 @@ class Modal extends React.PureComponent {
       default:
         break;
     }
-  }
+  };
 
   // Except when clicking on an embedded focusable node, refocus on this modal
   onClickOuter = (ev: SyntheticMouseEvent) => {
@@ -217,7 +203,7 @@ class Modal extends React.PureComponent {
       if (FOCUSABLE.indexOf(tagName.toLowerCase()) >= 0 && !disabled) return;
     }
     this.focus();
-  }
+  };
 }
 
 Modal.contextTypes = { theme: React.PropTypes.any };
@@ -226,7 +212,7 @@ Modal.contextTypes = { theme: React.PropTypes.any };
 // Styles
 // ==========================================
 const style = {
-  outer: (zIndex) => ({
+  outer: zIndex => ({
     position: 'fixed',
     top: 0,
     left: 0,
@@ -257,11 +243,15 @@ const style = {
     borderTop: `1px solid ${COLORS.line}`,
     paddingTop: 10,
   }),
-  button: ({ left, defaultButton, style: baseStyle }, theme) => merge({
-    marginRight: left ? 5 : undefined,
-    marginLeft: left ? undefined : 5,
-    border: !theme && defaultButton ? '1px solid black' : undefined,
-  }, baseStyle),
+  button: ({ left, defaultButton, style: baseStyle }, theme) =>
+    merge(
+      {
+        marginRight: left ? 5 : undefined,
+        marginLeft: left ? undefined : 5,
+        border: !theme && defaultButton ? '1px solid black' : undefined,
+      },
+      baseStyle,
+    ),
 };
 
 // ==========================================

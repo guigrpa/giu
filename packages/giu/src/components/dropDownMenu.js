@@ -1,52 +1,56 @@
 // @flow
 
-import React                from 'react';
-import { omit, merge }      from 'timm';
-import type {
-  Choice,
-  Command,
-}                           from '../gral/types';
-import { COLORS }           from '../gral/constants';
-import { isDark }           from '../gral/styles';
-import hoverable            from '../hocs/hoverable';
-import type { HoverableProps } from '../hocs/hoverable';
-import Select               from '../inputs/select';
+import React from 'react';
+import { omit, merge } from 'timm';
+import type { Choice, Command } from '../gral/types';
+import { COLORS } from '../gral/constants';
+import { isDark } from '../gral/styles';
+import hoverable from '../hocs/hoverable';
+import type { HoverableProps } from '../hocs/hoverable'; // eslint-disable-line
+import Select from '../inputs/select';
 
 // ==========================================
 // Component
 // ==========================================
 // -- Props:
 // --
-// -- * **items** *Array<Choice>*: menu items, similar to [Select](#select)
-// --   but with the inclusion of an `onClick` callback:
-// --   - **value** *any*: any value that can be converted to JSON. Values should be unique
-// --   - **label?** *string*: descriptive string that will be shown to the user
-// --   - **keys?** *Array<string>*: keyboard shortcuts for this option, e.g.
-// --     `mod+a` (= `cmd+a` in OS X, `ctrl+a` in Windows), `alt+backspace`, `shift+up`...
-// --   - **onClick?** *(ev: SyntheticEvent) => void*: called when the item is clicked
-// --     with the event as argument
-// -- * **lang?** *string*: current language (NB: just used to make sure the component is refreshed)
-// -- * **children** *any*: React elements that will be shown as the menu's title
-// -- * **onClickItem?** *Function*: called when an item is clicked
-// --   with the following arguments:
-// --   - **ev** *SyntheticMouseEvent*: `click` event
-// --   - **value** *any*: the item's `value` (as specified in the `items` prop)
-// -- * **style?** *Object*: will be merged with the menu title's `div` wrapper
-// -- * **accentColor?** *string*: CSS color descriptor (e.g. `darkgray`, `#ccffaa`...)
-// -- * *All other props are passed through to the Select input component*
-
+/* eslint-disable no-unused-vars */
+/* -- START_DOCS -- */
 type PublicProps = {
+  // Items: similar to the Select component but including an `onClick` callback
   items: Array<Choice>,
-  lang?: string,
-  children: any,
-  onClickItem?: (ev: SyntheticMouseEvent, val: any) => void,
-  style?: Object,
-  accentColor: string,
-  // all others are passed through unchanged
+
+  // Other props
+  lang?: string, // current language (used just for force-render)
+  children: any, // React elements that will be shown as the menu's title
+  onClickItem?: (
+    ev: SyntheticMouseEvent, // `click` event
+    val: any, // the item's `value` (as specified in the `items` prop)
+  ) => void,
+  style?: Object, // will be merged with the menu title's `div` wrapper
+  accentColor?: string, // CSS color descriptor (e.g. `darkgray`, `#ccffaa`...)
+
+  // All other props are passed through to the Select input component
 };
-type Props = PublicProps & HoverableProps;
+/* -- END_DOCS -- */
+/* eslint-enable no-unused-vars */
+
+type DefaultProps = {
+  accentColor: string,
+};
+
+type Props = {
+  /* :: ...$Exact<PublicProps>, */
+  /* :: ...$Exact<DefaultProps>, */
+  /* :: ...$Exact<HoverableProps>, */
+};
 const FILTERED_PROPS = [
-  'items', 'lang', 'children', 'onClickItem', 'style', 'accentColor',
+  'items',
+  'lang',
+  'children',
+  'onClickItem',
+  'style',
+  'accentColor',
 ];
 
 class DropDownMenu extends React.PureComponent {
@@ -56,8 +60,8 @@ class DropDownMenu extends React.PureComponent {
     cmds: ?Array<Command>,
   };
 
-  static defaultProps = {
-    accentColor:            COLORS.accent,
+  static defaultProps: DefaultProps = {
+    accentColor: COLORS.accent,
   };
 
   constructor(props: Props) {
@@ -86,7 +90,8 @@ class DropDownMenu extends React.PureComponent {
         styleOuter={style.selectOuter}
         accentColor={this.props.accentColor}
         {...props}
-        required noErrors
+        required
+        noErrors
       >
         {this.renderTitle()}
       </Select>
@@ -113,20 +118,22 @@ class DropDownMenu extends React.PureComponent {
   onMouseDownTitle = () => {
     if (!this.state.fFocused) return;
     this.closeMenu();
-  }
+  };
 
   // Run the `onClick` function (if any) associated to the clicked item,
   // and run the `onClickItem` prop.
   onClickItem = (ev: SyntheticMouseEvent, value: any) => {
     const { items, onClickItem } = this.props;
-    items.forEach((item) => {
+    items.forEach(item => {
       if (item.value === value && item.onClick) item.onClick(ev);
     });
     onClickItem && onClickItem(ev, value);
     this.closeMenu();
-  }
+  };
 
-  onFocus = () => { this.setState({ fFocused: true }); }
+  onFocus = () => {
+    this.setState({ fFocused: true });
+  };
 
   // On blur, remove the stored value from the select
   onBlur = () => {
@@ -134,14 +141,14 @@ class DropDownMenu extends React.PureComponent {
       fFocused: false,
       cmds: [{ type: 'REVERT' }],
     });
-  }
+  };
 
   // ==========================================
   // Helpers
   // ==========================================
   closeMenu = () => {
     this.setState({ cmds: [{ type: 'BLUR' }, { type: 'REVERT' }] });
-  }
+  };
 }
 
 // ==========================================

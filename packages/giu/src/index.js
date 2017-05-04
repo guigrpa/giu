@@ -9,7 +9,7 @@
 
 // @flow
 
-/* eslint-disable import/newline-after-import, import/imports-first */
+/* eslint-disable import/newline-after-import, import/first */
 
 require('./index.css');
 

@@ -1,9 +1,6 @@
 // @flow
 
-export type Point2 = {
-  x: number,
-  y: number,
-};
+export type Point2 = { x: number, y: number };
 
 const vectorNorm = (V: Point2): number =>
   Math.sqrt((V.x * V.x) + (V.y * V.y));

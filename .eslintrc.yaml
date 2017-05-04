@@ -28,6 +28,7 @@ rules:
   no-await-in-loop: off
   no-mixed-operators: off
   no-duplicate-imports: off
+  no-confusing-arrow: off
   key-spacing:
     - warn
     - beforeColon: false

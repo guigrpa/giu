@@ -1,6 +1,6 @@
 // @flow
 
-import React                from 'react';
+import React from 'react';
 import {
   vectorAdd as add,
   vectorSub as sub,
@@ -8,23 +8,27 @@ import {
   vectorRotate as rotate,
   vectorNormalize as normalize,
   degToRad,
-}                           from '../gral/math';
-import type { Point2 }     from '../gral/math';
+} from '../gral/math';
+import type { Point2 } from '../gral/math';
 
 const vec = (V: Point2) => `${V.x},${V.y}`;
 
 // ==========================================
 // Component
 // ==========================================
-type Props = {
-  from: Point2,
-  to: Point2,
+// -- START_DOCS
+export type HintArrowPars = {|
+  type: 'ARROW',
+  from: Point2, // coordinates, e.g. `{ x: 5, y: 10 }`
+  to: Point2, // coordinates
   curveFactor?: number,
   arrowSize?: number,
   arrowAngle?: number,
   counterclockwise?: boolean,
-};
-export type HintArrowProps = Props;
+|};
+// -- END_DOCS
+
+type Props = HintArrowPars;
 
 class HintArrow extends React.Component {
   props: Props;
@@ -34,7 +38,8 @@ class HintArrow extends React.Component {
   // ==========================================
   render() {
     const {
-      from: A, to: B,
+      from: A,
+      to: B,
       curveFactor = 0.7,
       arrowSize = 10,
       arrowAngle = 30,

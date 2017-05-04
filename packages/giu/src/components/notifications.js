@@ -10,7 +10,7 @@ import { updateIn, addLast, removeAt, addDefaults } from 'timm';
 import { MISC } from '../gral/constants';
 import type { Action } from '../gral/types';
 import Notification from './notification';
-import type { NotificationPars } from './notification';
+import type { NotificationPars } from './notificationTypes';
 
 /* --
 **Include the `<Notifications />` component at (or near)
@@ -187,11 +187,11 @@ class Notifications extends React.PureComponent {
   }
 
   // ==========================================
-  onRetain = (ev: SyntheticMouseEvent) => {
+  onRetain = (ev: SyntheticEvent) => {
     if (!(ev.currentTarget instanceof Element)) return;
     store.dispatch(actions.notifRetain(ev.currentTarget.id));
   };
-  onDismiss = (ev: SyntheticMouseEvent) => {
+  onDismiss = (ev: SyntheticEvent) => {
     if (!(ev.currentTarget instanceof Element)) return;
     const { id } = ev.currentTarget;
     const notifs = this.props.notifs || store.getState();

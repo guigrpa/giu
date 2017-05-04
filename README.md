@@ -21,6 +21,7 @@ Online demos: [an extremely compact one](http://guigrpa.github.io/giu/demo1.html
     + Ultra-customisable [date/time inputs](#dateinput)
     + Textarea with auto-resize
     + Uniform, lightweight styles with key accents that can easily be overriden
+    * An extremely flexible [data table](#datatable) component
     + ... and a gorgeous [analog time picker](#dateinput)!
 - Easy creation of [hint screens](#hint-screens) with dynamically-positioned labels and arrows
 - Lots of [helper functions](#helpers)
@@ -38,7 +39,7 @@ Make sure you also install the required `peerDependencies` ([*react*](https://gi
 
 Installation notes:
 
-* Many Giu components (including all inputs) require that you **include the `<Floats />` component at (or near) the root level of your React tree**. No props are required. If you forget it, you'll see a warning in the console and the components will not work correctly. Other components you might need to add, depending on whether you use them: `<Modals />`, `<Notifications />`, `<Hints />`. More about them below.
+* Many Giu components (including all inputs) require that you **include `<Floats />` at (or near) the root level of your React tree**. No props are required. If you forget it, you'll see a warning in the console and those components will not work correctly. Other components you might want to add (if you use them): `<Modals />`, `<Notifications />`, `<Hints />`. More about them below.
 
 * Why is *moment* part of `peerDependencies` and not `dependencies`? For i18n reasons: we want to make sure the user's `moment` object and the one used internally by Giu are exactly the same, so that `DateInput`'s strings and other locale-specific attributes (e.g. first day of the week) are shown correctly. If the version specified by the user and by Giu were incompatible, we would end up with two different `moment` objects.
 
@@ -432,6 +433,149 @@ Props:
   will be shown inside the button
 * **style** *object?*: will be merged with the outermost `span` element
 
+## DataTable
+
+A full-featured table supporting filtering, single/multiple selection,
+pagination, infinite scrolling, sorting, drag and drop, clipboard events,
+localStorage, etc.
+
+Following Giu's philosophy, DataTable allows you to choose whether you
+want to control individual features yourself, or you're OK with the
+default behaviour. In many cases, you can set initial props (e.g.
+`sortBy`, `sortDescending`, `selectedIds`, `manuallyOrderedIds`)
+and then leave Giu the gruntwork of managing all the state. In order
+to indicate this, just don't modify any of those props yourself.
+Alternatively, if you want to manage state yourself, use the provided
+callbacks (`onChangeSort`, `onChangeSelection`, `onChangeManualOrder`)
+and update your props accordingly.
+
+DataTable improves performance by only rendering the rows that are
+visible. Rows can have uniform and well-known heights
+(at the simplest end of the spectrum), uniform but unknown,
+and also dynamic: different for every row, and even changing
+in time (as a result of passed-down props or their own intrinsic state).
+
+```js
+type PublicProps = {
+  // Basic
+  // -----
+  itemsById?: ?Object, // Rows, keyed by id (default: {})
+  cols: Array<DataTableColumn>, // Column configuration objects
+  lang?: string, // Used to force-refresh when language changes
+
+  // Set of rows to be shown (before filtering)
+  // ------------------------------------------
+  shownIds?: ?Array<string>, // Row ids to be shown (default: [], no rows)
+  onChangeShownIds?: (shownIds: Array<string>) => void,
+  alwaysRenderIds?: Array<string>, // Render these rows even when not visible (e.g. editing)
+  commonCellProps?: ?Object, // Passed to all column `render` functions
+
+  // Filtering
+  // ---------
+  filterValue?: string, // (default: '')
+
+  // Sorting
+  // -------
+  headerClickForSorting?: boolean, // (default: true)
+  onChangeSort?: (options: {
+    sortBy: ?string,
+    sortDescending: boolean,
+  }) => void,
+  sortBy?: ?string, // Column, identified by `attr`
+  sortDescending?: boolean,
+
+  // Manual sorting
+  allowManualSorting?: boolean, // Add manual sort column (default: true)
+  manuallyOrderedIds?: Array<string>,
+  onChangeManualOrder?: (manuallyOrderedIds: ?Array<string>) => void,
+  manualSortColLabel?: string | (() => string), // Custom column label (default: 'Sort manually')
+
+  // Selection
+  // ---------
+  selectedIds?: ?Array<string>,
+  allowSelect?: boolean,
+  multipleSelection?: boolean,
+  onChangeSelection?: (selectedIds: Array<string>) => void,
+  onClipboardAction?: (ev: SyntheticClipboardEvent, json: string) => void,
+
+  // Fetching
+  // --------
+  // Set fetchMoreItems if you want DataTable to notify you when the last row is rendered
+  // (note: disabled when the filterValue prop is not empty)
+  fetchMoreItems?: (lastRowId: string) => void, // Called when the last row is rendered
+  fetching?: boolean, // When set, the FetchRowComponent will be shown
+  FetchRowComponent?: ReactClass<*>,
+
+  // LocalStorage
+  // ------------
+  // Set collectionName if you want DataTable to persist some user prefs to localStorage:
+  // sort criteria, manual order, selection...
+  collectionName?: string,
+
+  // Styles
+  // ------
+  height?: number, // Body height (default: 200)
+  width?: number, // (default: default div block behaviour)
+  rowHeight?: number, // Auto-calculated if unspecified
+  uniformRowHeight?: boolean, // Are rows of the same height (even if unknown a priori)? (default: false)
+  showHeader?: boolean, // (default: true)
+  accentColor?: string, // Used for selections
+  style?: Object,
+  styleHeader?: Object,
+  styleRow?: Object,
+
+  // For VirtualScroller specifically
+  estimatedMinRowHeight?: number,
+  numRowsInitialRender?: number,
+  maxRowsToRenderInOneGo?: number,
+};
+```
+
+**Column definitions:**
+
+```js
+export type DataTableColumn = {
+  attr: string, // column identifier, also used to get rawValues by default
+
+  // Label
+  // -----
+  // As a function, it will be called with the `commonCellProps`,
+  // if defined, or otherwise with the `lang` property)
+  label?: string | ((commonCellPropsOrLang: any) => string),
+  labelLevel?: number, // useful for very narrow cols (default: 0)
+
+  // Values
+  // ------
+  // Each cell has a "reference value", obtained through the `rawValue`
+  // callback (if present) or the column's `attr` property.
+  // The reference value is used for filtering, sorting, and copy events,
+  // unless the corresponding callbacks are set.
+  rawValue?: (item: Object) => any,
+  filterValue?: (item: Object) => any,
+  sortValue?: (item: Object) => any,
+
+  // Rendering
+  // ---------
+  // By default, the reference value is rendered. Customize this by
+  // specifying a `render` function.
+  render?: (item: Object) => React$Element<any>,
+
+  // Functionalities
+  // ---------------
+  sortable?: boolean, // (default: true)
+  sortableDescending?: boolean, // (default: true)
+  filterable?: boolean, // (default: true)
+
+  // Appearance
+  // ----------
+  hidden?: boolean,
+  minWidth?: number,
+  flexGrow?: number,
+  flexShrink?: number,
+  style?: ?Object, // Mixed with each row/header cell's outer div
+};
+```
+
 ## DropDownMenu
 
 ![DropDownMenu screenshots](https://raw.githubusercontent.com/guigrpa/giu/master/docs/DropDownMenu.png)
@@ -440,23 +584,25 @@ Props:
 
 Props:
 
-* **items** *Array<Choice>*: menu items, similar to [Select](#select)
-  but with the inclusion of an `onClick` callback:
-  - **value** *any*: any value that can be converted to JSON. Values should be unique
-  - **label?** *string*: descriptive string that will be shown to the user
-  - **keys?** *Array<string>*: keyboard shortcuts for this option, e.g.
-    `mod+a` (= `cmd+a` in OS X, `ctrl+a` in Windows), `alt+backspace`, `shift+up`...
-  - **onClick?** *(ev: SyntheticEvent) => void*: called when the item is clicked
-    with the event as argument
-* **lang?** *string*: current language (NB: just used to make sure the component is refreshed)
-* **children** *any*: React elements that will be shown as the menu's title
-* **onClickItem?** *Function*: called when an item is clicked
-  with the following arguments:
-  - **ev** *SyntheticMouseEvent*: `click` event
-  - **value** *any*: the item's `value` (as specified in the `items` prop)
-* **style?** *Object*: will be merged with the menu title's `div` wrapper
-* **accentColor?** *string*: CSS color descriptor (e.g. `darkgray`, `#ccffaa`...)
-* *All other props are passed through to the Select input component*
+
+```js
+type PublicProps = {
+  // Items: similar to the Select component but including an `onClick` callback
+  items: Array<Choice>,
+
+  // Other props
+  lang?: string, // current language (used just for force-render)
+  children: any, // React elements that will be shown as the menu's title
+  onClickItem?: (
+    ev: SyntheticMouseEvent, // `click` event
+    val: any, // the item's `value` (as specified in the `items` prop)
+  ) => void,
+  style?: Object, // will be merged with the menu title's `div` wrapper
+  accentColor?: string, // CSS color descriptor (e.g. `darkgray`, `#ccffaa`...)
+
+  // All other props are passed through to the Select input component
+};
+```
 
 ## Modals
 
@@ -496,23 +642,39 @@ class ModalExample extends React.Component {
 API reference:
 
 * **modalPush()**: creates a modal and pushes it on top of the stack:
-  - **pars** *ModalPars*: modal parameters:
-    * **title?** *string*: modal title displayed to the user
-    * **children?** *any*: body of the modal
-    * **buttons?** *Array<ModalButton>*: button objects:
-      - **left?** *boolean = false*: align button left instead of right
-      - **label?** *any*: button text or other contents
-      - **defaultButton?** *boolean*: will be highlighted and
-      - **onClick?** *(ev: SyntheticEvent) => void*: `click` handler for the button
-        automatically selected when RETURN is pressed
-      - **style?** *Object*: merge with the button's style
-    * **onClickBackdrop?** *(ev: SyntheticMouseEvent) => void*: called when the backdrop
-      (semi-transparent layer highlighting the modal in fron of other
-      page contents) is clicked
-    * **onEsc?** *(ev: SyntheticKeyboardEvent) => void*: called when ESC is pressed
-    * **style?** *Object*: merge with the modal's `div` style, e.g. to
-      fix a modal width or background color
+  - **pars** *ModalPars* (see Modal section)
 * **modalPop()**: removes the modal currently at the top of the stack
+
+**ModalPars and ModalButton definitions:**
+
+```js
+export type ModalPars = {|
+  id?: string,
+  title?: string, // modal title displayed to the user
+  children?: any, // body of the modal
+  buttons?: Array<ModalButton>, // button objects (see below)
+
+  // called when the backdrop
+  // (semi-transparent layer highlighting the modal in fron of other
+  // page contents) is clicked
+  onClickBackdrop?: (ev: SyntheticMouseEvent) => void,
+
+  onEsc?: (ev: SyntheticKeyboardEvent) => void, // called when ESC is pressed
+
+  // merge with the modal's `div` style, e.g. to
+  // fix a modal width or background color
+  style?: Object,
+  zIndex?: number,
+|};
+
+export type ModalButton = {|
+  left?: boolean, // align button left instead of right (default: false)
+  label?: any, // button text or other contents
+  defaultButton?: boolean, // will be highlighted and automatically selected when RETURN is pressed
+  onClick?: (ev: SyntheticEvent) => void, // `click` handler for the button
+  style?: Object, // merged with the button's style
+|};
+```
 
 ## Notifications
 
@@ -535,17 +697,7 @@ const NotifExample = () =>
 API reference:
 
 * **notify()**: creates a notification:
-  - **pars** *NotificationPars*: notification parameters:
-    + **sticky?** *boolean*: never delete this notification
-    + **timeOut?** *number = 4000*: time [ms] after which it's deleted
-    + **name?** *string*: a user-provided name for the notification
-    + **type?** *info|success|warn|error = `info`*
-    + **icon?** *string = `exclamation`*
-    + **iconSpin?** *boolean*
-    + **title?** *string*: highlighted text at the top of the notification
-    + **msg** *string*: notification text
-    + **onClick?** *(ev: SyntheticMouseEvent) => void*: `click` handler
-    + **style?** *Object*: merged with the outermost `div` style
+  - **pars** *NotificationPars*: notification parameters (see below):
   - **Returns** *string*: notification ID
 * **notifRetain()**: marks a notification as retained
   (it will not be automatically deleted, even if it's `sticky`):
@@ -554,6 +706,27 @@ API reference:
   - **id** *string*: ID of the notification to be deleted
 * **notifDeleteByName()**: deletes a notification:
   - **name** *string*: name of the notification to be deleted
+
+**`NotificationPars` definition:**
+
+```js
+export type NotificationType = 'info' | 'success' | 'warn' | 'error';
+export type NotificationPars = {
+  sticky?: boolean, // never delete this notification
+  timeOut?: number, // time [ms] after which it's deleted [default: 4000]
+  id?: string,
+  name?: string, // a user-provided name for the notification
+  type?: NotificationType, // default: `info`
+  icon?: string, // default: `exclamation`
+  iconSpin?: boolean,
+  title?: string, // highlighted text at the top of the notification
+  msg?: string, // notification text
+  onClick?: (ev: SyntheticEvent) => void, // `click` handler
+  style?: Object, // merged with the outermost `div` style
+  noStylePosition?: boolean,
+  noStyleShadow?: boolean,
+};
+```
 
 ## Hint screens
 
@@ -601,21 +774,7 @@ API reference:
 
 * **hintDefine()**: defines a hint screen:
   - **id** *string*: ID of the hint to be created
-  - **pars** *HintScreenPars*: hint parameters:
-    + **elements** *Array<ElementT> | () => Array<ElementT>*: either an array of elements,
-      or a function returning such an element (for dynamic positioning).
-      Elements have these attributes:
-      - **type** *LABEL|ARROW*
-      - Arrows:
-        - **from** *{x: number, y: number}*: coordinates, e.g. `{ x: 5, y: 10 }`
-        - **to** *{x: number, y: number}*: coordinates
-        - **counterclockwise** *boolean*
-      - Labels:
-        - **x** and **y** *number*: coordinates
-        - **align?** *left|center|right = left*
-        - **children?** *any*: React elements that comprise the label
-    + **closeLabel?** *string = `Got it!`*: label of the close button
-    + **zIndex?** *number*
+  - **pars** *HintScreenPars* (see below)
 * **hintDisableAll()**: disables all hints
 * **hintReset()**: clears the list of disabled hints
 * **hintShow()**: shows a hint
@@ -625,6 +784,41 @@ API reference:
     already been shown)
 * **hintHide()**: hides the currently shown hint, if any
 
+```js
+export type HintScreenPars = {|
+  elements?: ElementsWrapper,
+  closeLabel?: string, // label of the close button (default: 'Got it!')
+  zIndex?: number,
+|};
+type ElementsWrapper = Array<Element> | (() => Array<Element>);
+type Element = HintArrowPars | HintLabelPars;
+```
+
+```js
+export type HintLabelPars = {|
+  type: 'LABEL',
+  x: number,
+  y: number,
+  align?: AlignType, // (default: 'left')
+  children?: any, // React elements that comprise the label
+  fontSize?: number, // will be initialised by the HintScreen
+  style?: Object,
+|};
+type AlignType = 'left' | 'right' | 'center';
+```
+
+```js
+export type HintArrowPars = {|
+  type: 'ARROW',
+  from: Point2, // coordinates, e.g. `{ x: 5, y: 10 }`
+  to: Point2, // coordinates
+  curveFactor?: number,
+  arrowSize?: number,
+  arrowAngle?: number,
+  counterclockwise?: boolean,
+|};
+```
+
 
 ## Tiny little things
 
@@ -632,34 +826,45 @@ API reference:
 
 
 
-An inconspicuous-looking button-in-a-`span`. Props:
+An inconspicuous-looking button-in-a-`span`.
 
-* **plain?** *boolean*: removes most button styles
-* **children?** *any*: button contents (can include `Icon`
- components, etc.)
-* **onClick?** *(ev: SyntheticMouseEvent) => void*: `click` handler
-* **disabled?** *boolean*
-* **style?** *Object*: merged with the `span` style
-* *All other props are passed through to the `span` element*
-* Additional props with `mdl` theme:
-  + **colored?** *boolean*
-  + **primary?** *boolean*
-  + **accent?** *boolean*
-  + **fab?** *boolean*
+```js
+type Props = {
+  plain?: boolean, // removes most button styles
+  children?: any, // button contents (can include `Icon` components, etc.)
+  onClick?: (ev: SyntheticMouseEvent) => void,
+  disabled?: boolean,
+  style?: Object, // merged with the `span` style
+  skipTheme?: boolean,
+
+  // Additional props with `mdl` theme
+  colored?: boolean,
+  primary?: boolean,
+  accent?: boolean,
+  fab?: boolean,
+
+  // All other props are passed through to the `span` element
+};
+```
 
 ### Icon and Spinner
 
 
 
-A wrapper for Font Awesome icons. Props:
+A wrapper for Font Awesome icons.
 
-* **icon** *string*: e.g. `ambulance`, `cogs`...
-* **size?** *`lg` | `2x` | `3x` | `4x` | `5x`*
-* **fixedWidth?** *boolean*
-* **spin?** *boolean*
-* **disabled?** *boolean*
-* **style?** *Object*: merged with the `i` element style
-* *All other props are passed through to the `i` element*
+```js
+type Props = {
+  icon: string, // e.g. `ambulance`, `cogs`...
+  size?: 'lg' | '2x' | '3x' | '4x' | '5x',
+  fixedWidth?: boolean,
+  spin?: boolean,
+  disabled?: boolean,
+  style?: Object, // merged with the `i` element style
+  skipTheme?: boolean,
+  // All other props are passed through to the `i` element
+};
+```
 
 `Spinner` is a convenient shortcut for an `Icon` that, well, spins.
 
@@ -671,9 +876,13 @@ A simple `div` showing a centered message with a large font size.
 Ideal for *No matches found*, *Choose one of the options above*,
 that kind of thing. Props:
 
-* **children?** *any*: the contents to be shown
-* **style?** *Object*: merged with the outermost `div` style
-* *All other props are passed through to the `div` element*
+```js
+type Props = {
+  children?: any, // contents to be shown
+  style?: Object, // merged with the outermost `div` style
+  // All other props are passed through to the `div` element
+};
+```
 
 ### Progress
 
@@ -719,19 +928,27 @@ just `true` (or `null`).
 Specific props received from the parent (all other props are
 passed through):
 
-* **onHoverStart?** *(ev: SyntheticMouseEvent) => void*: relays the original event to
+* **onHoverStart?** *HoverEventHandler (see below)*: relays the original event to
   the parent component.
-* **onHoverStop?** *(ev: SyntheticMouseEvent) => void*: relays the original event to
+* **onHoverStop?** *HoverEventHandler (see below)*: relays the original event to
   the parent component.
 
 Additional props passed to the base component:
 
-* **hovering** *?(string|number|boolean)*: identifies the
-  element that is hovered (see description above), or `null` if none
-* **onHoverStart** *(ev: SyntheticMouseEvent) => void*: `onMouseEnter` event handler
-  you can attach to your target DOM elements
-* **onHoverStop** *(ev: SyntheticMouseEvent) => void*: `onMouseLeave` event handler
-  you can attach to your target DOM elements
+```js
+export type HoverableProps = {
+  // `id` element that is hovered (see description above), or `null` if none
+  hovering: Hovering,
+
+  // `onMouseEnter` event handler you can attach to your target DOM elements
+  onHoverStart: HoverEventHandler,
+
+  // `onMouseLeave` event handler you can attach to your target DOM elements
+  onHoverStop: HoverEventHandler,
+};
+type Hovering = ?(string | number | boolean); // null when nothing is hovered
+type HoverEventHandler = (ev: SyntheticEvent) => void;
+```
 
 
 ## Helpers
@@ -876,7 +1093,7 @@ e.g. on OS X with overlaid scrollbars.
 
 ## License (MIT)
 
-Copyright (c) [Guillermo Grau Panea](https://github.com/guigrpa) 2016
+Copyright (c) [Guillermo Grau Panea](https://github.com/guigrpa) 2016-present
 
 Permission is hereby granted, free of charge, to any person obtaining a copy of this software and associated documentation files (the "Software"), to deal in the Software without restriction, including without limitation the rights to use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies of the Software, and to permit persons to whom the Software is furnished to do so, subject to the following conditions:
 

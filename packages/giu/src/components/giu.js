@@ -7,9 +7,7 @@ import React                from 'react';
 // ==========================================
 // Component
 // ==========================================
-/* --
-A root component that can be used for custom themes.
--- */
+// -- A root component that can be used for custom themes.
 type Props = {
   theme: string | Object,
   children: any;

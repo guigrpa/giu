@@ -2,18 +2,14 @@
 
 /* eslint-disable no-plusplus */
 
-import React                from 'react';
-import { createStore }      from 'redux';
-import type { Reducer }     from 'redux';
-import {
-  addLast,
-  removeAt,
-  set as timmSet,
-}                           from 'timm';
-import { MISC }             from '../gral/constants';
-import type { Action }      from '../gral/types';
-import Modal                from './modal';
-import type { ModalPars }   from './modal';
+import React from 'react';
+import { createStore } from 'redux';
+import type { Reducer } from 'redux';
+import { addLast, removeAt, set as timmSet } from 'timm';
+import { MISC } from '../gral/constants';
+import type { Action } from '../gral/types';
+import Modal from './modal';
+import type { ModalPars } from './modalTypes';
 
 /* --
 **Include the `<Modals />` component at (or near)
@@ -48,22 +44,7 @@ class ModalExample extends React.Component {
 API reference:
 
 * **modalPush()**: creates a modal and pushes it on top of the stack:
-  - **pars** *ModalPars*: modal parameters:
-    * **title?** *string*: modal title displayed to the user
-    * **children?** *any*: body of the modal
-    * **buttons?** *Array<ModalButton>*: button objects:
-      - **left?** *boolean = false*: align button left instead of right
-      - **label?** *any*: button text or other contents
-      - **defaultButton?** *boolean*: will be highlighted and
-      - **onClick?** *(ev: SyntheticEvent) => void*: `click` handler for the button
-        automatically selected when RETURN is pressed
-      - **style?** *Object*: merge with the button's style
-    * **onClickBackdrop?** *(ev: SyntheticMouseEvent) => void*: called when the backdrop
-      (semi-transparent layer highlighting the modal in fron of other
-      page contents) is clicked
-    * **onEsc?** *(ev: SyntheticKeyboardEvent) => void*: called when ESC is pressed
-    * **style?** *Object*: merge with the modal's `div` style, e.g. to
-      fix a modal width or background color
+  - **pars** *ModalPars* (see Modal section)
 * **modalPop()**: removes the modal currently at the top of the stack
 -- */
 
@@ -73,7 +54,9 @@ type State = Array<ModalPars>;
 // Store, reducer
 // ==========================================
 let store: Object;
-function initStore() { store = createStore(reducer); }
+function initStore() {
+  store = createStore(reducer);
+}
 
 const INITIAL_STATE: State = [];
 const reducer: Reducer<State, Action> = (state0 = INITIAL_STATE, action) => {
@@ -143,21 +126,27 @@ class Modals extends React.PureComponent {
     }
   }
 
-  componentWillUnmount() { if (this.storeUnsubscribe) this.storeUnsubscribe(); }
+  componentWillUnmount() {
+    if (this.storeUnsubscribe) this.storeUnsubscribe();
+  }
 
   // ==========================================
   render() {
     const modals = this.props.modals || store.getState();
-    this.fPopped = (modals.length < this.prevModals.length);
+    this.fPopped = modals.length < this.prevModals.length;
     this.prevModals = modals;
     return (
       <div className="giu-modals">
-        {modals.map((props, idx) =>
-          <Modal key={props.id} ref={(c) => { this.refModals[idx] = c; }}
-            zIndex={MISC.zModalBase + (idx * MISC.zModalStep)}
+        {modals.map((props, idx) => (
+          <Modal
+            key={props.id}
+            ref={c => {
+              this.refModals[idx] = c;
+            }}
+            zIndex={MISC.zModalBase + idx * MISC.zModalStep}
             {...props}
           />
-        )}
+        ))}
       </div>
     );
   }
@@ -168,9 +157,4 @@ class Modals extends React.PureComponent {
 // ==========================================
 const isModalActive = () => store.getState().length > 0;
 
-export {
-  Modals,
-  reducer,
-  actions,
-  modalPush, modalPop, isModalActive,
-};
+export { Modals, reducer, actions, modalPush, modalPop, isModalActive };

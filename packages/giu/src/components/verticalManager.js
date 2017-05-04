@@ -7,23 +7,35 @@ import throttle             from 'lodash/throttle';
 // VerticalManager
 // ===============================================================
 // Renders hidden first, reports on its height, then becomes visible when
-// it gets a `top` property passed from the top. Becoming visible does not
+// it gets a `top` property passed from its owner comp.
+// Becoming visible does not
 // mean its child component gets re-rendered (this is more efficient than
 // react-virtualized when using its CellMeasurer component).
 
-type Props = {
+/* eslint-disable no-unused-vars */
+type PublicProps = {
+  /* eslint-enable no-unused-vars */
   registerOuterRef?: (ref: any) => void,
   id: string,
   index: number,
-  childProps: Object,
+  childProps?: Object,
   ChildComponent: ReactClass<*>,
   onChangeHeight: ?(id: string, height: number) => void,
   top: ?number,
 };
 
+type DefaultProps = {
+  childProps: Object,
+};
+
+type Props = {
+  /* :: ...$Exact<PublicProps>, */
+  /* :: ...$Exact<DefaultProps>, */
+};
+
 class VerticalManager extends React.Component {
   static propTypes: Props;
-  static defaultProps = {
+  static defaultProps: DefaultProps = {
     childProps: {},
   };
   height: number;

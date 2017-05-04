@@ -1,16 +1,15 @@
 // @flow
 
-import 'typeface-gloria-hallelujah';  // eslint-disable-line import/extensions
-import React                from 'react';
-import {
-  COLORS,
-  MISC,
-}                           from '../gral/constants';
-import Backdrop             from '../components/backdrop';
-import HintLabel            from '../components/hintLabel';
-import type { HintLabelProps } from '../components/hintLabel';
-import HintArrow            from '../components/hintArrow';
-import type { HintArrowProps } from '../components/hintArrow';
+/* eslint-disable react/no-array-index-key */
+
+import 'typeface-gloria-hallelujah'; // eslint-disable-line import/extensions
+import React from 'react';
+import { COLORS, MISC } from '../gral/constants';
+import Backdrop from '../components/backdrop';
+import HintLabel from '../components/hintLabel';
+import HintArrow from '../components/hintArrow';
+import type { HintLabelPars } from '../components/hintLabel'; // eslint-disable-line
+import type { HintArrowPars } from '../components/hintArrow'; // eslint-disable-line
 
 const FONT_SIZE = 20;
 const FONT_FAMILY = '"Gloria Hallelujah", sans-serif';
@@ -18,16 +17,27 @@ const FONT_FAMILY = '"Gloria Hallelujah", sans-serif';
 // ==========================================
 // Component
 // ==========================================
-type Arrow = HintArrowProps & { type: 'ARROW' };
-type Label = HintLabelProps & { type: 'LABEL' };
-type Element = Arrow | Label;
-type ElementsWrapper = Array<Element> | () => Array<Element>;
-export type HintScreenPars = {
-  elements: ElementsWrapper,
-  closeLabel?: string,
+
+// -- START_DOCS
+export type HintScreenPars = {|
+  elements?: ElementsWrapper,
+  closeLabel?: string, // label of the close button (default: 'Got it!')
   zIndex?: number,
+|};
+type ElementsWrapper = Array<Element> | (() => Array<Element>);
+type Element = HintArrowPars | HintLabelPars;
+// -- END_DOCS
+
+type DefaultProps = {
+  // eslint-disable-line
+  elements: ElementsWrapper,
+  closeLabel: string,
+  zIndex: number,
 };
-type Props = HintScreenPars & {
+
+type Props = {
+  /* :: ...HintScreenPars, */
+  /* :: ...$Exact<DefaultProps>, */
   onClose: (ev: SyntheticMouseEvent) => void,
 };
 
@@ -37,14 +47,18 @@ type Props = HintScreenPars & {
 // In such a case, use `Hints` instead.
 class HintScreen extends React.PureComponent {
   props: Props;
-  static defaultProps: HintScreenPars = {
-    elements:               ([]: ElementsWrapper),
-    closeLabel:             'Got it!',
-    zIndex:                 MISC.zHintBase,
-  }
+  static defaultProps: DefaultProps = {
+    elements: ([]: ElementsWrapper),
+    closeLabel: 'Got it!',
+    zIndex: MISC.zHintBase,
+  };
 
-  componentDidMount() { window.addEventListener('resize', this.onResize); }
-  componentWillUnmount() { window.removeEventListener('resize', this.onResize); }
+  componentDidMount() {
+    window.addEventListener('resize', this.onResize);
+  }
+  componentWillUnmount() {
+    window.removeEventListener('resize', this.onResize);
+  }
 
   // ==========================================
   // Render
@@ -68,11 +82,14 @@ class HintScreen extends React.PureComponent {
     );
   }
 
-  renderBackdrop() { return <Backdrop style={style.backdrop} />; }
+  renderBackdrop() {
+    return <Backdrop style={style.backdrop} />;
+  }
 
   renderArrows(elements: Array<Element>) {
-    const arrows: Array<Arrow> =
-      (elements.filter((o) => o.type === 'ARROW'): Array<any>);
+    const arrows: Array<HintArrowPars> = (elements.filter(
+      o => o.type === 'ARROW',
+    ): Array<any>);
     if (!arrows || !arrows.length) return null;
     return (
       <svg style={style.svg}>
@@ -82,14 +99,12 @@ class HintScreen extends React.PureComponent {
   }
 
   renderLabels(elements: Array<Element>) {
-    const labels: Array<Label> =
-      (elements.filter((o) => o.type === 'LABEL'): Array<any>);
+    const labels: Array<HintLabelPars> = (elements.filter(
+      o => o.type === 'LABEL',
+    ): Array<any>);
     if (!labels || !labels.length) return null;
     return labels.map((label, idx) => (
-      <HintLabel key={idx}
-        fontSize={FONT_SIZE}
-        {...label}
-      />
+      <HintLabel key={idx} fontSize={FONT_SIZE} {...label} />
     ));
   }
 
@@ -101,15 +116,16 @@ class HintScreen extends React.PureComponent {
   // ==========================================
   // Event handlers
   // ==========================================
-  onResize = () => { this.forceUpdate(); }
+  onResize = () => {
+    this.forceUpdate();
+  };
 }
-
 
 // ==========================================
 // Styles
 // ==========================================
 const style = {
-  outer: (zIndex) => ({
+  outer: zIndex => ({
     position: 'fixed',
     top: 0,
     left: 0,

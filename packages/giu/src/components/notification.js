@@ -13,49 +13,13 @@ import { COLORS, FONTS } from '../gral/constants';
 import hoverable from '../hocs/hoverable';
 /* :: import type { HoverableProps } from '../hocs/hoverable'; */
 import Icon from './icon';
+/* eslint-disable no-unused-vars */
+import type { NotificationType, NotificationPars } from './notificationTypes';
+/* eslint-enable no-unused-vars */
 
 // ==========================================
 // Component
 // ==========================================
-/* --
-**`NotificationPars` definition:**
-
-```js
-export type NotificationType = 'info' | 'success' | 'warn' | 'error';
-export type NotificationPars = {
-  sticky?: boolean,  // never delete this notification
-  timeOut?: number,  // time [ms] after which it's deleted [default: 4000]
-  id?: string,
-  name?: string,  // a user-provided name for the notification
-  type?: NotificationType, // default: `info`
-  icon?: string, // default: `exclamation`
-  iconSpin?: boolean,
-  title?: string,  // highlighted text at the top of the notification
-  msg?: string,  // notification text
-  onClick?: (ev: SyntheticMouseEvent) => void,  // `click` handler
-  style?: Object,  // merged with the outermost `div` style
-  noStylePosition?: boolean,
-  noStyleShadow?: boolean,
-};
-```
--- */
-export type NotificationType = 'info' | 'success' | 'warn' | 'error';
-export type NotificationPars = {
-  sticky?: boolean,  // never delete this notification
-  timeOut?: number,  // time [ms] after which it's deleted [default: 4000]
-  id?: string,
-  name?: string,  // a user-provided name for the notification
-  type?: NotificationType, // default: `info`
-  icon?: string, // default: `exclamation`
-  iconSpin?: boolean,
-  title?: string,  // highlighted text at the top of the notification
-  msg?: string,  // notification text
-  onClick?: (ev: SyntheticMouseEvent) => void,  // `click` handler
-  style?: Object,  // merged with the outermost `div` style
-  noStylePosition?: boolean,
-  noStyleShadow?: boolean,
-};
-
 type Props = {
   /* :: ...$Exact<NotificationPars>, */
   /* :: ...$Exact<HoverableProps>, */

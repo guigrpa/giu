@@ -21,6 +21,7 @@ Online demos: [an extremely compact one](http://guigrpa.github.io/giu/demo1.html
     + Ultra-customisable [date/time inputs](#dateinput)
     + Textarea with auto-resize
     + Uniform, lightweight styles with key accents that can easily be overriden
+    * An extremely flexible [data table](#datatable) component
     + ... and a gorgeous [analog time picker](#dateinput)!
 - Easy creation of [hint screens](#hint-screens) with dynamically-positioned labels and arrows
 - Lots of [helper functions](#helpers)
@@ -38,7 +39,7 @@ Make sure you also install the required `peerDependencies` ([*react*](https://gi
 
 Installation notes:
 
-* Many Giu components (including all inputs) require that you **include the `<Floats />` component at (or near) the root level of your React tree**. No props are required. If you forget it, you'll see a warning in the console and the components will not work correctly. Other components you might need to add, depending on whether you use them: `<Modals />`, `<Notifications />`, `<Hints />`. More about them below.
+* Many Giu components (including all inputs) require that you **include `<Floats />` at (or near) the root level of your React tree**. No props are required. If you forget it, you'll see a warning in the console and those components will not work correctly. Other components you might want to add (if you use them): `<Modals />`, `<Notifications />`, `<Hints />`. More about them below.
 
 * Why is *moment* part of `peerDependencies` and not `dependencies`? For i18n reasons: we want to make sure the user's `moment` object and the one used internally by Giu are exactly the same, so that `DateInput`'s strings and other locale-specific attributes (e.g. first day of the week) are shown correctly. If the version specified by the user and by Giu were incompatible, we would end up with two different `moment` objects.
 
@@ -145,7 +146,7 @@ Enabling additional validators is easy:
 
 Here is the list of predefined validators:
 
-[[[./src/gral/validators.js]]]
+[[[./packages/giu/src/gral/validators.js]]]
 
 As we saw above, some of these validators are automatically enabled for certain components, e.g. `isDate()` in DateInputs and `isNumber()` in NumberInputs. However, you can include them in your `validators` list for customisation (e.g. i18n), as you'll see next.
 
@@ -275,13 +276,13 @@ Tasks 2 and 3 above are managed via a *pseudo-imperative* API, the `cmds` prop, 
 
 *Note: out of the box, Textarea resizes automatically as needed. You can limit its maximum height by adding a `style` prop: e.g. `style={{ maxHeight: 100 }}`*
 
-[[[./src/inputs/textNumberRangeInput.js]]]
+[[[./packages/giu/src/inputs/textNumberRangeInput.js]]]
 
 ### Checkbox
 
 [[[demo:checkboxes]]]
 
-[[[./src/inputs/checkbox.js]]]
+[[[./packages/giu/src/inputs/checkbox.js]]]
 
 ### DateInput
 [[[*
@@ -295,7 +296,7 @@ If you use [*moment*](https://github.com/moment/moment), your date picker and da
 ]]]
 [[[demo:date-inputs]]]
 
-[[[./src/inputs/dateInput.js]]]
+[[[./packages/giu/src/inputs/dateInput.js]]]
 
 ### Select
 [[[*
@@ -307,13 +308,13 @@ Shown below are some examples of Select and its features: `native` and custom (`
 ]]]
 [[[demo:selects]]]
 
-[[[./src/inputs/select.js]]]
+[[[./packages/giu/src/inputs/select.js]]]
 
 ### RadioGroup
 
 [[[demo:radio-groups]]]
 
-[[[./src/inputs/radioGroup.js]]]
+[[[./packages/giu/src/inputs/radioGroup.js]]]
 
 ### ColorInput
 [[[*
@@ -323,13 +324,19 @@ Shown below are some examples of ColorInput and its features: inline and drop-do
 ]]]
 [[[demo:color-inputs]]]
 
-[[[./src/inputs/colorInput.js]]]
+[[[./packages/giu/src/inputs/colorInput.js]]]
 
 ### FileInput
 
 [[[demo:file-inputs]]]
 
-[[[./src/inputs/fileInput.js]]]
+[[[./packages/giu/src/inputs/fileInput.js]]]
+
+## DataTable
+
+[[[./packages/giu/src/components/dataTable.js]]]
+
+[[[./packages/giu/src/components/dataTableRow.js]]]
 
 ## DropDownMenu
 [[[*
@@ -337,7 +344,7 @@ Shown below are some examples of ColorInput and its features: inline and drop-do
 ]]]
 [[[demo:drop-down-menus]]]
 
-[[[./src/components/dropDownMenu.js]]]
+[[[./packages/giu/src/components/dropDownMenu.js]]]
 
 ## Modals
 [[[*
@@ -345,7 +352,9 @@ Shown below are some examples of ColorInput and its features: inline and drop-do
 ]]]
 [[[demo:modals]]]
 
-[[[./src/components/modals.js]]]
+[[[./packages/giu/src/components/modals.js]]]
+
+[[[./packages/giu/src/components/modalTypes.js]]]
 
 ## Notifications
 [[[*
@@ -353,9 +362,9 @@ Shown below are some examples of ColorInput and its features: inline and drop-do
 ]]]
 [[[demo:notifications]]]
 
-[[[./src/components/notifications.js]]]
+[[[./packages/giu/src/components/notifications.js]]]
 
-[[[./src/components/notification.js]]]
+[[[./packages/giu/src/components/notificationTypes.js]]]
 
 ## Hint screens
 
@@ -368,7 +377,13 @@ certain part of your application or performs an action for the first time.
 ]]]
 [[[demo:hints]]]
 
-[[[./src/components/hints.js]]]
+[[[./packages/giu/src/components/hints.js]]]
+
+[[[./packages/giu/src/components/hintScreen.js]]]
+
+[[[./packages/giu/src/components/hintLabel.js]]]
+
+[[[./packages/giu/src/components/hintArrow.js]]]
 
 
 ## Tiny little things
@@ -377,13 +392,13 @@ certain part of your application or performs an action for the first time.
 
 [[[demo:buttons]]]
 
-[[[./src/components/button.js]]]
+[[[./packages/giu/src/components/button.js]]]
 
 ### Icon and Spinner
 
 [[[demo:icons]]]
 
-[[[./src/components/icon.js]]]
+[[[./packages/giu/src/components/icon.js]]]
 
 `Spinner` is a convenient shortcut for an `Icon` that, well, spins.
 
@@ -391,13 +406,13 @@ certain part of your application or performs an action for the first time.
 
 [[[demo:large-messages]]]
 
-[[[./src/components/largeMessage.js]]]
+[[[./packages/giu/src/components/largeMessage.js]]]
 
 ### Progress
 
 [[[demo:progress]]]
 
-[[[./src/components/progress.js]]]
+[[[./packages/giu/src/components/progress.js]]]
 
 
 ## Higher-order components (HOCs)
@@ -421,7 +436,7 @@ export default hoverable(MyReactComponent);
 
 [[[demo:hoverable]]]
 
-[[[./src/hocs/hoverable.js]]]
+[[[./packages/giu/src/hocs/hoverable.js]]]
 
 
 ## Helpers
@@ -430,17 +445,17 @@ You can find here a wide variety of helper functions, from the very simple (`can
 
 ### DOM node visibility helpers
 
-[[[./src/gral/visibility.js]]]
+[[[./packages/giu/src/gral/visibility.js]]]
 
 ### Style helpers
 
-[[[./src/gral/styles.js]]]
+[[[./packages/giu/src/gral/styles.js]]]
 
 ### Miscellaneous helpers
 
-[[[./src/gral/helpers.js]]]
+[[[./packages/giu/src/gral/helpers.js]]]
 
-[[[./src/gral/constants.js]]]
+[[[./packages/giu/src/gral/constants.js]]]
 
 
 ## [Changelog](https://github.com/guigrpa/giu/blob/master/CHANGELOG.md)
@@ -448,7 +463,7 @@ You can find here a wide variety of helper functions, from the very simple (`can
 
 ## License (MIT)
 
-Copyright (c) [Guillermo Grau Panea](https://github.com/guigrpa) 2016
+Copyright (c) [Guillermo Grau Panea](https://github.com/guigrpa) 2016-present
 
 Permission is hereby granted, free of charge, to any person obtaining a copy of this software and associated documentation files (the "Software"), to deal in the Software without restriction, including without limitation the rights to use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies of the Software, and to permit persons to whom the Software is furnished to do so, subject to the following conditions:
 

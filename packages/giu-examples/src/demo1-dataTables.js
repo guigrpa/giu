@@ -1,17 +1,29 @@
+// @flow
+
 /* eslint-disable no-console, no-alert, max-len */
 /* eslint-disable react/prop-types, react/no-multi-comp, react/jsx-no-bind, react/jsx-boolean-value */
-/* eslint-disable react/prefer-stateless-function */
-import React                from 'react';
-import faker                from 'faker';
-import { merge, setIn }     from 'timm';
-import sample               from 'lodash/sample';
+/* eslint-disable react/prefer-stateless-function, react/no-string-refs */
+
+import React from 'react';
+import faker from 'faker';
+import { merge, setIn } from 'timm';
+import sample from 'lodash/sample';
 import {
-  DataTable, SORT_MANUALLY,
-  Textarea, Checkbox, TextInput, Button, Spinner, Select, Icon, Modal,
-  bindAll,
-  flexContainer, flexItem,
+  DataTable,
+  SORT_MANUALLY,
+  Textarea,
+  Checkbox,
+  TextInput,
+  Button,
+  Spinner,
+  Select,
+  Icon,
+  Modal,
+  flexContainer,
+  flexItem,
   COLORS,
 } from 'giu';
+import type { DataTableColumn } from 'giu/lib/components/dataTableRow';
 import { ExampleLabel, exampleStyle } from './demo1-common';
 
 const DEBUG = false && process.env.NODE_ENV !== 'production';
@@ -59,7 +71,7 @@ const DATA_TABLE_COLS = [
     flexGrow: 1,
     minWidth: 100,
     // render: ({ item, id, attr, onChange, onMayHaveChangedHeight }) =>
-    render: ({ item, id, attr, onChange }) =>
+    render: ({ item, id, attr, onChange }) => (
       <Textarea
         value={item.notes}
         onChange={(ev, value) => onChange(id, attr, value)}
@@ -69,7 +81,8 @@ const DATA_TABLE_COLS = [
           marginBottom: -2,
         }}
         skipTheme
-      />,
+      />
+    ),
     sortable: false,
     filterable: false,
   },
@@ -78,11 +91,12 @@ const DATA_TABLE_COLS = [
     labelLevel: 1,
     label: () => (curLang === 'es' ? 'Confirmado' : 'Confirmed'),
     minWidth: 30,
-    render: ({ item, id, attr, onChange }) =>
+    render: ({ item, id, attr, onChange }) => (
       <Checkbox
         value={item.confirmed}
         onChange={(ev, value) => onChange(id, attr, value)}
-      />,
+      />
+    ),
   },
   {
     attr: 'phone',
@@ -91,8 +105,57 @@ const DATA_TABLE_COLS = [
   },
 ];
 
+const DATA_TABLE_ALT_LAYOUT_COLS = [
+  {
+    attr: 'allDetails',
+    label: () => (curLang === 'es' ? 'Detalles' : 'Details'),
+    flexGrow: 1,
+    minWidth: 100,
+    render: ({ item, id, onChange }) => (
+      <div>
+        <div>
+          <b>{curLang === 'es' ? 'Nombre:' : 'Name:'}</b>{' '}{item.name}
+        </div>
+        <div>
+          <div>
+            <b>{curLang === 'es' ? 'Teléfono' : 'Phone'}</b>
+            {' '}
+            {item.phone}
+            {' '}
+            (
+            {item.confirmed
+              ? curLang === 'es' ? 'Confirmado' : 'Confirmed'
+              : curLang === 'es' ? 'No confirmado' : 'Unconfirmed'}
+            )
+          </div>
+        </div>
+        <div>
+          <Textarea
+            value={item.notes}
+            onChange={(ev, value) => onChange(id, 'notes', value)}
+            style={{
+              color: 'black',
+              backgroundColor: 'rgba(255, 255, 255, 0.6)',
+              marginBottom: -2,
+            }}
+            skipTheme
+          />
+        </div>
+      </div>
+    ),
+    sortable: false,
+    rawValue: ({ name, phone, confirmed, notes }) => ({
+      name,
+      phone,
+      confirmed,
+      notes,
+    }),
+    filterValue: o => `${o.name} ${o.phone}`,
+  },
+];
+
 const manualSortColLabel = () =>
-  (curLang === 'es' ? 'Ordenar manualmente' : 'Sort manually');
+  curLang === 'es' ? 'Ordenar manualmente' : 'Sort manually';
 
 const FetchRowComponent = () => (
   <div style={{ padding: '5px 10px', backgroundColor: 'gray', color: 'white' }}>
@@ -101,28 +164,24 @@ const FetchRowComponent = () => (
 );
 
 class DevelopmentExample extends React.Component {
-  constructor(props) {
-    super(props);
+  commonCellProps: Object;
+  selectedIds: ?Array<string>;
+
+  constructor() {
+    super();
     const numItems = 0;
     // this.alwaysRenderIds = ['0', '1', '3'];
     this.state = {
-      dataTableKey: 1,        // replace key with new one when we have initial data
-      numItems,               // number of total items
+      dataTableKey: 1, // replace key with new one when we have initial data
+      numItems, // number of total items
       itemsById: {},
       shownIds: [],
-      numShownIds: 0,         // number of shown items (depending on filter)
+      numShownIds: 0, // number of shown items (depending on filter)
       filterValue: '',
-      fFetching: true,        // initially fetching...
+      fFetching: true, // initially fetching...
+      fAltLayout: false,
     };
-    bindAll(this, [
-      'fetchMore',
-      'logArgs',
-      'onChange',
-      'onChangeShownIds',
-    ]);
-    this.commonCellProps = {
-      onChange: this.onChange,
-    };
+    this.commonCellProps = { onChange: this.onChange };
   }
 
   componentDidMount() {
@@ -134,7 +193,8 @@ class DevelopmentExample extends React.Component {
       this.setState({
         dataTableKey: 2,
         numItems,
-        itemsById, shownIds,
+        itemsById,
+        shownIds,
         numShownIds: numItems,
         fFetching: false,
       });
@@ -144,13 +204,17 @@ class DevelopmentExample extends React.Component {
   render() {
     if (DEBUG) return null;
     const { lang } = this.props;
+    const { fAltLayout } = this.state;
     curLang = lang;
+    const otherProps = {};
+    if (fAltLayout) otherProps.sortBy = SORT_MANUALLY;
     return (
       <div>
         {this.renderControls()}
-        <DataTable key={this.state.dataTableKey}
+        <DataTable
+          key={this.state.dataTableKey}
           itemsById={this.state.itemsById}
-          cols={DATA_TABLE_COLS}
+          cols={fAltLayout ? DATA_TABLE_ALT_LAYOUT_COLS : DATA_TABLE_COLS}
           lang={lang}
           shownIds={this.state.shownIds}
           onChangeShownIds={this.onChangeShownIds}
@@ -165,11 +229,13 @@ class DevelopmentExample extends React.Component {
           collectionName="complexDataTableExample"
           onChangeSort={this.logArgs}
           selectedIds={this.selectedIds}
-          allowSelect multipleSelection
+          allowSelect
+          multipleSelection
           onChangeSelection={this.logArgs}
           accentColor="lightgray"
           styleHeader={style.header}
           styleRow={style.row}
+          {...otherProps}
         />
       </div>
     );
@@ -177,14 +243,29 @@ class DevelopmentExample extends React.Component {
 
   renderControls() {
     return (
-      <div style={flexContainer('row', { alignItems: 'baseline', marginTop: 4, marginBottom: 4 })}>
+      <div
+        style={flexContainer('row', {
+          alignItems: 'baseline',
+          marginTop: 4,
+          marginBottom: 4,
+        })}
+      >
         <div>
           <TextInput
             onChange={(ev, filterValue) => this.setState({ filterValue })}
             placeholder="Quick find"
           />
           {' '}
-          <Button onClick={() => this.selectRandomRow()}>Select random row</Button>
+          <Button onClick={() => this.selectRandomRow()}>
+            Select random row
+          </Button>
+          <Checkbox
+            label={
+              curLang === 'es' ? 'Layout alternativo' : 'Alternative layout'
+            }
+            value={this.state.fAltLayout}
+            onChange={(ev, fAltLayout) => this.setState({ fAltLayout })}
+          />
         </div>
         <div style={flexItem(1)} />
         <div>Items: {this.state.numShownIds}</div>
@@ -198,7 +279,7 @@ class DevelopmentExample extends React.Component {
     this.forceUpdate();
   }
 
-  fetchMore(id) {
+  fetchMore = id => {
     console.log(`Fetch items after ${id}`);
     if (this.state.numItems > 400) return;
     this.setState({ fFetching: true });
@@ -213,18 +294,20 @@ class DevelopmentExample extends React.Component {
         fFetching: false,
       });
     }, 800);
-  }
+  };
 
-  onChange(id, attr, value) {
+  onChange = (id, attr, value) => {
     const itemsById = setIn(this.state.itemsById, [id, attr], value);
     this.setState({ itemsById });
-  }
+  };
 
-  onChangeShownIds(shownIds) {
+  onChangeShownIds = shownIds => {
     this.setState({ numShownIds: shownIds.length });
-  }
+  };
 
-  logArgs(...args) { console.log(...args); }
+  logArgs = (...args) => {
+    console.log(...args);
+  };
 }
 
 const style = {
@@ -298,8 +381,13 @@ const COLS = [
 ];
 
 class CustomSortPaginateExample extends React.Component {
-  constructor(props) {
-    super(props);
+  itemsById: Object;
+  numPages: number;
+  shownIds: Array<string>;
+  state: { sortBy: ?string, page: number };
+
+  constructor() {
+    super();
     this.itemsById = sampleDataTableItems(NUM_ITEMS, 0);
     this.numPages = Math.ceil(NUM_ITEMS / ITEMS_PER_PAGE);
     this.state = {
@@ -316,7 +404,8 @@ class CustomSortPaginateExample extends React.Component {
     return (
       <div>
         {this.renderControls(sortBy, page)}
-        <DataTable ref="dataTable"
+        <DataTable
+          ref="dataTable"
           itemsById={this.itemsById}
           cols={COLS}
           shownIds={this.shownIds}
@@ -335,7 +424,9 @@ class CustomSortPaginateExample extends React.Component {
 
   renderControls(sortBy, page) {
     return (
-      <div style={flexContainer('row', { alignItems: 'baseline', marginTop: 4 })}>
+      <div
+        style={flexContainer('row', { alignItems: 'baseline', marginTop: 4 })}
+      >
         <div>
           Sort by
           {' '}
@@ -360,7 +451,11 @@ class CustomSortPaginateExample extends React.Component {
             skipTheme
           />
           {' '}
-          <b style={{ display: 'inline-block', width: 25, textAlign: 'center' }}>{page + 1}</b>
+          <b
+            style={{ display: 'inline-block', width: 25, textAlign: 'center' }}
+          >
+            {page + 1}
+          </b>
           {' '}
           <Icon
             icon="arrow-right"
@@ -436,8 +531,13 @@ const style2 = {
 // Index
 // -----------------------------------------------
 class DataTableExample extends React.PureComponent {
-  constructor(props) {
-    super(props);
+  itemsById: Object;
+  shownIds: Array<string>;
+  cols: Array<DataTableColumn>;
+  state: { fModal: boolean };
+
+  constructor() {
+    super();
     this.state = { fModal: false };
     this.itemsById = sampleDataTableItems(1000, 0);
     this.shownIds = Object.keys(this.itemsById);
@@ -457,22 +557,36 @@ class DataTableExample extends React.PureComponent {
           clipboard, manual sort with drag-and-drop, LocalStorage persistence...)
         </ExampleLabel>
         <p>
-          DataTable is based on the <b>VirtualScroller</b> component, whose primary function is
+          DataTable is based on the
+          {' '}
+          <b>VirtualScroller</b>
+          {' '}
+          component, whose primary function is
           to render only visible rows. These rows can have uniform and well-known heights (at the simplest
           end of the spectrum), uniform but unknown, and also dynamic: different for every row, and even
           changing in time (as a result of passed-down props or their own intrinsic state).
         </p>
 
-        <p><b>Complete example</b>: editable, filtered, internationalised, <i>inifinite</i>
-        (fetch more items by scrolling down to the bottom of the list),
-        custom styles, etc.</p>
+        <p>
+          <b>Complete example</b>
+          : editable, filtered, internationalised,
+          {' '}
+          <i>inifinite</i>
+          (fetch more items by scrolling down to the bottom of the list),
+          custom styles, etc.
+        </p>
         <DevelopmentExample lang={this.props.lang} />
 
-        <p><b>Example with custom sort and pagination</b>: this one is also ultra-fast, thanks to
-        having uniform heights:</p>
+        <p>
+          <b>Example with custom sort and pagination</b>
+          : this one is also ultra-fast, thanks to
+          having uniform heights:
+        </p>
         <CustomSortPaginateExample />
 
-        <p><b>Simplest example</b>: leave everything to the DataTable component</p>
+        <p>
+          <b>Simplest example</b>: leave everything to the DataTable component
+        </p>
         <SimpleExample />
 
         <p>

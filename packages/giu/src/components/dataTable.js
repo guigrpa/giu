@@ -1,40 +1,33 @@
 // @flow
 
 /* eslint-disable no-console */
-import {
-  merge,
-  removeAt, addLast,
-}                           from 'timm';
-import React                from 'react';
+import { merge, removeAt, addLast } from 'timm';
+import React from 'react';
 import {
   SortableContainer as sortableContainer,
   SortableElement as sortableElement,
   SortableHandle as sortableHandle,
   arrayMove,
-}                           from 'react-sortable-hoc';
+} from 'react-sortable-hoc';
 import VirtualScroller, { DEFAULT_ROW } from './virtualScroller';
 import type { ScrollIntoViewOptions } from '../gral/visibility';
-import { COLORS, KEYS }     from '../gral/constants';
-import { isDark }           from '../gral/styles';
-import {
-  cancelEvent,
-  stopPropagation,
-  simplifyString,
-}                           from '../gral/helpers';
+import { COLORS, KEYS } from '../gral/constants';
+import { isDark } from '../gral/styles';
+import { cancelEvent, stopPropagation, simplifyString } from '../gral/helpers';
 import { localGet, localSet } from '../gral/storage';
 import {
   DataTableHeader,
   DataTableRow,
   DataTableFetchingRow,
-}                           from './dataTableRow';
+} from './dataTableRow';
 import type { DataTableColumn } from './dataTableRow';
-import FocusCapture         from './focusCapture';
-import Icon                 from './icon';
+import FocusCapture from './focusCapture';
+import Icon from './icon';
 import './dataTable.css';
 
 const FETCHING_MORE_ITEMS_ROW = '__FETCHING_MORE_ITEMS_ROW__';
 const SORT_MANUALLY = '__SORT_MANUALLY__';
-const createManualSortCol = (label) => ({
+const createManualSortCol = label => ({
   attr: SORT_MANUALLY,
   sortable: true,
   sortableDescending: false,
@@ -54,69 +47,105 @@ const FOCUSABLE = ['input', 'textarea', 'select'];
 const DEFER_SCROLL_INTO_VIEW = 700;
 const DEBUG = false && process.env.NODE_ENV !== 'production';
 
-const DragHandle = sortableHandle(({ disabled }) =>
-  <Icon
-    icon="bars"
-    disabled={disabled}
-    style={style.dragHandle}
-    skipTheme
-  />
-);
+const DragHandle = sortableHandle(({ disabled }) => (
+  <Icon icon="bars" disabled={disabled} style={style.dragHandle} skipTheme />
+));
 
 const SortableDataTableRow = sortableElement(DataTableRow);
-const SortableVirtualScroller = sortableContainer(VirtualScroller, { withRef: true });
+const SortableVirtualScroller = sortableContainer(VirtualScroller, {
+  withRef: true,
+});
 
 // ===============================================================
 // Component
 // ===============================================================
-type Props = {
-  itemsById: Object,
-  cols: Array<DataTableColumn>,
-  lang?: string,
+/* --
+A full-featured table supporting filtering, single/multiple selection,
+pagination, infinite scrolling, sorting, drag and drop, clipboard events,
+localStorage, etc.
 
-  shownIds: Array<string>,
+Following Giu's philosophy, DataTable allows you to choose whether you
+want to control individual features yourself, or you're OK with the
+default behaviour. In many cases, you can set initial props (e.g.
+`sortBy`, `sortDescending`, `selectedIds`, `manuallyOrderedIds`)
+and then leave Giu the gruntwork of managing all the state. In order
+to indicate this, just don't modify any of those props yourself.
+Alternatively, if you want to manage state yourself, use the provided
+callbacks (`onChangeSort`, `onChangeSelection`, `onChangeManualOrder`)
+and update your props accordingly.
+
+DataTable improves performance by only rendering the rows that are
+visible. Rows can have uniform and well-known heights
+(at the simplest end of the spectrum), uniform but unknown,
+and also dynamic: different for every row, and even changing
+in time (as a result of passed-down props or their own intrinsic state).
+-- */
+/* eslint-disable no-unused-vars, max-len */
+/* -- START_DOCS -- */
+type PublicProps = {
+  // Basic
+  // -----
+  itemsById?: ?Object, // Rows, keyed by id (default: {})
+  cols: Array<DataTableColumn>, // Column configuration objects
+  lang?: string, // Used to force-refresh when language changes
+
+  // Set of rows to be shown (before filtering)
+  // ------------------------------------------
+  shownIds?: ?Array<string>, // Row ids to be shown (default: [], no rows)
   onChangeShownIds?: (shownIds: Array<string>) => void,
-  alwaysRenderIds?: Array<string>,
-  commonCellProps?: ?Object,
+  alwaysRenderIds?: Array<string>, // Render these rows even when not visible (e.g. editing)
+  commonCellProps?: ?Object, // Passed to all column `render` functions
 
   // Filtering
-  filterValue: string,
+  // ---------
+  filterValue?: string, // (default: '')
 
   // Sorting
-  headerClickForSorting: boolean,
+  // -------
+  headerClickForSorting?: boolean, // (default: true)
   onChangeSort?: (options: {
     sortBy: ?string,
     sortDescending: boolean,
-  }) => void,  // N/A if (!headerClickForSorting)
-  sortBy?: ?string,
+  }) => void,
+  sortBy?: ?string, // Column, identified by `attr`
   sortDescending?: boolean,
 
   // Manual sorting
-  allowManualSorting: boolean,  // dragging possible (adds dragging col)
+  allowManualSorting?: boolean, // Add manual sort column (default: true)
   manuallyOrderedIds?: Array<string>,
   onChangeManualOrder?: (manuallyOrderedIds: ?Array<string>) => void,
-    // N/A if (!allowManualSorting)
-  collectionName?: string,
-  manualSortColLabel: string | () => string,
+  manualSortColLabel?: string | (() => string), // Custom column label (default: 'Sort manually')
 
   // Selection
-  selectedIds?: Array<string>,
-  allowSelect: boolean,
-  multipleSelection: boolean,
+  // ---------
+  selectedIds?: ?Array<string>,
+  allowSelect?: boolean,
+  multipleSelection?: boolean,
   onChangeSelection?: (selectedIds: Array<string>) => void,
   onClipboardAction?: (ev: SyntheticClipboardEvent, json: string) => void,
 
   // Fetching
-  fetchMoreItems?: (lastRowId: string) => void,
-  fetching: boolean,
-  FetchRowComponent: typeof(DataTableFetchingRow),
+  // --------
+  // Set fetchMoreItems if you want DataTable to notify you when the last row is rendered
+  // (note: disabled when the filterValue prop is not empty)
+  fetchMoreItems?: (lastRowId: string) => void, // Called when the last row is rendered
+  fetching?: boolean, // When set, the FetchRowComponent will be shown
+  FetchRowComponent?: ReactClass<*>,
+
+  // LocalStorage
+  // ------------
+  // Set collectionName if you want DataTable to persist some user prefs to localStorage:
+  // sort criteria, manual order, selection...
+  collectionName?: string,
 
   // Styles
-  height: number,
-  width?: number,
-  rowHeight?: number,   // auto-calculated if unspecified
-  uniformRowHeight?: boolean,
-  accentColor: string,
+  // ------
+  height?: number, // Body height (default: 200)
+  width?: number, // (default: default div block behaviour)
+  rowHeight?: number, // Auto-calculated if unspecified
+  uniformRowHeight?: boolean, // Are rows of the same height (even if unknown a priori)? (default: false)
+  showHeader?: boolean, // (default: true)
+  accentColor?: string, // Used for selections
   style?: Object,
   styleHeader?: Object,
   styleRow?: Object,
@@ -126,28 +155,51 @@ type Props = {
   numRowsInitialRender?: number,
   maxRowsToRenderInOneGo?: number,
 };
+/* -- END_DOCS -- */
+/* eslint-enable no-unused-vars, max-len */
+
+type DefaultProps = {
+  itemsById: Object,
+  shownIds: Array<string>,
+  filterValue: string,
+  headerClickForSorting: boolean,
+  allowManualSorting: boolean,
+  manualSortColLabel: string | (() => string),
+  allowSelect: boolean,
+  multipleSelection: boolean,
+  fetching: boolean,
+  FetchRowComponent: ReactClass<*>,
+  height: number,
+  accentColor: string,
+};
+
+type Props = {
+  /* :: ...$Exact<PublicProps>, */
+  /* :: ...$Exact<DefaultProps>, */
+};
 
 class DataTable extends React.PureComponent {
   props: Props;
-  static defaultProps = {
-    itemsById:              {},
-    shownIds:               ([]: Array<string>),
+  static defaultProps: DefaultProps = {
+    itemsById: {},
+    shownIds: ([]: Array<string>),
 
-    filterValue:            '',
+    filterValue: '',
 
-    headerClickForSorting:  true,
+    headerClickForSorting: true,
 
-    allowManualSorting:     true,
-    manualSortColLabel:     'Sort manually',
+    allowManualSorting: true,
+    manualSortColLabel: 'Sort manually',
 
-    allowSelect:            true,
-    multipleSelection:      true,
+    allowSelect: true,
+    multipleSelection: true,
 
-    fetching:               false,
-    FetchRowComponent:      DataTableFetchingRow,
+    fetching: false,
+    FetchRowComponent: DataTableFetchingRow,
 
-    height:                 200,
-    accentColor:            COLORS.accent,
+    showHeader: true,
+    height: 200,
+    accentColor: COLORS.accent,
   };
   cols: Array<DataTableColumn>;
   maxLabelLevel: number;
@@ -177,7 +229,12 @@ class DataTable extends React.PureComponent {
     this.recalcCols(props);
     // State initialised by outer props, then free to change by default
     this.filterValue = props.filterValue;
-    ['sortBy', 'sortDescending', 'selectedIds', 'manuallyOrderedIds'].forEach((key) => {
+    [
+      'sortBy',
+      'sortDescending',
+      'selectedIds',
+      'manuallyOrderedIds',
+    ].forEach(key => {
       // $FlowFixMe
       this[key] = undefined;
       if (props[key] != null) {
@@ -214,16 +271,21 @@ class DataTable extends React.PureComponent {
       cols,
       shownIds,
       filterValue,
-      sortBy, sortDescending,
+      sortBy,
+      sortDescending,
       collectionName,
-      allowManualSorting, manuallyOrderedIds,
+      allowManualSorting,
+      manuallyOrderedIds,
       selectedIds,
       FetchRowComponent,
       accentColor,
     } = nextProps;
     let fRecalcShownIds = false;
     if (itemsById !== this.props.itemsById) fRecalcShownIds = true;
-    if (cols !== this.props.cols || allowManualSorting !== this.props.allowManualSorting) {
+    if (
+      cols !== this.props.cols ||
+      allowManualSorting !== this.props.allowManualSorting
+    ) {
       this.recalcCols(nextProps);
       fRecalcShownIds = true;
     }
@@ -232,16 +294,27 @@ class DataTable extends React.PureComponent {
       this.filterValue = filterValue;
       fRecalcShownIds = true;
     }
-    if (sortBy !== this.props.sortBy || sortDescending !== this.props.sortDescending) {
+    if (
+      sortBy !== this.props.sortBy ||
+      sortDescending !== this.props.sortDescending
+    ) {
       this.sortBy = sortBy;
       this.sortDescending = !!sortDescending;
       this.localStorageSave(collectionName, 'sortBy', this.sortBy);
-      this.localStorageSave(collectionName, 'sortDescending', this.sortDescending);
+      this.localStorageSave(
+        collectionName,
+        'sortDescending',
+        this.sortDescending,
+      );
       fRecalcShownIds = true;
     }
     if (manuallyOrderedIds !== this.props.manuallyOrderedIds) {
       this.manuallyOrderedIds = manuallyOrderedIds;
-      this.localStorageSave(collectionName, 'manuallyOrderedIds', this.manuallyOrderedIds);
+      this.localStorageSave(
+        collectionName,
+        'manuallyOrderedIds',
+        this.manuallyOrderedIds,
+      );
       if (sortBy === SORT_MANUALLY) fRecalcShownIds = true;
     }
     if (fRecalcShownIds) this.recalcShownIds(nextProps);
@@ -260,7 +333,10 @@ class DataTable extends React.PureComponent {
 
   recalcCols(props: Props) {
     if (props.allowManualSorting) {
-      this.cols = [createManualSortCol(props.manualSortColLabel), ...props.cols];
+      this.cols = [
+        createManualSortCol(props.manualSortColLabel),
+        ...props.cols,
+      ];
     } else {
       this.cols = props.cols;
     }
@@ -282,14 +358,17 @@ class DataTable extends React.PureComponent {
   recalcRowComponents(props: Props) {
     this.RowComponents = {
       [FETCHING_MORE_ITEMS_ROW]: props.FetchRowComponent,
-      [DEFAULT_ROW]: props.allowManualSorting ? SortableDataTableRow : DataTableRow,
+      [DEFAULT_ROW]: props.allowManualSorting
+        ? SortableDataTableRow
+        : DataTableRow,
     };
   }
 
   recalcColors(props: Props) {
     const { accentColor } = props;
     this.selectedBgColor = accentColor;
-    this.selectedFgColor = COLORS[isDark(accentColor) ? 'lightText' : 'darkText'];
+    this.selectedFgColor =
+      COLORS[isDark(accentColor) ? 'lightText' : 'darkText'];
   }
 
   recalcShownIds(props: Props) {
@@ -304,7 +383,10 @@ class DataTable extends React.PureComponent {
     if (this.props.onChangeShownIds && shownIds !== prevShownIds) {
       this.props.onChangeShownIds(shownIds);
     }
-    if (selectedIds !== prevSelectedIds && !this.fPendingInitialScrollIntoView) {
+    if (
+      selectedIds !== prevSelectedIds &&
+      !this.fPendingInitialScrollIntoView
+    ) {
       this.scrollSelectedIntoView();
     }
     this.prevShownIds = shownIds;
@@ -314,7 +396,9 @@ class DataTable extends React.PureComponent {
   // ==========================================
   // Imperative API
   // ==========================================
-  focus() { this.refFocusCapture && this.refFocusCapture.focus(); }
+  focus() {
+    this.refFocusCapture && this.refFocusCapture.focus();
+  }
   // scrollToTop: see below
 
   // ===============================================================
@@ -323,7 +407,7 @@ class DataTable extends React.PureComponent {
   render() {
     DEBUG && console.log('DataTable: rendering...');
 
-    const { lang, filterValue, allowManualSorting } = this.props;
+    const { lang, filterValue, allowManualSorting, showHeader } = this.props;
     const { cols, selectedIds, sortBy, sortDescending } = this;
 
     const fSortedManually = sortBy === SORT_MANUALLY;
@@ -331,7 +415,9 @@ class DataTable extends React.PureComponent {
     // Timm will make sure `this.commonRowProps` doesn't change unless
     // any of the merged properties changes.
     this.commonRowProps = merge(this.commonRowProps, {
-      cols, lang, selectedIds,
+      cols,
+      lang,
+      selectedIds,
       fSortedManually: allowManualSorting ? fSortedManually : undefined,
       commonCellProps: this.props.commonCellProps,
       onClick: this.props.allowSelect ? this.onClickRow : undefined,
@@ -343,32 +429,46 @@ class DataTable extends React.PureComponent {
     // Get the ordered list of IDs to be shown
     const shownIds = this.shownIds.slice();
     if (this.props.fetching) shownIds.push(FETCHING_MORE_ITEMS_ROW);
-    const ChosenVirtualScroller = allowManualSorting ? SortableVirtualScroller : VirtualScroller;
+    const ChosenVirtualScroller = allowManualSorting
+      ? SortableVirtualScroller
+      : VirtualScroller;
 
     return (
-      <div ref={(c) => { this.refOuter = c; }}
+      <div
+        ref={c => {
+          this.refOuter = c;
+        }}
         className={`giu-data-table ${this.fDragging ? 'dragging' : 'not-dragging'}`}
         onKeyDown={this.onKeyDown}
         onClick={this.onClickOuter}
         style={style.outer(this.props)}
       >
-        <FocusCapture registerRef={(c) => { this.refFocusCapture = c; }}
+        <FocusCapture
+          registerRef={c => {
+            this.refFocusCapture = c;
+          }}
           onCopy={this.onCopyCut}
           onCut={this.onCopyCut}
           onPaste={this.onPaste}
         />
-        <DataTableHeader
-          cols={cols}
-          lang={lang}  // to force-refresh when it changes
-          commonCellProps={this.props.commonCellProps}
-          maxLabelLevel={this.maxLabelLevel}
-          scrollbarWidth={this.scrollbarWidth}
-          sortBy={sortBy}
-          sortDescending={sortDescending}
-          onClick={this.props.headerClickForSorting ? this.onClickHeader : undefined}
-          style={this.props.styleHeader}
-        />
-        <ChosenVirtualScroller ref={(c) => { this.refVirtualScroller = c; }}
+        {showHeader &&
+          <DataTableHeader
+            cols={cols}
+            lang={lang} // to force-refresh when it changes
+            commonCellProps={this.props.commonCellProps}
+            maxLabelLevel={this.maxLabelLevel}
+            scrollbarWidth={this.scrollbarWidth}
+            sortBy={sortBy}
+            sortDescending={sortDescending}
+            onClick={
+              this.props.headerClickForSorting ? this.onClickHeader : undefined
+            }
+            style={this.props.styleHeader}
+          />}
+        <ChosenVirtualScroller
+          ref={c => {
+            this.refVirtualScroller = c;
+          }}
           itemsById={this.props.itemsById}
           shownIds={shownIds}
           alwaysRenderIds={this.props.alwaysRenderIds}
@@ -384,13 +484,11 @@ class DataTable extends React.PureComponent {
           estimatedMinRowHeight={this.props.estimatedMinRowHeight}
           numRowsInitialRender={this.props.numRowsInitialRender}
           maxRowsToRenderInOneGo={this.props.maxRowsToRenderInOneGo}
-
           // Sortable
           useDragHandle={allowManualSorting ? true : undefined}
           onSortStart={allowManualSorting ? this.onDragStart : undefined}
           onSortEnd={allowManualSorting ? this.onDragEnd : undefined}
           helperClass="giu-data-table-dragged-row"
-
           style={style.scroller}
         />
       </div>
@@ -412,9 +510,10 @@ class DataTable extends React.PureComponent {
         this.scrollPageUpDown(ev.which === KEYS.pageUp ? -1 : +1);
         cancelEvent(ev);
         break;
-      default: break;
+      default:
+        break;
     }
-  }
+  };
 
   // Except when clicking on an embedded focusable node, refocus on this table
   // Prevent bubbling of click events; they may reach Modals
@@ -425,20 +524,21 @@ class DataTable extends React.PureComponent {
     if (FOCUSABLE.indexOf(tagName.toLowerCase()) >= 0 && !disabled) return;
     this.focus();
     stopPropagation(ev);
-  }
+  };
 
   onRenderLastRow = (id: string) => {
     if (id === FETCHING_MORE_ITEMS_ROW) return;
     const { fetchMoreItems } = this.props;
     if (!fetchMoreItems) return;
     fetchMoreItems(id);
-  }
+  };
 
   onChangeScrollbarWidth = (scrollbarWidth: number) => {
     this.scrollbarWidth = scrollbarWidth;
-    DEBUG && console.log('DataTable: scrollbarWidth has changed. Re-rendering...');
+    DEBUG &&
+      console.log('DataTable: scrollbarWidth has changed. Re-rendering...');
     this.forceUpdate();
-  }
+  };
 
   onClickHeader = (attr: string) => {
     const { sortBy, sortDescending } = this;
@@ -447,7 +547,7 @@ class DataTable extends React.PureComponent {
     } else if (sortDescending) {
       this.changeSort(null, false);
     } else {
-      const colSpec = this.cols.find((o) => o.attr === attr);
+      const colSpec = this.cols.find(o => o.attr === attr);
       let fSortableDescending = colSpec ? colSpec.sortableDescending : true;
       if (fSortableDescending == null) fSortableDescending = true;
       if (fSortableDescending) {
@@ -456,23 +556,27 @@ class DataTable extends React.PureComponent {
         this.changeSort(null, false);
       }
     }
-  }
+  };
 
   onClickRow = (ev: SyntheticMouseEvent, id: string) => {
-    const fMultiSelect = (ev.metaKey || ev.ctrlKey) && this.props.multipleSelection;
+    const fMultiSelect =
+      (ev.metaKey || ev.ctrlKey) && this.props.multipleSelection;
     if (fMultiSelect) {
       this.selectToggleSingle(id);
     } else {
       this.selectSingle(id);
     }
-  }
+  };
 
   onDragStart = () => {
     this.fDragging = true;
     this.forceUpdate();
-  }
+  };
 
-  onDragEnd = ({ oldIndex, newIndex }: {
+  onDragEnd = ({
+    oldIndex,
+    newIndex,
+  }: {
     oldIndex: number,
     newIndex: number,
   }) => {
@@ -501,7 +605,7 @@ class DataTable extends React.PureComponent {
       this.fDragging = false;
       this.forceUpdate();
     });
-  }
+  };
 
   // ===============================================================
   // Clipboard
@@ -513,7 +617,7 @@ class DataTable extends React.PureComponent {
     if (this.props.onClipboardAction) {
       this.props.onClipboardAction(ev, json);
     }
-  }
+  };
 
   onPaste = (ev: SyntheticClipboardEvent) => {
     const json = ev.clipboardData.getData('text/plain');
@@ -521,18 +625,18 @@ class DataTable extends React.PureComponent {
     if (this.props.onClipboardAction) {
       this.props.onClipboardAction(ev, json);
     }
-  }
+  };
 
   getJsonForClipboard() {
     try {
       const { itemsById, cols } = this.props;
       const { selectedIds } = this;
       const allRowValues = {};
-      selectedIds.forEach((id) => {
+      selectedIds.forEach(id => {
         const rowValues = {};
         const item = itemsById[id];
         if (!item) return;
-        cols.forEach((col) => {
+        cols.forEach(col => {
           const { attr } = col;
           rowValues[attr] = col.rawValue ? col.rawValue(item) : item[attr];
         });
@@ -575,16 +679,24 @@ class DataTable extends React.PureComponent {
 
   selectToggleSingle(id: string) {
     const idx = this.selectedIds.indexOf(id);
-    this.changeSelectedIds(idx >= 0 ?
-      removeAt(this.selectedIds, idx) :
-      addLast(this.selectedIds, id));
+    this.changeSelectedIds(
+      idx >= 0
+        ? removeAt(this.selectedIds, idx)
+        : addLast(this.selectedIds, id),
+    );
   }
 
   changeSelectedIds(selectedIds: Array<string>) {
     this.selectedIds = selectedIds;
-    this.localStorageSave(this.props.collectionName, 'selectedIds', this.selectedIds);
+    this.localStorageSave(
+      this.props.collectionName,
+      'selectedIds',
+      this.selectedIds,
+    );
     this.forceUpdate();
-    if (this.props.onChangeSelection) this.props.onChangeSelection(this.selectedIds);
+    if (this.props.onChangeSelection) {
+      this.props.onChangeSelection(this.selectedIds);
+    }
   }
 
   // ===============================================================
@@ -604,7 +716,8 @@ class DataTable extends React.PureComponent {
     const refVirtualScroller = this.getVirtualScrollerRef();
     if (!refVirtualScroller) return;
     if (!this.selectedIds.length) return;
-    DEBUG && console.log(`DataTable: triggering a scrollIntoView... ${this.selectedIds.join(',')}`);
+    DEBUG &&
+      console.log(`DataTable: triggering a scrollIntoView... ${this.selectedIds.join(',')}`);
     refVirtualScroller.scrollIntoView(this.selectedIds[0], options);
   }
 
@@ -622,7 +735,7 @@ class DataTable extends React.PureComponent {
     if (!needle) return ids;
     needle = simplifyString(needle);
     const { itemsById } = props;
-    const cols = this.cols.filter((col) => col.filterable !== false);
+    const cols = this.cols.filter(col => col.filterable !== false);
     const numCols = cols.length;
     const filteredIds = [];
     for (let i = 0; i < ids.length; i++) {
@@ -631,10 +744,10 @@ class DataTable extends React.PureComponent {
       let fInclude = false;
       for (let k = 0; k < numCols; k++) {
         const col = cols[k];
-        let haystack = col.filterValue ?
-          col.filterValue(item) :
-          (col.rawValue ? col.rawValue(item) : item[col.attr]);
-        if (!haystack.toLowerCase) continue;
+        let haystack = col.filterValue
+          ? col.filterValue(item)
+          : col.rawValue ? col.rawValue(item) : item[col.attr];
+        if (haystack == null || !haystack.toLowerCase) continue;
         haystack = simplifyString(haystack);
         if (haystack.indexOf && haystack.indexOf(needle) >= 0) {
           fInclude = true;
@@ -669,15 +782,15 @@ class DataTable extends React.PureComponent {
       fChangedManualOrder = true;
       sortedIds = ids;
 
-    // In the general case, we do have a list of `manuallyOrderedIds`, but its set of IDs
-    // may differ from the `ids` list received as argument: `ids` may be filtered, it may be
-    // empty because the records have not been fetched yet, etc.
-    //
-    // The following algorithm makes sure that:
-    // - IDs that are both in `ids` and in `manuallyOrderedIds` are copies to the final list
-    // in the order defined by `manuallyOrderedIds`
-    // - All other IDs in the `ids` list (and *not* in `manuallyOrderedIds`) are appended
-    // to both the output list *and* the `manuallyOrderedIds`
+      // In the general case, we do have a list of `manuallyOrderedIds`, but its set of IDs
+      // may differ from the `ids` list received as argument: `ids` may be filtered, it may be
+      // empty because the records have not been fetched yet, etc.
+      //
+      // The following algorithm makes sure that:
+      // - IDs that are both in `ids` and in `manuallyOrderedIds` are copies to the final list
+      // in the order defined by `manuallyOrderedIds`
+      // - All other IDs in the `ids` list (and *not* in `manuallyOrderedIds`) are appended
+      // to both the output list *and* the `manuallyOrderedIds`
     } else {
       sortedIds = [];
 
@@ -708,9 +821,10 @@ class DataTable extends React.PureComponent {
     const { sortBy, sortDescending } = this;
     const { itemsById } = props;
     if (!sortBy) return ids;
-    const col = this.cols.find((o) => o.attr === sortBy);
+    const col = this.cols.find(o => o.attr === sortBy);
     if (!col) return ids;
-    const getSortValue = col.sortValue || col.rawValue || ((item) => item[sortBy]);
+    const getSortValue =
+      col.sortValue || col.rawValue || (item => item[sortBy]);
     const sortValues = {};
     for (let i = 0; i < ids.length; i++) {
       const id = ids[i];
@@ -736,20 +850,34 @@ class DataTable extends React.PureComponent {
   }
 
   changeSort(sortBy: ?string, sortDescending: boolean) {
-    if (sortBy === this.sortBy && sortDescending === this.sortDescending) return;
+    if (sortBy === this.sortBy && sortDescending === this.sortDescending) {
+      return;
+    }
     this.sortBy = sortBy;
     this.sortDescending = sortDescending;
     this.localStorageSave(this.props.collectionName, 'sortBy', this.sortBy);
-    this.localStorageSave(this.props.collectionName, 'sortDescending', this.sortDescending);
+    this.localStorageSave(
+      this.props.collectionName,
+      'sortDescending',
+      this.sortDescending,
+    );
     this.recalcShownIds(this.props);
     this.scrollToTop();
     this.forceUpdate();
-    if (this.props.onChangeSort) this.props.onChangeSort({ sortBy, sortDescending });
+    if (this.props.onChangeSort) {
+      this.props.onChangeSort({ sortBy, sortDescending });
+    }
   }
 
   manualOrderDidChange(props: Props) {
-    this.localStorageSave(props.collectionName, 'manuallyOrderedIds', this.manuallyOrderedIds);
-    if (props.onChangeManualOrder) props.onChangeManualOrder(this.manuallyOrderedIds);
+    this.localStorageSave(
+      props.collectionName,
+      'manuallyOrderedIds',
+      this.manuallyOrderedIds,
+    );
+    if (props.onChangeManualOrder) {
+      props.onChangeManualOrder(this.manuallyOrderedIds);
+    }
     // console.log(`New manual order: ${this.manuallyOrderedIds.join(', ')}`)
   }
 
@@ -767,10 +895,14 @@ class DataTable extends React.PureComponent {
 // Styles
 // ===============================================================
 const style = {
-  outer: ({ style: baseStyle }) => merge({
-    maxWidth: '100%',
-    overflowX: 'hidden',
-  }, baseStyle),
+  outer: ({ style: baseStyle }) =>
+    merge(
+      {
+        maxWidth: '100%',
+        overflowX: 'hidden',
+      },
+      baseStyle,
+    ),
   dragHandle: {
     marginLeft: 4,
     marginRight: 3,
@@ -785,6 +917,4 @@ const style = {
 // Public API
 // ===============================================================
 export default DataTable;
-export {
-  SORT_MANUALLY,
-};
+export { SORT_MANUALLY };

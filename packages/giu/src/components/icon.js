@@ -11,22 +11,9 @@ const SPINNER_ICON = 'circle-o-notch';
 // ==========================================
 // Component
 // ==========================================
-/* --
-A wrapper for Font Awesome icons. Props:
-
-```js
-type Props = {
-  icon: string,  // e.g. `ambulance`, `cogs`...
-  size?: 'lg' | '2x' | '3x' | '4x' | '5x',
-  fixedWidth?: boolean,
-  spin?: boolean,
-  disabled?: boolean,
-  style?: Object,  // merged with the `i` element style
-  skipTheme?: boolean,
-  // All other props are passed through to the `i` element
-};
-```
--- */
+// -- A wrapper for Font Awesome icons.
+// --
+// -- START_DOCS
 type Props = {
   icon: string, // e.g. `ambulance`, `cogs`...
   size?: 'lg' | '2x' | '3x' | '4x' | '5x',
@@ -37,6 +24,8 @@ type Props = {
   skipTheme?: boolean,
   // All other props are passed through to the `i` element
 };
+// -- END_DOCS
+
 const FILTERED_PROPS = [
   'icon',
   'size',

@@ -1,24 +1,25 @@
 // @flow
 
-import React                from 'react';
-import { omit, merge }      from 'timm';
-import { COLORS }           from '../gral/constants';
+import React from 'react';
+import { omit, merge } from 'timm';
+import { COLORS } from '../gral/constants';
 
 // ==========================================
 // Component
 // ==========================================
-// -- A simple `div` showing a centered message with a large font size.
-// -- Ideal for *No matches found*, *Choose one of the options above*,
-// -- that kind of thing. Props:
-// --
-// -- * **children?** *any*: the contents to be shown
-// -- * **style?** *Object*: merged with the outermost `div` style
-// -- * *All other props are passed through to the `div` element*
+/* --
+A simple `div` showing a centered message with a large font size.
+Ideal for *No matches found*, *Choose one of the options above*,
+that kind of thing. Props:
+-- */
+// -- START_DOCS
 type Props = {
-  children?: any,
-  style?: Object,
-  // all other props are passed through
+  children?: any, // contents to be shown
+  style?: Object, // merged with the outermost `div` style
+  // All other props are passed through to the `div` element
 };
+// -- END_DOCS
+
 const FILTERED_PROPS = ['children', 'style'];
 
 class LargeMessage extends React.PureComponent {

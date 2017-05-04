@@ -7,28 +7,9 @@ import { COLORS } from '../gral/constants';
 // ==========================================
 // Component
 // ==========================================
-/* --
-An inconspicuous-looking button-in-a-`span`.
-
-```js
-type Props = {
-  plain?: boolean,  // removes most button styles
-  children?: any,  // button contents (can include `Icon` components, etc.)
-  onClick?: (ev: SyntheticMouseEvent) => void,
-  disabled?: boolean,
-  style?: Object,  // merged with the `span` style
-  skipTheme?: boolean,
-
-  // Additional props with `mdl` theme
-  colored?: boolean,
-  primary?: boolean,
-  accent?: boolean,
-  fab?: boolean,
-
-  // All other props are passed through to the `span` element
-};
-```
--- */
+// -- An inconspicuous-looking button-in-a-`span`.
+// --
+// -- START_DOCS
 type Props = {
   plain?: boolean, // removes most button styles
   children?: any, // button contents (can include `Icon` components, etc.)
@@ -45,6 +26,8 @@ type Props = {
 
   // All other props are passed through to the `span` element
 };
+// -- END_DOCS
+
 const FILTERED_PROPS = [
   'skipTheme',
   'plain',

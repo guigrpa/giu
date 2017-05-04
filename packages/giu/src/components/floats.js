@@ -1,32 +1,38 @@
 // @flow
 
-import React                from 'react';
-import { createStore }      from 'redux';
-import type { Reducer }     from 'redux';
+import React from 'react';
+import { createStore } from 'redux';
+import type { Reducer } from 'redux';
 import {
-  addLast, removeAt,
+  addLast,
+  removeAt,
   set as timmSet,
-  merge, mergeIn, addDefaults,
+  merge,
+  mergeIn,
+  addDefaults,
   omit,
-}                           from 'timm';
+} from 'timm';
 import {
   cancelEvent,
-  windowHeightWithoutScrollbar, windowWidthWithoutScrollbar,
-}                           from '../gral/helpers';
-import { isVisible }        from '../gral/visibility';
-import { MISC }             from '../gral/constants';
-import {
-  boxWithShadow,
-}                           from '../gral/styles';
-import type { Action }      from '../gral/types';
+  windowHeightWithoutScrollbar,
+  windowWidthWithoutScrollbar,
+} from '../gral/helpers';
+import { isVisible } from '../gral/visibility';
+import { MISC } from '../gral/constants';
+import { boxWithShadow } from '../gral/styles';
+import type { Action } from '../gral/types';
 
 const PROP_KEYS_TO_REMOVE_FROM_FLOAT_DIV = [
-  'position', 'align', 'zIndex', 'limitSize', 'getAnchorNode',
+  'position',
+  'align',
+  'zIndex',
+  'limitSize',
+  'getAnchorNode',
 ];
 
 type Position = 'above' | 'below';
 type Align = 'left' | 'right';
-type FloatUserPars = {
+type FloatUserPars = {|
   id: string,
   position?: ?Position,
   align?: ?Align,
@@ -35,16 +41,11 @@ type FloatUserPars = {
   getAnchorNode: () => ?Node,
   style?: Object,
   noStyleShadow?: boolean,
-};
+|};
 type FloatStatePars = {
-  id: string,
-  position?: ?Position,
-  align?: ?Align,
+  /* :: ...FloatUserPars, */
   zIndex: number,
   limitSize: boolean,
-  getAnchorNode: () => ?Node,
-  style?: Object,
-  noStyleShadow?: boolean,
 };
 type State = {
   cntReposition: number,
@@ -55,7 +56,9 @@ type State = {
 // Store, reducer
 // ==========================================
 let store: Object;
-function initStore() { store = createStore(reducer); }
+function initStore() {
+  store = createStore(reducer);
+}
 
 const INITIAL_STATE: State = {
   cntReposition: 0,
@@ -72,14 +75,14 @@ const reducer: Reducer<State, Action> = (state0 = INITIAL_STATE, action) => {
       break;
     case 'FLOAT_DELETE':
       id = action.id;
-      idx = state.floats.findIndex((o) => o.id === id);
+      idx = state.floats.findIndex(o => o.id === id);
       if (idx >= 0) {
         state = timmSet(state, 'floats', removeAt(state.floats, idx));
       }
       break;
     case 'FLOAT_UPDATE':
       id = action.id;
-      idx = state.floats.findIndex((o) => o.id === id);
+      idx = state.floats.findIndex(o => o.id === id);
       if (idx >= 0) {
         state = mergeIn(state, ['floats', idx], action.pars);
       }
@@ -109,7 +112,11 @@ const actions = {
     return { type: 'FLOAT_ADD', pars };
   },
   floatDelete: (id: string) => ({ type: 'FLOAT_DELETE', id }),
-  floatUpdate: (id: string, pars: FloatUserPars) => ({ type: 'FLOAT_UPDATE', id, pars }),
+  floatUpdate: (id: string, pars: FloatUserPars) => ({
+    type: 'FLOAT_UPDATE',
+    id,
+    pars,
+  }),
   floatReposition: () => ({ type: 'FLOAT_REPOSITION' }),
 };
 
@@ -144,7 +151,9 @@ const floatReposition = () => {
 try {
   window.addEventListener('scroll', floatReposition);
   window.addEventListener('resize', floatReposition);
-} catch (err) { /* ignore */ }
+} catch (err) {
+  /* ignore */
+}
 
 // ==========================================
 // Position and visibility calculation
@@ -200,10 +209,7 @@ class Floats extends React.PureComponent {
     this.curState = store.getState();
     this.floats = this.curState.floats;
     return (
-      <div
-        className="giu-floats"
-        style={style.outer}
-      >
+      <div className="giu-floats" style={style.outer}>
         {this.floats.map(this.renderFloat)}
       </div>
     );
@@ -213,18 +219,22 @@ class Floats extends React.PureComponent {
     if (!isAnchorVisible(props)) return null;
     const { id, zIndex } = props;
     return (
-      <div key={id}
+      <div
+        key={id}
         className="giu-float"
         onMouseDown={cancelEvent}
         style={style.wrapper(zIndex)}
       >
-        <div ref={(c) => { this.refFloats[idx] = c; }}
+        <div
+          ref={c => {
+            this.refFloats[idx] = c;
+          }}
           {...omit(props, PROP_KEYS_TO_REMOVE_FROM_FLOAT_DIV)}
           style={style.floatInitial(props)}
         />
       </div>
     );
-  }
+  };
 
   // ==========================================
   repositionFloats() {
@@ -234,7 +244,7 @@ class Floats extends React.PureComponent {
     // We use a promise here, since it triggers a microtask
     // (faster than a task)
     Promise.resolve().then(() => {
-    // setTimeout(() => {
+      // setTimeout(() => {
       const floats = this.floats;
       for (let idx = 0; idx < floats.length; idx++) {
         this.repositionFloat(floats[idx], idx);
@@ -323,7 +333,7 @@ class Floats extends React.PureComponent {
     }
 
     // Apply style
-    Object.keys(styleAttrs).forEach((attr) => {
+    Object.keys(styleAttrs).forEach(attr => {
       ref.style[attr] = styleAttrs[attr];
     });
     ref.style.opacity = 1;
@@ -341,7 +351,7 @@ const style = {
     width: 0,
     height: 0,
   },
-  wrapper: (zIndex) => ({
+  wrapper: zIndex => ({
     position: 'fixed',
     top: 0,
     left: 0,
@@ -366,7 +376,9 @@ const style = {
 // Warnings
 // ==========================================
 let fCheckedFloats = false;
-const floatsWarning = (name: string) => `<${name}> requires a <Floats> component to be \
+const floatsWarning = (
+  name: string,
+) => `<${name}> requires a <Floats> component to be \
 included in your application. It will not work properly otherwise. Please add it \
 as close as possible to the application root; no props are needed.`;
 
@@ -383,6 +395,9 @@ function warnFloats(componentName: string) {
 // ==========================================
 export {
   Floats,
-  floatAdd, floatDelete, floatUpdate, floatReposition,
+  floatAdd,
+  floatDelete,
+  floatUpdate,
+  floatReposition,
   warnFloats,
 };
