@@ -1,4 +1,15 @@
-* Converted to a monorepo (with [oao](https://github.com/guigrpa/oao)) with `giu` and `giu-examples`.
+* Simplify inclusion of Material Design Light: just `import 'giu/lib/mdl';` and wrap your application in `<Giu theme="mdl">`
+* Add `skipTheme` prop to TextInput, NumberInput, PasswordInput + DateInput (#3)
+* **Bugfixes**:
+    - DataTable: Tolerate undefined/null raw values when filtering.
+    - DataTable: Remove unwanted logs in the console.
+    - DataTable: Refresh floats on scroll and after dragging a row.
+    - Select: Fix imperative API (forward validateAndGetValue() to the inner input).
+    - DateInput: Fix imperative API (moved to a class-based outer React component).
+    - FileInput: Fix incorrect update when selecting a file again, after clearing the input.
+* DataTable: add draft docs.
+* Examples: DataTable: add "alternative-layout" (not-so-tabular) example.
+* Internal: **convert to a monorepo** (with [oao](https://github.com/guigrpa/oao)) with `giu` and `giu-examples`.
 
 ## 0.10.2 (March 13, 2017)
 

@@ -301,6 +301,7 @@ Tasks 2 and 3 above are managed via a *pseudo-imperative* API, the `cmds` prop, 
 Props:
 
 * **style** *object?*: merged with the `input`/`textarea` style
+* **skipTheme** *boolean?*
 * **vertical** *boolean?*: [only for `RangeInput`]
 * *All other props are passed through to the `input` element*
 
@@ -347,6 +348,7 @@ Props:
 * **style** *object?*: merged with the `input` style
 * **styleOuter** *object?*: when `type === 'inlinePicker'`,
   merged with the outermost `span` style
+* **skipTheme** *boolean?*
 * **accentColor** *string?*: CSS color descriptor (e.g. `darkgray`, `#ccffaa`...)
 
 ### Select
@@ -592,7 +594,7 @@ type PublicProps = {
 
   // Other props
   lang?: string, // current language (used just for force-render)
-  children: any, // React elements that will be shown as the menu's title
+  children?: any, // React elements that will be shown as the menu's title
   onClickItem?: (
     ev: SyntheticMouseEvent, // `click` event
     val: any, // the item's `value` (as specified in the `items` prop)
@@ -932,6 +934,15 @@ passed through):
   the parent component.
 * **onHoverStop?** *HoverEventHandler (see below)*: relays the original event to
   the parent component.
+
+Limitations regarding Flow:
+
+* This HOC accepts both functional and class-based React components.
+* For the HOC result to be properly typed, however, the composed component
+  must be a class-based React component and have `defaultProps` defined
+  (even if empty, e.g. `static defaultProps = {};`).
+* If you're passing a functional component, just add a FlowFixMe directive
+  in a comment before the call to `hoverable()` so that Flow won't complain.
 
 Additional props passed to the base component:
 
