@@ -1,21 +1,37 @@
+// @flow
+
 /* eslint-disable no-console, no-alert, max-len */
 /* eslint-disable react/prop-types, react/no-multi-comp, react/jsx-no-bind, react/jsx-boolean-value */
 /* eslint-disable react/prefer-stateless-function */
-import React                from 'react';
+import React from 'react';
 import {
-  Modal, modalPush, modalPop,
-  TextInput, DateInput, ColorInput, Textarea, Select,
-  Button, Icon, DropDownMenu,
+  Modal,
+  modalPush,
+  modalPop,
+  TextInput,
+  DateInput,
+  ColorInput,
+  Textarea,
+  Select,
+  Button,
+  Icon,
+  DropDownMenu,
 } from 'giu';
 import {
-  ExampleLabel, exampleStyle,
-  NORMAL_OPTIONS, LONG_TEXT,
+  ExampleLabel,
+  exampleStyle,
+  NORMAL_OPTIONS,
+  LONG_TEXT,
   onChange,
 } from './demo1-common';
 
 class ModalExample extends React.Component {
-  constructor(props) {
-    super(props);
+  state: { fEmbeddedModal: boolean };
+  refInput: Object;
+  refName: Object;
+
+  constructor() {
+    super();
     this.state = { fEmbeddedModal: false };
   }
 
@@ -29,9 +45,7 @@ class ModalExample extends React.Component {
           Add modal
         </Button>
         {' '}
-        <Button
-          onClick={() => this.setState({ fEmbeddedModal: true })}
-        >
+        <Button onClick={() => this.setState({ fEmbeddedModal: true })}>
           Embed modal
         </Button>
         {this.state.fEmbeddedModal && this.renderEmbeddedModal()}
@@ -60,37 +74,56 @@ class ModalExample extends React.Component {
         onEsc={close}
         style={{ width: 500 }}
       >
-        What&#39;s your name?{' '}
-        <TextInput ref={(o) => { this.refInput = o; }}
+        {'What\'s your name?'}{' '}
+        <TextInput
+          ref={o => {
+            this.refInput = o;
+          }}
           autoFocus
           required
           errorZ={52}
         />
-        <DateInput
-          placeholder="date of birth"
-          floatZ={55}
-          required
-        />
+        <DateInput placeholder="date of birth" floatZ={55} required />
         <Textarea
           placeholder="Write something..."
           required
           errorZ={52}
           style={{ maxHeight: 100 }}
-        /><br />
+        />
+        <br />
         <TextInput required errorZ={52} placeholder="Another text input" />
         <br />
         <br />
         <br />
-        <div style={{ marginLeft: 20 }} /* useful margin for debugging with visible FocusCaptures */>
+        <div
+          style={{
+            marginLeft: 20,
+          }} /* useful margin for debugging with visible FocusCaptures */
+        >
           <ExampleLabel>
             Some examples to see that everything works correctly in a modal
           </ExampleLabel>
           <ColorInput floatZ={55} />
           <ColorInput floatZ={55} disabled />
-          <Select floatZ={55} type="dropDownPicker" value="a" items={NORMAL_OPTIONS} />
-          <Select floatZ={55} type="dropDownPicker" value="a" items={NORMAL_OPTIONS} disabled />
-          <DropDownMenu floatZ={55} items={NORMAL_OPTIONS} onClickItem={onChange}>
-            <Icon icon={this.context.theme === 'mdl' ?  'menu' : 'bars'} /> Menu
+          <Select
+            floatZ={55}
+            type="dropDownPicker"
+            value="a"
+            items={NORMAL_OPTIONS}
+          />
+          <Select
+            floatZ={55}
+            type="dropDownPicker"
+            value="a"
+            items={NORMAL_OPTIONS}
+            disabled
+          />
+          <DropDownMenu
+            floatZ={55}
+            items={NORMAL_OPTIONS}
+            onClickItem={onChange}
+          >
+            <Icon icon={this.context.theme === 'mdl' ? 'menu' : 'bars'} /> Menu
           </DropDownMenu>
         </div>
       </Modal>
@@ -98,26 +131,29 @@ class ModalExample extends React.Component {
   }
 
   addModal() {
-    const title = 'Hello, what\'s your name?';
+    const title = "Hello, what's your name?";
     const children = (
       <div>
-        <TextInput ref={(o) => { this.refName = o; }}
+        <TextInput
+          ref={o => {
+            this.refName = o;
+          }}
           autoFocus
           required
           errorZ={52}
         />{' '}
-        <DateInput
-          placeholder="date of birth"
-          floatZ={55}
-          required
-        />
+        <DateInput placeholder="date of birth" floatZ={55} required />
       </div>
     );
     modalPush({
       title,
       children,
       buttons: [
-        { label: 'Hello!', onClick: this.addModal2.bind(this), defaultButton: true },
+        {
+          label: 'Hello!',
+          onClick: this.addModal2.bind(this),
+          defaultButton: true,
+        },
         { label: 'Back', onClick: modalPop, left: true },
       ],
       onEsc: modalPop,
@@ -140,9 +176,7 @@ class ModalExample extends React.Component {
     modalPush({
       title,
       children,
-      buttons: [
-        { label: 'Back', onClick: modalPop, defaultButton: true },
-      ],
+      buttons: [{ label: 'Back', onClick: modalPop, defaultButton: true }],
       onEsc: modalPop,
       style: { width: 500 },
     });

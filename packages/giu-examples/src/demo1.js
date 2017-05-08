@@ -1,3 +1,5 @@
+// @flow
+
 /* eslint-disable no-console, no-alert, max-len */
 /* eslint-disable react/prop-types, react/no-multi-comp, react/jsx-no-bind, react/jsx-boolean-value */
 /* eslint-disable react/prefer-stateless-function, react/jsx-no-target-blank */
@@ -8,7 +10,8 @@ import ReactDOMServer       from 'react-dom/server';
 import { merge }            from 'timm';
 import moment               from 'moment';
 import {
-  DateInput, TextInput, RangeInput, Select,
+  DateInput, TextInput, NumberInput, RangeInput, Select, Textarea,
+  ColorInput, FileInput,
   DropDownMenu,
   Button, Progress, Icon, Spinner, LargeMessage,
   Floats, floatReposition,
@@ -33,15 +36,17 @@ import {
 
 const { floor, random } = Math;
 const randomInt = (min, max) => min + floor(random() * (max - min + 1));
-const sample = (arr) => arr[randomInt(0, arr.length - 1)];
+const sample = (arr): any => arr[randomInt(0, arr.length - 1)];
 
 let cntNotif = 1;
-const notify = (msg) => createNotif({
-  msg: msg || `Notification #${cntNotif++}`, // eslint-disable-line no-plusplus
-  type: sample(['info', 'success', 'warn', 'error']),
-  icon: sample(['arrow-left', 'arrow-right', 'arrow-up', 'arrow-down']),
-  onClick: () => console.log('notification clicked'),
-});
+const notify = (msg) => {
+  createNotif({
+    msg: msg || `Notification #${cntNotif++}`, // eslint-disable-line no-plusplus
+    type: sample(['info', 'success', 'warn', 'error']),
+    icon: sample(['arrow-left', 'arrow-right', 'arrow-up', 'arrow-down']),
+    onClick: () => console.log('notification clicked'),
+  });
+};
 
 // -----------------------------------------------
 // Examples
@@ -132,6 +137,27 @@ class App extends React.Component {
             <Modals />
             <DataTableExample />
             <ModalExample />
+          </div>
+        );
+        break;
+      case 8:
+        out = (
+          <div>
+            <Floats />
+            <TextInput ref={c => { console.log('TextInput ref ', c); }} />
+            <NumberInput ref={c => { console.log('NumberInput ref ', c); }} />
+            <Textarea ref={c => { console.log('Textarea ref ', c); }} />
+            <Select ref={c => { console.log('Select (native) ref ', c); }} items={[]} />
+            <Select ref={c => { console.log('Select (inline) ref ', c); }} items={[]} type="inlinePicker" />
+            <Select ref={c => { console.log('Select (dropDown) ref ', c); }} items={[]} type="dropDownPicker" />
+            <DateInput ref={c => { console.log('DateInput ref ', c); }} />
+            <DateInput ref={c => { console.log('DateInput (native) ref ', c); }} type="native" />
+            <DateInput ref={c => { console.log('DateInput (onlyField) ref ', c); }} type="onlyField" />
+            <span ref={c => { console.log('DateInput wrapper ref ', c); }}>
+              <DateInput />
+            </span>
+            <ColorInput ref={c => { console.log('ColorInput ref ', c); }} />
+            <FileInput ref={c => { console.log('FileInput ref ', c); }} />
           </div>
         );
         break;
@@ -409,7 +435,7 @@ if (typeof document !== 'undefined') {
 
 // SSR
 } else {
-  module.exports = function render(locals, callback) {
+  module.exports = function render(locals: Object, callback: Function) {
     const ssrHtml = ReactDOMServer.renderToString(mainEl);
     /* eslint-disable global-require */
     const ssrCss = require('giu/lib/all.css');
