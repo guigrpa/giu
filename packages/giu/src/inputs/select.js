@@ -55,12 +55,10 @@ class Select extends React.Component {
   };
 
   // ==========================================
-  // Imperative API
-  // ==========================================
   getValue() { return this.refInput ? this.refInput.getValue() : null; }
+  getErrors() { return this.refInput ? this.refInput.getErrors() : null; }
+  validateAndGetValue() { return this.refInput ? this.refInput.validateAndGetValue() : null; }
 
-  // ==========================================
-  // Render
   // ==========================================
   render() {
     const { type } = this.props;
@@ -75,8 +73,6 @@ class Select extends React.Component {
     );
   }
 
-  // ==========================================
-  // Event handlers
   // ==========================================
   registerInputRef = (c) => { this.refInput = c; }
 }
