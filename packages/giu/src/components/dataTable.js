@@ -9,12 +9,13 @@ import {
   SortableHandle as sortableHandle,
   arrayMove,
 } from 'react-sortable-hoc';
-import VirtualScroller, { DEFAULT_ROW } from './virtualScroller';
 import type { ScrollIntoViewOptions } from '../gral/visibility';
 import { COLORS, KEYS } from '../gral/constants';
 import { isDark } from '../gral/styles';
 import { cancelEvent, stopPropagation, simplifyString } from '../gral/helpers';
 import { localGet, localSet } from '../gral/storage';
+import { floatReposition } from '../components/floats';
+import VirtualScroller, { DEFAULT_ROW } from './virtualScroller';
 import {
   DataTableHeader,
   DataTableRow,
@@ -571,6 +572,7 @@ class DataTable extends React.PureComponent {
   onDragStart = () => {
     this.fDragging = true;
     this.forceUpdate();
+    floatReposition();
   };
 
   onDragEnd = ({
@@ -597,6 +599,7 @@ class DataTable extends React.PureComponent {
     this.recalcShownIds(this.props);
     this.manualOrderDidChange(this.props);
     this.forceUpdate();
+    floatReposition();
 
     // Finally, and asynchronously (to allow time for the previous re-render),
     // set `fDragging` to `false` and re-render, to enable `VerticalManager` animations again

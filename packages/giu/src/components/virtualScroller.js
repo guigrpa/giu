@@ -8,6 +8,7 @@ import { cancelBodyScrolling } from '../gral/helpers';
 import { getScrollbarWidth } from '../gral/constants';
 import { scrollIntoView } from '../gral/visibility';
 import type { ScrollIntoViewOptions } from '../gral/visibility';
+import { floatReposition } from '../components/floats';
 import VerticalManager from './verticalManager';
 
 const MAX_ROWS_INITIAL_RENDER = 20;
@@ -163,6 +164,11 @@ class VirtualScroller extends React.PureComponent {
     }
   }
 
+  onScroll = (ev: Event) => {
+    floatReposition();
+    this.recalcViewport(ev);
+  }
+
   recalcViewport = (ev: Object = {}) => {
     if (!this.refScroller) return;
     const { scrollTop, clientHeight } = this.refScroller;
@@ -301,7 +307,7 @@ class VirtualScroller extends React.PureComponent {
         }}
         className="giu-virtual-scroller"
         onWheel={cancelBodyScrolling}
-        onScroll={this.recalcViewport}
+        onScroll={this.onScroll}
         style={style.scroller(this.props)}
       >
         {this.renderSizer()}
