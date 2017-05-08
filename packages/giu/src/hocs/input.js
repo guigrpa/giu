@@ -6,12 +6,36 @@ import { COLORS, MISC, IS_IOS, FONTS } from '../gral/constants';
 import { scrollIntoView } from '../gral/visibility';
 import { isDark } from '../gral/styles';
 import { isRequired } from '../gral/validators';
+import type { Validator } from '../gral/validators';
 import {
   floatAdd, floatDelete, floatUpdate, floatReposition,
   warnFloats,
 } from '../components/floats';
 import FocusCapture from '../components/focusCapture';
 import IosFloatWrapper from '../inputs/iosFloatWrapper';
+
+type HocOptions = {|
+  toInternalValue?: (extValue: any, hocProps: Object) => any,
+  toExternalValue?: (intValue: any, hocProps: Object) => any,
+  isNull: (intValue: any) => boolean,
+  valueAttr?: string,
+  fIncludeFocusCapture?: boolean,
+  defaultValidators?: { [key: string]: Validator },
+  validatorContext?: Object,
+  trappedKeys?: Array<number>,
+  className?: string, // wrapper class name
+  fIncludeClipboardProps?: boolean,
+|};
+
+type Props = {
+  value: any,
+  errors?: ?Array<string>,
+  required?: boolean,
+  validators?: ?Array<Validator>,
+  noErrors?: boolean,
+
+  // focusOnChange:          true,
+};
 
 const PROP_TYPES = {
   value:                  React.PropTypes.any,
@@ -48,7 +72,7 @@ function input(ComposedComponent, {
   trappedKeys = [],
   className,
   fIncludeClipboardProps: fIncludeClipboardProps0,
-} = {}) {
+}: HocOptions) {
   const fIncludeClipboardProps = fIncludeClipboardProps0 != null
     ? fIncludeClipboardProps0
     : fIncludeFocusCapture;
