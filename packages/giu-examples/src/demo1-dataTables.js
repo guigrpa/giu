@@ -14,6 +14,7 @@ import {
   Textarea,
   Checkbox,
   TextInput,
+  DateInput,
   Button,
   Spinner,
   Select,
@@ -22,6 +23,7 @@ import {
   flexContainer,
   flexItem,
   COLORS,
+  notify,
 } from 'giu';
 import type { DataTableColumn } from 'giu/lib/components/dataTableRow';
 import { ExampleLabel, exampleStyle } from './demo1-common';
@@ -33,6 +35,11 @@ const CELL_WITH_ELLIPSIS = {
   textOverflow: 'ellipsis',
   overflowX: 'hidden',
 };
+
+const USER_TYPES = [
+  { value: 'Guest', label: 'Guest' },
+  { value: 'User', label: 'User' },
+];
 
 // -----------------------------------------------
 // Development example
@@ -48,6 +55,8 @@ const sampleDataTableItems = (num, idStart = 0) => {
       age: 20 + Math.ceil(Math.random() * 10),
       confirmed: Math.random() > 0.5,
       phone: faker.phone.phoneNumber(),
+      lastModified: new Date(),
+      type: Math.random() > 0.5 ? 'Guest' : 'User',
       notes: faker.lorem.sentences(2).split('\n').join(' '),
     };
   }
@@ -528,9 +537,168 @@ const style2 = {
 };
 
 // -----------------------------------------------
+// Example with inputs and validation
+// -----------------------------------------------
+const DATA_EDIT_AND_VALIDATE_EXAMPLE = sampleDataTableItems(15, 0);
+const COLLECT_FIELDS_ON_SUBMIT = ['name', 'type', 'lastModified', 'confirmed', 'phone'];
+
+class EditAndValidateExample extends React.Component {
+  commonCellProps: Object;
+  inputRefs: Object;
+
+  constructor() {
+    super();
+    this.state = {
+      changedRows: {},
+    };
+    this.commonCellProps = {
+      registerInputRef: this.registerInputRef,
+      onChange: this.onChange,
+      onSubmit: this.onSubmit,
+    };
+    this.inputRefs = {};
+  }
+
+  // -----------------------------------------------
+  render() {
+    const itemsById = DATA_EDIT_AND_VALIDATE_EXAMPLE;
+    return (
+      <DataTable
+        itemsById={itemsById}
+        shownIds={Object.keys(itemsById)}
+        alwaysRenderIds={Object.keys(this.state.changedRows)}
+        cols={this.getCols()}
+        commonCellProps={this.commonCellProps}
+        collectionName="editAndValidateExample"
+        uniformRowHeight
+        accentColor="lightgray"
+      />
+    );
+  }
+
+  getCols() {
+    return [
+      {
+        attr: 'name',
+        minWidth: 150,
+        flexGrow: 1,
+        render: ({ item, id, attr, onChange, registerInputRef }) => (
+          <TextInput
+            ref={c => registerInputRef(id, attr, c)}
+            value={item[attr]}
+            onChange={() => onChange(id)}
+            required
+            skipTheme
+            style={{ width: '100%' }}
+          />
+        ),
+      },
+      {
+        attr: 'type',
+        minWidth: 150,
+        render: ({ item, id, attr, onChange, registerInputRef }) => (
+          <Select
+            ref={c => registerInputRef(id, attr, c)}
+            items={USER_TYPES}
+            value={item[attr]}
+            onChange={() => onChange(id)}
+            required
+            style={{ width: '100%' }}
+          />
+        ),
+      },
+      {
+        attr: 'lastModified',
+        minWidth: 150,
+        render: ({ item, id, attr, onChange, registerInputRef }) => (
+          <DateInput
+            ref={c => { registerInputRef(id, attr, c); }}
+            value={item[attr]}
+            onChange={() => onChange(id)}
+            required
+            skipTheme
+            style={{ width: '100%' }}
+          />
+        ),
+      },
+      {
+        attr: 'confirmed',
+        labelLevel: 1,
+        minWidth: 30,
+        render: ({ item, id, attr, onChange, registerInputRef }) => (
+          <Checkbox
+            ref={c => registerInputRef(id, attr, c)}
+            value={item[attr]}
+            onChange={() => onChange(id)}
+          />
+        ),
+      },
+      {
+        attr: 'phone',
+        minWidth: 150,
+        render: ({ item, id, attr, onChange, registerInputRef }) => (
+          <TextInput
+            ref={c => registerInputRef(id, attr, c)}
+            value={item[attr]}
+            onChange={() => onChange(id)}
+            required
+            skipTheme
+            style={{ width: '100%' }}
+          />
+        ),
+      },
+      {
+        attr: 'submit',
+        minWidth: 50,
+        render: ({ id, onSubmit }) => (
+          <Icon icon="check" onClick={() => onSubmit(id)} />
+        ),
+      },
+    ];
+  }
+
+  // -----------------------------------------------
+  registerInputRef = (id, attr, ref) => {
+    if (!this.inputRefs[id]) this.inputRefs[id] = {};
+    this.inputRefs[id][attr] = ref;
+  };
+
+  onChange = id => {
+    const { changedRows } = this.state;
+    if (changedRows[id]) return;
+    changedRows[id] = true;
+    this.setState({ changedRows });
+  };
+
+  onSubmit = async id => {
+    const data = {};
+    await Promise.all(
+      COLLECT_FIELDS_ON_SUBMIT.map(async attr => {
+        const rowRefs = this.inputRefs[id];
+        if (!rowRefs) return;
+        const ref = rowRefs[attr];
+        if (!ref) {
+          console.warn(`No ref for attribute ${attr}`);
+          return;
+        }
+        data[attr] = await ref.validateAndGetValue();
+      }),
+    );
+    console.log(data);
+    const msg = `name: ${data.name}, phone: ${data.phone}`;
+    notify({
+      type: 'success',
+      icon: 'check',
+      title: 'Updated!',
+      msg,
+    });
+  };
+}
+
+// -----------------------------------------------
 // Index
 // -----------------------------------------------
-class DataTableExample extends React.PureComponent {
+class AllExamples extends React.PureComponent {
   itemsById: Object;
   shownIds: Array<string>;
   cols: Array<DataTableColumn>;
@@ -585,6 +753,11 @@ class DataTableExample extends React.PureComponent {
         <CustomSortPaginateExample />
 
         <p>
+          <b>Example with inline edit and validation</b>
+        </p>
+        <EditAndValidateExample />
+
+        <p>
           <b>Simplest example</b>: leave everything to the DataTable component
         </p>
         <SimpleExample />
@@ -627,4 +800,4 @@ class DataTableExample extends React.PureComponent {
   }
 }
 
-export default DataTableExample;
+export default AllExamples;
