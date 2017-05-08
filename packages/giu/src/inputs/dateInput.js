@@ -117,6 +117,7 @@ let cntId = 0;
 // -- * **style** *object?*: merged with the `input` style
 // -- * **styleOuter** *object?*: when `type === 'inlinePicker'`,
 // --   merged with the outermost `span` style
+// -- * **skipTheme** *boolean?*
 // -- * **accentColor** *string?*: CSS color descriptor (e.g. `darkgray`, `#ccffaa`...)
 const DEFAULT_PROPS = {
   type:                   'dropDownPicker',
@@ -173,6 +174,7 @@ class BaseDateInput extends React.Component {
     floatZ:                 React.PropTypes.number,
     style:                  React.PropTypes.object,
     styleOuter:             React.PropTypes.object,
+    skipTheme:              React.PropTypes.bool,
     accentColor:            React.PropTypes.string,
     // From input HOC
     curValue:               React.PropTypes.string.isRequired,
@@ -288,7 +290,9 @@ class BaseDateInput extends React.Component {
   }
 
   renderField(fHidden) {
-    if (!fHidden && this.context.theme === 'mdl') return this.renderFieldMdl();
+    if (!fHidden && !this.props.skipTheme && this.context.theme === 'mdl') {
+      return this.renderFieldMdl();
+    }
     const {
       curValue, onChange, placeholder,
       date, time, seconds,
@@ -514,7 +518,7 @@ const style = {
 // Miscellaneous
 // ==========================================
 const PROP_KEYS_TO_REMOVE_FROM_INPUT = Object.keys(BaseDateInput.propTypes).concat([
-  'cmds', 'keyDown', 'onResizeOuter', 'required',
+  'cmds', 'keyDown', 'onResizeOuter', 'required', 'skipTheme',
 ]);
 const PROP_KEYS_TO_REMOVE_FROM_INPUT_MDL = PROP_KEYS_TO_REMOVE_FROM_INPUT.concat(['placeholder']);
 

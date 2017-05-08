@@ -39,11 +39,13 @@ let cntId = 0;
 // -- Props:
 // --
 // -- * **style** *object?*: merged with the `input`/`textarea` style
+// -- * **skipTheme** *boolean?*
 // -- * **vertical** *boolean?*: [only for `RangeInput`]
 // -- * *All other props are passed through to the `input` element*
 const PROP_TYPES = {
   disabled:               React.PropTypes.bool,
   style:                  React.PropTypes.object,
+  skipTheme:              React.PropTypes.bool,
   vertical:               React.PropTypes.bool,
   // Input HOC
   curValue:               React.PropTypes.any.isRequired,
@@ -55,7 +57,7 @@ const PROP_TYPES = {
 };
 const PROP_KEYS_TO_REMOVE_FROM_INPUT = Object.keys(PROP_TYPES).concat([
   'cmds', 'keyDown', 'floatZ', 'floatPosition', 'onResizeOuter', 'styleOuter',
-  'required',
+  'required', 'skipTheme',
 ]);
 const PROP_KEYS_TO_REMOVE_FROM_INPUT_MDL = PROP_KEYS_TO_REMOVE_FROM_INPUT.concat(['placeholder']);
 
@@ -83,7 +85,9 @@ function createClass(name, inputType) {
     // Render
     // ==========================================
     render() {
-      if (this.context.theme === 'mdl' && !this.props.vertical) return this.renderMdl();
+      if (!this.props.skipTheme && this.context.theme === 'mdl' && !this.props.vertical) {
+        return this.renderMdl();
+      }
       const {
         curValue, disabled,
         registerFocusableRef,
