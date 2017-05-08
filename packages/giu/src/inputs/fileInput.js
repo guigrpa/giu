@@ -34,6 +34,11 @@ class FileInput extends React.Component {
     fFocused:               React.PropTypes.bool.isRequired,
   };
 
+  constructor() {
+    super();
+    this.cntCleared = 0;
+  }
+
   componentDidUpdate(prevProps) {
     const { cmds } = this.props;
     if (!cmds || cmds === prevProps.cmds) return;
@@ -57,7 +62,7 @@ class FileInput extends React.Component {
         className="giu-file-input"
         style={style.outer(this.props)}
       >
-        <input ref={this.registerInputRef}
+        <input ref={this.registerInputRef} key={this.cntCleared}
           type="file"
           style={style.input}
           onChange={this.onChange}
@@ -99,7 +104,10 @@ class FileInput extends React.Component {
   }
 
   onClickButton = () => { if (this.refInput) this.refInput.click(); }
-  onClickClear = (ev) => { this.props.onChange(ev, null); }
+  onClickClear = (ev) => {
+    this.cntCleared += 1;  // make sure we get a new file input (it has memory!)
+    this.props.onChange(ev, null);
+  }
 
   onChange = (ev) => {
     const { files } = ev.target;
