@@ -1,3 +1,5 @@
+/* eslint-disable react/no-multi-comp */
+
 import React                from 'react';
 import {
   omit, merge,
@@ -130,24 +132,35 @@ const DEFAULT_PROPS = {
   accentColor:            COLORS.accent,
 };
 
-const DateInputWrapper = (props0) => {
-  let props = addDefaults(props0, DEFAULT_PROPS);
-  if (IS_IOS && props.checkIos) {
-    props = timmSet(props, 'analogTime', false);
-  }
-  props = omit(props, ['checkIos']);
-  return <DateInput {...props} />;
-};
+class DateInputWrapper extends React.Component {
+  static propTypes = {
+    type:                     React.PropTypes.oneOf([
+      'native',
+      'onlyField',
+      'inlinePicker',
+      'dropDownPicker',
+    ]),
+    checkIos:              React.PropTypes.bool,
+  };
 
-DateInputWrapper.propTypes = {
-  type:                     React.PropTypes.oneOf([
-    'native',
-    'onlyField',
-    'inlinePicker',
-    'dropDownPicker',
-  ]),
-  checkIos:              React.PropTypes.bool,
-};
+  // ==========================================
+  getValue() { return this.refInput ? this.refInput.getValue() : null; }
+  getErrors() { return this.refInput ? this.refInput.getErrors() : null; }
+  validateAndGetValue() { return this.refInput ? this.refInput.validateAndGetValue() : null; }
+
+  // ==========================================
+  render() {
+    let props = addDefaults(this.props, DEFAULT_PROPS);
+    if (IS_IOS && props.checkIos) {
+      props = timmSet(props, 'analogTime', false);
+    }
+    props = omit(props, ['checkIos']);
+    return <DateInput ref={this.registerInputRef} {...props} />;
+  }
+
+  // ==========================================
+  registerInputRef = (c) => { this.refInput = c; }
+}
 
 // ==========================================
 // Component
