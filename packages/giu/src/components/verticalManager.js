@@ -1,7 +1,7 @@
 // @flow
 
-import React                from 'react';
-import throttle             from 'lodash/throttle';
+import React from 'react';
+import throttle from 'lodash/throttle';
 
 // ===============================================================
 // VerticalManager
@@ -73,7 +73,7 @@ class VerticalManager extends React.Component {
       this.height = height;
       onChangeHeight(this.props.id, height);
     }
-  }
+  };
 
   // Some components (e.g. Textarea) are too fast reporting that
   // they have changed, before the DOM has actually been updated
@@ -81,7 +81,7 @@ class VerticalManager extends React.Component {
   // for things to stabilise before measuring.
   asyncMeasureHeight = () => {
     setImmediate(this.measureHeight);
-  }
+  };
 
   // ===============================================================
   // Render
@@ -90,7 +90,8 @@ class VerticalManager extends React.Component {
     const { id, index, ChildComponent, childProps } = this.props;
     const disabled = !childProps.fSortedManually || this.props.top == null;
     return (
-      <div ref={this.registerOuterRef}
+      <div
+        ref={this.registerOuterRef}
         className="giu-vertical-manager"
         id={id}
         style={style.outer(this.props)}
@@ -98,10 +99,8 @@ class VerticalManager extends React.Component {
         <ChildComponent
           // react-sortable-hoc sortableRow requires the index
           index={index}
-
           {...childProps}
           onMayHaveChangedHeight={this.asyncMeasureHeight}
-
           // Disable participation of this row in drag-n-drop
           // (react-sortable-hoc) if its `top` is `undefined`
           // (i.e. if it is hidden and temporarily possitioned at the top,
@@ -109,10 +108,10 @@ class VerticalManager extends React.Component {
           disabled={disabled}
         />
       </div>
-      // Typical example of `onMayHaveChangedHeight`: in the `render`
-      // property of a given DataTable column:
-      // <Textarea onChange={this.props.onMayHaveChangedHeight} />
     );
+    // Typical example of `onMayHaveChangedHeight`: in the `render`
+    // property of a given DataTable column:
+    // <Textarea onChange={this.props.onMayHaveChangedHeight} />
   }
 
   // ===============================================================
@@ -121,7 +120,7 @@ class VerticalManager extends React.Component {
   registerOuterRef = (c: ?Object) => {
     this.refVerticalManager = c;
     if (this.props.registerOuterRef) this.props.registerOuterRef(c);
-  }
+  };
 }
 
 // ===============================================================
