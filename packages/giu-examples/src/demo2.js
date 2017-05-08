@@ -20,8 +20,7 @@ import {
   flexContainer, flexItem, boxWithShadow,
   TextInput,
 } from 'giu';
-import 'giu/lib/vendor/material';
-import 'giu/lib/vendor/material.css';
+import 'giu/lib/mdl';
 import DataTableExample from './demo1-dataTables';
 import ModalExample from './demo1-modals';
 import HintExample from './demo1-hints';
