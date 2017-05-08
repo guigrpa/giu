@@ -1,3 +1,5 @@
+## 0.11.0 (2017-5-8)
+
 * Simplify inclusion of Material Design Light: just `import 'giu/lib/mdl';` and wrap your application in `<Giu theme="mdl">`
 * Add `skipTheme` prop to TextInput, NumberInput, PasswordInput + DateInput (#3)
 * **Bugfixes**:
