@@ -5,6 +5,8 @@
 let moment;
 try {
   moment = require('moment');
-} catch (err) { /* ignore */ }
+} catch (err) {
+  /* ignore */
+}
 
 module.exports = moment;

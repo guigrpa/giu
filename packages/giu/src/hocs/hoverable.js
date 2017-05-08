@@ -25,6 +25,15 @@ passed through):
 * **onHoverStop?** *HoverEventHandler (see below)*: relays the original event to
   the parent component.
 
+Limitations regarding Flow:
+
+* This HOC accepts both functional and class-based React components.
+* For the HOC result to be properly typed, however, the composed component
+  must be a class-based React component and have `defaultProps` defined
+  (even if empty, e.g. `static defaultProps = {};`).
+* If you're passing a functional component, just add a FlowFixMe directive
+  in a comment before the call to `hoverable()` so that Flow won't complain.
+
 Additional props passed to the base component:
 -- */
 
@@ -43,15 +52,26 @@ type Hovering = ?(string | number | boolean); // null when nothing is hovered
 type HoverEventHandler = (ev: SyntheticEvent) => void;
 /* -- END_DOCS -- */
 
-type DefaultProps<DP> = {  // eslint-disable-line
-  // eslint-disable-line
+/* eslint-disable no-unused-vars */
+type DefaultProps<DP> = {
   /* :: ...$Exact<DP>, */
   /* :: ...$Exact<HoverableProps>, */
 };
+/* eslint-enable no-unused-vars */
 
-function hoverable<DP: any, P>(
-  ComposedComponent: Class<React$Component<DP, P, *>>,
-): Class<React$Component<DefaultProps<DP>, P, *>> {
+/* eslint-disable max-len */
+type StatelessComponent<P> = (props: P) => ?React$Element<any>;
+type Hoc<DP, P> = {
+  (ComposedComponent: Class<React$Component<DP, P, *>>): Class<React$Component<DefaultProps<DP>, P, *>>;
+  (ComposedComponent: StatelessComponent<P>): any;
+};
+/* eslint-enable max-len */
+
+// function hoverable<DP: any, P>(
+//   ComposedComponent: Class<React$Component<DP, P, *>>,
+// ): Class<React$Component<DefaultProps<DP>, P, *>> {
+const hoverable: Hoc<*, *> = (ComposedComponent) => {
+// function hoverable(ComposedComponent) {
   const composedComponentName =
     ComposedComponent.displayName || ComposedComponent.name || 'Component';
   const hocDisplayName = `Hoverable(${composedComponentName})`;
@@ -101,7 +121,7 @@ function hoverable<DP: any, P>(
   }
 
   return (Derived: any);
-}
+};
 
 // ==========================================
 // Public API

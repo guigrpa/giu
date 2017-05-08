@@ -26,4 +26,4 @@ export type Command = {|
   type: CommandType,
 |};
 
-export type Action = $Subtype<{ type: string }>;
+export type Action = { type: string };

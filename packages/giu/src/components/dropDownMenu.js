@@ -22,7 +22,7 @@ type PublicProps = {
 
   // Other props
   lang?: string, // current language (used just for force-render)
-  children: any, // React elements that will be shown as the menu's title
+  children?: any, // React elements that will be shown as the menu's title
   onClickItem?: (
     ev: SyntheticMouseEvent, // `click` event
     val: any, // the item's `value` (as specified in the `items` prop)

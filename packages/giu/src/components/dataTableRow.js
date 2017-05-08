@@ -11,7 +11,7 @@ import { COLORS } from '../gral/constants';
 import Spinner from './spinner';
 import Icon from './icon';
 
-const DEBUG = true && process.env.NODE_ENV !== 'production';
+const DEBUG = false && process.env.NODE_ENV !== 'production';
 
 /* --
 **Column definitions:**

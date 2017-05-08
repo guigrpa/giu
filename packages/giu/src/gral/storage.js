@@ -6,27 +6,33 @@ function setLocalStorageNamespace(newNamespace: string) {
   namespace = newNamespace;
 }
 
-function localGet(key: string, { defaultValue }: {|
-  defaultValue?: any,
-|} = {}): any {
+function localGet(
+  key: string,
+  {
+    defaultValue,
+  }: {|
+    defaultValue?: any,
+  |} = {},
+): any {
   let out = defaultValue;
   try {
     const str: any = localStorage[`${namespace}_${key}`];
     out = JSON.parse(str);
-  } catch (err) { /* ignore */ }
+  } catch (err) {
+    /* ignore */
+  }
   return out;
 }
 
 function localSet(key: string, val: any) {
   try {
     localStorage[`${namespace}_${key}`] = JSON.stringify(val);
-  } catch (err) { /* ignore */ }
+  } catch (err) {
+    /* ignore */
+  }
 }
 
 // ==========================================
 // Public API
 // ==========================================
-export {
-  setLocalStorageNamespace,
-  localGet, localSet,
-};
+export { setLocalStorageNamespace, localGet, localSet };

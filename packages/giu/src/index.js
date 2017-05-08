@@ -23,10 +23,10 @@ import tinycolor from 'tinycolor2';
 export { tinycolor };
 
 // Components
-import Giu                from './components/giu';
+import Giu from './components/giu';
 export { Giu };
 
-import Select             from './inputs/select';
+import Select from './inputs/select';
 export { Select };
 export { LIST_SEPARATOR } from './inputs/selectCustom';
 export {
@@ -34,101 +34,118 @@ export {
   PasswordInput,
   NumberInput,
   RangeInput,
-}                         from './inputs/textNumberRangeInput';
-import DateInput          from './inputs/dateInput';
+} from './inputs/textNumberRangeInput';
+import DateInput from './inputs/dateInput';
 export { DateInput };
-import Textarea           from './inputs/textarea';
+import Textarea from './inputs/textarea';
 export { Textarea };
-import Checkbox           from './inputs/checkbox';
+import Checkbox from './inputs/checkbox';
 export { Checkbox };
-import FileInput          from './inputs/fileInput';
+import FileInput from './inputs/fileInput';
 export { FileInput };
-import RadioGroup         from './inputs/radioGroup';
+import RadioGroup from './inputs/radioGroup';
 export { RadioGroup };
-import ColorInput         from './inputs/colorInput';
+import ColorInput from './inputs/colorInput';
 export { ColorInput };
 
 export {
   Modals,
   reducer as modalReducer,
   actions as modalActions,
-  modalPush, modalPop, isModalActive,
-}                         from './components/modals';
-import Modal              from './components/modal';
+  modalPush,
+  modalPop,
+  isModalActive,
+} from './components/modals';
+import Modal from './components/modal';
 export { Modal };
 export {
   Notifications,
   reducer as notifReducer,
   actions as notifActions,
-  notify, notifRetain, notifDelete, notifDeleteByName,
-}                         from './components/notifications';
-import Notification       from './components/notification';
+  notify,
+  notifRetain,
+  notifDelete,
+  notifDeleteByName,
+} from './components/notifications';
+import Notification from './components/notification';
 export { Notification };
 export {
   Floats,
-  floatAdd, floatDelete, floatUpdate, floatReposition,
-}                         from './components/floats';
+  floatAdd,
+  floatDelete,
+  floatUpdate,
+  floatReposition,
+} from './components/floats';
 export {
   Hints,
   reducer,
   actions,
-  hintDefine, hintDisableAll, hintReset, hintShow, hintHide, isHintShown,
-}                         from './components/hints';
-import HintScreen         from './components/hintScreen';
+  hintDefine,
+  hintDisableAll,
+  hintReset,
+  hintShow,
+  hintHide,
+  isHintShown,
+} from './components/hints';
+import HintScreen from './components/hintScreen';
 export { HintScreen };
 
 import DataTable, { SORT_MANUALLY } from './components/dataTable';
 export { DataTable, SORT_MANUALLY };
-import VirtualScroller    from './components/virtualScroller';
+import VirtualScroller from './components/virtualScroller';
 export { VirtualScroller };
-import DropDownMenu       from './components/dropDownMenu';
+import DropDownMenu from './components/dropDownMenu';
 export { DropDownMenu };
-import Button             from './components/button';
+import Button from './components/button';
 export { Button };
-import Icon               from './components/icon';
+import Icon from './components/icon';
 export { Icon };
-import Spinner            from './components/spinner';
+import Spinner from './components/spinner';
 export { Spinner };
-import LargeMessage       from './components/largeMessage';
+import LargeMessage from './components/largeMessage';
 export { LargeMessage };
-import Progress           from './components/progress';
+import Progress from './components/progress';
 export { Progress };
 
 // HOCs
-import hoverable          from './hocs/hoverable';
+import hoverable from './hocs/hoverable';
 export { hoverable };
-import input              from './hocs/input';
+import input from './hocs/input';
 export { input };
 
 // Styles
 export {
-  flexContainer, flexItem,
+  flexContainer,
+  flexItem,
   boxWithShadow,
-  isDark, isLight,
-  darken, lighten,
+  isDark,
+  isLight,
+  darken,
+  lighten,
   addStylesToPage,
-}                         from './gral/styles';
+} from './gral/styles';
 export {
-  COLORS, KEYS, FONTS,
+  COLORS,
+  KEYS,
+  FONTS,
   getScrollbarWidth,
-  IS_MAC, IS_IOS,
-}                         from './gral/constants';
+  IS_MAC,
+  IS_IOS,
+} from './gral/constants';
 
 // Other
 export {
   bindAll,
-  cancelEvent, preventDefault, stopPropagation,
+  cancelEvent,
+  preventDefault,
+  stopPropagation,
   cancelBodyScrolling,
-  windowHeightWithoutScrollbar, windowWidthWithoutScrollbar,
-}                         from './gral/helpers';
+  windowHeightWithoutScrollbar,
+  windowWidthWithoutScrollbar,
+} from './gral/helpers';
 // Disabled since it adds a polyfill dependency; might not be worth it now
 // export *                  from './gral/wait';
-export *                  from './gral/validators';
-export {
-  isAnyModifierPressed,
-}                         from './gral/keys';
-export {
-  isVisible,
-  scrollIntoView,
-}                         from './gral/visibility';
-export *                  from './gral/storage';
+export * from './gral/validators';
+export { isAnyModifierPressed } from './gral/keys';
+export { isVisible, scrollIntoView } from './gral/visibility';
+export * from './gral/storage';

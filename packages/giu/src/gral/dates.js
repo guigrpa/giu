@@ -1,13 +1,9 @@
 // @flow
 
 import moment from '../vendor/moment';
-import type { Moment }     from '../gral/types';
+import type { Moment } from '../gral/types';
 
-function getUtcFlag(
-  fDate: boolean,
-  fTime: boolean,
-  fUtc: ?boolean,
-): boolean {
+function getUtcFlag(fDate: boolean, fTime: boolean, fUtc: ?boolean): boolean {
   return fUtc != null ? fUtc : !(fDate && fTime);
 }
 
@@ -26,14 +22,14 @@ function startOfDefaultDay(fUtc: boolean): Moment {
 }
 
 function getTimeInSecs(mom: Moment): number {
-  return (mom.hours() * 3600) + (mom.minutes() * 60) + mom.seconds();
+  return mom.hours() * 3600 + mom.minutes() * 60 + mom.seconds();
 }
 
 // Date formatting
-const dateFormat = (): string =>
-  moment.localeData().longDateFormat('L');
-const timeFormat = (fSeconds: boolean): string =>
-  `HH:mm${fSeconds ? ':ss' : ''}`;
+const dateFormat = (): string => moment.localeData().longDateFormat('L');
+const timeFormat = (
+  fSeconds: boolean,
+): string => `HH:mm${fSeconds ? ':ss' : ''}`;
 function dateTimeFormat(
   fDate: boolean,
   fTime: boolean,
@@ -44,10 +40,7 @@ function dateTimeFormat(
   return `${dateFormat()} ${timeFormat(fSeconds)}`;
 }
 
-function dateTimeFormatNative(
-  fDate: boolean,
-  fTime: boolean,
-): string {
+function dateTimeFormatNative(fDate: boolean, fTime: boolean): string {
   let out;
   if (fDate && fTime) {
     out = 'YYYY-MM-DDTHH:mm:ss';
@@ -66,5 +59,6 @@ export {
   getTimeInSecs,
   dateFormat,
   timeFormat,
-  dateTimeFormat, dateTimeFormatNative,
+  dateTimeFormat,
+  dateTimeFormatNative,
 };

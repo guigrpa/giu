@@ -98,7 +98,7 @@ const modalPop = () => store.dispatch(actions.modalPop());
 // Modals component
 // ==========================================
 type Props = {
-  modals: State,
+  modals?: State,
 };
 
 class Modals extends React.PureComponent {

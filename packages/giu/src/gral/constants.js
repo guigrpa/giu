@@ -1,3 +1,5 @@
+// @flow
+
 const COLORS = {
   // Text
   dim: '#999999',
@@ -74,18 +76,20 @@ const NULL_STRING = '__NULL__';
 // ==========================================
 // Scrollbar width
 // ==========================================
-// -- **getScrollbarWidth()**
-// --
-// -- Measures and returns the scrollbar width.
-// --
-// -- Measurements are taken lazily when first requested.
-// -- On window `resize`, it is measured again (zooming causes
-// -- the reported widths to change, and the `resize` event is a
-// -- reliable way to detect zooming).
-// -- Note that the returned value might be zero,
-// -- e.g. on OS X with overlaid scrollbars.
-// --
-// -- * **Returns** *?number*: scrollbar width in pixels
+/* --
+**getScrollbarWidth()**
+
+Measures and returns the scrollbar width.
+
+Measurements are taken lazily when first requested.
+On window `resize`, it is measured again (zooming causes
+the reported widths to change, and the `resize` event is a
+reliable way to detect zooming).
+Note that the returned value might be zero,
+e.g. on OS X with overlaid scrollbars.
+
+* **Returns** *?number*: scrollbar width in pixels
+-- */
 let scrollbarWidth: number;
 function updateScrollbarWidth() {
   // May be SSR, hence try
@@ -99,9 +103,11 @@ function updateScrollbarWidth() {
     scrollDiv.style.height = '100px';
     scrollDiv.style.overflow = 'scroll';
     scrollDiv.style.opacity = '0.001';
-    document.body.appendChild(scrollDiv);
+    const { body } = document;
+    if (body == null) throw new Error('document.body not present');
+    body.appendChild(scrollDiv);
     scrollbarWidth = scrollDiv.offsetWidth - scrollDiv.clientWidth;
-    document.body.removeChild(scrollDiv);
+    body.removeChild(scrollDiv);
   } catch (err) {
     scrollbarWidth = 0;
   }
@@ -113,7 +119,9 @@ function getScrollbarWidth(): number {
 
 try {
   window.addEventListener('resize', updateScrollbarWidth);
-} catch (err) { /* ignore */ }
+} catch (err) {
+  /* ignore */
+}
 
 // ==========================================
 // Platform detection
@@ -125,15 +133,22 @@ let IS_IOS = false;
 try {
   IS_MAC = /Mac/.test(navigator.platform);
   IS_IOS = /iPod|iPhone|iPad/.test(navigator.platform);
-} catch (err) { /* ignore */ }
+} catch (err) {
+  /* ignore */
+}
 /* eslint-enable import/no-mutable-exports */
 
 // ==========================================
 // Public API
 // ==========================================
 export {
-  COLORS, KEYS, UNICODE, MISC, FONTS,
+  COLORS,
+  KEYS,
+  UNICODE,
+  MISC,
+  FONTS,
   NULL_STRING,
   getScrollbarWidth,
-  IS_MAC, IS_IOS,
+  IS_MAC,
+  IS_IOS,
 };

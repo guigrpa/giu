@@ -14,9 +14,10 @@ Waits for a given number of milliseconds.
 * **delay** *number*: delay [ms]
 * **Returns** *Promise<void>*: resolves when the delay expires.
 -- */
-const delay = (ms: number) => new Promise((resolve) => {
-  setTimeout(resolve, ms);
-});
+const delay = (ms: number) =>
+  new Promise(resolve => {
+    setTimeout(resolve, ms);
+  });
 
 /* --
 **waitUntil()**
@@ -32,7 +33,7 @@ Waits until a given condition is true, or until time runs out.
 const waitUntil = async (
   cb: () => boolean,
   timeout: number = Infinity,
-  waiterId: ?string
+  waiterId: ?string,
 ) => {
   let t = 0;
   if (cb()) return;
@@ -66,6 +67,4 @@ const isWaiting = (waiterId?: string) => {
 // ==========================================
 // Public API
 // ==========================================
-export {
-  delay, waitUntil, isWaiting,
-};
+export { delay, waitUntil, isWaiting };

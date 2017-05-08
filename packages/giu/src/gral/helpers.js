@@ -1,65 +1,72 @@
-import {
-  merge,
-  addDefaults,
-}                           from 'timm';
-import unorm                from 'unorm';
-import {
-  getScrollbarWidth,
-}                           from '../gral/constants';
+// @flow
 
-// -- **bindAll()**
-// --
-// -- Binds a list of object methods to the object with `Function#bind()`.
-// -- Especially useful for ES6-style React components.
-// --
-// -- * **self** *Object*: methods will be bound to this object
-// -- * **fnNames** *Array<string>*: list of method names
+import { merge, addDefaults } from 'timm';
+import unorm from 'unorm';
+import { getScrollbarWidth } from '../gral/constants';
+
+/* --
+**bindAll()**
+
+Binds a list of object methods to the object with `Function#bind()`.
+Especially useful for ES6-style React components.
+
+* **self** *Object*: methods will be bound to this object
+* **fnNames** *Array<string>*: list of method names
+-- */
 function bindAll(self: Object, fnNames: Array<string>) {
-  fnNames.forEach((name) => {
+  fnNames.forEach(name => {
     /* eslint-disable no-param-reassign */
     self[name] = self[name].bind(self);
     /* eslint-enable no-param-reassign */
   });
 }
 
-// -- **cancelEvent()**
-// --
-// -- Calls `preventDefault()` and `stopPropagation()` on the provided event.
-// --
-// -- * **ev** *?SyntheticEvent*: event to be cancelled
+/* --
+**cancelEvent()**
+
+Calls `preventDefault()` and `stopPropagation()` on the provided event.
+
+* **ev** *?SyntheticEvent*: event to be cancelled
+-- */
 function cancelEvent(ev: ?SyntheticEvent) {
   if (!ev) return;
   ev.preventDefault && ev.preventDefault();
   ev.stopPropagation && ev.stopPropagation();
 }
 
-// -- **preventDefault()**
-// --
-// -- Calls `preventDefault()` on the provided event.
-// --
-// -- * **ev** *?SyntheticEvent*: event for which default behaviour is to be prevented
+/* --
+**preventDefault()**
+
+Calls `preventDefault()` on the provided event.
+
+* **ev** *?SyntheticEvent*: event for which default behaviour is to be prevented
+-- */
 function preventDefault(ev: ?SyntheticEvent) {
   if (!ev) return;
   ev.preventDefault && ev.preventDefault();
 }
 
-// -- **stopPropagation()**
-// --
-// -- Calls `stopPropagation()` on the provided event.
-// --
-// -- * **ev** *?SyntheticEvent*: event for which default behaviour is to be prevented
+/* --
+**stopPropagation()**
+
+Calls `stopPropagation()` on the provided event.
+
+* **ev** *?SyntheticEvent*: event for which default behaviour is to be prevented
+-- */
 function stopPropagation(ev: ?SyntheticEvent) {
   if (!ev) return;
   ev.stopPropagation && ev.stopPropagation();
 }
 
-// -- **cancelBodyScrolling()**
-// --
-// -- `onWheel` event handler that can be attached to a scroller DOM node,
-// -- in order to prevent `wheel` events to cause document scrolling when
-// -- the scroller reaches the top/bottom of its contents.
-// --
-// -- * **ev** *SyntheticWheelEvent*: `wheel` event
+/* --
+**cancelBodyScrolling()**
+
+`onWheel` event handler that can be attached to a scroller DOM node,
+in order to prevent `wheel` events to cause document scrolling when
+the scroller reaches the top/bottom of its contents.
+
+* **ev** *SyntheticWheelEvent*: `wheel` event
+-- */
 function cancelBodyScrolling(ev: SyntheticWheelEvent) {
   const el = ev.currentTarget;
   if (!(el instanceof Element)) return;
@@ -67,8 +74,8 @@ function cancelBodyScrolling(ev: SyntheticWheelEvent) {
   if (!(nativeEvent instanceof WheelEvent)) return;
   if (nativeEvent.deltaY <= 0) {
     if (el.scrollTop <= 0) cancelEvent(ev);
-  } else {
-    if (el.scrollTop + el.clientHeight + 0.5 >= el.scrollHeight) cancelEvent(ev);
+  } else if (el.scrollTop + el.clientHeight + 0.5 >= el.scrollHeight) {
+    cancelEvent(ev);
   }
   stopPropagation(ev);
 }
@@ -80,8 +87,13 @@ function windowBottomScrollbarHeight(): number {
   let out = 0;
   // May be SSR, hence try
   try {
-    if (document.body.scrollWidth > window.innerWidth) out = getScrollbarWidth();
-  } catch (err) { /* ignore */ }
+    const { body } = document;
+    if (body && body.scrollWidth > window.innerWidth) {
+      out = getScrollbarWidth();
+    }
+  } catch (err) {
+    /* ignore */
+  }
   return out;
 }
 
@@ -89,17 +101,24 @@ function windowRightScrollbarWidth(): number {
   let out = 0;
   // May be SSR, hence try
   try {
-    if (document.body.scrollHeight > window.innerHeight) out = getScrollbarWidth();
-  } catch (err) { /* ignore */ }
+    const { body } = document;
+    if (body && body.scrollHeight > window.innerHeight) {
+      out = getScrollbarWidth();
+    }
+  } catch (err) {
+    /* ignore */
+  }
   return out;
 }
 
-// -- **windowHeightWithoutScrollbar() / windowWidthWithoutScrollbar()**
-// --
-// -- Provides the inner height (width) of the window
-// -- excluding scrollbars (if any).
-// --
-// -- * **Returns** *number*: inner height (width) in pixels
+/* --
+**windowHeightWithoutScrollbar() / windowWidthWithoutScrollbar()**
+
+Provides the inner height (width) of the window
+excluding scrollbars (if any).
+
+* **Returns** *number*: inner height (width) in pixels
+-- */
 function windowHeightWithoutScrollbar(): number {
   // May be SSR, hence try
   try {
@@ -137,10 +156,14 @@ function simplifyString(str: string): string {
 // ==========================================
 export {
   bindAll,
-  cancelEvent, preventDefault, stopPropagation,
+  cancelEvent,
+  preventDefault,
+  stopPropagation,
   cancelBodyScrolling,
-  windowBottomScrollbarHeight, windowRightScrollbarWidth,
-  windowHeightWithoutScrollbar, windowWidthWithoutScrollbar,
+  windowBottomScrollbarHeight,
+  windowRightScrollbarWidth,
+  windowHeightWithoutScrollbar,
+  windowWidthWithoutScrollbar,
   propsWithDefaultsAndOverrides,
   simplifyString,
 

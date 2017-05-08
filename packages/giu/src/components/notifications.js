@@ -146,7 +146,7 @@ const notifDeleteByName = (name: string) => {
 // Notifications component
 // ==========================================
 type Props = {
-  notifs?: State,
+  notifs?: ?State,
 };
 
 class Notifications extends React.PureComponent {

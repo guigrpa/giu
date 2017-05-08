@@ -1,11 +1,12 @@
 // @flow
 
 /* eslint-disable no-underscore-dangle */
-import { set as timmSet }   from 'timm';
+import { set as timmSet } from 'timm';
 import {
-  windowHeightWithoutScrollbar, windowWidthWithoutScrollbar,
-}                           from '../gral/helpers';
-import { MISC }             from '../gral/constants';
+  windowHeightWithoutScrollbar,
+  windowWidthWithoutScrollbar,
+} from '../gral/helpers';
+import { MISC } from '../gral/constants';
 
 export type ScrollIntoViewOptions = {
   fHoriz?: ?boolean,
@@ -16,15 +17,17 @@ export type ScrollIntoViewOptions = {
 // Get-cropping-ancestor algorithm (recursive)
 // ==========================================
 
-// -- **isVisible()**
-// --
-// -- Determines whether the provided node is *fully* visible
-// -- in the browser window.
-// --
-// -- * **node** *?Node*: DOM node; if unspecified, the function returns `false`
-// -- * **bcr?** *ClientRect*: bounding client rectangle for `node`; if not specified,
-// --   `getBoundingClientRect()` will be called on `node`
-// -- * **Returns** *boolean*
+/* --
+**isVisible()**
+
+Determines whether the provided node is *fully* visible
+in the browser window.
+
+* **node** *?Node*: DOM node; if unspecified, the function returns `false`
+* **bcr?** *ClientRect*: bounding client rectangle for `node`; if not specified,
+  `getBoundingClientRect()` will be called on `node`
+* **Returns** *boolean*
+-- */
 function isVisible(node: ?Node, bcr0?: ClientRect): boolean {
   if (!node) return false;
   if (!(node instanceof Element)) return true;
@@ -42,10 +45,14 @@ function _getCroppingAncestor(
   if (!ancestor || !(ancestor instanceof HTMLElement)) {
     let fCropped = false;
     if (fHoriz == null || fHoriz === false) {
-      if (refBcr.top < 0 || refBcr.bottom > windowHeightWithoutScrollbar()) fCropped = true;
+      if (refBcr.top < 0 || refBcr.bottom > windowHeightWithoutScrollbar()) {
+        fCropped = true;
+      }
     }
     if (fHoriz == null || fHoriz === true) {
-      if (refBcr.left < 0 || refBcr.right > windowWidthWithoutScrollbar()) fCropped = true;
+      if (refBcr.left < 0 || refBcr.right > windowWidthWithoutScrollbar()) {
+        fCropped = true;
+      }
     }
     return fCropped ? window : null;
   }
@@ -61,13 +68,19 @@ function _getCroppingAncestor(
   let fOverflowHidden;
   if (fHoriz == null || fHoriz === false) {
     fOverflowHidden = !_isOverflowVisible(ancestor.style.overflowY);
-    if (fOverflowHidden && (refBcr.top < ancestorBcr.top || refBcr.bottom > ancestorBcr.bottom)) {
+    if (
+      fOverflowHidden &&
+      (refBcr.top < ancestorBcr.top || refBcr.bottom > ancestorBcr.bottom)
+    ) {
       fCropped = true;
     }
   }
   if (fHoriz == null || fHoriz === true) {
     fOverflowHidden = !_isOverflowVisible(ancestor.style.overflowX);
-    if (fOverflowHidden && (refBcr.left < ancestorBcr.left || refBcr.right > ancestorBcr.right)) {
+    if (
+      fOverflowHidden &&
+      (refBcr.left < ancestorBcr.left || refBcr.right > ancestorBcr.right)
+    ) {
       fCropped = true;
     }
   }
@@ -80,18 +93,20 @@ function _getCroppingAncestor(
 // Scroll-into-view algorithm (iterative)
 // ==========================================
 
-// -- **scrollIntoView()**
-// --
-// -- Scrolls the node's ancestors as needed in order to make a node fully visible
-// -- in the browser window (or at least most of it, if it is too large).
-// -- Implemented as a recursive algorithm that is first run
-// -- vertically and then horizontally.
-// --
-// -- * **node** *?Node*: DOM node
-// -- * **options?** *object = {}*: the following options are allowed:
-// --   - **topAncestor?** *?Node*: stop the recursive algorithm at this
-// --     ancestor (otherwise stops at the root level or when a `Modal`
-// --     ancestor is reached)
+/* --
+**scrollIntoView()**
+
+Scrolls the node's ancestors as needed in order to make a node fully visible
+in the browser window (or at least most of it, if it is too large).
+Implemented as a recursive algorithm that is first run
+vertically and then horizontally.
+
+* **node** *?Node*: DOM node
+* **options?** *object = {}*: the following options are allowed:
+  - **topAncestor?** *?Node*: stop the recursive algorithm at this
+    ancestor (otherwise stops at the root level or when a `Modal`
+    ancestor is reached)
+-- */
 function scrollIntoView(node: ?Node, options?: ?ScrollIntoViewOptions = {}) {
   if (!node) return;
   if (!(node instanceof Element)) return;
@@ -112,7 +127,9 @@ function _scrollIntoView(node: Element, options: ScrollIntoViewOptions) {
     let ancestor2;
     if (fWindowLevel) {
       ancestor1 = 0;
-      ancestor2 = fHoriz ? windowWidthWithoutScrollbar() : windowHeightWithoutScrollbar();
+      ancestor2 = fHoriz
+        ? windowWidthWithoutScrollbar()
+        : windowHeightWithoutScrollbar();
     } else {
       const bcr2 = ancestor.getBoundingClientRect();
       ancestor1 = fHoriz ? bcr2.left : bcr2.top;
@@ -136,11 +153,13 @@ function _scrollIntoView(node: Element, options: ScrollIntoViewOptions) {
       const deltaY = fHoriz ? 0 : delta;
       window.scrollBy(deltaX, deltaY);
     } else {
+      /* eslint-disable no-lonely-if */
       if (fHoriz) {
         ancestor.scrollLeft += delta;
       } else {
         ancestor.scrollTop += delta;
       }
+      /* eslint-enable no-lonely-if */
     }
 
     // Update before iterating: BCR may have changed, and we may still not be visible
@@ -155,13 +174,10 @@ function _scrollIntoView(node: Element, options: ScrollIntoViewOptions) {
 // Helpers
 // ==========================================
 function _isOverflowVisible(overflow) {
-  return (!overflow || overflow === 'visible');
+  return !overflow || overflow === 'visible';
 }
 
 // ==========================================
 // Public API
 // ==========================================
-export {
-  isVisible,
-  scrollIntoView,
-};
+export { isVisible, scrollIntoView };
