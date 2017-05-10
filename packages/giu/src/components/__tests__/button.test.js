@@ -3,7 +3,7 @@
 /* eslint-env jest */
 
 import React from 'react';
-import renderer from 'react-test-renderer';
+import renderer from 'react-test-renderer'; // eslint-disable-line
 import Button from '../button';
 
 describe('Button', () => {

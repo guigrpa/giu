@@ -1,6 +1,7 @@
 /* eslint-disable global-require, no-console, max-len */
 /* eslint-disable react/prop-types, react/no-multi-comp, react/prefer-stateless-function, react/jsx-boolean-value */
 /* eslint-disable react/jsx-indent */
+/* eslint-disable react/no-string-refs, react/no-unescaped-entities, react/no-danger, react/no-array-index-key */
 import 'babel-polyfill';  // eslint-disable-line
 import React                from 'react';
 import ReactDOM             from 'react-dom';

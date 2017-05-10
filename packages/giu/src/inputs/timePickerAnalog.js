@@ -81,7 +81,9 @@ class TimePickerAnalog extends React.PureComponent {
       this.minutes = curValue.minutes();
       this.seconds = curValue.seconds();
     } else {
-      this.hours = this.minutes = this.seconds = null;
+      this.hours = null;
+      this.minutes = null;
+      this.seconds = null;
     }
     this.radius = size / 2 - 2;
     this.translate = size / 2;
@@ -237,7 +239,9 @@ class TimePickerAnalog extends React.PureComponent {
       12);
     // Assume the user wants hours >= 7 by default
     if (hours < 7) hours += 12;
-    this.hours = this.minutes = this.seconds = 0;
+    this.hours = 0;
+    this.minutes = 0;
+    this.seconds = 0;
     this.setUnits(ev, hours, 'hours');
   }
 

@@ -1,8 +1,7 @@
+/* eslint-disable no-console */
+
 import React from 'react';
-import {
-  Floats,
-  TextInput, PasswordInput,
-} from '../src';
+import { Floats, TextInput, PasswordInput } from '../src';
 
 const Component = class extends React.Component {
   // componentDidMount() {
@@ -17,14 +16,20 @@ const Component = class extends React.Component {
     return (
       <div className="login">
         <Floats />
-        <form onSubmit={(ev) => this.onHandleSubmit(ev)}>
-          <TextInput ref={c => { this.refUserName = c; }}
+        <form onSubmit={ev => this.onHandleSubmit(ev)}>
+          <TextInput
+            ref={c => {
+              this.refUserName = c;
+            }}
             id="a"
             value=""
             placeholder="Enter your name"
             focusOnChange={false}
           />
-          <PasswordInput ref={c => { this.refPassword = c; }}
+          <PasswordInput
+            ref={c => {
+              this.refPassword = c;
+            }}
             id="b"
             value=""
             placeholder="Enter your password"
@@ -50,11 +55,11 @@ const Component = class extends React.Component {
         'Content-Type': 'application/json',
       },
     })
-    .then(res => {
-      console.log(res)
-      return fetch('/api');
-    })
-    .catch(() => {});
+      .then(res => {
+        console.log(res);
+        return fetch('/api');
+      })
+      .catch(() => {});
   }
 };
 
