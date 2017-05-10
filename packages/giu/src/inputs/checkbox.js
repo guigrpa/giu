@@ -1,35 +1,56 @@
-import React                from 'react';
-import { omit }             from 'timm';
-import input                from '../hocs/input';
+// @flow
 
-function toInternalValue(val) { return val != null ? val : false; }
-function toExternalValue(val) { return val; }
-function isNull(val) { return val == null; }
+import React from 'react';
+import { omit } from 'timm';
+import input, { INPUT_HOC_INVALID_HTML_PROPS } from '../hocs/input';
+
+const toInternalValue = val => (val != null ? val : false);
+const toExternalValue = val => val;
+const isNull = val => val == null;
 
 let cntId = 0;
 
 // ==========================================
-// Component
+// Types
 // ==========================================
 // -- Props:
-// --
-// -- * **label** *any?*: React components to be included in the
-// --   checkbox's `label` element
-// -- * **styleLabel** *object?*: merged with the `label` style
-class Checkbox extends React.Component {
-  static propTypes = {
-    id:                     React.PropTypes.string,
-    label:                  React.PropTypes.any,
-    disabled:               React.PropTypes.bool,
-    styleLabel:             React.PropTypes.object,
-    // Input HOC
-    curValue:               React.PropTypes.bool.isRequired,
-    registerOuterRef:       React.PropTypes.func.isRequired,
-    registerFocusableRef:   React.PropTypes.func.isRequired,
-    // all others are passed through to the `input` unchanged
-  };
+/* eslint-disable no-unused-vars */
+// -- START_DOCS
+type PublicProps = {
+  id?: string,
+  label?: any, // React components to be included in the checkbox's `label` element
+  disabled?: boolean,
+  styleLabel?: Object, // merged with the `label` style
+  // all others are passed through to the `input` unchanged
+};
+// -- END_DOCS
+/* eslint-enable no-unused-vars */
 
-  constructor(props) {
+const FILTERED_OUT_PROPS = [
+  'id',
+  'label',
+  'disabled',
+  'styleLabel',
+  ...INPUT_HOC_INVALID_HTML_PROPS,
+];
+
+type Props = {
+  /* :: ...$Exact<PublicProps>, */
+  // Input HOC
+  curValue: boolean,
+  registerOuterRef: Function,
+  registerFocusableRef: Function,
+};
+
+// ==========================================
+// Component
+// ==========================================
+class Checkbox extends React.Component {
+  static defaultProps = {};
+  props: Props;
+  labelId: string;
+
+  constructor(props: Props) {
     super(props);
     this.labelId = this.props.id || `giu-checkbox_${cntId}`;
     cntId += 1;
@@ -47,7 +68,8 @@ class Checkbox extends React.Component {
   renderWithLabel() {
     const { label, registerOuterRef, styleLabel } = this.props;
     return (
-      <span ref={registerOuterRef}
+      <span
+        ref={registerOuterRef}
         className="giu-checkbox"
         style={style.wrapper}
       >
@@ -57,12 +79,14 @@ class Checkbox extends React.Component {
     );
   }
 
-  renderInput(className) {
+  renderInput(className?: string) {
     const { curValue, disabled, registerFocusableRef } = this.props;
-    const inputProps = omit(this.props, PROP_KEYS_TO_REMOVE_FROM_INPUT);
+    const inputProps = omit(this.props, FILTERED_OUT_PROPS);
     return (
-      <input ref={registerFocusableRef}
-        id={this.labelId} className={className}
+      <input
+        ref={registerFocusableRef}
+        id={this.labelId}
+        className={className}
         type="checkbox"
         checked={curValue}
         tabIndex={disabled ? -1 : undefined}
@@ -83,17 +107,11 @@ const style = {
 };
 
 // ==========================================
-// Miscellaneous
-// ==========================================
-const PROP_KEYS_TO_REMOVE_FROM_INPUT = Object.keys(Checkbox.propTypes).concat([
-  'cmds', 'errors', 'keyDown', 'fFocused',
-  'floatZ', 'floatPosition', 'onResizeOuter', 'styleOuter',
-]);
-
-// ==========================================
 // Public API
 // ==========================================
 export default input(Checkbox, {
-  toInternalValue, toExternalValue, isNull,
+  toInternalValue,
+  toExternalValue,
+  isNull,
   valueAttr: 'checked',
 });

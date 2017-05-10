@@ -31,7 +31,7 @@ isDate()
 export type ValidationFunction = (
   val: any,
   props: Object,
-  context: Object
+  context: any
 ) => (Promise<?string> | ?string);
 
 type ErrorMessageFunction = (
@@ -42,7 +42,7 @@ type ErrorMessageFunction = (
 
 type CustomErrorMessage = string | ErrorMessageFunction;
 
-export type Validator = {
+export type Validator = ValidationFunction | {
   fInternal?: boolean,
   id?: string,
   validate?: ValidationFunction,

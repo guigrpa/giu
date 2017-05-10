@@ -4,19 +4,22 @@ import keycode from 'keycode';
 import { UNICODE, IS_MAC } from '../gral/constants';
 import { cancelEvent } from '../gral/helpers';
 
-export type KeyboardEventPars = {
+/* eslint-disable no-unused-vars */
+type Modifiers = {|
   altKey: boolean,
   metaKey: boolean,
   ctrlKey: boolean,
   shiftKey: boolean,
+|};
+/* eslint-enable no-unused-vars */
+
+export type KeyboardEventPars = {
+  /* :: ...Modifiers, */
   keyCode: number,
   which: number,
 };
 export type KeyboardShortcut = {
-  altKey: boolean,
-  metaKey: boolean,
-  ctrlKey: boolean,
-  shiftKey: boolean,
+  /* :: ...Modifiers, */
   keyCodes: Array<number>,
   keyNames: Array<string>,
   hash: string,
@@ -33,11 +36,8 @@ function getHash({
   ctrlKey,
   shiftKey,
 }: {
+  /* :: ...Modifiers, */
   keyCode: number,
-  altKey: boolean,
-  metaKey: boolean,
-  ctrlKey: boolean,
-  shiftKey: boolean,
 }) {
   return (
     `${String(keyCode)},alt=${String(altKey)},` +

@@ -20,8 +20,8 @@ type PublicProps = {
   index: number,
   childProps?: Object,
   ChildComponent: ReactClass<*>,
-  onChangeHeight: ?(id: string, height: number) => void,
-  top: ?number,
+  onChangeHeight?: (id: string, height: number) => void,
+  top?: number,
 };
 
 type DefaultProps = {

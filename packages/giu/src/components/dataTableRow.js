@@ -55,7 +55,7 @@ export type DataTableColumn = {
   minWidth?: number,
   flexGrow?: number,
   flexShrink?: number,
-  style?: ?Object, // Mixed with each row/header cell's outer div
+  style?: Object, // Mixed with each row/header cell's outer div
 };
 /* -- END_DOCS -- */
 
@@ -159,11 +159,11 @@ class DataTableRow extends React.PureComponent {
     item: Object,
     cols: Array<DataTableColumn>,
     selectedIds: Array<string>,
-    commonCellProps: ?Object,
+    commonCellProps?: Object,
     fSortedManually: boolean,
     onMayHaveChangedHeight: () => void,
     onClick: (ev: SyntheticEvent, id: string) => void,
-    style: ?Object,
+    style?: Object,
     selectedBgColor: string,
     selectedFgColor: string,
   };

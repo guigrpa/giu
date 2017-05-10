@@ -11,11 +11,11 @@ import {
 } from '../gral/styles';
 import { COLORS, FONTS } from '../gral/constants';
 import hoverable from '../hocs/hoverable';
-/* :: import type { HoverableProps } from '../hocs/hoverable'; */
-import Icon from './icon';
 /* eslint-disable no-unused-vars */
+import type { HoverableProps } from '../hocs/hoverable';
 import type { NotificationType, NotificationPars } from './notificationTypes';
 /* eslint-enable no-unused-vars */
+import Icon from './icon';
 
 // ==========================================
 // Component

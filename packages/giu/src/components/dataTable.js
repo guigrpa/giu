@@ -86,16 +86,16 @@ in time (as a result of passed-down props or their own intrinsic state).
 type PublicProps = {
   // Basic
   // -----
-  itemsById?: ?Object, // Rows, keyed by id (default: {})
+  itemsById?: Object, // Rows, keyed by id (default: {})
   cols: Array<DataTableColumn>, // Column configuration objects
   lang?: string, // Used to force-refresh when language changes
 
   // Set of rows to be shown (before filtering)
   // ------------------------------------------
-  shownIds?: ?Array<string>, // Row ids to be shown (default: [], no rows)
+  shownIds?: Array<string>, // Row ids to be shown (default: [], no rows)
   onChangeShownIds?: (shownIds: Array<string>) => void,
   alwaysRenderIds?: Array<string>, // Render these rows even when not visible (e.g. editing)
-  commonCellProps?: ?Object, // Passed to all column `render` functions
+  commonCellProps?: Object, // Passed to all column `render` functions
 
   // Filtering
   // ---------
@@ -119,7 +119,7 @@ type PublicProps = {
 
   // Selection
   // ---------
-  selectedIds?: ?Array<string>,
+  selectedIds?: Array<string>,
   allowSelect?: boolean,
   multipleSelection?: boolean,
   onChangeSelection?: (selectedIds: Array<string>) => void,

@@ -1,16 +1,15 @@
-import React                from 'react';
-import {
-  merge,
-  set as timmSet,
-}                           from 'timm';
-import isFunction           from 'lodash/isFunction';
-import { preventDefault }   from '../gral/helpers';
-import { NULL_STRING }      from '../gral/constants';
+import React from 'react';
+import { merge, set as timmSet } from 'timm';
+import isFunction from 'lodash/isFunction';
+import { preventDefault } from '../gral/helpers';
+import { NULL_STRING } from '../gral/constants';
 import { LIST_SEPARATOR_KEY } from '../inputs/listPicker';
-import { GLOW }             from '../gral/styles';
-import input                from '../hocs/input';
+import { GLOW } from '../gral/styles';
+import input from '../hocs/input';
 
-function toInternalValue(val) { return val != null ? JSON.stringify(val) : NULL_STRING; }
+function toInternalValue(val) {
+  return val != null ? JSON.stringify(val) : NULL_STRING;
+}
 function toExternalValue(val) {
   if (val === NULL_STRING) return null;
   try {
@@ -21,7 +20,9 @@ function toExternalValue(val) {
     return null;
   }
 }
-function isNull(val) { return val === NULL_STRING; }
+function isNull(val) {
+  return val === NULL_STRING;
+}
 
 let cntId = 0;
 
@@ -38,14 +39,14 @@ let cntId = 0;
 // -- * **lang** *string?*: current language (NB: just used to make sure the component is refreshed)
 class RadioGroup extends React.Component {
   static propTypes = {
-    disabled:               React.PropTypes.bool,
-    items:                  React.PropTypes.array.isRequired,
-    lang:                   React.PropTypes.string,
+    disabled: React.PropTypes.bool,
+    items: React.PropTypes.array.isRequired,
+    lang: React.PropTypes.string,
     // Input HOC
-    curValue:               React.PropTypes.string.isRequired,
-    onChange:               React.PropTypes.func.isRequired,
-    registerOuterRef:       React.PropTypes.func.isRequired,
-    fFocused:               React.PropTypes.bool.isRequired,
+    curValue: React.PropTypes.string.isRequired,
+    onChange: React.PropTypes.func.isRequired,
+    registerOuterRef: React.PropTypes.func.isRequired,
+    fFocused: React.PropTypes.bool.isRequired,
   };
 
   constructor(props) {
@@ -54,21 +55,19 @@ class RadioGroup extends React.Component {
     cntId += 1;
   }
 
-  componentWillMount() { this.prepareItems(this.props.items); }
+  componentWillMount() {
+    this.prepareItems(this.props.items);
+  }
   componentWillReceiveProps(nextProps) {
     const { items } = nextProps;
     if (items !== this.props.items) this.prepareItems(items);
   }
 
   // ==========================================
-  // Render
-  // ==========================================
   render() {
     const { registerOuterRef } = this.props;
     return (
-      <div ref={registerOuterRef}
-        style={style.outer(this.props)}
-      >
+      <div ref={registerOuterRef} style={style.outer(this.props)}>
         {this.items.map(this.renderItem)}
       </div>
     );
@@ -80,10 +79,7 @@ class RadioGroup extends React.Component {
     const id = `${this.buttonGroupName}_${idx}`;
     const finalLabel = isFunction(label) ? label(this.props.lang) : label;
     return (
-      <div key={value}
-        id={idx}
-        onClick={this.onClickItem}
-      >
+      <div key={value} id={idx} onClick={this.onClickItem}>
         <input
           type="radio"
           name={this.buttonGroupName}
@@ -98,32 +94,26 @@ class RadioGroup extends React.Component {
         {labelExtra && <div style={style.labelExtra}>{labelExtra}</div>}
       </div>
     );
-  }
+  };
 
   // ==========================================
-  // Event handlers
-  // ==========================================
-  onClickItem = (ev) => {
+  onClickItem = ev => {
     const idx = Number(ev.currentTarget.id);
     const item = this.items[idx];
     if (!item) return;
     this.props.onChange(ev, item.value);
-  }
+  };
 
-  // ==========================================
-  // Helpers
   // ==========================================
   prepareItems(rawItems) {
     this.items = [];
-    rawItems.forEach((item) => {
+    rawItems.forEach(item => {
       if (item.label === LIST_SEPARATOR_KEY) return;
       this.items.push(timmSet(item, 'value', toInternalValue(item.value)));
     });
   }
 }
 
-// ==========================================
-// Styles
 // ==========================================
 const style = {
   outerBase: {
@@ -147,10 +137,12 @@ const style = {
 };
 
 // ==========================================
-// Public API
+// Public
 // ==========================================
 export default input(RadioGroup, {
-  toInternalValue, toExternalValue, isNull,
+  toInternalValue,
+  toExternalValue,
+  isNull,
   fIncludeFocusCapture: true,
   className: 'giu-radio-buttons',
 });

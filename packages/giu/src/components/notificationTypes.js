@@ -5,7 +5,7 @@
 -- */
 /* -- START_DOCS -- */
 export type NotificationType = 'info' | 'success' | 'warn' | 'error';
-export type NotificationPars = {
+export type NotificationPars = {|
   sticky?: boolean, // never delete this notification
   timeOut?: number, // time [ms] after which it's deleted [default: 4000]
   id?: string,
@@ -19,5 +19,5 @@ export type NotificationPars = {
   style?: Object, // merged with the outermost `div` style
   noStylePosition?: boolean,
   noStyleShadow?: boolean,
-};
+|};
 /* -- END_DOCS -- */

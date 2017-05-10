@@ -3,41 +3,64 @@
 /* eslint-disable no-unused-vars, max-len */
 
 import React from 'react';
+import type { StatelessComponent } from '../gral/types';
 
-export type AddedProps = {
+// =======================================
+// Example HOC
+// (no-op, it just passes through
+// all props and adds a few of its own)
+// =======================================
+type HocAddedProps = {
   extra: string,
 };
 
-type DefaultProps<DP> = {
+type PublicDefaultProps<DP> = {
   /* :: ...$Exact<DP>, */
-  /* :: ...$Exact<AddedProps>, */
+  /* :: ...$Exact<HocAddedProps>, */
 };
 
-type StatelessComponent<P> = (props: P) => ?React$Element<any>;
+type PublicProps<P> = P;
+
 type Hoc<DP, P> = {
-  (ComposedComponent: Class<React$Component<DP, P, *>>): Class<React$Component<DefaultProps<DP>, P, *>>;
+  (
+    ComposedComponent: Class<React$Component<DP, P, *>>
+  ): Class<React$Component<PublicDefaultProps<DP>, PublicProps<P>, *>>,
   (a: StatelessComponent<P>): any, // FIXME
 };
 
-const hoc: Hoc<*, *> = (ComposedComponent) => {
-  const Derived = () => {};
-  return (Derived: any);
-};
+const hoc: Hoc<*, *> = ComposedComponent => (ComposedComponent: any);
 
 // =======================================
 // Examples
 // =======================================
-type Props = { text: string, extra: string, cond?: string };
+/* eslint-disable no-unused-vars */
+type OuterProps = {
+  /* :: ...$Exact<HocAddedProps>, */
+  text: string,
+  cond?: string,
+  cond2?: string,
+};
+/* eslint-enable no-unused-vars */
+
+type Props = {
+  /* :: ...$Exact<OuterProps>, */
+  cond2: string,
+};
 
 // ---------------------------------------
 // Class-based
 // ---------------------------------------
 class A extends React.Component {
   props: Props;
-  static defaultProps = {};
+  static defaultProps = {
+    cond2: 'hello',
+  };
 
   render() {
-    return <span>{this.props.text}{this.props.extra}</span>;
+    const txt =
+      `${this.props.text} ${this.props.extra} ` +
+      `${this.props.cond || 'xxx'} ${this.props.cond2}`;
+    return <span>{txt}</span>;
   }
 }
 const HA = hoc(A);
@@ -53,14 +76,14 @@ const a1 = () => <HA />;
 // $FlowFixMe (wrong type)
 const a2 = () => <HA text={3} />;
 // $FlowFixMe (wrong type on conditional)
-const a3 = () => <HA text={3} cond={3} />;
+const a3 = () => <HA text="foo" cond={3} />;
+// $FlowFixMe (wrong type on conditional 2)
+const a4 = () => <HA text="foo" cond2={3} />;
 
 // ---------------------------------------
 // Functional examples (FIXME)
 // ---------------------------------------
-const B = (props: Props) => (
-  <span>{props.text}{props.extra}</span>
-);
+const B = (props: Props) => <span>{props.text}{props.extra}</span>;
 const HB = hoc(B);
 
 // Tests
@@ -75,4 +98,3 @@ const b1 = () => <HB />;
 const b2 = () => <HB text={3} />;
 // FIXME: should fail but doesn't (wrong type on conditional)
 const b3 = () => <HB text={3} cond={3} />;
-

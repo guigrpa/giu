@@ -27,3 +27,5 @@ export type Command = {|
 |};
 
 export type Action = { type: string };
+
+export type StatelessComponent<P> = (props: P) => ?React$Element<any>;

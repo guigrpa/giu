@@ -174,7 +174,7 @@ const FetchRowComponent = () => (
 
 class DevelopmentExample extends React.Component {
   commonCellProps: Object;
-  selectedIds: ?Array<string>;
+  selectedIds: Array<string>;
 
   constructor() {
     super();
@@ -191,6 +191,7 @@ class DevelopmentExample extends React.Component {
       fAltLayout: false,
     };
     this.commonCellProps = { onChange: this.onChange };
+    this.selectedIds = [];
   }
 
   componentDidMount() {

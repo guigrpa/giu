@@ -1,52 +1,72 @@
-import React                from 'react';
-import { omit, merge }      from 'timm';
-import {
-  preventDefault, stopPropagation,
-}                           from '../gral/helpers';
-import { KEYS }             from '../gral/constants';
-import {
-  inputReset, INPUT_DISABLED,
-}                           from '../gral/styles';
-import {
-  isAnyModifierPressed,
-}                           from '../gral/keys';
-import input                from '../hocs/input';
+// @flow
+
+import React from 'react';
+import { omit, merge } from 'timm';
+import { preventDefault, stopPropagation } from '../gral/helpers';
+import { KEYS } from '../gral/constants';
+import { inputReset, INPUT_DISABLED } from '../gral/styles';
+import { isAnyModifierPressed } from '../gral/keys';
+import input, { INPUT_HOC_INVALID_HTML_PROPS } from '../hocs/input';
 
 const DEBUG = false && process.env.NODE_ENV !== 'production';
 
 const NULL_VALUE = '';
-function toInternalValue(val) { return val != null ? val : NULL_VALUE; }
-function toExternalValue(val) { return val !== NULL_VALUE ? val : null; }
-function isNull(val) { return val === NULL_VALUE; }
+const toInternalValue = val => (val != null ? val : NULL_VALUE);
+const toExternalValue = val => (val !== NULL_VALUE ? val : null);
+const isNull = val => val === NULL_VALUE;
 
-function getPlaceHolderText(val) {
+const getPlaceholderText = val => {
   const lines = val.split('\n');
-  const out = !lines[lines.length - 1].length
-    ? `${val}x`
-    : val;
+  const out = !lines[lines.length - 1].length ? `${val}x` : val;
   return out;
-}
+};
 
 let cntId = 0;
+
+// ==========================================
+// Types
+// ==========================================
+// -- Props:
+/* eslint-disable no-unused-vars */
+// -- START_DOCS
+type PublicProps = {
+  style?: Object,
+  skipTheme?: boolean,
+  // all others are passed through unchanged
+};
+// -- END_DOCS
+/* eslint-enable no-unused-vars */
+
+type Props = {
+  /* :: ...$Exact<PublicProps>, */
+  // Input HOC
+  curValue: string,
+  disabled?: boolean,
+  registerOuterRef: Function,
+  registerFocusableRef: Function,
+  fFocused: boolean,
+  onResizeOuter: Function,
+};
+
+const FILTERED_OUT_PROPS = [
+  'style',
+  'skipTheme',
+  ...INPUT_HOC_INVALID_HTML_PROPS,
+];
+const FILTERED_OUT_PROPS_MDL = [...FILTERED_OUT_PROPS, 'placeholder'];
 
 // ==========================================
 // Component
 // ==========================================
 class Textarea extends React.Component {
-  static propTypes = {
-    style:                  React.PropTypes.object,
-    skipTheme:              React.PropTypes.bool,
-    // Input HOC
-    curValue:               React.PropTypes.any.isRequired,
-    errors:                 React.PropTypes.array.isRequired,
-    registerOuterRef:       React.PropTypes.func.isRequired,
-    registerFocusableRef:   React.PropTypes.func.isRequired,
-    fFocused:               React.PropTypes.bool.isRequired,
-    onResizeOuter:          React.PropTypes.func.isRequired,
-    // all others are passed through unchanged
-  };
+  static defaultProps = {};
+  props: Props;
+  labelId: string;
+  refInput: ?Object;
+  refOuter: ?Object;
+  refTaPlaceholder: ?Object;
 
-  constructor(props) {
+  constructor(props: Props) {
     super(props);
     this.labelId = this.props.id || `giu-textarea_${cntId}`;
     cntId += 1;
@@ -55,34 +75,40 @@ class Textarea extends React.Component {
   componentDidMount() {
     this.resize();
     window.addEventListener('resize', this.resize);
-    if (this.context.theme === 'mdl' && this.refOuter) window.componentHandler.upgradeElement(this.refOuter);
+    if (this.context.theme === 'mdl' && this.refOuter) {
+      window.componentHandler.upgradeElement(this.refOuter);
+    }
   }
-  componentDidUpdate() { this.resize(); }
+  componentDidUpdate() {
+    this.resize();
+  }
   componentWillUnmount() {
     window.removeEventListener('resize', this.resize);
   }
 
   // ==========================================
-  // Render
-  // ==========================================
   render() {
-    if (!this.props.skipTheme && this.context.theme === 'mdl') return this.renderMdl();
-    const {
-      curValue, disabled,
-      style: styleField,
-    } = this.props;
-    const otherProps = omit(this.props, PROP_KEYS_TO_REMOVE_FROM_INPUT);
+    if (!this.props.skipTheme && this.context.theme === 'mdl') {
+      return this.renderMdl();
+    }
+    const { curValue, disabled, style: styleField } = this.props;
+    const otherProps = omit(this.props, FILTERED_OUT_PROPS);
     return (
-      <div ref={this.registerOuterRef}
+      <div
+        ref={this.registerOuterRef}
         className="giu-textarea"
         style={style.taWrapper}
       >
-        <div ref={(c) => { this.refTaPlaceholder = c; }}
+        <div
+          ref={c => {
+            this.refTaPlaceholder = c;
+          }}
           style={merge(style.hiddenPlaceholder, styleField)}
         >
-          {getPlaceHolderText(curValue)}
+          {getPlaceholderText(curValue)}
         </div>
-        <textarea ref={this.registerInputRef}
+        <textarea
+          ref={this.registerInputRef}
           value={curValue}
           onKeyDown={this.onKeyDown}
           style={style.field(this.props)}
@@ -94,16 +120,15 @@ class Textarea extends React.Component {
   }
 
   renderMdl() {
-    const {
-      curValue, disabled,
-      fFocused,
-    } = this.props;
-    const otherProps = omit(this.props, PROP_KEYS_TO_REMOVE_FROM_INPUT_MDL);
-    let className = 'giu-textarea mdl-textfield mdl-js-textfield mdl-textfield--floating-label';
+    const { curValue, disabled, fFocused } = this.props;
+    const otherProps = omit(this.props, FILTERED_OUT_PROPS_MDL);
+    let className =
+      'giu-textarea mdl-textfield mdl-js-textfield mdl-textfield--floating-label';
     if (curValue !== '' || fFocused) className += ' is-dirty';
     return (
       <div ref={this.registerOuterRef} className={className}>
-        <textarea ref={this.registerInputRef}
+        <textarea
+          ref={this.registerInputRef}
           className="mdl-textfield__input"
           value={curValue}
           id={this.labelId}
@@ -112,23 +137,23 @@ class Textarea extends React.Component {
           {...otherProps}
           tabIndex={disabled ? -1 : undefined}
         />
-        <label className="mdl-textfield__label" htmlFor={this.labelId}>{this.props.placeholder || ''}</label>
+        <label className="mdl-textfield__label" htmlFor={this.labelId}>
+          {this.props.placeholder || ''}
+        </label>
       </div>
     );
   }
 
   // ==========================================
-  // Handlers
-  // ==========================================
-  registerOuterRef = (c) => {
+  registerOuterRef = c => {
     this.refOuter = c;
     this.props.registerOuterRef(c);
-  }
+  };
 
-  registerInputRef = (c) => {
+  registerInputRef = c => {
     this.refInput = c;
     this.props.registerFocusableRef(c);
-  }
+  };
 
   resize = () => {
     if (!this.refTaPlaceholder) return;
@@ -137,11 +162,11 @@ class Textarea extends React.Component {
     if (!this.refInput) return;
     this.refInput.style.height = `${height}px`;
     if (this.props.onResizeOuter) this.props.onResizeOuter();
-  }
+  };
 
   // shift-enter should not insert a new line (it should be bubbled up);
   // enter (with no modifier) should insert a new line (and not bubble)
-  onKeyDown = (ev) => {
+  onKeyDown = ev => {
     if (ev.which === KEYS.return) {
       if (isAnyModifierPressed(ev)) {
         preventDefault(ev);
@@ -149,13 +174,11 @@ class Textarea extends React.Component {
         stopPropagation(ev);
       }
     }
-  }
+  };
 }
 
 Textarea.contextTypes = { theme: React.PropTypes.any };
 
-// ==========================================
-// Styles
 // ==========================================
 const style = {
   taWrapper: {
@@ -183,7 +206,9 @@ const style = {
       cursor: 'beam',
       padding: 2,
     };
-    if (disabled) out = merge(out, { cursor: 'default', pointerEvents: 'none' });
+    if (disabled) {
+      out = merge(out, { cursor: 'default', pointerEvents: 'none' });
+    }
     out = merge(out, styleField);
     return out;
   },
@@ -209,14 +234,6 @@ const style = {
 };
 
 // ==========================================
-// Miscellaneous
-// ==========================================
-const PROP_KEYS_TO_REMOVE_FROM_INPUT = Object.keys(Textarea.propTypes).concat([
-  'cmds', 'keyDown', 'floatZ', 'floatPosition', 'styleOuter', 'required',
-]);
-const PROP_KEYS_TO_REMOVE_FROM_INPUT_MDL = PROP_KEYS_TO_REMOVE_FROM_INPUT.concat(['placeholder']);
-
-// ==========================================
-// Public API
+// Public
 // ==========================================
 export default input(Textarea, { toInternalValue, toExternalValue, isNull });

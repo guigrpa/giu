@@ -30,20 +30,22 @@ const PROP_KEYS_TO_REMOVE_FROM_FLOAT_DIV = [
   'getAnchorNode',
 ];
 
-type Position = 'above' | 'below';
-type Align = 'left' | 'right';
+export type FloatPosition = 'above' | 'below';
+export type FloatAlign = 'left' | 'right';
 type FloatUserPars = {|
-  id: string,
-  position?: ?Position,
-  align?: ?Align,
+  id?: string,
+  position?: FloatPosition,
+  align?: FloatAlign,
   zIndex?: number,
   limitSize?: boolean,
   getAnchorNode: () => ?Node,
   style?: Object,
   noStyleShadow?: boolean,
+  children?: any,
 |};
 type FloatStatePars = {
   /* :: ...FloatUserPars, */
+  id: string,
   zIndex: number,
   limitSize: boolean,
 };

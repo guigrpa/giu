@@ -302,7 +302,7 @@ const ButtonExample = () =>
     <Button onClick={() => notify('Plain button pressed')} plain>Notify me!</Button>
   </div>;
 
-const HoverableExample = hoverable(({ hovering, onHoverStart, onHoverStop }) => (
+const HoverableExample0 = ({ hovering, onHoverStart, onHoverStop }) => (
   <div
     onMouseEnter={onHoverStart}
     onMouseLeave={onHoverStop}
@@ -310,7 +310,8 @@ const HoverableExample = hoverable(({ hovering, onHoverStart, onHoverStop }) => 
   >
     <ExampleLabel>Hoverable (HOC)</ExampleLabel>
   </div>
-));
+);
+const HoverableExample = hoverable((HoverableExample0: any));
 
 const StyleUtilsExample = () =>
   <div style={style.example}>

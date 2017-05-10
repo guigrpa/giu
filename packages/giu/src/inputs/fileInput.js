@@ -1,38 +1,53 @@
-import React                from 'react';
-import { omit, merge }      from 'timm';
-import filesize             from 'filesize';
-import {
-  GLOW,
-  HIDDEN_FOCUS_CAPTURE,
-}                           from '../gral/styles';
-import input                from '../hocs/input';
-import Button               from '../components/button';
-import Icon                 from '../components/icon';
+// @flow
 
-function isNull(val) { return val == null; }
+import React from 'react';
+import { omit, merge } from 'timm';
+import filesize from 'filesize';
+import { GLOW, HIDDEN_FOCUS_CAPTURE } from '../gral/styles';
+import input, { INPUT_HOC_INVALID_HTML_PROPS } from '../hocs/input';
+import type { Command } from '../gral/types';
+import Button from '../components/button';
+import Icon from '../components/icon';
+
+const isNull = val => val == null;
+
+// ==========================================
+// Types
+// ==========================================
+// -- Props:
+/* eslint-disable no-unused-vars */
+// -- START_DOCS
+type PublicProps = {
+  children?: any, // React elements that will be shown inside the button(default: `Choose file…`)
+  cmds?: Array<Command>,
+  disabled?: boolean,
+  style?: Object, // will be merged with the outermost `span` element
+  // all others are passed through unchanged
+};
+// -- END_DOCS
+/* eslint-enable no-unused-vars */
+
+type Props = {
+  /* :: ...$Exact<PublicProps>, */
+  // Input HOC
+  curValue: ?Object,
+  onChange: (ev: SyntheticEvent, providedValue: any) => void,
+  registerOuterRef: Function,
+  registerFocusableRef: Function,
+  errors: Array<string>,
+  fFocused: boolean,
+};
+
+const FILTERED_OUT_PROPS = ['style', ...INPUT_HOC_INVALID_HTML_PROPS];
 
 // ==========================================
 // Component
 // ==========================================
-// -- Props:
-// --
-// -- * **children** *any? = `Choose file…`*: React elements that
-// --   will be shown inside the button
-// -- * **style** *object?*: will be merged with the outermost `span` element
 class FileInput extends React.Component {
-  static propTypes = {
-    children:               React.PropTypes.any,
-    cmds:                   React.PropTypes.array,
-    disabled:               React.PropTypes.bool,
-    style:                  React.PropTypes.object,
-    // Input HOC
-    registerOuterRef:       React.PropTypes.func.isRequired,
-    registerFocusableRef:   React.PropTypes.func.isRequired,
-    curValue:               React.PropTypes.object,
-    onChange:               React.PropTypes.func.isRequired,
-    errors:                 React.PropTypes.array.isRequired,
-    fFocused:               React.PropTypes.bool.isRequired,
-  };
+  static defaultProps = {};
+  props: Props;
+  cntCleared: number;
+  refInput: ?Object;
 
   constructor() {
     super();
@@ -42,37 +57,31 @@ class FileInput extends React.Component {
   componentDidUpdate(prevProps) {
     const { cmds } = this.props;
     if (!cmds || cmds === prevProps.cmds) return;
-    cmds.forEach((cmd) => {
+    cmds.forEach(cmd => {
       if (cmd.type === 'CLICK') this.onClickButton();
     });
   }
 
   // ==========================================
-  // Render
-  // ==========================================
   render() {
-    const {
-      children,
-      registerOuterRef,
-      disabled,
-    } = this.props;
-    const otherProps = omit(this.props, PROP_KEYS_TO_REMOVE_FROM_INPUT);
+    const { children, registerOuterRef, disabled } = this.props;
+    const otherProps = omit(this.props, FILTERED_OUT_PROPS);
     return (
-      <span ref={registerOuterRef}
+      <span
+        ref={registerOuterRef}
         className="giu-file-input"
         style={style.outer(this.props)}
       >
-        <input ref={this.registerInputRef} key={this.cntCleared}
+        <input
+          ref={this.registerInputRef}
+          key={this.cntCleared}
           type="file"
           style={style.input}
           onChange={this.onChange}
           tabIndex={disabled ? -1 : undefined}
           {...otherProps}
         />
-        <Button
-          disabled={disabled}
-          onClick={this.onClickButton}
-        >
+        <Button disabled={disabled} onClick={this.onClickButton}>
           {children || 'Choose a file…'}
         </Button>
         &nbsp;
@@ -96,28 +105,26 @@ class FileInput extends React.Component {
   }
 
   // ==========================================
-  // Event handlers
-  // ==========================================
-  registerInputRef = (c) => {
+  registerInputRef = c => {
     this.refInput = c;
     this.props.registerFocusableRef(c);
-  }
+  };
 
-  onClickButton = () => { if (this.refInput) this.refInput.click(); }
-  onClickClear = (ev) => {
-    this.cntCleared += 1;  // make sure we get a new file input (it has memory!)
+  onClickButton = () => {
+    if (this.refInput) this.refInput.click();
+  };
+  onClickClear = ev => {
+    this.cntCleared += 1; // make sure we get a new file input (it has memory!)
     this.props.onChange(ev, null);
-  }
+  };
 
-  onChange = (ev) => {
+  onChange = ev => {
     const { files } = ev.target;
     if (!files || !files.length) return;
     this.props.onChange(ev, files);
-  }
+  };
 }
 
-// ==========================================
-// Styles
 // ==========================================
 const style = {
   outer: ({ fFocused, style: baseStyle }) => {
@@ -130,13 +137,6 @@ const style = {
 };
 
 // ==========================================
-// Miscellaneous
-// ==========================================
-const PROP_KEYS_TO_REMOVE_FROM_INPUT = Object.keys(FileInput.propTypes).concat([
-  'keyDown', 'floatZ', 'floatPosition', 'onResizeOuter', 'styleOuter',
-]);
-
-// ==========================================
-// Public API
+// Public
 // ==========================================
 export default input(FileInput, { isNull, valueAttr: 'files' });

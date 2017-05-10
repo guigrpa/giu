@@ -3,8 +3,10 @@
 import React from 'react';
 import { omit } from 'timm';
 
+/* eslint-disable max-len */
+
 // ==========================================
-// HOC
+// Types and docs
 // ==========================================
 /* --
 Keeps track of `hovering` state and passes it as prop to your base
@@ -53,42 +55,32 @@ type HoverEventHandler = (ev: SyntheticEvent) => void;
 /* -- END_DOCS -- */
 
 /* eslint-disable no-unused-vars */
-type DefaultProps<DP> = {
+type PublicDefaultProps<DP> = {
   /* :: ...$Exact<DP>, */
   /* :: ...$Exact<HoverableProps>, */
 };
 /* eslint-enable no-unused-vars */
 
-/* eslint-disable max-len */
-type StatelessComponent<P> = (props: P) => ?React$Element<any>;
-type Hoc<DP, P> = {
-  (ComposedComponent: Class<React$Component<DP, P, *>>): Class<React$Component<DefaultProps<DP>, P, *>>;
-  (ComposedComponent: StatelessComponent<P>): any;
-};
-/* eslint-enable max-len */
-
-// function hoverable<DP: any, P>(
-//   ComposedComponent: Class<React$Component<DP, P, *>>,
-// ): Class<React$Component<DefaultProps<DP>, P, *>> {
-const hoverable: Hoc<*, *> = (ComposedComponent) => {
-// function hoverable(ComposedComponent) {
+// ==========================================
+// HOC
+// ==========================================
+function hoverable<DP: any, P>(
+  ComposedComponent: Class<React$Component<DP, P, *>>,
+): Class<React$Component<PublicDefaultProps<DP>, P, *>> {
   const composedComponentName =
     ComposedComponent.displayName || ComposedComponent.name || 'Component';
   const hocDisplayName = `Hoverable(${composedComponentName})`;
 
   class Derived extends React.Component {
+    static displayName = hocDisplayName;
     props: {
       onHoverStart?: HoverEventHandler,
       onHoverStop?: HoverEventHandler,
     };
-    state: {
-      hovering: Hovering,
-    };
+    state: { hovering: Hovering };
 
-    static displayName = hocDisplayName;
-
-    constructor(props) {
-      super(props);
+    constructor() {
+      super();
       this.state = { hovering: null };
     }
 
@@ -121,7 +113,7 @@ const hoverable: Hoc<*, *> = (ComposedComponent) => {
   }
 
   return (Derived: any);
-};
+}
 
 // ==========================================
 // Public API
