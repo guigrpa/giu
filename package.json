@@ -24,8 +24,8 @@
   },
   "scripts": {
     "status": "oao status",
-    "travis": "yarn bootstrap && yarn compile && yarn test",
-    "build": "yarn bootstrap && yarn compile && yarn lint && yarn flow && yarn test && yarn buildExamplesSsr && yarn docs && yarn xxl && yarn prepareRelease",
+    "travis": "yarn bootstrap && yarn compile",
+    "build": "yarn bootstrap && yarn compile && yarn lint && yarn flow && yarn buildExamplesSsr && yarn docs && yarn xxl && yarn prepareRelease",
     "bootstrap": "oao bootstrap",
     "compile": "oao all --parallel \"yarn compile\"",
     "compileWatch": "oao all --parallel \"yarn compileWatch\"",
