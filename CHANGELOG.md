@@ -1,3 +1,5 @@
+* SelectCustom: add `styleTitle` prop (merged with the title span)
+
 ## 0.11.0 (2017-5-8)
 
 * Simplify inclusion of Material Design Light: just `import 'giu/lib/mdl';` and wrap your application in `<Giu theme="mdl">`

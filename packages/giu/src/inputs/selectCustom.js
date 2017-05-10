@@ -65,6 +65,7 @@ class SelectCustomBase extends React.Component {
     floatAlign:             React.PropTypes.string,
     floatZ:                 React.PropTypes.number,
     style:                  React.PropTypes.object,
+    styleTitle:             React.PropTypes.object,  // merged with the title span
     twoStageStyle:          React.PropTypes.bool,
     accentColor:            React.PropTypes.string,
     // Input HOC
@@ -320,10 +321,11 @@ const style = {
     cursor: 'pointer',
     position: 'relative',
   })),
-  title: ({ disabled, fFocused }) => {
+  title: ({ disabled, fFocused, styleTitle }) => {
     let out = style.titleBase;
     if (disabled) out = merge(out, INPUT_DISABLED);
     if (fFocused) out = merge(out, GLOW);
+    if (styleTitle) out = merge(out, styleTitle);
     return out;
   },
   caret: {
