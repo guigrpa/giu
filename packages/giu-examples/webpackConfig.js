@@ -22,6 +22,7 @@ module.exports = {
   entry: {
     demo1: ['./src/demo1.js'],
     demo2: ['./src/demo2.js'],
+    demo3: ['./src/demo3.js'],
     index: ['./src/index.js'],
   },
 
