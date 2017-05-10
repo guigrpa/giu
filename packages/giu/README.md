@@ -311,9 +311,15 @@ Props:
 
 Props:
 
-* **label** *any?*: React components to be included in the
-  checkbox's `label` element
-* **styleLabel** *object?*: merged with the `label` style
+```js
+type PublicProps = {
+  id?: string,
+  label?: any, // React components to be included in the checkbox's `label` element
+  disabled?: boolean,
+  styleLabel?: Object, // merged with the `label` style
+  // all others are passed through to the `input` unchanged
+};
+```
 
 ### DateInput
 
@@ -431,9 +437,15 @@ Props:
 
 Props:
 
-* **children** *any? = `Choose file…`*: React elements that
-  will be shown inside the button
-* **style** *object?*: will be merged with the outermost `span` element
+```js
+type PublicProps = {
+  children?: any, // React elements that will be shown inside the button(default: `Choose file…`)
+  cmds?: Array<Command>,
+  disabled?: boolean,
+  style?: Object, // will be merged with the outermost `span` element
+  // all others are passed through unchanged
+};
+```
 
 ## DataTable
 
@@ -461,16 +473,16 @@ in time (as a result of passed-down props or their own intrinsic state).
 type PublicProps = {
   // Basic
   // -----
-  itemsById?: ?Object, // Rows, keyed by id (default: {})
+  itemsById?: Object, // Rows, keyed by id (default: {})
   cols: Array<DataTableColumn>, // Column configuration objects
   lang?: string, // Used to force-refresh when language changes
 
   // Set of rows to be shown (before filtering)
   // ------------------------------------------
-  shownIds?: ?Array<string>, // Row ids to be shown (default: [], no rows)
+  shownIds?: Array<string>, // Row ids to be shown (default: [], no rows)
   onChangeShownIds?: (shownIds: Array<string>) => void,
   alwaysRenderIds?: Array<string>, // Render these rows even when not visible (e.g. editing)
-  commonCellProps?: ?Object, // Passed to all column `render` functions
+  commonCellProps?: Object, // Passed to all column `render` functions
 
   // Filtering
   // ---------
@@ -494,7 +506,7 @@ type PublicProps = {
 
   // Selection
   // ---------
-  selectedIds?: ?Array<string>,
+  selectedIds?: Array<string>,
   allowSelect?: boolean,
   multipleSelection?: boolean,
   onChangeSelection?: (selectedIds: Array<string>) => void,
@@ -574,7 +586,7 @@ export type DataTableColumn = {
   minWidth?: number,
   flexGrow?: number,
   flexShrink?: number,
-  style?: ?Object, // Mixed with each row/header cell's outer div
+  style?: Object, // Mixed with each row/header cell's outer div
 };
 ```
 
@@ -713,7 +725,7 @@ API reference:
 
 ```js
 export type NotificationType = 'info' | 'success' | 'warn' | 'error';
-export type NotificationPars = {
+export type NotificationPars = {|
   sticky?: boolean, // never delete this notification
   timeOut?: number, // time [ms] after which it's deleted [default: 4000]
   id?: string,
@@ -727,7 +739,7 @@ export type NotificationPars = {
   style?: Object, // merged with the outermost `div` style
   noStylePosition?: boolean,
   noStyleShadow?: boolean,
-};
+|};
 ```
 
 ## Hint screens
