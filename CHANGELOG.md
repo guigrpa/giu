@@ -1,3 +1,5 @@
+## 0.11.1 (2017-5-10)
+
 * SelectCustom: add `styleTitle` prop (merged with the title span)
 
 ## 0.11.0 (2017-5-8)
