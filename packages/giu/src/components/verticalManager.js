@@ -93,7 +93,7 @@ class VerticalManager extends React.Component {
       <div
         ref={this.registerOuterRef}
         className="giu-vertical-manager"
-        id={id}
+        id={`giu-vertical-manager-${id}`}
         style={style.outer(this.props)}
       >
         <ChildComponent
