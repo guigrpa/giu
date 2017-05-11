@@ -124,6 +124,7 @@ type PublicProps = {
   multipleSelection?: boolean,
   onChangeSelection?: (selectedIds: Array<string>) => void,
   onClipboardAction?: (ev: SyntheticClipboardEvent, json: string) => void,
+  onRowDoubleClick?: (ev: SyntheticMouseEvent) => void,
 
   // Fetching
   // --------
@@ -422,6 +423,7 @@ class DataTable extends React.PureComponent {
       fSortedManually: allowManualSorting ? fSortedManually : undefined,
       commonCellProps: this.props.commonCellProps,
       onClick: this.props.allowSelect ? this.onClickRow : undefined,
+      onDoubleClick: this.props.onRowDoubleClick,
       style: this.props.styleRow,
       selectedBgColor: this.selectedBgColor,
       selectedFgColor: this.selectedFgColor,

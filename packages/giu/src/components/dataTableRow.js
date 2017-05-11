@@ -163,6 +163,7 @@ class DataTableRow extends React.PureComponent {
     fSortedManually: boolean,
     onMayHaveChangedHeight: () => void,
     onClick: (ev: SyntheticEvent, id: string) => void,
+    onDoubleClick: (ev: SyntheticEvent, id: string) => void,
     style?: Object,
     selectedBgColor: string,
     selectedFgColor: string,
@@ -226,6 +227,11 @@ class DataTableRow extends React.PureComponent {
   onClick = (ev: SyntheticEvent) => {
     const { onClick } = this.props;
     if (onClick) onClick(ev, this.props.id);
+  };
+
+  onDoubleClick = (ev: SyntheticEvent) => {
+    const { onDoubleClick } = this.props;
+    if (onDoubleClick) onDoubleClick(ev, this.props.id);
   };
 }
 
