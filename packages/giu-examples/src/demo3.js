@@ -25,7 +25,6 @@ import faker from 'faker';
 const SIDEBAR_WIDTH = 200;
 const TOP_HEIGHT = 80;
 const DATATABLE_HEADER_HEIGHT = 40;
-const AUTOFOCUS_ATTR = 'name';
 
 const COLLECT_FIELDS_ON_SUBMIT = [
   'name',
@@ -109,14 +108,15 @@ class Contents extends React.Component {
       isValidating: false,
       isDirty: false,
       selectedIds: [],
+      inputCmds: [],
       filterValue: '',
-      cntKey: 0, // reset datatable by just changing this
     };
     this.inputRefs = {};
     this.commonCellProps = {
       isEditing: this.state.isEditing,
       onChange: this.onChange,
       registerInputRef: this.registerInputRef,
+      cmds: this.state.inputCmds,
     };
   }
 
@@ -201,16 +201,14 @@ class Contents extends React.Component {
 
   // Called by HeightMeasurer
   renderDataTable = height => {
-    const { itemsById, isEditing } = this.state;
+    const { itemsById, isEditing, inputCmds } = this.state;
     const finalHeight = height ? height - DATATABLE_HEADER_HEIGHT : undefined;
-    this.commonCellProps = timmSet(
-      this.commonCellProps,
-      'isEditing',
-      isEditing
-    );
+    this.commonCellProps = merge(this.commonCellProps, {
+      isEditing,
+      cmds: inputCmds,
+    });
     return (
       <DataTable
-        key={this.state.cntKey}
         itemsById={itemsById}
         shownIds={Object.keys(itemsById)}
         alwaysRenderIds={this.state.selectedIds}
@@ -220,6 +218,7 @@ class Contents extends React.Component {
         headerClickForSorting={!isEditing}
         selectedIds={this.state.selectedIds}
         onChangeSelection={this.onChangeSelection}
+        onRowDoubleClick={this.onRowDoubleClick}
         height={finalHeight}
         uniformRowHeight
         accentColor="lightgray"
@@ -234,17 +233,17 @@ class Contents extends React.Component {
         attr: 'name',
         minWidth: 150,
         flexGrow: 1,
-        render: ctx => (
+        render: ctx =>
           <TextInput
             ref={c => ctx.registerInputRef(ctx.id, ctx.attr, c)}
             disabled={!(ctx.isEditing && ctx.isItemSelected)}
             value={ctx.item[ctx.attr]}
             onChange={ctx.onChange}
+            cmds={ctx.cmds}
             required
             skipTheme
             style={style.input(ctx.isEditing && ctx.isItemSelected)}
-          />
-        ),
+          />,
       },
       {
         attr: 'type',
@@ -257,6 +256,7 @@ class Contents extends React.Component {
             items={USER_TYPES}
             value={ctx.item[ctx.attr]}
             onChange={ctx.onChange}
+            cmds={ctx.cmds}
             required
             styleOuter={style.input(ctx.isEditing && ctx.isItemSelected)}
             styleTitle={style.input(ctx.isEditing && ctx.isItemSelected)}
@@ -272,6 +272,7 @@ class Contents extends React.Component {
             disabled={!(ctx.isEditing && ctx.isItemSelected)}
             value={ctx.item[ctx.attr]}
             onChange={ctx.onChange}
+            cmds={ctx.cmds}
             required
             skipTheme
             style={style.input(ctx.isEditing && ctx.isItemSelected)}
@@ -288,6 +289,7 @@ class Contents extends React.Component {
             disabled={!(ctx.isEditing && ctx.isItemSelected)}
             value={ctx.item[ctx.attr]}
             onChange={ctx.onChange}
+            cmds={ctx.cmds}
           />
         ),
       },
@@ -300,6 +302,7 @@ class Contents extends React.Component {
             disabled={!(ctx.isEditing && ctx.isItemSelected)}
             value={ctx.item[ctx.attr]}
             onChange={ctx.onChange}
+            cmds={ctx.cmds}
             required
             skipTheme
             style={style.input(ctx.isEditing && ctx.isItemSelected)}
@@ -324,7 +327,7 @@ class Contents extends React.Component {
 
   onDelete = () => {
     const itemsById = omit(this.state.itemsById, this.state.selectedIds);
-    this.setState({ itemsById });
+    this.setState({ itemsById, selectedIds: [] });
   };
 
   onChange = () => {
@@ -333,21 +336,28 @@ class Contents extends React.Component {
 
   onCancel = () => {
     const id = this.state.selectedIds[0];
-    const isCreate = id[0] === 'c';
-    const prevItemsById = this.state.itemsById;
-    let itemsById = omit(prevItemsById, [id]);
-    // FIXME: Cancel edit: add item back
-    if (!isCreate) {
-      itemsById = timmSet(itemsById, id, { ...prevItemsById[id] });
-      console.log(itemsById[id] !== prevItemsById[id]);
+    const nextState = { isEditing: false, isDirty: false };
+
+    // If it was a create operation (local 'cid', or client ID), delete row
+    if (id[0] === 'c') {
+      nextState.itemsById = omit(this.state.itemsById, [id]);
+
+      // If it was an update, send a REVERT command to all fields
+      // [it'd be better if only the targeted row would receive them, but anyway...]
+    } else {
+      nextState.inputCmds = [{ type: 'REVERT' }];
     }
-    this.setState({ itemsById, isEditing: false, isDirty: false });
+    this.setState(nextState);
+  };
+
+  onRowDoubleClick = () => {
+    if (this.state.selectedIds.length === 1) this.onEdit();
   };
 
   onEdit = () => {
     this.setState({ isEditing: true }, () => {
       const id = this.state.selectedIds[0];
-      this.focusOnEdit(id);
+      this.focusOnFirstEditableField(id);
     });
   };
 
@@ -363,18 +373,17 @@ class Contents extends React.Component {
         selectedIds: [cid],
       },
       () => {
-        this.focusOnEdit(cid);
+        this.focusOnFirstEditableField(cid);
       }
     );
   };
 
-  focusOnEdit = id => {
-    if (id == null) return;
-    const rowRefs = this.inputRefs[id];
-    if (!rowRefs) return;
-    const ref = rowRefs[AUTOFOCUS_ATTR];
-    if (!ref) return;
-    ref._focus(); // HACK: less bad with `cmds`
+  focusOnFirstEditableField = id => {
+    const rowNode = document.querySelector(`#giu-vertical-manager-${id}`);
+    if (!rowNode) return;
+    const fieldNode = rowNode.querySelector('input, select, textarea');
+    if (fieldNode) fieldNode.focus();
+    // Bye-bye, HACK! (no refs needed any more)
   };
 
   onSave = async () => {
@@ -474,11 +483,14 @@ const style = {
     width: 10,
   },
   dataTableHeader: { height: DATATABLE_HEADER_HEIGHT },
-  input: isEditing => ({
+  // Use constant objects for better performance with PureComponents
+  input: isEditing => (isEditing ? style.inputEdit : style.inputBrowse),
+  inputEdit: { width: '100%' },
+  inputBrowse: {
     width: '100%',
-    borderColor: isEditing ? undefined : 'transparent',
-    backgroundColor: isEditing ? undefined : 'transparent',
-  }),
+    borderColor: 'transparent',
+    backgroundColor: 'transparent',
+  },
 };
 
 // ================================================
