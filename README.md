@@ -511,6 +511,7 @@ type PublicProps = {
   multipleSelection?: boolean,
   onChangeSelection?: (selectedIds: Array<string>) => void,
   onClipboardAction?: (ev: SyntheticClipboardEvent, json: string) => void,
+  onRowDoubleClick?: (ev: SyntheticMouseEvent) => void,
 
   // Fetching
   // --------
@@ -1096,6 +1097,16 @@ Provides the inner height (width) of the window
 excluding scrollbars (if any).
 
 * **Returns** *number*: inner height (width) in pixels
+
+**simplifyString()**
+
+Generates a new version of a string with the following changes:
+all lowercase, no diacritics, Unicode-normalized (NFKD). Useful
+for (simplistic) sorting and filtering. A quick'n'dirty
+collation helper.
+
+* **str** *string*: string to be processed
+* **Returns** *string*: simplified version of the input string
 
 **getScrollbarWidth()**
 
