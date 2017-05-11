@@ -511,7 +511,7 @@ type PublicProps = {
   multipleSelection?: boolean,
   onChangeSelection?: (selectedIds: Array<string>) => void,
   onClipboardAction?: (ev: SyntheticClipboardEvent, json: string) => void,
-  onRowDoubleClick?: (ev: SyntheticMouseEvent) => void,
+  onRowDoubleClick?: (ev: SyntheticMouseEvent, id: string) => void,
 
   // Fetching
   // --------
