@@ -158,7 +158,7 @@ class DataTableRow extends React.PureComponent {
     id: string,
     item: Object,
     cols: Array<DataTableColumn>,
-    selectedIds: Array<string>,
+    isItemSelected: boolean,
     commonCellProps?: Object,
     fSortedManually: boolean,
     onMayHaveChangedHeight: () => void,
@@ -168,7 +168,6 @@ class DataTableRow extends React.PureComponent {
     selectedBgColor: string,
     selectedFgColor: string,
   };
-  isItemSelected: boolean;
 
   componentDidUpdate() {
     const { onMayHaveChangedHeight } = this.props;
@@ -181,12 +180,12 @@ class DataTableRow extends React.PureComponent {
   render() {
     const { id } = this.props;
     DEBUG && console.log(`Rendering row ${id}...`);
-    this.isItemSelected = this.props.selectedIds.indexOf(id) >= 0;
     return (
       <div
-        onClick={this.onClick}
         onFocus={this.onClick}
-        style={style.rowOuter(this.props, this.isItemSelected)}
+        onClick={this.onClick}
+        onDoubleClick={this.onDoubleClick}
+        style={style.rowOuter(this.props)}
       >
         {this.props.cols.map(this.renderCell, this)}
       </div>
@@ -204,7 +203,7 @@ class DataTableRow extends React.PureComponent {
           id,
           col,
           attr,
-          isItemSelected: this.isItemSelected,
+          isItemSelected: this.props.isItemSelected,
           fSortedManually: this.props.fSortedManually,
           onMayHaveChangedHeight: this.props.onMayHaveChangedHeight,
         },
@@ -248,8 +247,7 @@ const DataTableFetchingRow = () => (
 const style = {
   rowOuterBase: flexContainer('row'),
   rowOuter: (
-    { selectedBgColor, selectedFgColor, style: baseStyle },
-    fSelected
+    { selectedBgColor, selectedFgColor, style: baseStyle, isItemSelected }
   ) => {
     const out = merge(
       style.rowOuterBase,
@@ -259,7 +257,7 @@ const style = {
       },
       baseStyle
     );
-    if (fSelected) {
+    if (isItemSelected) {
       out.backgroundColor = selectedBgColor;
       out.color = selectedFgColor;
     }

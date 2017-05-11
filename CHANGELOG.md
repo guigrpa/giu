@@ -1,6 +1,7 @@
 * DataTable: select a row when user focuses on an input in that row (e.g. via TAB).
 * DataTable: add `isItemSelected` to the props received by all column render functions.
 * DataTable: add `onRowDoubleClick` prop
+* DataTable: prevent rendering extra rows on selection change (the new callback, `getSpecificRowProps()`, also adds more flexibility for future improvements)
 * VirtualScroller: improve responsiveness by drawing X pixels above and below the viewport.
 * New HeightMeasurer component: measures the height of its parent and passes it down to its function-as-a-child. **HeightMeasurer MUST BE the direct child of an element with an "extrinsic" height (ie. a height that is not determined by its children, but rather by its parents, e.g. a flex item with `overflow: hidden`)**
 * Add `simplifyString()` to public API (useful for simplistic sorting and filtering).

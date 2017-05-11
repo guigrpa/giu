@@ -410,7 +410,7 @@ class DataTable extends React.PureComponent {
     DEBUG && console.log('DataTable: rendering...');
 
     const { lang, filterValue, allowManualSorting, showHeader } = this.props;
-    const { cols, selectedIds, sortBy, sortDescending } = this;
+    const { cols, sortBy, sortDescending } = this;
 
     const fSortedManually = sortBy === SORT_MANUALLY;
 
@@ -419,7 +419,6 @@ class DataTable extends React.PureComponent {
     this.commonRowProps = merge(this.commonRowProps, {
       cols,
       lang,
-      selectedIds,
       fSortedManually: allowManualSorting ? fSortedManually : undefined,
       commonCellProps: this.props.commonCellProps,
       onClick: this.props.allowSelect ? this.onClickRow : undefined,
@@ -477,6 +476,7 @@ class DataTable extends React.PureComponent {
           alwaysRenderIds={this.props.alwaysRenderIds}
           RowComponents={this.RowComponents}
           commonRowProps={this.commonRowProps}
+          getSpecificRowProps={this.getSpecificRowProps}
           fSortedManually={fSortedManually}
           onRenderLastRow={filterValue ? undefined : this.onRenderLastRow}
           onChangeScrollbarWidth={this.onChangeScrollbarWidth}
@@ -497,6 +497,10 @@ class DataTable extends React.PureComponent {
       </div>
     );
   }
+
+  getSpecificRowProps = (id: string) => ({
+    isItemSelected: this.selectedIds.indexOf(id) >= 0,
+  });
 
   // ===============================================================
   // Event handlers

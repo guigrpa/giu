@@ -31,6 +31,7 @@ type PublicProps = {
   alwaysRenderIds?: Array<string>,
   RowComponents: { [key: string]: ReactClass<*> },
   commonRowProps: Object,
+  getSpecificRowProps: (id: string) => Object,
 
   height: number,
   width?: number,
@@ -366,7 +367,7 @@ class VirtualScroller extends React.PureComponent {
 
   renderRow(idx: number, id: string) {
     // DEBUG && console.log(`VirtualScroller: rendering row ${id} (idx: ${idx})`);
-    const { itemsById, RowComponents, commonRowProps } = this.props;
+    const { itemsById, RowComponents, commonRowProps, getSpecificRowProps } = this.props;
     const { rowHeight } = this;
     const item = itemsById[id];
     let top;
@@ -378,7 +379,7 @@ class VirtualScroller extends React.PureComponent {
       onChangeHeight = this.onChangeRowHeight;
       if (!this.cachedHeights[id]) this.pendingHeights.push(id);
     }
-    const childProps = merge({ id, item }, commonRowProps);
+    const childProps = merge({ id, item }, commonRowProps, getSpecificRowProps(id));
     const RowComponent = RowComponents[id] || RowComponents[DEFAULT_ROW];
     return (
       <VerticalManager
