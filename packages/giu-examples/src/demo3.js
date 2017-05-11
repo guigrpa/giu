@@ -164,7 +164,7 @@ class Contents extends React.Component {
         <div style={style.separator} />
         {!isEditing &&
           this.renderButton({
-            icon: 'add',
+            icon: 'plus',
             label: 'Create',
             onClick: this.onCreate,
           })}
@@ -339,6 +339,7 @@ class Contents extends React.Component {
     // FIXME: Cancel edit: add item back
     if (!isCreate) {
       itemsById = timmSet(itemsById, id, { ...prevItemsById[id] });
+      console.log(itemsById[id] !== prevItemsById[id]);
     }
     this.setState({ itemsById, isEditing: false, isDirty: false });
   };
