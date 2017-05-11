@@ -145,6 +145,17 @@ function propsWithDefaultsAndOverrides(
   return merge(addDefaults(props, defaults), overrides);
 }
 
+/* --
+**simplifyString()**
+
+Generates a new version of a string with the following changes:
+all lowercase, no diacritics, Unicode-normalized (NFKD). Useful
+for (simplistic) sorting and filtering. A quick'n'dirty
+collation helper.
+
+* **str** *string*: string to be processed
+* **Returns** *string*: simplified version of the input string
+-- */
 const COMBINING_CODEPOINTS = /[\u0300-\u036F]/g;
 function simplifyString(str: string): string {
   if (str == null) return str;

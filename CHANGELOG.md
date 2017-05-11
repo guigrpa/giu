@@ -1,3 +1,9 @@
+* DataTable: select a row when user focuses on an input in that row (e.g. via TAB).
+* DataTable: add `isItemSelected` to the props received by all column render functions.
+* New HeightMeasurer component: measures the height of its parent and passes it down to its function-as-a-child. **HeightMeasurer MUST BE the direct child of an element with an "extrinsic" height (ie. a height that is not determined by its children, but rather by its parents, e.g. a flex item with `overflow: hidden`)**
+* Add `simplifyString()` to public API (useful for simplistic sorting and filtering).
+* Bugfix: DataTable: Discard bubbled keyDown events when focus is on an input.
+
 ## 0.11.1 (2017-5-10)
 
 * SelectCustom: add `styleTitle` prop (merged with the title span)

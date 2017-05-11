@@ -94,6 +94,7 @@ import DataTable, { SORT_MANUALLY } from './components/dataTable';
 export { DataTable, SORT_MANUALLY };
 import VirtualScroller from './components/virtualScroller';
 export { VirtualScroller };
+
 import DropDownMenu from './components/dropDownMenu';
 export { DropDownMenu };
 import Button from './components/button';
@@ -106,6 +107,8 @@ import LargeMessage from './components/largeMessage';
 export { LargeMessage };
 import Progress from './components/progress';
 export { Progress };
+import HeightMeasurer from './components/heightMeasurer';
+export { HeightMeasurer };
 
 // HOCs
 import hoverable from './hocs/hoverable';
@@ -142,6 +145,7 @@ export {
   cancelBodyScrolling,
   windowHeightWithoutScrollbar,
   windowWidthWithoutScrollbar,
+  simplifyString,
 } from './gral/helpers';
 // Disabled since it adds a polyfill dependency; might not be worth it now
 // export *                  from './gral/wait';

@@ -167,6 +167,7 @@ class DataTableRow extends React.PureComponent {
     selectedBgColor: string,
     selectedFgColor: string,
   };
+  isItemSelected: boolean;
 
   componentDidUpdate() {
     const { onMayHaveChangedHeight } = this.props;
@@ -179,9 +180,13 @@ class DataTableRow extends React.PureComponent {
   render() {
     const { id } = this.props;
     DEBUG && console.log(`Rendering row ${id}...`);
-    const fSelected = this.props.selectedIds.indexOf(id) >= 0;
+    this.isItemSelected = this.props.selectedIds.indexOf(id) >= 0;
     return (
-      <div onClick={this.onClick} style={style.rowOuter(this.props, fSelected)}>
+      <div
+        onClick={this.onClick}
+        onFocus={this.onClick}
+        style={style.rowOuter(this.props, this.isItemSelected)}
+      >
         {this.props.cols.map(this.renderCell, this)}
       </div>
     );
@@ -198,10 +203,11 @@ class DataTableRow extends React.PureComponent {
           id,
           col,
           attr,
+          isItemSelected: this.isItemSelected,
           fSortedManually: this.props.fSortedManually,
           onMayHaveChangedHeight: this.props.onMayHaveChangedHeight,
         },
-        this.props.commonCellProps,
+        this.props.commonCellProps
       );
       value = render(cellProps);
     } else {
@@ -237,7 +243,7 @@ const style = {
   rowOuterBase: flexContainer('row'),
   rowOuter: (
     { selectedBgColor, selectedFgColor, style: baseStyle },
-    fSelected,
+    fSelected
   ) => {
     const out = merge(
       style.rowOuterBase,
@@ -245,7 +251,7 @@ const style = {
         paddingTop: 1,
         paddingBottom: 1,
       },
-      baseStyle,
+      baseStyle
     );
     if (fSelected) {
       out.backgroundColor = selectedBgColor;
@@ -265,7 +271,7 @@ const style = {
         paddingBottom: 2,
         borderBottom: `1px solid ${COLORS.line}`,
       }),
-      baseStyle,
+      baseStyle
     ),
   rowCell: (
     idxCol: number,
@@ -275,7 +281,7 @@ const style = {
       flexGrow,
       flexShrink,
       style: baseStyle,
-    }: DataTableColumn,
+    }: DataTableColumn
   ) => {
     if (hidden) return { display: 'none' };
     const flexValue = `${flexGrow || 0} ${flexShrink || 0} ${minWidth}px`;
@@ -287,7 +293,7 @@ const style = {
         paddingLeft: 2,
         paddingRight: 2,
       },
-      baseStyle,
+      baseStyle
     );
   },
   headerCell: (idxCol, col, fEnableHeaderClicks) => {
@@ -319,7 +325,7 @@ const style = {
         strokeWidth: 1,
         fill: 'none',
       },
-      base,
+      base
     ),
   headerSortIcon: {
     marginLeft: 5,

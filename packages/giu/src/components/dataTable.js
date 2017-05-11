@@ -305,7 +305,7 @@ class DataTable extends React.PureComponent {
       this.localStorageSave(
         collectionName,
         'sortDescending',
-        this.sortDescending,
+        this.sortDescending
       );
       fRecalcShownIds = true;
     }
@@ -314,7 +314,7 @@ class DataTable extends React.PureComponent {
       this.localStorageSave(
         collectionName,
         'manuallyOrderedIds',
-        this.manuallyOrderedIds,
+        this.manuallyOrderedIds
       );
       if (sortBy === SORT_MANUALLY) fRecalcShownIds = true;
     }
@@ -440,7 +440,6 @@ class DataTable extends React.PureComponent {
           this.refOuter = c;
         }}
         className={`giu-data-table ${this.fDragging ? 'dragging' : 'not-dragging'}`}
-        onKeyDown={this.onKeyDown}
         onClick={this.onClickOuter}
         style={style.outer(this.props)}
       >
@@ -448,6 +447,7 @@ class DataTable extends React.PureComponent {
           registerRef={c => {
             this.refFocusCapture = c;
           }}
+          onKeyDown={this.onKeyDown}
           onCopy={this.onCopyCut}
           onCut={this.onCopyCut}
           onPaste={this.onPaste}
@@ -500,19 +500,12 @@ class DataTable extends React.PureComponent {
   // Event handlers
   // ===============================================================
   onKeyDown = (ev: SyntheticKeyboardEvent) => {
-    switch (ev.which) {
-      case KEYS.up:
-      case KEYS.down:
-        this.selectMoveDelta(ev.which === KEYS.up ? -1 : +1);
-        cancelEvent(ev);
-        break;
-      case KEYS.pageUp:
-      case KEYS.pageDown:
-        this.scrollPageUpDown(ev.which === KEYS.pageUp ? -1 : +1);
-        cancelEvent(ev);
-        break;
-      default:
-        break;
+    if (ev.which === KEYS.up || ev.which === KEYS.down) {
+      this.selectMoveDelta(ev.which === KEYS.up ? -1 : +1);
+      cancelEvent(ev);
+    } else if (ev.which === KEYS.pageUp || ev.which === KEYS.pageDown) {
+      this.scrollPageUpDown(ev.which === KEYS.pageUp ? -1 : +1);
+      cancelEvent(ev);
     }
   };
 
@@ -559,6 +552,7 @@ class DataTable extends React.PureComponent {
     }
   };
 
+  // Will also get called on row focus
   onClickRow = (ev: SyntheticMouseEvent, id: string) => {
     const fMultiSelect =
       (ev.metaKey || ev.ctrlKey) && this.props.multipleSelection;
@@ -683,9 +677,7 @@ class DataTable extends React.PureComponent {
   selectToggleSingle(id: string) {
     const idx = this.selectedIds.indexOf(id);
     this.changeSelectedIds(
-      idx >= 0
-        ? removeAt(this.selectedIds, idx)
-        : addLast(this.selectedIds, id),
+      idx >= 0 ? removeAt(this.selectedIds, idx) : addLast(this.selectedIds, id)
     );
   }
 
@@ -694,7 +686,7 @@ class DataTable extends React.PureComponent {
     this.localStorageSave(
       this.props.collectionName,
       'selectedIds',
-      this.selectedIds,
+      this.selectedIds
     );
     this.forceUpdate();
     if (this.props.onChangeSelection) {
@@ -862,7 +854,7 @@ class DataTable extends React.PureComponent {
     this.localStorageSave(
       this.props.collectionName,
       'sortDescending',
-      this.sortDescending,
+      this.sortDescending
     );
     this.recalcShownIds(this.props);
     this.scrollToTop();
@@ -876,7 +868,7 @@ class DataTable extends React.PureComponent {
     this.localStorageSave(
       props.collectionName,
       'manuallyOrderedIds',
-      this.manuallyOrderedIds,
+      this.manuallyOrderedIds
     );
     if (props.onChangeManualOrder) {
       props.onChangeManualOrder(this.manuallyOrderedIds);
@@ -904,7 +896,7 @@ const style = {
         maxWidth: '100%',
         overflowX: 'hidden',
       },
-      baseStyle,
+      baseStyle
     ),
   dragHandle: {
     marginLeft: 4,
