@@ -137,7 +137,7 @@ class VirtualScroller extends React.PureComponent {
     this.checkRenderLastRow();
     this.timerCheckScrollbar = setInterval(
       this.checkScrollbar,
-      CHECK_SCROLLBAR_PERIOD,
+      CHECK_SCROLLBAR_PERIOD
     );
   }
 
@@ -160,7 +160,7 @@ class VirtualScroller extends React.PureComponent {
     if (this.pendingScrollToId != null) {
       const fSucceeded = this.doScrollToId(
         this.pendingScrollToId,
-        this.pendingScrollToIdOptions,
+        this.pendingScrollToIdOptions
       );
       if (fSucceeded) this.initPendingScroll();
     }
@@ -169,7 +169,7 @@ class VirtualScroller extends React.PureComponent {
   onScroll = (ev: Event) => {
     floatReposition();
     this.recalcViewport(ev);
-  }
+  };
 
   recalcViewport = (ev: Object = {}) => {
     if (!this.refScroller) return;
@@ -183,7 +183,10 @@ class VirtualScroller extends React.PureComponent {
       if (this.idxFirst !== idxFirst || this.idxLast !== idxLast) {
         /* eslint-disable max-len */
         DEBUG &&
-          console.log(`VirtualScroller: recalcViewPort(${ev.type}): trigger re-render (due to scroll, resize, etc)...`);
+          console.log(
+            `VirtualScroller: recalcViewPort(${ev.type}): ` +
+              'trigger re-render (due to scroll, resize, etc)...'
+          );
         /* eslint-enable max-len */
         this.forceUpdate();
       }
@@ -205,7 +208,7 @@ class VirtualScroller extends React.PureComponent {
         DEBUG &&
           console.log(
             'VirtualScroller: scrollbar has been added: ' +
-              'broadcasting resize event (may trigger re-render)...',
+              'broadcasting resize event (may trigger re-render)...'
           );
         window.dispatchEvent(new Event('resize'));
       }
@@ -216,7 +219,7 @@ class VirtualScroller extends React.PureComponent {
       DEBUG &&
         console.log(
           'VirtualScroller: scrollbar width changed: ' +
-            `${this.scrollbarWidth} -> ${scrollbarWidth}. Re-rendering...`,
+            `${this.scrollbarWidth} -> ${scrollbarWidth}. Re-rendering...`
         );
       if (onChangeScrollbarWidth) onChangeScrollbarWidth(scrollbarWidth);
     }
@@ -262,7 +265,7 @@ class VirtualScroller extends React.PureComponent {
       if (idx < 0) {
         DEBUG &&
           console.log(
-            'VirtualScroller: scrollIntoView: ignored, id not in shownIds',
+            'VirtualScroller: scrollIntoView: ignored, id not in shownIds'
           );
         return;
       }
@@ -300,7 +303,7 @@ class VirtualScroller extends React.PureComponent {
         'VirtualScroller: RENDERING ' +
           `[top=${this.scrollTop}, bottom=${this.scrollBottom}, ` +
           // $FlowFixMe
-          `idxFirst=${this.idxFirst}, idxLast=${this.idxLast}]...`,
+          `idxFirst=${this.idxFirst}, idxLast=${this.idxLast}]...`
       );
     return (
       <div
@@ -400,13 +403,15 @@ class VirtualScroller extends React.PureComponent {
     const prevCachedHeight = this.cachedHeights[id];
     if (prevCachedHeight === height) return;
     DEBUG &&
-      console.log(`VirtualScroller: received new height for row ${id}: ${height}`);
+      console.log(
+        `VirtualScroller: received new height for row ${id}: ${height}`
+      );
     if (height < this.minHeight) this.minHeight = height;
     if (this.props.uniformRowHeight && this.rowHeight == null) {
       this.rowHeight = height;
       DEBUG &&
         console.log(
-          'VirtualScroller: uniform row height is now known: re-rendering...',
+          'VirtualScroller: uniform row height is now known: re-rendering...'
         );
       this.forceUpdate();
       return;
@@ -513,7 +518,7 @@ class VirtualScroller extends React.PureComponent {
       }
       const numRowsToRender = this.calcNumRowsToRender(
         scrollBottom - rowTopLast,
-        maxRowsToRender,
+        maxRowsToRender
       );
       this.trimAndSetRenderInterval(idxFirst, idxLast + numRowsToRender);
       return;
@@ -521,7 +526,7 @@ class VirtualScroller extends React.PureComponent {
 
     const numRowsToRender = this.calcNumRowsToRender(
       scrollBottom - rowTopFirst,
-      maxRowsToRender,
+      maxRowsToRender
     );
     this.trimAndSetRenderInterval(idxFirst, idxFirst + numRowsToRender);
   }
@@ -617,7 +622,7 @@ const style = {
         overflowY: 'auto',
         overflowX: 'hidden',
       },
-      baseStyle,
+      baseStyle
     ),
   sizer: totalHeight => ({
     position: 'absolute',

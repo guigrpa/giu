@@ -714,7 +714,9 @@ class DataTable extends React.PureComponent {
     if (!refVirtualScroller) return;
     if (!this.selectedIds.length) return;
     DEBUG &&
-      console.log(`DataTable: triggering a scrollIntoView... ${this.selectedIds.join(',')}`);
+      console.log(
+        `DataTable: triggering a scrollIntoView... ${this.selectedIds.join(',')}`
+      );
     refVirtualScroller.scrollIntoView(this.selectedIds[0], options);
   }
 
