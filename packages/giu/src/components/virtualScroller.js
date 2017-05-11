@@ -14,6 +14,8 @@ import VerticalManager from './verticalManager';
 const MAX_ROWS_INITIAL_RENDER = 20;
 const CHECK_SCROLLBAR_PERIOD = 400;
 
+const EXTRA_RENDER_PIXELS = 100;
+
 const DEFAULT_ROW = '__DEFAULT_ROW__';
 
 const DEBUG = false && process.env.NODE_ENV !== 'production';
@@ -174,7 +176,7 @@ class VirtualScroller extends React.PureComponent {
     const { scrollTop, clientHeight } = this.refScroller;
     if (scrollTop !== this.scrollTop || clientHeight !== this.clientHeight) {
       this.scrollTop = scrollTop;
-      this.clientHeight = clientHeight;
+      this.clientHeight = Math.max(clientHeight, 0);
       this.scrollBottom = scrollTop + clientHeight; // convenience
       const { idxFirst, idxLast } = this;
       this.determineRenderInterval();
@@ -316,6 +318,9 @@ class VirtualScroller extends React.PureComponent {
     );
   }
 
+  // Empty div with the estimated total dimensions, so that the
+  // scrollbar aproximates the real size. The estimation will get better and
+  // better, as more rows get rendered
   renderSizer() {
     const totalHeight = this.rowHeight != null
       ? this.rowHeight * this.props.shownIds.length
@@ -458,8 +463,8 @@ class VirtualScroller extends React.PureComponent {
     // 3. Fixed-height rows
     // ------------------------------------------------------------
     if (rowHeight != null) {
-      const idxFirst = Math.floor(scrollTop / rowHeight);
-      const idxLast = Math.floor(scrollBottom / rowHeight);
+      const idxFirst = Math.floor((scrollTop - EXTRA_RENDER_PIXELS) / rowHeight);
+      const idxLast = Math.floor((scrollBottom + EXTRA_RENDER_PIXELS) / rowHeight);
       this.trimAndSetRenderInterval(idxFirst, idxLast);
       return;
     }
@@ -480,7 +485,7 @@ class VirtualScroller extends React.PureComponent {
         fFirstRowIsCached = false;
         break;
       }
-      if (rowTop >= scrollTop) break;
+      if (rowTop >= scrollTop - EXTRA_RENDER_PIXELS) break;
       rowTopFirst = rowTop;
     }
     idxFirst -= 1;
@@ -498,7 +503,7 @@ class VirtualScroller extends React.PureComponent {
           fLastRowIsCached = false;
           break;
         }
-        if (rowTop > scrollBottom) break;
+        if (rowTop > scrollBottom + EXTRA_RENDER_PIXELS) break;
         rowTopLast = rowTop;
       }
       idxLast -= 1;
