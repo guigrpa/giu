@@ -1,5 +1,5 @@
 import React                from 'react';
-import { merge }            from 'timm';
+import { merge, set as timmSet } from 'timm';
 import isFunction           from 'lodash/isFunction';
 import {
   COLORS, KEYS,
@@ -154,7 +154,7 @@ class SelectCustomBase extends React.Component {
       >
         {label}
         <span style={flexItem(1)} />
-        <Icon icon={caretIcon} skipTheme style={style.caret} />
+        <Icon icon={caretIcon} skipTheme style={style.caret(this.props)} />
         {IS_IOS && this.renderFloatForIos()}
       </span>
     );
@@ -328,7 +328,14 @@ const style = {
     if (styleTitle) out = merge(out, styleTitle);
     return out;
   },
-  caret: {
+  caret: ({ disabled }) => {
+    let out = style.caretBase;
+    if (disabled) {
+      out = timmSet(out, 'opacity', 0);
+    }
+    return out;
+  },
+  caretBase: {
     marginLeft: 15,
     marginRight: 3,
     marginTop: 1,
