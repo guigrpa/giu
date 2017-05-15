@@ -487,6 +487,7 @@ type PublicProps = {
   // Filtering
   // ---------
   filterValue?: string, // (default: '')
+  neverFilterIds?: Array<string>, // shown no matter what
 
   // Sorting
   // -------
@@ -497,6 +498,7 @@ type PublicProps = {
   }) => void,
   sortBy?: ?string, // Column, identified by `attr`
   sortDescending?: boolean,
+  customPositions?: { [id: string]: ?string }, // if position is null, it will be sent to the top
 
   // Manual sorting
   allowManualSorting?: boolean, // Add manual sort column (default: true)
