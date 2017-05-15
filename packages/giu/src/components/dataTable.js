@@ -1,7 +1,7 @@
 // @flow
 
 /* eslint-disable no-console */
-import { merge, removeAt, addLast } from 'timm';
+import { merge, removeAt, addLast, insert } from 'timm';
 import React from 'react';
 import {
   SortableContainer as sortableContainer,
@@ -100,6 +100,7 @@ type PublicProps = {
   // Filtering
   // ---------
   filterValue?: string, // (default: '')
+  neverFilterIds?: Array<string>, // shown no matter what
 
   // Sorting
   // -------
@@ -110,6 +111,7 @@ type PublicProps = {
   }) => void,
   sortBy?: ?string, // Column, identified by `attr`
   sortDescending?: boolean,
+  customPositions?: { [id: string]: ?string }, // if position is null, it will be sent to the top
 
   // Manual sorting
   allowManualSorting?: boolean, // Add manual sort column (default: true)
@@ -164,6 +166,7 @@ type DefaultProps = {
   itemsById: Object,
   shownIds: Array<string>,
   filterValue: string,
+  neverFilterIds: Array<string>,
   headerClickForSorting: boolean,
   allowManualSorting: boolean,
   manualSortColLabel: string | (() => string),
@@ -187,6 +190,7 @@ class DataTable extends React.PureComponent {
     shownIds: ([]: Array<string>),
 
     filterValue: '',
+    neverFilterIds: ([]: Array<string>),
 
     headerClickForSorting: true,
 
@@ -731,18 +735,22 @@ class DataTable extends React.PureComponent {
   }
 
   // ===============================================================
-  // Filtering and sorting
+  // Filtering
   // ===============================================================
   filter(ids: Array<string>, props: Props) {
     let needle = this.filterValue;
     if (!needle) return ids;
     needle = simplifyString(needle);
-    const { itemsById } = props;
+    const { itemsById, neverFilterIds } = props;
     const cols = this.cols.filter(col => col.filterable !== false);
     const numCols = cols.length;
     const filteredIds = [];
     for (let i = 0; i < ids.length; i++) {
       const id = ids[i];
+      if (neverFilterIds.indexOf(id) >= 0) {
+        filteredIds.push(id);
+        continue;
+      }
       const item = itemsById[id];
       let fInclude = false;
       for (let k = 0; k < numCols; k++) {
@@ -762,6 +770,9 @@ class DataTable extends React.PureComponent {
     return filteredIds;
   }
 
+  // ===============================================================
+  // Sorting
+  // ===============================================================
   sort(ids: Array<string>, props: Props) {
     let out;
     if (this.sortBy === SORT_MANUALLY) {
@@ -769,6 +780,7 @@ class DataTable extends React.PureComponent {
     } else {
       out = this.sortAutomatically(ids, props);
     }
+    out = this.processCustomPositions(out, props);
     return out;
   }
 
@@ -851,6 +863,45 @@ class DataTable extends React.PureComponent {
     if (sortDescending) sortedIds.reverse();
     return sortedIds;
   }
+
+  processCustomPositions(ids: Array<string>, props: Props) {
+    const { customPositions } = props;
+    if (!customPositions) return ids;
+    if (!Object.keys(customPositions).length) return ids;
+
+    // Extract row IDs with custom positions
+    let out = [];
+    const pending = [];
+    for (let i = 0; i < ids.length; i++) {
+      const id = ids[i];
+      if (customPositions[id] === undefined) {
+        out.push(id);
+      } else {
+        pending.push(id);
+      }
+    }
+    if (!pending.length) return out;
+
+    // Process pending rows
+    const top = [];
+    for (let i = 0; i < pending.length; i++) {
+      const id = pending[i];
+      const afterId = customPositions[id];
+      if (afterId === null) {
+        top.push(id);
+        continue;
+      }
+      const idx = out.indexOf(afterId);
+      if (idx < 0) {
+        top.push(id);
+        continue;
+      }
+      out = insert(out, idx + 1, id);
+    }
+
+    return top.concat(out);
+  }
+
 
   changeSort(sortBy: ?string, sortDescending: boolean) {
     if (sortBy === this.sortBy && sortDescending === this.sortDescending) {

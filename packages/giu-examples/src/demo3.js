@@ -62,6 +62,7 @@ const sampleDataTableItems = (num, idStart = 0) => {
 
 const createEmptyItem = id => ({
   id,
+  name: 'GGGGG',
   confirmed: false,
   type: 'User',
 });
@@ -101,9 +102,12 @@ const Sidebar = () => (
 class Contents extends React.Component {
   constructor() {
     super();
+    const itemsById = sampleDataTableItems(10, 0);
     this.state = {
       // items would normally come from props
-      itemsById: sampleDataTableItems(1000, 0),
+      itemsById,
+      shownIds: Object.keys(itemsById),
+      customPositions: {},
       isEditing: false,
       isValidating: false,
       isDirty: false,
@@ -201,21 +205,22 @@ class Contents extends React.Component {
 
   // Called by HeightMeasurer
   renderDataTable = height => {
-    const { itemsById, isEditing, inputCmds } = this.state;
+    const { isEditing } = this.state;
     const finalHeight = height ? height - DATATABLE_HEADER_HEIGHT : undefined;
     this.commonCellProps = merge(this.commonCellProps, {
       isEditing,
-      cmds: inputCmds,
+      cmds: this.state.inputCmds,
     });
     return (
       <DataTable
-        itemsById={itemsById}
-        shownIds={Object.keys(itemsById)}
+        itemsById={this.state.itemsById}
+        shownIds={this.state.shownIds}
         alwaysRenderIds={this.state.selectedIds}
+        neverFilterIds={this.state.selectedIds}
+        customPositions={this.state.customPositions}
         filterValue={this.state.filterValue}
         cols={this.getCols()}
         commonCellProps={this.commonCellProps}
-        headerClickForSorting={!isEditing}
         selectedIds={this.state.selectedIds}
         onChangeSelection={this.onChangeSelection}
         onRowDoubleClick={this.onRowDoubleClick}
@@ -233,7 +238,7 @@ class Contents extends React.Component {
         attr: 'name',
         minWidth: 150,
         flexGrow: 1,
-        render: ctx =>
+        render: ctx => (
           <TextInput
             ref={c => ctx.registerInputRef(ctx.id, ctx.attr, c)}
             disabled={!(ctx.isEditing && ctx.isItemSelected)}
@@ -243,7 +248,8 @@ class Contents extends React.Component {
             required
             skipTheme
             style={style.input(ctx.isEditing && ctx.isItemSelected)}
-          />,
+          />
+        ),
       },
       {
         attr: 'type',
@@ -327,7 +333,8 @@ class Contents extends React.Component {
 
   onDelete = () => {
     const itemsById = omit(this.state.itemsById, this.state.selectedIds);
-    this.setState({ itemsById, selectedIds: [] });
+    const shownIds = Object.keys(itemsById);
+    this.setState({ itemsById, shownIds, selectedIds: [] });
   };
 
   onChange = () => {
@@ -341,6 +348,8 @@ class Contents extends React.Component {
     // If it was a create operation (local 'cid', or client ID), delete row
     if (id[0] === 'c') {
       nextState.itemsById = omit(this.state.itemsById, [id]);
+      nextState.shownIds = Object.keys(nextState.itemsById);
+      nextState.customPositions = omit(this.state.customPositions, [id]);
 
       // If it was an update, send a REVERT command to all fields
       // [it'd be better if only the targeted row would receive them, but anyway...]
@@ -365,9 +374,17 @@ class Contents extends React.Component {
     const cid = `c${seqCid}`;
     seqCid += 1;
     const itemsById = timmSet(this.state.itemsById, cid, createEmptyItem(cid));
+    const customPositions = timmSet(
+      this.state.customPositions,
+      cid,
+      this.calculateSuitablePositionForNewItem()
+    );
+    const shownIds = Object.keys(itemsById);
     this.setState(
       {
         itemsById,
+        shownIds,
+        customPositions,
         isEditing: true,
         isDirty: true,
         selectedIds: [cid],
@@ -376,14 +393,6 @@ class Contents extends React.Component {
         this.focusOnFirstEditableField(cid);
       }
     );
-  };
-
-  focusOnFirstEditableField = id => {
-    const rowNode = document.querySelector(`#giu-vertical-manager-${id}`);
-    if (!rowNode) return;
-    const fieldNode = rowNode.querySelector('input, select, textarea');
-    if (fieldNode) fieldNode.focus();
-    // Bye-bye, HACK! (no refs needed any more)
   };
 
   onSave = async () => {
@@ -411,6 +420,7 @@ class Contents extends React.Component {
       );
       this.setState({
         itemsById,
+        customPositions: {},
         isEditing: false,
         isDirty: false,
         isValidating: false,
@@ -418,6 +428,21 @@ class Contents extends React.Component {
     } catch (err) {
       this.setState({ isValidating: false });
     }
+  };
+
+  // -----------------------------------------------
+  calculateSuitablePositionForNewItem() {
+    const { selectedIds } = this.state;
+    if (!selectedIds.length) return null; // at the top
+    return selectedIds[0]; // below the first selected row
+  }
+
+  focusOnFirstEditableField = id => {
+    const rowNode = document.querySelector(`#giu-vertical-manager-${id}`);
+    if (!rowNode) return;
+    const fieldNode = rowNode.querySelector('input, select, textarea');
+    if (fieldNode) fieldNode.focus();
+    // Bye-bye, HACK! (no refs needed any more)
   };
 }
 

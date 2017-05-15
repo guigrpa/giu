@@ -1,4 +1,7 @@
 * SelectCustom: hide caret when input is disabled.
+* DataTable: add `neverFilterIds`, for those rows that MUST be shown, no matter what.
+* DataTable: add `customPositions`, to tweak the position of certain rows.
+
 ## 0.12.0 (2017-5-11)
 
 * DataTable: select a row when user focuses on an input in that row (e.g. via TAB).
