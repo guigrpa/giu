@@ -334,9 +334,10 @@ class VirtualScroller extends React.PureComponent {
   }
 
   renderRows() {
+    // Render visible rows
     const { idxFirst, idxLast } = this;
     if (idxFirst == null || idxLast == null) return null;
-    const { shownIds, alwaysRenderIds } = this.props;
+    const { shownIds } = this.props;
     const numVisibleRows = idxLast - idxFirst + 1;
     this.pendingHeights = [];
     let rows = new Array(numVisibleRows);
@@ -345,6 +346,9 @@ class VirtualScroller extends React.PureComponent {
       const id = shownIds[idx];
       rows[i] = this.renderRow(idx, id);
     }
+
+    // Render rows in alwaysRenderIds that have not already been rendered
+    const { alwaysRenderIds } = this.props;
     if (alwaysRenderIds.length) {
       const before = [];
       const after = [];
@@ -357,7 +361,7 @@ class VirtualScroller extends React.PureComponent {
           targetArray = before;
         } else if (idx > idxLast) {
           targetArray = after;
-        } else continue;
+        } else continue; // already rendered
         targetArray && targetArray.push(this.renderRow(idx, id));
       }
       rows = before.concat(rows, after);
