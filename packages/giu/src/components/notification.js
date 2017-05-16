@@ -24,7 +24,6 @@ type Props = {
   /* :: ...$Exact<NotificationPars>, */
   /* :: ...$Exact<HoverableProps>, */
   type: NotificationType,
-  icon: string,
 };
 
 class Notification extends React.PureComponent {
@@ -32,13 +31,14 @@ class Notification extends React.PureComponent {
 
   static defaultProps = {
     type: ('info': NotificationType),
-    icon: 'exclamation',
   };
 
   // ==========================================
   // Render
   // ==========================================
   render() {
+    const { theme } = this.context;
+    const icon = this.props.icon || (theme === 'mdl' ? 'announcement' : 'exclamation');
     return (
       <div
         className="giu-notification"
@@ -49,7 +49,7 @@ class Notification extends React.PureComponent {
         style={style.outer(this.props, this.context.theme)}
       >
         <div style={style.icon}>
-          <Icon icon={this.props.icon} size="2x" spin={this.props.iconSpin} />
+          <Icon icon={icon} size="2x" spin={this.props.iconSpin} />
         </div>
         <div style={style.body}>
           <div style={style.title}>{this.props.title}</div>

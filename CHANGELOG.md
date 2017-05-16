@@ -1,5 +1,7 @@
 * Bugfixes:
     * Spinner: Fix creation after initial page load (#4).
+    * Notification: Fix default icon when using MDL (#5).
+
 ## 0.12.1 (2017-5-15)
 
 * SelectCustom: hide caret when input is disabled.
