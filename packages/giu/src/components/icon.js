@@ -39,6 +39,12 @@ const FILTERED_PROPS = [
 class Icon extends React.PureComponent {
   props: Props;
 
+  componentDidMount() {
+    if (this.context.theme === 'mdl' && this.refIcon) {
+      window.componentHandler.upgradeElement(this.refIcon);
+    }
+  }
+
   render() {
     if (!this.props.skipTheme && this.context.theme === 'mdl') {
       return this.renderMdl();
@@ -73,6 +79,9 @@ class Icon extends React.PureComponent {
     const otherProps = omit(this.props, FILTERED_PROPS);
     return (
       <div
+        ref={c => {
+          this.refIcon = c;
+        }}
         className="mdl-spinner mdl-js-spinner is-active"
         {...otherProps}
         style={style.mdlSpinner(this.props)}
@@ -95,7 +104,7 @@ const style = {
         fontSize: theme === 'mdl' ? style.mdlSize(size) : undefined,
         letterSpacing: 'normal',
       },
-      base,
+      base
     ),
   mdlSpinner: ({ size, style: base }) => {
     const dim = style.mdlSize(size);
@@ -104,7 +113,7 @@ const style = {
         width: dim,
         height: dim,
       },
-      base,
+      base
     );
   },
   mdlSize: size => {
