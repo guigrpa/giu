@@ -153,9 +153,12 @@ const IconExample = () =>
 const ButtonExample = () =>
   <div style={style.example}>
     <ExampleLabel>Button</ExampleLabel>
-    <Button onClick={() => notify('Normal button pressed')} colored>Notify me!</Button>{' '}
-    <Button onClick={() => notify('Plain button pressed')} plain>Notify me!</Button>{' '}
-    <Button onClick={() => notify('Plain button pressed')} disabled>Disabled</Button>
+    <Button onClick={() => notify('Normal button pressed')} colored>Colored</Button>{' '}
+    <Button onClick={() => notify('Normal button pressed')} primary>Primary</Button>{' '}
+    <Button onClick={() => notify('Normal button pressed')} accent>Accent</Button>{' '}
+    <Button onClick={() => notify('Plain button pressed')} disabled>Disabled</Button><br />
+    <Button onClick={() => notify('Plain button pressed')} plain>Flat</Button>{' '}
+    <Button onClick={() => notify('Plain button pressed')} plain disabled>Flat (disabled)</Button>{' '}
   </div>;
 
 const HoverableExample = hoverable(({ hovering, onHoverStart, onHoverStop }) => (
