@@ -60,7 +60,7 @@ export type DataTableColumn = {
 /* -- END_DOCS -- */
 
 // ===============================================================
-// Header
+// DataTableHeader
 // ===============================================================
 class DataTableHeader extends React.PureComponent {
   static propTypes: {
@@ -75,8 +75,6 @@ class DataTableHeader extends React.PureComponent {
     style?: Object,
   };
 
-  // ===============================================================
-  // Render
   // ===============================================================
   render() {
     return (
@@ -107,12 +105,17 @@ class DataTableHeader extends React.PureComponent {
       <div
         key={attr}
         id={attr}
-        onClick={fAttrIsSortable ? this.onClick : undefined}
-        style={style.headerCell(idxCol, col, fAttrIsSortable)}
+        style={style.headerCell(idxCol, col)}
       >
         {labelLevel && this.renderCallOut(labelLevel)}
-        {finalLabel}
-        {elIcon}
+        <span
+          id={attr}
+          onClick={fAttrIsSortable ? this.onClick : undefined}
+          style={style.headerCellClickable(fAttrIsSortable)}
+        >
+          {finalLabel}
+          {elIcon}
+        </span>
       </div>
     );
   }
@@ -140,8 +143,6 @@ class DataTableHeader extends React.PureComponent {
     return <Icon icon={icon} style={style.headerSortIcon} skipTheme />;
   }
 
-  // ===============================================================
-  // Event handlers
   // ===============================================================
   onClick = (ev: SyntheticEvent) => {
     if (!(ev.currentTarget instanceof Element)) return;
@@ -300,13 +301,12 @@ const style = {
       baseStyle
     );
   },
-  headerCell: (idxCol, col, fEnableHeaderClicks) => {
+  headerCell: (idxCol, col) => {
     const level = col.labelLevel || 0;
     let out = {
       fontWeight: 'bold',
       whiteSpace: 'nowrap',
       textOverflow: 'ellipsis',
-      cursor: fEnableHeaderClicks ? 'pointer' : undefined,
     };
     out = merge(out, style.rowCell(idxCol, col));
     if (level) {
@@ -319,6 +319,9 @@ const style = {
     }
     return out;
   },
+  headerCellClickable: fEnableHeaderClicks => ({
+    cursor: fEnableHeaderClicks ? 'pointer' : undefined,
+  }),
   headerCallOut: base =>
     merge(
       {
