@@ -19,12 +19,17 @@ import {
   flexItem,
   Button,
   HeightMeasurer,
+  Spinner,
 } from 'giu';
 import faker from 'faker';
+
+import './demo3.css';
 
 const SIDEBAR_WIDTH = 200;
 const TOP_HEIGHT = 80;
 const DATATABLE_HEADER_HEIGHT = 40;
+
+const NUM_ITEMS = 1000;
 
 const COLLECT_FIELDS_ON_SUBMIT = [
   'name',
@@ -44,7 +49,7 @@ const USER_TYPES = [
 const sampleDataTableItems = (num, idStart = 0) => {
   const out = {};
   for (let i = 0; i < num; i++) {
-    const id = String(idStart + i);
+    const id = String(idStart + 1 + i);
     const name = i === 0 ? 'Mª Antonia Pérez Ñandú' : faker.name.findName();
     out[id] = {
       id,
@@ -62,12 +67,102 @@ const sampleDataTableItems = (num, idStart = 0) => {
 
 const createEmptyItem = id => ({
   id,
-  name: 'GGGGG',
+  name: '',
   confirmed: false,
   type: 'User',
 });
 
-let seqCid = 0;
+let seqCid = 0; // use for item creation
+
+const COLS = [
+  {
+    attr: 'id',
+    minWidth: 40,
+    render: ctx => <div style={{ paddingTop: 2 }}>{ctx.item.id}</div>,
+  },
+  {
+    attr: 'name',
+    minWidth: 150,
+    flexGrow: 1,
+    render: ctx => (
+      <TextInput
+        ref={c => ctx.registerInputRef(ctx.id, ctx.attr, c)}
+        disabled={!(ctx.isEditing && ctx.isItemSelected)}
+        value={ctx.item[ctx.attr]}
+        onChange={ctx.onChange}
+        cmds={ctx.cmds}
+        required
+        skipTheme
+        style={style.input(ctx.isEditing && ctx.isItemSelected)}
+      />
+    ),
+  },
+  {
+    attr: 'type',
+    minWidth: 150,
+    render: ctx => (
+      <Select
+        ref={c => ctx.registerInputRef(ctx.id, ctx.attr, c)}
+        disabled={!(ctx.isEditing && ctx.isItemSelected)}
+        type="dropDownPicker"
+        items={USER_TYPES}
+        value={ctx.item[ctx.attr]}
+        onChange={ctx.onChange}
+        cmds={ctx.cmds}
+        required
+        styleOuter={style.input(ctx.isEditing && ctx.isItemSelected)}
+        styleTitle={style.input(ctx.isEditing && ctx.isItemSelected)}
+      />
+    ),
+  },
+  {
+    attr: 'lastModified',
+    minWidth: 150,
+    render: ctx => (
+      <DateInput
+        ref={c => ctx.registerInputRef(ctx.id, ctx.attr, c)}
+        type="dropDownPicker"
+        disabled={!(ctx.isEditing && ctx.isItemSelected)}
+        value={ctx.item[ctx.attr]}
+        onChange={ctx.onChange}
+        cmds={ctx.cmds}
+        required
+        skipTheme
+        style={style.input(ctx.isEditing && ctx.isItemSelected)}
+      />
+    ),
+  },
+  {
+    attr: 'confirmed',
+    labelLevel: 1,
+    minWidth: 30,
+    render: ctx => (
+      <Checkbox
+        ref={c => ctx.registerInputRef(ctx.id, ctx.attr, c)}
+        disabled={!(ctx.isEditing && ctx.isItemSelected)}
+        value={ctx.item[ctx.attr]}
+        onChange={ctx.onChange}
+        cmds={ctx.cmds}
+      />
+    ),
+  },
+  {
+    attr: 'phone',
+    minWidth: 150,
+    render: ctx => (
+      <TextInput
+        ref={c => ctx.registerInputRef(ctx.id, ctx.attr, c)}
+        disabled={!(ctx.isEditing && ctx.isItemSelected)}
+        value={ctx.item[ctx.attr]}
+        onChange={ctx.onChange}
+        cmds={ctx.cmds}
+        required
+        skipTheme
+        style={style.input(ctx.isEditing && ctx.isItemSelected)}
+      />
+    ),
+  },
+];
 
 // ================================================
 // App, Top, Sidebar
@@ -102,11 +197,14 @@ const Sidebar = () => (
 class Contents extends React.Component {
   constructor() {
     super();
-    const itemsById = sampleDataTableItems(10, 0);
+    const itemsById = sampleDataTableItems(NUM_ITEMS, 0);
     this.state = {
+      hasPagination: false,
       // items would normally come from props
       itemsById,
       shownIds: Object.keys(itemsById),
+      numItems: NUM_ITEMS,
+      isFetching: false,
       customPositions: {},
       isEditing: false,
       isValidating: false,
@@ -156,6 +254,8 @@ class Contents extends React.Component {
             onClick: this.onCancel,
           })}
         <div style={flexItem(1)} />
+        {this.renderStats()}
+        {!isEditing && this.renderPaginationToggle()}{' '}
         {!isEditing && this.renderFilter()}
         <div style={style.separator} />
         {!isEditing &&
@@ -191,7 +291,32 @@ class Contents extends React.Component {
     );
   }
 
+  renderStats() {
+    return (
+      <div>
+        # items:
+        {' '}
+        <b>{this.state.numItems}</b>
+        {this.state.isFetching ? <Spinner /> : null}
+      </div>
+    );
+  }
+
+  renderPaginationToggle() {
+    return (
+      <Checkbox
+        label="Pagination (disables quick filter)"
+        value={this.state.hasPagination}
+        onChange={(ev, hasPagination) => {
+          this.setState({ hasPagination, filterValue: '' });
+        }}
+        style={{ marginLeft: 10 }}
+      />
+    );
+  }
+
   renderFilter() {
+    if (this.state.hasPagination) return null;
     return (
       <TextInput
         placeholder="🔍 Quick filter"
@@ -199,13 +324,14 @@ class Contents extends React.Component {
         onChange={(ev, filterValue) => {
           this.setState({ filterValue });
         }}
+        style={{ marginLeft: 10 }}
       />
     );
   }
 
   // Called by HeightMeasurer
   renderDataTable = height => {
-    const { isEditing } = this.state;
+    const { isEditing, hasPagination } = this.state;
     const finalHeight = height ? height - DATATABLE_HEADER_HEIGHT : undefined;
     this.commonCellProps = merge(this.commonCellProps, {
       isEditing,
@@ -213,13 +339,17 @@ class Contents extends React.Component {
     });
     return (
       <DataTable
+        key={String(hasPagination)}
         itemsById={this.state.itemsById}
         shownIds={this.state.shownIds}
         alwaysRenderIds={this.state.selectedIds}
         neverFilterIds={this.state.selectedIds}
         customPositions={this.state.customPositions}
+        fetchMoreItems={hasPagination && this.fetchMore}
+        fetching={hasPagination && this.state.isFetching}
+        FetchRowComponent={FetchRowComponent}
         filterValue={this.state.filterValue}
-        cols={this.getCols()}
+        cols={COLS}
         commonCellProps={this.commonCellProps}
         selectedIds={this.state.selectedIds}
         onChangeSelection={this.onChangeSelection}
@@ -231,92 +361,6 @@ class Contents extends React.Component {
       />
     );
   };
-
-  getCols() {
-    return [
-      {
-        attr: 'name',
-        minWidth: 150,
-        flexGrow: 1,
-        render: ctx => (
-          <TextInput
-            ref={c => ctx.registerInputRef(ctx.id, ctx.attr, c)}
-            disabled={!(ctx.isEditing && ctx.isItemSelected)}
-            value={ctx.item[ctx.attr]}
-            onChange={ctx.onChange}
-            cmds={ctx.cmds}
-            required
-            skipTheme
-            style={style.input(ctx.isEditing && ctx.isItemSelected)}
-          />
-        ),
-      },
-      {
-        attr: 'type',
-        minWidth: 150,
-        render: ctx => (
-          <Select
-            ref={c => ctx.registerInputRef(ctx.id, ctx.attr, c)}
-            disabled={!(ctx.isEditing && ctx.isItemSelected)}
-            type="dropDownPicker"
-            items={USER_TYPES}
-            value={ctx.item[ctx.attr]}
-            onChange={ctx.onChange}
-            cmds={ctx.cmds}
-            required
-            styleOuter={style.input(ctx.isEditing && ctx.isItemSelected)}
-            styleTitle={style.input(ctx.isEditing && ctx.isItemSelected)}
-          />
-        ),
-      },
-      {
-        attr: 'lastModified',
-        minWidth: 150,
-        render: ctx => (
-          <DateInput
-            ref={c => ctx.registerInputRef(ctx.id, ctx.attr, c)}
-            disabled={!(ctx.isEditing && ctx.isItemSelected)}
-            value={ctx.item[ctx.attr]}
-            onChange={ctx.onChange}
-            cmds={ctx.cmds}
-            required
-            skipTheme
-            style={style.input(ctx.isEditing && ctx.isItemSelected)}
-          />
-        ),
-      },
-      {
-        attr: 'confirmed',
-        labelLevel: 1,
-        minWidth: 30,
-        render: ctx => (
-          <Checkbox
-            ref={c => ctx.registerInputRef(ctx.id, ctx.attr, c)}
-            disabled={!(ctx.isEditing && ctx.isItemSelected)}
-            value={ctx.item[ctx.attr]}
-            onChange={ctx.onChange}
-            cmds={ctx.cmds}
-          />
-        ),
-      },
-      {
-        attr: 'phone',
-        minWidth: 150,
-        render: ctx => (
-          <TextInput
-            ref={c => ctx.registerInputRef(ctx.id, ctx.attr, c)}
-            disabled={!(ctx.isEditing && ctx.isItemSelected)}
-            value={ctx.item[ctx.attr]}
-            onChange={ctx.onChange}
-            cmds={ctx.cmds}
-            required
-            skipTheme
-            style={style.input(ctx.isEditing && ctx.isItemSelected)}
-          />
-        ),
-      },
-    ];
-  }
 
   // -----------------------------------------------
   registerInputRef = (id, attr, ref) => {
@@ -430,6 +474,22 @@ class Contents extends React.Component {
     }
   };
 
+  fetchMore = id => {
+    console.log(`Fetch items after ${id}`);
+    this.setState({ isFetching: true });
+    setTimeout(() => {
+      const numNewItems = 20;
+      const newItems = sampleDataTableItems(numNewItems, this.state.numItems);
+      const itemsById = merge(this.state.itemsById, newItems);
+      this.setState({
+        numItems: this.state.numItems + numNewItems,
+        itemsById,
+        shownIds: Object.keys(itemsById),
+        isFetching: false,
+      });
+    }, 800);
+  };
+
   // -----------------------------------------------
   calculateSuitablePositionForNewItem() {
     const { selectedIds } = this.state;
@@ -445,6 +505,15 @@ class Contents extends React.Component {
     // Bye-bye, HACK! (no refs needed any more)
   };
 }
+
+// -----------------------------------------------
+// Helper components
+// -----------------------------------------------
+const FetchRowComponent = () => (
+  <div style={{ padding: '5px 10px', backgroundColor: 'gray', color: 'white' }}>
+    <Spinner />{' '}Fetching...
+  </div>
+);
 
 // -----------------------------------------------
 // Styles

@@ -596,7 +596,7 @@ class EditAndValidateExample extends React.Component {
       },
       {
         attr: 'type',
-        minWidth: 150,
+        minWidth: 80,
         render: ({ item, id, attr, onChange, registerInputRef }) => (
           <Select
             ref={c => registerInputRef(id, attr, c)}
