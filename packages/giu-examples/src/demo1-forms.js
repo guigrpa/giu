@@ -13,7 +13,7 @@ import {
 } from 'giu';
 import {
   ExampleLabel, exampleStyle,
-  NORMAL_OPTIONS, TALL_OPTIONS,
+  NORMAL_OPTIONS, TALL_OPTIONS, WIDE_OPTIONS,
   onChange, onChangeJson,
 } from './demo1-common';
 
@@ -184,6 +184,12 @@ class FormExample extends React.Component {
             />
             <Select disabled value="a" items={NORMAL_OPTIONS} lang={lang} />
             &nbsp;&nbsp;
+            <Select type="dropDownPicker" required
+              value="a" onChange={onChangeJson}
+              items={WIDE_OPTIONS}
+              lang={lang}
+              styleTitle={{ maxWidth: 100 }}
+            />
             <Select type="dropDownPicker" required
               value="a" onChange={onChangeJson}
               items={NORMAL_OPTIONS}

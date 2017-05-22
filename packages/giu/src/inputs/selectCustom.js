@@ -152,8 +152,7 @@ class SelectCustomBase extends React.Component {
         onMouseDown={this.onMouseDownTitle}
         style={style.title(this.props)}
       >
-        {label}
-        <span style={flexItem(1)} />
+        <span style={style.titleText}>{label}</span>
         <Icon icon={caretIcon} skipTheme style={style.caret(this.props)} />
         {IS_IOS && this.renderFloatForIos()}
       </span>
@@ -328,6 +327,11 @@ const style = {
     if (styleTitle) out = merge(out, styleTitle);
     return out;
   },
+  titleText: flexItem(1, {
+    overflow: 'hidden',
+    whiteSpace: 'nowrap',
+    textOverflow: 'ellipsis',
+  }),
   caret: ({ disabled }) => {
     let out = style.caretBase;
     if (disabled) {
