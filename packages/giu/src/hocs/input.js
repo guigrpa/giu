@@ -206,11 +206,7 @@ function input<DP: any, P>(
       super(props);
       this.curValue = toInternalValue(props.value, props);
       this.prevValue = this.curValue;
-      this.validationErrors = [];
-      this.lastValidatedValue = undefined;
-      // NOTE: this.errors = this.props.errors (user-provided) + this.validationErrors
-      this.recalcErrors(props);
-      this.prevErrors = this.errors;
+      this.resetErrors(props);
       this.fFocused = false;
       this.keyDown = null;
     }
@@ -268,6 +264,7 @@ function input<DP: any, P>(
             this.setCurValue(toInternalValue(cmd.value, nextProps));
             break;
           case 'REVERT':
+            this.resetErrors(nextProps);
             this.setCurValue(toInternalValue(nextProps.value, nextProps));
             break;
           case 'VALIDATE':
@@ -603,6 +600,13 @@ function input<DP: any, P>(
           throw exception;
         }
       });
+    }
+
+    resetErrors(props: Props) {
+      this.validationErrors = [];
+      this.lastValidatedValue = undefined;
+      this.recalcErrors(props);
+      this.prevErrors = this.errors;
     }
 
     recalcErrors(props: Props) {
