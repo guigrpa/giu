@@ -1,6 +1,11 @@
+* Modal: honor `plain` and `disabled` props on modal buttons (might be useful in the MDL theme) (#6).
+* Modal: remove lines above and below the main contents.
+* DataTable header: restrict clickable area to the column title only (not the whitespace).
+* Select: improve default title styles (ellipsized by default; height is also easier to configure now, with `styleTitle` and `maxWidth`)
 * Bugfixes:
     * Spinner: Fix creation after initial page load (#4).
     * Notification: Fix default icon when using MDL (#5).
+    * Input HOC: Reset validation errors upon REVERT.
 
 ## 0.12.1 (2017-5-15)
 

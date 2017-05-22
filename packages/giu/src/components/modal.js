@@ -2,7 +2,7 @@
 
 import React from 'react';
 import { merge } from 'timm';
-import { COLORS, KEYS, MISC } from '../gral/constants';
+import { KEYS, MISC } from '../gral/constants';
 import { cancelEvent, cancelBodyScrolling } from '../gral/helpers';
 import { flexContainer, flexItem, boxWithShadow } from '../gral/styles';
 import Button from './button';
