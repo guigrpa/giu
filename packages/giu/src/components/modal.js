@@ -233,14 +233,14 @@ const style = {
   }),
   title: {
     marginBottom: 10,
-    borderBottom: `1px solid ${COLORS.line}`,
+    // borderBottom: `1px solid ${COLORS.line}`,
     paddingBottom: 10,
     fontWeight: 'bold',
     fontSize: '1.5em',
   },
   buttons: flexContainer('row', {
     marginTop: 10,
-    borderTop: `1px solid ${COLORS.line}`,
+    // borderTop: `1px solid ${COLORS.line}`,
     paddingTop: 10,
   }),
   button: ({ left, defaultButton, style: baseStyle }, theme) =>
