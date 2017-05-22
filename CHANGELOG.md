@@ -1,3 +1,5 @@
+## 0.12.2 (2017-5-22)
+
 * Modal: honor `plain` and `disabled` props on modal buttons (might be useful in the MDL theme) (#6).
 * Modal: remove lines above and below the main contents.
 * DataTable header: restrict clickable area to the column title only (not the whitespace).
