@@ -1,3 +1,5 @@
+## 0.12.3 (2017-5-29)
+
 * Modal buttons: in MDL, make default buttons 'primary' (instead of 'accent') and other buttons 'plain' (#8).
 * DataTable: add optional `emptyIndicator` prop (shown when no rows are displayed). By default, a LargeMessage reading **No items** is shown.
 * DataTable: when sort order changes, keep selected item visible.
