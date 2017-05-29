@@ -45,7 +45,8 @@ const createManualSortCol = label => ({
 
 const FOCUSABLE = ['input', 'textarea', 'select'];
 
-const DEFER_SCROLL_INTO_VIEW = 700;
+const DEFER_SCROLL_INTO_VIEW_INITIAL = 700;
+const DEFER_SCROLL_INTO_VIEW_AFTER_SORT_CHANGE = 350;
 const DEBUG = false && process.env.NODE_ENV !== 'production';
 
 const DragHandle = sortableHandle(({ disabled }) => (
@@ -141,6 +142,10 @@ type PublicProps = {
   // Set collectionName if you want DataTable to persist some user prefs to localStorage:
   // sort criteria, manual order, selection...
   collectionName?: string,
+
+  // Miscellaneous
+  // -------------
+  emptyIndicator?: any,
 
   // Styles
   // ------
@@ -268,7 +273,7 @@ class DataTable extends React.PureComponent {
     setTimeout(() => {
       this.fPendingInitialScrollIntoView = false;
       this.scrollSelectedIntoView({ topAncestor: this.refOuter });
-    }, DEFER_SCROLL_INTO_VIEW);
+    }, DEFER_SCROLL_INTO_VIEW_INITIAL);
   }
 
   componentWillReceiveProps(nextProps: Props) {
@@ -412,9 +417,57 @@ class DataTable extends React.PureComponent {
   // ===============================================================
   render() {
     DEBUG && console.log('DataTable: rendering...');
+    return (
+      <div
+        ref={c => {
+          this.refOuter = c;
+        }}
+        className={`giu-data-table ${this.fDragging ? 'dragging' : 'not-dragging'}`}
+        onClick={this.onClickOuter}
+        style={style.outer(this.props)}
+      >
+        {this.renderFocusCapture()}
+        {this.props.showHeader && this.renderHeader()}
+        {this.renderVirtualScroller()}
+      </div>
+    );
+  }
 
-    const { lang, filterValue, allowManualSorting, showHeader } = this.props;
-    const { cols, sortBy, sortDescending } = this;
+  renderFocusCapture() {
+    return (
+      <FocusCapture
+        registerRef={c => {
+          this.refFocusCapture = c;
+        }}
+        onKeyDown={this.onKeyDown}
+        onCopy={this.onCopyCut}
+        onCut={this.onCopyCut}
+        onPaste={this.onPaste}
+      />
+    );
+  }
+
+  renderHeader() {
+    return (
+      <DataTableHeader
+        cols={this.cols}
+        lang={this.props.lang} // to force-refresh when it changes
+        commonCellProps={this.props.commonCellProps}
+        maxLabelLevel={this.maxLabelLevel}
+        scrollbarWidth={this.scrollbarWidth}
+        sortBy={this.sortBy}
+        sortDescending={this.sortDescending}
+        onClick={
+          this.props.headerClickForSorting ? this.onClickHeader : undefined
+        }
+        style={this.props.styleHeader}
+      />
+    );
+  }
+
+  renderVirtualScroller() {
+    const { lang, filterValue, allowManualSorting } = this.props;
+    const { cols, sortBy } = this;
 
     const fSortedManually = sortBy === SORT_MANUALLY;
 
@@ -440,65 +493,34 @@ class DataTable extends React.PureComponent {
       : VirtualScroller;
 
     return (
-      <div
+      <ChosenVirtualScroller
         ref={c => {
-          this.refOuter = c;
+          this.refVirtualScroller = c;
         }}
-        className={`giu-data-table ${this.fDragging ? 'dragging' : 'not-dragging'}`}
-        onClick={this.onClickOuter}
-        style={style.outer(this.props)}
-      >
-        <FocusCapture
-          registerRef={c => {
-            this.refFocusCapture = c;
-          }}
-          onKeyDown={this.onKeyDown}
-          onCopy={this.onCopyCut}
-          onCut={this.onCopyCut}
-          onPaste={this.onPaste}
-        />
-        {showHeader &&
-          <DataTableHeader
-            cols={cols}
-            lang={lang} // to force-refresh when it changes
-            commonCellProps={this.props.commonCellProps}
-            maxLabelLevel={this.maxLabelLevel}
-            scrollbarWidth={this.scrollbarWidth}
-            sortBy={sortBy}
-            sortDescending={sortDescending}
-            onClick={
-              this.props.headerClickForSorting ? this.onClickHeader : undefined
-            }
-            style={this.props.styleHeader}
-          />}
-        <ChosenVirtualScroller
-          ref={c => {
-            this.refVirtualScroller = c;
-          }}
-          itemsById={this.props.itemsById}
-          shownIds={shownIds}
-          alwaysRenderIds={this.props.alwaysRenderIds}
-          RowComponents={this.RowComponents}
-          commonRowProps={this.commonRowProps}
-          getSpecificRowProps={this.getSpecificRowProps}
-          fSortedManually={fSortedManually}
-          onRenderLastRow={filterValue ? undefined : this.onRenderLastRow}
-          onChangeScrollbarWidth={this.onChangeScrollbarWidth}
-          height={this.props.height}
-          width={this.props.width}
-          rowHeight={this.props.rowHeight}
-          uniformRowHeight={this.props.uniformRowHeight}
-          estimatedMinRowHeight={this.props.estimatedMinRowHeight}
-          numRowsInitialRender={this.props.numRowsInitialRender}
-          maxRowsToRenderInOneGo={this.props.maxRowsToRenderInOneGo}
-          // Sortable
-          useDragHandle={allowManualSorting ? true : undefined}
-          onSortStart={allowManualSorting ? this.onDragStart : undefined}
-          onSortEnd={allowManualSorting ? this.onDragEnd : undefined}
-          helperClass="giu-data-table-dragged-row"
-          style={style.scroller}
-        />
-      </div>
+        itemsById={this.props.itemsById}
+        shownIds={shownIds}
+        alwaysRenderIds={this.props.alwaysRenderIds}
+        RowComponents={this.RowComponents}
+        commonRowProps={this.commonRowProps}
+        getSpecificRowProps={this.getSpecificRowProps}
+        fSortedManually={fSortedManually}
+        onRenderLastRow={filterValue ? undefined : this.onRenderLastRow}
+        onChangeScrollbarWidth={this.onChangeScrollbarWidth}
+        height={this.props.height}
+        width={this.props.width}
+        rowHeight={this.props.rowHeight}
+        uniformRowHeight={this.props.uniformRowHeight}
+        estimatedMinRowHeight={this.props.estimatedMinRowHeight}
+        numRowsInitialRender={this.props.numRowsInitialRender}
+        maxRowsToRenderInOneGo={this.props.maxRowsToRenderInOneGo}
+        emptyIndicator={this.props.emptyIndicator}
+        // Sortable
+        useDragHandle={allowManualSorting ? true : undefined}
+        onSortStart={allowManualSorting ? this.onDragStart : undefined}
+        onSortEnd={allowManualSorting ? this.onDragEnd : undefined}
+        helperClass="giu-data-table-dragged-row"
+        style={style.scroller}
+      />
     );
   }
 
@@ -902,7 +924,6 @@ class DataTable extends React.PureComponent {
     return top.concat(out);
   }
 
-
   changeSort(sortBy: ?string, sortDescending: boolean) {
     if (sortBy === this.sortBy && sortDescending === this.sortDescending) {
       return;
@@ -916,7 +937,14 @@ class DataTable extends React.PureComponent {
       this.sortDescending
     );
     this.recalcShownIds(this.props);
-    this.scrollToTop();
+    if (this.selectedIds.length) {
+      setTimeout(() => {
+        this.scrollSelectedIntoView();
+      }, DEFER_SCROLL_INTO_VIEW_AFTER_SORT_CHANGE);
+    } else {
+      this.scrollToTop();
+    }
+    setTimeout(floatReposition, 100);
     this.forceUpdate();
     if (this.props.onChangeSort) {
       this.props.onChangeSort({ sortBy, sortDescending });

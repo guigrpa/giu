@@ -10,6 +10,7 @@ import { scrollIntoView } from '../gral/visibility';
 import type { ScrollIntoViewOptions } from '../gral/visibility';
 import { floatReposition } from '../components/floats';
 import VerticalManager from './verticalManager';
+import LargeMessage from './largeMessage';
 
 const MAX_ROWS_INITIAL_RENDER = 20;
 const CHECK_SCROLLBAR_PERIOD = 400;
@@ -45,6 +46,8 @@ type PublicProps = {
   numRowsInitialRender?: number,
   estimatedMinRowHeight?: number,
   maxRowsToRenderInOneGo?: number,
+
+  emptyIndicator?: any,
 
   style?: Object,
 };
@@ -336,7 +339,7 @@ class VirtualScroller extends React.PureComponent {
   renderRows() {
     // Render visible rows
     const { idxFirst, idxLast } = this;
-    if (idxFirst == null || idxLast == null) return null;
+    if (idxFirst == null || idxLast == null) return this.renderEmpty();
     const { shownIds } = this.props;
     const numVisibleRows = idxLast - idxFirst + 1;
     this.pendingHeights = [];
@@ -398,6 +401,14 @@ class VirtualScroller extends React.PureComponent {
         top={top}
         onChangeHeight={onChangeHeight}
       />
+    );
+  }
+
+  renderEmpty() {
+    const { emptyIndicator } = this.props;
+    if (emptyIndicator) return emptyIndicator;
+    return (
+      <LargeMessage>No items</LargeMessage>
     );
   }
 

@@ -29,7 +29,7 @@ const SIDEBAR_WIDTH = 200;
 const TOP_HEIGHT = 80;
 const DATATABLE_HEADER_HEIGHT = 40;
 
-const NUM_ITEMS = 1000;
+const NUM_ITEMS = 15;
 
 const COLLECT_FIELDS_ON_SUBMIT = [
   'name',
@@ -339,6 +339,9 @@ class Contents extends React.Component {
     });
     return (
       <DataTable
+        ref={c => {
+          this.refDataTable = c;
+        }}
         key={String(hasPagination)}
         itemsById={this.state.itemsById}
         shownIds={this.state.shownIds}
@@ -469,6 +472,7 @@ class Contents extends React.Component {
         isDirty: false,
         isValidating: false,
       });
+      setTimeout(this.scrollSelectedIntoView, 400);
     } catch (err) {
       this.setState({ isValidating: false });
     }
@@ -504,6 +508,10 @@ class Contents extends React.Component {
     if (fieldNode) fieldNode.focus();
     // Bye-bye, HACK! (no refs needed any more)
   };
+
+  scrollSelectedIntoView = () => {
+    if (this.refDataTable) this.refDataTable.scrollSelectedIntoView();
+  }
 }
 
 // -----------------------------------------------

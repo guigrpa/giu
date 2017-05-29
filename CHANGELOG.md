@@ -1,3 +1,8 @@
+* DataTable: add optional `emptyIndicator` prop (shown when no rows are displayed). By default, a LargeMessage reading **No items** is shown.
+* DataTable: when sort order changes, keep selected item visible.
+* Bugfixes:
+    * DataTable: refresh float positions when sort order changes
+
 ## 0.12.2 (2017-5-22)
 
 * Modal: honor `plain` and `disabled` props on modal buttons (might be useful in the MDL theme) (#6).
