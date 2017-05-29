@@ -157,9 +157,12 @@ class Modal extends React.PureComponent {
         onClick={btn.onClick}
         style={style.button(btn, theme)}
         colored
-        plain={btn.plain}
         disabled={btn.disabled}
-        accent={theme && btn.defaultButton ? true : undefined}
+        primary={theme === 'mdl' && btn.defaultButton ? true : undefined}
+        plain={btn.plain != null
+          ? btn.plain
+          : (theme === 'mdl' && !btn.defaultButton ? true : undefined)}
+        accent={btn.accent}
       >
         {btn.label}
       </Button>
