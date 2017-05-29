@@ -529,6 +529,10 @@ type PublicProps = {
   // sort criteria, manual order, selection...
   collectionName?: string,
 
+  // Miscellaneous
+  // -------------
+  emptyIndicator?: any,
+
   // Styles
   // ------
   height?: number, // Body height (default: 200)
