@@ -544,6 +544,7 @@ type PublicProps = {
   style?: Object,
   styleHeader?: Object,
   styleRow?: Object,
+  animated?: boolean,
 
   // For VirtualScroller specifically
   estimatedMinRowHeight?: number,
