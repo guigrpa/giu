@@ -46,7 +46,8 @@ const createManualSortCol = label => ({
 const FOCUSABLE = ['input', 'textarea', 'select'];
 
 const DEFER_SCROLL_INTO_VIEW_INITIAL = 700;
-const DEFER_SCROLL_INTO_VIEW_AFTER_SORT_CHANGE = 350;
+const DEFER_SCROLL_INTO_VIEW_AFTER_SORT_CHANGE_SLOW = 500;
+const DEFER_SCROLL_INTO_VIEW_AFTER_SORT_CHANGE_FAST = 150;
 const DEBUG = false && process.env.NODE_ENV !== 'production';
 
 const DragHandle = sortableHandle(({ disabled }) => (
@@ -417,12 +418,14 @@ class DataTable extends React.PureComponent {
   // ===============================================================
   render() {
     DEBUG && console.log('DataTable: rendering...');
+    let className = `giu-data-table ${this.fDragging ? 'dragging' : 'not-dragging'}`;
+    if (this.props.animated) className += ' animated';
     return (
       <div
         ref={c => {
           this.refOuter = c;
         }}
-        className={`giu-data-table ${this.fDragging ? 'dragging' : 'not-dragging'}`}
+        className={className}
         onClick={this.onClickOuter}
         style={style.outer(this.props)}
       >
@@ -938,9 +941,12 @@ class DataTable extends React.PureComponent {
     );
     this.recalcShownIds(this.props);
     if (this.selectedIds.length) {
+      const delay = this.props.animated
+        ? DEFER_SCROLL_INTO_VIEW_AFTER_SORT_CHANGE_SLOW
+        : DEFER_SCROLL_INTO_VIEW_AFTER_SORT_CHANGE_FAST;
       setTimeout(() => {
         this.scrollSelectedIntoView();
-      }, DEFER_SCROLL_INTO_VIEW_AFTER_SORT_CHANGE);
+      }, delay);
     } else {
       this.scrollToTop();
     }

@@ -245,6 +245,7 @@ class DevelopmentExample extends React.Component {
           accentColor="lightgray"
           styleHeader={style.header}
           styleRow={style.row}
+          animated
           {...otherProps}
         />
       </div>
@@ -349,6 +350,7 @@ const SimpleExample = () => {
       ]}
       shownIds={Object.keys(itemsById)}
       collectionName="simpleDataTableExample"
+      animated
     />
   );
 };
