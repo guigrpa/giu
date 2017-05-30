@@ -1,3 +1,5 @@
+## 0.13.0 (2017-5-30)
+
 * DataTable: add `animated` prop (**disabled by default**) to enable the `top` animation on rows. Notes:
     * This has no effect on row animation during drag & drop when ordering manually.
     * This animation works perfectly fine to react to columns that change their height (e.g. due to changing contents or to window resizing/zoom). It is even advisable to enable it, since it helps the user keep track of rows, since they move slowly. However, this animation doesn't work so well in the more general case when the sort criterion changes and a lot of rows shuffle up and down; that's why it has been disabled by default. **Recommendation: use `animated` when you have such columns which may change height dynamically**.
