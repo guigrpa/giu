@@ -1,3 +1,6 @@
+* DataTable: remove hidden rows (due to a filter) from the selection
+* Bugfix: VirtualScroller: fix a sporadic issue that surfaced when filtering DataTable rows (incorrect trimming of shown indexes)
+
 ## 0.13.0 (2017-5-30)
 
 * DataTable: add `animated` prop (**disabled by default**) to enable the `top` animation on rows. Notes:

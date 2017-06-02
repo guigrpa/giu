@@ -572,7 +572,7 @@ class VirtualScroller extends React.PureComponent {
 
     // Trim
     const numRows = this.props.shownIds.length;
-    const idxFirst: number = Math.max(idxFirst0, 0);
+    const idxFirst: number = Math.min(Math.max(idxFirst0, 0), numRows - 1);
     const idxLast: number = Math.min(idxLast0, numRows - 1);
     this.idxFirst = idxFirst;
     this.idxLast = idxLast;
