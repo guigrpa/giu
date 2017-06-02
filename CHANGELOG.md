@@ -1,3 +1,5 @@
+## 0.13.1 (2017-6-3)
+
 * DataTable: remove hidden rows (due to a filter) from the selection
 * Bugfix: VirtualScroller: fix a sporadic issue that surfaced when filtering DataTable rows (incorrect trimming of shown indexes)
 
