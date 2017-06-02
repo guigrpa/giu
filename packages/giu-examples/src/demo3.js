@@ -346,7 +346,7 @@ class Contents extends React.Component {
         itemsById={this.state.itemsById}
         shownIds={this.state.shownIds}
         alwaysRenderIds={this.state.selectedIds}
-        neverFilterIds={this.state.selectedIds}
+        neverFilterIds={isEditing ? this.state.selectedIds : undefined}
         customPositions={this.state.customPositions}
         fetchMoreItems={hasPagination && this.fetchMore}
         fetching={hasPagination && this.state.isFetching}
