@@ -529,6 +529,10 @@ type PublicProps = {
   // sort criteria, manual order, selection...
   collectionName?: string,
 
+  // Miscellaneous
+  // -------------
+  emptyIndicator?: any,
+
   // Styles
   // ------
   height?: number, // Body height (default: 200)
@@ -540,6 +544,7 @@ type PublicProps = {
   style?: Object,
   styleHeader?: Object,
   styleRow?: Object,
+  animated?: boolean,
 
   // For VirtualScroller specifically
   estimatedMinRowHeight?: number,
