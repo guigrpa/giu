@@ -393,8 +393,9 @@ class DataTable extends React.PureComponent {
 
   componentDidUpdate() {
     const { shownIds, prevShownIds, selectedIds, prevSelectedIds } = this;
-    if (this.props.onChangeShownIds && shownIds !== prevShownIds) {
-      this.props.onChangeShownIds(shownIds);
+    if (shownIds !== prevShownIds) {
+      this.props.onChangeShownIds && this.props.onChangeShownIds(shownIds);
+      this.selectRemoveHidden();
     }
     if (
       selectedIds !== prevSelectedIds &&
@@ -715,6 +716,18 @@ class DataTable extends React.PureComponent {
     this.changeSelectedIds(
       idx >= 0 ? removeAt(this.selectedIds, idx) : addLast(this.selectedIds, id)
     );
+  }
+
+  selectRemoveHidden() {
+    const { shownIds, selectedIds } = this;
+    const nextSelectedIds = [];
+    for (let i = 0; i < selectedIds.length; i++) {
+      const id = selectedIds[i];
+      if (shownIds.indexOf(id) >= 0) nextSelectedIds.push(id);
+    }
+    if (nextSelectedIds.length !== selectedIds.length) {
+      this.changeSelectedIds(nextSelectedIds);
+    }
   }
 
   changeSelectedIds(selectedIds: Array<string>) {
