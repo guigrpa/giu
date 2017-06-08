@@ -38,7 +38,11 @@ type Props = {
   fFocused: boolean,
 };
 
-const FILTERED_OUT_PROPS = ['style', ...INPUT_HOC_INVALID_HTML_PROPS];
+const FILTERED_OUT_PROPS = [
+  'style',
+  'children',
+  ...INPUT_HOC_INVALID_HTML_PROPS,
+];
 
 // ==========================================
 // Component

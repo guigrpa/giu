@@ -1,3 +1,5 @@
+* Bugfix: FileInput does not work with children (#10)
+
 ## 0.13.1 (2017-6-3)
 
 * DataTable: remove hidden rows (due to a filter) from the selection
