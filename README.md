@@ -502,8 +502,14 @@ type PublicProps = {
 
   // Manual sorting
   allowManualSorting?: boolean, // Add manual sort column (default: true)
+  disableDragging?: boolean, // Keep the sort column (if any), but disable it (temporarily)
   manuallyOrderedIds?: Array<string>,
-  onChangeManualOrder?: (manuallyOrderedIds: ?Array<string>) => void,
+  onChangeManualOrder?: (
+    manuallyOrderedIds: ?Array<string>,
+    context: {
+      draggedId?: string, // ID of the row that has been dragged
+    }
+  ) => void,
   manualSortColLabel?: string | (() => string), // Custom column label (default: 'Sort manually')
 
   // Selection
