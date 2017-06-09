@@ -160,14 +160,15 @@ class DataTableRow extends React.PureComponent {
     item: Object,
     cols: Array<DataTableColumn>,
     isItemSelected: boolean,
-    commonCellProps?: Object,
     fSortedManually: boolean,
-    onMayHaveChangedHeight: () => void,
+    disableDragging: boolean,
+    commonCellProps?: Object,
     onClick: (ev: SyntheticEvent, id: string) => void,
     onDoubleClick: (ev: SyntheticEvent, id: string) => void,
     style?: Object,
     selectedBgColor: string,
     selectedFgColor: string,
+    onMayHaveChangedHeight: () => void,
   };
 
   componentDidUpdate() {
@@ -206,6 +207,7 @@ class DataTableRow extends React.PureComponent {
           attr,
           isItemSelected: this.props.isItemSelected,
           fSortedManually: this.props.fSortedManually,
+          disableDragging: this.props.disableDragging,
           onMayHaveChangedHeight: this.props.onMayHaveChangedHeight,
         },
         this.props.commonCellProps

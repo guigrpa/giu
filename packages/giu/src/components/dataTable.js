@@ -36,7 +36,9 @@ const createManualSortCol = label => ({
   label,
   labelLevel: 1,
   /* eslint-disable react/prop-types */
-  render: ({ fSortedManually }) => <DragHandle disabled={!fSortedManually} />,
+  render: ({ fSortedManually, disableDragging }) => (
+    <DragHandle disabled={!fSortedManually || disableDragging} />
+  ),
   /* eslint-enable react/prop-types */
   minWidth: 30,
   flexGrow: 0,
@@ -117,6 +119,7 @@ type PublicProps = {
 
   // Manual sorting
   allowManualSorting?: boolean, // Add manual sort column (default: true)
+  disableDragging?: boolean, // Keep the sort column (if any), but disable it (temporarily)
   manuallyOrderedIds?: Array<string>,
   onChangeManualOrder?: (
     manuallyOrderedIds: ?Array<string>,
@@ -207,6 +210,7 @@ class DataTable extends React.PureComponent {
     headerClickForSorting: true,
 
     allowManualSorting: true,
+    disableDragging: false,
     manualSortColLabel: 'Sort manually',
 
     allowSelect: true,
@@ -487,6 +491,7 @@ class DataTable extends React.PureComponent {
       cols,
       lang,
       fSortedManually: allowManualSorting ? fSortedManually : undefined,
+      disableDragging: this.props.disableDragging,
       commonCellProps: this.props.commonCellProps,
       onClick: this.props.allowSelect ? this.onClickRow : undefined,
       onDoubleClick: this.props.onRowDoubleClick,
@@ -513,23 +518,22 @@ class DataTable extends React.PureComponent {
         RowComponents={this.RowComponents}
         commonRowProps={this.commonRowProps}
         getSpecificRowProps={this.getSpecificRowProps}
-        fSortedManually={fSortedManually}
-        onRenderLastRow={filterValue ? undefined : this.onRenderLastRow}
-        onChangeScrollbarWidth={this.onChangeScrollbarWidth}
         height={this.props.height}
         width={this.props.width}
         rowHeight={this.props.rowHeight}
         uniformRowHeight={this.props.uniformRowHeight}
-        estimatedMinRowHeight={this.props.estimatedMinRowHeight}
+        onRenderLastRow={filterValue ? undefined : this.onRenderLastRow}
+        onChangeScrollbarWidth={this.onChangeScrollbarWidth}
         numRowsInitialRender={this.props.numRowsInitialRender}
+        estimatedMinRowHeight={this.props.estimatedMinRowHeight}
         maxRowsToRenderInOneGo={this.props.maxRowsToRenderInOneGo}
         emptyIndicator={this.props.emptyIndicator}
-        // Sortable
+        style={style.scroller}
+        // For the sortable variant...
         useDragHandle={allowManualSorting ? true : undefined}
         onSortStart={allowManualSorting ? this.onDragStart : undefined}
         onSortEnd={allowManualSorting ? this.onDragEnd : undefined}
         helperClass="giu-data-table-dragged-row"
-        style={style.scroller}
       />
     );
   }

@@ -88,7 +88,6 @@ class VerticalManager extends React.Component {
   // ===============================================================
   render() {
     const { id, index, ChildComponent, childProps } = this.props;
-    const disabled = !childProps.fSortedManually || this.props.top == null;
     return (
       <div
         ref={this.registerOuterRef}
@@ -105,7 +104,13 @@ class VerticalManager extends React.Component {
           // (react-sortable-hoc) if its `top` is `undefined`
           // (i.e. if it is hidden and temporarily possitioned at the top,
           // hence possibly interfering in react-sortable-hoc´s algorithm)
-          disabled={disabled}
+          // or if props being passed through signal that dragging is disabled
+          // (this increases component coupling, I know... :( ))
+          disabled={
+            !childProps.fSortedManually ||
+              childProps.disableDragging ||
+              this.props.top == null
+          }
         />
       </div>
     );

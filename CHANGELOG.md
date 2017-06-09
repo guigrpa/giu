@@ -1,4 +1,5 @@
 * DataTable: `onChangeManualOrder` prop now receives an object as second argument, including the row that has been dragged (if applicable) as `draggedId`.
+* DataTable: add `disableDragging` prop to temporarily disable dragging, even if the manual-sorting column is displayed and even selected.
 * Bugfix: FileInput does not work with children (#10).
 
 ## 0.13.1 (2017-6-3)
