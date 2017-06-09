@@ -1,4 +1,5 @@
-* Bugfix: FileInput does not work with children (#10)
+* DataTable: `onChangeManualOrder` prop now receives an object as second argument, including the row that has been dragged (if applicable) as `draggedId`.
+* Bugfix: FileInput does not work with children (#10).
 
 ## 0.13.1 (2017-6-3)
 
