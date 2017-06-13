@@ -22,6 +22,7 @@ type PublicProps = {
   cmds?: Array<Command>,
   disabled?: boolean,
   style?: Object, // will be merged with the outermost `span` element
+  skipTheme?: boolean,
   // all others are passed through unchanged
 };
 // -- END_DOCS
@@ -40,6 +41,7 @@ type Props = {
 
 const FILTERED_OUT_PROPS = [
   'style',
+  'skipTheme',
   'children',
   ...INPUT_HOC_INVALID_HTML_PROPS,
 ];
@@ -85,7 +87,11 @@ class FileInput extends React.Component {
           tabIndex={disabled ? -1 : undefined}
           {...otherProps}
         />
-        <Button disabled={disabled} onClick={this.onClickButton}>
+        <Button
+          disabled={disabled}
+          onClick={this.onClickButton}
+          skipTheme={this.props.skipTheme}
+        >
           {children || 'Choose a file…'}
         </Button>
         &nbsp;
@@ -95,7 +101,7 @@ class FileInput extends React.Component {
   }
 
   renderFileName() {
-    const { curValue } = this.props;
+    const { curValue, skipTheme } = this.props;
     if (curValue == null || !curValue.length) return null;
     const { name, size } = curValue[0];
     const sizeDesc = filesize(size, { round: 0 });
@@ -103,7 +109,11 @@ class FileInput extends React.Component {
       <span>
         {name} [{sizeDesc}]
         {' '}
-        <Icon icon="times" onClick={this.onClickClear} />
+        <Icon
+          icon={!skipTheme && this.context.theme === 'mdl' ? 'clear' : 'times'}
+          onClick={this.onClickClear}
+          skipTheme={skipTheme}
+        />
       </span>
     );
   }
@@ -128,6 +138,8 @@ class FileInput extends React.Component {
     this.props.onChange(ev, files);
   };
 }
+
+FileInput.contextTypes = { theme: React.PropTypes.any };
 
 // ==========================================
 const style = {

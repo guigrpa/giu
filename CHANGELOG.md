@@ -1,3 +1,5 @@
+* FileInput: add support for `mdl` theme, including `skipTheme` prop (#11).
+
 ## 0.13.2 (2017-6-9)
 
 * DataTable: `onChangeManualOrder` prop now receives an object as second argument, including the row that has been dragged (if applicable) as `draggedId`.
