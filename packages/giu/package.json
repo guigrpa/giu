@@ -34,6 +34,9 @@
     "typeface-roboto": "0.0.22",
     "unorm": "1.4.1"
   },
+  "devDependencies": {
+    "prettier": "^1.4.4"
+  },
   "description": "A collection of React components and utilities",
   "keywords": [
     "React",

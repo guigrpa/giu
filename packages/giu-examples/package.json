@@ -28,7 +28,9 @@
     "timm": "^1.2.1",
     "giu": "*"
   },
-  "devDependencies": {},
+  "devDependencies": {
+    "prettier": "^1.4.4"
+  },
   "peerDependencies": {
     "moment": "^2.0.0",
     "react": "^15.3.0",
