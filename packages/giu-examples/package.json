@@ -1,7 +1,7 @@
 {
   "name": "giu-examples",
   "private": true,
-  "version": "0.13.1",
+  "version": "0.13.3",
   "scripts": {
     "compile": "yarn compile:clean && yarn compile:run",
     "compileWatch": "yarn compile:clean && yarn compile:runWatch",

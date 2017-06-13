@@ -1,3 +1,5 @@
+## 0.13.3 (2017-6-13)
+
 * FileInput: add support for `mdl` theme, including `skipTheme` prop (#11).
 
 ## 0.13.2 (2017-6-9)
