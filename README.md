@@ -443,6 +443,7 @@ type PublicProps = {
   cmds?: Array<Command>,
   disabled?: boolean,
   style?: Object, // will be merged with the outermost `span` element
+  skipTheme?: boolean,
   // all others are passed through unchanged
 };
 ```
