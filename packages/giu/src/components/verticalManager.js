@@ -88,11 +88,12 @@ class VerticalManager extends React.Component {
   // ===============================================================
   render() {
     const { id, index, ChildComponent, childProps } = this.props;
+    const saneId = id.replace(/[:,]/g, '');
     return (
       <div
         ref={this.registerOuterRef}
         className="giu-vertical-manager"
-        id={`giu-vertical-manager-${id}`}
+        id={`giu-vertical-manager-${saneId}`}
         style={style.outer(this.props)}
       >
         <ChildComponent
