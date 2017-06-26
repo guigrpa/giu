@@ -1,3 +1,5 @@
+* VerticalManager: sanitise `id` before using it as DOM attribute.
+
 ## 0.13.3 (2017-6-13)
 
 * FileInput: add support for `mdl` theme, including `skipTheme` prop (#11).
