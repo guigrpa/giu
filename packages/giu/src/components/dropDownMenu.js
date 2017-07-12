@@ -14,7 +14,6 @@ import Select from '../inputs/select';
 // ==========================================
 // -- Props:
 // --
-/* eslint-disable no-unused-vars */
 /* -- START_DOCS -- */
 type PublicProps = {
   // Items: similar to the Select component but including an `onClick` callback
@@ -25,24 +24,23 @@ type PublicProps = {
   children?: any, // React elements that will be shown as the menu's title
   onClickItem?: (
     ev: SyntheticMouseEvent, // `click` event
-    val: any, // the item's `value` (as specified in the `items` prop)
-  ) => void,
+    val: any // the item's `value` (as specified in the `items` prop)
+  ) => any,
   style?: Object, // will be merged with the menu title's `div` wrapper
   accentColor?: string, // CSS color descriptor (e.g. `darkgray`, `#ccffaa`...)
 
   // All other props are passed through to the Select input component
 };
 /* -- END_DOCS -- */
-/* eslint-enable no-unused-vars */
 
 type DefaultProps = {
   accentColor: string,
 };
 
 type Props = {
-  /* :: ...$Exact<PublicProps>, */
-  /* :: ...$Exact<DefaultProps>, */
-  /* :: ...$Exact<HoverableProps>, */
+  ...$Exact<PublicProps>,
+  ...$Exact<DefaultProps>,
+  ...$Exact<HoverableProps>,
 };
 const FILTERED_PROPS = [
   'items',

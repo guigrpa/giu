@@ -15,7 +15,6 @@ const isNull = val => val == null;
 // Types
 // ==========================================
 // -- Props:
-/* eslint-disable no-unused-vars */
 // -- START_DOCS
 type PublicProps = {
   children?: any, // React elements that will be shown inside the button(default: `Choose file…`)
@@ -26,13 +25,12 @@ type PublicProps = {
   // all others are passed through unchanged
 };
 // -- END_DOCS
-/* eslint-enable no-unused-vars */
 
 type Props = {
-  /* :: ...$Exact<PublicProps>, */
+  ...$Exact<PublicProps>,
   // Input HOC
   curValue: ?Object,
-  onChange: (ev: SyntheticEvent, providedValue: any) => void,
+  onChange: (ev: SyntheticEvent, providedValue: any) => any,
   registerOuterRef: Function,
   registerFocusableRef: Function,
   errors: Array<string>,

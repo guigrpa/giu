@@ -13,7 +13,7 @@ import { COLORS } from '../gral/constants';
 type Props = {
   plain?: boolean, // removes most button styles
   children?: any, // button contents (can include `Icon` components, etc.)
-  onClick?: (ev: SyntheticMouseEvent) => void,
+  onClick?: (ev: SyntheticMouseEvent) => any,
   disabled?: boolean,
   style?: Object, // merged with the `span` style
   skipTheme?: boolean,

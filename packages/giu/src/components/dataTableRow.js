@@ -63,7 +63,7 @@ export type DataTableColumn = {
 // DataTableHeader
 // ===============================================================
 class DataTableHeader extends React.PureComponent {
-  static propTypes: {
+  props: {
     cols: Array<DataTableColumn>,
     lang?: string, // just to force-refresh upon update
     commonCellProps?: Object,
@@ -71,7 +71,7 @@ class DataTableHeader extends React.PureComponent {
     scrollbarWidth: number,
     sortBy: ?string,
     sortDescending: boolean,
-    onClick: (attr: string) => void,
+    onClick: (attr: string) => any,
     style?: Object,
   };
 
@@ -102,11 +102,7 @@ class DataTableHeader extends React.PureComponent {
       ? this.renderSortIcon(this.props.sortDescending)
       : undefined;
     return (
-      <div
-        key={attr}
-        id={attr}
-        style={style.headerCell(idxCol, col)}
-      >
+      <div key={attr} id={attr} style={style.headerCell(idxCol, col)}>
         {labelLevel && this.renderCallOut(labelLevel)}
         <span
           id={attr}
@@ -155,7 +151,7 @@ class DataTableHeader extends React.PureComponent {
 // Row
 // ===============================================================
 class DataTableRow extends React.PureComponent {
-  static propTypes: {
+  props: {
     id: string,
     item: Object,
     cols: Array<DataTableColumn>,
@@ -163,12 +159,12 @@ class DataTableRow extends React.PureComponent {
     fSortedManually: boolean,
     disableDragging: boolean,
     commonCellProps?: Object,
-    onClick: (ev: SyntheticEvent, id: string) => void,
-    onDoubleClick: (ev: SyntheticEvent, id: string) => void,
+    onClick: (ev: SyntheticEvent, id: string) => any,
+    onDoubleClick: (ev: SyntheticEvent, id: string) => any,
     style?: Object,
     selectedBgColor: string,
     selectedFgColor: string,
-    onMayHaveChangedHeight: () => void,
+    onMayHaveChangedHeight: () => any,
   };
 
   componentDidUpdate() {
@@ -240,18 +236,20 @@ class DataTableRow extends React.PureComponent {
 // ===============================================================
 // Other components
 // ===============================================================
-const DataTableFetchingRow = () => (
-  <div style={style.fetchingRow}><Spinner size="lg" /></div>
-);
+const DataTableFetchingRow = () =>
+  <div style={style.fetchingRow}><Spinner size="lg" /></div>;
 
 // ===============================================================
 // Styles
 // ===============================================================
 const style = {
   rowOuterBase: flexContainer('row'),
-  rowOuter: (
-    { selectedBgColor, selectedFgColor, style: baseStyle, isItemSelected }
-  ) => {
+  rowOuter: ({
+    selectedBgColor,
+    selectedFgColor,
+    style: baseStyle,
+    isItemSelected,
+  }) => {
     const out = merge(
       style.rowOuterBase,
       {

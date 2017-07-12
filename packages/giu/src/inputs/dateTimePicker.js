@@ -1,66 +1,100 @@
-import React                from 'react';
-import { merge }            from 'timm';
-import moment               from '../vendor/moment';
-import {
-  getTimeInSecs,
-  getUtcFlag,
-  startOfDefaultDay,
-}                           from '../gral/dates';
+// @flow
+
+import React from 'react';
+import { merge } from 'timm';
+import moment from '../vendor/moment';
+import { getTimeInSecs, getUtcFlag, startOfDefaultDay } from '../gral/dates';
 import {
   flexContainer,
-  inputReset, INPUT_DISABLED,
+  inputReset,
+  INPUT_DISABLED,
   GLOW,
-}                           from '../gral/styles';
-import { COLORS, KEYS }     from '../gral/constants';
-import DatePicker           from '../inputs/datePicker';
-import TimePickerDigital    from '../inputs/timePickerDigital';
-import TimePickerAnalog     from '../inputs/timePickerAnalog';
+} from '../gral/styles';
+import { COLORS, KEYS } from '../gral/constants';
+import type { Moment, KeyboardEventPars } from '../gral/types';
+import DatePicker from '../inputs/datePicker';
+import TimePickerDigital from '../inputs/timePickerDigital';
+import TimePickerAnalog from '../inputs/timePickerAnalog';
 
 const TRAPPED_KEYS = [
-  KEYS.home, KEYS.end,
-  KEYS.up, KEYS.down, KEYS.left, KEYS.right,
-  KEYS.pageUp, KEYS.pageDown,
-  KEYS.backspace, KEYS.del,
+  KEYS.home,
+  KEYS.end,
+  KEYS.up,
+  KEYS.down,
+  KEYS.left,
+  KEYS.right,
+  KEYS.pageUp,
+  KEYS.pageDown,
+  KEYS.backspace,
+  KEYS.del,
 ];
+
+// ==========================================
+// Types
+// ==========================================
+type PublicProps = {|
+  registerOuterRef?: Function,
+  curValue: ?Moment,
+  keyDown?: KeyboardEventPars,
+  disabled?: boolean,
+  date?: boolean,
+  time?: boolean,
+  analogTime?: boolean,
+  seconds?: boolean,
+  utc?: boolean,
+  todayName?: string,
+  onMouseDown?: Function,
+  onClick?: Function,
+  onChange: (ev: ?SyntheticEvent, nextValue: ?Moment) => any,
+  fFocused?: boolean,
+  style?: Object,
+  accentColor?: string,
+|};
+
+type DefaultProps = {
+  disabled: boolean,
+  date: boolean,
+  time: boolean,
+  analogTime: boolean,
+  seconds: boolean,
+  todayName: string,
+  accentColor: string,
+};
+
+type Props = {
+  ...PublicProps,
+  ...$Exact<DefaultProps>,
+};
+
+type Picker = 'date' | 'time';
 
 // ==========================================
 // Component
 // ==========================================
 class DateTimePicker extends React.Component {
-  static propTypes = {
-    registerOuterRef:       React.PropTypes.func,
-    curValue:               React.PropTypes.object,   // a moment object
-    keyDown:                React.PropTypes.object,
-    disabled:               React.PropTypes.bool,
-    date:                   React.PropTypes.bool,
-    time:                   React.PropTypes.bool,
-    analogTime:             React.PropTypes.bool,
-    seconds:                React.PropTypes.bool,
-    utc:                    React.PropTypes.bool,
-    todayName:              React.PropTypes.string,
-    onMouseDown:            React.PropTypes.func,
-    onClick:                React.PropTypes.func,
-    onChange:               React.PropTypes.func.isRequired,
-    fFocused:               React.PropTypes.bool,
-    style:                  React.PropTypes.object,
-    accentColor:            React.PropTypes.string,
+  props: Props;
+  static defaultProps: DefaultProps = {
+    disabled: false,
+    date: true,
+    time: false,
+    analogTime: true,
+    seconds: false,
+    todayName: 'Today',
+    accentColor: COLORS.accent,
   };
-  static defaultProps = {
-    disabled:               false,
-    date:                   true,
-    time:                   false,
-    analogTime:             true,
-    seconds:                false,
-    todayName:              'Today',
-    accentColor:            COLORS.accent,
+  state: {
+    focusedSubpicker: Picker,
   };
+  keyDown: void | KeyboardEventPars;
+  utc: boolean;
+  refOuter: ?Object;
 
-  constructor(props) {
+  constructor(props: Props) {
     super(props);
     this.state = {
       focusedSubpicker: props.date ? 'date' : 'time',
     };
-    this.keyDown = null;
+    this.keyDown = undefined;
   }
 
   // In order to route the `keyDown` to the DatePicker or
@@ -68,7 +102,7 @@ class DateTimePicker extends React.Component {
   // we keep a local variable with the value that will be passed
   // down. When the subpicker focus changes, we set this value to null.
   // When the owner component updates this prop, we update this value.
-  componentWillReceiveProps(nextProps) {
+  componentWillReceiveProps(nextProps: Props) {
     const { keyDown } = nextProps;
     if (keyDown !== this.props.keyDown) {
       this.keyDown = keyDown;
@@ -80,14 +114,19 @@ class DateTimePicker extends React.Component {
   // ==========================================
   render() {
     const {
-      curValue, style: baseStyle,
-      date, time, utc,
-      onMouseDown, onClick,
+      curValue,
+      style: baseStyle,
+      date,
+      time,
+      utc,
+      onMouseDown,
+      onClick,
     } = this.props;
     this.utc = getUtcFlag(date, time, utc);
     if (curValue != null && this.utc) curValue.utc();
     return (
-      <div ref={this.registerOuterRef}
+      <div
+        ref={this.registerOuterRef}
         className="giu-date-time-picker"
         onMouseDown={onMouseDown}
         onClick={onClick}
@@ -102,12 +141,7 @@ class DateTimePicker extends React.Component {
 
   renderDate() {
     if (!this.props.date) return null;
-    const {
-      curValue,
-      disabled,
-      todayName,
-      accentColor,
-    } = this.props;
+    const { curValue, disabled, todayName, accentColor } = this.props;
     let keyDown;
     if (!disabled && this.state.focusedSubpicker === 'date') {
       keyDown = this.keyDown;
@@ -135,7 +169,9 @@ class DateTimePicker extends React.Component {
     const {
       curValue,
       disabled,
-      time, analogTime, seconds,
+      time,
+      analogTime,
+      seconds,
       accentColor,
     } = this.props;
     if (!time) return null;
@@ -160,12 +196,12 @@ class DateTimePicker extends React.Component {
   // ==========================================
   // Event handlers
   // ==========================================
-  registerOuterRef = (c) => {
+  registerOuterRef = (c: ?Object) => {
     this.refOuter = c;
     this.props.registerOuterRef && this.props.registerOuterRef(c);
-  }
+  };
 
-  onChange = (focusedSubpicker) => (ev, nextValue0) => {
+  onChange = (focusedSubpicker: Picker) => (ev: any, nextValue0: ?Moment) => {
     const { date, time } = this.props;
     let nextValue = nextValue0;
     if (nextValue != null && !(date && time)) {
@@ -179,11 +215,11 @@ class DateTimePicker extends React.Component {
     }
     this.props.onChange(ev, nextValue);
     this.changeFocusedSubpicker(focusedSubpicker);
-  }
+  };
 
-  changeFocusedSubpicker(focusedSubpicker) {
+  changeFocusedSubpicker(focusedSubpicker: Picker) {
     if (focusedSubpicker === this.state.focusedSubpicker) return;
-    this.keyDown = null;
+    this.keyDown = undefined;
     this.setState({ focusedSubpicker });
   }
 }
@@ -192,11 +228,13 @@ class DateTimePicker extends React.Component {
 // Styles
 // ==========================================
 const style = {
-  outerBase: inputReset(flexContainer('row', {
-    paddingTop: 3,
-    paddingBottom: 3,
-    overflowY: 'auto',
-  })),
+  outerBase: inputReset(
+    flexContainer('row', {
+      paddingTop: 3,
+      paddingBottom: 3,
+      overflowY: 'auto',
+    })
+  ),
   outerDisabled: INPUT_DISABLED,
   outer: ({ disabled, fFocused }) => {
     let out = style.outerBase;
@@ -215,7 +253,4 @@ const style = {
 // ==========================================
 // Public API
 // ==========================================
-export {
-  DateTimePicker,
-  TRAPPED_KEYS,
-};
+export { DateTimePicker, TRAPPED_KEYS };

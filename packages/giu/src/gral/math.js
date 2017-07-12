@@ -13,7 +13,7 @@ const vectorCompose = (
   V1: Point2,
   alpha: number,
   V2: Point2,
-  beta: number,
+  beta: number
 ): Point2 => ({
   x: alpha * V1.x + beta * V2.x,
   y: alpha * V1.y + beta * V2.y,

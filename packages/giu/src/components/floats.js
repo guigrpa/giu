@@ -44,7 +44,7 @@ type FloatUserPars = {|
   children?: any,
 |};
 type FloatStatePars = {
-  /* :: ...FloatUserPars, */
+  ...FloatUserPars,
   id: string,
   zIndex: number,
   limitSize: boolean,
@@ -379,7 +379,7 @@ const style = {
 // ==========================================
 let fCheckedFloats = false;
 const floatsWarning = (
-  name: string,
+  name: string
 ) => `<${name}> requires a <Floats> component to be \
 included in your application. It will not work properly otherwise. Please add it \
 as close as possible to the application root; no props are needed.`;

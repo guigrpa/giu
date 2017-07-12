@@ -308,7 +308,7 @@ Shown below are some examples of Select and its features: `native` and custom (`
 ]]]
 [[[demo:selects]]]
 
-[[[./packages/giu/src/inputs/select.js]]]
+[[[./packages/giu/src/inputs/selectTypes.js]]]
 
 ### RadioGroup
 

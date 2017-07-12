@@ -12,7 +12,7 @@ function localGet(
     defaultValue,
   }: {|
     defaultValue?: any,
-  |} = {},
+  |} = {}
 ): any {
   let out = defaultValue;
   try {

@@ -12,15 +12,13 @@ import throttle from 'lodash/throttle';
 // mean its child component gets re-rendered (this is more efficient than
 // react-virtualized when using its CellMeasurer component).
 
-/* eslint-disable no-unused-vars */
 type PublicProps = {
-  /* eslint-enable no-unused-vars */
   registerOuterRef?: (ref: any) => void,
   id: string,
   index: number,
   childProps?: Object,
   ChildComponent: ReactClass<*>,
-  onChangeHeight?: (id: string, height: number) => void,
+  onChangeHeight?: (id: string, height: number) => any,
   top?: number,
 };
 
@@ -29,17 +27,17 @@ type DefaultProps = {
 };
 
 type Props = {
-  /* :: ...$Exact<PublicProps>, */
-  /* :: ...$Exact<DefaultProps>, */
+  ...$Exact<PublicProps>,
+  ...$Exact<DefaultProps>,
 };
 
 class VerticalManager extends React.Component {
-  static propTypes: Props;
+  props: Props;
   static defaultProps: DefaultProps = {
     childProps: {},
   };
   height: number;
-  throttledMeasureHeight: () => void;
+  throttledMeasureHeight: () => any;
   refVerticalManager: ?Object;
 
   constructor(props: Props) {
@@ -109,8 +107,8 @@ class VerticalManager extends React.Component {
           // (this increases component coupling, I know... :( ))
           disabled={
             !childProps.fSortedManually ||
-              childProps.disableDragging ||
-              this.props.top == null
+            childProps.disableDragging ||
+            this.props.top == null
           }
         />
       </div>

@@ -36,9 +36,8 @@ const createManualSortCol = label => ({
   label,
   labelLevel: 1,
   /* eslint-disable react/prop-types */
-  render: ({ fSortedManually, disableDragging }) => (
-    <DragHandle disabled={!fSortedManually || disableDragging} />
-  ),
+  render: ({ fSortedManually, disableDragging }) =>
+    <DragHandle disabled={!fSortedManually || disableDragging} />,
   /* eslint-enable react/prop-types */
   minWidth: 30,
   flexGrow: 0,
@@ -52,9 +51,9 @@ const DEFER_SCROLL_INTO_VIEW_AFTER_SORT_CHANGE_SLOW = 500;
 const DEFER_SCROLL_INTO_VIEW_AFTER_SORT_CHANGE_FAST = 150;
 const DEBUG = false && process.env.NODE_ENV !== 'production';
 
-const DragHandle = sortableHandle(({ disabled }) => (
+const DragHandle = sortableHandle(({ disabled }) =>
   <Icon icon="bars" disabled={disabled} style={style.dragHandle} skipTheme />
-));
+);
 
 const SortableDataTableRow = sortableElement(DataTableRow);
 const SortableVirtualScroller = sortableContainer(VirtualScroller, {
@@ -85,7 +84,7 @@ visible. Rows can have uniform and well-known heights
 and also dynamic: different for every row, and even changing
 in time (as a result of passed-down props or their own intrinsic state).
 -- */
-/* eslint-disable no-unused-vars, max-len */
+/* eslint-disable max-len */
 /* -- START_DOCS -- */
 type PublicProps = {
   // Basic
@@ -97,7 +96,7 @@ type PublicProps = {
   // Set of rows to be shown (before filtering)
   // ------------------------------------------
   shownIds?: Array<string>, // Row ids to be shown (default: [], no rows)
-  onChangeShownIds?: (shownIds: Array<string>) => void,
+  onChangeShownIds?: (shownIds: Array<string>) => any,
   alwaysRenderIds?: Array<string>, // Render these rows even when not visible (e.g. editing)
   commonCellProps?: Object, // Passed to all column `render` functions
 
@@ -112,7 +111,7 @@ type PublicProps = {
   onChangeSort?: (options: {
     sortBy: ?string,
     sortDescending: boolean,
-  }) => void,
+  }) => any,
   sortBy?: ?string, // Column, identified by `attr`
   sortDescending?: boolean,
   customPositions?: { [id: string]: ?string }, // if position is null, it will be sent to the top
@@ -126,7 +125,7 @@ type PublicProps = {
     context: {
       draggedId?: string, // ID of the row that has been dragged
     }
-  ) => void,
+  ) => any,
   manualSortColLabel?: string | (() => string), // Custom column label (default: 'Sort manually')
 
   // Selection
@@ -134,15 +133,15 @@ type PublicProps = {
   selectedIds?: Array<string>,
   allowSelect?: boolean,
   multipleSelection?: boolean,
-  onChangeSelection?: (selectedIds: Array<string>) => void,
-  onClipboardAction?: (ev: SyntheticClipboardEvent, json: string) => void,
-  onRowDoubleClick?: (ev: SyntheticMouseEvent, id: string) => void,
+  onChangeSelection?: (selectedIds: Array<string>) => any,
+  onClipboardAction?: (ev: SyntheticClipboardEvent, json: string) => any,
+  onRowDoubleClick?: (ev: SyntheticMouseEvent, id: string) => any,
 
   // Fetching
   // --------
   // Set fetchMoreItems if you want DataTable to notify you when the last row is rendered
   // (note: disabled when the filterValue prop is not empty)
-  fetchMoreItems?: (lastRowId: string) => void, // Called when the last row is rendered
+  fetchMoreItems?: (lastRowId: string) => any, // Called when the last row is rendered
   fetching?: boolean, // When set, the FetchRowComponent will be shown
   FetchRowComponent?: ReactClass<*>,
 
@@ -175,7 +174,7 @@ type PublicProps = {
   maxRowsToRenderInOneGo?: number,
 };
 /* -- END_DOCS -- */
-/* eslint-enable no-unused-vars, max-len */
+/* eslint-enable max-len */
 
 type DefaultProps = {
   itemsById: Object,
@@ -194,8 +193,8 @@ type DefaultProps = {
 };
 
 type Props = {
-  /* :: ...$Exact<PublicProps>, */
-  /* :: ...$Exact<DefaultProps>, */
+  ...$Exact<PublicProps>,
+  ...$Exact<DefaultProps>,
 };
 
 class DataTable extends React.PureComponent {
@@ -429,7 +428,9 @@ class DataTable extends React.PureComponent {
   // ===============================================================
   render() {
     DEBUG && console.log('DataTable: rendering...');
-    let className = `giu-data-table ${this.fDragging ? 'dragging' : 'not-dragging'}`;
+    let className = `giu-data-table ${this.fDragging
+      ? 'dragging'
+      : 'not-dragging'}`;
     if (this.props.animated) className += ' animated';
     return (
       <div
@@ -771,7 +772,9 @@ class DataTable extends React.PureComponent {
     if (!this.selectedIds.length) return;
     DEBUG &&
       console.log(
-        `DataTable: triggering a scrollIntoView... ${this.selectedIds.join(',')}`
+        `DataTable: triggering a scrollIntoView... ${this.selectedIds.join(
+          ','
+        )}`
       );
     refVirtualScroller.scrollIntoView(this.selectedIds[0], options);
   }
@@ -935,6 +938,7 @@ class DataTable extends React.PureComponent {
     for (let i = 0; i < pending.length; i++) {
       const id = pending[i];
       const afterId = customPositions[id];
+      if (afterId === undefined) continue; // avoids Flow error
       if (afterId === null) {
         top.push(id);
         continue;

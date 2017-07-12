@@ -1,8 +1,10 @@
+// @flow
+
 import React from 'react';
 import { omit, merge, set as timmSet } from 'timm';
 import { inputReset, INPUT_DISABLED } from '../gral/styles';
 import { isNumber } from '../gral/validators';
-import input from '../hocs/input';
+import input, { INPUT_HOC_INVALID_HTML_PROPS } from '../hocs/input';
 
 const NULL_VALUE = '';
 const classOptions = {
@@ -31,38 +33,38 @@ const classOptions = {
 
 let cntId = 0;
 
+// ==========================================
+// Types
+// ==========================================
 // -- Props:
-// --
-// -- * **style** *object?*: merged with the `input`/`textarea` style
-// -- * **skipTheme** *boolean?*
-// -- * **vertical** *boolean?*: [only for `RangeInput`]
-// -- * *All other props are passed through to the `input` element*
-const PROP_TYPES = {
-  disabled: React.PropTypes.bool,
-  style: React.PropTypes.object,
-  skipTheme: React.PropTypes.bool,
-  vertical: React.PropTypes.bool,
-  // Input HOC
-  curValue: React.PropTypes.any.isRequired,
-  errors: React.PropTypes.array.isRequired,
-  registerOuterRef: React.PropTypes.func.isRequired,
-  registerFocusableRef: React.PropTypes.func.isRequired,
-  fFocused: React.PropTypes.bool.isRequired,
-  // all others are passed through unchanged
+// -- START_DOCS
+type PublicProps = {
+  disabled?: boolean,
+  style?: Object, // merged with the `input`/`textarea` style
+  skipTheme?: boolean,
+  vertical?: boolean, // only for RangeInput
+  // all others are passed through to the `input` unchanged
 };
-const PROP_KEYS_TO_REMOVE_FROM_INPUT = Object.keys(PROP_TYPES).concat([
-  'cmds',
-  'keyDown',
-  'floatZ',
-  'floatPosition',
-  'onResizeOuter',
-  'styleOuter',
-  'required',
+// -- END_DOCS
+
+type Props = {
+  ...$Exact<PublicProps>,
+  // Input HOC
+  curValue: any,
+  errors: Array<string>,
+  registerOuterRef: Function,
+  registerFocusableRef: Function,
+  fFocused: boolean,
+};
+
+const FILTERED_OUT_PROPS = [
+  'disabled',
   'skipTheme',
-]);
-const PROP_KEYS_TO_REMOVE_FROM_INPUT_MDL = PROP_KEYS_TO_REMOVE_FROM_INPUT.concat(
-  ['placeholder']
-);
+  'vertical',
+  ...INPUT_HOC_INVALID_HTML_PROPS,
+];
+
+const FILTERED_OUT_PROPS_MDL = FILTERED_OUT_PROPS.concat(['placeholder']);
 
 // ==========================================
 // Component
@@ -70,9 +72,12 @@ const PROP_KEYS_TO_REMOVE_FROM_INPUT_MDL = PROP_KEYS_TO_REMOVE_FROM_INPUT.concat
 function createClass(name, inputType) {
   const Klass = class extends React.Component {
     static displayName = name;
-    static propTypes = PROP_TYPES;
+    props: Props;
+    static defaultProps = {};
+    labelId: string;
+    refMdl: ?Object;
 
-    constructor(props) {
+    constructor(props: Props) {
       super(props);
       this.labelId = this.props.id || `giu-${inputType}-input_${cntId}`;
       cntId += 1;
@@ -102,7 +107,7 @@ function createClass(name, inputType) {
         // For ranges
         vertical,
       } = this.props;
-      const otherProps = omit(this.props, PROP_KEYS_TO_REMOVE_FROM_INPUT);
+      const otherProps = omit(this.props, FILTERED_OUT_PROPS);
       return (
         <input
           ref={registerFocusableRef}
@@ -120,7 +125,7 @@ function createClass(name, inputType) {
     renderMdl() {
       if (inputType === 'range') return this.renderMdlSlider();
       const { curValue, disabled, registerFocusableRef, fFocused } = this.props;
-      const otherProps = omit(this.props, PROP_KEYS_TO_REMOVE_FROM_INPUT_MDL);
+      const otherProps = omit(this.props, FILTERED_OUT_PROPS_MDL);
       let className = `giu-${inputType}-input mdl-textfield mdl-js-textfield mdl-textfield--floating-label`;
       if (curValue !== '' || fFocused) className += ' is-dirty';
       return (
@@ -149,7 +154,7 @@ function createClass(name, inputType) {
 
     renderMdlSlider() {
       const { curValue, disabled, registerFocusableRef } = this.props;
-      const otherProps = omit(this.props, PROP_KEYS_TO_REMOVE_FROM_INPUT);
+      const otherProps = omit(this.props, FILTERED_OUT_PROPS);
       return (
         <input
           ref={registerFocusableRef}

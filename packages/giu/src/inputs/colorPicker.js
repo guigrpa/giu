@@ -1,14 +1,18 @@
-import React                from 'react';
-import tinycolor            from 'tinycolor2';
-import { merge }            from 'timm';
-import { COLORS }           from '../gral/constants';
-import { cancelEvent }      from '../gral/helpers';
+// @flow
+
+import React from 'react';
+import tinycolor from 'tinycolor2';
+import { merge } from 'timm';
+import { COLORS } from '../gral/constants';
+import { cancelEvent } from '../gral/helpers';
 import {
   isDark,
-  flexContainer, flexItem,
-  inputReset, INPUT_DISABLED,
+  flexContainer,
+  flexItem,
+  inputReset,
+  INPUT_DISABLED,
   GLOW,
-}                           from '../gral/styles';
+} from '../gral/styles';
 
 require('./colorPicker.css');
 
@@ -17,31 +21,19 @@ const ALPHA_SLIDER_SIZE = 100;
 const SLIDER_WIDTH = 10;
 const SWATCH_RADIUS = 6;
 
-const hueBg = (h) => tinycolor({ h, s: 1, v: 1 }).toHexString();
+const hueBg = h => tinycolor({ h, s: 1, v: 1 }).toHexString();
 const clamp = (x, min, max) => Math.min(Math.max(x, min), max);
 
 const normalize = (x, attr) => {
-  let out;
-  if ('rgb'.indexOf(attr) >= 0) {
-    out = x / 255;
-  } else if (attr === 'h') {
-    out = x / 359;
-  } else {
-    out = x;
-  }
-  return out;
+  if ('rgb'.indexOf(attr) >= 0) return x / 255;
+  if (attr === 'h') return x / 359;
+  return x;
 };
 
 const denormalize = (x, attr) => {
-  let out;
-  if ('rgb'.indexOf(attr) >= 0) {
-    out = x * 255;
-  } else if (attr === 'h') {
-    out = x * 359;
-  } else {
-    out = x;
-  }
-  return out;
+  if ('rgb'.indexOf(attr) >= 0) return x * 255;
+  if (attr === 'h') return x * 359;
+  return x;
 };
 
 const colToXy = (activeAttr, rgbhsva) => {
@@ -74,7 +66,8 @@ const xyToCol = (activeAttr, xNorm, yNorm) => {
 };
 
 /* eslint-disable max-len */
-const MANY_COLORS = '#ff0000 0%, #ff0099 10%, #cd00ff 20%, #3200ff 30%, #0066ff 40%, #00fffd 50%, #00ff66 60%, #35ff00 70%, #cdff00 80%, #ff9900 90%, #ff0000 100%';
+const MANY_COLORS =
+  '#ff0000 0%, #ff0099 10%, #cd00ff 20%, #3200ff 30%, #0066ff 40%, #00fffd 50%, #00ff66 60%, #35ff00 70%, #cdff00 80%, #ff9900 90%, #ff0000 100%';
 /* eslint-enable max-len */
 const GRADIENTS = {
   // Hue selector
@@ -87,30 +80,55 @@ const GRADIENTS = {
   r: 'linear-gradient(to bottom, #ff0000 0%, #000000 100%)',
   g: 'linear-gradient(to bottom, #00ff00 0%, #000000 100%)',
   b: 'linear-gradient(to bottom, #0000ff 0%, #000000 100%)',
-  v: (h) => `linear-gradient(to bottom, ${hueBg(h)} 0%, #000 100%)`,
-  s: (h) => `linear-gradient(to bottom, ${hueBg(h)} 0%, #bbb 100%)`,
+  v: h => `linear-gradient(to bottom, ${hueBg(h)} 0%, #000 100%)`,
+  s: h => `linear-gradient(to bottom, ${hueBg(h)} 0%, #bbb 100%)`,
   alpha: ({ r, g, b }) =>
     `linear-gradient(to right, rgba(${r}, ${g}, ${b}, 0), rgb(${r}, ${g}, ${b}))`,
+};
+
+// ==========================================
+// Types
+// ==========================================
+type PublicProps = {|
+  registerOuterRef: Function,
+  curValue: ?string,
+  onChange: Function,
+  disabled?: boolean,
+  fFocused: boolean,
+  accentColor?: string,
+|};
+
+type DefaultProps = {|
+  accentColor: string,
+|};
+
+type Props = {
+  ...PublicProps,
+  ...DefaultProps,
 };
 
 // ==========================================
 // Component
 // ==========================================
 class ColorPicker extends React.PureComponent {
-  static propTypes = {
-    registerOuterRef:       React.PropTypes.func,
-    curValue:               React.PropTypes.string,
-    onChange:               React.PropTypes.func.isRequired,
-    disabled:               React.PropTypes.bool,
-    fFocused:               React.PropTypes.bool,
-    accentColor:            React.PropTypes.string,
+  props: Props;
+  static defaultProps: DefaultProps = {
+    accentColor: COLORS.accent,
   };
-  static defaultProps = {
-    accentColor:            COLORS.accent,
+  state: {
+    mode: string,
+    activeAttr: string,
   };
+  rgba: Object;
+  hsva: Object;
+  rgbhsva: Object;
+  fRgb: boolean;
+  refAlphaSlider: ?Object;
+  refColorSelector: ?Object;
+  refAttrSlider: ?Object;
 
-  constructor(props) {
-    super(props);
+  constructor() {
+    super();
     this.state = {
       mode: 'hsv',
       activeAttr: 'h',
@@ -133,15 +151,20 @@ class ColorPicker extends React.PureComponent {
     const { registerOuterRef, curValue } = this.props;
     const col = tinycolor(curValue);
     const rgba = col.toRgb();
-    if (!this.rgba ||
-        rgba.r !== this.rgba.r || rgba.g !== this.rgba.g || rgba.b !== this.rgba.b) {
+    if (
+      !this.rgba ||
+      rgba.r !== this.rgba.r ||
+      rgba.g !== this.rgba.g ||
+      rgba.b !== this.rgba.b
+    ) {
       this.rgba = rgba;
       this.hsva = col.toHsv();
     }
     this.rgbhsva = merge(this.rgba, this.hsva);
     this.fRgb = 'rgb'.indexOf(this.state.activeAttr) >= 0;
     return (
-      <div ref={registerOuterRef}
+      <div
+        ref={registerOuterRef}
         className="giu-color-picker"
         onMouseDown={cancelEvent}
         style={style.outer(this.props)}
@@ -167,7 +190,10 @@ class ColorPicker extends React.PureComponent {
       gradients = this.renderSVSelector(activeAttr);
     }
     return (
-      <div ref={(c) => { this.refColorSelector = c; }}
+      <div
+        ref={c => {
+          this.refColorSelector = c;
+        }}
         onMouseDown={this.onMouseDownColorSelector}
         style={style.colorSelector}
       >
@@ -177,28 +203,51 @@ class ColorPicker extends React.PureComponent {
     );
   }
 
-  renderRGBSelector(attr) {
+  renderRGBSelector(attr: string) {
     const val = normalize(this.rgba[attr], attr);
     return [
-      <div key="rgb1" className="giu-rgb-selector" style={style.rgbSelector(attr, val, true)} />,
-      <div key="rgb2" className="giu-rgb-selector" style={style.rgbSelector(attr, val, false)} />,
+      <div
+        key="rgb1"
+        className="giu-rgb-selector"
+        style={style.rgbSelector(attr, val, true)}
+      />,
+      <div
+        key="rgb2"
+        className="giu-rgb-selector"
+        style={style.rgbSelector(attr, val, false)}
+      />,
     ];
   }
 
   renderHSelector() {
     return [
-      <div key="h1" style={merge(style.selectorBase, style.hSelectorBackground(this.hsva.h))} />,
-      <div key="h2" style={merge(style.selectorBase, style.hSelectorLightLeft)} />,
-      <div key="h3" style={merge(style.selectorBase, style.hSelectorDarkBottom)} />,
+      <div
+        key="h1"
+        style={merge(
+          style.selectorBase,
+          style.hSelectorBackground(this.hsva.h)
+        )}
+      />,
+      <div
+        key="h2"
+        style={merge(style.selectorBase, style.hSelectorLightLeft)}
+      />,
+      <div
+        key="h3"
+        style={merge(style.selectorBase, style.hSelectorDarkBottom)}
+      />,
     ];
   }
 
-  renderSVSelector(attr) {
+  renderSVSelector(attr: string) {
     const val = normalize(this.hsva[attr], attr);
     return [
       <div key="sv1" style={style.svSelector(attr, val, true)} />,
       <div key="sv2" style={style.svSelector(attr, val, false)} />,
-      <div key="sv3" style={merge(style.selectorBase, style.hSelectorDarkBottom)} />,
+      <div
+        key="sv3"
+        style={merge(style.selectorBase, style.hSelectorDarkBottom)}
+      />,
     ];
   }
 
@@ -217,7 +266,10 @@ class ColorPicker extends React.PureComponent {
   // ------------------------------------------
   renderActiveAttrSlider() {
     return (
-      <div ref={(c) => { this.refAttrSlider = c; }}
+      <div
+        ref={c => {
+          this.refAttrSlider = c;
+        }}
         onMouseDown={this.onMouseDownAttrSlider}
         style={style.activeAttrSlider(this.state, this.hsva)}
       >
@@ -242,10 +294,11 @@ class ColorPicker extends React.PureComponent {
   // ------------------------------------------
   renderControls() {
     const { mode, activeAttr } = this.state;
-    const colorAttrs = mode.split('').map((colorAttr) => {
+    const colorAttrs = mode.split('').map(colorAttr => {
       const fSelected = activeAttr === colorAttr;
       return (
-        <div key={colorAttr}
+        <div
+          key={colorAttr}
           id={colorAttr}
           onMouseDown={this.onMouseDownAttrSelector}
           style={style.colorAttr(fSelected, this.props)}
@@ -271,7 +324,7 @@ class ColorPicker extends React.PureComponent {
     );
   }
 
-  renderModeButton(mode) {
+  renderModeButton(mode: string) {
     const fSelected = this.state.mode === mode;
     return (
       <div
@@ -286,7 +339,10 @@ class ColorPicker extends React.PureComponent {
 
   renderAlphaSlider() {
     return (
-      <div ref={(c) => { this.refAlphaSlider = c; }}
+      <div
+        ref={c => {
+          this.refAlphaSlider = c;
+        }}
         onMouseDown={this.onMouseDownAlphaSlider}
         style={style.alphaSlider}
       >
@@ -300,7 +356,14 @@ class ColorPicker extends React.PureComponent {
   renderAlphaSliderValue() {
     if (!this.props.curValue) return null;
     return (
-      <div style={style.circleControl(this.rgba.a, 0.5, ALPHA_SLIDER_SIZE, SLIDER_WIDTH)}>
+      <div
+        style={style.circleControl(
+          this.rgba.a,
+          0.5,
+          ALPHA_SLIDER_SIZE,
+          SLIDER_WIDTH
+        )}
+      >
         <div style={style.circleControl2} />
       </div>
     );
@@ -315,7 +378,9 @@ class ColorPicker extends React.PureComponent {
     const hex6 = tinycolor(curValue).toHexString();
     const rgbaStr = tinycolor(curValue).toRgbString();
     return [
-      <div key="sample1" style={style.sample1(hex6)}>#{tinycolor(curValue).toHex8()}</div>,
+      <div key="sample1" style={style.sample1(hex6)}>
+        #{tinycolor(curValue).toHex8()}
+      </div>,
       <div key="sample2" style={style.sample2}>
         &nbsp;
         <div className="giu-transparency-tiles" style={style.fillWithTiles} />
@@ -327,73 +392,78 @@ class ColorPicker extends React.PureComponent {
   // ==========================================
   // Event handlers
   // ==========================================
-  onMouseDownMode = (ev) => {
+  onMouseDownMode = (ev: any) => {
     const mode = ev.target.id;
     if (mode === this.state.mode) return;
     const activeAttr = mode[0];
     this.setState({ mode, activeAttr });
-  }
-  onMouseDownAttrSelector = (ev) => { this.setState({ activeAttr: ev.target.id }); }
+  };
+  onMouseDownAttrSelector = (ev: any) => {
+    this.setState({ activeAttr: ev.target.id });
+  };
 
-  onMouseDownColorSelector = (ev) => {
+  onMouseDownColorSelector = (ev: any) => {
     window.addEventListener('mousemove', this.onMouseMoveColorSelector);
     window.addEventListener('mouseup', this.onMouseUpColorSelector);
     this.onMouseMoveColorSelector(ev);
-  }
-  onMouseMoveColorSelector = (ev) => {
+  };
+  onMouseMoveColorSelector = (ev: any) => {
+    if (this.refColorSelector == null) return;
     const bcr = this.refColorSelector.getBoundingClientRect();
     const xNorm = clamp((ev.clientX - bcr.left) / SIZE, 0, 1);
     const yNorm = 1 - clamp((ev.clientY - bcr.top) / SIZE, 0, 1);
     const attrs = xyToCol(this.state.activeAttr, xNorm, yNorm);
     this.onChange(ev, attrs);
-  }
+  };
   onMouseUpColorSelector = () => {
     window.removeEventListener('mousemove', this.onMouseMoveColorSelector);
     window.removeEventListener('mouseup', this.onMouseUpColorSelector);
-  }
+  };
 
-  onMouseDownAttrSlider = (ev) => {
+  onMouseDownAttrSlider = (ev: any) => {
     window.addEventListener('mousemove', this.onMouseMoveAttrSlider);
     window.addEventListener('mouseup', this.onMouseUpAttrSlider);
     this.onMouseMoveAttrSlider(ev);
-  }
-  onMouseMoveAttrSlider = (ev) => {
+  };
+  onMouseMoveAttrSlider = (ev: any) => {
+    if (this.refAttrSlider == null) return;
     const bcr = this.refAttrSlider.getBoundingClientRect();
     const attrNorm = 1 - clamp((ev.clientY - bcr.top) / SIZE, 0, 1);
     const attr = this.state.activeAttr;
     this.onChange(ev, { [attr]: denormalize(attrNorm, attr) });
-  }
+  };
   onMouseUpAttrSlider = () => {
     window.removeEventListener('mousemove', this.onMouseMoveAttrSlider);
     window.removeEventListener('mouseup', this.onMouseUpAttrSlider);
-  }
+  };
 
-  onMouseDownAlphaSlider = (ev) => {
+  onMouseDownAlphaSlider = (ev: any) => {
     window.addEventListener('mousemove', this.onMouseMoveAlphaSlider);
     window.addEventListener('mouseup', this.onMouseUpAlphaSlider);
     this.onMouseMoveAlphaSlider(ev);
-  }
-  onMouseMoveAlphaSlider = (ev) => {
+  };
+  onMouseMoveAlphaSlider = (ev: any) => {
+    if (this.refAlphaSlider == null) return;
     const bcr = this.refAlphaSlider.getBoundingClientRect();
     const attrNorm = clamp((ev.clientX - bcr.left) / ALPHA_SLIDER_SIZE, 0, 1);
     this.onChange(ev, { a: attrNorm });
-  }
+  };
   onMouseUpAlphaSlider = () => {
     window.removeEventListener('mousemove', this.onMouseMoveAlphaSlider);
     window.removeEventListener('mouseup', this.onMouseUpAlphaSlider);
-  }
+  };
 
-  onChange(ev, attrs) {
+  onChange(ev: any, attrs: Object) {
     let hex8;
     if (this.fRgb) {
       hex8 = tinycolor(merge({}, this.rgba, attrs)).toHex8();
 
-    // In HSV mode, we need to avoid singularities (e.g. at v = 0).
-    // We keep the HSV values chosen by the user in `this.hsva` and
-    // don't modify them when the RGB value doesn't change (see `render()`).
-    // If `hex8` doesn't change, we trigger a forceUpdate() here, so that
-    // the control reflects the updated value (no owner element will trigger
-    // this refresh, since the control's `value` has not changed).
+      // In HSV mode, we need to avoid singularities (e.g. at v = 0).
+      // We keep the HSV values chosen by the user in `this.hsva` and
+      // don't modify them when the RGB value doesn't change (see `render()`).
+      // If `hex8` doesn't change, we trigger a forceUpdate() here, so that
+      // the control reflects the updated value (no owner element will trigger
+      // this refresh, since the control's `value` has not changed).
     } else {
       const prevHex8 = tinycolor(merge({}, this.hsva)).toHex8();
       this.hsva = merge(this.hsva, attrs);
@@ -410,9 +480,11 @@ class ColorPicker extends React.PureComponent {
 // Styles
 // ==========================================
 const style = {
-  outerBase: inputReset(flexContainer('row', {
-    padding: 6,
-  })),
+  outerBase: inputReset(
+    flexContainer('row', {
+      padding: 6,
+    })
+  ),
   outer: ({ disabled, fFocused }) => {
     let out = style.outerBase;
     if (disabled) out = merge(out, INPUT_DISABLED);
@@ -429,19 +501,21 @@ const style = {
   },
   selectorBase: {
     position: 'absolute',
-    top: 0, right: 0, bottom: 0, left: 0,
+    top: 0,
+    right: 0,
+    bottom: 0,
+    left: 0,
   },
   rgbSelector: (attr, normAttr, fHigh) => {
-    let pos = 'rgb'.indexOf(attr) * (-SIZE) * 2;
+    let pos = 'rgb'.indexOf(attr) * -SIZE * 2;
     if (!fHigh) pos -= SIZE;
     return merge(style.selectorBase, {
-      backgroundImage: GRADIENTS.rgb,
       backgroundRepeat: 'no-repeat',
       backgroundPosition: `${pos}px 0`,
       opacity: fHigh ? normAttr : 1 - normAttr,
     });
   },
-  hSelectorBackground: (h) => ({ background: hueBg(h) }),
+  hSelectorBackground: h => ({ background: hueBg(h) }),
   hSelectorLightLeft: { background: GRADIENTS.lightLeft },
   hSelectorDarkBottom: { background: GRADIENTS.darkBottom },
   svSelector: (attr, normAttr, fHigh) => {
@@ -474,31 +548,37 @@ const style = {
 
   // Control column
   controlColumn: flexContainer('column'),
-  modeButtons: ({ accentColor }) => flexContainer('row', {
-    border: `1px solid ${accentColor}`,
-  }),
+  modeButtons: ({ accentColor }) =>
+    flexContainer('row', {
+      border: `1px solid ${accentColor}`,
+    }),
   modeButton: (fSelected, { accentColor }) => {
     const out = flexItem(1, {
       padding: 3,
       textAlign: 'center',
       cursor: 'pointer',
     });
-    out.backgroundColor = fSelected ? accentColor : undefined;
-    if (fSelected) out.color = COLORS[isDark(out.backgroundColor) ? 'lightText' : 'darkText'];
+    if (fSelected) {
+      out.backgroundColor = accentColor;
+      out.color = COLORS[isDark(accentColor) ? 'lightText' : 'darkText'];
+    }
     return out;
   },
-  colorAttrs: ({ accentColor }) => flexContainer('row', {
-    marginTop: 5,
-    border: `1px solid ${accentColor}`,
-  }),
+  colorAttrs: ({ accentColor }) =>
+    flexContainer('row', {
+      marginTop: 5,
+      border: `1px solid ${accentColor}`,
+    }),
   colorAttr: (fSelected, { accentColor }) => {
     const out = flexItem(1, {
       padding: 3,
       textAlign: 'center',
       cursor: 'pointer',
     });
-    out.backgroundColor = fSelected ? accentColor : undefined;
-    if (fSelected) out.color = COLORS[isDark(out.backgroundColor) ? 'lightText' : 'darkText'];
+    if (fSelected) {
+      out.backgroundColor = accentColor;
+      out.color = COLORS[isDark(accentColor) ? 'lightText' : 'darkText'];
+    }
     return out;
   },
   colorAttrName: {
@@ -512,19 +592,23 @@ const style = {
     width: ALPHA_SLIDER_SIZE,
     cursor: 'pointer',
   },
-  alphaSliderGradient: (rgba) => ({
+  alphaSliderGradient: rgba => ({
     position: 'absolute',
-    top: 0, right: 0, bottom: 0, left: 0,
+    top: 0,
+    right: 0,
+    bottom: 0,
+    left: 0,
     background: GRADIENTS.alpha(rgba),
   }),
-  sample1: (hex6) => {
+  sample1: hex6 => {
     const backgroundColor = hex6;
     const color = COLORS[isDark(backgroundColor) ? 'lightText' : 'darkText'];
     return {
       marginTop: 5,
       padding: '3px 0px',
       textAlign: 'center',
-      backgroundColor, color,
+      backgroundColor,
+      color,
     };
   },
   sample2: flexItem(1, {
@@ -534,9 +618,12 @@ const style = {
     textAlign: 'center',
     fontWeight: 'bold',
   }),
-  sample2Swatch: (rgbaStr) => ({
+  sample2Swatch: rgbaStr => ({
     position: 'absolute',
-    top: 0, right: 0, bottom: 0, left: 0,
+    top: 0,
+    right: 0,
+    bottom: 0,
+    left: 0,
     backgroundColor: rgbaStr,
     borderRadius: 2,
   }),
@@ -544,7 +631,10 @@ const style = {
   // General
   fillWithTiles: {
     position: 'absolute',
-    top: 0, right: 0, bottom: 0, left: 0,
+    top: 0,
+    right: 0,
+    bottom: 0,
+    left: 0,
     borderRadius: 2,
   },
   circleControl: (x, y, width = SIZE, height = SIZE) => ({

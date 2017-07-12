@@ -51,21 +51,19 @@ export type HoverableProps = {
   onHoverStop: HoverEventHandler,
 };
 type Hovering = ?(string | number | boolean); // null when nothing is hovered
-type HoverEventHandler = (ev: SyntheticEvent) => void;
+type HoverEventHandler = (ev: SyntheticEvent) => any;
 /* -- END_DOCS -- */
 
-/* eslint-disable no-unused-vars */
 type PublicDefaultProps<DP> = {
-  /* :: ...$Exact<DP>, */
-  /* :: ...$Exact<HoverableProps>, */
+  ...$Exact<DP>,
+  ...$Exact<HoverableProps>,
 };
-/* eslint-enable no-unused-vars */
 
 // ==========================================
 // HOC
 // ==========================================
 function hoverable<DP: any, P>(
-  ComposedComponent: Class<React$Component<DP, P, *>>,
+  ComposedComponent: Class<React$Component<DP, P, *>>
 ): Class<React$Component<PublicDefaultProps<DP>, P, *>> {
   const composedComponentName =
     ComposedComponent.displayName || ComposedComponent.name || 'Component';

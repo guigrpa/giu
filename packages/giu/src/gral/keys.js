@@ -3,29 +3,9 @@
 import keycode from 'keycode';
 import { UNICODE, IS_MAC } from '../gral/constants';
 import { cancelEvent } from '../gral/helpers';
+import type { KeyboardModifiers, KeyboardShortcut } from '../gral/types';
 
-/* eslint-disable no-unused-vars */
-type Modifiers = {|
-  altKey: boolean,
-  metaKey: boolean,
-  ctrlKey: boolean,
-  shiftKey: boolean,
-|};
-/* eslint-enable no-unused-vars */
-
-export type KeyboardEventPars = {
-  /* :: ...Modifiers, */
-  keyCode: number,
-  which: number,
-};
-export type KeyboardShortcut = {
-  /* :: ...Modifiers, */
-  keyCodes: Array<number>,
-  keyNames: Array<string>,
-  hash: string,
-};
-
-type KeyboardShortcutCallbackT = (ev: SyntheticKeyboardEvent) => void;
+type KeyboardShortcutCallbackT = (ev: SyntheticKeyboardEvent) => any;
 
 const shortcuts: { [key: string]: KeyboardShortcutCallbackT } = {};
 
@@ -36,7 +16,7 @@ function getHash({
   ctrlKey,
   shiftKey,
 }: {
-  /* :: ...Modifiers, */
+  ...KeyboardModifiers,
   keyCode: number,
 }) {
   return (
@@ -125,7 +105,7 @@ function createShortcut(keySpec: string): KeyboardShortcut {
 
 function registerShortcut(
   shortcut: KeyboardShortcut,
-  cb: KeyboardShortcutCallbackT,
+  cb: KeyboardShortcutCallbackT
 ) {
   shortcuts[shortcut.hash] = cb;
 }

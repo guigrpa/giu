@@ -36,9 +36,9 @@ type DefaultProps = {
 };
 
 type Props = {
-  /* :: ...HintScreenPars, */
-  /* :: ...$Exact<DefaultProps>, */
-  onClose: (ev: SyntheticMouseEvent) => void,
+  ...HintScreenPars,
+  ...$Exact<DefaultProps>,
+  onClose: (ev: SyntheticMouseEvent) => any,
 };
 
 // **Warning**: an embedded `HintScreen` in a component
@@ -88,7 +88,7 @@ class HintScreen extends React.PureComponent {
 
   renderArrows(elements: Array<Element>) {
     const arrows: Array<HintArrowPars> = (elements.filter(
-      o => o.type === 'ARROW',
+      o => o.type === 'ARROW'
     ): Array<any>);
     if (!arrows || !arrows.length) return null;
     return (
@@ -100,12 +100,12 @@ class HintScreen extends React.PureComponent {
 
   renderLabels(elements: Array<Element>) {
     const labels: Array<HintLabelPars> = (elements.filter(
-      o => o.type === 'LABEL',
+      o => o.type === 'LABEL'
     ): Array<any>);
     if (!labels || !labels.length) return null;
-    return labels.map((label, idx) => (
+    return labels.map((label, idx) =>
       <HintLabel key={idx} fontSize={FONT_SIZE} {...label} />
-    ));
+    );
   }
 
   renderCloseButton() {

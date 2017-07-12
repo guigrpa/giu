@@ -1,59 +1,66 @@
 // @flow
 
-import React                from 'react';
-import moment               from '../vendor/moment';
-import {
-  startOfToday,
-  getTimeInSecs,
-}                           from '../gral/dates';
-import {
-  flexContainer,
-  isDark,
-}                           from '../gral/styles';
-import type { Moment }     from '../gral/types';
-import type { KeyboardEventPars } from '../gral/keys';
-import { COLORS, KEYS }     from '../gral/constants';
-import hoverable            from '../hocs/hoverable';
+import React from 'react';
+import moment from '../vendor/moment';
+import { startOfToday, getTimeInSecs } from '../gral/dates';
+import { flexContainer, isDark } from '../gral/styles';
+import type { Moment, KeyboardEventPars } from '../gral/types';
+import { COLORS, KEYS } from '../gral/constants';
+import hoverable from '../hocs/hoverable';
 import type { HoverableProps } from '../hocs/hoverable';
-import Button               from '../components/button';
-import Icon                 from '../components/icon';
+import Button from '../components/button';
+import Icon from '../components/icon';
 
 const ROW_HEIGHT = '1.3em';
 const DAY_WIDTH = '2em';
 
 // ==========================================
-// Component
+// Types
 // ==========================================
-type PublicProps = {
+type PublicProps = {|
   disabled: boolean,
   curValue: ?Moment,
-  onChange: (ev: ?SyntheticEvent, nextValue: ?Moment) => void,
+  onChange: (ev: ?SyntheticEvent, nextValue: ?Moment) => any,
   utc: boolean,
   todayName: string,
   keyDown: ?KeyboardEventPars,
   accentColor: string,
-};
-type Props = PublicProps & HoverableProps;
+|};
 
+type Props = {
+  ...PublicProps,
+  ...$Exact<HoverableProps>,
+};
+
+// ==========================================
+// Component
+// ==========================================
 class DatePicker extends React.Component {
   props: Props;
+  static defaultProps = {};
   state: {
     shownMonthStart: Moment,
   };
   startOfCurValue: ?Moment;
   shownMonthNumber: number;
 
-  constructor(props) {
-    super(props);
+  constructor() {
+    super();
     this.state = ({ shownMonthStart: null }: any);
   }
 
-  componentWillMount() { this.updateShownMonth(this.props); }
+  componentWillMount() {
+    this.updateShownMonth(this.props);
+  }
   componentWillReceiveProps(nextProps: Props) {
     const prevValue = this.props.curValue;
     const nextValue = nextProps.curValue;
     if (prevValue != null || nextValue != null) {
-      if (prevValue == null || nextValue == null || !prevValue.isSame(nextValue)) {
+      if (
+        prevValue == null ||
+        nextValue == null ||
+        !prevValue.isSame(nextValue)
+      ) {
         this.updateShownMonth(nextProps);
       }
     }
@@ -73,7 +80,9 @@ class DatePicker extends React.Component {
   // ==========================================
   render() {
     const { curValue, utc } = this.props;
-    this.startOfCurValue = curValue != null ? curValue.clone().startOf('day') : null;
+    this.startOfCurValue = curValue != null
+      ? curValue.clone().startOf('day')
+      : null;
     this.shownMonthNumber = this.state.shownMonthStart.month();
 
     // Clone the `shownMonthStart` moment this way, so that it gets the correct locales
@@ -95,13 +104,28 @@ class DatePicker extends React.Component {
     return (
       <div style={style.monthRow}>
         <div style={style.monthChange}>
-          {!disabled && <Icon icon="arrow-left" onClick={this.onClickPrevMonth} skipTheme />}
+          {!disabled &&
+            <Icon
+              icon="arrow-left"
+              onClick={this.onClickPrevMonth}
+              skipTheme
+            />}
         </div>
-        <Button onClick={this.onClickMonthName} skipTheme plain style={style.monthName}>
+        <Button
+          onClick={this.onClickMonthName}
+          skipTheme
+          plain
+          style={style.monthName}
+        >
           {shownMonthStart.format('MMMM YYYY')}
         </Button>
         <div style={style.monthChange}>
-          {!disabled && <Icon icon="arrow-right" onClick={this.onClickNextMonth} skipTheme />}
+          {!disabled &&
+            <Icon
+              icon="arrow-right"
+              onClick={this.onClickNextMonth}
+              skipTheme
+            />}
         </div>
       </div>
     );
@@ -150,10 +174,12 @@ class DatePicker extends React.Component {
     const { hovering, onHoverStart, onHoverStop } = this.props;
     const id = mom.toISOString();
     const fHovered = hovering === id;
-    const fSelected = !!this.startOfCurValue && this.startOfCurValue.isSame(mom);
+    const fSelected =
+      !!this.startOfCurValue && this.startOfCurValue.isSame(mom);
     const fInShownMonth = mom.month() === this.shownMonthNumber;
     return (
-      <div key={idx}
+      <div
+        key={idx}
         id={id}
         onClick={this.onClickDay}
         onMouseEnter={onHoverStart}
@@ -168,10 +194,7 @@ class DatePicker extends React.Component {
   renderToday() {
     const { todayName } = this.props;
     return (
-      <div
-        onClick={this.onClickToday}
-        style={style.today}
-      >
+      <div onClick={this.onClickToday} style={style.today}>
         {todayName}
       </div>
     );
@@ -184,11 +207,15 @@ class DatePicker extends React.Component {
     const { utc } = this.props;
     const shownMonthStart = startOfToday(utc).startOf('month');
     this.setState({ shownMonthStart });
-  }
+  };
 
-  onClickPrevMonth = () => { this.changeShownMonth('subtract'); }
-  onClickNextMonth = () => { this.changeShownMonth('add'); }
-  changeShownMonth(op: 'subtract'|'add') {
+  onClickPrevMonth = () => {
+    this.changeShownMonth('subtract');
+  };
+  onClickNextMonth = () => {
+    this.changeShownMonth('add');
+  };
+  changeShownMonth(op: 'subtract' | 'add') {
     const shownMonthStart = this.state.shownMonthStart.clone();
     if (op === 'add') {
       shownMonthStart.add(1, 'month');
@@ -204,38 +231,55 @@ class DatePicker extends React.Component {
     const startOfDay = moment(ev.target.id);
     if (utc) startOfDay.utc();
     this.changeDateTo(ev, startOfDay);
-  }
+  };
 
   onClickToday = (ev: SyntheticEvent) => {
     const { utc } = this.props;
     const startOfDay = startOfToday(utc);
     this.changeDateTo(ev, startOfDay);
     this.onClickMonthName();
-  }
+  };
 
   doKeyDown({ which, shiftKey, ctrlKey, altKey, metaKey }: KeyboardEventPars) {
     if (shiftKey || ctrlKey || altKey || metaKey) return;
     switch (which) {
-      case KEYS.pageUp:   this.onClickPrevMonth();           break;
-      case KEYS.pageDown: this.onClickNextMonth();           break;
-      case KEYS.right:    this.changeDateByDays(+1);         break;
-      case KEYS.left:     this.changeDateByDays(-1);         break;
-      case KEYS.down:     this.changeDateByDays(+7);         break;
-      case KEYS.up:       this.changeDateByDays(-7);         break;
-      case KEYS.home:     this.goToStartEndOfMonth('start'); break;
-      case KEYS.end:      this.goToStartEndOfMonth('end');   break;
+      case KEYS.pageUp:
+        this.onClickPrevMonth();
+        break;
+      case KEYS.pageDown:
+        this.onClickNextMonth();
+        break;
+      case KEYS.right:
+        this.changeDateByDays(+1);
+        break;
+      case KEYS.left:
+        this.changeDateByDays(-1);
+        break;
+      case KEYS.down:
+        this.changeDateByDays(+7);
+        break;
+      case KEYS.up:
+        this.changeDateByDays(-7);
+        break;
+      case KEYS.home:
+        this.goToStartEndOfMonth('start');
+        break;
+      case KEYS.end:
+        this.goToStartEndOfMonth('end');
+        break;
       case KEYS.del:
       case KEYS.backspace:
         this.props.onChange(null, null);
         break;
-      default: break;
+      default:
+        break;
     }
   }
 
   // ==========================================
   // Helpers
   // ==========================================
-  goToStartEndOfMonth(op: 'start'|'end') {
+  goToStartEndOfMonth(op: 'start' | 'end') {
     const startOfDay = this.state.shownMonthStart.clone();
     if (op === 'end') startOfDay.add(1, 'month').subtract(1, 'day');
     this.changeDateTo(null, startOfDay);
@@ -308,7 +352,9 @@ const style = {
     { disabled, accentColor }: { disabled: boolean, accentColor: string }
   ) => {
     const fHighlightBorder = fSelected || (!disabled && fHovered);
-    const border = `1px solid ${fHighlightBorder ? accentColor : 'transparent'}`;
+    const border = `1px solid ${fHighlightBorder
+      ? accentColor
+      : 'transparent'}`;
     const backgroundColor = fSelected ? accentColor : undefined;
     let color;
     if (!fInShownMonth) {

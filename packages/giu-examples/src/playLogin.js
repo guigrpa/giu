@@ -35,7 +35,8 @@ const Component = class extends React.Component {
             placeholder="Enter your password"
             focusOnChange={false}
           />
-          <br /><br />
+          <br />
+          <br />
           <input type="submit" value="Log in" />
         </form>
       </div>

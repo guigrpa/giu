@@ -45,7 +45,7 @@ const style = {
         height: IS_IOS ? '110vh' : '100vh',
         backgroundColor: 'white',
       },
-      baseStyle,
+      baseStyle
     ),
 };
 

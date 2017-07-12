@@ -1,63 +1,69 @@
-import React                from 'react';
-import { merge }            from 'timm';
-import tinycolor            from 'tinycolor2';
-import {
-  COLORS,
-  KEYS,
-  IS_IOS,
-}                           from '../gral/constants';
-import {
-  GLOW,
-  inputReset, INPUT_DISABLED,
-}                           from '../gral/styles';
-import input                from '../hocs/input';
-import {
-  floatAdd,
-  floatDelete,
-  floatUpdate,
-}                           from '../components/floats';
-import ColorPicker          from '../inputs/colorPicker';
-import IosFloatWrapper      from '../inputs/iosFloatWrapper';
+// @flow
 
-function toInternalValue(val) { return val; }
-function toExternalValue(val) { return val; }
-function isNull(val) { return val == null; }
+import React from 'react';
+import { merge } from 'timm';
+import tinycolor from 'tinycolor2';
+import { COLORS, KEYS, IS_IOS } from '../gral/constants';
+import { GLOW, inputReset, INPUT_DISABLED } from '../gral/styles';
+import type { KeyboardEventPars } from '../gral/types';
+import input from '../hocs/input';
+import { floatAdd, floatDelete, floatUpdate } from '../components/floats';
+import type { FloatPosition, FloatAlign } from '../components/floats';
+import ColorPicker from '../inputs/colorPicker';
+import IosFloatWrapper from '../inputs/iosFloatWrapper';
+
+const toInternalValue = val => val;
+const toExternalValue = val => val;
+const isNull = val => val == null;
 
 const SWATCH_WIDTH = 25;
 const SWATCH_HEIGHT = 10;
 
 // ==========================================
-// Component
+// Types
 // ==========================================
 // -- Props:
-// --
-// -- * **inlinePicker** *boolean?*: whether the complete color picker
-// --   should be inlined (`true`) or appear as a dropdown when clicked
-// -- * **onCloseFloat** *function?*
-// -- * **accentColor** *string?*: CSS color descriptor (e.g. `darkgray`, `#ccffaa`...)
-class ColorInput extends React.Component {
-  static propTypes = {
-    disabled:               React.PropTypes.bool,
-    inlinePicker:           React.PropTypes.bool,
-    onCloseFloat:           React.PropTypes.func,
-    floatPosition:          React.PropTypes.string,
-    floatAlign:             React.PropTypes.string,
-    floatZ:                 React.PropTypes.number,
-    accentColor:            React.PropTypes.string,
-    // Input HOC
-    curValue:               React.PropTypes.string,
-    onChange:               React.PropTypes.func.isRequired,
-    registerOuterRef:       React.PropTypes.func.isRequired,
-    fFocused:               React.PropTypes.bool.isRequired,
-    keyDown:                React.PropTypes.object,
-  };
+// -- START_DOCS
+type PublicProps = {
+  disabled?: boolean,
+  // whether the complete color picker should be inlined or appear as a dropdown when clicked
+  inlinePicker?: boolean,
+  onCloseFloat?: () => any,
+  floatPosition?: FloatPosition,
+  floatAlign?: FloatAlign,
+  floatZ?: number,
+  accentColor?: string, // CSS color descriptor (e.g. `darkgray`, `#ccffaa`...)
+};
+// -- END_DOCS
 
-  constructor(props) {
-    super(props);
+type Props = {
+  ...$Exact<PublicProps>,
+  // Input HOC
+  curValue: ?string,
+  onChange: Function,
+  registerOuterRef: Function,
+  fFocused: boolean,
+  keyDown?: KeyboardEventPars,
+};
+
+// ==========================================
+// Component
+// ==========================================
+class ColorInput extends React.Component {
+  static defaultProps = {};
+  props: Props;
+  state: {
+    fFloat: boolean,
+  };
+  floatId: ?string;
+  refTitle: ?Object;
+
+  constructor() {
+    super();
     this.state = { fFloat: false };
   }
 
-  componentWillReceiveProps(nextProps) {
+  componentWillReceiveProps(nextProps: Props) {
     const { keyDown, fFocused } = nextProps;
     if (keyDown !== this.props.keyDown) this.processKeyDown(keyDown);
     if (fFocused !== this.props.fFocused) {
@@ -65,8 +71,12 @@ class ColorInput extends React.Component {
     }
   }
 
-  componentDidUpdate() { this.renderFloat(); }
-  componentWillUnmount() { floatDelete(this.floatId); }
+  componentDidUpdate() {
+    this.renderFloat();
+  }
+  componentWillUnmount() {
+    if (this.floatId != null) floatDelete(this.floatId);
+  }
 
   // ==========================================
   // Render
@@ -84,15 +94,13 @@ class ColorInput extends React.Component {
   renderTitle() {
     return (
       // The `x` text keeps baselines aligned
-      <div ref={this.registerTitleRef}
+      <div
+        ref={this.registerTitleRef}
         onMouseDown={this.onMouseDownTitle}
         style={style.title(this.props)}
       >
         x
-        <div
-          className="giu-transparency-tiles"
-          style={style.swatchTiles}
-        />
+        <div className="giu-transparency-tiles" style={style.swatchTiles} />
         <div style={style.swatch(this.props)} />
         {IS_IOS && this.renderFloatForIos()}
       </div>
@@ -148,9 +156,11 @@ class ColorInput extends React.Component {
     const {
       inlinePicker,
       registerOuterRef,
-      curValue, onChange,
+      curValue,
+      onChange,
       accentColor,
-      disabled, fFocused,
+      disabled,
+      fFocused,
     } = this.props;
     return (
       <ColorPicker
@@ -167,23 +177,23 @@ class ColorInput extends React.Component {
   // ==========================================
   // Event handlers
   // ==========================================
-  registerTitleRef = (c) => {
+  registerTitleRef = c => {
     this.refTitle = c;
     this.props.registerOuterRef(c);
-  }
+  };
 
   // If the menu is not focused, ignore it: it will be handled by the `input` HOC.
   // ...but if it is focused, we want to toggle it
   onMouseDownTitle = () => {
     if (!this.props.fFocused) return;
     this.setState({ fFloat: !this.state.fFloat });
-  }
+  };
 
   // ==========================================
   // Helpers
   // ==========================================
   processKeyDown(keyDown) {
-    if (keyDown.which === KEYS.esc && !this.props.inlinePicker) {
+    if (keyDown && keyDown.which === KEYS.esc && !this.props.inlinePicker) {
       this.setState({ fFloat: !this.state.fFloat });
     }
   }
@@ -211,7 +221,10 @@ const style = {
   },
   swatchTiles: {
     position: 'absolute',
-    top: 4, right: 4, bottom: 4, left: 4,
+    top: 4,
+    right: 4,
+    bottom: 4,
+    left: 4,
     borderRadius: 2,
   },
   swatch: ({ curValue }) => {
@@ -233,7 +246,9 @@ const style = {
 // Public API
 // ==========================================
 export default input(ColorInput, {
-  toInternalValue, toExternalValue, isNull,
+  toInternalValue,
+  toExternalValue,
+  isNull,
   fIncludeFocusCapture: true,
   trappedKeys: [KEYS.esc],
   className: 'giu-color-input',

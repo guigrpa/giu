@@ -9,7 +9,7 @@ import { HIDDEN_FOCUS_CAPTURE, HIDDEN_FOCUS_CAPTURE_IOS } from '../gral/styles';
 // ==========================================
 type Props = {
   disabled?: boolean,
-  registerRef?: (ref: any) => void,
+  registerRef?: (ref: ?Object) => void,
 };
 
 const FocusCapture = ({ registerRef, disabled, ...otherProps }: Props) => {

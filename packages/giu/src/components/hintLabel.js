@@ -20,7 +20,7 @@ type AlignType = 'left' | 'right' | 'center';
 // -- END_DOCS
 
 type Props = {
-  /* :: ...HintLabelPars, */
+  ...HintLabelPars,
   fontSize: number,
 };
 

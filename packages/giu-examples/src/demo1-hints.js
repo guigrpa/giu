@@ -54,15 +54,14 @@ class HintExample extends React.Component {
     return (
       <div style={exampleStyle}>
         <ExampleLabel>
-          Hints (show once, disable-all, reset) and Hint (embedded): simple label positioning,
-          even taking into account DOM element positions
+          Hints (show once, disable-all, reset) and Hint (embedded): simple
+          label positioning, even taking into account DOM element positions
         </ExampleLabel>
         <span ref="buttonShowHint">
           <Button onClick={() => hintShow('hintExample')}>
             Show hint (if not already shown)
           </Button>
-        </span>
-        {' '}
+        </span>{' '}
         <Button
           onClick={() => {
             hintReset();
@@ -70,8 +69,7 @@ class HintExample extends React.Component {
           }}
         >
           Reset hints
-        </Button>
-        {' '}
+        </Button>{' '}
         <Button
           onClick={() => {
             hintDisableAll();
@@ -79,8 +77,8 @@ class HintExample extends React.Component {
           }}
         >
           Disable all
-        </Button>
-        {' '}<br />
+        </Button>{' '}
+        <br />
         <span ref="buttonEmbedHint">
           <Button onClick={() => this.setState({ fEmbeddedHint: true })}>
             Embed hint
@@ -139,15 +137,20 @@ class HintExample extends React.Component {
       if (ref) {
         const bcr = ref.getBoundingClientRect();
         const y = (bcr.top + bcr.bottom) / 2;
-        const to = y >= 130
-          ? { x: bcr.right + 10, y }
-          : { x: (bcr.left + bcr.right) / 2, y: bcr.bottom + 10 };
+        const to =
+          y >= 130
+            ? { x: bcr.right + 10, y }
+            : { x: (bcr.left + bcr.right) / 2, y: bcr.bottom + 10 };
         const counterclockwise = y >= 130;
         out.push({
           type: 'LABEL',
           x: 160,
           y: Math.max(130, (bcr.top + bcr.bottom) / 2),
-          children: <span>This is <i>the</i> button</span>,
+          children: (
+            <span>
+              This is <i>the</i> button
+            </span>
+          ),
         });
         out.push({
           type: 'ARROW',

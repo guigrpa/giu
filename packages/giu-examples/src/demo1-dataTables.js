@@ -80,7 +80,7 @@ const DATA_TABLE_COLS = [
     flexGrow: 1,
     minWidth: 100,
     // render: ({ item, id, attr, onChange, onMayHaveChangedHeight }) =>
-    render: ({ item, id, attr, onChange }) => (
+    render: ({ item, id, attr, onChange }) =>
       <Textarea
         value={item.notes}
         onChange={(ev, value) => onChange(id, attr, value)}
@@ -90,8 +90,7 @@ const DATA_TABLE_COLS = [
           marginBottom: -2,
         }}
         skipTheme
-      />
-    ),
+      />,
     sortable: false,
     filterable: false,
   },
@@ -100,12 +99,11 @@ const DATA_TABLE_COLS = [
     labelLevel: 1,
     label: () => (curLang === 'es' ? 'Confirmado' : 'Confirmed'),
     minWidth: 30,
-    render: ({ item, id, attr, onChange }) => (
+    render: ({ item, id, attr, onChange }) =>
       <Checkbox
         value={item.confirmed}
         onChange={(ev, value) => onChange(id, attr, value)}
-      />
-    ),
+      />,
   },
   {
     attr: 'phone',
@@ -120,18 +118,14 @@ const DATA_TABLE_ALT_LAYOUT_COLS = [
     label: () => (curLang === 'es' ? 'Detalles' : 'Details'),
     flexGrow: 1,
     minWidth: 100,
-    render: ({ item, id, onChange }) => (
+    render: ({ item, id, onChange }) =>
       <div>
         <div>
-          <b>{curLang === 'es' ? 'Nombre:' : 'Name:'}</b>{' '}{item.name}
+          <b>{curLang === 'es' ? 'Nombre:' : 'Name:'}</b> {item.name}
         </div>
         <div>
           <div>
-            <b>{curLang === 'es' ? 'Teléfono' : 'Phone'}</b>
-            {' '}
-            {item.phone}
-            {' '}
-            (
+            <b>{curLang === 'es' ? 'Teléfono' : 'Phone'}</b> {item.phone} (
             {item.confirmed
               ? curLang === 'es' ? 'Confirmado' : 'Confirmed'
               : curLang === 'es' ? 'No confirmado' : 'Unconfirmed'}
@@ -150,8 +144,7 @@ const DATA_TABLE_ALT_LAYOUT_COLS = [
             skipTheme
           />
         </div>
-      </div>
-    ),
+      </div>,
     sortable: false,
     rawValue: ({ name, phone, confirmed, notes }) => ({
       name,
@@ -166,11 +159,10 @@ const DATA_TABLE_ALT_LAYOUT_COLS = [
 const manualSortColLabel = () =>
   curLang === 'es' ? 'Ordenar manualmente' : 'Sort manually';
 
-const FetchRowComponent = () => (
+const FetchRowComponent = () =>
   <div style={{ padding: '5px 10px', backgroundColor: 'gray', color: 'white' }}>
-    <Spinner />{' '}Fetching...
-  </div>
-);
+    <Spinner /> Fetching...
+  </div>;
 
 class DevelopmentExample extends React.Component {
   commonCellProps: Object;
@@ -265,8 +257,7 @@ class DevelopmentExample extends React.Component {
           <TextInput
             onChange={(ev, filterValue) => this.setState({ filterValue })}
             placeholder="Quick find"
-          />
-          {' '}
+          />{' '}
           <Button onClick={() => this.selectRandomRow()}>
             Select random row
           </Button>
@@ -279,7 +270,9 @@ class DevelopmentExample extends React.Component {
           />
         </div>
         <div style={flexItem(1)} />
-        <div>Items: {this.state.numShownIds}</div>
+        <div>
+          Items: {this.state.numShownIds}
+        </div>
       </div>
     );
   }
@@ -440,8 +433,7 @@ class CustomSortPaginateExample extends React.Component {
         style={flexContainer('row', { alignItems: 'baseline', marginTop: 4 })}
       >
         <div>
-          Sort by
-          {' '}
+          Sort by{' '}
           <Select
             value={sortBy}
             items={CUSTOM_SORT_OPTIONS}
@@ -454,21 +446,18 @@ class CustomSortPaginateExample extends React.Component {
         </div>
         <div style={{ width: 10 }} />
         <div>
-          Page:
-          {' '}
+          Page:{' '}
           <Icon
             icon="arrow-left"
             disabled={page === 0}
             onClick={() => this.setState({ page: this.state.page - 1 })}
             skipTheme
-          />
-          {' '}
+          />{' '}
           <b
             style={{ display: 'inline-block', width: 25, textAlign: 'center' }}
           >
             {page + 1}
-          </b>
-          {' '}
+          </b>{' '}
           <Icon
             icon="arrow-right"
             disabled={page === this.numPages - 1}
@@ -543,7 +532,13 @@ const style2 = {
 // Example with inputs and validation
 // -----------------------------------------------
 const DATA_EDIT_AND_VALIDATE_EXAMPLE = sampleDataTableItems(15, 0);
-const COLLECT_FIELDS_ON_SUBMIT = ['name', 'type', 'lastModified', 'confirmed', 'phone'];
+const COLLECT_FIELDS_ON_SUBMIT = [
+  'name',
+  'type',
+  'lastModified',
+  'confirmed',
+  'phone',
+];
 
 class EditAndValidateExample extends React.Component {
   commonCellProps: Object;
@@ -585,7 +580,7 @@ class EditAndValidateExample extends React.Component {
         attr: 'name',
         minWidth: 150,
         flexGrow: 1,
-        render: ({ item, id, attr, onChange, registerInputRef }) => (
+        render: ({ item, id, attr, onChange, registerInputRef }) =>
           <TextInput
             ref={c => registerInputRef(id, attr, c)}
             value={item[attr]}
@@ -593,13 +588,12 @@ class EditAndValidateExample extends React.Component {
             required
             skipTheme
             style={{ width: '100%' }}
-          />
-        ),
+          />,
       },
       {
         attr: 'type',
         minWidth: 80,
-        render: ({ item, id, attr, onChange, registerInputRef }) => (
+        render: ({ item, id, attr, onChange, registerInputRef }) =>
           <Select
             ref={c => registerInputRef(id, attr, c)}
             items={USER_TYPES}
@@ -607,39 +601,38 @@ class EditAndValidateExample extends React.Component {
             onChange={() => onChange(id)}
             required
             style={{ width: '100%' }}
-          />
-        ),
+          />,
       },
       {
         attr: 'lastModified',
         minWidth: 150,
-        render: ({ item, id, attr, onChange, registerInputRef }) => (
+        render: ({ item, id, attr, onChange, registerInputRef }) =>
           <DateInput
-            ref={c => { registerInputRef(id, attr, c); }}
+            ref={c => {
+              registerInputRef(id, attr, c);
+            }}
             value={item[attr]}
             onChange={() => onChange(id)}
             required
             skipTheme
             style={{ width: '100%' }}
-          />
-        ),
+          />,
       },
       {
         attr: 'confirmed',
         labelLevel: 1,
         minWidth: 30,
-        render: ({ item, id, attr, onChange, registerInputRef }) => (
+        render: ({ item, id, attr, onChange, registerInputRef }) =>
           <Checkbox
             ref={c => registerInputRef(id, attr, c)}
             value={item[attr]}
             onChange={() => onChange(id)}
-          />
-        ),
+          />,
       },
       {
         attr: 'phone',
         minWidth: 150,
-        render: ({ item, id, attr, onChange, registerInputRef }) => (
+        render: ({ item, id, attr, onChange, registerInputRef }) =>
           <TextInput
             ref={c => registerInputRef(id, attr, c)}
             value={item[attr]}
@@ -647,15 +640,13 @@ class EditAndValidateExample extends React.Component {
             required
             skipTheme
             style={{ width: '100%' }}
-          />
-        ),
+          />,
       },
       {
         attr: 'submit',
         minWidth: 50,
-        render: ({ id, onSubmit }) => (
-          <Icon icon="check" onClick={() => onSubmit(id)} />
-        ),
+        render: ({ id, onSubmit }) =>
+          <Icon icon="check" onClick={() => onSubmit(id)} />,
       },
     ];
   }
@@ -685,7 +676,7 @@ class EditAndValidateExample extends React.Component {
           return;
         }
         data[attr] = await ref.validateAndGetValue();
-      }),
+      })
     );
     console.log(data);
     const msg = `name: ${data.name}, phone: ${data.phone}`;
@@ -724,34 +715,30 @@ class AllExamples extends React.PureComponent {
     return (
       <div style={exampleStyle}>
         <ExampleLabel>
-          DataTable (sort, filter, select/multi-select, fetch more, keyboard-controlled,
-          clipboard, manual sort with drag-and-drop, LocalStorage persistence...)
+          DataTable (sort, filter, select/multi-select, fetch more,
+          keyboard-controlled, clipboard, manual sort with drag-and-drop,
+          LocalStorage persistence...)
         </ExampleLabel>
         <p>
-          DataTable is based on the
-          {' '}
-          <b>VirtualScroller</b>
-          {' '}
-          component, whose primary function is
-          to render only visible rows. These rows can have uniform and well-known heights (at the simplest
-          end of the spectrum), uniform but unknown, and also dynamic: different for every row, and even
-          changing in time (as a result of passed-down props or their own intrinsic state).
+          DataTable is based on the <b>VirtualScroller</b> component, whose
+          primary function is to render only visible rows. These rows can have
+          uniform and well-known heights (at the simplest end of the spectrum),
+          uniform but unknown, and also dynamic: different for every row, and
+          even changing in time (as a result of passed-down props or their own
+          intrinsic state).
         </p>
 
         <p>
           <b>Complete example</b>
-          : editable, filtered, internationalised,
-          {' '}
-          <i>inifinite</i>
-          (fetch more items by scrolling down to the bottom of the list),
-          custom styles, etc.
+          : editable, filtered, internationalised, <i>inifinite</i>
+          (fetch more items by scrolling down to the bottom of the list), custom
+          styles, etc.
         </p>
         <DevelopmentExample lang={this.props.lang} />
 
         <p>
           <b>Example with custom sort and pagination</b>
-          : this one is also ultra-fast, thanks to
-          having uniform heights:
+          : this one is also ultra-fast, thanks to having uniform heights:
         </p>
         <CustomSortPaginateExample />
 
@@ -766,8 +753,7 @@ class AllExamples extends React.PureComponent {
         <SimpleExample />
 
         <p>
-          Finally, you can also <b>embed a DataTable in a Modal</b>:
-          {' '}
+          Finally, you can also <b>embed a DataTable in a Modal</b>:{' '}
           <Button onClick={() => this.setState({ fModal: true })}>
             Show me!
           </Button>

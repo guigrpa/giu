@@ -39,7 +39,7 @@ function isVisible(node: ?Node, bcr0?: ClientRect): boolean {
 function _getCroppingAncestor(
   refBcr: ClientRect,
   ancestor: ?Node,
-  options?: ScrollIntoViewOptions = {},
+  options?: ScrollIntoViewOptions = {}
 ): ?Node {
   const { fHoriz, topAncestor } = options;
   if (!ancestor || !(ancestor instanceof HTMLElement)) {

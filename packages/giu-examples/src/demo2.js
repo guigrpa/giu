@@ -1,23 +1,33 @@
 /* eslint-disable no-console, no-alert, max-len */
 /* eslint-disable react/prop-types, react/no-multi-comp, react/jsx-no-bind, react/jsx-boolean-value */
 /* eslint-disable react/prefer-stateless-function, react/jsx-no-target-blank */
-import React                from 'react';
-import ReactDOM             from 'react-dom';
-import ReactDOMServer       from 'react-dom/server';
-import { merge }            from 'timm';
-import moment               from 'moment';
+import React from 'react';
+import ReactDOM from 'react-dom';
+import ReactDOMServer from 'react-dom/server';
+import { merge } from 'timm';
+import moment from 'moment';
 
 import {
   Giu,
-  DateInput, Select,
+  DateInput,
+  Select,
   DropDownMenu,
-  Button, Progress, Icon, Spinner, LargeMessage,
-  Floats, floatReposition,
+  Button,
+  Progress,
+  Icon,
+  Spinner,
+  LargeMessage,
+  Floats,
+  floatReposition,
   Modals,
-  Notifications, Notification, notify as createNotif,
+  Notifications,
+  Notification,
+  notify as createNotif,
   Hints,
   hoverable,
-  flexContainer, flexItem, boxWithShadow,
+  flexContainer,
+  flexItem,
+  boxWithShadow,
   TextInput,
 } from 'giu';
 import 'giu/lib/mdl';
@@ -27,25 +37,30 @@ import HintExample from './demo1-hints';
 import FormExample from './demo1-forms';
 import FormExample2 from './demo1-forms2';
 import {
-  ExampleLabel, exampleStyle,
-  NORMAL_OPTIONS, TALL_OPTIONS, WIDE_OPTIONS,
+  ExampleLabel,
+  exampleStyle,
+  NORMAL_OPTIONS,
+  TALL_OPTIONS,
+  WIDE_OPTIONS,
   LONG_TEXT,
   onChangeJson,
-  getLang, setLang,
+  getLang,
+  setLang,
 } from './demo1-common';
 
-require('babel-polyfill');  // eslint-disable-line
+require('babel-polyfill'); // eslint-disable-line
 
 const { floor, random } = Math;
 const randomInt = (min, max) => min + floor(random() * (max - min + 1));
-const sample = (arr) => arr[randomInt(0, arr.length - 1)];
+const sample = arr => arr[randomInt(0, arr.length - 1)];
 
 let cntNotif = 1;
-const notify = (msg) => createNotif({
-  msg: msg || `Notification #${cntNotif++}`, // eslint-disable-line no-plusplus
-  type: sample(['info', 'success', 'warn', 'error']),
-  icon: sample(['cached', 'favorite', 'lock']),
-});
+const notify = msg =>
+  createNotif({
+    msg: msg || `Notification #${cntNotif++}`, // eslint-disable-line no-plusplus
+    type: sample(['info', 'success', 'warn', 'error']),
+    icon: sample(['cached', 'favorite', 'lock']),
+  });
 
 // -----------------------------------------------
 // Examples
@@ -65,7 +80,10 @@ class App extends React.Component {
             <Notifications />
             <Hints />
             <div style={{ padding: 10, fontSize: '1.8em', fontWeight: 'bold' }}>
-              <a target="_blank" href="http://github.com/guigrpa/giu">Giu</a> demo page
+              <a target="_blank" href="http://github.com/guigrpa/giu">
+                Giu
+              </a>{' '}
+              demo page
               <LangSelector
                 lang={lang}
                 onChange={(ev, newLang) => {
@@ -97,22 +115,35 @@ class App extends React.Component {
               </div>
             </div>
             <div style={{ textAlign: 'right', padding: 10, fontSize: '1.2em' }}>
-              by <a target="_blank" href="http://github.com/guigrpa">Guillermo Grau Panea</a> 2016
+              by{' '}
+              <a target="_blank" href="http://github.com/guigrpa">
+                Guillermo Grau Panea
+              </a>{' '}
+              2016
             </div>
           </div>
         );
         break;
     }
     // return out;
-    return <Giu theme="mdl">{out}</Giu>;
+    return (
+      <Giu theme="mdl">
+        {out}
+      </Giu>
+    );
   }
 }
 
 const LangSelector = ({ lang, onChange: onValueChange }) =>
-  <span style={{ fontWeight: 'normal', fontSize: 12, width: 80, whiteSpace: 'nowrap' }}>
-    &nbsp;&nbsp;
-    Show some examples in:
-    {' '}
+  <span
+    style={{
+      fontWeight: 'normal',
+      fontSize: 12,
+      width: 80,
+      whiteSpace: 'nowrap',
+    }}
+  >
+    &nbsp;&nbsp; Show some examples in:{' '}
     <Select
       items={[
         { value: 'en', label: 'English' },
@@ -144,8 +175,7 @@ const MessageExample = () =>
 const IconExample = () =>
   <div style={style.example}>
     <ExampleLabel>Icon</ExampleLabel>
-    <Icon icon="cached" id="a" size="lg" />{' '}
-    <Spinner size="lg" />{' '}
+    <Icon icon="cached" id="a" size="lg" /> <Spinner size="lg" />{' '}
     <Icon icon="favorite" id="a" size="lg" />{' '}
     <Icon icon="lock" size="lg" onClick={() => notify()} />
   </div>;
@@ -153,15 +183,28 @@ const IconExample = () =>
 const ButtonExample = () =>
   <div style={style.example}>
     <ExampleLabel>Button</ExampleLabel>
-    <Button onClick={() => notify('Normal button pressed')} colored>Colored</Button>{' '}
-    <Button onClick={() => notify('Normal button pressed')} primary>Primary</Button>{' '}
-    <Button onClick={() => notify('Normal button pressed')} accent>Accent</Button>{' '}
-    <Button onClick={() => notify('Plain button pressed')} disabled>Disabled</Button><br />
-    <Button onClick={() => notify('Plain button pressed')} plain>Flat</Button>{' '}
-    <Button onClick={() => notify('Plain button pressed')} plain disabled>Flat (disabled)</Button>{' '}
+    <Button onClick={() => notify('Normal button pressed')} colored>
+      Colored
+    </Button>{' '}
+    <Button onClick={() => notify('Normal button pressed')} primary>
+      Primary
+    </Button>{' '}
+    <Button onClick={() => notify('Normal button pressed')} accent>
+      Accent
+    </Button>{' '}
+    <Button onClick={() => notify('Plain button pressed')} disabled>
+      Disabled
+    </Button>
+    <br />
+    <Button onClick={() => notify('Plain button pressed')} plain>
+      Flat
+    </Button>{' '}
+    <Button onClick={() => notify('Plain button pressed')} plain disabled>
+      Flat (disabled)
+    </Button>{' '}
   </div>;
 
-const HoverableExample = hoverable(({ hovering, onHoverStart, onHoverStop }) => (
+const HoverableExample = hoverable(({ hovering, onHoverStart, onHoverStop }) =>
   <div
     onMouseEnter={onHoverStart}
     onMouseLeave={onHoverStop}
@@ -169,7 +212,7 @@ const HoverableExample = hoverable(({ hovering, onHoverStart, onHoverStop }) => 
   >
     <ExampleLabel>Hoverable (HOC)</ExampleLabel>
   </div>
-));
+);
 
 const StyleUtilsExample = () =>
   <div style={style.example}>
@@ -186,16 +229,19 @@ const StyleUtilsExample = () =>
       <FlexSpacer />
       <span>Right</span>
     </div>
-    <div style={boxWithShadow({ padding: 3 })}>
-      A box with a shadow
-    </div>
+    <div style={boxWithShadow({ padding: 3 })}>A box with a shadow</div>
   </div>;
 
-const FlexSpacer = ({ children }) => <div style={flexItem('1')}>{children}</div>;
+const FlexSpacer = ({ children }) =>
+  <div style={flexItem('1')}>
+    {children}
+  </div>;
 
 const DropDownExample = ({ lang }) =>
   <div style={style.example}>
-    <ExampleLabel>DropDownMenu (focusable, keyboard-controlled, embedded ListPicker)</ExampleLabel>
+    <ExampleLabel>
+      DropDownMenu (focusable, keyboard-controlled, embedded ListPicker)
+    </ExampleLabel>
     <DropDownMenu
       items={NORMAL_OPTIONS}
       lang={lang}
@@ -226,21 +272,25 @@ const DropDownExample = ({ lang }) =>
 const ScrollingExample = () =>
   <div style={style.example}>
     <ExampleLabel>Scrollable (with translateZ(0)) with floats</ExampleLabel>
-    <div
-      onScroll={floatReposition}
-      style={style.scrolling}
-    >
+    <div onScroll={floatReposition} style={style.scrolling}>
       <DateInput placeholder="date" date time required />
       <br />
-      {LONG_TEXT}<br />
-      {LONG_TEXT}<br />
-      {LONG_TEXT}<br />
+      {LONG_TEXT}
+      <br />
+      {LONG_TEXT}
+      <br />
+      {LONG_TEXT}
+      <br />
       <DateInput placeholder="date" required />
       <br />
-      {LONG_TEXT}<br />
-      {LONG_TEXT}<br />
-      {LONG_TEXT}<br />
-      {LONG_TEXT}<br />
+      {LONG_TEXT}
+      <br />
+      {LONG_TEXT}
+      <br />
+      {LONG_TEXT}
+      <br />
+      {LONG_TEXT}
+      <br />
       <DateInput placeholder="date" required />
     </div>
   </div>;
@@ -251,7 +301,9 @@ class ProgressExample extends React.Component {
     this.state = { value: 0.3 };
   }
   componentDidMount() {
-    setInterval(() => { this.setState({ value: Math.random() }); }, 2000);
+    setInterval(() => {
+      this.setState({ value: Math.random() });
+    }, 2000);
   }
   render() {
     return (
@@ -270,7 +322,9 @@ class DeferredExample extends React.Component {
     this.state = { shown: false };
   }
   componentDidMount() {
-    setTimeout(() => { this.setState({ shown: true }); }, 2000);
+    setTimeout(() => {
+      this.setState({ shown: true });
+    }, 2000);
   }
   render() {
     if (!this.state.shown) return null;
@@ -283,7 +337,6 @@ class DeferredExample extends React.Component {
     );
   }
 }
-
 
 // -----------------------------------------------
 // Styles
@@ -298,7 +351,7 @@ const style = {
     overflow: 'auto',
     transform: 'translateZ(0)',
   },
-  hoverable: (hovering) => ({
+  hoverable: hovering => ({
     backgroundColor: hovering ? '#ccc' : undefined,
   }),
 };
@@ -312,7 +365,7 @@ const mainEl = <App />;
 if (typeof document !== 'undefined') {
   ReactDOM.render(mainEl, document.getElementById('app'));
 
-// SSR
+  // SSR
 } else {
   module.exports = function render(locals, callback) {
     const ssrHtml = ReactDOMServer.renderToString(mainEl);

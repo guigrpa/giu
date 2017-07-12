@@ -93,7 +93,7 @@ const reducer: Reducer<State, Action> = (state0 = INITIAL_STATE, action) => {
   switch (action.type) {
     case 'HINT_DEFINE':
       state = updateIn(state, ['catalogue'], catalogue =>
-        timmSet(catalogue, action.id, action.pars),
+        timmSet(catalogue, action.id, action.pars)
       );
       break;
     case 'HINT_DISABLE_ALL':
@@ -149,7 +149,7 @@ const actions = {
   },
   hintShow: (id: string, force?: boolean = false) => (
     dispatch: Function,
-    getState: Function,
+    getState: Function
   ) => {
     dispatch({ type: 'HINT_SHOW', id, force });
     const { disabled } = getState();

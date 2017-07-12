@@ -15,8 +15,8 @@ type HocAddedProps = {
 };
 
 type PublicDefaultProps<DP> = {
-  /* :: ...$Exact<DP>, */
-  /* :: ...$Exact<HocAddedProps>, */
+  ...$Exact<DP>,
+  ...$Exact<HocAddedProps>,
 };
 
 type PublicProps<P> = P;
@@ -33,17 +33,15 @@ const hoc: Hoc<*, *> = ComposedComponent => (ComposedComponent: any);
 // =======================================
 // Examples
 // =======================================
-/* eslint-disable no-unused-vars */
 type OuterProps = {
-  /* :: ...$Exact<HocAddedProps>, */
+  ...$Exact<HocAddedProps>,
   text: string,
   cond?: string,
   cond2?: string,
 };
-/* eslint-enable no-unused-vars */
 
 type Props = {
-  /* :: ...$Exact<OuterProps>, */
+  ...$Exact<OuterProps>,
   cond2: string,
 };
 

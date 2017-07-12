@@ -1,35 +1,49 @@
-import React                from 'react';
-import moment               from '../vendor/moment';
-import {
-  startOfToday,
-  getTimeInSecs,
-}                           from '../gral/dates';
-import {
-  getScrollbarWidth,
-  NULL_STRING,
-}                           from '../gral/constants';
-import { ListPicker }       from '../inputs/listPicker';
+// @flow
+
+import React from 'react';
+import moment from '../vendor/moment';
+import { startOfToday, getTimeInSecs } from '../gral/dates';
+import type { Moment, Choice, KeyboardEventPars } from '../gral/types';
+import { getScrollbarWidth, NULL_STRING } from '../gral/constants';
+import { ListPicker } from '../inputs/listPicker';
 
 const ROW_HEIGHT = '1.3em';
+
+// ==========================================
+// Types
+// ==========================================
+type PublicProps = {|
+  disabled: boolean,
+  curValue: ?Moment,
+  onChange: (ev: ?SyntheticEvent, value: ?Moment) => any,
+  utc: boolean,
+  keyDown?: KeyboardEventPars,
+  stepMinutes?: number,
+  accentColor: string,
+|};
+
+type DefaultProps = {
+  stepMinutes: number,
+};
+
+type Props = {
+  ...PublicProps,
+  ...$Exact<DefaultProps>,
+};
 
 // ==========================================
 // Component
 // ==========================================
 class TimePickerDigital extends React.Component {
-  static propTypes = {
-    disabled:               React.PropTypes.bool.isRequired,
-    curValue:               React.PropTypes.object,  // moment object, not start of day
-    onChange:               React.PropTypes.func.isRequired,
-    utc:                    React.PropTypes.bool.isRequired,
-    keyDown:                React.PropTypes.object,
-    stepMinutes:            React.PropTypes.number,
-    accentColor:            React.PropTypes.string.isRequired,
+  props: Props;
+  static defaultProps: DefaultProps = {
+    stepMinutes: 30,
   };
-  static defaultProps = {
-    stepMinutes:            30,
-  };
+  timeItems: Array<Choice>;
 
-  componentWillMount() { this.initTimeItems(); }
+  componentWillMount() {
+    this.initTimeItems();
+  }
 
   // ==========================================
   // Render
@@ -43,18 +57,18 @@ class TimePickerDigital extends React.Component {
         onChange={this.onChange}
         keyDown={keyDown}
         disabled={disabled}
-        style={style.outer} twoStageStyle
+        style={style.outer}
+        twoStageStyle
         styleItem={style.item}
         accentColor={accentColor}
       />
     );
   }
 
-
   // ==========================================
   // Event handlers
   // ==========================================
-  onChange = (ev, secsStr) => {
+  onChange = (ev: ?SyntheticEvent, secsStr: string) => {
     const { curValue, utc, onChange } = this.props;
     if (secsStr === NULL_STRING) {
       onChange(ev, null);
@@ -69,7 +83,7 @@ class TimePickerDigital extends React.Component {
     }
     nextValue.add(moment.duration(secs, 'seconds'));
     onChange(ev, nextValue);
-  }
+  };
 
   // ==========================================
   // Helpers

@@ -15,7 +15,7 @@ Provides an inline style object for a Flex container.
 -- */
 const flexContainer = (
   flexDirection: 'row' | 'column' = 'row',
-  style?: Object,
+  style?: Object
 ): Object => merge({ display: 'flex', flexDirection }, style);
 
 /* --
@@ -45,7 +45,7 @@ const boxWithShadow = (style?: Object): Object =>
       borderRadius: 2,
       boxShadow: '0 3px 6px rgba(0,0,0,0.16), 0 3px 6px rgba(0,0,0,0.23)',
     },
-    style,
+    style
   );
 
 /* --
@@ -78,7 +78,7 @@ const darken = (color: string | Object, percentage?: number = 10): string =>
 const lighten = (color: string | Object, percentage?: number = 10): string =>
   tinycolor(color).lighten(percentage).toHexString();
 
-const inputReset = (style: Object): Object =>
+const inputReset = (style?: Object): Object =>
   merge(
     {
       backgroundColor: COLORS.bgInput,
@@ -88,7 +88,7 @@ const inputReset = (style: Object): Object =>
       fontWeight: 'inherit',
       color: 'inherit',
     },
-    style,
+    style
   );
 
 const INPUT_DISABLED = {

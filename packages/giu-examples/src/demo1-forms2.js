@@ -1,18 +1,17 @@
+// @flow
+
 /* eslint-disable react/no-string-refs */
 
 import React from 'react';
-import {
-  NumberInput, isLte,
-  Button,
-  notify,
-} from 'giu';
-import {
-  ExampleLabel, exampleStyle,
-} from './demo1-common';
+import { NumberInput, isLte, Button, notify } from 'giu';
+import { ExampleLabel, exampleStyle } from './demo1-common';
 
 class FormExample extends React.Component {
-  constructor(props) {
-    super(props);
+  state: { a: any, b: any };
+  refs: any;
+
+  constructor() {
+    super();
     this.state = {
       a: null,
       b: 4,
@@ -33,7 +32,7 @@ class FormExample extends React.Component {
     const props = { required: true, validators: [isLte(10)] };
     return (
       <div>
-        <b>Uncontrolled:{' '}</b>
+        <b>Uncontrolled: </b>
         <NumberInput ref="a1" value={null} {...props} />
         <NumberInput ref="b1" value={3} {...props} />
         <Button onClick={this.onSubmit('1')}>Read values</Button>
@@ -48,13 +47,15 @@ class FormExample extends React.Component {
     };
     return (
       <div>
-        <b>Controlled:{' '}</b>
-        <NumberInput ref="a2"
+        <b>Controlled: </b>
+        <NumberInput
+          ref="a2"
           value={this.state.a}
           onChange={(ev, val) => this.setState({ a: val })}
           {...props}
         />
-        <NumberInput ref="b2"
+        <NumberInput
+          ref="b2"
           value={this.state.b}
           onChange={(ev, val) => this.setState({ b: val })}
           {...props}
@@ -64,7 +65,7 @@ class FormExample extends React.Component {
     );
   }
 
-  onSubmit = (suffix) => async () => {
+  onSubmit = (suffix: string) => async () => {
     try {
       const [a, b] = await Promise.all([
         this.refs[`a${suffix}`].validateAndGetValue(),
@@ -81,10 +82,9 @@ class FormExample extends React.Component {
         icon: this.context.theme === 'mdl' ? 'warning' : 'bullhorn',
       });
     }
-  }
+  };
 
-  readValues = async () => {
-  }
+  readValues = async () => {};
 }
 
 FormExample.contextTypes = { theme: React.PropTypes.any };

@@ -78,13 +78,16 @@ const COLS = [
   {
     attr: 'id',
     minWidth: 40,
-    render: ctx => <div style={{ paddingTop: 2 }}>{ctx.item.id}</div>,
+    render: ctx =>
+      <div style={{ paddingTop: 2 }}>
+        {ctx.item.id}
+      </div>,
   },
   {
     attr: 'name',
     minWidth: 150,
     flexGrow: 1,
-    render: ctx => (
+    render: ctx =>
       <TextInput
         ref={c => ctx.registerInputRef(ctx.id, ctx.attr, c)}
         disabled={!(ctx.isEditing && ctx.isItemSelected)}
@@ -94,13 +97,12 @@ const COLS = [
         required
         skipTheme
         style={style.input(ctx.isEditing && ctx.isItemSelected)}
-      />
-    ),
+      />,
   },
   {
     attr: 'type',
     minWidth: 150,
-    render: ctx => (
+    render: ctx =>
       <Select
         ref={c => ctx.registerInputRef(ctx.id, ctx.attr, c)}
         disabled={!(ctx.isEditing && ctx.isItemSelected)}
@@ -112,13 +114,12 @@ const COLS = [
         required
         styleOuter={style.input(ctx.isEditing && ctx.isItemSelected)}
         styleTitle={style.input(ctx.isEditing && ctx.isItemSelected)}
-      />
-    ),
+      />,
   },
   {
     attr: 'lastModified',
     minWidth: 150,
-    render: ctx => (
+    render: ctx =>
       <DateInput
         ref={c => ctx.registerInputRef(ctx.id, ctx.attr, c)}
         type="dropDownPicker"
@@ -129,27 +130,25 @@ const COLS = [
         required
         skipTheme
         style={style.input(ctx.isEditing && ctx.isItemSelected)}
-      />
-    ),
+      />,
   },
   {
     attr: 'confirmed',
     labelLevel: 1,
     minWidth: 30,
-    render: ctx => (
+    render: ctx =>
       <Checkbox
         ref={c => ctx.registerInputRef(ctx.id, ctx.attr, c)}
         disabled={!(ctx.isEditing && ctx.isItemSelected)}
         value={ctx.item[ctx.attr]}
         onChange={ctx.onChange}
         cmds={ctx.cmds}
-      />
-    ),
+      />,
   },
   {
     attr: 'phone',
     minWidth: 150,
-    render: ctx => (
+    render: ctx =>
       <TextInput
         ref={c => ctx.registerInputRef(ctx.id, ctx.attr, c)}
         disabled={!(ctx.isEditing && ctx.isItemSelected)}
@@ -159,26 +158,24 @@ const COLS = [
         required
         skipTheme
         style={style.input(ctx.isEditing && ctx.isItemSelected)}
-      />
-    ),
+      />,
   },
 ];
 
 // ================================================
 // App, Top, Sidebar
 // ================================================
-const App = () => (
+const App = () =>
   <div style={style.app}>
     <Floats />
     <Notifications />
     <Top />
     <Sidebar />
     <Contents />
-  </div>
-);
+  </div>;
 
 const Top = () => <div style={style.top}>Top</div>;
-const Sidebar = () => (
+const Sidebar = () =>
   <div style={style.sidebar}>
     <div style={style.section}>Section 1</div>
     <div style={style.section}>Section 2</div>
@@ -188,8 +185,7 @@ const Sidebar = () => (
     <div style={style.section}>Section 6</div>
     <div style={style.section}>Section 7</div>
     <div style={style.section}>Section 8</div>
-  </div>
-);
+  </div>;
 
 // ================================================
 // Contents
@@ -286,7 +282,7 @@ class Contents extends React.Component {
   renderButton({ icon, label, disabled, onClick }) {
     return (
       <Button disabled={disabled} onClick={onClick}>
-        <Icon icon={icon} />{' '}{label}
+        <Icon icon={icon} /> {label}
       </Button>
     );
   }
@@ -294,9 +290,7 @@ class Contents extends React.Component {
   renderStats() {
     return (
       <div>
-        # items:
-        {' '}
-        <b>{this.state.numItems}</b>
+        # items: <b>{this.state.numItems}</b>
         {this.state.isFetching ? <Spinner /> : null}
       </div>
     );
@@ -511,17 +505,16 @@ class Contents extends React.Component {
 
   scrollSelectedIntoView = () => {
     if (this.refDataTable) this.refDataTable.scrollSelectedIntoView();
-  }
+  };
 }
 
 // -----------------------------------------------
 // Helper components
 // -----------------------------------------------
-const FetchRowComponent = () => (
+const FetchRowComponent = () =>
   <div style={{ padding: '5px 10px', backgroundColor: 'gray', color: 'white' }}>
-    <Spinner />{' '}Fetching...
-  </div>
-);
+    <Spinner /> Fetching...
+  </div>;
 
 // -----------------------------------------------
 // Styles

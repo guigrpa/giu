@@ -1,15 +1,16 @@
-import React                from 'react';
-import { omit, merge }      from 'timm';
-import isFunction           from 'lodash/isFunction';
-import { NULL_STRING }      from '../gral/constants';
-import {
-  inputReset, INPUT_DISABLED,
-}                           from '../gral/styles';
-import input                from '../hocs/input';
-import { LIST_SEPARATOR_KEY } from '../inputs/listPicker';
+// @flow
 
-function toInternalValue(val) { return val != null ? JSON.stringify(val) : NULL_STRING; }
-function toExternalValue(val) {
+import React from 'react';
+import { omit, merge } from 'timm';
+import { NULL_STRING } from '../gral/constants';
+import { inputReset, INPUT_DISABLED } from '../gral/styles';
+import input, { INPUT_HOC_INVALID_HTML_PROPS } from '../hocs/input';
+import { LIST_SEPARATOR_KEY } from '../inputs/listPicker';
+import type { SelectProps } from './selectTypes';
+
+const toInternalValue = val =>
+  val != null ? JSON.stringify(val) : NULL_STRING;
+const toExternalValue = val => {
   if (val === NULL_STRING) return null;
   try {
     return JSON.parse(val);
@@ -18,53 +19,66 @@ function toExternalValue(val) {
     console.warn('SelectNative: error parsing JSON', val);
     return null;
   }
-}
+};
+const isNull = val => val === NULL_STRING;
 
-function isNull(val) { return val === NULL_STRING; }
+// ==========================================
+// Types
+// ==========================================
+type Props = {
+  ...$Exact<SelectProps>,
+  // Input HOC
+  curValue: string,
+  registerFocusableRef: Function,
+};
+
+const FILTERED_OUT_PROPS = [
+  'inlinePicker',
+  'items',
+  'lang',
+  'required',
+  'disabled',
+  'style',
+  ...INPUT_HOC_INVALID_HTML_PROPS,
+];
 
 // ==========================================
 // Component
 // ==========================================
 class SelectNative extends React.Component {
-  static propTypes = {
-    items:                  React.PropTypes.array.isRequired,
-    lang:                   React.PropTypes.string,
-    required:               React.PropTypes.bool,
-    disabled:               React.PropTypes.bool,
-    style:                  React.PropTypes.object,
-    // Input HOC
-    curValue:               React.PropTypes.string.isRequired,
-    registerFocusableRef:   React.PropTypes.func.isRequired,
-    // all others are passed through to the `select` unchanged
-  };
+  props: Props;
+  static defaultProps = {};
 
-  // ==========================================
-  // Render
   // ==========================================
   render() {
     const {
-      curValue, items,
+      curValue,
+      items,
       lang,
-      required, disabled,
+      required,
+      disabled,
       registerFocusableRef,
     } = this.props;
     const finalItems = [];
     if (!required) finalItems.push({ value: NULL_STRING, label: '' });
-    items.forEach((option) => {
+    items.forEach(option => {
       if (option.label !== LIST_SEPARATOR_KEY) finalItems.push(option);
     });
-    const otherProps = omit(this.props, PROP_KEYS_TO_REMOVE_FROM_INPUT);
+    const otherProps = omit(this.props, FILTERED_OUT_PROPS);
     return (
-      <select ref={registerFocusableRef}
+      <select
+        ref={registerFocusableRef}
         className="giu-select-native"
         value={curValue}
         {...otherProps}
         tabIndex={disabled ? -1 : undefined}
         style={style.field(this.props)}
       >
-        {finalItems.map((o) => {
-          const value = o.value === NULL_STRING ? o.value : toInternalValue(o.value);
-          const label = isFunction(o.label) ? o.label(lang) : o.label;
+        {finalItems.map(o => {
+          const value = o.value === NULL_STRING
+            ? o.value
+            : toInternalValue(o.value);
+          const label = typeof o.label === 'function' ? o.label(lang) : o.label;
           return <option key={value} id={value} value={value}>{label}</option>;
         })}
       </select>
@@ -72,8 +86,6 @@ class SelectNative extends React.Component {
   }
 }
 
-// ==========================================
-// Styles
 // ==========================================
 const style = {
   fieldBase: inputReset({
@@ -89,14 +101,10 @@ const style = {
 };
 
 // ==========================================
-// Miscellaneous
-// ==========================================
-const PROP_KEYS_TO_REMOVE_FROM_INPUT = Object.keys(SelectNative.propTypes).concat([
-  'registerOuterRef', 'inlinePicker', 'errors', 'cmds', 'keyDown', 'fFocused',
-  'floatZ', 'floatPosition', 'onResizeOuter', 'styleOuter',
-]);
-
-// ==========================================
 // Public API
 // ==========================================
-export default input(SelectNative, { toInternalValue, toExternalValue, isNull });
+export default input(SelectNative, {
+  toInternalValue,
+  toExternalValue,
+  isNull,
+});

@@ -2,7 +2,7 @@
 
 /* eslint-disable global-require */
 
-import React                from 'react';
+import React from 'react';
 
 // ==========================================
 // Component
@@ -10,7 +10,7 @@ import React                from 'react';
 // -- A root component that can be used for custom themes.
 type Props = {
   theme: string | Object,
-  children: any;
+  children: any,
 };
 
 class Giu extends React.PureComponent {

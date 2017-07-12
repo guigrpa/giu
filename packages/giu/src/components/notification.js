@@ -21,8 +21,8 @@ import Icon from './icon';
 // Component
 // ==========================================
 type Props = {
-  /* :: ...$Exact<NotificationPars>, */
-  /* :: ...$Exact<HoverableProps>, */
+  ...$Exact<NotificationPars>,
+  ...$Exact<HoverableProps>,
   type: NotificationType,
 };
 
@@ -38,7 +38,8 @@ class Notification extends React.PureComponent {
   // ==========================================
   render() {
     const { theme } = this.context;
-    const icon = this.props.icon || (theme === 'mdl' ? 'announcement' : 'exclamation');
+    const icon =
+      this.props.icon || (theme === 'mdl' ? 'announcement' : 'exclamation');
     return (
       <div
         className="giu-notification"
@@ -75,7 +76,7 @@ const style = {
       noStylePosition,
       noStyleShadow,
     },
-    theme,
+    theme
   ) => {
     let bgColor = COLORS.notifs[type] || COLORS.notifs.info;
     if (hovering && onClick) bgColor = darken(bgColor, 10);

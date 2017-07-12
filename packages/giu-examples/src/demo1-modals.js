@@ -39,12 +39,10 @@ class ModalExample extends React.Component {
     return (
       <div style={exampleStyle}>
         <ExampleLabel>
-          Modals (stackable) and Modal (embedded): focusable, keyboard-controlled
+          Modals (stackable) and Modal (embedded): focusable,
+          keyboard-controlled
         </ExampleLabel>
-        <Button onClick={this.addModal.bind(this)}>
-          Add modal
-        </Button>
-        {' '}
+        <Button onClick={this.addModal.bind(this)}>Add modal</Button>{' '}
         <Button onClick={() => this.setState({ fEmbeddedModal: true })}>
           Embed modal
         </Button>
@@ -74,7 +72,7 @@ class ModalExample extends React.Component {
         onEsc={close}
         style={{ width: 500 }}
       >
-        {'What\'s your name?'}{' '}
+        {"What's your name?"}{' '}
         <TextInput
           ref={o => {
             this.refInput = o;
@@ -166,11 +164,16 @@ class ModalExample extends React.Component {
       <div>
         Nice to meet you, {this.refName.getValue()}!<br />
         This is some really long text:<br />
-        {LONG_TEXT}<br />
-        {LONG_TEXT}<br />
-        {LONG_TEXT}<br />
-        {LONG_TEXT}<br />
-        {LONG_TEXT}<br />
+        {LONG_TEXT}
+        <br />
+        {LONG_TEXT}
+        <br />
+        {LONG_TEXT}
+        <br />
+        {LONG_TEXT}
+        <br />
+        {LONG_TEXT}
+        <br />
       </div>
     );
     modalPush({

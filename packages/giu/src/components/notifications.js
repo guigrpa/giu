@@ -39,7 +39,7 @@ API reference:
   - **name** *string*: name of the notification to be deleted
 -- */
 type NotificationStatePars = {
-  /* :: ...$Exact<NotificationPars>, */
+  ...$Exact<NotificationPars>,
   retained?: boolean,
 };
 
@@ -172,7 +172,6 @@ class Notifications extends React.PureComponent {
     return (
       <div className="giu-notifications" style={style.outer}>
         {notifs.map((props: NotificationStatePars) =>
-        (
           <Notification
             key={props.id}
             {...props}
@@ -181,7 +180,7 @@ class Notifications extends React.PureComponent {
             onClick={this.onDismiss}
             noStylePosition={true}
           />
-        ))}
+        )}
       </div>
     );
   }
@@ -217,4 +216,12 @@ const style = {
 // ==========================================
 // Public API
 // ==========================================
-export { Notifications, reducer, actions, notify, notifRetain, notifDelete, notifDeleteByName };
+export {
+  Notifications,
+  reducer,
+  actions,
+  notify,
+  notifRetain,
+  notifDelete,
+  notifDeleteByName,
+};

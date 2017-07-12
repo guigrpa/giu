@@ -11,14 +11,39 @@
 export type Moment = any;
 
 // ========================================
+// Keys
+// ========================================
+export type KeyboardModifiers = {|
+  altKey: boolean,
+  metaKey: boolean,
+  ctrlKey: boolean,
+  shiftKey: boolean,
+|};
+
+export type KeyboardEventPars = {
+  ...KeyboardModifiers,
+  keyCode: number,
+  which: number,
+};
+
+export type KeyboardShortcut = {
+  ...KeyboardModifiers,
+  keyCodes: Array<number>,
+  keyNames: Array<string>,
+  hash: string,
+  description: string,
+};
+
+// ========================================
 // Other
 // ========================================
-export type Choice = {|
+export type Choice = {
   value: any,
-  label?: string,
-  keys?: Array<string>,
-  onClick?: (ev: SyntheticEvent) => void,
-|};
+  label?: string | ((lang: ?string) => any),
+  keys?: string | Array<string>,
+  onClick?: (ev: SyntheticEvent) => any,
+  shortcuts?: Array<KeyboardShortcut>,
+};
 
 type CommandType = 'FOCUS' | 'BLUR' | 'REVERT';
 

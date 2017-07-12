@@ -140,7 +140,7 @@ function windowWidthWithoutScrollbar(): number {
 function propsWithDefaultsAndOverrides(
   props: Object,
   defaults: ?Object,
-  overrides?: ?Object,
+  overrides?: ?Object
 ): Object {
   return merge(addDefaults(props, defaults), overrides);
 }

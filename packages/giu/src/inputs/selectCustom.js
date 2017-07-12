@@ -1,42 +1,36 @@
-import React                from 'react';
+// @flow
+
+import React from 'react';
 import { merge, set as timmSet } from 'timm';
-import isFunction           from 'lodash/isFunction';
+import { COLORS, KEYS, UNICODE, NULL_STRING, IS_IOS } from '../gral/constants';
 import {
-  COLORS, KEYS,
-  UNICODE,
-  NULL_STRING,
-  IS_IOS,
-}                           from '../gral/constants';
-import {
-  flexContainer, flexItem,
+  flexContainer,
+  flexItem,
   GLOW,
-  inputReset, INPUT_DISABLED,
-}                           from '../gral/styles';
+  inputReset,
+  INPUT_DISABLED,
+} from '../gral/styles';
 import {
   createShortcut,
   registerShortcut,
   unregisterShortcut,
-}                           from '../gral/keys';
-import input                from '../hocs/input';
-import {
-  ListPicker,
-  LIST_SEPARATOR_KEY,
-}                           from '../inputs/listPicker';
-import IosFloatWrapper      from '../inputs/iosFloatWrapper';
-import {
-  floatAdd,
-  floatDelete,
-  floatUpdate,
-}                           from '../components/floats';
-import Icon                 from '../components/icon';
+} from '../gral/keys';
+import type { Choice, KeyboardEventPars } from '../gral/types';
+import input from '../hocs/input';
+import { ListPicker, LIST_SEPARATOR_KEY } from '../inputs/listPicker';
+import IosFloatWrapper from '../inputs/iosFloatWrapper';
+import { floatAdd, floatDelete, floatUpdate } from '../components/floats';
+import Icon from '../components/icon';
+import type { SelectProps } from './selectTypes';
 
 const LIST_SEPARATOR = {
   value: LIST_SEPARATOR_KEY,
   label: LIST_SEPARATOR_KEY,
 };
 
-function toInternalValue(val) { return val != null ? JSON.stringify(val) : NULL_STRING; }
-function toExternalValue(val) {
+const toInternalValue = val =>
+  val != null ? JSON.stringify(val) : NULL_STRING;
+const toExternalValue = val => {
   if (val === NULL_STRING) return null;
   try {
     return JSON.parse(val);
@@ -45,42 +39,46 @@ function toExternalValue(val) {
     console.warn('SelectCustom: error parsing JSON', val);
     return null;
   }
-}
-function isNull(val) { return val === NULL_STRING; }
+};
+const isNull = val => val === NULL_STRING;
+
+// ==========================================
+// Types
+// ==========================================
+type DefaultProps = {
+  accentColor: string,
+};
+
+type Props = {
+  ...$Exact<SelectProps>,
+  inlinePicker?: boolean,
+  ...$Exact<DefaultProps>,
+  // Input HOC
+  curValue: string,
+  onChange: Function,
+  registerOuterRef: Function,
+  fFocused: boolean,
+  keyDown?: KeyboardEventPars,
+};
 
 // ==========================================
 // Component
 // ==========================================
 class SelectCustomBase extends React.Component {
-  static propTypes = {
-    disabled:               React.PropTypes.bool,
-    items:                  React.PropTypes.array.isRequired,
-    lang:                   React.PropTypes.string,
-    required:               React.PropTypes.bool,
-    inlinePicker:           React.PropTypes.bool,
-    children:               React.PropTypes.any,
-    onClickItem:            React.PropTypes.func,
-    onCloseFloat:           React.PropTypes.func,
-    floatPosition:          React.PropTypes.string,
-    floatAlign:             React.PropTypes.string,
-    floatZ:                 React.PropTypes.number,
-    style:                  React.PropTypes.object,
-    styleTitle:             React.PropTypes.object,  // merged with the title span
-    twoStageStyle:          React.PropTypes.bool,
-    accentColor:            React.PropTypes.string,
-    // Input HOC
-    curValue:               React.PropTypes.string.isRequired,
-    onChange:               React.PropTypes.func.isRequired,
-    registerOuterRef:       React.PropTypes.func.isRequired,
-    fFocused:               React.PropTypes.bool.isRequired,
-    keyDown:                React.PropTypes.object,
+  props: Props;
+  static defaultProps: DefaultProps = {
+    accentColor: COLORS.accent,
   };
-  static defaultProps = {
-    accentColor:            COLORS.accent,
+  state: {
+    fFloat: boolean,
   };
+  floatId: ?string;
+  keyDown: void | KeyboardEventPars;
+  items: Array<Choice>;
+  refTitle: ?Object;
 
-  constructor(props) {
-    super(props);
+  constructor() {
+    super();
     this.state = { fFloat: false };
     this.keyDown = undefined;
   }
@@ -89,7 +87,9 @@ class SelectCustomBase extends React.Component {
     this.prepareItems(this.props.items, this.props.required);
   }
 
-  componentDidMount() { this.registerShortcuts(); }
+  componentDidMount() {
+    this.registerShortcuts();
+  }
 
   componentWillReceiveProps(nextProps) {
     const { keyDown, items, required, fFocused } = nextProps;
@@ -107,7 +107,7 @@ class SelectCustomBase extends React.Component {
   }
 
   componentWillUnmount() {
-    floatDelete(this.floatId);
+    if (this.floatId != null) floatDelete(this.floatId);
     this.unregisterShortcuts();
   }
 
@@ -115,39 +115,45 @@ class SelectCustomBase extends React.Component {
   // Render
   // ==========================================
   render() {
+    const { children } = this.props;
     let out;
     if (this.props.inlinePicker) {
       out = this.renderPicker();
-    } else if (this.props.children) {
-      out = this.renderProvidedTitle();
+    } else if (children) {
+      out = this.renderProvidedTitle(children);
     } else {
       out = this.renderDefaultTitle();
     }
     return out;
   }
 
-  renderProvidedTitle() {
-    const elTitle = React.cloneElement(this.props.children, {
+  renderProvidedTitle(children) {
+    const elTitle = React.cloneElement(children, {
       ref: this.registerTitleRef,
     });
-    return IS_IOS ?
-      <span style={style.providedTitleWrapperForIos}>
-        {elTitle}
-        {this.renderFloatForIos()}
-      </span> :
-      elTitle;
+    return IS_IOS
+      ? <span style={style.providedTitleWrapperForIos}>
+          {elTitle}
+          {this.renderFloatForIos()}
+        </span>
+      : elTitle;
   }
 
   renderDefaultTitle() {
     const { curValue, lang } = this.props;
     let label = UNICODE.nbsp;
     if (curValue !== NULL_STRING) {
-      const item = this.items.find((o) => o.value === curValue);
-      if (item) label = isFunction(item.label) ? item.label(lang) : item.label;
+      const item = this.items.find(o => o.value === curValue);
+      if (item) {
+        label = typeof item.label === 'function'
+          ? item.label(lang)
+          : item.label;
+      }
     }
     const caretIcon = this.state.fFloat ? 'caret-up' : 'caret-down';
     return (
-      <span ref={this.registerTitleRef}
+      <span
+        ref={this.registerTitleRef}
         className="giu-select-custom"
         onMouseDown={this.onMouseDownTitle}
         style={style.title(this.props)}
@@ -209,11 +215,14 @@ class SelectCustomBase extends React.Component {
     const {
       inlinePicker,
       registerOuterRef,
-      curValue, onChange,
-      disabled, fFocused,
+      curValue,
+      onChange,
+      disabled,
+      fFocused,
       lang,
       style: styleList,
-      twoStageStyle, accentColor,
+      twoStageStyle,
+      accentColor,
     } = this.props;
     return (
       <ListPicker
@@ -237,28 +246,29 @@ class SelectCustomBase extends React.Component {
   // ==========================================
   // Event handlers
   // ==========================================
-  registerTitleRef = (c) => {
+  registerTitleRef = c => {
     this.refTitle = c;
     this.props.registerOuterRef(c);
-  }
+  };
 
   // If the menu is not focused, ignore it: it will be handled by the `input` HOC.
   // ...but if it is focused, we want to toggle it
   onMouseDownTitle = () => {
     if (!this.props.fFocused) return;
     this.setState({ fFloat: !this.state.fFloat });
-  }
+  };
 
-  onClickItem = (ev, nextValue) => {
-    const { inlinePicker } = this.props;
+  onClickItem = (ev: ?SyntheticEvent, nextValue: string) => {
+    const { inlinePicker, onClickItem } = this.props;
     if (!inlinePicker) this.setState({ fFloat: false });
-    this.props.onClickItem && this.props.onClickItem(ev, toExternalValue(nextValue));
-  }
+    onClickItem && onClickItem(ev, toExternalValue(nextValue));
+  };
 
   // ==========================================
   // Helpers
   // ==========================================
   processKeyDown(keyDown) {
+    if (keyDown == null) return;
     if (keyDown.which === KEYS.esc && !this.props.inlinePicker) {
       this.setState({ fFloat: !this.state.fFloat });
       this.keyDown = undefined;
@@ -276,7 +286,7 @@ class SelectCustomBase extends React.Component {
         shortcuts: [],
       });
     }
-    rawItems.forEach((item) => {
+    rawItems.forEach(item => {
       const { value } = item;
       if (value === LIST_SEPARATOR_KEY) {
         this.items.push({
@@ -288,24 +298,30 @@ class SelectCustomBase extends React.Component {
       }
       let keys = item.keys || [];
       if (!Array.isArray(keys)) keys = [keys];
-      this.items.push(merge(item, {
+      const newItem: any = merge(item, {
         value: toInternalValue(value),
         shortcuts: keys.map(createShortcut),
-      }));
+      });
+      this.items.push(newItem);
     });
   }
 
   registerShortcuts() {
-    this.items.forEach((item) => item.shortcuts.forEach((shortcut) => {
-      registerShortcut(shortcut, (ev) => {
-        this.props.onChange(ev, item.value);
-        this.onClickItem(ev, item.value);
+    this.items.forEach(item => {
+      if (!item.shortcuts) return;
+      item.shortcuts.forEach(shortcut => {
+        registerShortcut(shortcut, ev => {
+          this.props.onChange(ev, item.value);
+          this.onClickItem(ev, item.value);
+        });
       });
-    }));
+    });
   }
 
   unregisterShortcuts() {
-    this.items.forEach((item) => item.shortcuts.forEach(unregisterShortcut));
+    this.items.forEach(item => {
+      if (item.shortcuts) item.shortcuts.forEach(unregisterShortcut);
+    });
   }
 }
 
@@ -313,13 +329,16 @@ class SelectCustomBase extends React.Component {
 // Styles
 // ==========================================
 const style = {
-  titleBase: flexContainer('row', inputReset({
-    display: 'inline-flex',
-    padding: '1px 2px',
-    minWidth: 40,
-    cursor: 'pointer',
-    position: 'relative',
-  })),
+  titleBase: flexContainer(
+    'row',
+    inputReset({
+      display: 'inline-flex',
+      padding: '1px 2px',
+      minWidth: 40,
+      cursor: 'pointer',
+      position: 'relative',
+    })
+  ),
   title: ({ disabled, fFocused, styleTitle }) => {
     let out = style.titleBase;
     if (disabled) out = merge(out, INPUT_DISABLED);
@@ -351,19 +370,22 @@ const style = {
 // Public API
 // ==========================================
 const SelectCustom = input(SelectCustomBase, {
-  toInternalValue, toExternalValue, isNull,
+  toInternalValue,
+  toExternalValue,
+  isNull,
   fIncludeFocusCapture: true,
   trappedKeys: [
     KEYS.esc,
     // For ListPicker
-    KEYS.down, KEYS.up,
-    KEYS.home, KEYS.end,
-    KEYS.return, KEYS.del, KEYS.backspace,
+    KEYS.down,
+    KEYS.up,
+    KEYS.home,
+    KEYS.end,
+    KEYS.return,
+    KEYS.del,
+    KEYS.backspace,
   ],
   className: 'giu-select-custom',
 });
 
-export {
-  SelectCustom,
-  LIST_SEPARATOR,
-};
+export { SelectCustom, LIST_SEPARATOR };

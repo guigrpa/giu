@@ -14,7 +14,6 @@ let cntId = 0;
 // Types
 // ==========================================
 // -- Props:
-/* eslint-disable no-unused-vars */
 // -- START_DOCS
 type PublicProps = {
   id?: string,
@@ -24,7 +23,6 @@ type PublicProps = {
   // all others are passed through to the `input` unchanged
 };
 // -- END_DOCS
-/* eslint-enable no-unused-vars */
 
 const FILTERED_OUT_PROPS = [
   'id',
@@ -35,7 +33,7 @@ const FILTERED_OUT_PROPS = [
 ];
 
 type Props = {
-  /* :: ...$Exact<PublicProps>, */
+  ...$Exact<PublicProps>,
   // Input HOC
   curValue: boolean,
   registerOuterRef: Function,

@@ -27,13 +27,12 @@ function getTimeInSecs(mom: Moment): number {
 
 // Date formatting
 const dateFormat = (): string => moment.localeData().longDateFormat('L');
-const timeFormat = (
-  fSeconds: boolean,
-): string => `HH:mm${fSeconds ? ':ss' : ''}`;
+const timeFormat = (fSeconds: boolean): string =>
+  `HH:mm${fSeconds ? ':ss' : ''}`;
 function dateTimeFormat(
   fDate: boolean,
   fTime: boolean,
-  fSeconds: boolean,
+  fSeconds: boolean
 ): string {
   if (!fTime) return dateFormat();
   if (!fDate) return timeFormat(fSeconds);

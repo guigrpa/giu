@@ -58,8 +58,8 @@ type DefaultProps = {|
 |};
 
 type Props = {
-  /* :: ...ModalPars, */
-  /* :: ...DefaultProps, */
+  ...ModalPars,
+  ...DefaultProps,
 };
 
 class Modal extends React.PureComponent {
@@ -159,9 +159,11 @@ class Modal extends React.PureComponent {
         colored
         disabled={btn.disabled}
         primary={theme === 'mdl' && btn.defaultButton ? true : undefined}
-        plain={btn.plain != null
-          ? btn.plain
-          : (theme === 'mdl' && !btn.defaultButton ? true : undefined)}
+        plain={
+          btn.plain != null
+            ? btn.plain
+            : theme === 'mdl' && !btn.defaultButton ? true : undefined
+        }
         accent={btn.accent}
       >
         {btn.label}
@@ -255,7 +257,7 @@ const style = {
         marginLeft: left ? undefined : 5,
         border: !theme && defaultButton ? '1px solid black' : undefined,
       },
-      baseStyle,
+      baseStyle
     ),
 };
 

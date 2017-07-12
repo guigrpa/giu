@@ -1,12 +1,13 @@
-import React                from 'react';
-import {
-  merge,
-  set as timmSet,
-}                           from 'timm';
-import { cancelEvent }      from '../gral/helpers';
-import { startOfToday }     from '../gral/dates';
-import { COLORS, KEYS }     from '../gral/constants';
-import hoverable            from '../hocs/hoverable';
+// @flow
+
+import React from 'react';
+import { merge, set as timmSet } from 'timm';
+import { cancelEvent } from '../gral/helpers';
+import { startOfToday } from '../gral/dates';
+import { COLORS, KEYS } from '../gral/constants';
+import type { Moment, KeyboardEventPars } from '../gral/types';
+import type { HoverableProps } from '../hocs/hoverable';
+import hoverable from '../hocs/hoverable';
 
 const PI = Math.PI;
 const PI2 = Math.PI * 2;
@@ -14,13 +15,15 @@ const cos = Math.cos;
 const sin = Math.sin;
 const atan2 = Math.atan2;
 const round = Math.round;
-const sign = Math.sign || ((o) => {
-  if (o > 0) return 1;
-  if (o < 0) return -1;
-  return 0;
-});
+const sign =
+  Math.sign ||
+  (o => {
+    if (o > 0) return 1;
+    if (o < 0) return -1;
+    return 0;
+  });
 const DEFAULT_SIZE = 120;
-const UP_DOWN_STEP = 5;       // [min]
+const UP_DOWN_STEP = 5; // [min]
 const HAND_NAMES = ['seconds', 'minutes', 'hours'];
 const positiveRemainder = (val, q) => (val + q) % q;
 const correctLeaps = (prevVal, nextVal, steps) => {
@@ -32,29 +35,56 @@ const correctLeaps = (prevVal, nextVal, steps) => {
 };
 
 // ==========================================
+// Types
+// ==========================================
+type PublicProps = {|
+  disabled: boolean,
+  curValue: ?Moment,
+  onChange: Function,
+  seconds?: boolean,
+  utc: boolean,
+  keyDown: ?KeyboardEventPars,
+  stepMinutes?: number,
+  accentColor: string,
+  size?: number,
+|};
+
+type DefaultProps = {
+  size: number,
+};
+
+type Props = {
+  ...PublicProps,
+  ...$Exact<DefaultProps>,
+  ...$Exact<HoverableProps>,
+};
+
+type Unit = 'hours' | 'minutes' | 'seconds';
+
+// ==========================================
 // Component
 // ==========================================
 class TimePickerAnalog extends React.PureComponent {
-  static propTypes = {
-    disabled:               React.PropTypes.bool.isRequired,
-    curValue:               React.PropTypes.object,  // moment object, not start of day
-    onChange:               React.PropTypes.func.isRequired,
-    seconds:                React.PropTypes.bool,
-    utc:                    React.PropTypes.bool.isRequired,
-    keyDown:                React.PropTypes.object,
-    accentColor:            React.PropTypes.string.isRequired,
-    size:                   React.PropTypes.number,
-    // Hoverable HOC
-    hovering:               React.PropTypes.any,
-    onHoverStart:           React.PropTypes.func.isRequired,
-    onHoverStop:            React.PropTypes.func.isRequired,
+  props: Props;
+  static defaultProps: DefaultProps = {
+    size: DEFAULT_SIZE,
   };
-  static defaultProps = {
-    size:                   DEFAULT_SIZE,
+  state: {
+    dragging: ?boolean,
+    hint: ?{ hours: number, minutes: number, seconds: number },
   };
+  hours: ?number;
+  minutes: ?number;
+  seconds: ?number;
+  radius: number;
+  translate: number;
+  dragUnits: Unit;
+  dragDeltaPhi: number;
+  dragSteps: number;
+  refSvg: ?Object;
 
-  constructor(props) {
-    super(props);
+  constructor() {
+    super();
     this.state = {
       dragging: null,
       hint: null,
@@ -89,7 +119,10 @@ class TimePickerAnalog extends React.PureComponent {
     this.translate = size / 2;
     return (
       <div className="giu-time-picker-analog" style={style.outer}>
-        <svg ref={(c) => { this.refSvg = c; }}
+        <svg
+          ref={c => {
+            this.refSvg = c;
+          }}
           onClick={this.onClickBackground}
           onMouseMove={this.onMouseMoveBackground}
           onMouseLeave={this.onMouseLeaveBackground}
@@ -112,7 +145,9 @@ class TimePickerAnalog extends React.PureComponent {
     let idx = 0;
     let phi = 0;
     while (phi < PI2) {
-      const props = { x1: r * cos(phi), y1: r * sin(phi) };
+      const props = {};
+      props.x1 = r * cos(phi);
+      props.y1 = r * sin(phi);
       let factor;
       if (idx % 5) {
         props.style = style.tickMinor;
@@ -131,13 +166,10 @@ class TimePickerAnalog extends React.PureComponent {
   }
 
   renderHands() {
-    const {
-      curValue, seconds,
-      hovering,
-    } = this.props;
+    const { curValue, seconds, hovering } = this.props;
     const { dragging } = this.state;
     const hands = [];
-    HAND_NAMES.forEach((name) => {
+    HAND_NAMES.forEach(name => {
       if (name === 'seconds' && !seconds) return;
       if (curValue) {
         const fHovered = hovering === name && !dragging;
@@ -154,7 +186,7 @@ class TimePickerAnalog extends React.PureComponent {
   }
 
   renderHand(name, val, fHovered, fDragged, fDragHandle, fHint) {
-    const phi = PI2 * val - (PI / 2);
+    const phi = PI2 * val - PI / 2;
     const r = name === 'hours' ? 0.6 * this.radius : 0.83 * this.radius;
     const props = {
       id: name,
@@ -166,7 +198,8 @@ class TimePickerAnalog extends React.PureComponent {
     let out;
     if (!fDragHandle) {
       out = (
-        <line key={`hand-${name}`}
+        <line
+          key={`hand-${name}`}
           {...props}
           style={style.hand(name, fHovered, fDragged, fHint, this.props)}
         />
@@ -175,7 +208,8 @@ class TimePickerAnalog extends React.PureComponent {
       // Wider targets for dragging
       const { onHoverStart, onHoverStop } = this.props;
       out = (
-        <line key={`hand-transparent-${name}`}
+        <line
+          key={`hand-transparent-${name}`}
           id={name}
           {...props}
           style={style.transparentHand(this.props)}
@@ -190,21 +224,14 @@ class TimePickerAnalog extends React.PureComponent {
 
   renderCenter() {
     return (
-      <circle
-        cx={0} cy={0}
-        r={this.radius * 0.06}
-        style={style.centerCircle}
-      />
+      <circle cx={0} cy={0} r={this.radius * 0.06} style={style.centerCircle} />
     );
   }
 
   renderAmPm() {
     if (this.hours == null) return null;
     return (
-      <div
-        onClick={this.onClickAmPm}
-        style={style.amPm(this.props)}
-      >
+      <div onClick={this.onClickAmPm} style={style.amPm(this.props)}>
         {this.hours >= 12 ? 'PM' : 'AM'}
       </div>
     );
@@ -216,77 +243,79 @@ class TimePickerAnalog extends React.PureComponent {
   onMouseLeaveBackground = () => {
     if (!this.state.hint) return;
     this.setState({ hint: null });
-  }
+  };
 
-  onMouseMoveBackground = (ev) => {
+  onMouseMoveBackground = ev => {
     if (this.props.curValue) return;
     const phi = this.getPhiFromMousePosition(ev);
     if (phi == null) return;
-    const hours = positiveRemainder(
-      round((phi + PI / 2) / (PI2 / 12)),
-      12);
+    const hours = positiveRemainder(round((phi + PI / 2) / (PI2 / 12)), 12);
     this.setState({
       hint: { hours, minutes: 0, seconds: 0 },
     });
-  }
+  };
 
-  onClickBackground = (ev) => {
+  onClickBackground = ev => {
     if (this.props.disabled || this.hours != null) return;
     const phi = this.getPhiFromMousePosition(ev);
     if (phi == null) return;
-    let hours = positiveRemainder(
-      round((phi + PI / 2) / (PI2 / 12)),
-      12);
+    let hours = positiveRemainder(round((phi + PI / 2) / (PI2 / 12)), 12);
     // Assume the user wants hours >= 7 by default
     if (hours < 7) hours += 12;
     this.hours = 0;
     this.minutes = 0;
     this.seconds = 0;
     this.setUnits(ev, hours, 'hours');
-  }
+  };
 
-  onMouseDownHand = (ev) => {
+  onMouseDownHand = ev => {
     cancelEvent(ev);
     if (this.props.disabled) return;
-    const name = ev.target.id;
+    const name: any = ev.target.id;
     this.setState({ dragging: name });
     this.dragUnits = name;
     this.dragSteps = name === 'hours' ? 12 : 60;
-    this.dragDeltaPhi = (this.getUnits(name) % 1) * PI2 / this.dragSteps;
+    this.dragDeltaPhi = this.getUnits(name) % 1 * PI2 / this.dragSteps;
     window.addEventListener('mousemove', this.onMouseMoveHand);
     window.addEventListener('mouseup', this.onMouseUpHand);
-  }
+  };
 
-  onMouseMoveHand = (ev) => {
+  onMouseMoveHand = ev => {
     cancelEvent(ev);
     const { dragUnits, dragDeltaPhi, dragSteps } = this;
     const phi = this.getPhiFromMousePosition(ev) - dragDeltaPhi;
     if (phi == null) return;
     let val = positiveRemainder(
       round((phi + PI / 2) / (PI2 / dragSteps)),
-      dragSteps);
-    const curVal = this[dragUnits];
+      dragSteps
+    );
+    const curVal = (this: any)[dragUnits];
     val = correctLeaps(curVal, val, dragSteps);
     if (val !== curVal) this.setUnits(ev, val, dragUnits);
-  }
+  };
 
-  onMouseUpHand = (ev) => {
+  onMouseUpHand = ev => {
     cancelEvent(ev);
     window.removeEventListener('mousemove', this.onMouseMoveHand);
     window.removeEventListener('mouseup', this.onMouseUpHand);
     this.setState({ dragging: null });
-  }
+  };
 
-  onClickAmPm = (ev) => {
+  onClickAmPm = ev => {
+    if (this.hours == null) return;
     const nextHours = this.hours >= 12 ? this.hours - 12 : this.hours + 12;
     this.setUnits(ev, nextHours, 'hours');
-  }
+  };
 
   doKeyDown({ which, shiftKey, ctrlKey, altKey, metaKey }) {
     if (shiftKey || ctrlKey || altKey || metaKey) return;
     switch (which) {
-      case KEYS.pageDown: this.changeTimeByMins(+60);           break;
-      case KEYS.pageUp:   this.changeTimeByMins(-60);           break;
+      case KEYS.pageDown:
+        this.changeTimeByMins(+60);
+        break;
+      case KEYS.pageUp:
+        this.changeTimeByMins(-60);
+        break;
       case KEYS.down:
       case KEYS.right:
         this.changeTimeByMins(+UP_DOWN_STEP);
@@ -299,7 +328,8 @@ class TimePickerAnalog extends React.PureComponent {
       case KEYS.backspace:
         this.props.onChange(null, null);
         break;
-      default: break;
+      default:
+        break;
     }
   }
 
@@ -322,20 +352,21 @@ class TimePickerAnalog extends React.PureComponent {
 
   getUnits(units, { fHint } = {}) {
     let out;
-    const base = fHint ? this.state.hint : this;
+    const base: any = fHint ? this.state.hint : this;
     switch (units) {
       case 'hours':
         out = base.hours + base.minutes / 60 + base.seconds / 3600;
         out = positiveRemainder(out, 12);
         break;
-      case 'minutes' :
+      case 'minutes':
         out = base.minutes + base.seconds / 60;
         out = positiveRemainder(out, 60);
         break;
-      case 'seconds' :
+      case 'seconds':
         out = positiveRemainder(base.seconds, 60);
         break;
       default:
+        out = 0;
         break;
     }
     return out;
@@ -350,10 +381,10 @@ class TimePickerAnalog extends React.PureComponent {
 
   getPhiFromMousePosition(ev) {
     const refSvg = this.refSvg;
-    if (!refSvg) return null;
+    if (!refSvg) return 0;
     const bcr = refSvg.getBoundingClientRect();
     const x = ev.clientX - bcr.left - refSvg.clientLeft - this.translate;
-    const y = ev.clientY - bcr.top  - refSvg.clientTop  - this.translate;
+    const y = ev.clientY - bcr.top - refSvg.clientTop - this.translate;
     let phi = atan2(y, x);
     if (phi < 0) phi += PI2;
     return phi;
@@ -365,8 +396,8 @@ class TimePickerAnalog extends React.PureComponent {
 // ==========================================
 /* eslint-disable react/no-multi-comp */
 class WatchFace extends React.PureComponent {
-  static propTypes = {
-    radius:                 React.PropTypes.number.isRequired,
+  props: {
+    radius: number,
   };
 
   render() {
@@ -375,7 +406,9 @@ class WatchFace extends React.PureComponent {
     let idx = 0;
     let phi = 0;
     while (phi < PI2) {
-      const props = { x1: r * cos(phi), y1: r * sin(phi) };
+      const props = {};
+      props.x1 = r * cos(phi);
+      props.y1 = r * sin(phi);
       let factor;
       if (idx % 5) {
         props.style = style.tickMinor;
@@ -394,7 +427,6 @@ class WatchFace extends React.PureComponent {
   }
 }
 
-
 // ==========================================
 // Styles
 // ==========================================
@@ -409,7 +441,7 @@ const style = {
     marginBottom: -3,
     border: 'none',
   },
-  svg: (size) => ({
+  svg: size => ({
     width: size,
     height: size,
   }),

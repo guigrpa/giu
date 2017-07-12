@@ -1,16 +1,16 @@
+// @flow
+
 import React from 'react';
 import { merge, set as timmSet } from 'timm';
-import isFunction from 'lodash/isFunction';
 import { preventDefault } from '../gral/helpers';
 import { NULL_STRING } from '../gral/constants';
 import { LIST_SEPARATOR_KEY } from '../inputs/listPicker';
 import { GLOW } from '../gral/styles';
 import input from '../hocs/input';
 
-function toInternalValue(val) {
-  return val != null ? JSON.stringify(val) : NULL_STRING;
-}
-function toExternalValue(val) {
+const toInternalValue = val =>
+  val != null ? JSON.stringify(val) : NULL_STRING;
+const toExternalValue = val => {
   if (val === NULL_STRING) return null;
   try {
     return JSON.parse(val);
@@ -19,38 +19,50 @@ function toExternalValue(val) {
     console.warn('RadioGroup: error parsing JSON', val);
     return null;
   }
-}
-function isNull(val) {
-  return val === NULL_STRING;
-}
+};
+const isNull = val => val === NULL_STRING;
 
 let cntId = 0;
 
 // ==========================================
-// Component
+// Types
 // ==========================================
 // -- Props:
-// --
-// -- * **items** *array(object)*: each item has the following attributes
-// --   - **value** *any*: any value that can be converted to JSON. Values should be unique
-// --   - **label** *any?*: React elements that will be shown as a label for
-// --     the corresponding radio button
-// --   - **labelExtra** *any?*: React elements that will be shown below the main label
-// -- * **lang** *string?*: current language (NB: just used to make sure the component is refreshed)
-class RadioGroup extends React.Component {
-  static propTypes = {
-    disabled: React.PropTypes.bool,
-    items: React.PropTypes.array.isRequired,
-    lang: React.PropTypes.string,
-    // Input HOC
-    curValue: React.PropTypes.string.isRequired,
-    onChange: React.PropTypes.func.isRequired,
-    registerOuterRef: React.PropTypes.func.isRequired,
-    fFocused: React.PropTypes.bool.isRequired,
-  };
+// -- START_DOCS
+type PublicProps = {
+  items: Array<RadioChoice>,
+  lang?: string, // current language (used just for force-render)
+  disabled?: boolean,
+};
 
-  constructor(props) {
-    super(props);
+type RadioChoice = {
+  value: any, // any value that can be converted to JSON. Values should be unique
+  // React elements that will be shown as a label for the corresponding radio button
+  label?: any | ((lang: ?string) => any),
+  labelExtra?: any, // React elements that will be shown below the main label
+};
+// -- END_DOCS
+
+type Props = {
+  ...$Exact<PublicProps>,
+  // Input HOC
+  curValue: string,
+  onChange: Function,
+  registerOuterRef: Function,
+  fFocused: boolean,
+};
+
+// ==========================================
+// Component
+// ==========================================
+class RadioGroup extends React.Component {
+  static defaultProps = {};
+  props: Props;
+  items: Array<RadioChoice>;
+  buttonGroupName: string;
+
+  constructor() {
+    super();
     this.buttonGroupName = `giu-radio-group_${cntId}`;
     cntId += 1;
   }
@@ -58,7 +70,7 @@ class RadioGroup extends React.Component {
   componentWillMount() {
     this.prepareItems(this.props.items);
   }
-  componentWillReceiveProps(nextProps) {
+  componentWillReceiveProps(nextProps: Props) {
     const { items } = nextProps;
     if (items !== this.props.items) this.prepareItems(items);
   }
@@ -77,7 +89,9 @@ class RadioGroup extends React.Component {
     const { curValue } = this.props;
     const { value, label, labelExtra } = item;
     const id = `${this.buttonGroupName}_${idx}`;
-    const finalLabel = isFunction(label) ? label(this.props.lang) : label;
+    const finalLabel = label && typeof label === 'function'
+      ? label(this.props.lang)
+      : label;
     return (
       <div key={value} id={idx} onClick={this.onClickItem}>
         <input

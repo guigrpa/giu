@@ -27,7 +27,6 @@ let cntId = 0;
 // Types
 // ==========================================
 // -- Props:
-/* eslint-disable no-unused-vars */
 // -- START_DOCS
 type PublicProps = {
   style?: Object,
@@ -35,10 +34,9 @@ type PublicProps = {
   // all others are passed through unchanged
 };
 // -- END_DOCS
-/* eslint-enable no-unused-vars */
 
 type Props = {
-  /* :: ...$Exact<PublicProps>, */
+  ...$Exact<PublicProps>,
   // Input HOC
   curValue: string,
   disabled?: boolean,
@@ -68,7 +66,7 @@ class Textarea extends React.Component {
 
   constructor(props: Props) {
     super(props);
-    this.labelId = this.props.id || `giu-textarea_${cntId}`;
+    this.labelId = props.id || `giu-textarea_${cntId}`;
     cntId += 1;
   }
 

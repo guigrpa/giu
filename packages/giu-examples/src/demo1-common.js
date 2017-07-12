@@ -1,3 +1,5 @@
+// @flow
+
 /* eslint-disable no-console, no-alert, max-len */
 /* eslint-disable react/prop-types, react/no-multi-comp, react/jsx-no-bind, react/jsx-boolean-value */
 /* eslint-disable react/prefer-stateless-function */
@@ -5,9 +7,10 @@ import React from 'react';
 import faker from 'faker';
 import { LIST_SEPARATOR } from 'giu';
 
-const ExampleLabel = ({ children }) => (
-  <div style={style.label}>{children}</div>
-);
+const ExampleLabel = ({ children }: Object) =>
+  <div style={style.label}>
+    {children}
+  </div>;
 
 const style = {
   label: {
@@ -27,7 +30,7 @@ const exampleStyle = {
 
 let lang = 'en';
 const getLang = () => lang;
-const setLang = newLang => {
+const setLang = (newLang: string) => {
   lang = newLang;
 };
 
@@ -71,8 +74,9 @@ const WIDE_OPTIONS = [
 
 const LONG_TEXT = faker.lorem.sentences(7).split('\n').join(' ');
 
-const onChange = (ev, o) => console.log(o);
-const onChangeJson = (ev, o) => console.log(JSON.stringify(o));
+const onChange = (ev: ?SyntheticEvent, o: any): any => console.log(o);
+const onChangeJson = (ev: ?SyntheticEvent, o: any): any =>
+  console.log(JSON.stringify(o));
 
 export {
   ExampleLabel,

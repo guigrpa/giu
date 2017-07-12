@@ -11,11 +11,10 @@ type Props = {
   floatZ?: number,
 };
 
-const IosFloatWrapper = (props: Props) => (
+const IosFloatWrapper = (props: Props) =>
   <div style={style.outer(props)}>
     {props.children}
-  </div>
-);
+  </div>;
 
 const style = {
   outer: ({ floatPosition, floatAlign, floatZ }) => ({
