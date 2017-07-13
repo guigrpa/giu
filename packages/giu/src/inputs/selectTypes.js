@@ -54,6 +54,7 @@ You can also include a separator between `items` by including the special
 
 ```js
 import { Select, LIST_SEPARATOR } from 'giu';
+
 <Select required items={[
   { value: 'apples', label: 'Apples', keys: 'alt+a' },
   { value: 'cherries', label: 'Cherries', keys: ['alt+h', 'alt+e'] },
