@@ -8,7 +8,7 @@ import { COLORS } from '../gral/constants';
 // ==========================================
 // Component
 // ==========================================
-// -- An inconspicuous-looking button-in-a-`span`.
+// -- An inconspicuous-looking button-in-a-`span`. Props:
 // --
 // -- START_DOCS
 type Props = {

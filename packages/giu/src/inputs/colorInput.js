@@ -26,7 +26,7 @@ const SWATCH_HEIGHT = 10;
 // -- START_DOCS
 type PublicProps = {
   disabled?: boolean,
-  // whether the complete color picker should be inlined or appear as a dropdown when clicked
+  // Whether the complete color picker should be inlined or appear as a dropdown when clicked
   inlinePicker?: boolean,
   onCloseFloat?: () => any,
   floatPosition?: FloatPosition,

@@ -6,7 +6,7 @@ Online demos: [an extremely compact one](http://guigrpa.github.io/giu/demo1.html
 
 [[[demo:intro]]]
 
-## Why?
+## Why? :sparkles:
 
 - Improvements over native HTML inputs: (optional) [state delegation](#inputs), [comprehensive validation](#input-validation), [native JS types and nullability](#input-value-types).
 - Support for **Server-Side Rendering**.
@@ -379,6 +379,8 @@ certain part of your application or performs an action for the first time.
 
 [[[./packages/giu/src/components/hints.js]]]
 
+**`HintScreenPars`, `HintLabelPars` and `HintArrowPars` definitions:**
+
 [[[./packages/giu/src/components/hintScreen.js]]]
 
 [[[./packages/giu/src/components/hintLabel.js]]]
@@ -457,11 +459,10 @@ You can find here a wide variety of helper functions, from the very simple (`can
 
 [[[./packages/giu/src/gral/constants.js]]]
 
+## [Changelog](https://github.com/guigrpa/giu/blob/master/CHANGELOG.md) :scroll:
 
-## [Changelog](https://github.com/guigrpa/giu/blob/master/CHANGELOG.md)
 
-
-## License (MIT)
+## License (MIT) :books:
 
 Copyright (c) [Guillermo Grau Panea](https://github.com/guigrpa) 2016-present
 

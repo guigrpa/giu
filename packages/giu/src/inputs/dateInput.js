@@ -86,15 +86,13 @@ let cntId = 0;
 // ==========================================
 // DateInput
 // ==========================================
-// ------------------------------------------
+//------------------------------------------
 // Types
-// ------------------------------------------
+//------------------------------------------
 // -- Props:
 // -- START_DOCS
 type PublicProps = {
-  // Picker type: `native` | `onlyField` | `inlinePicker` | `dropDownPicker`
-  // (default: dropDownPicker)
-  type?: PickerType,
+  type?: PickerType, // see below (default: 'dropDownPicker')
   // Whether Giu should check for iOS in order to simplify certain components
   // (e.g. do not use analogue time picker) -- default: true
   checkIos?: boolean,
@@ -122,6 +120,8 @@ type PublicProps = {
   accentColor?: string, // CSS color descriptor (e.g. `darkgray`, `#ccffaa`...)
   // all others are passed through to the `input` unchanged
 };
+
+type PickerType = 'native' | 'onlyField' | 'inlinePicker' | 'dropDownPicker';
 // -- END_DOCS
 
 const DEFAULT_PROPS = {
@@ -162,8 +162,6 @@ type Props = {
   onPaste: Function,
 };
 
-type PickerType = 'native' | 'onlyField' | 'inlinePicker' | 'dropDownPicker';
-
 const FILTERED_OUT_PROPS = [
   'type',
   'disabled',
@@ -188,9 +186,9 @@ const FILTERED_OUT_PROPS = [
 
 const FILTERED_OUT_PROPS_MDL = FILTERED_OUT_PROPS.concat(['placeholder']);
 
-// ------------------------------------------
+//------------------------------------------
 // Component
-// ------------------------------------------
+//------------------------------------------
 class BaseDateInput extends React.Component {
   props: Props;
   static defaultProps = {};

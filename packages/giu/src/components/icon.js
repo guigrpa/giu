@@ -12,7 +12,7 @@ const SPINNER_ICON = 'circle-o-notch';
 // ==========================================
 // Component
 // ==========================================
-// -- A wrapper for Font Awesome icons.
+// -- A wrapper for Font Awesome icons. Props:
 // --
 // -- START_DOCS
 type Props = {

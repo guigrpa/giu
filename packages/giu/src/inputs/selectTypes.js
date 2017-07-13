@@ -8,7 +8,7 @@ import type { Choice } from '../gral/types';
 export type SelectProps = {
   // Both SelectCustom and SelectNative
   // ----------------------------------
-  type: SelectPickerType, // default: 'native'
+  type: SelectPickerType, // see below (default: 'native')
   // Items with the following attributes:
   // - **value** *any*: any value that can be converted to JSON. Values should be unique
   // - **label** *string*: descriptive string that will be shown to the user
@@ -48,16 +48,18 @@ export type SelectProps = {
 export type SelectPickerType = 'native' | 'inlinePicker' | 'dropDownPicker';
 // -- END_DOCS
 
-// -- You can also include a separator between `items` by including the special
-// -- `LIST_SEPARATOR` item (**only in non-native Selects**):
-// --
-// -- ```js
-// -- import { Select, LIST_SEPARATOR } from 'giu';
-// -- <Select required items={[
-// --   { value: 'apples', label: 'Apples', keys: 'alt+a' },
-// --   { value: 'cherries', label: 'Cherries', keys: ['alt+h', 'alt+e'] },
-// --   LIST_SEPARATOR,
-// --   { value: 'peaches', label: 'Peaches', keys: 'alt+p' },
-// --   { value: 'blueberries', label: 'Blueberries', keys: 'alt+b' },
-// -- ]} />
-// -- ```
+/* --
+You can also include a separator between `items` by including the special
+`LIST_SEPARATOR` item (**only in non-native Selects**):
+
+```js
+import { Select, LIST_SEPARATOR } from 'giu';
+<Select required items={[
+  { value: 'apples', label: 'Apples', keys: 'alt+a' },
+  { value: 'cherries', label: 'Cherries', keys: ['alt+h', 'alt+e'] },
+  LIST_SEPARATOR,
+  { value: 'peaches', label: 'Peaches', keys: 'alt+p' },
+  { value: 'blueberries', label: 'Blueberries', keys: 'alt+b' },
+]} />
+```
+-- */
