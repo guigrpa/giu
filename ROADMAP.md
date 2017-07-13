@@ -5,13 +5,8 @@
     - [ ] Copy docs from giu-examples to the docs folder for publishing
 - [ ] Expose `delay()`, `waitUntil()` and `isWaiting()` (`gral/wait`) helpers again, using `babel-runtime` and `babel-plugin-transform-runtime`.
 
-- [ ] Add Roboto (in mdl theme) to dropdownmenus, colorpickers, datepickers, listpickers???
-- [ ] How will the user override MDL colors?
-
 - FLOW conversion:
     - [ ] Add support for Hoverable HOC on functional components
-    - [ ] Add types to input HOC and derived components
-    - Check status of https://github.com/facebook/flow/issues/2372 (incorrect handling of `undefined` for required React props) -- and also related: https://github.com/facebook/flow/issues/2781
 - [ ] Jest snapshots
 
 - [ ] *Bug* ListPicker on Windows incorrectly aligns (vertically) items and shortcuts (it *is* correct in the main doc page)

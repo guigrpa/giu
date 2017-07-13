@@ -61,6 +61,7 @@ const FILTERED_OUT_PROPS = [
   'disabled',
   'skipTheme',
   'vertical',
+  'required',
   ...INPUT_HOC_INVALID_HTML_PROPS,
 ];
 

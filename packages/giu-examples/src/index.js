@@ -97,9 +97,7 @@ const LONG_TEXT = `Lorem ipsum dolor sit amet, consectetur adipiscing elit. Proi
 // Main
 // -----------------------------------------------
 class App extends React.Component {
-  static propTypes = {
-    md: React.PropTypes.string,
-  };
+  props: { md?: string };
 
   constructor(props) {
     super(props);

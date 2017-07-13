@@ -49,6 +49,7 @@ type Props = {
 const FILTERED_OUT_PROPS = [
   'style',
   'skipTheme',
+  'required',
   ...INPUT_HOC_INVALID_HTML_PROPS,
 ];
 const FILTERED_OUT_PROPS_MDL = [...FILTERED_OUT_PROPS, 'placeholder'];
