@@ -1,6 +1,7 @@
 // @flow
 
 import React from 'react';
+import PropTypes from 'prop-types';
 import { omit, merge } from 'timm';
 import filesize from 'filesize';
 import { GLOW, HIDDEN_FOCUS_CAPTURE } from '../gral/styles';
@@ -137,7 +138,7 @@ class FileInput extends React.Component {
   };
 }
 
-FileInput.contextTypes = { theme: React.PropTypes.any };
+FileInput.contextTypes = { theme: PropTypes.any };
 
 // ==========================================
 const style = {

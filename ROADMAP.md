@@ -6,6 +6,7 @@
 
 - [ ] Jest snapshots
 
+- [ ] Add copy&paste to RangePicker
 - [ ] *Bug* ListPicker on Windows incorrectly aligns (vertically) items and shortcuts (it *is* correct in the main doc page)
 - [ ] Stop scrollers (in ListPickers and DataTables) from scrolling the window! (seems to happen only on Chrome Mac)
 - [ ] Safari Mac: DataTables don't scroll smoothly

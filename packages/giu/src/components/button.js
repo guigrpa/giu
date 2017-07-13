@@ -1,6 +1,7 @@
 // @flow
 
 import React from 'react';
+import PropTypes from 'prop-types';
 import { omit, merge } from 'timm';
 import { COLORS } from '../gral/constants';
 
@@ -105,7 +106,7 @@ class Button extends React.PureComponent {
   }
 }
 
-Button.contextTypes = { theme: React.PropTypes.any };
+Button.contextTypes = { theme: PropTypes.any };
 
 // ==========================================
 // Styles

@@ -1,6 +1,7 @@
 // @flow
 
 import React from 'react';
+import PropTypes from 'prop-types';
 import { omit, merge, set as timmSet } from 'timm';
 import { inputReset, INPUT_DISABLED } from '../gral/styles';
 import { isNumber } from '../gral/validators';
@@ -170,7 +171,7 @@ function createClass(name, inputType) {
     }
   };
 
-  Klass.contextTypes = { theme: React.PropTypes.any };
+  Klass.contextTypes = { theme: PropTypes.any };
 
   return input(Klass, classOptions[inputType]);
 }

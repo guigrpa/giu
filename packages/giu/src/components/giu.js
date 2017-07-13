@@ -3,6 +3,7 @@
 /* eslint-disable global-require */
 
 import React from 'react';
+import PropTypes from 'prop-types';
 
 // ==========================================
 // Component
@@ -30,7 +31,7 @@ class Giu extends React.PureComponent {
 }
 
 Giu.childContextTypes = {
-  theme: React.PropTypes.any,
+  theme: PropTypes.any,
 };
 
 // ==========================================

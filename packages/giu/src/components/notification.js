@@ -1,6 +1,7 @@
 // @flow
 
 import React from 'react';
+import PropTypes from 'prop-types';
 import { merge } from 'timm';
 import {
   flexContainer,
@@ -61,7 +62,7 @@ class Notification extends React.PureComponent {
   }
 }
 
-Notification.contextTypes = { theme: React.PropTypes.any };
+Notification.contextTypes = { theme: PropTypes.any };
 
 // ==========================================
 // Styles

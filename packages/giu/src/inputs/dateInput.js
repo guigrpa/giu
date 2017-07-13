@@ -3,6 +3,7 @@
 /* eslint-disable react/no-multi-comp */
 
 import React from 'react';
+import PropTypes from 'prop-types';
 import { omit, merge, set as timmSet, addDefaults } from 'timm';
 import moment from '../vendor/moment';
 import { cancelEvent, stopPropagation } from '../gral/helpers';
@@ -530,7 +531,7 @@ class BaseDateInput extends React.Component {
   };
 }
 
-BaseDateInput.contextTypes = { theme: React.PropTypes.any };
+BaseDateInput.contextTypes = { theme: PropTypes.any };
 
 // ==========================================
 const style = {

@@ -4,6 +4,7 @@
 /* eslint-disable react/prop-types, react/no-multi-comp, react/jsx-no-bind, react/jsx-boolean-value */
 /* eslint-disable react/prefer-stateless-function */
 import React from 'react';
+import PropTypes from 'prop-types';
 import {
   Modal,
   modalPush,
@@ -186,6 +187,6 @@ class ModalExample extends React.Component {
   }
 }
 
-ModalExample.contextTypes = { theme: React.PropTypes.any };
+ModalExample.contextTypes = { theme: PropTypes.any };
 
 export default ModalExample;

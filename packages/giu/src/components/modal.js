@@ -1,6 +1,7 @@
 // @flow
 
 import React from 'react';
+import PropTypes from 'prop-types';
 import { merge } from 'timm';
 import { KEYS, MISC } from '../gral/constants';
 import { cancelEvent, cancelBodyScrolling } from '../gral/helpers';
@@ -213,7 +214,7 @@ class Modal extends React.PureComponent {
   };
 }
 
-Modal.contextTypes = { theme: React.PropTypes.any };
+Modal.contextTypes = { theme: PropTypes.any };
 
 // ==========================================
 // Styles

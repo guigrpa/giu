@@ -1,6 +1,7 @@
 // @flow
 
 import React from 'react';
+import PropTypes from 'prop-types';
 import { omit, merge } from 'timm';
 import { preventDefault, stopPropagation } from '../gral/helpers';
 import { KEYS } from '../gral/constants';
@@ -176,7 +177,7 @@ class Textarea extends React.Component {
   };
 }
 
-Textarea.contextTypes = { theme: React.PropTypes.any };
+Textarea.contextTypes = { theme: PropTypes.any };
 
 // ==========================================
 const style = {

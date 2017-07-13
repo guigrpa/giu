@@ -1,6 +1,7 @@
 // @flow
 
 import React from 'react';
+import PropTypes from 'prop-types';
 
 // ==========================================
 // Component
@@ -55,7 +56,7 @@ class Progress extends React.PureComponent {
   };
 }
 
-Progress.contextTypes = { theme: React.PropTypes.any };
+Progress.contextTypes = { theme: PropTypes.any };
 
 // ==========================================
 // Styles

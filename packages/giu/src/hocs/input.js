@@ -3,6 +3,7 @@
 /* eslint-disable no-underscore-dangle, max-len */
 
 import React from 'react';
+import PropTypes from 'prop-types';
 import { omit, merge } from 'timm';
 import { cancelEvent, stopPropagation } from '../gral/helpers';
 import { COLORS, MISC, IS_IOS, FONTS } from '../gral/constants';
@@ -630,7 +631,7 @@ function input<DP: any, P>(
     }
   }
 
-  Klass.contextTypes = { theme: React.PropTypes.any };
+  Klass.contextTypes = { theme: PropTypes.any };
 
   return (Klass: any);
 }

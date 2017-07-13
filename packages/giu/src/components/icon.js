@@ -1,6 +1,7 @@
 // @flow
 
 import React from 'react';
+import PropTypes from 'prop-types';
 import { merge, omit } from 'timm';
 import { COLORS } from '../gral/constants';
 
@@ -91,7 +92,7 @@ class Icon extends React.PureComponent {
   }
 }
 
-Icon.contextTypes = { theme: React.PropTypes.any };
+Icon.contextTypes = { theme: PropTypes.any };
 
 // ==========================================
 // Styles
