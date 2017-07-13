@@ -6,7 +6,7 @@ Online demos: [an extremely compact one](http://guigrpa.github.io/giu/demo1.html
 
 
 
-## Why? :sparkles:
+## Why?
 
 - Improvements over native HTML inputs: (optional) [state delegation](#inputs), [comprehensive validation](#input-validation), [native JS types and nullability](#input-value-types).
 - Support for **Server-Side Rendering**.
@@ -430,6 +430,7 @@ You can also include a separator between `items` by including the special
 
 ```js
 import { Select, LIST_SEPARATOR } from 'giu';
+
 <Select required items={[
   { value: 'apples', label: 'Apples', keys: 'alt+a' },
   { value: 'cherries', label: 'Cherries', keys: ['alt+h', 'alt+e'] },
@@ -1187,10 +1188,10 @@ e.g. on OS X with overlaid scrollbars.
 
 * **Returns** *?number*: scrollbar width in pixels
 
-## [Changelog](https://github.com/guigrpa/giu/blob/master/CHANGELOG.md) :scroll:
+## [Changelog](https://github.com/guigrpa/giu/blob/master/CHANGELOG.md)
 
 
-## License (MIT) :books:
+## License (MIT)
 
 Copyright (c) [Guillermo Grau Panea](https://github.com/guigrpa) 2016-present
 

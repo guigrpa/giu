@@ -369,9 +369,9 @@ if (typeof document !== 'undefined') {
 } else {
   module.exports = function render(locals, callback) {
     const ssrHtml = ReactDOMServer.renderToString(mainEl);
-    /* eslint-disable global-require */
-    const ssrCss = require('giu/lib/all.css');
-    /* eslint-enable global-require */
+    /* eslint-disable global-require, prefer-template */
+    const ssrCss = require('giu/lib/allMdl.css');
+    /* eslint-enable global-require, prefer-template */
     let rendered = locals.template;
     rendered = rendered.replace('<!-- ssrHtml -->', ssrHtml);
     rendered = rendered.replace('<!-- ssrCss -->', ssrCss);

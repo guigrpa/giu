@@ -1,82 +1,101 @@
-// const fs = require('fs');
+/* eslint-disable no-console */
+
+const fs = require('fs');
 const path = require('path');
-const webpack = require('webpack');  // eslint-disable-line
-// const extractDocs = require('extract-docs');
-// const StaticSiteGeneratorPlugin = require('static-site-generator-webpack-plugin');
+const webpack = require('webpack'); // eslint-disable-line
+const extractDocs = require('extract-docs'); // eslint-disable-line
+const StaticSiteGeneratorPlugin = require('static-site-generator-webpack-plugin'); // eslint-disable-line
 
-const fProduction = process.env.NODE_ENV === 'production';
-const fSsr = !!process.env.SERVER_SIDE_RENDERING;
+module.exports = (env = {}) => {
+  const fProduction = env.NODE_ENV === 'production';
+  const fSsr = !!env.SERVER_SIDE_RENDERING;
 
-const cssLoader = {
-  loader: 'css-loader',
-  options: { minimize: fProduction },
-};
+  // const PAGES = ['demo1', 'demo3', 'index'];
+  const PAGES = ['demo1', 'demo2', 'demo3', 'index'];
 
-const styleLoader = { loader: 'style-loader' };
+  console.log(`Compiling for production: ${fProduction}`);
+  console.log(`Compiling for SSR: ${fSsr}`);
+  console.log(`Building: ${PAGES.join(', ')}`);
 
-module.exports = {
+  const cssLoader = {
+    loader: 'css-loader',
+    options: { minimize: fProduction },
+  };
 
-  // -------------------------------------------------
-  // Input (entry point)
-  // -------------------------------------------------
-  entry: {
-    demo1: ['./src/demo1.js'],
-    demo2: ['./src/demo2.js'],
-    demo3: ['./src/demo3.js'],
-    index: ['./src/index.js'],
-  },
+  const styleLoader = { loader: 'style-loader' };
 
-  // -------------------------------------------------
-  // Output
-  // -------------------------------------------------
-  output: {
-    filename: '[name].bundle.js',
-    path: path.resolve(process.cwd(), './lib/public'),
-    publicPath: '',
-    libraryTarget: fSsr ? 'commonjs2' : undefined,
-  },
+  const entry = {};
+  PAGES.forEach(page => {
+    entry[page] = [`./src/${page}.js`];
+  });
 
-  // -------------------------------------------------
-  // Configuration
-  // -------------------------------------------------
-  devtool: fProduction || fSsr ? undefined : 'eval',
-  target: fSsr ? 'node' : undefined,
+  return {
+    // -------------------------------------------------
+    // Input (entry points)
+    // -------------------------------------------------
+    entry,
 
-  plugins: (() => {
-    const out = [
-      new webpack.DefinePlugin({
-        'process.env.NODE_ENV': JSON.stringify(fProduction ? 'production' : 'development'),
-        'process.env.SERVER_SIDE_RENDERING': JSON.stringify(fSsr),
-      }),
-    ];
-    // if (fSsr) {
-    //   const readme = extractDocs({
-    //     template: './docs/templates/README.md',
-    //     missingRefs: true,
-    //     skipConditional: true,
-    //   });
-    //   out.push(new StaticSiteGeneratorPlugin('index', ['index.html'], {
-    //     template: fs.readFileSync(path.join(__dirname, 'index.html'), 'utf8'),
-    //     readme,
-    //   }));
-    //   out.push(new StaticSiteGeneratorPlugin('demo1', ['demo1.html'], {
-    //     template: fs.readFileSync(path.join(__dirname, 'demo1.html'), 'utf8'),
-    //   }));
-    // }
-    return out;
-  })(),
+    // -------------------------------------------------
+    // Output
+    // -------------------------------------------------
+    output: {
+      filename: '[name].bundle.js',
+      path: path.resolve(process.cwd(), './lib/public'),
+      publicPath: '',
+      libraryTarget: fSsr ? 'umd' : undefined,
+    },
 
-  module: {
-    rules: [{
-      test: /\.(js|jsx)$/,
-      loader: 'babel-loader',
-      exclude: path.resolve(process.cwd(), 'node_modules'),
-    }, {
-      test: /\.(otf|eot|svg|ttf|woff|woff2)(\?v=[0-9]\.[0-9]\.[0-9])?$/,
-      loader: 'file-loader',
-    }, {
-      test: /\.css$/,
-      use: [styleLoader, cssLoader],
-    }],
-  },
+    // -------------------------------------------------
+    // Configuration
+    // -------------------------------------------------
+    devtool: fProduction || fSsr ? undefined : 'eval',
+
+    plugins: (() => {
+      const out = [
+        new webpack.DefinePlugin({
+          'process.env.SERVER_SIDE_RENDERING': JSON.stringify(fSsr),
+        }),
+      ];
+      if (fSsr) {
+        PAGES.forEach(page => {
+          const templatePath = path.join(__dirname, `src/public/${page}.html`);
+          const locals = { template: fs.readFileSync(templatePath, 'utf8') };
+          if (page === 'index') {
+            locals.readme = extractDocs({
+              template: '../../docs/templates/README.md',
+              basePath: '../..',
+              missingRefs: true,
+              skipConditional: true,
+            });
+          }
+          out.push(
+            new StaticSiteGeneratorPlugin({
+              entry: page,
+              paths: [`${page}.html`],
+              locals,
+            })
+          );
+        });
+      }
+      return out;
+    })(),
+
+    module: {
+      rules: [
+        {
+          test: /\.(js|jsx)$/,
+          loader: 'babel-loader',
+          exclude: path.resolve(process.cwd(), 'node_modules'),
+        },
+        {
+          test: /\.(otf|eot|svg|ttf|woff|woff2)(\?v=[0-9]\.[0-9]\.[0-9])?$/,
+          loader: 'file-loader',
+        },
+        {
+          test: /\.css$/,
+          use: fSsr ? [cssLoader] : [styleLoader, cssLoader],
+        },
+      ],
+    },
+  };
 };

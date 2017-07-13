@@ -1,6 +1,7 @@
 # Roadmap
 
 - [ ] Build examples for SSR, static site
+- [ ] Re-check buildExamplesDev (no SSR)
 - [ ] Copy docs from giu-examples to the docs folder for publishing
 - [ ] Expose `delay()`, `waitUntil()` and `isWaiting()` (`gral/wait`) helpers again, using `babel-runtime` and `babel-plugin-transform-runtime`.
 

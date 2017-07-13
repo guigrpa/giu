@@ -168,7 +168,9 @@ class App extends React.Component {
 
 const Contents = ({ id }) => {
   let el;
-  switch (id) {
+  const idx = id.indexOf('demo:');
+  const finalId = idx >= 0 ? id.slice(idx) : id;
+  switch (finalId) {
     case 'demo:intro':
       el = <DemoIntro />;
       break;

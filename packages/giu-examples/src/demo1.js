@@ -572,6 +572,7 @@ const mainEl = <App />;
 
 // Normal render
 if (typeof document !== 'undefined') {
+  console.log('Rendering demo1...');
   ReactDOM.render(mainEl, document.getElementById('app'));
 
   // SSR

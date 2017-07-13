@@ -6,7 +6,7 @@ Online demos: [an extremely compact one](http://guigrpa.github.io/giu/demo1.html
 
 [[[demo:intro]]]
 
-## Why? :sparkles:
+## Why?
 
 - Improvements over native HTML inputs: (optional) [state delegation](#inputs), [comprehensive validation](#input-validation), [native JS types and nullability](#input-value-types).
 - Support for **Server-Side Rendering**.
@@ -459,10 +459,10 @@ You can find here a wide variety of helper functions, from the very simple (`can
 
 [[[./packages/giu/src/gral/constants.js]]]
 
-## [Changelog](https://github.com/guigrpa/giu/blob/master/CHANGELOG.md) :scroll:
+## [Changelog](https://github.com/guigrpa/giu/blob/master/CHANGELOG.md)
 
 
-## License (MIT) :books:
+## License (MIT)
 
 Copyright (c) [Guillermo Grau Panea](https://github.com/guigrpa) 2016-present
 
