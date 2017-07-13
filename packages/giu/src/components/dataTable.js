@@ -632,8 +632,11 @@ class DataTable extends React.PureComponent {
 
     // Update `manuallyOrderedIds`, creating a new array
     // console.log(`DataTable: moved #${finalOldIndex} to #${finalNewIndex}`);
-    this.manuallyOrderedIds = manuallyOrderedIds.slice();
-    arrayMove(this.manuallyOrderedIds, finalOldIndex, finalNewIndex);
+    this.manuallyOrderedIds = arrayMove(
+      this.manuallyOrderedIds,
+      finalOldIndex,
+      finalNewIndex
+    );
 
     // Update `shownIds` so that the changes are reflected. Then report on them to the user
     // and re-render

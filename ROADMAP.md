@@ -1,12 +1,9 @@
 # Roadmap
 
-- Monorepo migration:
-    - [ ] Build examples for SSR, static site
-    - [ ] Copy docs from giu-examples to the docs folder for publishing
+- [ ] Build examples for SSR, static site
+- [ ] Copy docs from giu-examples to the docs folder for publishing
 - [ ] Expose `delay()`, `waitUntil()` and `isWaiting()` (`gral/wait`) helpers again, using `babel-runtime` and `babel-plugin-transform-runtime`.
 
-- FLOW conversion:
-    - [ ] Add support for Hoverable HOC on functional components
 - [ ] Jest snapshots
 
 - [ ] *Bug* ListPicker on Windows incorrectly aligns (vertically) items and shortcuts (it *is* correct in the main doc page)
