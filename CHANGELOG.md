@@ -1,3 +1,5 @@
+* Complete Flow coverage.
+
 ## 0.13.4 (2017-6-26)
 
 * VerticalManager: sanitise `id` before using it as DOM attribute.
