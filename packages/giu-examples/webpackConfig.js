@@ -10,7 +10,6 @@ module.exports = (env = {}) => {
   const fProduction = env.NODE_ENV === 'production';
   const fSsr = !!env.SERVER_SIDE_RENDERING;
 
-  // const PAGES = ['demo1', 'demo3', 'index'];
   const PAGES = ['demo1', 'demo2', 'demo3', 'index'];
 
   console.log(`Compiling for production: ${fProduction}`);
