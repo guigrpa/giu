@@ -2,7 +2,7 @@
 
 An opinionated Swiss-army knife for building React application GUIs.
 
-Online demos: [an extremely compact one](http://guigrpa.github.io/giu/demo1.html) and [an interactive version of this documentation](http://guigrpa.github.io/giu).
+Online demos: [an extremely compact one](http://guigrpa.github.io/giu/demo1.html) ([Material Design Lite version here](http://guigrpa.github.io/giu/demo2.html)) and [an interactive version of this documentation](http://guigrpa.github.io/giu).
 
 
 
@@ -299,18 +299,21 @@ Tasks 2 and 3 above are managed via a *pseudo-imperative* API, the `cmds` prop, 
 *Note: out of the box, Textarea resizes automatically as needed. You can limit its maximum height by adding a `style` prop: e.g. `style={{ maxHeight: 100 }}`*
 
 Props:
-
-* **style** *object?*: merged with the `input`/`textarea` style
-* **skipTheme** *boolean?*
-* **vertical** *boolean?*: [only for `RangeInput`]
-* *All other props are passed through to the `input` element*
+```js
+type PublicProps = {
+  disabled?: boolean,
+  style?: Object, // merged with the `input`/`textarea` style
+  skipTheme?: boolean,
+  vertical?: boolean, // only for RangeInput
+  // all others are passed through to the `input` unchanged
+};
+```
 
 ### Checkbox
 
 
 
 Props:
-
 ```js
 type PublicProps = {
   id?: string,
@@ -334,28 +337,39 @@ If you use [*moment*](https://github.com/moment/moment), your date picker and da
 
 
 Props:
+```js
+type PublicProps = {
+  type?: PickerType, // see below (default: 'dropDownPicker')
+  // Whether Giu should check for iOS in order to simplify certain components
+  // (e.g. do not use analogue time picker) -- default: true
+  checkIos?: boolean,
+  disabled?: boolean,
+  placeholder?: string, // when unspecified, the expected date/time format will be used
+  date?: boolean, // whether the date is part of the value (default: true)
+  time?: boolean, // whether the time is part of the value (default: false)
+  // Whether the time picker should be analogue (traditional clock)
+  // or digital (list) (default: true)
+  analogTime?: boolean,
+  seconds?: boolean, // whether seconds should be included in the time value (default: false)
+  // UTC mode; by default, it is `true` *unless* `date` and `time` are both `true`.
+  // In other words, local time is only used by default if both `date` and `time` are enabled
+  utc?: boolean,
+  todayName?: string, // label for the *Today* button (default: 'Today')
+  // Current language (used just for force-render).
+  // Use it to inform Giu that you have changed `moment`'s language.
+  lang?: string,
+  floatPosition?: FloatPosition,
+  floatAlign?: FloatAlign,
+  floatZ?: number,
+  style?: Object, // merged with the `input` style
+  styleOuter?: Object, // when `type === 'inlinePicker'`, merged with the outermost `span` style
+  skipTheme?: boolean,
+  accentColor?: string, // CSS color descriptor (e.g. `darkgray`, `#ccffaa`...)
+  // all others are passed through to the `input` unchanged
+};
 
-* **type** *string(`native` | `onlyField` | `inlinePicker` | `dropDownPicker`)? =
-  `dropDownPicker`*
-* **checkIos** *boolean? = true*: whether Giu should check for iOS in order to
-  simplify certain components (e.g. do not use analogue time picker)
-* **placeholder** *string?*: when unspecified, the expected date/time
-  format will be used
-* **date** *boolean? = true*: whether the date is part of the value
-* **time** *boolean?*: whether the time is part of the value
-* **analogTime** *boolean? = true*: whether the time picker should be
-  analogue (traditional clock) or digital (list)
-* **seconds** *boolean?*: whether seconds should be included in the time value
-* **utc** *boolean?*: by default, it is `true` *unless* `date` and `time` are both `true`.
-  In other words, local time is only used by default if both `date` and `time` are enabled
-* **todayName** *string? = 'Today'*: label for the *Today* button
-* **lang** *string?*: current language (NB: just used to make sure the component is
-  refreshed). Use it to inform Giu that you have changed `moment`'s language.
-* **style** *object?*: merged with the `input` style
-* **styleOuter** *object?*: when `type === 'inlinePicker'`,
-  merged with the outermost `span` style
-* **skipTheme** *boolean?*
-* **accentColor** *string?*: CSS color descriptor (e.g. `darkgray`, `#ccffaa`...)
+type PickerType = 'native' | 'onlyField' | 'inlinePicker' | 'dropDownPicker';
+```
 
 ### Select
 
@@ -368,25 +382,55 @@ Shown below are some examples of Select and its features: `native` and custom (`
 
 
 Props:
+```js
+export type SelectProps = {
+  // Both SelectCustom and SelectNative
+  // ----------------------------------
+  type: SelectPickerType, // see below (default: 'native')
+  // Items with the following attributes:
+  // - **value** *any*: any value that can be converted to JSON. Values should be unique
+  // - **label** *string*: descriptive string that will be shown to the user
+  // - **keys** *array(string)?*: keyboard shortcuts for this option, e.g.
+  //   `mod+a` (= `cmd+a` in OS X, `ctrl+a` in Windows), `alt+backspace`, `shift+up`...
+  //   **Only supported in non-native Selects**
+  items: Array<Choice>,
+  lang?: string, // current language (used just for force-render).
+  // Apart from its use for [validation](#input-validation),
+  // enabling this flag disables the addition of a `null` option to the `items` list
+  required?: boolean,
+  disabled?: boolean,
+  // Style is merged with the outermost `div` style (if `type` is `inlinePicker`),
+  // or with the `input` style (if `type` is `native`)
+  style?: Object,
 
-* **type** *string(`native` | `inlinePicker` | `dropDownPicker`)? = `native`*
-* **items** *array(object)*: each item has the following attributes:
-  - **value** *any*: any value that can be converted to JSON. Values should be unique
-  - **label** *string*: descriptive string that will be shown to the user
-  - **keys** *array(string)?*: keyboard shortcuts for this option, e.g.
-    `mod+a` (= `cmd+a` in OS X, `ctrl+a` in Windows), `alt+backspace`, `shift+up`...
-    **Only supported in non-native Selects**
-* **lang** *string?*: current language (NB: just used to make sure the component is refreshed)
-* **required** *boolean?*: apart from its use for [validation](#input-validation),
-  enabling this flag disables the addition of a `null` option to the `items` list
-* **style** *object?*: merged with the outermost `div` style (if `type` is `inlinePicker`),
-  or with the `input` style (if `type` is `native`)
+  // SelectCustom only
+  // -----------------
+  children?: any,
+  onClickItem?: Function,
+  onCloseFloat?: Function,
+  floatPosition?: FloatPosition,
+  floatAlign?: FloatAlign,
+  floatZ?: number,
+  styleTitle?: Object, // merged with the title span
+  // When enabled, two different visual styles are applied
+  // to an item depending on whether it is just *hovered* or also *selected*. If disabled,
+  // a single style is used to highlight the selected or the hovered item
+  twoStageStyle?: boolean,
+  accentColor?: string, // CSS color descriptor (e.g. `darkgray`, `#ccffaa`...)
 
+  // SelectNative only
+  // -----------------
+  // All other props are passed through to the `select` unchanged
+};
+
+export type SelectPickerType = 'native' | 'inlinePicker' | 'dropDownPicker';
+```
 You can also include a separator between `items` by including the special
 `LIST_SEPARATOR` item (**only in non-native Selects**):
 
 ```js
 import { Select, LIST_SEPARATOR } from 'giu';
+
 <Select required items={[
   { value: 'apples', label: 'Apples', keys: 'alt+a' },
   { value: 'cherries', label: 'Cherries', keys: ['alt+h', 'alt+e'] },
@@ -396,25 +440,25 @@ import { Select, LIST_SEPARATOR } from 'giu';
 ]} />
 ```
 
-Additional props for non-native Selects:
-
-* **twoStageStyle** *boolean?*: when enabled, two different visual styles are applied
-  to an item depending on whether it is just *hovered* or also *selected*. If disabled,
-  a single style is used to highlight the selected or the hovered item
-* **accentColor** *string?*: CSS color descriptor (e.g. `darkgray`, `#ccffaa`...)
-
 ### RadioGroup
 
 
 
 Props:
+```js
+type PublicProps = {
+  items: Array<RadioChoice>,
+  lang?: string, // current language (used just for force-render)
+  disabled?: boolean,
+};
 
-* **items** *array(object)*: each item has the following attributes
-  - **value** *any*: any value that can be converted to JSON. Values should be unique
-  - **label** *any?*: React elements that will be shown as a label for
-    the corresponding radio button
-  - **labelExtra** *any?*: React elements that will be shown below the main label
-* **lang** *string?*: current language (NB: just used to make sure the component is refreshed)
+type RadioChoice = {
+  value: any, // any value that can be converted to JSON. Values should be unique
+  // React elements that will be shown as a label for the corresponding radio button
+  label?: any | ((lang: ?string) => any),
+  labelExtra?: any, // React elements that will be shown below the main label
+};
+```
 
 ### ColorInput
 
@@ -425,24 +469,31 @@ Shown below are some examples of ColorInput and its features: inline and drop-do
 
 
 Props:
-
-* **inlinePicker** *boolean?*: whether the complete color picker
-  should be inlined (`true`) or appear as a dropdown when clicked
-* **onCloseFloat** *function?*
-* **accentColor** *string?*: CSS color descriptor (e.g. `darkgray`, `#ccffaa`...)
+```js
+type PublicProps = {
+  disabled?: boolean,
+  // Whether the complete color picker should be inlined or appear as a dropdown when clicked
+  inlinePicker?: boolean,
+  onCloseFloat?: () => any,
+  floatPosition?: FloatPosition,
+  floatAlign?: FloatAlign,
+  floatZ?: number,
+  accentColor?: string, // CSS color descriptor (e.g. `darkgray`, `#ccffaa`...)
+};
+```
 
 ### FileInput
 
 
 
 Props:
-
 ```js
 type PublicProps = {
   children?: any, // React elements that will be shown inside the button(default: `Choose file…`)
   cmds?: Array<Command>,
   disabled?: boolean,
   style?: Object, // will be merged with the outermost `span` element
+  skipTheme?: boolean,
   // all others are passed through unchanged
 };
 ```
@@ -480,7 +531,7 @@ type PublicProps = {
   // Set of rows to be shown (before filtering)
   // ------------------------------------------
   shownIds?: Array<string>, // Row ids to be shown (default: [], no rows)
-  onChangeShownIds?: (shownIds: Array<string>) => void,
+  onChangeShownIds?: (shownIds: Array<string>) => any,
   alwaysRenderIds?: Array<string>, // Render these rows even when not visible (e.g. editing)
   commonCellProps?: Object, // Passed to all column `render` functions
 
@@ -495,15 +546,21 @@ type PublicProps = {
   onChangeSort?: (options: {
     sortBy: ?string,
     sortDescending: boolean,
-  }) => void,
+  }) => any,
   sortBy?: ?string, // Column, identified by `attr`
   sortDescending?: boolean,
   customPositions?: { [id: string]: ?string }, // if position is null, it will be sent to the top
 
   // Manual sorting
   allowManualSorting?: boolean, // Add manual sort column (default: true)
+  disableDragging?: boolean, // Keep the sort column (if any), but disable it (temporarily)
   manuallyOrderedIds?: Array<string>,
-  onChangeManualOrder?: (manuallyOrderedIds: ?Array<string>) => void,
+  onChangeManualOrder?: (
+    manuallyOrderedIds: ?Array<string>,
+    context: {
+      draggedId?: string, // ID of the row that has been dragged
+    }
+  ) => any,
   manualSortColLabel?: string | (() => string), // Custom column label (default: 'Sort manually')
 
   // Selection
@@ -511,15 +568,15 @@ type PublicProps = {
   selectedIds?: Array<string>,
   allowSelect?: boolean,
   multipleSelection?: boolean,
-  onChangeSelection?: (selectedIds: Array<string>) => void,
-  onClipboardAction?: (ev: SyntheticClipboardEvent, json: string) => void,
-  onRowDoubleClick?: (ev: SyntheticMouseEvent, id: string) => void,
+  onChangeSelection?: (selectedIds: Array<string>) => any,
+  onClipboardAction?: (ev: SyntheticClipboardEvent, json: string) => any,
+  onRowDoubleClick?: (ev: SyntheticMouseEvent, id: string) => any,
 
   // Fetching
   // --------
   // Set fetchMoreItems if you want DataTable to notify you when the last row is rendered
   // (note: disabled when the filterValue prop is not empty)
-  fetchMoreItems?: (lastRowId: string) => void, // Called when the last row is rendered
+  fetchMoreItems?: (lastRowId: string) => any, // Called when the last row is rendered
   fetching?: boolean, // When set, the FetchRowComponent will be shown
   FetchRowComponent?: ReactClass<*>,
 
@@ -606,7 +663,6 @@ export type DataTableColumn = {
 
 Props:
 
-
 ```js
 type PublicProps = {
   // Items: similar to the Select component but including an `onClick` callback
@@ -617,8 +673,8 @@ type PublicProps = {
   children?: any, // React elements that will be shown as the menu's title
   onClickItem?: (
     ev: SyntheticMouseEvent, // `click` event
-    val: any, // the item's `value` (as specified in the `items` prop)
-  ) => void,
+    val: any // the item's `value` (as specified in the `items` prop)
+  ) => any,
   style?: Object, // will be merged with the menu title's `div` wrapper
   accentColor?: string, // CSS color descriptor (e.g. `darkgray`, `#ccffaa`...)
 
@@ -679,9 +735,9 @@ export type ModalPars = {|
   // called when the backdrop
   // (semi-transparent layer highlighting the modal in fron of other
   // page contents) is clicked
-  onClickBackdrop?: (ev: SyntheticMouseEvent) => void,
+  onClickBackdrop?: (ev: SyntheticMouseEvent) => any,
 
-  onEsc?: (ev: SyntheticKeyboardEvent) => void, // called when ESC is pressed
+  onEsc?: (ev: SyntheticKeyboardEvent) => any, // called when ESC is pressed
 
   // merge with the modal's `div` style, e.g. to
   // fix a modal width or background color
@@ -692,9 +748,11 @@ export type ModalPars = {|
 export type ModalButton = {|
   left?: boolean, // align button left instead of right (default: false)
   label?: any, // button text or other contents
+  disabled?: boolean,
   defaultButton?: boolean, // will be highlighted and automatically selected when RETURN is pressed
-  onClick?: (ev: SyntheticEvent) => void, // `click` handler for the button
+  onClick?: (ev: SyntheticEvent) => any, // `click` handler for the button
   style?: Object, // merged with the button's style
+  accent?: boolean, // accent style (use it with MDL theme)
 |};
 ```
 
@@ -743,7 +801,7 @@ export type NotificationPars = {|
   iconSpin?: boolean,
   title?: string, // highlighted text at the top of the notification
   msg?: string, // notification text
-  onClick?: (ev: SyntheticEvent) => void, // `click` handler
+  onClick?: (ev: SyntheticEvent) => any, // `click` handler
   style?: Object, // merged with the outermost `div` style
   noStylePosition?: boolean,
   noStyleShadow?: boolean,
@@ -806,6 +864,8 @@ API reference:
     already been shown)
 * **hintHide()**: hides the currently shown hint, if any
 
+**`HintScreenPars`, `HintLabelPars` and `HintArrowPars` definitions:**
+
 ```js
 export type HintScreenPars = {|
   elements?: ElementsWrapper,
@@ -848,13 +908,13 @@ export type HintArrowPars = {|
 
 
 
-An inconspicuous-looking button-in-a-`span`.
+An inconspicuous-looking button-in-a-`span`. Props:
 
 ```js
 type Props = {
   plain?: boolean, // removes most button styles
   children?: any, // button contents (can include `Icon` components, etc.)
-  onClick?: (ev: SyntheticMouseEvent) => void,
+  onClick?: (ev: SyntheticMouseEvent) => any,
   disabled?: boolean,
   style?: Object, // merged with the `span` style
   skipTheme?: boolean,
@@ -873,7 +933,7 @@ type Props = {
 
 
 
-A wrapper for Font Awesome icons.
+A wrapper for Font Awesome icons. Props:
 
 ```js
 type Props = {
@@ -978,7 +1038,7 @@ export type HoverableProps = {
   onHoverStop: HoverEventHandler,
 };
 type Hovering = ?(string | number | boolean); // null when nothing is hovered
-type HoverEventHandler = (ev: SyntheticEvent) => void;
+type HoverEventHandler = (ev: SyntheticEvent) => any;
 ```
 
 
@@ -1127,7 +1187,6 @@ Note that the returned value might be zero,
 e.g. on OS X with overlaid scrollbars.
 
 * **Returns** *?number*: scrollbar width in pixels
-
 
 ## [Changelog](https://github.com/guigrpa/giu/blob/master/CHANGELOG.md)
 
