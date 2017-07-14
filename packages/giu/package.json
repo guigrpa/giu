@@ -21,6 +21,7 @@
     "react-dom": "^15.3.0"
   },
   "dependencies": {
+    "babel-runtime": "6.23.0",
     "filesize": "3.5.10",
     "font-awesome": "4.7.0",
     "keycode": "2.1.9",

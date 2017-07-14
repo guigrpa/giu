@@ -147,8 +147,7 @@ export {
   windowWidthWithoutScrollbar,
   simplifyString,
 } from './gral/helpers';
-// Disabled since it adds a polyfill dependency; might not be worth it now
-// export *                  from './gral/wait';
+export * from './gral/wait';
 export * from './gral/validators';
 export { isAnyModifierPressed } from './gral/keys';
 export { isVisible, scrollIntoView } from './gral/visibility';

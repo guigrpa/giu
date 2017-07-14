@@ -1,7 +1,6 @@
 /* eslint-disable no-console */
 /* eslint-disable react/no-multi-comp, react/no-did-mount-set-state */
 
-import 'babel-polyfill'; // eslint-disable-line
 import React from 'react';
 import ReactDOM from 'react-dom';
 import ReactDOMServer from 'react-dom/server';

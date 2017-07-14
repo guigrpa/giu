@@ -48,8 +48,6 @@ import {
   setLang,
 } from './demo1-common';
 
-require('babel-polyfill'); // eslint-disable-line
-
 const { floor, random } = Math;
 const randomInt = (min, max) => min + floor(random() * (max - min + 1));
 const sample = arr => arr[randomInt(0, arr.length - 1)];

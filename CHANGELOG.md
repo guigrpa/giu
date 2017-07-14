@@ -1,4 +1,5 @@
 * Complete Flow coverage.
+* Reintroduce `delay()`, `waitUntil()` helpers
 
 ## 0.13.4 (2017-6-26)
 
