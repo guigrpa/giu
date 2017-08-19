@@ -35,7 +35,7 @@ function createShortcut(keySpec: string): KeyboardShortcut {
   shortcut.shiftKey = false;
   shortcut.keyCodes = keySpec.split('+').map(extName0 => {
     let extName = extName0;
-    if (extName === 'mod') extName = IS_MAC ? 'cmd' : 'ctrl';
+    if (extName === 'mod') extName = IS_MAC ? 'command' : 'ctrl';
     return keycode(extName);
   });
   shortcut.keyNames = shortcut.keyCodes.map(keyCode => keycode(keyCode));
@@ -45,6 +45,7 @@ function createShortcut(keySpec: string): KeyboardShortcut {
         shortcut.altKey = true;
         break;
       case 'command':
+      case 'left command':
         shortcut.metaKey = true;
         break;
       case 'ctrl':
@@ -66,6 +67,7 @@ function createShortcut(keySpec: string): KeyboardShortcut {
           c = IS_MAC ? UNICODE.altKey : 'Alt-';
           break;
         case 'command':
+        case 'left command':
           c = UNICODE.cmdKey;
           break;
         case 'ctrl':

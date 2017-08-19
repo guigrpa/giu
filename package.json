@@ -83,12 +83,12 @@
     "jest-html": "1.3.4",
     "moment": "2.18.1",
     "nyc": "8.4.0",
-    "oao": "^0.8.5",
+    "oao": "0.10.0-beta.3",
     "react": "15.6.1",
     "react-dom": "15.6.1",
     "static-site-generator-webpack-plugin": "3.4.1",
     "style-loader": "0.18.2",
-    "webpack": "2.4.1",
+    "webpack": "3.5.5",
     "xxl": "1.2.0"
   },
   "jest": {
