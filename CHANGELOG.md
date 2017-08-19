@@ -1,3 +1,5 @@
+## 0.14.1 (2017-8-19)
+
 * Bugfix: fix an issue in which keyboard shortcuts involving the command key were incorrectly processed in OS X.
 
 ## 0.14.0 (2017-7-14)
