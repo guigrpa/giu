@@ -28,6 +28,7 @@ const PROP_KEYS_TO_REMOVE_FROM_FLOAT_DIV = [
   'zIndex',
   'limitSize',
   'getAnchorNode',
+  'noStyleShadow',
 ];
 
 export type FloatPosition = 'above' | 'below';
