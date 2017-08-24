@@ -1,6 +1,6 @@
 // @flow
 
-import React from 'react';
+import * as React from 'react';
 import { merge } from 'timm';
 import { cancelEvent } from '../gral/helpers';
 import { IS_IOS } from '../gral/constants';
@@ -11,13 +11,11 @@ require('./backdrop.css');
 // Component
 // ==========================================
 type Props = {
+  // All props are forwarded to the child `<div>`
   style?: Object,
 };
 
-class Backdrop extends React.PureComponent {
-  // All props are forwarded to the child `<div>`
-  props: Props;
-
+class Backdrop extends React.PureComponent<Props> {
   render() {
     return (
       <div

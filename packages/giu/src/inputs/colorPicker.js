@@ -1,6 +1,6 @@
-// @flow
+// @no-flow
 
-import React from 'react';
+import * as React from 'react';
 import tinycolor from 'tinycolor2';
 import { merge } from 'timm';
 import { COLORS } from '../gral/constants';
@@ -110,14 +110,15 @@ type Props = {
 // ==========================================
 // Component
 // ==========================================
-class ColorPicker extends React.PureComponent {
-  props: Props;
-  static defaultProps: DefaultProps = {
-    accentColor: COLORS.accent,
-  };
-  state: {
+class ColorPicker extends React.PureComponent<
+  Props,
+  {
     mode: string,
     activeAttr: string,
+  }
+> {
+  static defaultProps: DefaultProps = {
+    accentColor: COLORS.accent,
   };
   rgba: Object;
   hsva: Object;

@@ -13,10 +13,8 @@ import {
 import { COLORS, FONTS } from '../gral/constants';
 import type { HoverableProps } from '../hocs/hoverable';
 import hoverable from '../hocs/hoverable';
-import type { NotificationType, NotificationPars } from './notificationTypes';
-import Icon from './icon';
-
-const DEFAULT_NOTIFICATION_TYPE: NotificationType = 'info';
+import type { NotificationPars } from '../components/notificationTypes';
+import Icon from '../components/icon';
 
 // ==========================================
 // Component
@@ -26,7 +24,7 @@ type Props = {
   ...$Exact<NotificationPars>,
 };
 
-class Notification extends React.PureComponent<Props> {
+class _Notification extends React.PureComponent<Props> {
   render() {
     const { theme } = this.context;
     const icon =
@@ -56,15 +54,13 @@ class Notification extends React.PureComponent<Props> {
   }
 }
 
-Notification.contextTypes = { theme: PropTypes.any };
+_Notification.contextTypes = { theme: PropTypes.any };
 
-// ==========================================
-// Styles
 // ==========================================
 const style = {
   outer: (
     {
-      type = DEFAULT_NOTIFICATION_TYPE,
+      type = 'info',
       hovering,
       onClick,
       style: baseStyle,
@@ -77,42 +73,25 @@ const style = {
     if (hovering && onClick) bgColor = darken(bgColor, 10);
     const fgColor = COLORS[isDark(bgColor) ? 'lightText' : 'darkText'];
     let out = flexContainer('row', {
-      alignItems: 'center',
-      WebkitAlignItems: 'center',
-      overflow: 'hidden',
-      padding: '7px 13px',
       cursor: onClick ? 'pointer' : undefined,
       backgroundColor: bgColor,
       color: fgColor,
       fontFamily: theme === 'mdl' ? FONTS.mdl : undefined,
     });
     if (!noStyleShadow) out = boxWithShadow(out);
-    if (!noStylePosition) {
-      out = merge(out, {
-        position: 'fixed',
-        bottom: 20,
-        right: 20,
-        maxWidth: 350,
-      });
-    }
+    if (!noStylePosition) out = merge(out, {});
     if (baseStyle) out = merge(out, baseStyle);
     return out;
   },
-  icon: flexItem('0 1 auto', {
-    paddingRight: 20,
-  }),
+  icon: flexItem('0 1 auto', {}),
   body: flexItem('1 1 50px'),
-  title: {
-    fontWeight: 'bold',
-  },
-  msg: {
-    wordWrap: 'break-word',
-    fontWeight: 'normal',
-  },
+  title: {},
+  msg: {},
 };
 
 // ==========================================
 // Public API
 // ==========================================
-const HoverableNotification = hoverable(Notification);
-export default HoverableNotification;
+const Notification = hoverable(_Notification);
+
+export const a = () => <Notification />;

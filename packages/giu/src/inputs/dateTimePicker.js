@@ -1,6 +1,6 @@
-// @flow
+// @no-flow
 
-import React from 'react';
+import * as React from 'react';
 import { merge } from 'timm';
 import moment from '../vendor/moment';
 import { getTimeInSecs, getUtcFlag, startOfDefaultDay } from '../gral/dates';
@@ -45,7 +45,7 @@ type PublicProps = {|
   todayName?: string,
   onMouseDown?: Function,
   onClick?: Function,
-  onChange: (ev: ?SyntheticEvent, nextValue: ?Moment) => any,
+  onChange: (ev: ?SyntheticEvent<>, nextValue: ?Moment) => any,
   fFocused?: boolean,
   style?: Object,
   accentColor?: string,
@@ -71,8 +71,12 @@ type Picker = 'date' | 'time';
 // ==========================================
 // Component
 // ==========================================
-class DateTimePicker extends React.Component {
-  props: Props;
+class DateTimePicker extends React.Component<
+  Props,
+  {
+    focusedSubpicker: Picker,
+  }
+> {
   static defaultProps: DefaultProps = {
     disabled: false,
     date: true,
@@ -81,9 +85,6 @@ class DateTimePicker extends React.Component {
     seconds: false,
     todayName: 'Today',
     accentColor: COLORS.accent,
-  };
-  state: {
-    focusedSubpicker: Picker,
   };
   keyDown: void | KeyboardEventPars;
   utc: boolean;

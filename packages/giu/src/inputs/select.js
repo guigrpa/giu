@@ -1,6 +1,6 @@
-// @flow
+// @no-flow
 
-import React from 'react';
+import * as React from 'react';
 import SelectNative from '../inputs/selectNative';
 import { SelectCustom } from '../inputs/selectCustom';
 import type { SelectProps, SelectPickerType } from '../inputs/selectTypes';
@@ -17,8 +17,7 @@ type Props = {
   ...$Exact<DefaultProps>,
 };
 
-class Select extends React.Component {
-  props: Props;
+class Select extends React.Component<Props> {
   static defaultProps: DefaultProps = {
     type: 'native',
   };

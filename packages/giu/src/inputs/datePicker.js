@@ -1,6 +1,6 @@
 // @flow
 
-import React from 'react';
+import * as React from 'react';
 import moment from '../vendor/moment';
 import { startOfToday, getTimeInSecs } from '../gral/dates';
 import { flexContainer, isDark } from '../gral/styles';
@@ -20,7 +20,7 @@ const DAY_WIDTH = '2em';
 type PublicProps = {|
   disabled: boolean,
   curValue: ?Moment,
-  onChange: (ev: ?SyntheticEvent, nextValue: ?Moment) => any,
+  onChange: (ev: ?SyntheticEvent<>, nextValue: ?Moment) => any,
   utc: boolean,
   todayName: string,
   keyDown: ?KeyboardEventPars,
@@ -35,12 +35,13 @@ type Props = {
 // ==========================================
 // Component
 // ==========================================
-class DatePicker extends React.Component {
-  props: Props;
-  static defaultProps = {};
-  state: {
+class DatePicker extends React.Component<
+  Props,
+  {
     shownMonthStart: Moment,
-  };
+  }
+> {
+  static defaultProps = {};
   startOfCurValue: ?Moment;
   shownMonthNumber: number;
 
@@ -80,9 +81,8 @@ class DatePicker extends React.Component {
   // ==========================================
   render() {
     const { curValue, utc } = this.props;
-    this.startOfCurValue = curValue != null
-      ? curValue.clone().startOf('day')
-      : null;
+    this.startOfCurValue =
+      curValue != null ? curValue.clone().startOf('day') : null;
     this.shownMonthNumber = this.state.shownMonthStart.month();
 
     // Clone the `shownMonthStart` moment this way, so that it gets the correct locales
@@ -143,7 +143,11 @@ class DatePicker extends React.Component {
         </div>
       );
     }
-    return <div style={style.dayNamesRow}>{els}</div>;
+    return (
+      <div style={style.dayNamesRow}>
+        {els}
+      </div>
+    );
   }
 
   renderWeeks(shownMonthStart: Moment) {
@@ -157,7 +161,11 @@ class DatePicker extends React.Component {
       curDate.add(1, 'week');
       i += 1;
     }
-    return <div>{weeks}</div>;
+    return (
+      <div>
+        {weeks}
+      </div>
+    );
   }
 
   renderWeek(weekStartDate: Moment, idx: number) {
@@ -167,7 +175,11 @@ class DatePicker extends React.Component {
       els[i] = this.renderDay(curDate, i);
       curDate.add(1, 'day');
     }
-    return <div key={idx} style={style.week}>{els}</div>;
+    return (
+      <div key={idx} style={style.week}>
+        {els}
+      </div>
+    );
   }
 
   renderDay(mom: Moment, idx: number) {
@@ -225,7 +237,7 @@ class DatePicker extends React.Component {
     this.setState({ shownMonthStart });
   }
 
-  onClickDay = (ev: SyntheticEvent) => {
+  onClickDay = (ev: SyntheticEvent<>) => {
     const { utc } = this.props;
     if (!(ev.target instanceof Element)) return;
     const startOfDay = moment(ev.target.id);
@@ -233,7 +245,7 @@ class DatePicker extends React.Component {
     this.changeDateTo(ev, startOfDay);
   };
 
-  onClickToday = (ev: SyntheticEvent) => {
+  onClickToday = (ev: SyntheticEvent<>) => {
     const { utc } = this.props;
     const startOfDay = startOfToday(utc);
     this.changeDateTo(ev, startOfDay);
@@ -285,7 +297,7 @@ class DatePicker extends React.Component {
     this.changeDateTo(null, startOfDay);
   }
 
-  changeDateTo(ev: ?SyntheticEvent, startOfDay: Moment) {
+  changeDateTo(ev: ?SyntheticEvent<>, startOfDay: Moment) {
     const { curValue } = this.props;
     const nextValue = startOfDay.clone();
     if (curValue != null) {
@@ -306,7 +318,7 @@ class DatePicker extends React.Component {
     this.doChange(null, nextValue);
   }
 
-  doChange(ev: ?SyntheticEvent, nextValue) {
+  doChange(ev: ?SyntheticEvent<>, nextValue) {
     this.props.onChange(ev, nextValue);
   }
 }

@@ -1,6 +1,6 @@
 // @flow
 
-import React from 'react';
+import * as React from 'react';
 import PropTypes from 'prop-types';
 
 // ==========================================
@@ -12,8 +12,7 @@ A wrapper for the native HTML `progress` element (with 100% width).
 Remember that an indeterminate progress bar will be shown if you
 don't specify the `value` prop (native HTML behaviour).*
 -- */
-class Progress extends React.PureComponent {
-  props: Object;
+class Progress extends React.PureComponent<Object> {
   refMdl: ?Object;
 
   componentDidMount() {

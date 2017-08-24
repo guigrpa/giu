@@ -3,7 +3,7 @@
 /* eslint-disable no-console, no-alert, max-len */
 /* eslint-disable react/prop-types, react/no-multi-comp, react/jsx-no-bind, react/jsx-boolean-value */
 /* eslint-disable react/prefer-stateless-function, react/no-string-refs */
-import React from 'react';
+import * as React from 'react';
 import {
   HintScreen,
   hintDefine,
@@ -15,9 +15,7 @@ import {
 } from 'giu';
 import { ExampleLabel, exampleStyle } from './demo1-common';
 
-class HintExample extends React.Component {
-  state: { fEmbeddedHint: boolean };
-
+class HintExample extends React.Component<{}, { fEmbeddedHint: boolean }> {
   constructor() {
     super();
     this.state = { fEmbeddedHint: false };

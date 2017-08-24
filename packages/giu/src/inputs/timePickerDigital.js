@@ -1,6 +1,6 @@
-// @flow
+// @no-flow
 
-import React from 'react';
+import * as React from 'react';
 import moment from '../vendor/moment';
 import { startOfToday, getTimeInSecs } from '../gral/dates';
 import type { Moment, Choice, KeyboardEventPars } from '../gral/types';
@@ -15,7 +15,7 @@ const ROW_HEIGHT = '1.3em';
 type PublicProps = {|
   disabled: boolean,
   curValue: ?Moment,
-  onChange: (ev: ?SyntheticEvent, value: ?Moment) => any,
+  onChange: (ev: ?SyntheticEvent<>, value: ?Moment) => any,
   utc: boolean,
   keyDown?: KeyboardEventPars,
   stepMinutes?: number,
@@ -34,8 +34,7 @@ type Props = {
 // ==========================================
 // Component
 // ==========================================
-class TimePickerDigital extends React.Component {
-  props: Props;
+class TimePickerDigital extends React.Component<Props> {
   static defaultProps: DefaultProps = {
     stepMinutes: 30,
   };
@@ -68,7 +67,7 @@ class TimePickerDigital extends React.Component {
   // ==========================================
   // Event handlers
   // ==========================================
-  onChange = (ev: ?SyntheticEvent, secsStr: string) => {
+  onChange = (ev: ?SyntheticEvent<>, secsStr: string) => {
     const { curValue, utc, onChange } = this.props;
     if (secsStr === NULL_STRING) {
       onChange(ev, null);

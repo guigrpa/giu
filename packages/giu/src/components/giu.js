@@ -2,7 +2,7 @@
 
 /* eslint-disable global-require */
 
-import React from 'react';
+import * as React from 'react';
 import PropTypes from 'prop-types';
 
 // ==========================================
@@ -14,9 +14,7 @@ type Props = {
   children: any,
 };
 
-class Giu extends React.PureComponent {
-  props: Props;
-
+class Giu extends React.PureComponent<Props> {
   getChildContext() {
     return { theme: this.props.theme };
   }

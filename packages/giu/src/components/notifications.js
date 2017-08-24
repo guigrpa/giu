@@ -1,8 +1,8 @@
-// @flow
+// @no-flow
 
 /* eslint-disable no-plusplus */
 
-import React from 'react';
+import * as React from 'react';
 import { createStore, applyMiddleware } from 'redux';
 import type { Reducer } from 'redux';
 import thunk from 'redux-thunk';
@@ -149,8 +149,7 @@ type Props = {
   notifs?: ?State,
 };
 
-class Notifications extends React.PureComponent {
-  props: Props;
+class Notifications extends React.PureComponent<Props> {
   static defaultProps = { notifs: null };
   storeUnsubscribe: () => void;
 
@@ -168,10 +167,10 @@ class Notifications extends React.PureComponent {
 
   // ==========================================
   render() {
-    const notifs = this.props.notifs || store.getState();
+    const notifs: State = this.props.notifs || store.getState();
     return (
       <div className="giu-notifications" style={style.outer}>
-        {notifs.map((props: NotificationStatePars) =>
+        {notifs.map(props =>
           <Notification
             key={props.id}
             {...props}
@@ -186,11 +185,11 @@ class Notifications extends React.PureComponent {
   }
 
   // ==========================================
-  onRetain = (ev: SyntheticEvent) => {
+  onRetain = (ev: SyntheticEvent<>) => {
     if (!(ev.currentTarget instanceof Element)) return;
     store.dispatch(actions.notifRetain(ev.currentTarget.id));
   };
-  onDismiss = (ev: SyntheticEvent) => {
+  onDismiss = (ev: SyntheticEvent<>) => {
     if (!(ev.currentTarget instanceof Element)) return;
     const { id } = ev.currentTarget;
     const notifs = this.props.notifs || store.getState();

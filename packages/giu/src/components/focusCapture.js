@@ -1,6 +1,6 @@
 // @flow
 
-import React from 'react';
+import * as React from 'react';
 import { IS_IOS } from '../gral/constants';
 import { HIDDEN_FOCUS_CAPTURE, HIDDEN_FOCUS_CAPTURE_IOS } from '../gral/styles';
 
@@ -21,7 +21,11 @@ const FocusCapture = ({ registerRef, disabled, ...otherProps }: Props) => {
       {...otherProps}
     />
   );
-  return IS_IOS ? <span style={style.iosWrapper}>{el}</span> : el;
+  return IS_IOS
+    ? <span style={style.iosWrapper}>
+        {el}
+      </span>
+    : el;
 };
 
 // ==========================================

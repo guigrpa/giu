@@ -1,6 +1,6 @@
 // @flow
 
-import React from 'react';
+import * as React from 'react';
 import { createStore } from 'redux';
 import type { Reducer } from 'redux';
 import {
@@ -175,8 +175,7 @@ const isFloatsMounted = () => fFloatsMounted;
 
 type PropsT = {};
 
-class Floats extends React.PureComponent {
-  props: PropsT;
+class Floats extends React.PureComponent<PropsT> {
   prevState: State;
   curState: State;
   floats: Array<FloatStatePars>;

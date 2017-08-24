@@ -1,6 +1,6 @@
 // @flow
 
-import React from 'react';
+import * as React from 'react';
 import throttle from 'lodash/throttle';
 
 // ================================================
@@ -9,13 +9,14 @@ import throttle from 'lodash/throttle';
 // HeightMeasurer MUST BE the direct child of an element with an "extrinsic"
 // height (ie. a height that is not determined by its children, but rather
 // by its parents, e.g. a flex item with "overflow: hidden")
-class HeightMeasurer extends React.Component {
-  props: {
+class HeightMeasurer extends React.Component<
+  {
     children: Function, // function-as-a-child
-  };
-  state: {
+  },
+  {
     height: ?number,
-  };
+  }
+> {
   refOuter: ?Object;
   throttledRecalcHeight: Function;
 

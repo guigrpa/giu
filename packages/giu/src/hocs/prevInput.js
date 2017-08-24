@@ -1,8 +1,8 @@
-// @flow
+// @no-flow
 
 /* eslint-disable no-underscore-dangle, max-len */
 
-import * as React from 'react';
+import React from 'react';
 import PropTypes from 'prop-types';
 import { omit, merge } from 'timm';
 import { cancelEvent, stopPropagation } from '../gral/helpers';
@@ -22,18 +22,15 @@ import {
 import type { FloatPosition, FloatAlign } from '../components/floats';
 import FocusCapture from '../components/focusCapture';
 import IosFloatWrapper from '../inputs/iosFloatWrapper';
-import type { Hoc } from './hocTypes';
 
 // ==========================================
 // Types
 // ==========================================
-type ValueConversionFunction = (value: any, hocProps: Object) => any;
-
 // Configuration object, passed to the HOC along with the
 // component to be wrapped
 type HocOptions = {|
-  toInternalValue?: ValueConversionFunction,
-  toExternalValue?: ValueConversionFunction,
+  toInternalValue?: (extValue: any, hocProps: Object) => any,
+  toExternalValue?: (intValue: any, hocProps: Object) => any,
   isNull: (intValue: any) => boolean,
   valueAttr?: string,
   fIncludeFocusCapture?: boolean,
@@ -63,9 +60,9 @@ type HocPublicProps = {
   errorZ?: number,
   errorPosition?: FloatPosition,
   errorAlign?: FloatAlign,
-  onChange?: (ev: SyntheticEvent<>, extValue: any) => any,
-  onFocus?: (ev: SyntheticEvent<>) => any,
-  onBlur?: (ev: SyntheticEvent<>) => any,
+  onChange?: (ev: SyntheticEvent, extValue: any) => any,
+  onFocus?: (ev: SyntheticEvent) => any,
+  onBlur?: (ev: SyntheticEvent) => any,
   styleOuter?: Object,
   // all others are passed through unchanged
 };
@@ -121,7 +118,7 @@ type HocGeneratedProps = {
   keyDown: KeyboardEventPars,
   fFocused: boolean,
   onChange: (
-    ev: SyntheticEvent<>,
+    ev: SyntheticEvent,
     providedValue: any,
     options?: { fDontFocus?: boolean }
   ) => any,
@@ -141,16 +138,28 @@ type Props = {
   ...$Exact<DefaultsForHocPublicProps>,
 };
 
+type PublicProps<P> = {
+  ...$Exact<P>,
+  ...$Exact<HocPublicProps>,
+};
+
+type PublicDefaultProps<DP> = {
+  ...$Exact<DP>,
+  ...$Exact<DefaultsForHocPublicProps>,
+  ...$Exact<HocGeneratedProps>,
+};
+
 // ==========================================
 // HOC
 // ==========================================
 // **IMPORTANT**: must be the outermost HOC (i.e. closest to the
 // user), for the imperative API to work. Otherwise, please forward
 // the imperative calls to this HOC.
-const buildInputHoc = (hocOptions: HocOptions): Hoc<{}, HocGeneratedProps> => (
-  ComposedComponent: any
-): any => {
-  const {
+function input<DP: any, P>(
+  ComposedComponent: Class<React$Component<DP, P, *>>,
+  {
+    toInternalValue = o => o,
+    toExternalValue = o => o,
     isNull,
     valueAttr = 'value',
     fIncludeFocusCapture = false,
@@ -159,11 +168,8 @@ const buildInputHoc = (hocOptions: HocOptions): Hoc<{}, HocGeneratedProps> => (
     trappedKeys = [],
     className,
     fIncludeClipboardProps: fIncludeClipboardProps0,
-  } = hocOptions;
-  const toInternalValue: ValueConversionFunction =
-    hocOptions.toInternalValue || (o => o);
-  const toExternalValue: ValueConversionFunction =
-    hocOptions.toExternalValue || (o => o);
+  }: HocOptions
+): Class<React$Component<PublicDefaultProps<DP>, PublicProps<P>, *>> {
   const fIncludeClipboardProps =
     fIncludeClipboardProps0 != null
       ? fIncludeClipboardProps0
@@ -172,13 +178,14 @@ const buildInputHoc = (hocOptions: HocOptions): Hoc<{}, HocGeneratedProps> => (
     ComposedComponent.displayName || ComposedComponent.name || 'Component';
   const hocDisplayName = `Input(${composedComponentName})`;
 
-  class Klass extends React.PureComponent<Props> {
+  class Klass extends React.PureComponent {
     static displayName = hocDisplayName;
     static defaultProps: DefaultsForHocPublicProps = {
       focusOnChange: true,
       errors: ([]: Array<string>),
       validators: ([]: Array<Validator>),
     };
+    props: Props;
     curValue: any;
     prevValue: any;
     validationErrors: Array<?string>;
@@ -432,7 +439,7 @@ const buildInputHoc = (hocOptions: HocOptions): Hoc<{}, HocGeneratedProps> => (
     }
 
     onChange = (
-      ev: SyntheticEvent<>,
+      ev: SyntheticEvent,
       providedValue: any,
       options: { fDontFocus?: boolean } = {}
     ) => {
@@ -450,7 +457,7 @@ const buildInputHoc = (hocOptions: HocOptions): Hoc<{}, HocGeneratedProps> => (
       }
     };
 
-    onFocus = (ev: SyntheticEvent<>) => {
+    onFocus = (ev: SyntheticEvent) => {
       const { onFocus, disabled } = this.props;
       if (disabled) {
         this._blur();
@@ -461,14 +468,14 @@ const buildInputHoc = (hocOptions: HocOptions): Hoc<{}, HocGeneratedProps> => (
       if (onFocus) onFocus(ev);
     };
 
-    onBlur = (ev: SyntheticEvent<>) => {
+    onBlur = (ev: SyntheticEvent) => {
       const { onBlur } = this.props;
       this._validate().catch(() => {});
       this.changedFocus(false);
       if (onBlur) onBlur(ev);
     };
 
-    onMouseDownWrapper = (ev: SyntheticEvent<>) => {
+    onMouseDownWrapper = (ev: SyntheticEvent) => {
       // Always cancel mousedowns: they blur the component. If they are interesting,
       // capture them at a lower level
       cancelEvent(ev);
@@ -481,23 +488,23 @@ const buildInputHoc = (hocOptions: HocOptions): Hoc<{}, HocGeneratedProps> => (
     // Cancel bubbling of click events; they may reach Modals
     // on their way up and cause the element to blur.
     // Allow free propagation if the element is disabled.
-    onClickWrapper = (ev: SyntheticEvent<>) => {
+    onClickWrapper = (ev: SyntheticEvent) => {
       if (!this.props.disabled) stopPropagation(ev);
     };
 
-    onKeyDown = (ev: SyntheticKeyboardEvent<>) => {
+    onKeyDown = (ev: SyntheticKeyboardEvent) => {
       const { which, keyCode, metaKey, shiftKey, altKey, ctrlKey } = ev;
       if (trappedKeys.indexOf(which) < 0) return;
       this.keyDown = { which, keyCode, metaKey, shiftKey, altKey, ctrlKey };
       this.forceUpdate();
     };
 
-    onCopyCut = (ev: SyntheticClipboardEvent<>) => {
+    onCopyCut = (ev: SyntheticClipboardEvent) => {
       ev.clipboardData.setData('text/plain', this.curValue);
       ev.preventDefault();
     };
 
-    onPaste = (ev: SyntheticClipboardEvent<>) => {
+    onPaste = (ev: SyntheticClipboardEvent) => {
       const nextValue = ev.clipboardData.getData('text/plain');
       ev.preventDefault();
       this.onChange(ev, nextValue);
@@ -629,7 +636,7 @@ const buildInputHoc = (hocOptions: HocOptions): Hoc<{}, HocGeneratedProps> => (
   Klass.contextTypes = { theme: PropTypes.any };
 
   return (Klass: any);
-};
+}
 
 // ==========================================
 // Styles
@@ -660,5 +667,5 @@ const style = {
 // ==========================================
 // Public API
 // ==========================================
-export default buildInputHoc;
+export default input;
 export { INPUT_HOC_INVALID_HTML_PROPS };

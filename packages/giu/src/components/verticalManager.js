@@ -1,6 +1,6 @@
 // @flow
 
-import React from 'react';
+import * as React from 'react';
 import throttle from 'lodash/throttle';
 
 // ===============================================================
@@ -17,7 +17,7 @@ type PublicProps = {
   id: string,
   index: number,
   childProps?: Object,
-  ChildComponent: ReactClass<*>,
+  ChildComponent: React.ComponentType<*>,
   onChangeHeight?: (id: string, height: number) => any,
   top?: number,
 };
@@ -31,8 +31,7 @@ type Props = {
   ...$Exact<DefaultProps>,
 };
 
-class VerticalManager extends React.Component {
-  props: Props;
+class VerticalManager extends React.Component<Props> {
   static defaultProps: DefaultProps = {
     childProps: {},
   };

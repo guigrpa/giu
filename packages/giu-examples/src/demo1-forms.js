@@ -3,7 +3,7 @@
 /* eslint-disable no-console, no-alert, max-len */
 /* eslint-disable react/prop-types, react/no-multi-comp, react/jsx-no-bind, react/jsx-boolean-value */
 /* eslint-disable react/prefer-stateless-function */
-import React from 'react';
+import * as React from 'react';
 import {
   TextInput,
   PasswordInput,
@@ -34,12 +34,10 @@ import {
   onChangeJson,
 } from './demo1-common';
 
-class FormExample extends React.Component {
-  props: { lang: string };
-  state: {
-    fShowDateInput: boolean,
-    fixedDate: Date,
-  };
+class FormExample extends React.Component<{ lang: string }, {
+  fShowDateInput: boolean,
+  fixedDate: Date,
+}> {
   cmds: Array<any>;
 
   constructor() {
@@ -637,7 +635,7 @@ class FormExample extends React.Component {
   }
 }
 
-class TimePickerNow extends React.Component {
+class TimePickerNow extends React.Component<$FlowFixMeProps, $FlowFixMeState> {
   constructor(props) {
     super(props);
     this.state = {

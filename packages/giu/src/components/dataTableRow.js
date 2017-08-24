@@ -2,7 +2,7 @@
 
 /* eslint-disable no-console */
 /* eslint-disable react/no-multi-comp */
-import React from 'react';
+import * as React from 'react';
 import { merge } from 'timm';
 import upperFirst from 'lodash/upperFirst';
 import isFunction from 'lodash/isFunction';
@@ -41,7 +41,7 @@ export type DataTableColumn = {
   // ---------
   // By default, the reference value is rendered. Customize this by
   // specifying a `render` function.
-  render?: (item: Object) => React$Element<any>,
+  render?: (item: Object) => React.Element<any>,
 
   // Functionalities
   // ---------------
@@ -62,19 +62,17 @@ export type DataTableColumn = {
 // ===============================================================
 // DataTableHeader
 // ===============================================================
-class DataTableHeader extends React.PureComponent {
-  props: {
-    cols: Array<DataTableColumn>,
-    lang?: string, // just to force-refresh upon update
-    commonCellProps?: Object,
-    maxLabelLevel: number,
-    scrollbarWidth: number,
-    sortBy: ?string,
-    sortDescending: boolean,
-    onClick: (attr: string) => any,
-    style?: Object,
-  };
-
+class DataTableHeader extends React.PureComponent<{
+  cols: Array<DataTableColumn>,
+  lang?: string, // just to force-refresh upon update
+  commonCellProps?: Object,
+  maxLabelLevel: number,
+  scrollbarWidth: number,
+  sortBy: ?string,
+  sortDescending: boolean,
+  onClick?: (attr: string) => any,
+  style?: Object,
+}> {
   // ===============================================================
   render() {
     return (
@@ -140,33 +138,32 @@ class DataTableHeader extends React.PureComponent {
   }
 
   // ===============================================================
-  onClick = (ev: SyntheticEvent) => {
+  onClick = (ev: SyntheticEvent<>) => {
     if (!(ev.currentTarget instanceof Element)) return;
     const attr = ev.currentTarget.id;
-    this.props.onClick(attr);
+    const { onClick } = this.props;
+    if (onClick) onClick(attr);
   };
 }
 
 // ===============================================================
 // Row
 // ===============================================================
-class DataTableRow extends React.PureComponent {
-  props: {
-    id: string,
-    item: Object,
-    cols: Array<DataTableColumn>,
-    isItemSelected: boolean,
-    fSortedManually: boolean,
-    disableDragging: boolean,
-    commonCellProps?: Object,
-    onClick: (ev: SyntheticEvent, id: string) => any,
-    onDoubleClick: (ev: SyntheticEvent, id: string) => any,
-    style?: Object,
-    selectedBgColor: string,
-    selectedFgColor: string,
-    onMayHaveChangedHeight: () => any,
-  };
-
+class DataTableRow extends React.PureComponent<{
+  id: string,
+  item: Object,
+  cols: Array<DataTableColumn>,
+  isItemSelected: boolean,
+  fSortedManually: boolean,
+  disableDragging: boolean,
+  commonCellProps?: Object,
+  onClick: (ev: SyntheticEvent<>, id: string) => any,
+  onDoubleClick: (ev: SyntheticEvent<>, id: string) => any,
+  style?: Object,
+  selectedBgColor: string,
+  selectedFgColor: string,
+  onMayHaveChangedHeight: () => any,
+}> {
   componentDidUpdate() {
     const { onMayHaveChangedHeight } = this.props;
     if (onMayHaveChangedHeight) onMayHaveChangedHeight();
@@ -222,12 +219,12 @@ class DataTableRow extends React.PureComponent {
   // ===============================================================
   // Event handlers
   // ===============================================================
-  onClick = (ev: SyntheticEvent) => {
+  onClick = (ev: SyntheticEvent<>) => {
     const { onClick } = this.props;
     if (onClick) onClick(ev, this.props.id);
   };
 
-  onDoubleClick = (ev: SyntheticEvent) => {
+  onDoubleClick = (ev: SyntheticEvent<>) => {
     const { onDoubleClick } = this.props;
     if (onDoubleClick) onDoubleClick(ev, this.props.id);
   };
@@ -237,7 +234,9 @@ class DataTableRow extends React.PureComponent {
 // Other components
 // ===============================================================
 const DataTableFetchingRow = () =>
-  <div style={style.fetchingRow}><Spinner size="lg" /></div>;
+  <div style={style.fetchingRow}>
+    <Spinner size="lg" />
+  </div>;
 
 // ===============================================================
 // Styles

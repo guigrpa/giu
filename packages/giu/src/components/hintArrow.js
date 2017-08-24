@@ -1,6 +1,6 @@
 // @flow
 
-import React from 'react';
+import * as React from 'react';
 import {
   vectorAdd as add,
   vectorSub as sub,
@@ -17,7 +17,7 @@ const vec = (V: Point2) => `${V.x},${V.y}`;
 // Component
 // ==========================================
 // -- START_DOCS
-export type HintArrowPars = {|
+export type HintArrowPars = {
   type: 'ARROW',
   from: Point2, // coordinates, e.g. `{ x: 5, y: 10 }`
   to: Point2, // coordinates
@@ -25,14 +25,12 @@ export type HintArrowPars = {|
   arrowSize?: number,
   arrowAngle?: number,
   counterclockwise?: boolean,
-|};
+};
 // -- END_DOCS
 
 type Props = HintArrowPars;
 
-class HintArrow extends React.Component {
-  props: Props;
-
+class HintArrow extends React.Component<Props> {
   // ==========================================
   // Render
   // ==========================================

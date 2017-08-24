@@ -2,13 +2,12 @@
 
 /* eslint-disable react/no-string-refs */
 
-import React from 'react';
+import * as React from 'react';
 import PropTypes from 'prop-types';
 import { NumberInput, isLte, Button, notify } from 'giu';
 import { ExampleLabel, exampleStyle } from './demo1-common';
 
-class FormExample extends React.Component {
-  state: { a: any, b: any };
+class FormExample extends React.Component<$FlowFixMeProps, { a: any, b: any }> {
   refs: any;
 
   constructor() {

@@ -1,8 +1,8 @@
-// @flow
+// @no-flow
 
 /* eslint-disable no-unused-vars, max-len */
 
-import React from 'react';
+import * as React from 'react';
 import type { StatelessComponent } from '../gral/types';
 
 // =======================================
@@ -23,8 +23,8 @@ type PublicProps<P> = P;
 
 type Hoc<DP, P> = {
   (
-    ComposedComponent: Class<React$Component<DP, P, *>>
-  ): Class<React$Component<PublicDefaultProps<DP>, PublicProps<P>, *>>,
+    ComposedComponent: Class<React.Component<P, *>>
+  ): Class<React.Component<PublicProps<P>, *>>,
   (a: StatelessComponent<P>): any, // FIXME
 };
 
@@ -48,8 +48,7 @@ type Props = {
 // ---------------------------------------
 // Class-based
 // ---------------------------------------
-class A extends React.Component {
-  props: Props;
+class A extends React.Component<Props> {
   static defaultProps = {
     cond2: 'hello',
   };
@@ -58,7 +57,11 @@ class A extends React.Component {
     const txt =
       `${this.props.text} ${this.props.extra} ` +
       `${this.props.cond || 'xxx'} ${this.props.cond2}`;
-    return <span>{txt}</span>;
+    return (
+      <span>
+        {txt}
+      </span>
+    );
   }
 }
 const HA = hoc(A);
@@ -81,7 +84,11 @@ const a4 = () => <HA text="foo" cond2={3} />;
 // ---------------------------------------
 // Functional examples (FIXME)
 // ---------------------------------------
-const B = (props: Props) => <span>{props.text}{props.extra}</span>;
+const B = (props: Props) =>
+  <span>
+    {props.text}
+    {props.extra}
+  </span>;
 const HB = hoc(B);
 
 // Tests

@@ -2,7 +2,7 @@
 
 /* eslint-disable no-plusplus */
 
-import React from 'react';
+import * as React from 'react';
 import { createStore } from 'redux';
 import type { Reducer } from 'redux';
 import { addLast, removeAt, set as timmSet } from 'timm';
@@ -101,8 +101,7 @@ type Props = {
   modals?: State,
 };
 
-class Modals extends React.PureComponent {
-  props: Props;
+class Modals extends React.PureComponent<Props> {
   storeUnsubscribe: () => void;
   refModals: Array<any>;
   prevModals: State;

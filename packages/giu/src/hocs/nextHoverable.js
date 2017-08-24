@@ -1,6 +1,8 @@
 // @flow
 
 import * as React from 'react';
+import { omit } from 'timm';
+import type { Hoc } from './hocTypes';
 
 /* eslint-disable max-len */
 
@@ -58,21 +60,24 @@ type State = { hovering: Hovering };
 // ==========================================
 // HOC
 // ==========================================
-function hoverable<Props: {}>(
-  ComposedComponent: React.ComponentType<HoverableProps & Props>
-): React.ComponentType<Props> {
+const hoverable: Hoc<{}, HoverableProps> = (ComposedComponent: any): any => {
   const composedComponentName: any =
     ComposedComponent.displayName || ComposedComponent.name || 'Component';
   const hocDisplayName = `Hoverable(${composedComponentName})`;
 
-  class Derived extends React.Component<Props, State> {
+  class Derived extends React.Component<*, State> {
     static displayName = hocDisplayName;
-    state: State = { hovering: null };
+
+    constructor() {
+      super();
+      this.state = { hovering: null };
+    }
 
     render() {
+      const otherProps = omit(this.props, ['onHoverStart', 'onHoverStop']);
       return (
         <ComposedComponent
-          {...this.props}
+          {...otherProps}
           hovering={this.state.hovering}
           onHoverStart={this.onHoverStart}
           onHoverStop={this.onHoverStop}
@@ -87,19 +92,21 @@ function hoverable<Props: {}>(
       }
       if (!id) id = true;
       this.setState({ hovering: id });
-      if (this.props.onHoverStart) this.props.onHoverStart(ev);
+      const onHoverStart: any = this.props.onHoverStart;
+      if (onHoverStart) onHoverStart(ev);
     };
 
     onHoverStop = (ev: SyntheticEvent<>) => {
       this.setState({ hovering: null });
-      if (this.props.onHoverStop) this.props.onHoverStop(ev);
+      const onHoverStop: any = this.props.onHoverStop;
+      if (onHoverStop) onHoverStop(ev);
     };
   }
 
   return Derived;
-}
+};
 
 // ==========================================
-// Public API
+// Public
 // ==========================================
 export default hoverable;

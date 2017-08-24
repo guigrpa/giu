@@ -1,6 +1,6 @@
-// @flow
+// @no-flow
 
-import React from 'react';
+import * as React from 'react';
 import { omit } from 'timm';
 import input, { INPUT_HOC_INVALID_HTML_PROPS } from '../hocs/input';
 
@@ -43,9 +43,7 @@ type Props = {
 // ==========================================
 // Component
 // ==========================================
-class Checkbox extends React.Component {
-  static defaultProps = {};
-  props: Props;
+class Checkbox extends React.Component<Props> {
   labelId: string;
 
   constructor(props: Props) {
@@ -72,7 +70,9 @@ class Checkbox extends React.Component {
         style={style.wrapper}
       >
         {this.renderInput()}
-        <label htmlFor={this.labelId} style={styleLabel}>{label}</label>
+        <label htmlFor={this.labelId} style={styleLabel}>
+          {label}
+        </label>
       </span>
     );
   }
@@ -107,9 +107,9 @@ const style = {
 // ==========================================
 // Public API
 // ==========================================
-export default input(Checkbox, {
+export default input({
   toInternalValue,
   toExternalValue,
   isNull,
   valueAttr: 'checked',
-});
+})(Checkbox);

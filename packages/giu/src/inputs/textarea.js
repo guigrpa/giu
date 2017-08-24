@@ -1,6 +1,6 @@
-// @flow
+// @no-flow
 
-import React from 'react';
+import * as React from 'react';
 import PropTypes from 'prop-types';
 import { omit, merge } from 'timm';
 import { preventDefault, stopPropagation } from '../gral/helpers';
@@ -58,9 +58,8 @@ const FILTERED_OUT_PROPS_MDL = [...FILTERED_OUT_PROPS, 'placeholder'];
 // ==========================================
 // Component
 // ==========================================
-class Textarea extends React.Component {
+class Textarea extends React.Component<Props> {
   static defaultProps = {};
-  props: Props;
   labelId: string;
   refInput: ?Object;
   refOuter: ?Object;

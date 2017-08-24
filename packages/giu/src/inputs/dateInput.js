@@ -1,8 +1,8 @@
-// @flow
+// @no-flow
 
 /* eslint-disable react/no-multi-comp */
 
-import React from 'react';
+import * as React from 'react';
 import PropTypes from 'prop-types';
 import { omit, merge, set as timmSet, addDefaults } from 'timm';
 import moment from '../vendor/moment';
@@ -39,9 +39,10 @@ const toInternalValue = (extDate, props) => {
   const { type, date, time, seconds, utc } = props;
   const mom = moment(extDate);
   if (getUtcFlag(date, time, utc)) mom.utc();
-  const fmt = type === 'native'
-    ? dateTimeFormatNative(date, time)
-    : dateTimeFormat(date, time, seconds);
+  const fmt =
+    type === 'native'
+      ? dateTimeFormatNative(date, time)
+      : dateTimeFormat(date, time, seconds);
   return mom.format(fmt);
 };
 const toExternalValue = (str, props) => {
@@ -53,9 +54,10 @@ const isNull = val => val === NULL_VALUE;
 const momentToDisplay = (mom, props) => {
   if (mom == null) return NULL_VALUE;
   const { type, date, time, seconds } = props;
-  const fmt = type === 'native'
-    ? dateTimeFormatNative(date, time)
-    : dateTimeFormat(date, time, seconds);
+  const fmt =
+    type === 'native'
+      ? dateTimeFormatNative(date, time)
+      : dateTimeFormat(date, time, seconds);
   return mom.format(fmt);
 };
 const displayToMoment = (str, props) => {
@@ -189,12 +191,13 @@ const FILTERED_OUT_PROPS_MDL = FILTERED_OUT_PROPS.concat(['placeholder']);
 //------------------------------------------
 // Component
 //------------------------------------------
-class BaseDateInput extends React.Component {
-  props: Props;
-  static defaultProps = {};
-  state: {
+class BaseDateInput extends React.Component<
+  Props,
+  {
     fFloat: boolean,
-  };
+  }
+> {
+  static defaultProps = {};
   cmdsToPicker: ?Array<Command>;
   keyDown: void | KeyboardEventPars;
   lastExtValue: ?Moment;
@@ -448,9 +451,8 @@ class BaseDateInput extends React.Component {
       accentColor,
     } = this.props;
     const mom = displayToMoment(curValue, this.props);
-    const registerOuterRef = type === 'inlinePicker'
-      ? this.props.registerOuterRef
-      : undefined;
+    const registerOuterRef =
+      type === 'inlinePicker' ? this.props.registerOuterRef : undefined;
     return (
       <DateTimePicker
         registerOuterRef={registerOuterRef}
@@ -571,8 +573,7 @@ const DateInput = input(BaseDateInput, {
 // ==========================================
 // Wrapper to adapt props (adding defaults) to the DateInput.
 // Also wires the imperative API through
-class DateInputWrapper extends React.Component {
-  props: PublicProps;
+class DateInputWrapper extends React.Component<PublicProps> {
   refInput: ?Object;
 
   // ==========================================

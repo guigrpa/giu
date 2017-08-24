@@ -1,6 +1,6 @@
 // @flow
 
-import React from 'react';
+import * as React from 'react';
 import PropTypes from 'prop-types';
 import { omit, merge } from 'timm';
 import { COLORS } from '../gral/constants';
@@ -14,7 +14,7 @@ import { COLORS } from '../gral/constants';
 type Props = {
   plain?: boolean, // removes most button styles
   children?: any, // button contents (can include `Icon` components, etc.)
-  onClick?: (ev: SyntheticMouseEvent) => any,
+  onClick?: (ev: SyntheticMouseEvent<>) => any,
   disabled?: boolean,
   style?: Object, // merged with the `span` style
   skipTheme?: boolean,
@@ -50,8 +50,7 @@ const FILTERED_PROPS_MDL = [
   'fab',
 ];
 
-class Button extends React.PureComponent {
-  props: Props;
+class Button extends React.PureComponent<Props> {
   refButton: ?Object;
 
   componentDidMount() {

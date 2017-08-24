@@ -3,7 +3,7 @@
 /* eslint-disable no-console, no-alert, max-len */
 /* eslint-disable react/prop-types, react/no-multi-comp, react/jsx-no-bind, react/jsx-boolean-value */
 /* eslint-disable react/prefer-stateless-function */
-import React from 'react';
+import * as React from 'react';
 import faker from 'faker';
 import { LIST_SEPARATOR } from 'giu';
 
@@ -74,8 +74,8 @@ const WIDE_OPTIONS = [
 
 const LONG_TEXT = faker.lorem.sentences(7).split('\n').join(' ');
 
-const onChange = (ev: ?SyntheticEvent, o: any): any => console.log(o);
-const onChangeJson = (ev: ?SyntheticEvent, o: any): any =>
+const onChange = (ev: ?SyntheticEvent<>, o: any): any => console.log(o);
+const onChangeJson = (ev: ?SyntheticEvent<>, o: any): any =>
   console.log(JSON.stringify(o));
 
 export {

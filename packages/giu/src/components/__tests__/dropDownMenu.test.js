@@ -2,7 +2,7 @@
 
 /* eslint-env jest */
 
-import React from 'react';
+import * as React from 'react';
 import renderer from 'react-test-renderer'; // eslint-disable-line
 import DropDownMenu from '../dropDownMenu';
 import { LIST_SEPARATOR } from '../../';

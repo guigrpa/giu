@@ -1,6 +1,6 @@
 // @flow
 
-import React from 'react';
+import * as React from 'react';
 import { merge, set as timmSet } from 'timm';
 import { cancelEvent } from '../gral/helpers';
 import { startOfToday } from '../gral/dates';
@@ -64,14 +64,15 @@ type Unit = 'hours' | 'minutes' | 'seconds';
 // ==========================================
 // Component
 // ==========================================
-class TimePickerAnalog extends React.PureComponent {
-  props: Props;
-  static defaultProps: DefaultProps = {
-    size: DEFAULT_SIZE,
-  };
-  state: {
+class TimePickerAnalog extends React.PureComponent<
+  Props,
+  {
     dragging: ?boolean,
     hint: ?{ hours: number, minutes: number, seconds: number },
+  }
+> {
+  static defaultProps: DefaultProps = {
+    size: DEFAULT_SIZE,
   };
   hours: ?number;
   minutes: ?number;
@@ -162,7 +163,11 @@ class TimePickerAnalog extends React.PureComponent {
       idx += 1;
       phi += PI2 / 60;
     }
-    return <g>{ticks}</g>;
+    return (
+      <g>
+        {ticks}
+      </g>
+    );
   }
 
   renderHands() {
@@ -182,7 +187,11 @@ class TimePickerAnalog extends React.PureComponent {
         hands.push(this.renderHand(name, val, false, false, false, true));
       }
     });
-    return <g>{hands}</g>;
+    return (
+      <g>
+        {hands}
+      </g>
+    );
   }
 
   renderHand(name, val, fHovered, fDragged, fDragHandle, fHint) {
@@ -395,11 +404,9 @@ class TimePickerAnalog extends React.PureComponent {
 // WatchFace
 // ==========================================
 /* eslint-disable react/no-multi-comp */
-class WatchFace extends React.PureComponent {
-  props: {
-    radius: number,
-  };
-
+class WatchFace extends React.PureComponent<{
+  radius: number,
+}> {
   render() {
     const { radius: r } = this.props;
     const ticks = [];
@@ -423,7 +430,11 @@ class WatchFace extends React.PureComponent {
       idx += 1;
       phi += PI2 / 60;
     }
-    return <g>{ticks}</g>;
+    return (
+      <g>
+        {ticks}
+      </g>
+    );
   }
 }
 

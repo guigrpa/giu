@@ -2,7 +2,7 @@
 
 /* eslint-disable no-console */
 import { merge } from 'timm';
-import React from 'react';
+import * as React from 'react';
 import throttle from 'lodash/throttle';
 import { cancelBodyScrolling } from '../gral/helpers';
 import { getScrollbarWidth } from '../gral/constants';
@@ -28,7 +28,7 @@ type PublicProps = {
   itemsById?: Object,
   shownIds?: Array<string>,
   alwaysRenderIds?: Array<string>,
-  RowComponents: { [key: string]: ReactClass<*> },
+  RowComponents: { [key: string]: React.ComponentType<*> },
   commonRowProps: Object,
   getSpecificRowProps: (id: string) => Object,
 
@@ -64,8 +64,7 @@ type Props = {
   ...$Exact<DefaultProps>,
 };
 
-class VirtualScroller extends React.PureComponent {
-  props: Props;
+class VirtualScroller extends React.PureComponent<Props> {
   static defaultProps: DefaultProps = {
     itemsById: {},
     shownIds: ([]: Array<string>),
@@ -328,9 +327,10 @@ class VirtualScroller extends React.PureComponent {
   // scrollbar aproximates the real size. The estimation will get better and
   // better, as more rows get rendered
   renderSizer() {
-    const totalHeight = this.rowHeight != null
-      ? this.rowHeight * this.props.shownIds.length
-      : this.totalHeight;
+    const totalHeight =
+      this.rowHeight != null
+        ? this.rowHeight * this.props.shownIds.length
+        : this.totalHeight;
     // DEBUG && console.log(`VirtualScroller: totalHeight: ${totalHeight}`);
     return <div style={style.sizer(totalHeight)} />;
   }
@@ -472,17 +472,19 @@ class VirtualScroller extends React.PureComponent {
       return;
     }
 
-    const maxRowsToRender = scrollTop === 0
-      ? MAX_ROWS_INITIAL_RENDER
-      : this.props.maxRowsToRenderInOneGo;
+    const maxRowsToRender =
+      scrollTop === 0
+        ? MAX_ROWS_INITIAL_RENDER
+        : this.props.maxRowsToRenderInOneGo;
 
     // 2. We have no idea of the viewport (in some first renders)
     // ------------------------------------------------------------
     if (scrollBottom == null) {
       const idxFirst = 0;
-      const idxLast = this.props.numRowsInitialRender != null
-        ? this.props.numRowsInitialRender
-        : maxRowsToRender;
+      const idxLast =
+        this.props.numRowsInitialRender != null
+          ? this.props.numRowsInitialRender
+          : maxRowsToRender;
       this.trimAndSetRenderInterval(idxFirst, idxLast);
       return;
     }
@@ -592,9 +594,10 @@ class VirtualScroller extends React.PureComponent {
     // - If it is below, enlarge the interval to include it;
     //   if the target row has a known `top`, shift the interval
     const { pendingScrollToId } = this;
-    const pendingScrollToIdx = pendingScrollToId != null
-      ? this.props.shownIds.indexOf(pendingScrollToId)
-      : undefined;
+    const pendingScrollToIdx =
+      pendingScrollToId != null
+        ? this.props.shownIds.indexOf(pendingScrollToId)
+        : undefined;
     if (pendingScrollToIdx != null && pendingScrollToIdx >= 0) {
       const intervalLength = idxLast - idxFirst;
       if (pendingScrollToIdx < idxFirst) {

@@ -12,9 +12,9 @@ export type ModalPars = {|
   // called when the backdrop
   // (semi-transparent layer highlighting the modal in fron of other
   // page contents) is clicked
-  onClickBackdrop?: (ev: SyntheticMouseEvent) => any,
+  onClickBackdrop?: (ev: SyntheticMouseEvent<>) => any,
 
-  onEsc?: (ev: SyntheticKeyboardEvent) => any, // called when ESC is pressed
+  onEsc?: (ev: SyntheticKeyboardEvent<>) => any, // called when ESC is pressed
 
   // merge with the modal's `div` style, e.g. to
   // fix a modal width or background color
@@ -27,7 +27,7 @@ export type ModalButton = {|
   label?: any, // button text or other contents
   disabled?: boolean,
   defaultButton?: boolean, // will be highlighted and automatically selected when RETURN is pressed
-  onClick?: (ev: SyntheticEvent) => any, // `click` handler for the button
+  onClick?: (ev: SyntheticEvent<>) => any, // `click` handler for the button
   style?: Object, // merged with the button's style
   accent?: boolean, // accent style (use it with MDL theme)
 |};

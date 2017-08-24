@@ -1,6 +1,6 @@
-// @flow
+// @no-flow
 
-import React from 'react';
+import * as React from 'react';
 import { omit, merge } from 'timm';
 import { NULL_STRING } from '../gral/constants';
 import { inputReset, INPUT_DISABLED } from '../gral/styles';
@@ -45,8 +45,7 @@ const FILTERED_OUT_PROPS = [
 // ==========================================
 // Component
 // ==========================================
-class SelectNative extends React.Component {
-  props: Props;
+class SelectNative extends React.Component<Props> {
   static defaultProps = {};
 
   // ==========================================
@@ -75,11 +74,14 @@ class SelectNative extends React.Component {
         style={style.field(this.props)}
       >
         {finalItems.map(o => {
-          const value = o.value === NULL_STRING
-            ? o.value
-            : toInternalValue(o.value);
+          const value =
+            o.value === NULL_STRING ? o.value : toInternalValue(o.value);
           const label = typeof o.label === 'function' ? o.label(lang) : o.label;
-          return <option key={value} id={value} value={value}>{label}</option>;
+          return (
+            <option key={value} id={value} value={value}>
+              {label}
+            </option>
+          );
         })}
       </select>
     );

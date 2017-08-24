@@ -1,4 +1,16 @@
 # Roadmap
+​
+- Upgrade to the latest Flow (lots of React goodies!)
+    - [ ] Solve giu errors
+    - [ ] Check updates to HOCs
+    - [ ] Enable Flow on giu-examples, and solve those too
+    - [ ] Enable hocs/playFlowXXXX, and solve those too
+- Upgrade giu (subpackage)'s deps, and include React 16
+- Export useful types (HoverableProps, etc.)
+- In types.js, update the Command type: (1) make it a union; (2) remove exact-ness; (3) add SET_VALUE command, with `value: any` attribute
+- En iOS, los floats de errores de validación causan que los inputs de longitud 100% se hagan más cortos... y están muy distanciados del input
+- Combo box (or TextInput with hanging menu with typeahead)
+- Update docs to indicate that moment is now optional
 
 - [ ] Expose `delay()`, `waitUntil()` and `isWaiting()` (`gral/wait`) helpers again, using `babel-runtime` and `babel-plugin-transform-runtime`.
 

@@ -1,6 +1,6 @@
 // @flow
 
-import React from 'react';
+import * as React from 'react';
 import { merge } from 'timm';
 import {
   COLORS,
@@ -36,8 +36,8 @@ type PublicProps = {|
   curValue: string,
   keyDown?: KeyboardEventPars,
   emptyText?: string,
-  onChange: (ev: ?SyntheticEvent, value: string) => any,
-  onClickItem?: (ev: ?SyntheticEvent, value: string) => any,
+  onChange: (ev: ?SyntheticEvent<>, value: string) => any,
+  onClickItem?: (ev: ?SyntheticEvent<>, value: string) => any,
   disabled?: boolean,
   fFocused?: boolean,
   fFloating?: boolean,
@@ -61,8 +61,7 @@ type Props = {
 // ==========================================
 // Component
 // ==========================================
-class BaseListPicker extends React.PureComponent {
-  props: Props;
+class BaseListPicker extends React.PureComponent<Props> {
   static defaultProps: DefaultProps = {
     emptyText: 'Ø',
     accentColor: COLORS.accent,
@@ -116,7 +115,11 @@ class BaseListPicker extends React.PureComponent {
       !items.length ||
       (items.length === 1 && items[0].value === '' && items[0].label === '')
     ) {
-      return <div style={style.empty}>{this.props.emptyText}</div>;
+      return (
+        <div style={style.empty}>
+          {this.props.emptyText}
+        </div>
+      );
     }
     this.refItems = [];
     return items.map(this.renderItem);
@@ -185,7 +188,11 @@ class BaseListPicker extends React.PureComponent {
     if (!shortcuts) return null;
     const desc = shortcuts.map(o => o.description).join(', ');
     if (!desc) return null;
-    return <span style={style.shortcut}>{desc}</span>;
+    return (
+      <span style={style.shortcut}>
+        {desc}
+      </span>
+    );
   }
 
   // ==========================================
@@ -196,7 +203,7 @@ class BaseListPicker extends React.PureComponent {
     this.props.registerOuterRef && this.props.registerOuterRef(c);
   };
 
-  onClickItem = (ev: SyntheticEvent) => {
+  onClickItem = (ev: SyntheticEvent<>) => {
     const { onClickItem, onChange } = this.props;
     const currentTarget: any = ev.currentTarget;
     const { id } = currentTarget;

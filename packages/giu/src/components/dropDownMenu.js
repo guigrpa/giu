@@ -1,6 +1,6 @@
 // @flow
 
-import React from 'react';
+import * as React from 'react';
 import { omit, merge } from 'timm';
 import type { Choice, Command } from '../gral/types';
 import { COLORS } from '../gral/constants';
@@ -23,7 +23,7 @@ type PublicProps = {
   lang?: string, // current language (used just for force-render)
   children?: any, // React elements that will be shown as the menu's title
   onClickItem?: (
-    ev: SyntheticMouseEvent, // `click` event
+    ev: SyntheticMouseEvent<>, // `click` event
     val: any // the item's `value` (as specified in the `items` prop)
   ) => any,
   style?: Object, // will be merged with the menu title's `div` wrapper
@@ -51,13 +51,13 @@ const FILTERED_PROPS = [
   'accentColor',
 ];
 
-class DropDownMenu extends React.PureComponent {
-  props: Props;
-  state: {
+class DropDownMenu extends React.PureComponent<
+  Props,
+  {
     fFocused: boolean,
     cmds: ?Array<Command>,
-  };
-
+  }
+> {
   static defaultProps: DefaultProps = {
     accentColor: COLORS.accent,
   };
@@ -120,7 +120,7 @@ class DropDownMenu extends React.PureComponent {
 
   // Run the `onClick` function (if any) associated to the clicked item,
   // and run the `onClickItem` prop.
-  onClickItem = (ev: SyntheticMouseEvent, value: any) => {
+  onClickItem = (ev: SyntheticMouseEvent<>, value: any) => {
     const { items, onClickItem } = this.props;
     items.forEach(item => {
       if (item.value === value && item.onClick) item.onClick(ev);

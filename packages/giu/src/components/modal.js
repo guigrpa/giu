@@ -1,6 +1,6 @@
 // @flow
 
-import React from 'react';
+import * as React from 'react';
 import PropTypes from 'prop-types';
 import { merge } from 'timm';
 import { KEYS, MISC } from '../gral/constants';
@@ -63,8 +63,7 @@ type Props = {
   ...DefaultProps,
 };
 
-class Modal extends React.PureComponent {
-  props: Props;
+class Modal extends React.PureComponent<Props> {
   static defaultProps: DefaultProps = {
     buttons: ([]: Array<ModalButton>),
     zIndex: MISC.zModalBase,
@@ -126,7 +125,11 @@ class Modal extends React.PureComponent {
   }
 
   renderTitle(title: string) {
-    return <div style={style.title}>{title}</div>;
+    return (
+      <div style={style.title}>
+        {title}
+      </div>
+    );
   }
 
   renderSpacer() {
@@ -175,7 +178,7 @@ class Modal extends React.PureComponent {
   // ==========================================
   // Handlers
   // ==========================================
-  onKeyDown = (ev: SyntheticKeyboardEvent) => {
+  onKeyDown = (ev: SyntheticKeyboardEvent<>) => {
     const { which } = ev;
     let buttons;
     switch (which) {
@@ -204,7 +207,7 @@ class Modal extends React.PureComponent {
   };
 
   // Except when clicking on an embedded focusable node, refocus on this modal
-  onClickOuter = (ev: SyntheticMouseEvent) => {
+  onClickOuter = (ev: SyntheticMouseEvent<>) => {
     if (ev.target instanceof Element) {
       const target: any = ev.target;
       const { tagName, disabled } = target;

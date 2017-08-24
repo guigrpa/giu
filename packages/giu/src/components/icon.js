@@ -1,6 +1,6 @@
 // @flow
 
-import React from 'react';
+import * as React from 'react';
 import PropTypes from 'prop-types';
 import { merge, omit } from 'timm';
 import { COLORS } from '../gral/constants';
@@ -37,8 +37,7 @@ const FILTERED_PROPS = [
   'skipTheme',
 ];
 
-class Icon extends React.PureComponent {
-  props: Props;
+class Icon extends React.PureComponent<Props> {
   refIcon: ?Object;
 
   componentDidMount() {

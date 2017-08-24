@@ -1,6 +1,6 @@
 // @flow
 
-import React from 'react';
+import * as React from 'react';
 import { MISC } from '../gral/constants';
 import type { FloatPosition, FloatAlign } from '../components/floats';
 

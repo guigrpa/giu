@@ -1,13 +1,13 @@
 // @flow
 
-import React from 'react';
+import * as React from 'react';
 import { merge } from 'timm';
 
 // ==========================================
 // Component
 // ==========================================
 // -- START_DOCS
-export type HintLabelPars = {|
+export type HintLabelPars = {
   type: 'LABEL',
   x: number,
   y: number,
@@ -15,18 +15,16 @@ export type HintLabelPars = {|
   children?: any, // React elements that comprise the label
   fontSize?: number, // will be initialised by the HintScreen
   style?: Object,
-|};
+};
 type AlignType = 'left' | 'right' | 'center';
 // -- END_DOCS
 
 type Props = {
-  ...HintLabelPars,
+  ...$Exact<HintLabelPars>,
   fontSize: number,
 };
 
-class HintLabel extends React.Component {
-  props: Props;
-
+class HintLabel extends React.Component<Props> {
   // ==========================================
   // Render
   // ==========================================
@@ -56,9 +54,8 @@ const style = {
     const width = style.width || 200;
     let out = {
       position: 'absolute',
-      [align === 'right' ? 'right' : 'left']: align === 'center'
-        ? -width / 2
-        : 0,
+      [align === 'right' ? 'right' : 'left']:
+        align === 'center' ? -width / 2 : 0,
       textAlign: align,
       marginLeft: 8,
       marginRight: 8,

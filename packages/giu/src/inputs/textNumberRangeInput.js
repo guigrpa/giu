@@ -1,6 +1,6 @@
-// @flow
+// @no-flow
 
-import React from 'react';
+import * as React from 'react';
 import PropTypes from 'prop-types';
 import { omit, merge, set as timmSet } from 'timm';
 import { inputReset, INPUT_DISABLED } from '../gral/styles';
@@ -72,9 +72,8 @@ const FILTERED_OUT_PROPS_MDL = FILTERED_OUT_PROPS.concat(['placeholder']);
 // Component
 // ==========================================
 function createClass(name, inputType) {
-  const Klass = class extends React.Component {
+  const Klass = class extends React.Component<Props> {
     static displayName = name;
-    props: Props;
     static defaultProps = {};
     labelId: string;
     refMdl: ?Object;

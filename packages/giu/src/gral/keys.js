@@ -5,7 +5,7 @@ import { UNICODE, IS_MAC } from '../gral/constants';
 import { cancelEvent } from '../gral/helpers';
 import type { KeyboardModifiers, KeyboardShortcut } from '../gral/types';
 
-type KeyboardShortcutCallbackT = (ev: SyntheticKeyboardEvent) => any;
+type KeyboardShortcutCallbackT = (ev: SyntheticKeyboardEvent<>) => any;
 
 const shortcuts: { [key: string]: KeyboardShortcutCallbackT } = {};
 
@@ -116,12 +116,12 @@ function unregisterShortcut(shortcut: KeyboardShortcut) {
   delete shortcuts[shortcut.hash];
 }
 
-function isAnyModifierPressed(ev: SyntheticKeyboardEvent): boolean {
+function isAnyModifierPressed(ev: SyntheticKeyboardEvent<>): boolean {
   return ev.altKey || ev.metaKey || ev.ctrlKey || ev.shiftKey;
 }
 
 // Global key-down handler (a single one)
-function onKeyDown(ev: SyntheticKeyboardEvent) {
+function onKeyDown(ev: SyntheticKeyboardEvent<>) {
   const hash = getHash(ev);
   const shortcut = shortcuts[hash];
   if (!shortcut) return;

@@ -1,6 +1,6 @@
 // @flow
 
-import React from 'react';
+import * as React from 'react';
 import { createStore, applyMiddleware } from 'redux';
 import type { Reducer } from 'redux';
 import thunk from 'redux-thunk';
@@ -187,8 +187,7 @@ type Props = {
   storeState?: State,
 };
 
-class Hints extends React.PureComponent {
-  props: Props;
+class Hints extends React.PureComponent<Props> {
   storeUnsubscribe: () => void;
   storeState: State;
 

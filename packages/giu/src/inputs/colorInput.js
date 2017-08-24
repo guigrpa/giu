@@ -1,6 +1,6 @@
-// @flow
+// @no-flow
 
-import React from 'react';
+import * as React from 'react';
 import { merge } from 'timm';
 import tinycolor from 'tinycolor2';
 import { COLORS, KEYS, IS_IOS } from '../gral/constants';
@@ -49,12 +49,13 @@ type Props = {
 // ==========================================
 // Component
 // ==========================================
-class ColorInput extends React.Component {
-  static defaultProps = {};
-  props: Props;
-  state: {
+class ColorInput extends React.Component<
+  Props,
+  {
     fFloat: boolean,
-  };
+  }
+> {
+  static defaultProps = {};
   floatId: ?string;
   refTitle: ?Object;
 

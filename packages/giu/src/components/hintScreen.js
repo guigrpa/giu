@@ -3,7 +3,7 @@
 /* eslint-disable react/no-array-index-key */
 
 import 'typeface-gloria-hallelujah'; // eslint-disable-line import/extensions
-import React from 'react';
+import * as React from 'react';
 import { COLORS, MISC } from '../gral/constants';
 import Backdrop from '../components/backdrop';
 import HintLabel from '../components/hintLabel';
@@ -38,15 +38,14 @@ type DefaultProps = {
 type Props = {
   ...HintScreenPars,
   ...$Exact<DefaultProps>,
-  onClose: (ev: SyntheticMouseEvent) => any,
+  onClose: (ev: SyntheticMouseEvent<>) => any,
 };
 
 // **Warning**: an embedded `HintScreen` in a component
 // with `translateZ(0)` or similar (which creates a stacking context and
 // a containing block) will not be properly positioned and may even be cropped.
 // In such a case, use `Hints` instead.
-class HintScreen extends React.PureComponent {
-  props: Props;
+class HintScreen extends React.PureComponent<Props> {
   static defaultProps: DefaultProps = {
     elements: ([]: ElementsWrapper),
     closeLabel: 'Got it!',
@@ -110,7 +109,11 @@ class HintScreen extends React.PureComponent {
 
   renderCloseButton() {
     const { closeLabel } = this.props;
-    return <div style={style.closeButton}>{closeLabel}</div>;
+    return (
+      <div style={style.closeButton}>
+        {closeLabel}
+      </div>
+    );
   }
 
   // ==========================================

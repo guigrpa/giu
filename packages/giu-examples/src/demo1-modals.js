@@ -3,7 +3,7 @@
 /* eslint-disable no-console, no-alert, max-len */
 /* eslint-disable react/prop-types, react/no-multi-comp, react/jsx-no-bind, react/jsx-boolean-value */
 /* eslint-disable react/prefer-stateless-function */
-import React from 'react';
+import * as React from 'react';
 import PropTypes from 'prop-types';
 import {
   Modal,
@@ -26,8 +26,7 @@ import {
   onChange,
 } from './demo1-common';
 
-class ModalExample extends React.Component {
-  state: { fEmbeddedModal: boolean };
+class ModalExample extends React.Component<{}, { fEmbeddedModal: boolean }> {
   refInput: Object;
   refName: Object;
 

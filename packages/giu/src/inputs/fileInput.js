@@ -1,6 +1,6 @@
-// @flow
+// @no-flow
 
-import React from 'react';
+import * as React from 'react';
 import PropTypes from 'prop-types';
 import { omit, merge } from 'timm';
 import filesize from 'filesize';
@@ -31,7 +31,7 @@ type Props = {
   ...$Exact<PublicProps>,
   // Input HOC
   curValue: ?Object,
-  onChange: (ev: SyntheticEvent, providedValue: any) => any,
+  onChange: (ev: SyntheticEvent<>, providedValue: any) => any,
   registerOuterRef: Function,
   registerFocusableRef: Function,
   errors: Array<string>,
@@ -48,9 +48,8 @@ const FILTERED_OUT_PROPS = [
 // ==========================================
 // Component
 // ==========================================
-class FileInput extends React.Component {
+class FileInput extends React.Component<Props> {
   static defaultProps = {};
-  props: Props;
   cntCleared: number;
   refInput: ?Object;
 
@@ -106,8 +105,7 @@ class FileInput extends React.Component {
     const sizeDesc = filesize(size, { round: 0 });
     return (
       <span>
-        {name} [{sizeDesc}]
-        {' '}
+        {name} [{sizeDesc}]{' '}
         <Icon
           icon={!skipTheme && this.context.theme === 'mdl' ? 'clear' : 'times'}
           onClick={this.onClickClear}

@@ -1,6 +1,6 @@
-// @flow
+// @no-flow
 
-import React from 'react';
+import * as React from 'react';
 import { merge, set as timmSet } from 'timm';
 import { COLORS, KEYS, UNICODE, NULL_STRING, IS_IOS } from '../gral/constants';
 import {
@@ -64,13 +64,14 @@ type Props = {
 // ==========================================
 // Component
 // ==========================================
-class SelectCustomBase extends React.Component {
-  props: Props;
+class SelectCustomBase extends React.Component<
+  Props,
+  {
+    fFloat: boolean,
+  }
+> {
   static defaultProps: DefaultProps = {
     accentColor: COLORS.accent,
-  };
-  state: {
-    fFloat: boolean,
   };
   floatId: ?string;
   keyDown: void | KeyboardEventPars;
@@ -145,9 +146,8 @@ class SelectCustomBase extends React.Component {
     if (curValue !== NULL_STRING) {
       const item = this.items.find(o => o.value === curValue);
       if (item) {
-        label = typeof item.label === 'function'
-          ? item.label(lang)
-          : item.label;
+        label =
+          typeof item.label === 'function' ? item.label(lang) : item.label;
       }
     }
     const caretIcon = this.state.fFloat ? 'caret-up' : 'caret-down';
@@ -158,7 +158,9 @@ class SelectCustomBase extends React.Component {
         onMouseDown={this.onMouseDownTitle}
         style={style.title(this.props)}
       >
-        <span style={style.titleText}>{label}</span>
+        <span style={style.titleText}>
+          {label}
+        </span>
         <Icon icon={caretIcon} skipTheme style={style.caret(this.props)} />
         {IS_IOS && this.renderFloatForIos()}
       </span>
@@ -258,7 +260,7 @@ class SelectCustomBase extends React.Component {
     this.setState({ fFloat: !this.state.fFloat });
   };
 
-  onClickItem = (ev: ?SyntheticEvent, nextValue: string) => {
+  onClickItem = (ev: ?SyntheticEvent<>, nextValue: string) => {
     const { inlinePicker, onClickItem } = this.props;
     if (!inlinePicker) this.setState({ fFloat: false });
     onClickItem && onClickItem(ev, toExternalValue(nextValue));

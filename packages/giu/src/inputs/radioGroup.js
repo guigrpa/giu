@@ -1,6 +1,6 @@
-// @flow
+// @no-flow
 
-import React from 'react';
+import * as React from 'react';
 import { merge, set as timmSet } from 'timm';
 import { preventDefault } from '../gral/helpers';
 import { NULL_STRING } from '../gral/constants';
@@ -55,9 +55,8 @@ type Props = {
 // ==========================================
 // Component
 // ==========================================
-class RadioGroup extends React.Component {
+class RadioGroup extends React.Component<Props> {
   static defaultProps = {};
-  props: Props;
   items: Array<RadioChoice>;
   buttonGroupName: string;
 
@@ -89,9 +88,8 @@ class RadioGroup extends React.Component {
     const { curValue } = this.props;
     const { value, label, labelExtra } = item;
     const id = `${this.buttonGroupName}_${idx}`;
-    const finalLabel = label && typeof label === 'function'
-      ? label(this.props.lang)
-      : label;
+    const finalLabel =
+      label && typeof label === 'function' ? label(this.props.lang) : label;
     return (
       <div key={value} id={idx} onClick={this.onClickItem}>
         <input
@@ -104,8 +102,13 @@ class RadioGroup extends React.Component {
           readOnly /* will change via parents onClick */
           tabIndex={-1}
         />
-        <label htmlFor={id}>{finalLabel}</label>
-        {labelExtra && <div style={style.labelExtra}>{labelExtra}</div>}
+        <label htmlFor={id}>
+          {finalLabel}
+        </label>
+        {labelExtra &&
+          <div style={style.labelExtra}>
+            {labelExtra}
+          </div>}
       </div>
     );
   };
