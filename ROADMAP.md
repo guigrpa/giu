@@ -1,8 +1,6 @@
 # Roadmap
 
-- [ ] Expose `delay()`, `waitUntil()` and `isWaiting()` (`gral/wait`) helpers again, using `babel-runtime` and `babel-plugin-transform-runtime`.
-
-- [ ] Jest snapshots
+- [ ] Unit tests (with Jest snapshots)
 
 - [ ] Add copy&paste to RangePicker
 - [ ] *Bug* ListPicker on Windows incorrectly aligns (vertically) items and shortcuts (it *is* correct in the main doc page)
