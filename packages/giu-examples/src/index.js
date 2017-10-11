@@ -248,24 +248,18 @@ const Contents = ({ id }) => {
     default:
       el = (
         <div>
-          <b>
-            MISSING DEMO: {id}
-          </b>
+          <b>MISSING DEMO: {id}</b>
         </div>
       );
       break;
   }
-  return (
-    <div>
-      {el}
-    </div>
-  );
+  return <div>{el}</div>;
 };
 
 // -----------------------------------------------
 // Demos
 // -----------------------------------------------
-const DemoIntro = () =>
+const DemoIntro = () => (
   <div>
     <p>
       <b>All of the examples in this page are interactive</b> and use Giu's
@@ -274,7 +268,8 @@ const DemoIntro = () =>
     <p>
       You can also check out this <a href="demo1.html">compact demo</a>.
     </p>
-  </div>;
+  </div>
+);
 
 class InputIntroAge extends React.Component {
   render() {
@@ -398,7 +393,7 @@ class InputTypes extends React.Component {
   }
 }
 
-const ValidationIntro = () =>
+const ValidationIntro = () => (
   <Centered>
     <DateInput />
     <div>
@@ -407,9 +402,10 @@ const ValidationIntro = () =>
         validation)
       </i>
     </div>
-  </Centered>;
+  </Centered>
+);
 
-const ValidationIntro2 = () =>
+const ValidationIntro2 = () => (
   <CenteredFlex>
     <DateInput required />
     <TextInput placeholder="email" validators={[isEmail()]} />
@@ -417,9 +413,10 @@ const ValidationIntro2 = () =>
       placeholder="5 <= x <= 10"
       validators={[isGte(5), isLte(10)]}
     />
-  </CenteredFlex>;
+  </CenteredFlex>
+);
 
-const ValidationPredefined = () =>
+const ValidationPredefined = () => (
   <CenteredFlex>
     <TextInput
       placeholder="rabbit | cow | eagle"
@@ -428,9 +425,10 @@ const ValidationPredefined = () =>
     />
     <TextInput placeholder="email" required validators={[isEmail()]} />
     <NumberInput placeholder=">= 10" required validators={[isGte(10)]} />
-  </CenteredFlex>;
+  </CenteredFlex>
+);
 
-const ValidationCustomMessage = () =>
+const ValidationCustomMessage = () => (
   <div>
     <CenteredFlex>
       <TextInput
@@ -470,9 +468,10 @@ const ValidationCustomMessage = () =>
         ]}
       />
     </CenteredFlex>
-  </div>;
+  </div>
+);
 
-const ValidationCustomValidator = () =>
+const ValidationCustomValidator = () => (
   <CenteredFlex>
     <TextInput
       placeholder="custom sync validator"
@@ -500,7 +499,8 @@ const ValidationCustomValidator = () =>
       ]}
       style={{ width: 250 }}
     />
-  </CenteredFlex>;
+  </CenteredFlex>
+);
 
 // class InputValidation extends React.Component {
 //   render() {
@@ -559,7 +559,7 @@ class ImperativeApi extends React.Component {
   }
 }
 
-const InputsSimple = () =>
+const InputsSimple = () => (
   <div>
     <CenteredFlex>
       <div>
@@ -589,12 +589,14 @@ const InputsSimple = () =>
         />
       </div>
     </CenteredFlex>
-  </div>;
+  </div>
+);
 
-const Checkboxes = () =>
+const Checkboxes = () => (
   <Centered>
     <Checkbox value={true} label="Simple, huh?" />
-  </Centered>;
+  </Centered>
+);
 
 class DateInputs extends React.Component {
   constructor(props) {
@@ -727,13 +729,14 @@ class DateInputs extends React.Component {
         <p>
           If you are including a time picker, you can choose between an analogue
           one (with or without second hand) and a digital one
-          {IS_IOS &&
+          {IS_IOS && (
             <span>
               (<i>
                 note that, by default, Giu pickers are replaced by the native
                 HTML ones on iOS.
               </i>)
-            </span>}
+            </span>
+          )}
           :
         </p>
 
@@ -822,7 +825,7 @@ class DateInputs extends React.Component {
   }
 }
 
-const Selects = () =>
+const Selects = () => (
   <div>
     <p>Selects can be of three types:</p>
     <ul>
@@ -916,14 +919,16 @@ const Selects = () =>
         disabled
       />
     </CenteredFlex>
-  </div>;
+  </div>
+);
 
-const RadioGroups = () =>
+const RadioGroups = () => (
   <CenteredFlex>
     <RadioGroup items={getExampleItems()} value="cherries" />
-  </CenteredFlex>;
+  </CenteredFlex>
+);
 
-const ColorInputs = () =>
+const ColorInputs = () => (
   <div>
     <p>ColorInputs can be of two types:</p>
     <ul>
@@ -954,9 +959,10 @@ const ColorInputs = () =>
       <ColorInput value="aa52b6be" disabled />
       <ColorInput value="aa52b6be" disabled inlinePicker />
     </CenteredFlex>
-  </div>;
+  </div>
+);
 
-const FileInputs = () =>
+const FileInputs = () => (
   <CenteredFlex>
     <FileInput>
       <Icon icon="file-o" /> Choose a file...
@@ -964,7 +970,8 @@ const FileInputs = () =>
     <FileInput disabled>
       <Icon icon="file-o" /> Disabled FileInput
     </FileInput>
-  </CenteredFlex>;
+  </CenteredFlex>
+);
 
 class DropDownMenus extends React.Component {
   render() {
@@ -1104,7 +1111,7 @@ class HintDemo extends React.Component {
   }
 }
 
-const Buttons = ({ fIncludeDisabled }) =>
+const Buttons = ({ fIncludeDisabled }) => (
   <Centered>
     <Button
       onClick={() =>
@@ -1127,9 +1134,10 @@ const Buttons = ({ fIncludeDisabled }) =>
       OK, thanks!
     </Button>&nbsp;&nbsp;
     {fIncludeDisabled && <Button disabled>I&#39;m disabled</Button>}
-  </Centered>;
+  </Centered>
+);
 
-const Icons = () =>
+const Icons = () => (
   <Centered>
     <Icon size="2x" icon="globe" />&nbsp;&nbsp;
     <Icon size="2x" icon="group" />&nbsp;&nbsp;
@@ -1137,7 +1145,8 @@ const Icons = () =>
     <Icon size="2x" icon="music" />&nbsp;&nbsp;
     <Icon size="2x" icon="cog" spin />&nbsp;&nbsp;
     <Spinner size="2x" />
-  </Centered>;
+  </Centered>
+);
 
 class LargeMessages extends React.Component {
   constructor(props) {
@@ -1176,11 +1185,7 @@ class LargeMessages extends React.Component {
       default:
         break;
     }
-    return (
-      <LargeMessage style={{ minHeight: 110 }}>
-        {el}
-      </LargeMessage>
-    );
+    return <LargeMessage style={{ minHeight: 110 }}>{el}</LargeMessage>;
   }
 }
 
@@ -1204,7 +1209,7 @@ class ProgressDemo extends React.Component {
   }
 }
 
-const HoverableDemo = hoverable(({ hovering, onHoverStart, onHoverStop }) =>
+const HoverableDemo = hoverable(({ hovering, onHoverStart, onHoverStop }) => (
   <LargeMessage
     onMouseEnter={onHoverStart}
     onMouseLeave={onHoverStop}
@@ -1216,14 +1221,15 @@ const HoverableDemo = hoverable(({ hovering, onHoverStart, onHoverStop }) =>
   >
     Hover me {hovering}
   </LargeMessage>
-);
+));
 
 // -----------------------------------------------
 // Helpers
 // -----------------------------------------------
-const Markdown = ({ md }) =>
-  <div dangerouslySetInnerHTML={{ __html: marked(md) }} />;
-const CenteredFlex = ({ style, children }) =>
+const Markdown = ({ md }) => (
+  <div dangerouslySetInnerHTML={{ __html: marked(md) }} />
+);
+const CenteredFlex = ({ style, children }) => (
   <div
     className="giu-demo-flex-row"
     style={flexContainer(
@@ -1239,11 +1245,11 @@ const CenteredFlex = ({ style, children }) =>
     )}
   >
     {children}
-  </div>;
-const Centered = ({ children }) =>
-  <div style={{ textAlign: 'center', marginBottom: 8 }}>
-    {children}
-  </div>;
+  </div>
+);
+const Centered = ({ children }) => (
+  <div style={{ textAlign: 'center', marginBottom: 8 }}>{children}</div>
+);
 
 const getExampleItems = ({ fSeparator, fKeys, modifier } = {}) => {
   const out = [

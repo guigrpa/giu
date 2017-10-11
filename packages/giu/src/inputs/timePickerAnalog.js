@@ -275,7 +275,7 @@ class TimePickerAnalog extends React.PureComponent {
     this.setState({ dragging: name });
     this.dragUnits = name;
     this.dragSteps = name === 'hours' ? 12 : 60;
-    this.dragDeltaPhi = this.getUnits(name) % 1 * PI2 / this.dragSteps;
+    this.dragDeltaPhi = (this.getUnits(name) % 1) * PI2 / this.dragSteps;
     window.addEventListener('mousemove', this.onMouseMoveHand);
     window.addEventListener('mouseup', this.onMouseUpHand);
   };

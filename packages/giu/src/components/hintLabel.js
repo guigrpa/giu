@@ -33,9 +33,7 @@ class HintLabel extends React.Component {
   render() {
     return (
       <div className="giu-hint-label" style={style.outer(this.props)}>
-        <div style={style.label(this.props)}>
-          {this.props.children}
-        </div>
+        <div style={style.label(this.props)}>{this.props.children}</div>
       </div>
     );
   }
@@ -56,9 +54,8 @@ const style = {
     const width = style.width || 200;
     let out = {
       position: 'absolute',
-      [align === 'right' ? 'right' : 'left']: align === 'center'
-        ? -width / 2
-        : 0,
+      [align === 'right' ? 'right' : 'left']:
+        align === 'center' ? -width / 2 : 0,
       textAlign: align,
       marginLeft: 8,
       marginRight: 8,

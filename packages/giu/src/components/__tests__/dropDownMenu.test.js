@@ -28,9 +28,9 @@ describe('DropDownMenu', () => {
   });
 
   it('01 renders (closed)', () => {
-    const tree = renderer.create(
-      <DropDownMenu items={ITEMS}>Menu title</DropDownMenu>
-    ).toJSON();
+    const tree = renderer
+      .create(<DropDownMenu items={ITEMS}>Menu title</DropDownMenu>)
+      .toJSON();
     expect(tree).toMatchSnapshot();
   });
 

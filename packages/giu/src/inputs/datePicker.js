@@ -80,9 +80,8 @@ class DatePicker extends React.Component {
   // ==========================================
   render() {
     const { curValue, utc } = this.props;
-    this.startOfCurValue = curValue != null
-      ? curValue.clone().startOf('day')
-      : null;
+    this.startOfCurValue =
+      curValue != null ? curValue.clone().startOf('day') : null;
     this.shownMonthNumber = this.state.shownMonthStart.month();
 
     // Clone the `shownMonthStart` moment this way, so that it gets the correct locales
@@ -104,12 +103,9 @@ class DatePicker extends React.Component {
     return (
       <div style={style.monthRow}>
         <div style={style.monthChange}>
-          {!disabled &&
-            <Icon
-              icon="arrow-left"
-              onClick={this.onClickPrevMonth}
-              skipTheme
-            />}
+          {!disabled && (
+            <Icon icon="arrow-left" onClick={this.onClickPrevMonth} skipTheme />
+          )}
         </div>
         <Button
           onClick={this.onClickMonthName}
@@ -120,12 +116,13 @@ class DatePicker extends React.Component {
           {shownMonthStart.format('MMMM YYYY')}
         </Button>
         <div style={style.monthChange}>
-          {!disabled &&
+          {!disabled && (
             <Icon
               icon="arrow-right"
               onClick={this.onClickNextMonth}
               skipTheme
-            />}
+            />
+          )}
         </div>
       </div>
     );
@@ -167,7 +164,11 @@ class DatePicker extends React.Component {
       els[i] = this.renderDay(curDate, i);
       curDate.add(1, 'day');
     }
-    return <div key={idx} style={style.week}>{els}</div>;
+    return (
+      <div key={idx} style={style.week}>
+        {els}
+      </div>
+    );
   }
 
   renderDay(mom: Moment, idx: number) {

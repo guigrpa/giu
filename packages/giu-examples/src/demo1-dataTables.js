@@ -57,7 +57,10 @@ const sampleDataTableItems = (num, idStart = 0) => {
       phone: faker.phone.phoneNumber(),
       lastModified: new Date(),
       type: Math.random() > 0.5 ? 'Guest' : 'User',
-      notes: faker.lorem.sentences(2).split('\n').join(' '),
+      notes: faker.lorem
+        .sentences(2)
+        .split('\n')
+        .join(' '),
     };
   }
   return out;
@@ -80,7 +83,7 @@ const DATA_TABLE_COLS = [
     flexGrow: 1,
     minWidth: 100,
     // render: ({ item, id, attr, onChange, onMayHaveChangedHeight }) =>
-    render: ({ item, id, attr, onChange }) =>
+    render: ({ item, id, attr, onChange }) => (
       <Textarea
         value={item.notes}
         onChange={(ev, value) => onChange(id, attr, value)}
@@ -90,7 +93,8 @@ const DATA_TABLE_COLS = [
           marginBottom: -2,
         }}
         skipTheme
-      />,
+      />
+    ),
     sortable: false,
     filterable: false,
   },
@@ -99,11 +103,12 @@ const DATA_TABLE_COLS = [
     labelLevel: 1,
     label: () => (curLang === 'es' ? 'Confirmado' : 'Confirmed'),
     minWidth: 30,
-    render: ({ item, id, attr, onChange }) =>
+    render: ({ item, id, attr, onChange }) => (
       <Checkbox
         value={item.confirmed}
         onChange={(ev, value) => onChange(id, attr, value)}
-      />,
+      />
+    ),
   },
   {
     attr: 'phone',
@@ -118,7 +123,7 @@ const DATA_TABLE_ALT_LAYOUT_COLS = [
     label: () => (curLang === 'es' ? 'Detalles' : 'Details'),
     flexGrow: 1,
     minWidth: 100,
-    render: ({ item, id, onChange }) =>
+    render: ({ item, id, onChange }) => (
       <div>
         <div>
           <b>{curLang === 'es' ? 'Nombre:' : 'Name:'}</b> {item.name}
@@ -144,7 +149,8 @@ const DATA_TABLE_ALT_LAYOUT_COLS = [
             skipTheme
           />
         </div>
-      </div>,
+      </div>
+    ),
     sortable: false,
     rawValue: ({ name, phone, confirmed, notes }) => ({
       name,
@@ -159,10 +165,11 @@ const DATA_TABLE_ALT_LAYOUT_COLS = [
 const manualSortColLabel = () =>
   curLang === 'es' ? 'Ordenar manualmente' : 'Sort manually';
 
-const FetchRowComponent = () =>
+const FetchRowComponent = () => (
   <div style={{ padding: '5px 10px', backgroundColor: 'gray', color: 'white' }}>
     <Spinner /> Fetching...
-  </div>;
+  </div>
+);
 
 class DevelopmentExample extends React.Component {
   commonCellProps: Object;
@@ -270,9 +277,7 @@ class DevelopmentExample extends React.Component {
           />
         </div>
         <div style={flexItem(1)} />
-        <div>
-          Items: {this.state.numShownIds}
-        </div>
+        <div>Items: {this.state.numShownIds}</div>
       </div>
     );
   }
@@ -580,7 +585,7 @@ class EditAndValidateExample extends React.Component {
         attr: 'name',
         minWidth: 150,
         flexGrow: 1,
-        render: ({ item, id, attr, onChange, registerInputRef }) =>
+        render: ({ item, id, attr, onChange, registerInputRef }) => (
           <TextInput
             ref={c => registerInputRef(id, attr, c)}
             value={item[attr]}
@@ -588,12 +593,13 @@ class EditAndValidateExample extends React.Component {
             required
             skipTheme
             style={{ width: '100%' }}
-          />,
+          />
+        ),
       },
       {
         attr: 'type',
         minWidth: 80,
-        render: ({ item, id, attr, onChange, registerInputRef }) =>
+        render: ({ item, id, attr, onChange, registerInputRef }) => (
           <Select
             ref={c => registerInputRef(id, attr, c)}
             items={USER_TYPES}
@@ -601,12 +607,13 @@ class EditAndValidateExample extends React.Component {
             onChange={() => onChange(id)}
             required
             style={{ width: '100%' }}
-          />,
+          />
+        ),
       },
       {
         attr: 'lastModified',
         minWidth: 150,
-        render: ({ item, id, attr, onChange, registerInputRef }) =>
+        render: ({ item, id, attr, onChange, registerInputRef }) => (
           <DateInput
             ref={c => {
               registerInputRef(id, attr, c);
@@ -616,23 +623,25 @@ class EditAndValidateExample extends React.Component {
             required
             skipTheme
             style={{ width: '100%' }}
-          />,
+          />
+        ),
       },
       {
         attr: 'confirmed',
         labelLevel: 1,
         minWidth: 30,
-        render: ({ item, id, attr, onChange, registerInputRef }) =>
+        render: ({ item, id, attr, onChange, registerInputRef }) => (
           <Checkbox
             ref={c => registerInputRef(id, attr, c)}
             value={item[attr]}
             onChange={() => onChange(id)}
-          />,
+          />
+        ),
       },
       {
         attr: 'phone',
         minWidth: 150,
-        render: ({ item, id, attr, onChange, registerInputRef }) =>
+        render: ({ item, id, attr, onChange, registerInputRef }) => (
           <TextInput
             ref={c => registerInputRef(id, attr, c)}
             value={item[attr]}
@@ -640,13 +649,15 @@ class EditAndValidateExample extends React.Component {
             required
             skipTheme
             style={{ width: '100%' }}
-          />,
+          />
+        ),
       },
       {
         attr: 'submit',
         minWidth: 50,
-        render: ({ id, onSubmit }) =>
-          <Icon icon="check" onClick={() => onSubmit(id)} />,
+        render: ({ id, onSubmit }) => (
+          <Icon icon="check" onClick={() => onSubmit(id)} />
+        ),
       },
     ];
   }

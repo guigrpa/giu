@@ -124,15 +124,11 @@ class App extends React.Component {
         break;
     }
     // return out;
-    return (
-      <Giu theme="mdl">
-        {out}
-      </Giu>
-    );
+    return <Giu theme="mdl">{out}</Giu>;
   }
 }
 
-const LangSelector = ({ lang, onChange: onValueChange }) =>
+const LangSelector = ({ lang, onChange: onValueChange }) => (
   <span
     style={{
       fontWeight: 'normal',
@@ -151,9 +147,10 @@ const LangSelector = ({ lang, onChange: onValueChange }) =>
       onChange={onValueChange}
       required
     />
-  </span>;
+  </span>
+);
 
-const NotificationExample = () =>
+const NotificationExample = () => (
   <div style={style.example}>
     <ExampleLabel>Notification (embedded)</ExampleLabel>
     <Notification
@@ -162,23 +159,26 @@ const NotificationExample = () =>
       msg="Notification message"
       noStylePosition
     />
-  </div>;
+  </div>
+);
 
-const MessageExample = () =>
+const MessageExample = () => (
   <div style={style.example}>
     <ExampleLabel>LargeMessage</ExampleLabel>
     <LargeMessage>No items found.</LargeMessage>
-  </div>;
+  </div>
+);
 
-const IconExample = () =>
+const IconExample = () => (
   <div style={style.example}>
     <ExampleLabel>Icon</ExampleLabel>
     <Icon icon="cached" id="a" size="lg" /> <Spinner size="lg" />{' '}
     <Icon icon="favorite" id="a" size="lg" />{' '}
     <Icon icon="lock" size="lg" onClick={() => notify()} />
-  </div>;
+  </div>
+);
 
-const ButtonExample = () =>
+const ButtonExample = () => (
   <div style={style.example}>
     <ExampleLabel>Button</ExampleLabel>
     <Button onClick={() => notify('Normal button pressed')} colored>
@@ -200,19 +200,22 @@ const ButtonExample = () =>
     <Button onClick={() => notify('Plain button pressed')} plain disabled>
       Flat (disabled)
     </Button>{' '}
-  </div>;
-
-const HoverableExample = hoverable(({ hovering, onHoverStart, onHoverStop }) =>
-  <div
-    onMouseEnter={onHoverStart}
-    onMouseLeave={onHoverStop}
-    style={merge(style.example, style.hoverable(hovering))}
-  >
-    <ExampleLabel>Hoverable (HOC)</ExampleLabel>
   </div>
 );
 
-const StyleUtilsExample = () =>
+const HoverableExample = hoverable(
+  ({ hovering, onHoverStart, onHoverStop }) => (
+    <div
+      onMouseEnter={onHoverStart}
+      onMouseLeave={onHoverStop}
+      style={merge(style.example, style.hoverable(hovering))}
+    >
+      <ExampleLabel>Hoverable (HOC)</ExampleLabel>
+    </div>
+  )
+);
+
+const StyleUtilsExample = () => (
   <div style={style.example}>
     <ExampleLabel>Style utilities</ExampleLabel>
     <div style={flexContainer('row')}>
@@ -228,14 +231,14 @@ const StyleUtilsExample = () =>
       <span>Right</span>
     </div>
     <div style={boxWithShadow({ padding: 3 })}>A box with a shadow</div>
-  </div>;
+  </div>
+);
 
-const FlexSpacer = ({ children }) =>
-  <div style={flexItem('1')}>
-    {children}
-  </div>;
+const FlexSpacer = ({ children }) => (
+  <div style={flexItem('1')}>{children}</div>
+);
 
-const DropDownExample = ({ lang }) =>
+const DropDownExample = ({ lang }) => (
   <div style={style.example}>
     <ExampleLabel>
       DropDownMenu (focusable, keyboard-controlled, embedded ListPicker)
@@ -265,9 +268,10 @@ const DropDownExample = ({ lang }) =>
     >
       <Icon icon="lock" /> Menu to the left
     </DropDownMenu>
-  </div>;
+  </div>
+);
 
-const ScrollingExample = () =>
+const ScrollingExample = () => (
   <div style={style.example}>
     <ExampleLabel>Scrollable (with translateZ(0)) with floats</ExampleLabel>
     <div onScroll={floatReposition} style={style.scrolling}>
@@ -291,7 +295,8 @@ const ScrollingExample = () =>
       <br />
       <DateInput placeholder="date" required />
     </div>
-  </div>;
+  </div>
+);
 
 class ProgressExample extends React.Component {
   constructor(props) {

@@ -170,9 +170,10 @@ function input<DP: any, P>(
     fIncludeClipboardProps: fIncludeClipboardProps0,
   }: HocOptions
 ): Class<React$Component<PublicDefaultProps<DP>, PublicProps<P>, *>> {
-  const fIncludeClipboardProps = fIncludeClipboardProps0 != null
-    ? fIncludeClipboardProps0
-    : fIncludeFocusCapture;
+  const fIncludeClipboardProps =
+    fIncludeClipboardProps0 != null
+      ? fIncludeClipboardProps0
+      : fIncludeFocusCapture;
   const composedComponentName =
     ComposedComponent.displayName || ComposedComponent.name || 'Component';
   const hocDisplayName = `Input(${composedComponentName})`;
@@ -410,9 +411,10 @@ function input<DP: any, P>(
       const { errors, curValue, lastValidatedValue } = this;
       // console.log(`Rendering; lastValidatedValue=${lastValidatedValue}, curValue=${curValue}, ` +
       //   `internal value for props.value=${toInternalValue(this.props.value, this.props)}`);
-      const fModified = lastValidatedValue !== undefined
-        ? curValue !== lastValidatedValue
-        : curValue !== toInternalValue(this.props.value, this.props);
+      const fModified =
+        lastValidatedValue !== undefined
+          ? curValue !== lastValidatedValue
+          : curValue !== toInternalValue(this.props.value, this.props);
       return (
         <div style={style.errors(fModified, this.context.theme)}>
           {errors.join(' | ')}
@@ -565,9 +567,8 @@ function input<DP: any, P>(
         Object.keys(validators).forEach(id => {
           if (id === 'isRequired') return;
           const validator: Validator = validators[id];
-          const validate = typeof validator === 'function'
-            ? validator
-            : validator.validate;
+          const validate =
+            typeof validator === 'function' ? validator : validator.validate;
           if (typeof validate === 'function') {
             const value = validator.fInternal ? internalValue : externalValue;
             const pError = validate(value, this.props, validatorContext);
@@ -619,9 +620,10 @@ function input<DP: any, P>(
       } = this.props;
       let zIndex = errorZ;
       if (zIndex == null) {
-        zIndex = floatZ != null
-          ? floatZ - MISC.zErrorFloatDelta
-          : MISC.zErrorFloatDelta;
+        zIndex =
+          floatZ != null
+            ? floatZ - MISC.zErrorFloatDelta
+            : MISC.zErrorFloatDelta;
       }
       let position = errorPosition;
       if (position == null) {

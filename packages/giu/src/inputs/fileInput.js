@@ -106,8 +106,7 @@ class FileInput extends React.Component {
     const sizeDesc = filesize(size, { round: 0 });
     return (
       <span>
-        {name} [{sizeDesc}]
-        {' '}
+        {name} [{sizeDesc}]{' '}
         <Icon
           icon={!skipTheme && this.context.theme === 'mdl' ? 'clear' : 'times'}
           onClick={this.onClickClear}

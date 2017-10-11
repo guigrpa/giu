@@ -137,7 +137,7 @@ class Modals extends React.PureComponent {
     this.prevModals = modals;
     return (
       <div className="giu-modals">
-        {modals.map((props, idx) =>
+        {modals.map((props, idx) => (
           <Modal
             key={props.id}
             ref={c => {
@@ -146,7 +146,7 @@ class Modals extends React.PureComponent {
             zIndex={MISC.zModalBase + idx * MISC.zModalStep}
             {...props}
           />
-        )}
+        ))}
       </div>
     );
   }

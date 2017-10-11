@@ -207,11 +207,7 @@ class Hints extends React.PureComponent {
   // ==========================================
   render() {
     this.storeState = this.props.storeState || store.getState();
-    return (
-      <div className="giu-hints">
-        {this.renderHint()}
-      </div>
-    );
+    return <div className="giu-hints">{this.renderHint()}</div>;
   }
 
   renderHint() {

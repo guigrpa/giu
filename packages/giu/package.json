@@ -10,7 +10,7 @@
     "compile:copy:flow": "../../node_modules/.bin/flow-copy-source -i \"**/__mocks__/**\" -i \"**/__tests__/**\" src lib",
     "compile:copy:css": "cp src/*.css lib && cp src/components/*.css lib/components && cp src/inputs/*.css lib/inputs && cp src/vendor/*.css lib/vendor",
     "compile:run": "../../node_modules/.bin/babel src -d lib --ignore \"**/__mocks__/**\",\"**/__tests__/**\"",
-    "compile:runWatch": "yarn compile:run -- --watch"
+    "compile:runWatch": "yarn compile:run --watch"
   },
   "engines": {
     "node": ">=4"
@@ -37,7 +37,7 @@
     "unorm": "1.4.1"
   },
   "devDependencies": {
-    "prettier": "^1.4.4"
+    "prettier": "^1.7.4"
   },
   "description": "A collection of React components and utilities",
   "keywords": [

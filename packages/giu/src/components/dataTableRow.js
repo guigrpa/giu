@@ -236,8 +236,11 @@ class DataTableRow extends React.PureComponent {
 // ===============================================================
 // Other components
 // ===============================================================
-const DataTableFetchingRow = () =>
-  <div style={style.fetchingRow}><Spinner size="lg" /></div>;
+const DataTableFetchingRow = () => (
+  <div style={style.fetchingRow}>
+    <Spinner size="lg" />
+  </div>
+);
 
 // ===============================================================
 // Styles

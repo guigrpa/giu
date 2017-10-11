@@ -159,7 +159,10 @@ collation helper.
 const COMBINING_CODEPOINTS = /[\u0300-\u036F]/g;
 function simplifyString(str: string): string {
   if (str == null) return str;
-  return unorm.nfkd(str).replace(COMBINING_CODEPOINTS, '').toLowerCase();
+  return unorm
+    .nfkd(str)
+    .replace(COMBINING_CODEPOINTS, '')
+    .toLowerCase();
 }
 
 // ==========================================

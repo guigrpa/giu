@@ -131,12 +131,14 @@ class SelectCustomBase extends React.Component {
     const elTitle = React.cloneElement(children, {
       ref: this.registerTitleRef,
     });
-    return IS_IOS
-      ? <span style={style.providedTitleWrapperForIos}>
-          {elTitle}
-          {this.renderFloatForIos()}
-        </span>
-      : elTitle;
+    return IS_IOS ? (
+      <span style={style.providedTitleWrapperForIos}>
+        {elTitle}
+        {this.renderFloatForIos()}
+      </span>
+    ) : (
+      elTitle
+    );
   }
 
   renderDefaultTitle() {
@@ -145,9 +147,8 @@ class SelectCustomBase extends React.Component {
     if (curValue !== NULL_STRING) {
       const item = this.items.find(o => o.value === curValue);
       if (item) {
-        label = typeof item.label === 'function'
-          ? item.label(lang)
-          : item.label;
+        label =
+          typeof item.label === 'function' ? item.label(lang) : item.label;
       }
     }
     const caretIcon = this.state.fFloat ? 'caret-up' : 'caret-down';

@@ -103,9 +103,9 @@ class HintScreen extends React.PureComponent {
       o => o.type === 'LABEL'
     ): Array<any>);
     if (!labels || !labels.length) return null;
-    return labels.map((label, idx) =>
+    return labels.map((label, idx) => (
       <HintLabel key={idx} fontSize={FONT_SIZE} {...label} />
-    );
+    ));
   }
 
   renderCloseButton() {

@@ -74,9 +74,13 @@ Darkens or lightens a given color by a given percentage.
 * **Returns** *string*: hex string for the new color, e.g. `#ffaadd`
 -- */
 const darken = (color: string | Object, percentage?: number = 10): string =>
-  tinycolor(color).darken(percentage).toHexString();
+  tinycolor(color)
+    .darken(percentage)
+    .toHexString();
 const lighten = (color: string | Object, percentage?: number = 10): string =>
-  tinycolor(color).lighten(percentage).toHexString();
+  tinycolor(color)
+    .lighten(percentage)
+    .toHexString();
 
 const inputReset = (style?: Object): Object =>
   merge(

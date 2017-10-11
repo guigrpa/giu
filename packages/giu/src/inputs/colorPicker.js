@@ -303,9 +303,7 @@ class ColorPicker extends React.PureComponent {
           onMouseDown={this.onMouseDownAttrSelector}
           style={style.colorAttr(fSelected, this.props)}
         >
-          <span style={style.colorAttrName}>
-            {colorAttr.toUpperCase()}
-          </span>
+          <span style={style.colorAttrName}>{colorAttr.toUpperCase()}</span>
         </div>
       );
     });
@@ -315,9 +313,7 @@ class ColorPicker extends React.PureComponent {
           {this.renderModeButton('rgb')}
           {this.renderModeButton('hsv')}
         </div>
-        <div style={style.colorAttrs(this.props)}>
-          {colorAttrs}
-        </div>
+        <div style={style.colorAttrs(this.props)}>{colorAttrs}</div>
         {this.renderAlphaSlider()}
         {this.renderSamples()}
       </div>

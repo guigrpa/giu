@@ -23,17 +23,17 @@
     "express": "^4.15.2",
     "faker": "3.0.1",
     "fontfaceobserver": "1.7.1",
-    "giu": "*",
     "highlight.js": "^9.11.0",
     "lodash": "^4.17.4",
     "marked": "^0.3.6",
     "prop-types": "15.5.10",
     "storyboard": "^3.0.0",
     "storyboard-preset-console": "^3.0.0",
-    "timm": "^1.2.1"
+    "timm": "^1.2.1",
+    "giu": "*"
   },
   "devDependencies": {
-    "prettier": "^1.4.4"
+    "prettier": "^1.7.4"
   },
   "peerDependencies": {
     "moment": "^2.0.0",

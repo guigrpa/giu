@@ -39,9 +39,10 @@ const toInternalValue = (extDate, props) => {
   const { type, date, time, seconds, utc } = props;
   const mom = moment(extDate);
   if (getUtcFlag(date, time, utc)) mom.utc();
-  const fmt = type === 'native'
-    ? dateTimeFormatNative(date, time)
-    : dateTimeFormat(date, time, seconds);
+  const fmt =
+    type === 'native'
+      ? dateTimeFormatNative(date, time)
+      : dateTimeFormat(date, time, seconds);
   return mom.format(fmt);
 };
 const toExternalValue = (str, props) => {
@@ -53,9 +54,10 @@ const isNull = val => val === NULL_VALUE;
 const momentToDisplay = (mom, props) => {
   if (mom == null) return NULL_VALUE;
   const { type, date, time, seconds } = props;
-  const fmt = type === 'native'
-    ? dateTimeFormatNative(date, time)
-    : dateTimeFormat(date, time, seconds);
+  const fmt =
+    type === 'native'
+      ? dateTimeFormatNative(date, time)
+      : dateTimeFormat(date, time, seconds);
   return mom.format(fmt);
 };
 const displayToMoment = (str, props) => {
@@ -448,9 +450,8 @@ class BaseDateInput extends React.Component {
       accentColor,
     } = this.props;
     const mom = displayToMoment(curValue, this.props);
-    const registerOuterRef = type === 'inlinePicker'
-      ? this.props.registerOuterRef
-      : undefined;
+    const registerOuterRef =
+      type === 'inlinePicker' ? this.props.registerOuterRef : undefined;
     return (
       <DateTimePicker
         registerOuterRef={registerOuterRef}

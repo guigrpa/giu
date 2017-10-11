@@ -81,7 +81,12 @@ const a4 = () => <HA text="foo" cond2={3} />;
 // ---------------------------------------
 // Functional examples (FIXME)
 // ---------------------------------------
-const B = (props: Props) => <span>{props.text}{props.extra}</span>;
+const B = (props: Props) => (
+  <span>
+    {props.text}
+    {props.extra}
+  </span>
+);
 const HB = hoc(B);
 
 // Tests

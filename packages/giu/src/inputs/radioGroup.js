@@ -89,9 +89,8 @@ class RadioGroup extends React.Component {
     const { curValue } = this.props;
     const { value, label, labelExtra } = item;
     const id = `${this.buttonGroupName}_${idx}`;
-    const finalLabel = label && typeof label === 'function'
-      ? label(this.props.lang)
-      : label;
+    const finalLabel =
+      label && typeof label === 'function' ? label(this.props.lang) : label;
     return (
       <div key={value} id={idx} onClick={this.onClickItem}>
         <input

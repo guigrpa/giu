@@ -72,7 +72,9 @@ class Checkbox extends React.Component {
         style={style.wrapper}
       >
         {this.renderInput()}
-        <label htmlFor={this.labelId} style={styleLabel}>{label}</label>
+        <label htmlFor={this.labelId} style={styleLabel}>
+          {label}
+        </label>
       </span>
     );
   }

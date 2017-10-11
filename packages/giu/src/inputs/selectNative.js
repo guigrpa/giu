@@ -75,11 +75,14 @@ class SelectNative extends React.Component {
         style={style.field(this.props)}
       >
         {finalItems.map(o => {
-          const value = o.value === NULL_STRING
-            ? o.value
-            : toInternalValue(o.value);
+          const value =
+            o.value === NULL_STRING ? o.value : toInternalValue(o.value);
           const label = typeof o.label === 'function' ? o.label(lang) : o.label;
-          return <option key={value} id={value} value={value}>{label}</option>;
+          return (
+            <option key={value} id={value} value={value}>
+              {label}
+            </option>
+          );
         })}
       </select>
     );

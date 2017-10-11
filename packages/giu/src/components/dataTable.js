@@ -36,8 +36,9 @@ const createManualSortCol = label => ({
   label,
   labelLevel: 1,
   /* eslint-disable react/prop-types */
-  render: ({ fSortedManually, disableDragging }) =>
-    <DragHandle disabled={!fSortedManually || disableDragging} />,
+  render: ({ fSortedManually, disableDragging }) => (
+    <DragHandle disabled={!fSortedManually || disableDragging} />
+  ),
   /* eslint-enable react/prop-types */
   minWidth: 30,
   flexGrow: 0,
@@ -51,9 +52,9 @@ const DEFER_SCROLL_INTO_VIEW_AFTER_SORT_CHANGE_SLOW = 500;
 const DEFER_SCROLL_INTO_VIEW_AFTER_SORT_CHANGE_FAST = 150;
 const DEBUG = false && process.env.NODE_ENV !== 'production';
 
-const DragHandle = sortableHandle(({ disabled }) =>
+const DragHandle = sortableHandle(({ disabled }) => (
   <Icon icon="bars" disabled={disabled} style={style.dragHandle} skipTheme />
-);
+));
 
 const SortableDataTableRow = sortableElement(DataTableRow);
 const SortableVirtualScroller = sortableContainer(VirtualScroller, {

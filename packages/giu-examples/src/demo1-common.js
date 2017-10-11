@@ -7,10 +7,9 @@ import React from 'react';
 import faker from 'faker';
 import { LIST_SEPARATOR } from 'giu';
 
-const ExampleLabel = ({ children }: Object) =>
-  <div style={style.label}>
-    {children}
-  </div>;
+const ExampleLabel = ({ children }: Object) => (
+  <div style={style.label}>{children}</div>
+);
 
 const style = {
   label: {
@@ -72,7 +71,10 @@ const WIDE_OPTIONS = [
   { label: 'C', value: 'c' },
 ];
 
-const LONG_TEXT = faker.lorem.sentences(7).split('\n').join(' ');
+const LONG_TEXT = faker.lorem
+  .sentences(7)
+  .split('\n')
+  .join(' ');
 
 const onChange = (ev: ?SyntheticEvent, o: any): any => console.log(o);
 const onChangeJson = (ev: ?SyntheticEvent, o: any): any =>
