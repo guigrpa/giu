@@ -116,6 +116,10 @@ export { hoverable };
 import input from './hocs/input';
 export { input };
 
+// HOCs
+import Hoverable from './wrappers/hoverable';
+export { Hoverable };
+
 // Styles
 export {
   flexContainer,

@@ -28,7 +28,7 @@ import {
   Notification,
   notify as createNotif,
   Hints,
-  hoverable,
+  Hoverable,
   flexContainer,
   flexItem,
   boxWithShadow,
@@ -458,10 +458,10 @@ const HoverableExample0 = ({ hovering, onHoverStart, onHoverStop }) => (
     onMouseLeave={onHoverStop}
     style={merge(style.example, style.hoverable(hovering))}
   >
-    <ExampleLabel>Hoverable (HOC)</ExampleLabel>
+    <ExampleLabel>Hoverable</ExampleLabel>
   </div>
 );
-const HoverableExample = hoverable((HoverableExample0: any));
+const HoverableExample = () => <Hoverable render={HoverableExample0} />;
 
 const StyleUtilsExample = () => (
   <div style={style.example}>
