@@ -1,9 +1,6 @@
 // @flow
 
 import React from 'react';
-import { omit } from 'timm';
-
-/* eslint-disable max-len */
 
 // ==========================================
 // Types and docs
@@ -25,7 +22,7 @@ Specific props received from the parent:
   the parent component.
 * **onHoverStop?** *HoverEventHandler (see below)*: relays the original event to
   the parent component.
-* **render?** *Function*: render function, receiving
+* **render?** *Function*: render function, receiving the `HoverableProps` below
 
 Additional props passed to the base component:
 -- */
@@ -49,7 +46,7 @@ type Props = {
   onHoverStart?: HoverEventHandler,
   onHoverStop?: HoverEventHandler,
   render: Function,
-}
+};
 type State = {
   hovering: Hovering,
 };
