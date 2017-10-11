@@ -64,7 +64,7 @@
     "prepareRelease": "oao prepublish",
     "release": "oao publish",
     "prettier":
-      "prettier --single-quote --trailing-comma es5 --write \"packages/**/*.js\""
+      "prettier --single-quote --trailing-comma es5 --write \"packages/**/src/**/*.js\""
   },
   "_devDependencies":
     "The following are included to avoid dep conflicts: react, react-dom, moment",
