@@ -109,14 +109,14 @@ import Progress from './components/progress';
 export { Progress };
 import HeightMeasurer from './components/heightMeasurer';
 export { HeightMeasurer };
+import AnimatedCounter from './components/animatedCounter';
+export { AnimatedCounter };
 
-// HOCs
+// HOCs and wrappers
 import hoverable from './hocs/hoverable';
 export { hoverable };
 import input from './hocs/input';
 export { input };
-
-// HOCs
 import Hoverable from './wrappers/hoverable';
 export { Hoverable };
 

@@ -1,6 +1,7 @@
 /* eslint-disable no-console, no-alert, max-len */
 /* eslint-disable react/prop-types, react/no-multi-comp, react/jsx-no-bind, react/jsx-boolean-value */
 /* eslint-disable react/prefer-stateless-function, react/jsx-no-target-blank */
+/* eslint-disable react/no-string-refs */
 import React from 'react';
 import ReactDOM from 'react-dom';
 import ReactDOMServer from 'react-dom/server';
@@ -32,6 +33,7 @@ import {
   flexContainer,
   flexItem,
   boxWithShadow,
+  AnimatedCounter,
 } from 'giu';
 import DataTableExample from './demo1-dataTables';
 import ModalExample from './demo1-modals';
@@ -325,6 +327,7 @@ class App extends React.Component {
               <div style={flexItem('1 0 500px')}>
                 {EVERYTHING && <FormExample lang={lang} />}
                 {EVERYTHING && <FormExample2 />}
+                {EVERYTHING && <AnimatedCounterExample />}
               </div>
             </div>
             <div style={{ textAlign: 'right', padding: 10, fontSize: '1.2em' }}>
@@ -565,6 +568,30 @@ class ProgressExample extends React.Component {
       </div>
     );
   }
+}
+
+class AnimatedCounterExample extends React.Component {
+  state = {
+    value: 125,
+  };
+
+  render() {
+    return (
+      <div style={style.example}>
+        <ExampleLabel>Animated counter</ExampleLabel>
+        <NumberInput ref="number" value={this.state.value} />{' '}
+        <Button onClick={this.onSet}>Set</Button>{' '}
+        <AnimatedCounter value={this.state.value} />
+      </div>
+    );
+  }
+
+  onSet = async () => {
+    const ref = this.refs.number;
+    if (!ref) return;
+    const value = await ref.validateAndGetValue();
+    this.setState({ value });
+  };
 }
 
 // -----------------------------------------------
