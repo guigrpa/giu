@@ -1,7 +1,7 @@
 {
   "name": "giu",
   "private": true,
-  "version": "0.14.1",
+  "version": "0.15.0-alpha.0",
   "author": "Guillermo Grau Panea",
   "license": "MIT",
   "description": "A collection of React components and utilities",
@@ -25,8 +25,7 @@
   "scripts": {
     "status": "oao status",
     "travis": "yarn bootstrap && yarn compile",
-    "build":
-      "yarn bootstrap && yarn compile && yarn lint && yarn flow && yarn buildExamplesSsr && yarn docs && yarn xxl && yarn prepareRelease",
+    "build": "yarn bootstrap && yarn compile && yarn lint && yarn flow && yarn buildExamplesSsr && yarn docs && yarn xxl && yarn prepareRelease",
     "bootstrap": "oao bootstrap",
     "compile": "oao all --parallel \"yarn compile\"",
     "compileWatch": "oao all --parallel \"yarn compileWatch\"",
@@ -38,36 +37,25 @@
     "lint": "eslint packages",
     "flow": "flow check || exit 0",
     "docs": "yarn docs:readme && yarn docs:copyExamples",
-    "docs:readme":
-      "extract-docs --template docs/templates/README.md --output README.md",
+    "docs:readme": "extract-docs --template docs/templates/README.md --output README.md",
     "docs:copyExamples": "cp -r packages/giu-examples/lib/public/* docs/",
     "xxl": "xxl --src packages --exclude node_modules,/lib/",
     "jest": "jest --watch --coverage",
-    "jest-html":
-      "jest-html --css-patterns test/snapshot.css --snapshot-patterns \"packages/**/*.snap\"",
+    "jest-html": "jest-html --css-patterns test/snapshot.css --snapshot-patterns \"packages/**/*.snap\"",
     "test": "yarn testCovFull",
     "testFast": "jest",
-    "testCovFull":
-      "yarn _testCovPrepare && yarn _testDev && yarn _testProd && yarn _testCovReport",
-    "testCovFast":
-      "yarn _testCovPrepare && yarn _testDev && yarn _testCovReport",
-    "_testCovPrepare":
-      "rm -rf ./coverage .nyc_output .nyc_tmp && mkdir .nyc_tmp",
-    "_testCovReport":
-      "cp -r .nyc_tmp .nyc_output && nyc report --reporter=html --reporter=lcov --reporter=text",
-    "_testDev":
-      "cross-env NODE_ENV=development yarn _testCov && mv .nyc_tmp/coverage-final.json .nyc_tmp/coverage-dev.json",
-    "_testProd":
-      "cross-env NODE_ENV=production yarn _testCov && mv .nyc_tmp/coverage-final.json .nyc_tmp/coverage-prod.json",
-    "_testCov":
-      "jest --coverage && mv .nyc_output/coverage-final.json .nyc_tmp && rm -rf .nyc_output",
+    "testCovFull": "yarn _testCovPrepare && yarn _testDev && yarn _testProd && yarn _testCovReport",
+    "testCovFast": "yarn _testCovPrepare && yarn _testDev && yarn _testCovReport",
+    "_testCovPrepare": "rm -rf ./coverage .nyc_output .nyc_tmp && mkdir .nyc_tmp",
+    "_testCovReport": "cp -r .nyc_tmp .nyc_output && nyc report --reporter=html --reporter=lcov --reporter=text",
+    "_testDev": "cross-env NODE_ENV=development yarn _testCov && mv .nyc_tmp/coverage-final.json .nyc_tmp/coverage-dev.json",
+    "_testProd": "cross-env NODE_ENV=production yarn _testCov && mv .nyc_tmp/coverage-final.json .nyc_tmp/coverage-prod.json",
+    "_testCov": "jest --coverage && mv .nyc_output/coverage-final.json .nyc_tmp && rm -rf .nyc_output",
     "prepareRelease": "oao prepublish",
     "release": "oao publish",
-    "prettier":
-      "prettier --single-quote --trailing-comma es5 --write \"packages/**/src/**/*.js\""
+    "prettier": "prettier --single-quote --trailing-comma es5 --write \"packages/**/src/**/*.js\""
   },
-  "_devDependencies":
-    "The following are included to avoid dep conflicts: react, react-dom, moment",
+  "_devDependencies": "The following are included to avoid dep conflicts: react, react-dom, moment",
   "devDependencies": {
     "babel-cli": "6.26.0",
     "babel-core": "6.25.0",
@@ -112,8 +100,14 @@
       "^.+\\.(gif|ttf|eot|svg)$": "<rootDir>/test/emptyString.js"
     },
     "coverageDirectory": ".nyc_output",
-    "coverageReporters": ["json", "text", "html"],
-    "snapshotSerializers": ["<rootDir>/node_modules/jest-html"],
+    "coverageReporters": [
+      "json",
+      "text",
+      "html"
+    ],
+    "snapshotSerializers": [
+      "<rootDir>/node_modules/jest-html"
+    ],
     "collectCoverageFrom": [
       "packages/*/src/**",
       "!packages/giu-examples/**",

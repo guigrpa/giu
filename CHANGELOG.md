@@ -1,3 +1,5 @@
+## 0.15.0-alpha.0 (2017-10-13)
+
 * Add **AnimatedCounter**.
 * Add **Hoverable** (a wrapper that will eventually replace the `hoverable` HOC).
 
