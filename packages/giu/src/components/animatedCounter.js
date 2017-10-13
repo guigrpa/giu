@@ -12,6 +12,7 @@ type Props = {
   value: ?number,
   nullLabel?: string,
   decimals?: number,
+  formatter?: (value: ?number) => string,
 };
 
 // ==========================================
@@ -72,7 +73,9 @@ class AnimatedCounter extends React.PureComponent {
   // ==========================================
   render() {
     let value;
-    if (this.value == null) {
+    if (this.props.formatter) {
+      value = this.props.formatter(this.value);
+    } else if (this.value == null) {
       value = this.props.nullLabel || '–';
     } else {
       value = this.value.toFixed(this.props.decimals || 0);

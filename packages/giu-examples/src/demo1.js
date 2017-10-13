@@ -581,7 +581,11 @@ class AnimatedCounterExample extends React.Component {
         <ExampleLabel>Animated counter</ExampleLabel>
         <NumberInput ref="number" value={this.state.value} />{' '}
         <Button onClick={this.onSet}>Set</Button>{' '}
-        <AnimatedCounter value={this.state.value} />
+        <AnimatedCounter value={this.state.value} /> (or with custom formatter:{' '}
+        <AnimatedCounter
+          value={this.state.value}
+          formatter={value => (value != null ? `${value.toFixed(2)} €` : '– €')}
+        />)
       </div>
     );
   }

@@ -1,3 +1,5 @@
+* Add custom formatter to AnimatedCounter.
+
 ## 0.15.0-alpha.0 (2017-10-13)
 
 * Add **AnimatedCounter**.
