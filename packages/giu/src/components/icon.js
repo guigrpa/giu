@@ -20,6 +20,7 @@ type Props = {
   size?: 'lg' | '2x' | '3x' | '4x' | '5x',
   fixedWidth?: boolean,
   spin?: boolean,
+  onClick?: (ev: SyntheticMouseEvent) => any,
   disabled?: boolean,
   style?: Object, // merged with the `i` element style
   skipTheme?: boolean,
@@ -98,10 +99,10 @@ Icon.contextTypes = { theme: PropTypes.any };
 // Styles
 // ==========================================
 const style = {
-  icon: ({ disabled, size, style: base }, theme) =>
+  icon: ({ onClick, disabled, size, style: base }, theme) =>
     merge(
       {
-        cursor: disabled ? undefined : 'pointer',
+        cursor: disabled || !onClick ? undefined : 'pointer',
         color: disabled ? COLORS.dim : undefined,
         fontSize: theme === 'mdl' ? style.mdlSize(size) : undefined,
         letterSpacing: 'normal',

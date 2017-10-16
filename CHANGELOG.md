@@ -1,3 +1,5 @@
+* Icon: no longer show a `pointer` cursor when hovering, when no `onClick` prop is given.
+
 ## 0.15.0-alpha.1 (2017-10-13)
 
 * Add custom formatter to AnimatedCounter.
