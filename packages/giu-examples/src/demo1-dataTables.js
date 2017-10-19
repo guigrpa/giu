@@ -107,6 +107,7 @@ const DATA_TABLE_COLS = [
       <Checkbox
         value={item.confirmed}
         onChange={(ev, value) => onChange(id, attr, value)}
+        skipTheme
       />
     ),
   },
@@ -274,6 +275,7 @@ class DevelopmentExample extends React.Component {
             }
             value={this.state.fAltLayout}
             onChange={(ev, fAltLayout) => this.setState({ fAltLayout })}
+            skipTheme
           />
         </div>
         <div style={flexItem(1)} />
@@ -635,6 +637,7 @@ class EditAndValidateExample extends React.Component {
             ref={c => registerInputRef(id, attr, c)}
             value={item[attr]}
             onChange={() => onChange(id)}
+            skipTheme
           />
         ),
       },

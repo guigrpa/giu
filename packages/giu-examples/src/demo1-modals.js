@@ -17,6 +17,7 @@ import {
   Button,
   Icon,
   DropDownMenu,
+  Checkbox,
 } from 'giu';
 import {
   ExampleLabel,
@@ -124,6 +125,8 @@ class ModalExample extends React.Component {
           >
             <Icon icon={this.context.theme === 'mdl' ? 'menu' : 'bars'} /> Menu
           </DropDownMenu>
+          <Checkbox />
+          <Checkbox disabled />
         </div>
       </Modal>
     );
