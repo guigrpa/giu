@@ -1,5 +1,6 @@
 * Icon: no longer show a `pointer` cursor when hovering, when no `onClick` prop is given.
 * Checkbox: add support for `mdl` theme, including `skipTheme` prop.
+* Export `HoverableProps`, `PublicHoverableProps` flow types.
 
 ## 0.15.0-alpha.1 (2017-10-13)
 

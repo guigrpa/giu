@@ -21,8 +21,11 @@ import {
   GLOW,
 } from '../gral/styles';
 import type { Choice, KeyboardEventPars } from '../gral/types';
-import hoverable from '../hocs/hoverable';
-import type { HoverableProps } from '../hocs/hoverable';
+import Hoverable from '../wrappers/hoverable';
+import type {
+  HoverableProps,
+  PublicHoverableProps,
+} from '../wrappers/hoverable';
 
 const LIST_SEPARATOR_KEY = '__SEPARATOR__';
 
@@ -45,6 +48,7 @@ type PublicProps = {|
   styleItem?: Object,
   twoStageStyle?: boolean,
   accentColor?: string,
+  ...PublicHoverableProps,
 |};
 
 type DefaultProps = {
@@ -54,14 +58,22 @@ type DefaultProps = {
 
 type Props = {
   ...PublicProps,
-  ...$Exact<HoverableProps>,
+  ...HoverableProps,
   ...$Exact<DefaultProps>,
 };
 
 // ==========================================
 // Component
 // ==========================================
-class BaseListPicker extends React.PureComponent {
+const HoverableListPicker = (props: PublicProps) => (
+  <Hoverable
+    onHoverStart={props.onHoverStart}
+    onHoverStop={props.onHoverStop}
+    render={hoverableProps => <ListPicker {...props} {...hoverableProps} />}
+  />
+);
+
+class ListPicker extends React.PureComponent {
   props: Props;
   static defaultProps: DefaultProps = {
     emptyText: 'Ø',
@@ -346,6 +358,4 @@ style.outerDisabled = merge(INPUT_DISABLED, {
 // ==========================================
 // Public API
 // ==========================================
-const ListPicker = hoverable(BaseListPicker);
-
-export { ListPicker, LIST_SEPARATOR_KEY };
+export { HoverableListPicker as ListPicker, LIST_SEPARATOR_KEY };

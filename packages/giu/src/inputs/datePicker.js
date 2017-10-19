@@ -6,8 +6,11 @@ import { startOfToday, getTimeInSecs } from '../gral/dates';
 import { flexContainer, isDark } from '../gral/styles';
 import type { Moment, KeyboardEventPars } from '../gral/types';
 import { COLORS, KEYS } from '../gral/constants';
-import hoverable from '../hocs/hoverable';
-import type { HoverableProps } from '../hocs/hoverable';
+import Hoverable from '../wrappers/hoverable';
+import type {
+  HoverableProps,
+  PublicHoverableProps,
+} from '../wrappers/hoverable';
 import Button from '../components/button';
 import Icon from '../components/icon';
 
@@ -25,16 +28,25 @@ type PublicProps = {|
   todayName: string,
   keyDown: ?KeyboardEventPars,
   accentColor: string,
+  ...PublicHoverableProps,
 |};
 
 type Props = {
   ...PublicProps,
-  ...$Exact<HoverableProps>,
+  ...HoverableProps,
 };
 
 // ==========================================
 // Component
 // ==========================================
+const HoverableDatePicker = (props: PublicProps) => (
+  <Hoverable
+    onHoverStart={props.onHoverStart}
+    onHoverStop={props.onHoverStop}
+    render={hoverableProps => <DatePicker {...props} {...hoverableProps} />}
+  />
+);
+
 class DatePicker extends React.Component {
   props: Props;
   static defaultProps = {};
@@ -383,4 +395,4 @@ const style = {
 // ==========================================
 // Public API
 // ==========================================
-export default hoverable(DatePicker);
+export default HoverableDatePicker;

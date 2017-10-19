@@ -28,7 +28,7 @@ Additional props passed to the base component:
 -- */
 
 /* -- START_DOCS -- */
-export type HoverableProps = {
+export type HoverableProps = {|
   // `id` element that is hovered (see description above), or `null` if none
   hovering: Hovering,
 
@@ -37,10 +37,15 @@ export type HoverableProps = {
 
   // `onMouseLeave` event handler you can attach to your target DOM elements
   onHoverStop: HoverEventHandler,
-};
+|};
 type Hovering = ?(string | number | boolean); // null when nothing is hovered
 type HoverEventHandler = (ev: SyntheticEvent) => any;
 /* -- END_DOCS -- */
+
+export type PublicHoverableProps = {|
+  onHoverStart?: HoverEventHandler,
+  onHoverStop?: HoverEventHandler,
+|};
 
 type Props = {
   onHoverStart?: HoverEventHandler,

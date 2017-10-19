@@ -6,8 +6,11 @@ import { cancelEvent } from '../gral/helpers';
 import { startOfToday } from '../gral/dates';
 import { COLORS, KEYS } from '../gral/constants';
 import type { Moment, KeyboardEventPars } from '../gral/types';
-import type { HoverableProps } from '../hocs/hoverable';
-import hoverable from '../hocs/hoverable';
+import Hoverable from '../wrappers/hoverable';
+import type {
+  HoverableProps,
+  PublicHoverableProps,
+} from '../wrappers/hoverable';
 
 const PI = Math.PI;
 const PI2 = Math.PI * 2;
@@ -43,10 +46,11 @@ type PublicProps = {|
   onChange: Function,
   seconds?: boolean,
   utc: boolean,
-  keyDown: ?KeyboardEventPars,
+  keyDown?: KeyboardEventPars,
   stepMinutes?: number,
   accentColor: string,
   size?: number,
+  ...PublicHoverableProps,
 |};
 
 type DefaultProps = {
@@ -55,8 +59,8 @@ type DefaultProps = {
 
 type Props = {
   ...PublicProps,
+  ...HoverableProps,
   ...$Exact<DefaultProps>,
-  ...$Exact<HoverableProps>,
 };
 
 type Unit = 'hours' | 'minutes' | 'seconds';
@@ -64,6 +68,16 @@ type Unit = 'hours' | 'minutes' | 'seconds';
 // ==========================================
 // Component
 // ==========================================
+const HoverableTimePickerAnalog = (props: PublicProps) => (
+  <Hoverable
+    onHoverStart={props.onHoverStart}
+    onHoverStop={props.onHoverStop}
+    render={hoverableProps => (
+      <TimePickerAnalog {...props} {...hoverableProps} />
+    )}
+  />
+);
+
 class TimePickerAnalog extends React.PureComponent {
   props: Props;
   static defaultProps: DefaultProps = {
@@ -501,4 +515,4 @@ const style = {
 // ==========================================
 // Public API
 // ==========================================
-export default hoverable(TimePickerAnalog);
+export default HoverableTimePickerAnalog;

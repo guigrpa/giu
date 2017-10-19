@@ -5,8 +5,6 @@ import { omit, merge } from 'timm';
 import type { Choice, Command } from '../gral/types';
 import { COLORS } from '../gral/constants';
 import { isDark } from '../gral/styles';
-import hoverable from '../hocs/hoverable';
-import type { HoverableProps } from '../hocs/hoverable'; // eslint-disable-line
 import Select from '../inputs/select';
 
 // ==========================================
@@ -40,7 +38,6 @@ type DefaultProps = {
 type Props = {
   ...$Exact<PublicProps>,
   ...$Exact<DefaultProps>,
-  ...$Exact<HoverableProps>,
 };
 const FILTERED_PROPS = [
   'items',
@@ -175,4 +172,4 @@ const style = {
 // ==========================================
 // Public API
 // ==========================================
-export default hoverable(DropDownMenu);
+export default DropDownMenu;

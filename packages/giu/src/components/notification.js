@@ -11,21 +11,39 @@ import {
   darken,
 } from '../gral/styles';
 import { COLORS, FONTS } from '../gral/constants';
-import hoverable from '../hocs/hoverable';
+import Hoverable from '../wrappers/hoverable';
+import type {
+  HoverableProps,
+  PublicHoverableProps,
+} from '../wrappers/hoverable';
 /* eslint-disable no-unused-vars */
-import type { HoverableProps } from '../hocs/hoverable';
 import type { NotificationType, NotificationPars } from './notificationTypes';
 /* eslint-enable no-unused-vars */
 import Icon from './icon';
 
 // ==========================================
-// Component
+// Types
 // ==========================================
+type PublicProps = {
+  ...NotificationPars,
+  ...PublicHoverableProps,
+};
 type Props = {
-  ...$Exact<NotificationPars>,
-  ...$Exact<HoverableProps>,
+  ...PublicProps,
+  ...HoverableProps,
   type: NotificationType,
 };
+
+// ==========================================
+// Component
+// ==========================================
+const HoverableNotification = (props: PublicProps) => (
+  <Hoverable
+    onHoverStart={props.onHoverStart}
+    onHoverStop={props.onHoverStop}
+    render={hoverableProps => <Notification {...props} {...hoverableProps} />}
+  />
+);
 
 class Notification extends React.PureComponent {
   props: Props;
@@ -34,8 +52,6 @@ class Notification extends React.PureComponent {
     type: ('info': NotificationType),
   };
 
-  // ==========================================
-  // Render
   // ==========================================
   render() {
     const { theme } = this.context;
@@ -120,5 +136,4 @@ const style = {
 // ==========================================
 // Public API
 // ==========================================
-const HoverableNotification = hoverable(Notification);
 export default HoverableNotification;

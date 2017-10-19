@@ -119,6 +119,10 @@ import input from './hocs/input';
 export { input };
 import Hoverable from './wrappers/hoverable';
 export { Hoverable };
+export type {
+  HoverableProps,
+  PublicHoverableProps,
+} from './wrappers/hoverable';
 
 // Styles
 export {
