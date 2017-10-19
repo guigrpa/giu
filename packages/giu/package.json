@@ -1,6 +1,6 @@
 {
   "name": "giu",
-  "version": "0.15.0-alpha.1",
+  "version": "0.15.0-alpha.2",
   "main": "lib/index.js",
   "scripts": {
     "compile": "yarn compile:clean && yarn compile:copy && yarn compile:run",
