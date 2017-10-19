@@ -320,6 +320,7 @@ type PublicProps = {
   label?: any, // React components to be included in the checkbox's `label` element
   disabled?: boolean,
   styleLabel?: Object, // merged with the `label` style
+  skipTheme?: boolean,
   // all others are passed through to the `input` unchanged
 };
 ```
@@ -941,6 +942,7 @@ type Props = {
   size?: 'lg' | '2x' | '3x' | '4x' | '5x',
   fixedWidth?: boolean,
   spin?: boolean,
+  onClick?: (ev: SyntheticMouseEvent) => any,
   disabled?: boolean,
   style?: Object, // merged with the `i` element style
   skipTheme?: boolean,
