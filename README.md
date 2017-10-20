@@ -899,6 +899,7 @@ export type HintArrowPars = {|
   arrowSize?: number,
   arrowAngle?: number,
   counterclockwise?: boolean,
+  style?: Object,
 |};
 ```
 
