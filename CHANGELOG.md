@@ -1,3 +1,5 @@
+## 0.15.0-alpha.3 (2017-10-20)
+
 * HintArrow: add `style` prop.
 
 ## 0.15.0-alpha.2 (2017-10-19)
