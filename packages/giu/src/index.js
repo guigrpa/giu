@@ -11,8 +11,6 @@
 
 /* eslint-disable import/newline-after-import, import/first */
 
-require('./index.css');
-
 // NB: Flow complains when we take a default export from another module
 // and reexport as a named export from this main API,
 // e.g. export Select from './inputs/select';

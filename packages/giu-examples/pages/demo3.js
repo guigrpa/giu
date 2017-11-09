@@ -2,8 +2,7 @@
 /* eslint-disable react/no-multi-comp, react/no-did-mount-set-state */
 
 import React from 'react';
-import ReactDOM from 'react-dom';
-import ReactDOMServer from 'react-dom/server';
+import Head from 'next/head';
 import { set as timmSet, merge, omit } from 'timm';
 import {
   Floats,
@@ -21,8 +20,6 @@ import {
   Spinner,
 } from 'giu';
 import faker from 'faker';
-
-import './demo3.css';
 
 const SIDEBAR_WIDTH = 200;
 const TOP_HEIGHT = 80;
@@ -596,22 +593,32 @@ const style = {
 // ================================================
 // Render main
 // ================================================
-const mainEl = <App />;
-
-// Normal render
-if (typeof document !== 'undefined') {
-  ReactDOM.render(mainEl, document.getElementById('app'));
-
-  // SSR
-} else {
-  module.exports = function render(locals: Object, callback: Function) {
-    const ssrHtml = ReactDOMServer.renderToString(mainEl);
-    /* eslint-disable global-require */
-    const ssrCss = require('giu/lib/all.css');
-    /* eslint-enable global-require */
-    let rendered = locals.template;
-    rendered = rendered.replace('<!-- ssrHtml -->', ssrHtml);
-    rendered = rendered.replace('<!-- ssrCss -->', ssrCss);
-    callback(null, rendered);
-  };
-}
+export default () => (
+  <div>
+    <Head>
+      <title>Giu demos</title>
+      <meta name="viewport" content="initial-scale=1.0, width=device-width" />
+      <link
+        rel="stylesheet"
+        href="/static/font-awesome/css/font-awesome.min.css"
+      />
+      <link rel="icon" type="image/ico" href="/static/favicon.ico" />
+    </Head>
+    <App />
+    <style jsx global>{`
+      body {
+        font-family: 'Futura Std', Tahoma, sans-serif;
+        font-size: 12px;
+        padding: 10px;
+        margin: 0;
+        background: lavender;
+      }
+      .giu-date-picker {
+        font-size: 12px;
+      }
+      .giu-list-picker {
+        font-size: 12px !important;
+      }
+    `}</style>
+  </div>
+);

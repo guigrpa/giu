@@ -21,6 +21,7 @@ import { isVisible } from '../gral/visibility';
 import { MISC } from '../gral/constants';
 import { boxWithShadow } from '../gral/styles';
 import type { Action } from '../gral/types';
+import { GLOBAL_CSS } from '../gral/resetCss';
 
 const PROP_KEYS_TO_REMOVE_FROM_FLOAT_DIV = [
   'position',
@@ -214,6 +215,9 @@ class Floats extends React.PureComponent {
     return (
       <div className="giu-floats" style={style.outer}>
         {this.floats.map(this.renderFloat)}
+        <style jsx global>
+          {GLOBAL_CSS}
+        </style>
       </div>
     );
   }
@@ -379,9 +383,9 @@ const style = {
 // Warnings
 // ==========================================
 let fCheckedFloats = false;
-const floatsWarning = (
-  name: string
-) => `<${name}> requires a <Floats> component to be \
+const floatsWarning = (name: string) => `<${
+  name
+}> requires a <Floats> component to be \
 included in your application. It will not work properly otherwise. Please add it \
 as close as possible to the application root; no props are needed.`;
 

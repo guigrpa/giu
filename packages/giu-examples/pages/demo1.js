@@ -3,8 +3,7 @@
 /* eslint-disable react/prefer-stateless-function, react/jsx-no-target-blank */
 /* eslint-disable react/no-string-refs */
 import React from 'react';
-import ReactDOM from 'react-dom';
-import ReactDOMServer from 'react-dom/server';
+import Head from 'next/head';
 import { merge } from 'timm';
 import moment from 'moment';
 import {
@@ -35,11 +34,6 @@ import {
   boxWithShadow,
   AnimatedCounter,
 } from 'giu';
-import DataTableExample from './demo1-dataTables';
-import ModalExample from './demo1-modals';
-import HintExample from './demo1-hints';
-import FormExample from './demo1-forms';
-import FormExample2 from './demo1-forms2';
 import {
   ExampleLabel,
   exampleStyle,
@@ -51,7 +45,12 @@ import {
   onChangeJson,
   getLang,
   setLang,
-} from './demo1-common';
+} from '../components/demo1-common';
+import DataTableExample from '../components/demo1-dataTables';
+import ModalExample from '../components/demo1-modals';
+import HintExample from '../components/demo1-hints';
+import FormExample from '../components/demo1-forms';
+import FormExample2 from '../components/demo1-forms2';
 
 const { floor, random } = Math;
 const randomInt = (min, max) => min + floor(random() * (max - min + 1));
@@ -81,11 +80,16 @@ class App extends React.Component {
         out = (
           <div>
             <Floats />
-            Test<br />Test<br />Test<br />Test<br />Test<br />Test<br />Test<br />Test<br />Test<br />
-            Test<br />Test<br />Test<br />Test<br />Test<br />Test<br />Test<br />Test<br />Test<br />
-            Test<br />Test<br />Test<br />Test<br />Test<br />Test<br />Test<br />Test<br />Test<br />
-            Test<br />Test<br />Test<br />Test<br />Test<br />Test<br />Test<br />Test<br />Test<br />
-            Test<br />Test<br />Test<br />Test<br />Test<br />Test<br />Test<br />Test<br />Test<br />
+            Test<br />Test<br />Test<br />Test<br />Test<br />Test<br />Test<br
+            />Test<br />Test<br />
+            Test<br />Test<br />Test<br />Test<br />Test<br />Test<br />Test<br
+            />Test<br />Test<br />
+            Test<br />Test<br />Test<br />Test<br />Test<br />Test<br />Test<br
+            />Test<br />Test<br />
+            Test<br />Test<br />Test<br />Test<br />Test<br />Test<br />Test<br
+            />Test<br />Test<br />
+            Test<br />Test<br />Test<br />Test<br />Test<br />Test<br />Test<br
+            />Test<br />Test<br />
             <TextInput
               onChange={onChange}
               errors={['Must be numeric']}
@@ -93,11 +97,16 @@ class App extends React.Component {
               errorAlign="right"
             />
             <br />
-            Test<br />Test<br />Test<br />Test<br />Test<br />Test<br />Test<br />Test<br />Test<br />
-            Test<br />Test<br />Test<br />Test<br />Test<br />Test<br />Test<br />Test<br />Test<br />
-            Test<br />Test<br />Test<br />Test<br />Test<br />Test<br />Test<br />Test<br />Test<br />
-            Test<br />Test<br />Test<br />Test<br />Test<br />Test<br />Test<br />Test<br />Test<br />
-            Test<br />Test<br />Test<br />Test<br />Test<br />Test<br />Test<br />Test<br />Test<br />
+            Test<br />Test<br />Test<br />Test<br />Test<br />Test<br />Test<br
+            />Test<br />Test<br />
+            Test<br />Test<br />Test<br />Test<br />Test<br />Test<br />Test<br
+            />Test<br />Test<br />
+            Test<br />Test<br />Test<br />Test<br />Test<br />Test<br />Test<br
+            />Test<br />Test<br />
+            Test<br />Test<br />Test<br />Test<br />Test<br />Test<br />Test<br
+            />Test<br />Test<br />
+            Test<br />Test<br />Test<br />Test<br />Test<br />Test<br />Test<br
+            />Test<br />Test<br />
           </div>
         );
         break;
@@ -525,7 +534,7 @@ const DropDownExample = ({ lang }) => (
 const ScrollingExample = () => (
   <div style={style.example}>
     <ExampleLabel>Scrollable (with translateZ(0)) with floats</ExampleLabel>
-    <div onScroll={floatReposition} style={style.scrolling}>
+    <div className="inner" onScroll={floatReposition}>
       <DateInput placeholder="date" date time />
       <br />
       {LONG_TEXT}
@@ -546,6 +555,15 @@ const ScrollingExample = () => (
       <br />
       <DateInput placeholder="date" />
     </div>
+    <style jsx>
+      {`
+        .inner {
+          max-height: 120px;
+          overflow: auto;
+          transform: translateZ(0);
+        }
+      `}
+    </style>
   </div>
 );
 
@@ -606,36 +624,38 @@ const style = {
     fontSize: 12,
   },
   example: exampleStyle,
-  scrolling: {
-    maxHeight: 120,
-    overflow: 'auto',
-    transform: 'translateZ(0)',
-  },
   hoverable: hovering => ({
     backgroundColor: hovering ? '#ccc' : undefined,
   }),
 };
 
 // -----------------------------------------------
-// Render main
+// Public
 // -----------------------------------------------
-const mainEl = <App />;
-
-// Normal render
-if (typeof document !== 'undefined') {
-  console.log('Rendering demo1...');
-  ReactDOM.render(mainEl, document.getElementById('app'));
-
-  // SSR
-} else {
-  module.exports = function render(locals: Object, callback: Function) {
-    const ssrHtml = ReactDOMServer.renderToString(mainEl);
-    /* eslint-disable global-require */
-    const ssrCss = require('giu/lib/all.css');
-    /* eslint-enable global-require */
-    let rendered = locals.template;
-    rendered = rendered.replace('<!-- ssrHtml -->', ssrHtml);
-    rendered = rendered.replace('<!-- ssrCss -->', ssrCss);
-    callback(null, rendered);
-  };
-}
+export default () => (
+  <div>
+    <Head>
+      <title>Giu demos</title>
+      <meta name="viewport" content="initial-scale=1.0, width=device-width" />
+      <link
+        rel="stylesheet"
+        href="/static/font-awesome/css/font-awesome.min.css"
+      />
+      <link
+        rel="stylesheet"
+        href="/static/typeface-gloria-hallelujah/index.css"
+      />
+      <link rel="icon" type="image/ico" href="/static/favicon.ico" />
+    </Head>
+    <App />
+    <style jsx global>{`
+      body {
+        font-family: 'Futura Std', Tahoma, sans-serif;
+        font-size: 12px;
+        padding: 10px;
+        margin: 0;
+        background: lavender;
+      }
+    `}</style>
+  </div>
+);

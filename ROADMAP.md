@@ -1,5 +1,14 @@
 # Roadmap
 
+- [ ] Migrate examples to Next
+    - [ ] index.js
+    - [ ] Integrate docs
+    - [ ] Update extract-docs (remove #!/bin/node)
+    - [ ] Clean up deps (remove Webpack, etc)
+- [ ] Complete migration to React 16 (see console errors in index.js, demo1.js)
+- [ ] Update docs (see breaking changes in changelog)
+- [ ] Migrate to latest Flow
+
 - [ ] Unit tests (with Jest snapshots)
 
 - [ ] Add copy&paste to RangePicker

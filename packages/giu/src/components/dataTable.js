@@ -24,7 +24,6 @@ import {
 import type { DataTableColumn } from './dataTableRow';
 import FocusCapture from './focusCapture';
 import Icon from './icon';
-import './dataTable.css';
 
 const FETCHING_MORE_ITEMS_ROW = '__FETCHING_MORE_ITEMS_ROW__';
 const SORT_MANUALLY = '__SORT_MANUALLY__';
@@ -251,22 +250,19 @@ class DataTable extends React.PureComponent {
     this.recalcCols(props);
     // State initialised by outer props, then free to change by default
     this.filterValue = props.filterValue;
-    [
-      'sortBy',
-      'sortDescending',
-      'selectedIds',
-      'manuallyOrderedIds',
-    ].forEach(key => {
-      // $FlowFixMe
-      this[key] = undefined;
-      if (props[key] != null) {
+    ['sortBy', 'sortDescending', 'selectedIds', 'manuallyOrderedIds'].forEach(
+      key => {
         // $FlowFixMe
-        this[key] = props[key];
-      } else if (props.collectionName) {
-        // $FlowFixMe
-        this[key] = localGet(this.localStorageKey(props.collectionName, key));
+        this[key] = undefined;
+        if (props[key] != null) {
+          // $FlowFixMe
+          this[key] = props[key];
+        } else if (props.collectionName) {
+          // $FlowFixMe
+          this[key] = localGet(this.localStorageKey(props.collectionName, key));
+        }
       }
-    });
+    );
     if (this.sortBy === undefined) this.sortBy = null;
     if (this.sortDescending == null) this.sortDescending = false;
     if (this.selectedIds == null) this.selectedIds = [];
@@ -429,9 +425,9 @@ class DataTable extends React.PureComponent {
   // ===============================================================
   render() {
     DEBUG && console.log('DataTable: rendering...');
-    let className = `giu-data-table ${this.fDragging
-      ? 'dragging'
-      : 'not-dragging'}`;
+    let className = `giu-data-table ${
+      this.fDragging ? 'dragging' : 'not-dragging'
+    }`;
     if (this.props.animated) className += ' animated';
     return (
       <div
@@ -445,6 +441,7 @@ class DataTable extends React.PureComponent {
         {this.renderFocusCapture()}
         {this.props.showHeader && this.renderHeader()}
         {this.renderVirtualScroller()}
+        {STYLES}
       </div>
     );
   }
@@ -1031,6 +1028,25 @@ const style = {
     marginBottom: 2,
   },
 };
+
+const STYLES = (
+  <style jsx global>{`
+    /* Important transition, no only aesthetically. When a row's contents changes height
+  and it is not shown because it is above the viewport, wheneve the user scrolls up
+  to that row it will get rendered, report on its new height, and all of the subsequent
+  rows will get repositioned. This should happen slowly to avoid confusing jumps
+  while scrolling */
+    .giu-data-table.not-dragging.animated .giu-vertical-manager {
+      transition: top 300ms;
+    }
+
+    /* Just in case a DataTable lands on a Modal: make sure the dragged
+  row is drawn above the modal, not below */
+    .giu-data-table-dragged-row {
+      z-index: 50000;
+    }
+  `}</style>
+);
 
 // ===============================================================
 // Public API

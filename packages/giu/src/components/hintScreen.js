@@ -2,7 +2,6 @@
 
 /* eslint-disable react/no-array-index-key */
 
-import 'typeface-gloria-hallelujah'; // eslint-disable-line import/extensions
 import React from 'react';
 import { COLORS, MISC } from '../gral/constants';
 import Backdrop from '../components/backdrop';
@@ -23,6 +22,7 @@ export type HintScreenPars = {|
   elements?: ElementsWrapper,
   closeLabel?: string, // label of the close button (default: 'Got it!')
   zIndex?: number,
+  style?: Object,
 |};
 type ElementsWrapper = Array<Element> | (() => Array<Element>);
 type Element = HintArrowPars | HintLabelPars;
@@ -73,7 +73,7 @@ class HintScreen extends React.PureComponent {
         style={style.outer(this.props.zIndex)}
       >
         {this.renderBackdrop()}
-        <div style={style.contents}>
+        <div style={style.contents(this.props)}>
           {this.renderArrows(elements)}
           {this.renderLabels(elements)}
           {this.renderCloseButton()}
@@ -133,11 +133,12 @@ const style = {
     height: '100vh',
     zIndex,
   }),
-  contents: {
+  contents: ({ style: baseStyle = {} }) => ({
     color: COLORS.lightText,
     fontSize: FONT_SIZE,
     fontFamily: FONT_FAMILY,
-  },
+    ...baseStyle,
+  }),
   svg: {
     position: 'fixed',
     width: '100vw',

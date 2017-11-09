@@ -25,7 +25,8 @@
   "scripts": {
     "status": "oao status",
     "travis": "yarn bootstrap && yarn compile",
-    "build": "yarn bootstrap && yarn compile && yarn lint && yarn flow && yarn buildExamplesSsr && yarn docs && yarn xxl && yarn prepareRelease",
+    "build":
+      "yarn bootstrap && yarn compile && yarn lint && yarn flow && yarn buildExamplesSsr && yarn docs && yarn xxl && yarn prepareRelease",
     "bootstrap": "oao bootstrap",
     "compile": "oao all --parallel \"yarn compile\"",
     "compileWatch": "oao all --parallel \"yarn compileWatch\"",
@@ -33,39 +34,44 @@
     "buildExamplesDev": "cd packages/giu-examples && yarn buildWatch",
     "buildExamplesSsr": "cd packages/giu-examples && yarn buildSsr",
     "buildExamplesSsrDev": "cd packages/giu-examples && yarn buildSsrWatch",
-    "start": "cd packages/giu-examples && yarn example",
+    "start": "cd packages/giu-examples && yarn start",
     "lint": "eslint packages",
     "flow": "flow check || exit 0",
     "docs": "yarn docs:readme && yarn docs:copyExamples",
-    "docs:readme": "extract-docs --template docs/templates/README.md --output README.md",
+    "docs:readme":
+      "extract-docs --template docs/templates/README.md --output README.md",
     "docs:copyExamples": "cp -r packages/giu-examples/lib/public/* docs/",
     "xxl": "xxl --src packages --exclude node_modules,/lib/",
     "jest": "jest --watch --coverage",
-    "jest-html": "jest-html --css-patterns test/snapshot.css --snapshot-patterns \"packages/**/*.snap\"",
+    "jest-html":
+      "jest-html --css-patterns test/snapshot.css --snapshot-patterns \"packages/**/*.snap\"",
     "test": "yarn testCovFull",
     "testFast": "jest",
-    "testCovFull": "yarn _testCovPrepare && yarn _testDev && yarn _testProd && yarn _testCovReport",
-    "testCovFast": "yarn _testCovPrepare && yarn _testDev && yarn _testCovReport",
-    "_testCovPrepare": "rm -rf ./coverage .nyc_output .nyc_tmp && mkdir .nyc_tmp",
-    "_testCovReport": "cp -r .nyc_tmp .nyc_output && nyc report --reporter=html --reporter=lcov --reporter=text",
-    "_testDev": "cross-env NODE_ENV=development yarn _testCov && mv .nyc_tmp/coverage-final.json .nyc_tmp/coverage-dev.json",
-    "_testProd": "cross-env NODE_ENV=production yarn _testCov && mv .nyc_tmp/coverage-final.json .nyc_tmp/coverage-prod.json",
-    "_testCov": "jest --coverage && mv .nyc_output/coverage-final.json .nyc_tmp && rm -rf .nyc_output",
+    "testCovFull":
+      "yarn _testCovPrepare && yarn _testDev && yarn _testProd && yarn _testCovReport",
+    "testCovFast":
+      "yarn _testCovPrepare && yarn _testDev && yarn _testCovReport",
+    "_testCovPrepare":
+      "rm -rf ./coverage .nyc_output .nyc_tmp && mkdir .nyc_tmp",
+    "_testCovReport":
+      "cp -r .nyc_tmp .nyc_output && nyc report --reporter=html --reporter=lcov --reporter=text",
+    "_testDev":
+      "cross-env NODE_ENV=development yarn _testCov && mv .nyc_tmp/coverage-final.json .nyc_tmp/coverage-dev.json",
+    "_testProd":
+      "cross-env NODE_ENV=production yarn _testCov && mv .nyc_tmp/coverage-final.json .nyc_tmp/coverage-prod.json",
+    "_testCov":
+      "jest --coverage && mv .nyc_output/coverage-final.json .nyc_tmp && rm -rf .nyc_output",
     "prepareRelease": "oao prepublish",
     "release": "oao publish",
-    "prettier": "prettier --single-quote --trailing-comma es5 --write \"packages/**/src/**/*.js\""
+    "prettier":
+      "prettier --single-quote --trailing-comma es5 --write \"packages/**/src/**/*.js\""
   },
-  "_devDependencies": "The following are included to avoid dep conflicts: react, react-dom, moment",
+  "_devDependencies":
+    "The following are included to avoid dep conflicts: react, react-dom, moment",
   "devDependencies": {
-    "babel-cli": "6.26.0",
-    "babel-core": "6.25.0",
     "babel-eslint": "7.2.3",
     "babel-jest": "20.0.3",
     "babel-loader": "7.1.2",
-    "babel-plugin-transform-runtime": "6.23.0",
-    "babel-preset-es2015": "6.24.1",
-    "babel-preset-react": "6.24.1",
-    "babel-preset-stage-0": "6.24.1",
     "coveralls": "2.13.1",
     "cross-env": "5.0.5",
     "css-loader": "0.28.5",
@@ -77,7 +83,6 @@
     "eslint-plugin-jsx-a11y": "6.0.2",
     "eslint-plugin-react": "7.3.0",
     "extract-docs": "1.6.0",
-    "file-loader": "0.11.2",
     "flow-bin": "0.52.0",
     "flow-copy-source": "1.2.0",
     "jest": "17.0.3",
@@ -86,10 +91,11 @@
     "nyc": "11.1.0",
     "oao": "^0.10.0",
     "prettier": "^1.7.4",
-    "react": "15.6.1",
-    "react-dom": "15.6.1",
+    "react": "^16.0.0",
+    "react-dom": "^16.0.0",
     "static-site-generator-webpack-plugin": "3.4.1",
     "style-loader": "0.18.2",
+    "styled-jsx": "^2.1.3",
     "webpack": "3.5.5",
     "xxl": "1.2.0"
   },
@@ -100,14 +106,8 @@
       "^.+\\.(gif|ttf|eot|svg)$": "<rootDir>/test/emptyString.js"
     },
     "coverageDirectory": ".nyc_output",
-    "coverageReporters": [
-      "json",
-      "text",
-      "html"
-    ],
-    "snapshotSerializers": [
-      "<rootDir>/node_modules/jest-html"
-    ],
+    "coverageReporters": ["json", "text", "html"],
+    "snapshotSerializers": ["<rootDir>/node_modules/jest-html"],
     "collectCoverageFrom": [
       "packages/*/src/**",
       "!packages/giu-examples/**",

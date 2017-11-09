@@ -21,10 +21,6 @@ class Giu extends React.PureComponent {
     return { theme: this.props.theme };
   }
 
-  componentWillMount() {
-    if (this.props.theme === 'mdl') require('typeface-roboto');
-  }
-
   render() {
     return this.props.children;
   }

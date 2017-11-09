@@ -5,8 +5,6 @@ import PropTypes from 'prop-types';
 import { merge, omit } from 'timm';
 import { COLORS } from '../gral/constants';
 
-require('font-awesome/css/font-awesome.css');
-
 const SPINNER_ICON = 'circle-o-notch';
 
 // ==========================================

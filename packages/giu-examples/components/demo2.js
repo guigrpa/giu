@@ -30,6 +30,8 @@ import {
   boxWithShadow,
   TextInput,
 } from 'giu';
+import 'typeface-roboto'; // eslint-disable-line import/extensions
+import 'font-awesome/css/font-awesome.css';
 import 'giu/lib/mdl';
 import DataTableExample from './demo1-dataTables';
 import ModalExample from './demo1-modals';
