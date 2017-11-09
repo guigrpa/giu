@@ -25,9 +25,13 @@ class AnimatedCounter extends React.PureComponent {
   value: ?number;
   targetValue: ?number;
 
-  componentWillMount() {
+  constructor(props: Props) {
+    super(props);
     this.value = null;
-    this.targetValue = this.props.value;
+    this.targetValue = props.value;
+  }
+
+  componentDidMount() {
     if (this.targetValue != null) this.startTimer();
   }
 
