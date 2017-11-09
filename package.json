@@ -40,7 +40,7 @@
     "docs": "yarn docs:readme && yarn docs:copyExamples",
     "docs:readme":
       "extract-docs --template docs/templates/README.md --output README.md",
-    "docs:copyExamples": "cp -r packages/giu-examples/lib/public/* docs/",
+    "docs:copyExamples": "cp -r packages/giu-examples/out/* docs/",
     "xxl": "xxl --src packages --exclude node_modules,/lib/",
     "jest": "jest --watch --coverage",
     "jest-html":

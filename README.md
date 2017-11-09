@@ -872,6 +872,7 @@ export type HintScreenPars = {|
   elements?: ElementsWrapper,
   closeLabel?: string, // label of the close button (default: 'Got it!')
   zIndex?: number,
+  style?: Object,
 |};
 type ElementsWrapper = Array<Element> | (() => Array<Element>);
 type Element = HintArrowPars | HintLabelPars;

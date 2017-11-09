@@ -6,7 +6,7 @@
     "compile": "echo Nothing",
     "compileWatch": "echo Nothing",
     "start": "next",
-    "build": "next build",
+    "build": "next build && next export",
     "buildOld":
       "yarn build:copyPublic && yarn build:webpack -- -p --env.NODE_ENV=production",
     "buildWatch": "yarn build:copyPublic && yarn build:webpack -- -w",
