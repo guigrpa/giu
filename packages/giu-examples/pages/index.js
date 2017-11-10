@@ -1303,21 +1303,22 @@ const getExampleItems = ({ fSeparator, fKeys, modifier } = {}) => {
 // -----------------------------------------------
 class AppWrapper extends React.Component {
   static async getInitialProps({ req }) {
-    let readmeMarkdown;
+    const out = {};
     if (req) {
       const extractDocs = require('extract-docs'); // eslint-disable-line
-      readmeMarkdown = extractDocs({
+      out.readmeMarkdown = extractDocs({
         template: '../../docsPrivate/templates/README.md',
         basePath: '../..',
         missingRefs: true,
         skipConditional: true,
       });
+      out.baseUrl = process.env.BASE_URL || '';
     }
-    return { readmeMarkdown };
+    return out;
   }
 
   render() {
-    const prefix = process.env.BASE_URL || '';
+    const { baseUrl } = this.props;
     return (
       <div>
         <Head>
@@ -1328,11 +1329,11 @@ class AppWrapper extends React.Component {
           />
           <link
             rel="stylesheet"
-            href={`${prefix}/static/font-awesome/css/font-awesome.min.css`}
+            href={`${baseUrl}/static/font-awesome/css/font-awesome.min.css`}
           />
           <link
             rel="stylesheet"
-            href={`${prefix}/static/typeface-gloria-hallelujah/index.css`}
+            href={`${baseUrl}/static/typeface-gloria-hallelujah/index.css`}
           />
           <link
             href="https://fonts.googleapis.com/css?family=Open+Sans:400,700"
@@ -1341,16 +1342,16 @@ class AppWrapper extends React.Component {
           />
           <link
             rel="stylesheet"
-            href={`${prefix}/static/stylesheets/normalize.css`}
+            href={`${baseUrl}/static/stylesheets/normalize.css`}
           />
           <link
             rel="stylesheet"
-            href={`${prefix}/static/stylesheets/stylesheet.css`}
+            href={`${baseUrl}/static/stylesheets/stylesheet.css`}
           />
           <link
             rel="icon"
             type="image/ico"
-            href={`${prefix}/static/favicon.ico`}
+            href={`${baseUrl}/static/favicon.ico`}
           />
         </Head>
         <App md={this.props.readmeMarkdown} />
