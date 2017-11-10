@@ -591,41 +591,54 @@ const style = {
 };
 
 // ================================================
-// Render main
+// Public
 // ================================================
-export default () => {
-  const prefix = process.env.BASE_URL || '';
-  return (
-    <div>
-      <Head>
-        <title>Giu demos</title>
-        <meta name="viewport" content="initial-scale=1.0, width=device-width" />
-        <link
-          rel="stylesheet"
-          href={`${prefix}/static/font-awesome/css/font-awesome.min.css`}
-        />
-        <link
-          rel="icon"
-          type="image/ico"
-          href={`${prefix}/static/favicon.ico`}
-        />
-      </Head>
-      <App />
-      <style jsx global>{`
-        body {
-          font-family: 'Futura Std', Tahoma, sans-serif;
-          font-size: 12px;
-          padding: 10px;
-          margin: 0;
-          background: lavender;
-        }
-        .giu-date-picker {
-          font-size: 12px;
-        }
-        .giu-list-picker {
-          font-size: 12px !important;
-        }
-      `}</style>
-    </div>
-  );
-};
+class AppWrapper extends React.Component {
+  static async getInitialProps({ req }) {
+    const out = {};
+    if (req) out.baseUrl = process.env.BASE_URL || '';
+    return out;
+  }
+
+  render() {
+    const { baseUrl } = this.props;
+    return (
+      <div>
+        <Head>
+          <title>Giu demos</title>
+          <meta
+            name="viewport"
+            content="initial-scale=1.0, width=device-width"
+          />
+          <link
+            rel="stylesheet"
+            href={`${baseUrl}/static/font-awesome/css/font-awesome.min.css`}
+          />
+          <link
+            rel="icon"
+            type="image/ico"
+            href={`${baseUrl}/static/favicon.ico`}
+          />
+        </Head>
+        <App />
+        <style jsx global>{`
+          body {
+            font-family: 'Futura Std', Tahoma, sans-serif;
+            font-size: 12px;
+            padding: 10px;
+            margin: 0;
+            background: lavender;
+          }
+          .giu-date-picker {
+            font-size: 12px;
+          }
+          .giu-list-picker {
+            font-size: 12px !important;
+          }
+        `}</style>
+      </div>
+    );
+  }
+}
+
+export default AppWrapper;
