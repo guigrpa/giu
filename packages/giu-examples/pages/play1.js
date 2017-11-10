@@ -8,7 +8,7 @@ class AppWrapper extends React.Component {
   render() {
     return (
       <div>
-        <Link href="play2">
+        <Link href="/giu/play2">
           <a>Play2</a>
         </Link>
       </div>
