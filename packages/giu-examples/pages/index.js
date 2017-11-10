@@ -4,7 +4,6 @@
 /* eslint-disable react/no-string-refs, react/no-unescaped-entities, react/no-danger, react/no-array-index-key */
 import React from 'react';
 import Head from 'next/head';
-import Link from 'next/link';
 import marked from 'marked';
 import hljs from 'highlight.js';
 import { merge } from 'timm';
@@ -295,8 +294,7 @@ class InputIntroAge extends React.Component {
                 title: 'Saved!',
                 msg: `Your age is ${age}`,
               })
-            )
-          }
+            )}
         >
           <Icon icon="save" /> Save
         </Button>
@@ -339,7 +337,11 @@ class InputTypes extends React.Component {
           </li>
           <li>
             <a href="#select">Select</a>:{' '}
-            <Select items={getExampleItems()} value="blueberries" required />{' '}
+            <Select
+              items={getExampleItems()}
+              value="blueberries"
+              required
+            />{' '}
             (native){' '}
             <Select
               required
@@ -357,9 +359,7 @@ class InputTypes extends React.Component {
           </li>
           <li>
             <a href="#colorinput">ColorInput</a>:{' '}
-            <ColorInput value="aadc54ab" /> (<a href="#color-inputs">
-              more details
-            </a>)
+            <ColorInput value="aadc54ab" /> (<a href="#color-inputs">more details</a>)
           </li>
           <li>
             <a href="#fileinput">FileInput</a>: <FileInput />
@@ -988,8 +988,7 @@ class DropDownMenus extends React.Component {
               msg: `I'll fetch some ${fruits}!`,
               icon: 'shopping-cart',
               type: 'success',
-            })
-          }
+            })}
           style={{ padding: '3px 8px' }}
         >
           <Icon icon="shopping-basket" />&nbsp; Which fruit?
@@ -1118,8 +1117,7 @@ const Buttons = ({ fIncludeDisabled }) => (
         createNotif({
           icon: 'cutlery',
           msg: 'What about some sushi?',
-        })
-      }
+        })}
     >
       <Icon icon="lightbulb-o" /> Inspire me!
     </Button>&nbsp;&nbsp;
@@ -1129,8 +1127,7 @@ const Buttons = ({ fIncludeDisabled }) => (
           type: 'success',
           icon: 'heart',
           msg: "You're welcome!",
-        })
-      }
+        })}
       plain
     >
       OK, thanks!

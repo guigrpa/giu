@@ -1,4 +1,4 @@
-/* eslint-disable no-console */
+/* eslint-disable */
 
 import React from 'react';
 import { Floats, TextInput, PasswordInput } from '../src';
