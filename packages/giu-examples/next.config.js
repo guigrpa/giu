@@ -1,8 +1,9 @@
 module.exports = {
+  assetPrefix: process.env.BASE_URL || '',
   exportPathMap: () => ({
     '/': { page: '/' },
-    '/demos/compact': { page: '/demo1' },
-    '/demos/material': { page: '/demo2' },
-    '/demos/datatable': { page: '/demo3' },
+    '/compact': { page: '/compact' },
+    '/material': { page: '/material' },
+    '/datatable': { page: '/datatable' },
   }),
 };

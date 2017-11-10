@@ -1307,7 +1307,7 @@ class AppWrapper extends React.Component {
     if (req) {
       const extractDocs = require('extract-docs'); // eslint-disable-line
       readmeMarkdown = extractDocs({
-        template: '../../docs/templates/README.md',
+        template: '../../docsPrivate/templates/README.md',
         basePath: '../..',
         missingRefs: true,
         skipConditional: true,
@@ -1317,6 +1317,7 @@ class AppWrapper extends React.Component {
   }
 
   render() {
+    const prefix = process.env.BASE_URL || '';
     return (
       <div>
         <Head>
@@ -1327,20 +1328,30 @@ class AppWrapper extends React.Component {
           />
           <link
             rel="stylesheet"
-            href="/static/font-awesome/css/font-awesome.min.css"
+            href={`${prefix}/static/font-awesome/css/font-awesome.min.css`}
           />
           <link
             rel="stylesheet"
-            href="/static/typeface-gloria-hallelujah/index.css"
+            href={`${prefix}/static/typeface-gloria-hallelujah/index.css`}
           />
           <link
             href="https://fonts.googleapis.com/css?family=Open+Sans:400,700"
             rel="stylesheet"
             type="text/css"
           />
-          <link rel="stylesheet" href="/static/stylesheets/normalize.css" />
-          <link rel="stylesheet" href="/static/stylesheets/stylesheet.css" />
-          <link rel="icon" type="image/ico" href="/static/favicon.ico" />
+          <link
+            rel="stylesheet"
+            href={`${prefix}/static/stylesheets/normalize.css`}
+          />
+          <link
+            rel="stylesheet"
+            href={`${prefix}/static/stylesheets/stylesheet.css`}
+          />
+          <link
+            rel="icon"
+            type="image/ico"
+            href={`${prefix}/static/favicon.ico`}
+          />
         </Head>
         <App md={this.props.readmeMarkdown} />
         <style jsx global>{`

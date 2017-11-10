@@ -26,21 +26,19 @@
     "status": "oao status",
     "travis": "yarn bootstrap && yarn compile",
     "build":
-      "yarn bootstrap && yarn compile && yarn lint && yarn flow && yarn buildExamplesSsr && yarn docs && yarn xxl && yarn prepareRelease",
+      "yarn bootstrap && yarn compile && yarn lint && yarn flow && yarn buildExamples && yarn docs && yarn xxl && yarn prepareRelease",
     "bootstrap": "oao bootstrap",
-    "compile": "oao all --parallel \"yarn compile\"",
-    "compileWatch": "oao all --parallel \"yarn compileWatch\"",
+    "compile": "cd packages/giu && yarn compile",
+    "compileWatch": "cd packages/giu && yarn compileWatch",
     "buildExamples": "cd packages/giu-examples && yarn build",
-    "buildExamplesDev": "cd packages/giu-examples && yarn buildWatch",
-    "buildExamplesSsr": "cd packages/giu-examples && yarn buildSsr",
-    "buildExamplesSsrDev": "cd packages/giu-examples && yarn buildSsrWatch",
     "start": "cd packages/giu-examples && yarn start",
     "lint": "eslint packages",
     "flow": "flow check || exit 0",
     "docs": "yarn docs:readme && yarn docs:copyExamples",
     "docs:readme":
-      "extract-docs --template docs/templates/README.md --output README.md",
-    "docs:copyExamples": "cp -r packages/giu-examples/out/* docs/",
+      "extract-docs --template docsPrivate/templates/README.md --output README.md",
+    "docs:copyExamples":
+      "rm -rf docs/ && mkdir docs && cp -r packages/giu-examples/out/* docs/",
     "xxl": "xxl --src packages --exclude node_modules,/lib/",
     "jest": "jest --watch --coverage",
     "jest-html":
