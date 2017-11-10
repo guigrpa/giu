@@ -1,3 +1,5 @@
+* Fix invalid props passed to DOM elements in Button and ListPicker (surfaced upgrading to React 16)
+
 ## 0.15.0-alpha.4 (2017-11-10)
 
 * **Breaking**: Fonts are no longer included out of the box. Please add to your bundle Gloria Hallelujah, Roboto, Font Awesome, Material Icons and any others you may need.

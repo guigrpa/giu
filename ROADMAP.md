@@ -10,7 +10,6 @@
 - [ ] Safari Mac: DataTables don't scroll smoothly
 - [ ] Check DataTable behaviour on iOS, especially dragging
 
-- [ ] Use SVG icons: https://css-tricks.com/icon-fonts-vs-svg/
 - [ ] Combo input (free-text, typeahead, list)
 
 Long-standing:
@@ -18,4 +17,3 @@ Long-standing:
 - [ ] Focus delegation?
 - [ ] Multi-selection ListPicker
 - [ ] Drag and drop
-- [ ] Include SVG font?
