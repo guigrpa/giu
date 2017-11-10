@@ -1,7 +1,7 @@
 {
   "name": "giu-examples",
   "private": true,
-  "version": "0.15.0-alpha.2",
+  "version": "0.15.0-alpha.4",
   "scripts": {
     "start": "next",
     "build": "BASE_URL=/giu yarn _build",

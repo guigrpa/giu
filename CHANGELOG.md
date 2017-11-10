@@ -1,3 +1,5 @@
+## 0.15.0-alpha.4 (2017-11-10)
+
 * **Breaking**: Fonts are no longer included out of the box. Please add to your bundle Gloria Hallelujah, Roboto, Font Awesome, Material Icons and any others you may need.
 * **Breaking**: material-design-lite (mdl) library is no longer included out of the box. Please add it to your bundle (see giu-examples/pages/demo2.js).
 * HintScreen: style (including font family) can now be customised (via `HintScreenPars`)
