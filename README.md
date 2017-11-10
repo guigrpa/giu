@@ -37,12 +37,12 @@ $ npm install --save-dev giu
 
 Make sure you also install the required `peerDependencies` ([*react*](https://github.com/facebook/react)). Optionally, you may want to add:
 
-* [*moment*](https://github.com/moment/moment)) -- if you are going to use the DateInput component
-* [*material-design-lite*](https://github.com/google/material-design-lite) -- if you are going to use the `mdl` theme (see example bundling for Webpack under *packages/giu-examples/pages/material.js*)
+* [*moment*](https://github.com/moment/moment) — if you are going to use the DateInput component
+* [*material-design-lite*](https://github.com/google/material-design-lite) — if you are going to use the `mdl` theme (see example bundling for Webpack under *packages/giu-examples/pages/material.js*)
 
 You may also want to **add fonts to your bundle** (no longer included in Giu starting with v0.15). For example, the Hints component uses *Gloria Hallelujah* by default -- make sure you load it from Google Fonts, bundle it via something like [typeface-gloria-hallelujah](https://www.npmjs.com/package/typeface-gloria-hallelujah) (if you use Webpack), or just configure the Hints component with a different font. The same applies to *Font Awesome* (default icon font), *Roboto* and *Material Icons* (for the `mdl` theme).
 
-Once you've installed Giu, just `import { WhateverComponentYouNeed, maybeAlsoFunctions } from giu`. The details on what is available can be found below. Note that many Giu components (including all inputs) require that you **include `<Floats />` at (or near) the root level of your React tree**. No props are required. If you forget it, you'll see a warning in the console and those components will not work correctly. Other components you might want to add (if you use them): `<Modals />`, `<Notifications />`, `<Hints />`. More about them below.
+Once you've installed Giu, just `import { WhateverComponentYouNeed, maybeAlsoFunctions } from 'giu'`. The details on what is available can be found below. Note that many Giu components (including all inputs) require that you **include `<Floats />` at (or near) the root level of your React tree**. No props are required. If you forget it, you'll see a warning in the console and those components will not work correctly. Other components you might want to add (if you use them): `<Modals />`, `<Notifications />`, `<Hints />`. More about them below.
 
 ## Inputs
 
