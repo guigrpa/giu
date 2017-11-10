@@ -153,8 +153,8 @@ class ListPicker extends React.PureComponent {
           ref={c => {
             this.refItems[idx] = c;
           }}
-          onMouseEnter={!disabled && onHoverStart}
-          onMouseLeave={!disabled && onHoverStop}
+          onMouseEnter={disabled ? undefined : onHoverStart}
+          onMouseLeave={disabled ? undefined : onHoverStop}
           style={style.separatorWrapper}
         >
           <div style={style.separator} />
@@ -314,9 +314,9 @@ const style = {
     let border;
     let backgroundColor;
     if (twoStageStyle) {
-      border = `1px solid ${fHovered || fSelected
-        ? accentColor
-        : 'transparent'}`;
+      border = `1px solid ${
+        fHovered || fSelected ? accentColor : 'transparent'
+      }`;
       backgroundColor = fSelected ? accentColor : undefined;
     } else {
       const fHighlighted = fHovered || (fSelected && hovering == null);

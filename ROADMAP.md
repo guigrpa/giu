@@ -1,7 +1,5 @@
 # Roadmap
 
-- [ ] Complete migration to React 16 (see development-mode console errors in index.js, demo1.js)
-- [ ] A better solution for icon font?
 - [ ] Migrate to latest Flow
 
 - [ ] Unit tests (with Jest snapshots)

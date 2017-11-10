@@ -69,7 +69,7 @@ class Button extends React.PureComponent {
     return (
       <span
         className="giu-button"
-        onClick={!disabled && onClick}
+        onClick={disabled ? undefined : onClick}
         {...otherProps}
         style={style.button(this.props)}
       >
