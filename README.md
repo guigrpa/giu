@@ -29,19 +29,20 @@ Online demos: [an extremely compact one](http://guigrpa.github.io/giu/compact/) 
 
 ## Installation
 
-Giu is intended to be bundled with [*webpack*](https://webpack.github.io/), so it is recommended to include it in your `devDependencies`:
+Giu is intended to be bundled, e.g. with [*webpack*](https://webpack.github.io/). The examples under *packages/giu-examples/pages* are bundled with [Next.js](https://github.com/zeit/next.js/) and support SSR. Install it like this:
 
 ```
 $ npm install --save-dev giu
 ```
 
-Make sure you also install the required `peerDependencies` ([*react*](https://github.com/facebook/react) and [*moment*](https://github.com/moment/moment)).
+Make sure you also install the required `peerDependencies` ([*react*](https://github.com/facebook/react)). Optionally, you may want to add:
 
-Installation notes:
+* [*moment*](https://github.com/moment/moment)) -- if you are going to use the DateInput component
+* [*material-design-lite*](https://github.com/google/material-design-lite) -- if you are going to use the `mdl` theme (see example bundling for Webpack under *packages/giu-examples/pages/material.js*)
 
-* Many Giu components (including all inputs) require that you **include `<Floats />` at (or near) the root level of your React tree**. No props are required. If you forget it, you'll see a warning in the console and those components will not work correctly. Other components you might want to add (if you use them): `<Modals />`, `<Notifications />`, `<Hints />`. More about them below.
+You may also want to **add fonts to your bundle** (no longer included in Giu starting with v0.15). For example, the Hints component uses *Gloria Hallelujah* by default -- make sure you load it from Google Fonts, bundle it via something like [typeface-gloria-hallelujah](https://www.npmjs.com/package/typeface-gloria-hallelujah) (if you use Webpack), or just configure the Hints component with a different font. The same applies to *Font Awesome* (default icon font), *Roboto* and *Material Icons* (for the `mdl` theme).
 
-* Why is *moment* part of `peerDependencies` and not `dependencies`? For i18n reasons: we want to make sure the user's `moment` object and the one used internally by Giu are exactly the same, so that `DateInput`'s strings and other locale-specific attributes (e.g. first day of the week) are shown correctly. If the version specified by the user and by Giu were incompatible, we would end up with two different `moment` objects.
+Once you've installed Giu, just `import { WhateverComponentYouNeed, maybeAlsoFunctions } from giu`. The details on what is available can be found below. Note that many Giu components (including all inputs) require that you **include `<Floats />` at (or near) the root level of your React tree**. No props are required. If you forget it, you'll see a warning in the console and those components will not work correctly. Other components you might want to add (if you use them): `<Modals />`, `<Notifications />`, `<Hints />`. More about them below.
 
 ## Inputs
 
