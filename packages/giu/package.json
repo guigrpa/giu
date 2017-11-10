@@ -4,13 +4,10 @@
   "main": "lib/index.js",
   "scripts": {
     "compile": "yarn compile:clean && yarn compile:copy && yarn compile:run",
-    "compileWatch":
-      "yarn compile:clean && yarn compile:copy && yarn compile:runWatch",
+    "compileWatch": "yarn compile:clean && yarn compile:copy && yarn compile:runWatch",
     "compile:clean": "rm -rf ./lib",
-    "compile:copy":
-      "../../node_modules/.bin/flow-copy-source -i \"**/__mocks__/**\" -i \"**/__tests__/**\" src lib",
-    "compile:run":
-      "babel src -d lib --ignore \"**/__mocks__/**\",\"**/__tests__/**\"",
+    "compile:copy": "../../node_modules/.bin/flow-copy-source -i \"**/__mocks__/**\" -i \"**/__tests__/**\" src lib",
+    "compile:run": "babel src -d lib --ignore \"**/__mocks__/**\",\"**/__tests__/**\"",
     "compile:runWatch": "yarn compile:run --watch"
   },
   "engines": {

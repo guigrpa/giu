@@ -2,7 +2,7 @@
 
 An opinionated Swiss-army knife for building React application GUIs.
 
-Online demos: [an extremely compact one](http://guigrpa.github.io/giu/demo1.html) ([Material Design Lite version here](http://guigrpa.github.io/giu/demo2.html)) and [an interactive version of this documentation](http://guigrpa.github.io/giu).
+Online demos: [an extremely compact one](http://guigrpa.github.io/giu/compact/) ([Material Design Lite version here](http://guigrpa.github.io/giu/material/)) and [an interactive version of this documentation](http://guigrpa.github.io/giu).
 
 
 
@@ -872,6 +872,7 @@ export type HintScreenPars = {|
   elements?: ElementsWrapper,
   closeLabel?: string, // label of the close button (default: 'Got it!')
   zIndex?: number,
+  style?: Object,
 |};
 type ElementsWrapper = Array<Element> | (() => Array<Element>);
 type Element = HintArrowPars | HintLabelPars;
