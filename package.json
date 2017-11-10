@@ -38,7 +38,7 @@
     "docs:readme":
       "extract-docs --template docsPrivate/templates/README.md --output README.md",
     "docs:copyExamples":
-      "rm -rf docs/ && mkdir docs && cp -r packages/giu-examples/out/* docs/",
+      "rm -rf docs/ && mkdir docs && cp -r packages/giu-examples/out/* docs/ && touch docs/.nojekyll",
     "xxl": "xxl --src packages --exclude node_modules,/lib/",
     "jest": "jest --watch --coverage",
     "jest-html":
