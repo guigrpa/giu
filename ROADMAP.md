@@ -1,9 +1,9 @@
 # Roadmap
 
 - [ ] Migrate examples to Next
-    - [ ] Clean up deps (remove Webpack, etc)
-    - [ ] Bug when moving from index to compact
-- [ ] Complete migration to React 16 (see console errors in index.js, demo1.js)
+    - [ ] Clean up deps
+    - [ ] Add a very small page with just a link back, and verify it from compact
+- [ ] Complete migration to React 16 (see development-mode console errors in index.js, demo1.js)
 - [ ] Update docs (see breaking changes in changelog)
 - [ ] Migrate to latest Flow
 

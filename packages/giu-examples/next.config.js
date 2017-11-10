@@ -5,5 +5,7 @@ module.exports = {
     '/compact': { page: '/compact' },
     '/material': { page: '/material' },
     '/datatable': { page: '/datatable' },
+    '/play1': { page: '/play1' },
+    '/play2': { page: '/play2' },
   }),
 };
