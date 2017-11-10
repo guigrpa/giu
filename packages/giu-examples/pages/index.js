@@ -4,6 +4,7 @@
 /* eslint-disable react/no-string-refs, react/no-unescaped-entities, react/no-danger, react/no-array-index-key */
 import React from 'react';
 import Head from 'next/head';
+import Link from 'next/link';
 import marked from 'marked';
 import hljs from 'highlight.js';
 import { merge } from 'timm';
@@ -265,7 +266,7 @@ const DemoIntro = () => (
       components and helpers. Feel free to play with them!
     </p>
     <p>
-      You can also check out this <a href="demo1.html">compact demo</a>.
+      You can also check out this <a href="compact/">compact demo</a>.
     </p>
   </div>
 );
