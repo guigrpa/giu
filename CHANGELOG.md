@@ -1,4 +1,5 @@
 * Add `disabled` prop to choices, so they can be used as titles in lists
+* Minor tweaks to HintLabels (linespace)
 * Fix invalid props passed to DOM elements in Button and ListPicker (surfaced upgrading to React 16)
 
 ## 0.15.0-alpha.4 (2017-11-10)

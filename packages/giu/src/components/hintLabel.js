@@ -61,7 +61,8 @@ const style = {
       marginRight: 8,
       marginTop: align === 'center' ? fontSize * 0.3 : -fontSize * 0.7,
       fontSize,
-      lineHeight: `${fontSize + 5}px`,
+      // lineHeight: `${fontSize + 5}px`,
+      lineHeight: 1.45,
       width,
     };
     out = merge(out, baseStyle);
