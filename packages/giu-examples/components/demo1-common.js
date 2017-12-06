@@ -53,6 +53,14 @@ const NORMAL_OPTIONS = [
 
 const TALL_OPTIONS = [];
 for (let i = 0; i < 50; i++) {
+  if (i === 31) {
+    TALL_OPTIONS.push(LIST_SEPARATOR);
+    TALL_OPTIONS.push({
+      label: 'Title',
+      value: 'title',
+      disabled: true,
+    });
+  }
   TALL_OPTIONS.push({
     label: `Option ${i}`,
     value: i,

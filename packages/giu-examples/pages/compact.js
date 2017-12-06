@@ -154,6 +154,20 @@ class App extends React.Component {
           </div>
         );
         break;
+      case 3.5:
+        out = (
+          <div>
+            <Floats />
+            <Select
+              type="inlinePicker"
+              items={TALL_OPTIONS}
+              curValue={33}
+              onClickItem={onChange}
+              style={{ width: 300, height: 150 }}
+            />
+          </div>
+        );
+        break;
       case 4:
         out = (
           <div>

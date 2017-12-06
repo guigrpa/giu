@@ -135,7 +135,7 @@ class ListPicker extends React.PureComponent {
   }
 
   renderItem = (item, idx) => {
-    const { value: itemValue, label, shortcuts } = item;
+    const { value: itemValue, label, disabled: itemDisabled, shortcuts } = item;
     const {
       curValue,
       hovering,
@@ -153,8 +153,6 @@ class ListPicker extends React.PureComponent {
           ref={c => {
             this.refItems[idx] = c;
           }}
-          onMouseEnter={disabled ? undefined : onHoverStart}
-          onMouseLeave={disabled ? undefined : onHoverStop}
           style={style.separatorWrapper}
         >
           <div style={style.separator} />
@@ -165,6 +163,7 @@ class ListPicker extends React.PureComponent {
       hovering,
       fHovered: hovering === itemValue,
       fSelected: curValue === itemValue,
+      disabled: itemDisabled,
       twoStageStyle,
       accentColor,
     };
@@ -172,6 +171,8 @@ class ListPicker extends React.PureComponent {
     const finalLabel =
       (typeof label === 'function' ? label(this.props.lang) : label) ||
       UNICODE.nbsp;
+    const finalDisabled = disabled || itemDisabled;
+    const finalStyle = merge(style.item(styleProps), styleItem);
     return (
       <div
         key={itemValue}
@@ -179,12 +180,12 @@ class ListPicker extends React.PureComponent {
           this.refItems[idx] = c;
         }}
         id={itemValue}
-        onMouseEnter={disabled ? undefined : onHoverStart}
-        onMouseLeave={disabled ? undefined : onHoverStop}
+        onMouseEnter={finalDisabled ? undefined : onHoverStart}
+        onMouseLeave={finalDisabled ? undefined : onHoverStop}
         onMouseDown={cancelEvent}
-        onMouseUp={IS_IOS ? undefined : this.onClickItem}
-        onClick={IS_IOS ? this.onClickItem : undefined}
-        style={merge(style.item(styleProps), styleItem)}
+        onMouseUp={IS_IOS || finalDisabled ? undefined : this.onClickItem}
+        onClick={IS_IOS && !finalDisabled ? this.onClickItem : undefined}
+        style={finalStyle}
       >
         {finalLabel}
         {keyEl ? <div style={flexItem(1)} /> : undefined}
@@ -261,7 +262,8 @@ class ListPicker extends React.PureComponent {
     while (!fFound) {
       idx += delta;
       if (idx < 0 || idx > len - 1) break;
-      fFound = items[idx].label !== LIST_SEPARATOR_KEY;
+      const item = items[idx];
+      fFound = item.label !== LIST_SEPARATOR_KEY && !item.disabled;
     }
     if (fFound) this.selectMoveTo(idx);
   }
@@ -310,7 +312,14 @@ const style = {
     paddingLeft: 10,
     cursor: 'not-allowed',
   },
-  item: ({ hovering, fHovered, fSelected, twoStageStyle, accentColor }) => {
+  item: ({
+    hovering,
+    fHovered,
+    fSelected,
+    twoStageStyle,
+    accentColor,
+    disabled,
+  }) => {
     let border;
     let backgroundColor;
     if (twoStageStyle) {
@@ -324,7 +333,9 @@ const style = {
       backgroundColor = fHighlighted ? accentColor : undefined;
     }
     let color;
-    if (backgroundColor) {
+    if (disabled) {
+      color = COLORS.dim;
+    } else if (backgroundColor) {
       color = COLORS[isDark(backgroundColor) ? 'lightText' : 'darkText'];
     }
     return flexContainer('row', {

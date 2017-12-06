@@ -43,6 +43,7 @@ export type Choice = {
   keys?: string | Array<string>,
   onClick?: (ev: SyntheticEvent) => any,
   shortcuts?: Array<KeyboardShortcut>,
+  disabled?: boolean,
 };
 
 type CommandType = 'FOCUS' | 'BLUR' | 'REVERT';
