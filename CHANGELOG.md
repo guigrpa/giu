@@ -1,3 +1,5 @@
+## 0.15.1 (2017-12-6)
+
 * Icon: calculate size always, not relying on Font Awesome styles
 
 ## 0.15.0 (2017-12-6)
