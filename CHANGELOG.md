@@ -1,3 +1,5 @@
+* Icon: calculate size always, not relying on Font Awesome styles
+
 ## 0.15.0 (2017-12-6)
 
 * Add `disabled` prop to choices, so they can be used as titles in lists

@@ -50,12 +50,10 @@ class Icon extends React.PureComponent {
     if (!this.props.skipTheme && this.context.theme === 'mdl') {
       return this.renderMdl();
     }
-    const { icon, size, fixedWidth, spin, disabled } = this.props;
+    const { icon, spin, disabled } = this.props;
     const otherProps = omit(this.props, FILTERED_PROPS);
     if (disabled) otherProps.onClick = undefined;
     let className = `giu-icon fa fa-${icon}`;
-    if (size != null) className += ` fa-${size}`;
-    if (fixedWidth) className += ' fa-fw';
     if (icon === SPINNER_ICON || spin) className += ' fa-spin';
     return (
       <i className={className} {...otherProps} style={style.icon(this.props)} />
@@ -69,7 +67,7 @@ class Icon extends React.PureComponent {
       <i
         className="giu-icon material-icons"
         {...otherProps}
-        style={style.icon(this.props, 'mdl')}
+        style={style.icon(this.props)}
       >
         {this.props.icon}
       </i>
@@ -97,18 +95,21 @@ Icon.contextTypes = { theme: PropTypes.any };
 // Styles
 // ==========================================
 const style = {
-  icon: ({ onClick, disabled, size, style: base }, theme) =>
+  icon: ({ onClick, disabled, size, fixedWidth, style: base }) =>
     merge(
       {
+        display: 'inline-block',
         cursor: disabled || !onClick ? undefined : 'pointer',
         color: disabled ? COLORS.dim : undefined,
-        fontSize: theme === 'mdl' ? style.mdlSize(size) : undefined,
+        fontSize: calcSize(size),
         letterSpacing: 'normal',
+        width: fixedWidth ? '1.28571429em' : undefined,
+        textAlign: fixedWidth ? 'center' : undefined,
       },
       base
     ),
   mdlSpinner: ({ size, style: base }) => {
-    const dim = style.mdlSize(size);
+    const dim = calcSize(size);
     return merge(
       {
         width: dim,
@@ -117,15 +118,16 @@ const style = {
       base
     );
   },
-  mdlSize: size => {
-    let fontSize = '1em';
-    if (size === 'lg') fontSize = '1.33333333em';
-    else if (size === '2x') fontSize = '2em';
-    else if (size === '3x') fontSize = '3em';
-    else if (size === '4x') fontSize = '4em';
-    else if (size === '5x') fontSize = '5em';
-    return fontSize;
-  },
+};
+
+const calcSize = size => {
+  let fontSize = '1em';
+  if (size === 'lg') fontSize = '1.33333333em';
+  else if (size === '2x') fontSize = '2em';
+  else if (size === '3x') fontSize = '3em';
+  else if (size === '4x') fontSize = '4em';
+  else if (size === '5x') fontSize = '5em';
+  return fontSize;
 };
 
 // ==========================================
