@@ -15,7 +15,6 @@
     "faker": "3.0.1",
     "font-awesome": "^4.7.0",
     "fontfaceobserver": "1.7.1",
-    "giu": "*",
     "highlight.js": "^9.11.0",
     "lodash": "^4.17.4",
     "marked": "^0.3.6",
