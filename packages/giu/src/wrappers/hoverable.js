@@ -1,4 +1,4 @@
-// @noflow
+// @flow
 
 import React from 'react';
 
@@ -59,9 +59,8 @@ type State = {
 // ==========================================
 // Hoverable
 // ==========================================
-class Hoverable extends React.Component {
-  props: Props;
-  state: State = { hovering: null };
+class Hoverable extends React.Component<Props, State> {
+  state = { hovering: null };
 
   // ==========================================
   render() {

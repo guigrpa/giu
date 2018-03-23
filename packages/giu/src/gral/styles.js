@@ -1,4 +1,4 @@
-// @noflow
+// @flow
 
 import tinycolor from 'tinycolor2';
 import { merge } from 'timm';
@@ -146,6 +146,9 @@ function addStylesToPage(styles: string) {
   }
 }
 
+// ==========================================
+// Public
+// ==========================================
 export {
   flexContainer,
   flexItem,

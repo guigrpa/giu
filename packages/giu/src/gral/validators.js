@@ -1,4 +1,4 @@
-// @noflow
+// @flow
 
 import { dateTimeFormat } from '../gral/dates';
 

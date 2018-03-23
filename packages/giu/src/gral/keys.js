@@ -1,4 +1,4 @@
-// @noflow
+// @flow
 
 import keycode from 'keycode';
 import { UNICODE, IS_MAC } from '../gral/constants';
@@ -135,6 +135,9 @@ try {
   /* ignore */
 }
 
+// ==========================================
+// Public
+// ==========================================
 export {
   createShortcut,
   registerShortcut,

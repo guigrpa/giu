@@ -1,4 +1,4 @@
-// @noflow
+// @flow
 
 import moment from '../vendor/moment';
 import type { Moment } from '../gral/types';
@@ -51,6 +51,9 @@ function dateTimeFormatNative(fDate: boolean, fTime: boolean): string {
   return out;
 }
 
+// ==========================================
+// Public
+// ==========================================
 export {
   getUtcFlag,
   startOfToday,

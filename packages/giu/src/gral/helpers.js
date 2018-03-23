@@ -1,4 +1,4 @@
-// @noflow
+// @flow
 
 import { merge, addDefaults } from 'timm';
 import unorm from 'unorm';
@@ -26,9 +26,9 @@ function bindAll(self: Object, fnNames: Array<string>) {
 
 Calls `preventDefault()` and `stopPropagation()` on the provided event.
 
-* **ev** *?SyntheticEvent*: event to be cancelled
+* **ev** *?SyntheticEvent<*>*: event to be cancelled
 -- */
-function cancelEvent(ev: ?SyntheticEvent) {
+function cancelEvent(ev: ?SyntheticEvent<*>) {
   if (!ev) return;
   ev.preventDefault && ev.preventDefault();
   ev.stopPropagation && ev.stopPropagation();
@@ -39,9 +39,9 @@ function cancelEvent(ev: ?SyntheticEvent) {
 
 Calls `preventDefault()` on the provided event.
 
-* **ev** *?SyntheticEvent*: event for which default behaviour is to be prevented
+* **ev** *?SyntheticEvent<*>*: event for which default behaviour is to be prevented
 -- */
-function preventDefault(ev: ?SyntheticEvent) {
+function preventDefault(ev: ?SyntheticEvent<*>) {
   if (!ev) return;
   ev.preventDefault && ev.preventDefault();
 }
@@ -51,9 +51,9 @@ function preventDefault(ev: ?SyntheticEvent) {
 
 Calls `stopPropagation()` on the provided event.
 
-* **ev** *?SyntheticEvent*: event for which default behaviour is to be prevented
+* **ev** *?SyntheticEvent<*>*: event for which default behaviour is to be prevented
 -- */
-function stopPropagation(ev: ?SyntheticEvent) {
+function stopPropagation(ev: ?SyntheticEvent<*>) {
   if (!ev) return;
   ev.stopPropagation && ev.stopPropagation();
 }
@@ -65,9 +65,9 @@ function stopPropagation(ev: ?SyntheticEvent) {
 in order to prevent `wheel` events to cause document scrolling when
 the scroller reaches the top/bottom of its contents.
 
-* **ev** *SyntheticWheelEvent*: `wheel` event
+* **ev** *SyntheticWheelEvent<*>*: `wheel` event
 -- */
-function cancelBodyScrolling(ev: SyntheticWheelEvent) {
+function cancelBodyScrolling(ev: SyntheticWheelEvent<*>) {
   const el = ev.currentTarget;
   if (!(el instanceof Element)) return;
   const { nativeEvent } = ev;

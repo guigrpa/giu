@@ -1,4 +1,4 @@
-// @noflow
+// @flow
 
 // ==========================================
 // Waiting...
@@ -14,7 +14,7 @@ Waits for a given number of milliseconds.
 * **delay** *number*: delay [ms]
 * **Returns** *Promise<void>*: resolves when the delay expires.
 -- */
-const delay = (ms: number) =>
+const delay = (ms: number): Promise<void> =>
   new Promise(resolve => {
     setTimeout(resolve, ms);
   });

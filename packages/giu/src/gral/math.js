@@ -1,4 +1,4 @@
-// @noflow
+// @flow
 
 export type Point2 = { x: number, y: number };
 
@@ -44,9 +44,9 @@ const vectorRotate = (V: Point2, radians: number): Point2 => {
 const radToDeg = (radians: number): number => radians / Math.PI * 180;
 const degToRad = (deg: number): number => deg / 180 * Math.PI;
 
-// -----------------------------------------------
+// ==========================================
 // Public
-// -----------------------------------------------
+// ==========================================
 export {
   vectorNorm,
   vectorNormalize,

@@ -7,7 +7,7 @@
  * @license MIT
  */
 
-// @noflow
+// @flow
 
 /* eslint-disable import/newline-after-import, import/first */
 
