@@ -21,7 +21,6 @@ import { isVisible } from '../gral/visibility';
 import { MISC } from '../gral/constants';
 import { boxWithShadow } from '../gral/styles';
 import type { Action } from '../gral/types';
-import { GLOBAL_CSS } from '../gral/resetCss';
 
 const PROP_KEYS_TO_REMOVE_FROM_FLOAT_DIV = [
   'position',
@@ -215,9 +214,15 @@ class Floats extends React.PureComponent {
     return (
       <div className="giu-floats" style={style.outer}>
         {this.floats.map(this.renderFloat)}
-        <style jsx global>
-          {GLOBAL_CSS}
-        </style>
+        <style jsx global>{`
+          *,
+          *:before,
+          *:after {
+            -moz-box-sizing: border-box;
+            -webkit-box-sizing: border-box;
+            box-sizing: border-box;
+          }
+        `}</style>
       </div>
     );
   }

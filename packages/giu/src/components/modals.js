@@ -10,7 +10,6 @@ import { MISC } from '../gral/constants';
 import type { Action } from '../gral/types';
 import Modal from './modal';
 import type { ModalPars } from './modalTypes';
-import { GLOBAL_CSS } from '../gral/resetCss';
 
 /* --
 **Include the `<Modals />` component at (or near)
@@ -148,9 +147,15 @@ class Modals extends React.PureComponent {
             {...props}
           />
         ))}
-        <style jsx global>
-          {GLOBAL_CSS}
-        </style>
+        <style jsx global>{`
+          *,
+          *:before,
+          *:after {
+            -moz-box-sizing: border-box;
+            -webkit-box-sizing: border-box;
+            box-sizing: border-box;
+          }
+        `}</style>
       </div>
     );
   }
