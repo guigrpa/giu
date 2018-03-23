@@ -365,9 +365,9 @@ const style = {
     { disabled, accentColor }: { disabled: boolean, accentColor: string }
   ) => {
     const fHighlightBorder = fSelected || (!disabled && fHovered);
-    const border = `1px solid ${fHighlightBorder
-      ? accentColor
-      : 'transparent'}`;
+    const border = `1px solid ${
+      fHighlightBorder ? accentColor : 'transparent'
+    }`;
     const backgroundColor = fSelected ? accentColor : undefined;
     let color;
     if (!fInShownMonth) {

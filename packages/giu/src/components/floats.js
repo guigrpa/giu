@@ -383,9 +383,9 @@ const style = {
 // Warnings
 // ==========================================
 let fCheckedFloats = false;
-const floatsWarning = (name: string) => `<${
-  name
-}> requires a <Floats> component to be \
+const floatsWarning = (
+  name: string
+) => `<${name}> requires a <Floats> component to be \
 included in your application. It will not work properly otherwise. Please add it \
 as close as possible to the application root; no props are needed.`;
 

@@ -81,9 +81,7 @@ const GRADIENTS = {
   v: h => `linear-gradient(to bottom, ${hueBg(h)} 0%, #000 100%)`,
   s: h => `linear-gradient(to bottom, ${hueBg(h)} 0%, #bbb 100%)`,
   alpha: ({ r, g, b }) =>
-    `linear-gradient(to right, rgba(${r}, ${g}, ${b}, 0), rgb(${r}, ${g}, ${
-      b
-    }))`,
+    `linear-gradient(to right, rgba(${r}, ${g}, ${b}, 0), rgb(${r}, ${g}, ${b}))`,
 };
 
 // ==========================================

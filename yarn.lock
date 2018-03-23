@@ -3052,9 +3052,9 @@ nyc@11.1.0:
     yargs "^8.0.1"
     yargs-parser "^5.0.0"
 
-oao@^0.10.0:
-  version "0.10.4"
-  resolved "https://registry.yarnpkg.com/oao/-/oao-0.10.4.tgz#c2cb7b1e0b66aaafa31c3682ce556cb31dbbda35"
+oao@^1.5.1:
+  version "1.5.1"
+  resolved "https://registry.yarnpkg.com/oao/-/oao-1.5.1.tgz#ead609ee2b36bf56699f06a38be16340ce6be099"
   dependencies:
     babel-polyfill "6.26.0"
     commander "2.11.0"
@@ -3062,6 +3062,7 @@ oao@^0.10.0:
     globby "6.1.0"
     inquirer "3.2.1"
     kebab-case "1.0.0"
+    minimatch "^3.0.4"
     rimraf "2.6.1"
     semver "5.4.1"
     shelljs "0.7.8"
@@ -3313,9 +3314,9 @@ preserve@^0.2.0:
   version "0.2.0"
   resolved "https://registry.yarnpkg.com/preserve/-/preserve-0.2.0.tgz#815ed1f6ebc65926f865b310c0713bcb3315ce4b"
 
-prettier@^1.7.4:
-  version "1.7.4"
-  resolved "https://registry.yarnpkg.com/prettier/-/prettier-1.7.4.tgz#5e8624ae9363c80f95ec644584ecdf55d74f93fa"
+prettier@^1.11.1:
+  version "1.11.1"
+  resolved "https://registry.yarnpkg.com/prettier/-/prettier-1.11.1.tgz#61e43fc4cd44e68f2b0dfc2c38cd4bb0fccdcc75"
 
 pretty-format@4.2.1:
   version "4.2.1"
