@@ -1,4 +1,4 @@
-// @flow
+// @noflow
 
 import React from 'react';
 import moment from '../vendor/moment';
@@ -238,7 +238,7 @@ class DatePicker extends React.Component {
     this.setState({ shownMonthStart });
   }
 
-  onClickDay = (ev: SyntheticEvent) => {
+  onClickDay = (ev: SyntheticEvent<*>) => {
     const { utc } = this.props;
     if (!(ev.target instanceof Element)) return;
     const startOfDay = moment(ev.target.id);
@@ -246,7 +246,7 @@ class DatePicker extends React.Component {
     this.changeDateTo(ev, startOfDay);
   };
 
-  onClickToday = (ev: SyntheticEvent) => {
+  onClickToday = (ev: SyntheticEvent<*>) => {
     const { utc } = this.props;
     const startOfDay = startOfToday(utc);
     this.changeDateTo(ev, startOfDay);
@@ -393,6 +393,6 @@ const style = {
 };
 
 // ==========================================
-// Public API
+// Public
 // ==========================================
 export default HoverableDatePicker;

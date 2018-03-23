@@ -1,13 +1,14 @@
 // @flow
 
 import React from 'react';
+import type { ComponentType } from 'react';
 import throttle from 'lodash/throttle';
 
 // ===============================================================
-// VerticalManager
+// Declarations
 // ===============================================================
 // Renders hidden first, reports on its height, then becomes visible when
-// it gets a `top` property passed from its owner comp.
+// it gets a `top` property from its owner.
 // Becoming visible does not
 // mean its child component gets re-rendered (this is more efficient than
 // react-virtualized when using its CellMeasurer component).
@@ -17,7 +18,7 @@ type PublicProps = {
   id: string,
   index: number,
   childProps?: Object,
-  ChildComponent: ReactClass<*>,
+  ChildComponent: ComponentType<*>,
   onChangeHeight?: (id: string, height: number) => any,
   top?: number,
 };
@@ -31,8 +32,10 @@ type Props = {
   ...$Exact<DefaultProps>,
 };
 
-class VerticalManager extends React.Component {
-  props: Props;
+// ===============================================================
+// VerticalManager
+// ===============================================================
+class VerticalManager extends React.Component<Props> {
   static defaultProps: DefaultProps = {
     childProps: {},
   };
@@ -82,8 +85,6 @@ class VerticalManager extends React.Component {
   };
 
   // ===============================================================
-  // Render
-  // ===============================================================
   render() {
     const { id, index, ChildComponent, childProps } = this.props;
     const saneId = id.replace(/[:,]/g, '');
@@ -119,16 +120,12 @@ class VerticalManager extends React.Component {
   }
 
   // ===============================================================
-  // Event handlers
-  // ===============================================================
   registerOuterRef = (c: ?Object) => {
     this.refVerticalManager = c;
     if (this.props.registerOuterRef) this.props.registerOuterRef(c);
   };
 }
 
-// ===============================================================
-// Styles
 // ===============================================================
 const style = {
   outer: ({ top }) => ({
@@ -143,6 +140,6 @@ const style = {
 };
 
 // ===============================================================
-// Public API
+// Public
 // ===============================================================
 export default VerticalManager;

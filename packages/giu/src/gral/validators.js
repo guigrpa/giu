@@ -1,4 +1,4 @@
-// @flow
+// @noflow
 
 import { dateTimeFormat } from '../gral/dates';
 
@@ -262,7 +262,7 @@ const buildError = (
 };
 
 // ==========================================
-// Public API
+// Public
 // ==========================================
 export {
   isRequired,

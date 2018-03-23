@@ -1,4 +1,4 @@
-// @flow
+// @noflow
 
 /* eslint-disable no-underscore-dangle, max-len */
 
@@ -60,9 +60,9 @@ type HocPublicProps = {
   errorZ?: number,
   errorPosition?: FloatPosition,
   errorAlign?: FloatAlign,
-  onChange?: (ev: SyntheticEvent, extValue: any) => any,
-  onFocus?: (ev: SyntheticEvent) => any,
-  onBlur?: (ev: SyntheticEvent) => any,
+  onChange?: (ev: SyntheticEvent<*>, extValue: any) => any,
+  onFocus?: (ev: SyntheticEvent<*>) => any,
+  onBlur?: (ev: SyntheticEvent<*>) => any,
   styleOuter?: Object,
   // all others are passed through unchanged
 };
@@ -118,7 +118,7 @@ type HocGeneratedProps = {
   keyDown: KeyboardEventPars,
   fFocused: boolean,
   onChange: (
-    ev: SyntheticEvent,
+    ev: SyntheticEvent<*>,
     providedValue: any,
     options?: { fDontFocus?: boolean }
   ) => any,
@@ -439,7 +439,7 @@ function input<DP: any, P>(
     }
 
     onChange = (
-      ev: SyntheticEvent,
+      ev: SyntheticEvent<*>,
       providedValue: any,
       options: { fDontFocus?: boolean } = {}
     ) => {
@@ -457,7 +457,7 @@ function input<DP: any, P>(
       }
     };
 
-    onFocus = (ev: SyntheticEvent) => {
+    onFocus = (ev: SyntheticEvent<*>) => {
       const { onFocus, disabled } = this.props;
       if (disabled) {
         this._blur();
@@ -468,14 +468,14 @@ function input<DP: any, P>(
       if (onFocus) onFocus(ev);
     };
 
-    onBlur = (ev: SyntheticEvent) => {
+    onBlur = (ev: SyntheticEvent<*>) => {
       const { onBlur } = this.props;
       this._validate().catch(() => {});
       this.changedFocus(false);
       if (onBlur) onBlur(ev);
     };
 
-    onMouseDownWrapper = (ev: SyntheticEvent) => {
+    onMouseDownWrapper = (ev: SyntheticEvent<*>) => {
       // Always cancel mousedowns: they blur the component. If they are interesting,
       // capture them at a lower level
       cancelEvent(ev);
@@ -488,23 +488,23 @@ function input<DP: any, P>(
     // Cancel bubbling of click events; they may reach Modals
     // on their way up and cause the element to blur.
     // Allow free propagation if the element is disabled.
-    onClickWrapper = (ev: SyntheticEvent) => {
+    onClickWrapper = (ev: SyntheticEvent<*>) => {
       if (!this.props.disabled) stopPropagation(ev);
     };
 
-    onKeyDown = (ev: SyntheticKeyboardEvent) => {
+    onKeyDown = (ev: SyntheticKeyboardEvent<*>) => {
       const { which, keyCode, metaKey, shiftKey, altKey, ctrlKey } = ev;
       if (trappedKeys.indexOf(which) < 0) return;
       this.keyDown = { which, keyCode, metaKey, shiftKey, altKey, ctrlKey };
       this.forceUpdate();
     };
 
-    onCopyCut = (ev: SyntheticClipboardEvent) => {
+    onCopyCut = (ev: SyntheticClipboardEvent<*>) => {
       ev.clipboardData.setData('text/plain', this.curValue);
       ev.preventDefault();
     };
 
-    onPaste = (ev: SyntheticClipboardEvent) => {
+    onPaste = (ev: SyntheticClipboardEvent<*>) => {
       const nextValue = ev.clipboardData.getData('text/plain');
       ev.preventDefault();
       this.onChange(ev, nextValue);
@@ -665,7 +665,7 @@ const style = {
 };
 
 // ==========================================
-// Public API
+// Public
 // ==========================================
 export default input;
 export { INPUT_HOC_INVALID_HTML_PROPS };

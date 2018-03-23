@@ -1,4 +1,4 @@
-// @flow
+// @noflow
 
 /* eslint-disable no-unused-vars, max-len */
 

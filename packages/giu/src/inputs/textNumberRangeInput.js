@@ -1,4 +1,4 @@
-// @flow
+// @noflow
 
 import React from 'react';
 import PropTypes from 'prop-types';
@@ -199,7 +199,7 @@ const style = {
 };
 
 // ==========================================
-// Public API
+// Public
 // ==========================================
 const TextInput = createClass('TextInput', 'text');
 const PasswordInput = createClass('PasswordInput', 'password');

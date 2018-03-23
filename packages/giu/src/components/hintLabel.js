@@ -24,12 +24,7 @@ type Props = {
   fontSize: number,
 };
 
-class HintLabel extends React.Component {
-  props: Props;
-
-  // ==========================================
-  // Render
-  // ==========================================
+class HintLabel extends React.Component<Props> {
   render() {
     return (
       <div className="giu-hint-label" style={style.outer(this.props)}>
@@ -40,8 +35,6 @@ class HintLabel extends React.Component {
 }
 
 // ==========================================
-// Styles
-// ==========================================
 const style = {
   outer: ({ x, y }) => ({
     position: 'fixed',
@@ -51,7 +44,7 @@ const style = {
     pointerEvents: 'none',
   }),
   label: ({ align = 'left', fontSize, style: baseStyle }) => {
-    const width = style.width || 200;
+    const width = baseStyle ? baseStyle.width : 200;
     let out = {
       position: 'absolute',
       [align === 'right' ? 'right' : 'left']:
@@ -71,6 +64,6 @@ const style = {
 };
 
 // ==========================================
-// Public API
+// Public
 // ==========================================
 export default HintLabel;

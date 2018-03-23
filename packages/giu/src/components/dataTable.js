@@ -3,6 +3,7 @@
 /* eslint-disable no-console */
 import { merge, removeAt, addLast, insert } from 'timm';
 import React from 'react';
+import type { ComponentType } from 'react';
 import {
   SortableContainer as sortableContainer,
   SortableElement as sortableElement,
@@ -134,8 +135,8 @@ type PublicProps = {
   allowSelect?: boolean,
   multipleSelection?: boolean,
   onChangeSelection?: (selectedIds: Array<string>) => any,
-  onClipboardAction?: (ev: SyntheticClipboardEvent, json: string) => any,
-  onRowDoubleClick?: (ev: SyntheticMouseEvent, id: string) => any,
+  onClipboardAction?: (ev: SyntheticClipboardEvent<*>, json: string) => any,
+  onRowDoubleClick?: (ev: SyntheticMouseEvent<*>, id: string) => any,
 
   // Fetching
   // --------
@@ -143,7 +144,7 @@ type PublicProps = {
   // (note: disabled when the filterValue prop is not empty)
   fetchMoreItems?: (lastRowId: string) => any, // Called when the last row is rendered
   fetching?: boolean, // When set, the FetchRowComponent will be shown
-  FetchRowComponent?: ReactClass<*>,
+  FetchRowComponent?: ComponentType<any>,
 
   // LocalStorage
   // ------------
@@ -187,7 +188,7 @@ type DefaultProps = {
   allowSelect: boolean,
   multipleSelection: boolean,
   fetching: boolean,
-  FetchRowComponent: ReactClass<*>,
+  FetchRowComponent: ComponentType<any>,
   height: number,
   accentColor: string,
 };
@@ -197,8 +198,7 @@ type Props = {
   ...$Exact<DefaultProps>,
 };
 
-class DataTable extends React.PureComponent {
-  props: Props;
+class DataTable extends React.PureComponent<Props> {
   static defaultProps: DefaultProps = {
     itemsById: {},
     shownIds: ([]: Array<string>),
@@ -238,7 +238,7 @@ class DataTable extends React.PureComponent {
   selectedBgColor: string;
   selectedFgColor: string;
   fPendingInitialScrollIntoView: boolean;
-  RowComponents: { [key: string]: ReactClass<*> };
+  RowComponents: { [key: string]: ComponentType<any> };
   refOuter: ?Object;
   refFocusCapture: ?Object;
   refVirtualScroller: ?Object;
@@ -544,7 +544,7 @@ class DataTable extends React.PureComponent {
   // ===============================================================
   // Event handlers
   // ===============================================================
-  onKeyDown = (ev: SyntheticKeyboardEvent) => {
+  onKeyDown = (ev: SyntheticKeyboardEvent<*>) => {
     if (ev.which === KEYS.up || ev.which === KEYS.down) {
       this.selectMoveDelta(ev.which === KEYS.up ? -1 : +1);
       cancelEvent(ev);
@@ -557,7 +557,7 @@ class DataTable extends React.PureComponent {
   // Except when clicking on an embedded focusable node, refocus on this table
   // Prevent bubbling of click events; they may reach Modals
   // on their way up and cause the element to blur.
-  onClickOuter = (ev: SyntheticEvent) => {
+  onClickOuter = (ev: SyntheticEvent<*>) => {
     if (!(ev.target instanceof Element)) return;
     const { tagName, disabled } = (ev.target: any);
     if (FOCUSABLE.indexOf(tagName.toLowerCase()) >= 0 && !disabled) return;
@@ -598,7 +598,7 @@ class DataTable extends React.PureComponent {
   };
 
   // Will also get called on row focus
-  onClickRow = (ev: SyntheticMouseEvent, id: string) => {
+  onClickRow = (ev: SyntheticMouseEvent<*>, id: string) => {
     const fMultiSelect =
       (ev.metaKey || ev.ctrlKey) && this.props.multipleSelection;
     if (fMultiSelect) {
@@ -655,7 +655,7 @@ class DataTable extends React.PureComponent {
   // ===============================================================
   // Clipboard
   // ===============================================================
-  onCopyCut = (ev: SyntheticClipboardEvent) => {
+  onCopyCut = (ev: SyntheticClipboardEvent<*>) => {
     const json = this.getJsonForClipboard();
     ev.clipboardData.setData('text/plain', json);
     ev.preventDefault();
@@ -664,7 +664,7 @@ class DataTable extends React.PureComponent {
     }
   };
 
-  onPaste = (ev: SyntheticClipboardEvent) => {
+  onPaste = (ev: SyntheticClipboardEvent<*>) => {
     const json = ev.clipboardData.getData('text/plain');
     ev.preventDefault();
     if (this.props.onClipboardAction) {
@@ -1049,7 +1049,7 @@ const STYLES = (
 );
 
 // ===============================================================
-// Public API
+// Public
 // ===============================================================
 export default DataTable;
 export { SORT_MANUALLY };

@@ -17,7 +17,7 @@ const vec = (V: Point2) => `${V.x},${V.y}`;
 // Component
 // ==========================================
 // -- START_DOCS
-export type HintArrowPars = {|
+export type HintArrowPars = {
   type: 'ARROW',
   from: Point2, // coordinates, e.g. `{ x: 5, y: 10 }`
   to: Point2, // coordinates
@@ -26,17 +26,12 @@ export type HintArrowPars = {|
   arrowAngle?: number,
   counterclockwise?: boolean,
   style?: Object,
-|};
+};
 // -- END_DOCS
 
 type Props = HintArrowPars;
 
-class HintArrow extends React.Component {
-  props: Props;
-
-  // ==========================================
-  // Render
-  // ==========================================
+class HintArrow extends React.Component<Props> {
   render() {
     const {
       from: A,
@@ -84,6 +79,6 @@ class HintArrow extends React.Component {
 }
 
 // ==========================================
-// Public API
+// Public
 // ==========================================
 export default HintArrow;

@@ -1,4 +1,4 @@
-// @flow
+// @noflow
 
 export type Point2 = { x: number, y: number };
 
@@ -45,7 +45,7 @@ const radToDeg = (radians: number): number => radians / Math.PI * 180;
 const degToRad = (deg: number): number => deg / 180 * Math.PI;
 
 // -----------------------------------------------
-// Public API
+// Public
 // -----------------------------------------------
 export {
   vectorNorm,

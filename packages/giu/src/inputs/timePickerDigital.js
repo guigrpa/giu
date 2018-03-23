@@ -1,4 +1,4 @@
-// @flow
+// @noflow
 
 import React from 'react';
 import moment from '../vendor/moment';
@@ -130,6 +130,6 @@ const style = {
 };
 
 // ==========================================
-// Public API
+// Public
 // ==========================================
 export default TimePickerDigital;

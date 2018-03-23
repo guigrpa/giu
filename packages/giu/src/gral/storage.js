@@ -1,4 +1,4 @@
-// @flow
+// @noflow
 
 let namespace = 'giu';
 
@@ -33,6 +33,6 @@ function localSet(key: string, val: any) {
 }
 
 // ==========================================
-// Public API
+// Public
 // ==========================================
 export { setLocalStorageNamespace, localGet, localSet };

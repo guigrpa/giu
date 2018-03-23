@@ -1,4 +1,4 @@
-// @flow
+// @noflow
 
 import React from 'react';
 import tinycolor from 'tinycolor2';
@@ -666,6 +666,6 @@ const STYLES = (
 );
 
 // ==========================================
-// Public API
+// Public
 // ==========================================
 export default ColorPicker;

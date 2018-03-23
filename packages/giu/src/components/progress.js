@@ -6,14 +6,15 @@ import PropTypes from 'prop-types';
 // ==========================================
 // Component
 // ==========================================
+type Props = Object;
+
 /* --
 A wrapper for the native HTML `progress` element (with 100% width).
 *All props are passed through to the `progress` element.
 Remember that an indeterminate progress bar will be shown if you
 don't specify the `value` prop (native HTML behaviour).*
 -- */
-class Progress extends React.PureComponent {
-  props: Object;
+class Progress extends React.PureComponent<Props> {
   refMdl: ?Object;
 
   componentDidMount() {
@@ -59,8 +60,6 @@ class Progress extends React.PureComponent {
 Progress.contextTypes = { theme: PropTypes.any };
 
 // ==========================================
-// Styles
-// ==========================================
 const style = {
   progress: {
     width: '100%',
@@ -68,6 +67,6 @@ const style = {
 };
 
 // ==========================================
-// Public API
+// Public
 // ==========================================
 export default Progress;

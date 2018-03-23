@@ -14,7 +14,7 @@ import { COLORS } from '../gral/constants';
 type Props = {
   plain?: boolean, // removes most button styles
   children?: any, // button contents (can include `Icon` components, etc.)
-  onClick?: (ev: SyntheticMouseEvent) => any,
+  onClick?: (ev: SyntheticMouseEvent<*>) => any,
   disabled?: boolean,
   style?: Object, // merged with the `span` style
   skipTheme?: boolean,
@@ -24,23 +24,12 @@ type Props = {
   primary?: boolean,
   accent?: boolean,
   fab?: boolean,
+  classNames?: Array<string>,
 
   // All other props are passed through to the `span` element
 };
 // -- END_DOCS
 
-const FILTERED_PROPS = [
-  'skipTheme',
-  'plain',
-  'colored',
-  'primary',
-  'accent',
-  'fab',
-  'children',
-  'onClick',
-  'disabled',
-  'style',
-];
 const FILTERED_PROPS_MDL = [
   'skipTheme',
   'plain',
@@ -48,10 +37,17 @@ const FILTERED_PROPS_MDL = [
   'primary',
   'accent',
   'fab',
+  'classNames',
+];
+const FILTERED_PROPS = [
+  ...FILTERED_PROPS_MDL,
+  'children',
+  'onClick',
+  'disabled',
+  'style',
 ];
 
-class Button extends React.PureComponent {
-  props: Props;
+class Button extends React.PureComponent<Props> {
   refButton: ?Object;
 
   componentDidMount() {
@@ -141,6 +137,6 @@ const style = {
 };
 
 // ==========================================
-// Public API
+// Public
 // ==========================================
 export default Button;

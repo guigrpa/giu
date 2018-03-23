@@ -18,9 +18,8 @@ type Props = {
 // ==========================================
 // Component
 // ==========================================
-class AnimatedCounter extends React.PureComponent {
-  props: Props;
-  timer: ?number;
+class AnimatedCounter extends React.PureComponent<Props> {
+  timer: ?IntervalID;
   timerLeft: number;
   value: ?number;
   targetValue: ?number;

@@ -1,4 +1,4 @@
-// @flow
+// @noflow
 
 import moment from '../vendor/moment';
 import type { Moment } from '../gral/types';

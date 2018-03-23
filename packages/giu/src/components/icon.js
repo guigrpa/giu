@@ -18,7 +18,7 @@ type Props = {
   size?: 'lg' | '2x' | '3x' | '4x' | '5x',
   fixedWidth?: boolean,
   spin?: boolean,
-  onClick?: (ev: SyntheticMouseEvent) => any,
+  onClick?: (ev: SyntheticMouseEvent<*>) => any,
   disabled?: boolean,
   style?: Object, // merged with the `i` element style
   skipTheme?: boolean,
@@ -36,8 +36,7 @@ const FILTERED_PROPS = [
   'skipTheme',
 ];
 
-class Icon extends React.PureComponent {
-  props: Props;
+class Icon extends React.PureComponent<Props> {
   refIcon: ?Object;
 
   componentDidMount() {
@@ -46,6 +45,7 @@ class Icon extends React.PureComponent {
     }
   }
 
+  // ==========================================
   render() {
     if (!this.props.skipTheme && this.context.theme === 'mdl') {
       return this.renderMdl();
@@ -131,7 +131,7 @@ const calcSize = size => {
 };
 
 // ==========================================
-// Public API
+// Public
 // ==========================================
 export default Icon;
 export { SPINNER_ICON };

@@ -101,8 +101,7 @@ type Props = {
   modals?: State,
 };
 
-class Modals extends React.PureComponent {
-  props: Props;
+class Modals extends React.PureComponent<Props> {
   storeUnsubscribe: () => void;
   refModals: Array<any>;
   prevModals: State;
@@ -162,7 +161,7 @@ class Modals extends React.PureComponent {
 }
 
 // ==========================================
-// Public API
+// Public
 // ==========================================
 const isModalActive = () => store.getState().length > 0;
 

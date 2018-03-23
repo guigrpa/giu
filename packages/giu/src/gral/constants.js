@@ -1,4 +1,4 @@
-// @flow
+// @noflow
 
 const COLORS = {
   // Text
@@ -139,7 +139,7 @@ try {
 /* eslint-enable import/no-mutable-exports */
 
 // ==========================================
-// Public API
+// Public
 // ==========================================
 export {
   COLORS,

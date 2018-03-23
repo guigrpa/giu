@@ -1,4 +1,4 @@
-// @flow
+// @noflow
 
 import React from 'react';
 
@@ -39,7 +39,7 @@ export type HoverableProps = {|
   onHoverStop: HoverEventHandler,
 |};
 type Hovering = ?(string | number | boolean); // null when nothing is hovered
-type HoverEventHandler = (ev: SyntheticEvent) => any;
+type HoverEventHandler = (ev: SyntheticEvent<*>) => any;
 /* -- END_DOCS -- */
 
 export type PublicHoverableProps = {|
@@ -72,7 +72,7 @@ class Hoverable extends React.Component {
     });
   }
 
-  onHoverStart = (ev: SyntheticEvent) => {
+  onHoverStart = (ev: SyntheticEvent<*>) => {
     let id;
     if (ev.currentTarget instanceof Element) {
       id = ev.currentTarget.id;
@@ -82,13 +82,13 @@ class Hoverable extends React.Component {
     if (this.props.onHoverStart) this.props.onHoverStart(ev);
   };
 
-  onHoverStop = (ev: SyntheticEvent) => {
+  onHoverStop = (ev: SyntheticEvent<*>) => {
     this.setState({ hovering: null });
     if (this.props.onHoverStop) this.props.onHoverStop(ev);
   };
 }
 
 // ==========================================
-// Public API
+// Public
 // ==========================================
 export default Hoverable;

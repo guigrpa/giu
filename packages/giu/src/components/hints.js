@@ -187,8 +187,7 @@ type Props = {
   storeState?: State,
 };
 
-class Hints extends React.PureComponent {
-  props: Props;
+class Hints extends React.PureComponent<Props> {
   storeUnsubscribe: () => void;
   storeState: State;
 
@@ -219,7 +218,7 @@ class Hints extends React.PureComponent {
 }
 
 // ==========================================
-// Public API
+// Public
 // ==========================================
 const isHintShown = () => store.getState().shown != null;
 

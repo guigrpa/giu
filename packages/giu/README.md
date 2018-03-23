@@ -571,8 +571,8 @@ type PublicProps = {
   allowSelect?: boolean,
   multipleSelection?: boolean,
   onChangeSelection?: (selectedIds: Array<string>) => any,
-  onClipboardAction?: (ev: SyntheticClipboardEvent, json: string) => any,
-  onRowDoubleClick?: (ev: SyntheticMouseEvent, id: string) => any,
+  onClipboardAction?: (ev: SyntheticClipboardEvent<*>, json: string) => any,
+  onRowDoubleClick?: (ev: SyntheticMouseEvent<*>, id: string) => any,
 
   // Fetching
   // --------
@@ -674,7 +674,7 @@ type PublicProps = {
   lang?: string, // current language (used just for force-render)
   children?: any, // React elements that will be shown as the menu's title
   onClickItem?: (
-    ev: SyntheticMouseEvent, // `click` event
+    ev: SyntheticMouseEvent<*>, // `click` event
     val: any // the item's `value` (as specified in the `items` prop)
   ) => any,
   style?: Object, // will be merged with the menu title's `div` wrapper
@@ -737,9 +737,9 @@ export type ModalPars = {|
   // called when the backdrop
   // (semi-transparent layer highlighting the modal in fron of other
   // page contents) is clicked
-  onClickBackdrop?: (ev: SyntheticMouseEvent) => any,
+  onClickBackdrop?: (ev: SyntheticMouseEvent<*>) => any,
 
-  onEsc?: (ev: SyntheticKeyboardEvent) => any, // called when ESC is pressed
+  onEsc?: (ev: SyntheticKeyboardEvent<*>) => any, // called when ESC is pressed
 
   // merge with the modal's `div` style, e.g. to
   // fix a modal width or background color
@@ -752,7 +752,7 @@ export type ModalButton = {|
   label?: any, // button text or other contents
   disabled?: boolean,
   defaultButton?: boolean, // will be highlighted and automatically selected when RETURN is pressed
-  onClick?: (ev: SyntheticEvent) => any, // `click` handler for the button
+  onClick?: (ev: SyntheticEvent<*>) => any, // `click` handler for the button
   style?: Object, // merged with the button's style
   accent?: boolean, // accent style (use it with MDL theme)
 |};
@@ -803,7 +803,7 @@ export type NotificationPars = {|
   iconSpin?: boolean,
   title?: string, // highlighted text at the top of the notification
   msg?: string, // notification text
-  onClick?: (ev: SyntheticEvent) => any, // `click` handler
+  onClick?: (ev: SyntheticEvent<*>) => any, // `click` handler
   style?: Object, // merged with the outermost `div` style
   noStylePosition?: boolean,
   noStyleShadow?: boolean,
@@ -918,7 +918,7 @@ An inconspicuous-looking button-in-a-`span`. Props:
 type Props = {
   plain?: boolean, // removes most button styles
   children?: any, // button contents (can include `Icon` components, etc.)
-  onClick?: (ev: SyntheticMouseEvent) => any,
+  onClick?: (ev: SyntheticMouseEvent<*>) => any,
   disabled?: boolean,
   style?: Object, // merged with the `span` style
   skipTheme?: boolean,
@@ -945,7 +945,7 @@ type Props = {
   size?: 'lg' | '2x' | '3x' | '4x' | '5x',
   fixedWidth?: boolean,
   spin?: boolean,
-  onClick?: (ev: SyntheticMouseEvent) => any,
+  onClick?: (ev: SyntheticMouseEvent<*>) => any,
   disabled?: boolean,
   style?: Object, // merged with the `i` element style
   skipTheme?: boolean,
@@ -1043,7 +1043,7 @@ export type HoverableProps = {
   onHoverStop: HoverEventHandler,
 };
 type Hovering = ?(string | number | boolean); // null when nothing is hovered
-type HoverEventHandler = (ev: SyntheticEvent) => any;
+type HoverEventHandler = (ev: SyntheticEvent<*>) => any;
 ```
 
 

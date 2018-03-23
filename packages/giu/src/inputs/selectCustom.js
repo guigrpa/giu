@@ -1,4 +1,4 @@
-// @flow
+// @noflow
 
 import React from 'react';
 import { merge, set as timmSet } from 'timm';
@@ -368,7 +368,7 @@ const style = {
 };
 
 // ==========================================
-// Public API
+// Public
 // ==========================================
 const SelectCustom = input(SelectCustomBase, {
   toInternalValue,

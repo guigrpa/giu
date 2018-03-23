@@ -1,4 +1,4 @@
-// @flow
+// @noflow
 
 import React from 'react';
 import { merge } from 'timm';
@@ -209,7 +209,7 @@ class ListPicker extends React.PureComponent {
     this.props.registerOuterRef && this.props.registerOuterRef(c);
   };
 
-  onClickItem = (ev: SyntheticEvent) => {
+  onClickItem = (ev: SyntheticEvent<*>) => {
     const { onClickItem, onChange } = this.props;
     const currentTarget: any = ev.currentTarget;
     const { id } = currentTarget;
@@ -367,6 +367,6 @@ style.outerDisabled = merge(INPUT_DISABLED, {
 });
 
 // ==========================================
-// Public API
+// Public
 // ==========================================
 export { HoverableListPicker as ListPicker, LIST_SEPARATOR_KEY };

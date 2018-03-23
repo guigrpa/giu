@@ -25,14 +25,12 @@ const FocusCapture = ({ registerRef, disabled, ...otherProps }: Props) => {
 };
 
 // ==========================================
-// Styles
-// ==========================================
 const style = {
   input: IS_IOS ? HIDDEN_FOCUS_CAPTURE_IOS : HIDDEN_FOCUS_CAPTURE,
   iosWrapper: { position: 'relative' },
 };
 
 // ==========================================
-// Public API
+// Public
 // ==========================================
 export default FocusCapture;

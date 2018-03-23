@@ -1,4 +1,4 @@
-// @flow
+// @noflow
 
 import React from 'react';
 import { omit, merge } from 'timm';
@@ -104,7 +104,7 @@ const style = {
 };
 
 // ==========================================
-// Public API
+// Public
 // ==========================================
 export default input(SelectNative, {
   toInternalValue,

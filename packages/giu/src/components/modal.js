@@ -63,8 +63,7 @@ type Props = {
   ...DefaultProps,
 };
 
-class Modal extends React.PureComponent {
-  props: Props;
+class Modal extends React.PureComponent<Props> {
   static defaultProps: DefaultProps = {
     buttons: ([]: Array<ModalButton>),
     zIndex: MISC.zModalBase,
@@ -78,8 +77,6 @@ class Modal extends React.PureComponent {
     this.refFocusCapture && this.refFocusCapture.focus();
   }
 
-  // ==========================================
-  // Render
   // ==========================================
   render() {
     return (
@@ -173,9 +170,7 @@ class Modal extends React.PureComponent {
   };
 
   // ==========================================
-  // Handlers
-  // ==========================================
-  onKeyDown = (ev: SyntheticKeyboardEvent) => {
+  onKeyDown = (ev: SyntheticKeyboardEvent<*>) => {
     const { which } = ev;
     let buttons;
     switch (which) {
@@ -204,7 +199,7 @@ class Modal extends React.PureComponent {
   };
 
   // Except when clicking on an embedded focusable node, refocus on this modal
-  onClickOuter = (ev: SyntheticMouseEvent) => {
+  onClickOuter = (ev: SyntheticMouseEvent<*>) => {
     if (ev.target instanceof Element) {
       const target: any = ev.target;
       const { tagName, disabled } = target;
@@ -216,8 +211,6 @@ class Modal extends React.PureComponent {
 
 Modal.contextTypes = { theme: PropTypes.any };
 
-// ==========================================
-// Styles
 // ==========================================
 const style = {
   outer: zIndex => ({
@@ -263,6 +256,6 @@ const style = {
 };
 
 // ==========================================
-// Public API
+// Public
 // ==========================================
 export default Modal;

@@ -1,4 +1,4 @@
-// @flow
+// @noflow
 
 import React from 'react';
 import SelectNative from '../inputs/selectNative';
@@ -55,6 +55,6 @@ class Select extends React.Component {
 }
 
 // ==========================================
-// Public API
+// Public
 // ==========================================
 export default Select;

@@ -1,4 +1,4 @@
-// @flow
+// @noflow
 
 // ==========================================
 // Waiting...
@@ -65,6 +65,6 @@ const isWaiting = (waiterId?: string) => {
 };
 
 // ==========================================
-// Public API
+// Public
 // ==========================================
 export { delay, waitUntil, isWaiting };

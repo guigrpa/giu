@@ -1,4 +1,4 @@
-// @flow
+// @noflow
 
 /* eslint-disable no-console, no-alert, max-len */
 /* eslint-disable react/prop-types, react/no-multi-comp, react/jsx-no-bind, react/jsx-boolean-value */

@@ -1,4 +1,4 @@
-// @flow
+// @noflow
 
 /* eslint-disable no-underscore-dangle */
 import { set as timmSet } from 'timm';
@@ -178,6 +178,6 @@ function _isOverflowVisible(overflow) {
 }
 
 // ==========================================
-// Public API
+// Public
 // ==========================================
 export { isVisible, scrollIntoView };

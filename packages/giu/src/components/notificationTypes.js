@@ -15,7 +15,7 @@ export type NotificationPars = {|
   iconSpin?: boolean,
   title?: string, // highlighted text at the top of the notification
   msg?: string, // notification text
-  onClick?: (ev: SyntheticEvent) => any, // `click` handler
+  onClick?: (ev: SyntheticEvent<*>) => any, // `click` handler
   style?: Object, // merged with the outermost `div` style
   noStylePosition?: boolean,
   noStyleShadow?: boolean,

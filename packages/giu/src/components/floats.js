@@ -173,17 +173,16 @@ function isAnchorVisible({ getAnchorNode }: FloatStatePars) {
 let fFloatsMounted = false;
 const isFloatsMounted = () => fFloatsMounted;
 
-type PropsT = {};
+type Props = {};
 
-class Floats extends React.PureComponent {
-  props: PropsT;
+class Floats extends React.PureComponent<Props> {
   prevState: State;
   curState: State;
   floats: Array<FloatStatePars>;
   storeUnsubscribe: () => void;
   refFloats: Array<?Object>;
 
-  constructor(props: PropsT) {
+  constructor(props: Props) {
     super(props);
     if (!store) initStore();
     this.storeUnsubscribe = store.subscribe(this.forceUpdate.bind(this));
@@ -403,7 +402,7 @@ function warnFloats(componentName: string) {
 }
 
 // ==========================================
-// Public API
+// Public
 // ==========================================
 export {
   Floats,

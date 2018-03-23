@@ -149,8 +149,7 @@ type Props = {
   notifs?: ?State,
 };
 
-class Notifications extends React.PureComponent {
-  props: Props;
+class Notifications extends React.PureComponent<Props> {
   static defaultProps = { notifs: null };
   storeUnsubscribe: () => void;
 
@@ -186,11 +185,11 @@ class Notifications extends React.PureComponent {
   }
 
   // ==========================================
-  onRetain = (ev: SyntheticEvent) => {
+  onRetain = (ev: SyntheticEvent<*>) => {
     if (!(ev.currentTarget instanceof Element)) return;
     store.dispatch(actions.notifRetain(ev.currentTarget.id));
   };
-  onDismiss = (ev: SyntheticEvent) => {
+  onDismiss = (ev: SyntheticEvent<*>) => {
     if (!(ev.currentTarget instanceof Element)) return;
     const { id } = ev.currentTarget;
     const notifs = this.props.notifs || store.getState();
@@ -200,8 +199,6 @@ class Notifications extends React.PureComponent {
   };
 }
 
-// ==========================================
-// Styles
 // ==========================================
 const style = {
   outer: {
@@ -214,7 +211,7 @@ const style = {
 };
 
 // ==========================================
-// Public API
+// Public
 // ==========================================
 export {
   Notifications,

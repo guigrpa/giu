@@ -1,4 +1,4 @@
-// @flow
+// @noflow
 
 import tinycolor from 'tinycolor2';
 import { merge } from 'timm';

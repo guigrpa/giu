@@ -38,15 +38,14 @@ type DefaultProps = {
 type Props = {
   ...HintScreenPars,
   ...$Exact<DefaultProps>,
-  onClose: (ev: SyntheticMouseEvent) => any,
+  onClose: (ev: SyntheticMouseEvent<*>) => any,
 };
 
 // **Warning**: an embedded `HintScreen` in a component
 // with `translateZ(0)` or similar (which creates a stacking context and
 // a containing block) will not be properly positioned and may even be cropped.
 // In such a case, use `Hints` instead.
-class HintScreen extends React.PureComponent {
-  props: Props;
+class HintScreen extends React.PureComponent<Props> {
   static defaultProps: DefaultProps = {
     elements: ([]: ElementsWrapper),
     closeLabel: 'Got it!',
@@ -164,6 +163,6 @@ const style = {
 };
 
 // ==========================================
-// Public API
+// Public
 // ==========================================
 export default HintScreen;

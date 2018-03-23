@@ -6,14 +6,15 @@ import Icon, { SPINNER_ICON } from './icon';
 // ==========================================
 // Component
 // ==========================================
-class Spinner extends React.PureComponent {
-  props: Object;
+type Props = Object;
+
+class Spinner extends React.PureComponent<Props> {
   render() {
     return <Icon icon={SPINNER_ICON} {...this.props} />;
   }
 }
 
 // ==========================================
-// Public API
+// Public
 // ==========================================
 export default Spinner;

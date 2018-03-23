@@ -1,4 +1,4 @@
-// @flow
+// @noflow
 
 /* eslint-disable react/no-multi-comp */
 
@@ -604,6 +604,6 @@ class DateInputWrapper extends React.Component {
 }
 
 // ==========================================
-// Public API
+// Public
 // ==========================================
 export default DateInputWrapper;

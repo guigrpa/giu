@@ -1,4 +1,4 @@
-// @flow
+// @noflow
 
 import React from 'react';
 import PropTypes from 'prop-types';
@@ -31,7 +31,7 @@ type Props = {
   ...$Exact<PublicProps>,
   // Input HOC
   curValue: ?Object,
-  onChange: (ev: SyntheticEvent, providedValue: any) => any,
+  onChange: (ev: SyntheticEvent<*>, providedValue: any) => any,
   registerOuterRef: Function,
   registerFocusableRef: Function,
   errors: Array<string>,

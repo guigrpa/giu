@@ -1,4 +1,4 @@
-// @flow
+// @noflow
 
 /* eslint-disable no-unused-vars, no-undef */
 
@@ -41,7 +41,7 @@ export type Choice = {
   value: any,
   label?: string | ((lang: ?string) => any),
   keys?: string | Array<string>,
-  onClick?: (ev: SyntheticEvent) => any,
+  onClick?: (ev: SyntheticEvent<*>) => any,
   shortcuts?: Array<KeyboardShortcut>,
   disabled?: boolean,
 };

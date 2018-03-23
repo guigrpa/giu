@@ -1,4 +1,4 @@
-// @flow
+// @noflow
 
 import { merge, addDefaults } from 'timm';
 import unorm from 'unorm';
@@ -166,7 +166,7 @@ function simplifyString(str: string): string {
 }
 
 // ==========================================
-// Public API
+// Public
 // ==========================================
 export {
   bindAll,

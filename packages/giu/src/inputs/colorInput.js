@@ -1,4 +1,4 @@
-// @flow
+// @noflow
 
 import React from 'react';
 import { merge } from 'timm';
@@ -243,7 +243,7 @@ const style = {
 };
 
 // ==========================================
-// Public API
+// Public
 // ==========================================
 export default input(ColorInput, {
   toInternalValue,

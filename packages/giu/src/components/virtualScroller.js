@@ -3,6 +3,7 @@
 /* eslint-disable no-console */
 import { merge } from 'timm';
 import React from 'react';
+import type { ComponentType } from 'react';
 import throttle from 'lodash/throttle';
 import { cancelBodyScrolling } from '../gral/helpers';
 import { getScrollbarWidth } from '../gral/constants';
@@ -28,7 +29,7 @@ type PublicProps = {
   itemsById?: Object,
   shownIds?: Array<string>,
   alwaysRenderIds?: Array<string>,
-  RowComponents: { [key: string]: ReactClass<*> },
+  RowComponents: { [key: string]: ComponentType<*> },
   commonRowProps: Object,
   getSpecificRowProps: (id: string) => Object,
 
@@ -64,7 +65,7 @@ type Props = {
   ...$Exact<DefaultProps>,
 };
 
-class VirtualScroller extends React.PureComponent {
+class VirtualScroller extends React.PureComponent<Props> {
   props: Props;
   static defaultProps: DefaultProps = {
     itemsById: {},
@@ -93,7 +94,7 @@ class VirtualScroller extends React.PureComponent {
   clientHeight: number;
   fHasScrollbar: boolean;
   scrollbarWidth: number;
-  timerCheckScrollbar: ?number;
+  timerCheckScrollbar: ?IntervalID;
   throttledRecalcViewport: (ev: Object) => any;
   refItems: { [key: string]: ?Object };
   refScroller: ?Object;
@@ -297,8 +298,6 @@ class VirtualScroller extends React.PureComponent {
   }
 
   // ===============================================================
-  // Render
-  // ===============================================================
   render() {
     this.determineRenderInterval();
     DEBUG &&
@@ -419,8 +418,6 @@ class VirtualScroller extends React.PureComponent {
     return <LargeMessage>No items</LargeMessage>;
   }
 
-  // ===============================================================
-  // Event handlers
   // ===============================================================
   onChangeRowHeight = (id: string, height: number) => {
     const prevCachedHeight = this.cachedHeights[id];
@@ -640,8 +637,6 @@ class VirtualScroller extends React.PureComponent {
 }
 
 // ===============================================================
-// Styles
-// ===============================================================
 const style = {
   scroller: ({ height, width, style: baseStyle }) =>
     merge(
@@ -666,7 +661,7 @@ const style = {
 };
 
 // ===============================================================
-// Public API
+// Public
 // ===============================================================
 export default VirtualScroller;
 export { DEFAULT_ROW };

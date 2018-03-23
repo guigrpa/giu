@@ -66,13 +66,7 @@ rules:
 globals:
   # Flow
   Class: false
-  $Diff: false
-  $Subtype: false
   $Exact: false
-  $Shape: false
-  ReactClass: false
-  React$Component: false
-  React$Element: false
   SyntheticEvent: false
   SyntheticWheelEvent: false
   SyntheticKeyboardEvent: false
@@ -83,6 +77,8 @@ globals:
   KeyboardEvent: false
   HTMLElement: false
   HTMLInputElement: false
+  IntervalID: false
+  TimeoutID: false
   # Jest
   $: false
   mockComponent: false

@@ -22,9 +22,7 @@ type Props = {
 
 const FILTERED_PROPS = ['children', 'style'];
 
-class LargeMessage extends React.PureComponent {
-  props: Props;
-
+class LargeMessage extends React.PureComponent<Props> {
   render() {
     const otherProps = omit(this.props, FILTERED_PROPS);
     return (
@@ -40,8 +38,6 @@ class LargeMessage extends React.PureComponent {
 }
 
 // ==========================================
-// Styles
-// ==========================================
 const style = {
   outer: ({ style: baseStyle }) => {
     const out = {
@@ -56,6 +52,6 @@ const style = {
 };
 
 // ==========================================
-// Public API
+// Public
 // ==========================================
 export default LargeMessage;

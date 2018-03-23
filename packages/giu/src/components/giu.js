@@ -14,9 +14,7 @@ type Props = {
   children: any,
 };
 
-class Giu extends React.PureComponent {
-  props: Props;
-
+class Giu extends React.PureComponent<Props> {
   getChildContext() {
     return { theme: this.props.theme };
   }
@@ -31,6 +29,6 @@ Giu.childContextTypes = {
 };
 
 // ==========================================
-// Public API
+// Public
 // ==========================================
 export default Giu;

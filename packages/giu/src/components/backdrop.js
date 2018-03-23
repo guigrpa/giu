@@ -6,16 +6,17 @@ import { cancelEvent } from '../gral/helpers';
 import { IS_IOS } from '../gral/constants';
 
 // ==========================================
-// Component
+// Declarations
 // ==========================================
 type Props = {
+  // All props are forwarded to the child `<div>`
   style?: Object,
 };
 
-class Backdrop extends React.PureComponent {
-  // All props are forwarded to the child `<div>`
-  props: Props;
-
+// ==========================================
+// Component
+// ==========================================
+class Backdrop extends React.PureComponent<Props> {
   render() {
     // Due to bug: https://github.com/zeit/styled-jsx/issues/329
     return (
@@ -70,6 +71,6 @@ const STYLES = (
 );
 
 // ==========================================
-// Public API
+// Public
 // ==========================================
 export default Backdrop;

@@ -1,4 +1,4 @@
-// @flow
+// @noflow
 
 /* eslint-disable react/no-string-refs */
 

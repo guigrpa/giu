@@ -45,9 +45,7 @@ const HoverableNotification = (props: PublicProps) => (
   />
 );
 
-class Notification extends React.PureComponent {
-  props: Props;
-
+class Notification extends React.PureComponent<Props> {
   static defaultProps = {
     type: ('info': NotificationType),
   };
@@ -80,8 +78,6 @@ class Notification extends React.PureComponent {
 
 Notification.contextTypes = { theme: PropTypes.any };
 
-// ==========================================
-// Styles
 // ==========================================
 const style = {
   outer: (
@@ -134,6 +130,6 @@ const style = {
 };
 
 // ==========================================
-// Public API
+// Public
 // ==========================================
 export default HoverableNotification;
