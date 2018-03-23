@@ -19,7 +19,6 @@
     "react-dom": "^16.2.0"
   },
   "dependencies": {
-    "babel-runtime": "6.23.0",
     "filesize": "3.5.10",
     "keycode": "2.1.9",
     "lodash": "4.17.4",

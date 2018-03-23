@@ -50,6 +50,9 @@
     "release": "oao publish",
     "prettier": "prettier --single-quote --trailing-comma es5 --write \"packages/**/src/**/*.js\""
   },
+  "workspaces": [
+    "packages/*"
+  ],
   "_devDependencies": "The following are included to avoid dep conflicts: react, react-dom, moment",
   "devDependencies": {
     "babel-eslint": "7.2.3",

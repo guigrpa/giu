@@ -6,3 +6,4 @@ packages/*/out
 *.html
 packages/*/package.json
 /package.json
+*.md
