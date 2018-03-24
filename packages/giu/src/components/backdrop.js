@@ -64,7 +64,6 @@ const STYLES = (
 
     .giu-backdrop {
       animation: appear 300ms;
-      -webkit-animation: appear 300ms;
       opacity: 0.6;
     }
   `}</style>
