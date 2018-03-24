@@ -11,44 +11,30 @@ import {
   darken,
 } from '../gral/styles';
 import { COLORS, FONTS } from '../gral/constants';
-import Hoverable from '../wrappers/hoverable';
-import type {
-  HoverableProps,
-  PublicHoverableProps,
-} from '../wrappers/hoverable';
-/* eslint-disable no-unused-vars */
 import type { NotificationType, NotificationPars } from './notificationTypes';
-/* eslint-enable no-unused-vars */
 import Icon from './icon';
 
 // ==========================================
-// Types
+// Declarations
 // ==========================================
-type PublicProps = {
-  ...NotificationPars,
-  ...PublicHoverableProps,
-};
 type Props = {
-  ...PublicProps,
-  ...HoverableProps,
+  ...NotificationPars,
+  onHoverStart?: (ev: SyntheticEvent<*>) => any,
+  onHoverStop?: (ev: SyntheticEvent<*>) => any,
   type: NotificationType,
+};
+type State = {
+  hovering: boolean,
 };
 
 // ==========================================
 // Component
 // ==========================================
-const HoverableNotification = (props: PublicProps) => (
-  <Hoverable
-    onHoverStart={props.onHoverStart}
-    onHoverStop={props.onHoverStop}
-    render={hoverableProps => <Notification {...props} {...hoverableProps} />}
-  />
-);
-
-class Notification extends React.PureComponent<Props> {
+class Notification extends React.PureComponent<Props, State> {
   static defaultProps = {
     type: ('info': NotificationType),
   };
+  state = { hovering: false };
 
   // ==========================================
   render() {
@@ -59,10 +45,10 @@ class Notification extends React.PureComponent<Props> {
       <div
         className="giu-notification"
         id={this.props.id}
-        onMouseEnter={this.props.onHoverStart}
-        onMouseLeave={this.props.onHoverStop}
+        onMouseEnter={this.onHoverStart}
+        onMouseLeave={this.onHoverStop}
         onClick={this.props.onClick}
-        style={style.outer(this.props, this.context.theme)}
+        style={style.outer(this.props, this.state, this.context.theme)}
       >
         <div style={style.icon}>
           <Icon icon={icon} size="2x" spin={this.props.iconSpin} />
@@ -74,6 +60,17 @@ class Notification extends React.PureComponent<Props> {
       </div>
     );
   }
+
+  // ==========================================
+  onHoverStart = (ev: SyntheticEvent<*>) => {
+    this.setState({ hovering: true });
+    this.props.onHoverStart && this.props.onHoverStart(ev);
+  };
+
+  onHoverStop = (ev: SyntheticEvent<*>) => {
+    this.setState({ hovering: false });
+    this.props.onHoverStop && this.props.onHoverStop(ev);
+  };
 }
 
 Notification.contextTypes = { theme: PropTypes.any };
@@ -81,14 +78,8 @@ Notification.contextTypes = { theme: PropTypes.any };
 // ==========================================
 const style = {
   outer: (
-    {
-      type,
-      hovering,
-      onClick,
-      style: baseStyle,
-      noStylePosition,
-      noStyleShadow,
-    },
+    { type, onClick, style: baseStyle, noStylePosition, noStyleShadow },
+    { hovering },
     theme
   ) => {
     let bgColor = COLORS.notifs[type] || COLORS.notifs.info;
@@ -116,13 +107,9 @@ const style = {
     if (baseStyle) out = merge(out, baseStyle);
     return out;
   },
-  icon: flexItem('0 1 auto', {
-    paddingRight: 20,
-  }),
+  icon: flexItem('0 1 auto', { paddingRight: 20 }),
   body: flexItem('1 1 50px'),
-  title: {
-    fontWeight: 'bold',
-  },
+  title: { fontWeight: 'bold' },
   msg: {
     wordWrap: 'break-word',
     fontWeight: 'normal',
@@ -132,4 +119,4 @@ const style = {
 // ==========================================
 // Public
 // ==========================================
-export default HoverableNotification;
+export default Notification;
