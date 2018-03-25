@@ -1,4 +1,4 @@
-// @noflow
+// @flow
 
 import React from 'react';
 import moment from '../vendor/moment';
@@ -6,11 +6,6 @@ import { startOfToday, getTimeInSecs } from '../gral/dates';
 import { flexContainer, isDark } from '../gral/styles';
 import type { Moment, KeyboardEventPars } from '../gral/types';
 import { COLORS, KEYS } from '../gral/constants';
-import Hoverable from '../wrappers/hoverable';
-import type {
-  HoverableProps,
-  PublicHoverableProps,
-} from '../wrappers/hoverable';
 import Button from '../components/button';
 import Icon from '../components/icon';
 
@@ -20,50 +15,40 @@ const DAY_WIDTH = '2em';
 // ==========================================
 // Types
 // ==========================================
-type PublicProps = {|
+type Props = {|
   disabled: boolean,
   curValue: ?Moment,
-  onChange: (ev: ?SyntheticEvent, nextValue: ?Moment) => any,
+  onChange: (ev: ?SyntheticEvent<*>, nextValue: ?Moment) => any,
   utc: boolean,
   todayName: string,
   keyDown: ?KeyboardEventPars,
   accentColor: string,
-  ...PublicHoverableProps,
 |};
 
-type Props = {
-  ...PublicProps,
-  ...HoverableProps,
+type State = {
+  shownMonthStart: Moment,
+  hovering: ?string,
 };
 
 // ==========================================
 // Component
 // ==========================================
-const HoverableDatePicker = (props: PublicProps) => (
-  <Hoverable
-    onHoverStart={props.onHoverStart}
-    onHoverStop={props.onHoverStop}
-    render={hoverableProps => <DatePicker {...props} {...hoverableProps} />}
-  />
-);
-
-class DatePicker extends React.Component {
-  props: Props;
-  static defaultProps = {};
-  state: {
-    shownMonthStart: Moment,
-  };
+class DatePicker extends React.Component<Props, State> {
   startOfCurValue: ?Moment;
   shownMonthNumber: number;
 
   constructor() {
     super();
-    this.state = ({ shownMonthStart: null }: any);
+    this.state = ({
+      shownMonthStart: null,
+      hovering: null,
+    }: any);
   }
 
   componentWillMount() {
     this.updateShownMonth(this.props);
   }
+
   componentWillReceiveProps(nextProps: Props) {
     const prevValue = this.props.curValue;
     const nextValue = nextProps.curValue;
@@ -184,7 +169,7 @@ class DatePicker extends React.Component {
   }
 
   renderDay(mom: Moment, idx: number) {
-    const { hovering, onHoverStart, onHoverStop } = this.props;
+    const { hovering } = this.state;
     const id = mom.toISOString();
     const fHovered = hovering === id;
     const fSelected =
@@ -195,8 +180,8 @@ class DatePicker extends React.Component {
         key={idx}
         id={id}
         onClick={this.onClickDay}
-        onMouseEnter={onHoverStart}
-        onMouseLeave={onHoverStop}
+        onMouseEnter={this.onHoverStart}
+        onMouseLeave={this.onHoverStop}
         style={style.day(fSelected, fHovered, fInShownMonth, this.props)}
       >
         {mom.date()}
@@ -213,8 +198,6 @@ class DatePicker extends React.Component {
     );
   }
 
-  // ==========================================
-  // Event handlers
   // ==========================================
   onClickMonthName = () => {
     const { utc } = this.props;
@@ -289,8 +272,14 @@ class DatePicker extends React.Component {
     }
   }
 
-  // ==========================================
-  // Helpers
+  onHoverStart = (ev: SyntheticMouseEvent<*>) => {
+    this.setState({ hovering: ev.currentTarget.id });
+  };
+
+  onHoverStop = () => {
+    this.setState({ hovering: null });
+  };
+
   // ==========================================
   goToStartEndOfMonth(op: 'start' | 'end') {
     const startOfDay = this.state.shownMonthStart.clone();
@@ -298,7 +287,7 @@ class DatePicker extends React.Component {
     this.changeDateTo(null, startOfDay);
   }
 
-  changeDateTo(ev: ?SyntheticEvent, startOfDay: Moment) {
+  changeDateTo(ev: ?SyntheticEvent<*>, startOfDay: Moment) {
     const { curValue } = this.props;
     const nextValue = startOfDay.clone();
     if (curValue != null) {
@@ -319,13 +308,11 @@ class DatePicker extends React.Component {
     this.doChange(null, nextValue);
   }
 
-  doChange(ev: ?SyntheticEvent, nextValue) {
+  doChange(ev: ?SyntheticEvent<*>, nextValue: Moment) {
     this.props.onChange(ev, nextValue);
   }
 }
 
-// ==========================================
-// Styles
 // ==========================================
 const style = {
   outer: {
@@ -341,9 +328,7 @@ const style = {
     width: DAY_WIDTH,
     textAlign: 'center',
   },
-  monthName: {
-    fontWeight: 'bold',
-  },
+  monthName: { fontWeight: 'bold' },
   dayNamesRow: flexContainer('row', {
     justifyContent: 'space-between',
     alignItems: 'baseline',
@@ -395,4 +380,4 @@ const style = {
 // ==========================================
 // Public
 // ==========================================
-export default HoverableDatePicker;
+export default DatePicker;

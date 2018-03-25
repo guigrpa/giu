@@ -418,30 +418,6 @@ certain part of your application or performs an action for the first time.
 [[[./packages/giu/src/components/progress.js]]]
 
 
-## Higher-order components (HOCs)
-
-[HOCs](https://medium.com/@dan_abramov/mixins-are-dead-long-live-higher-order-components-94a0d2f9e750#.v1zqfc63a) are used internally by Giu components and are also provided in the user API. They work fine with all kinds of base components: [ES6 classes](https://facebook.github.io/react/docs/reusable-components.html#es6-classes), [plain-old `createClass`-style components](https://facebook.github.io/react/docs/multiple-components.html#composition-example) and [stateless functions](https://facebook.github.io/react/docs/reusable-components.html#stateless-functions).
-
-Example usage:
-
-```js
-import { hoverable } from 'giu';
-import { Component } from 'react';
-
-class MyReactComponent extends Component {
-    /* ... */
-}
-
-export default hoverable(MyReactComponent);
-```
-
-### Hoverable HOC
-
-[[[demo:hoverable]]]
-
-[[[./packages/giu/src/hocs/hoverable.js]]]
-
-
 ## Helpers
 
 You can find here a wide variety of helper functions, from the very simple (`cancelEvent()`, `flexContainer()`) to the relatively complex (`scrollIntoView()`). This is just an opinionated collection of hopefully useful bits and pieces for building React components.

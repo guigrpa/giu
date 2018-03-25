@@ -111,16 +111,8 @@ import AnimatedCounter from './components/animatedCounter';
 export { AnimatedCounter };
 
 // HOCs and wrappers
-import hoverable from './hocs/hoverable';
-export { hoverable };
 import input from './hocs/input';
 export { input };
-import Hoverable from './wrappers/hoverable';
-export { Hoverable };
-export type {
-  HoverableProps,
-  PublicHoverableProps,
-} from './wrappers/hoverable';
 
 // Styles
 export {

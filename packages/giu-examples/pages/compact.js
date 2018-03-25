@@ -28,7 +28,6 @@ import {
   Notification,
   notify as createNotif,
   Hints,
-  Hoverable,
   flexContainer,
   flexItem,
   boxWithShadow,
@@ -80,16 +79,11 @@ class App extends React.Component {
         out = (
           <div>
             <Floats />
-            Test<br />Test<br />Test<br />Test<br />Test<br />Test<br />Test<br
-            />Test<br />Test<br />
-            Test<br />Test<br />Test<br />Test<br />Test<br />Test<br />Test<br
-            />Test<br />Test<br />
-            Test<br />Test<br />Test<br />Test<br />Test<br />Test<br />Test<br
-            />Test<br />Test<br />
-            Test<br />Test<br />Test<br />Test<br />Test<br />Test<br />Test<br
-            />Test<br />Test<br />
-            Test<br />Test<br />Test<br />Test<br />Test<br />Test<br />Test<br
-            />Test<br />Test<br />
+            Test<br />Test<br />Test<br />Test<br />Test<br />Test<br />Test<br />Test<br />Test<br />
+            Test<br />Test<br />Test<br />Test<br />Test<br />Test<br />Test<br />Test<br />Test<br />
+            Test<br />Test<br />Test<br />Test<br />Test<br />Test<br />Test<br />Test<br />Test<br />
+            Test<br />Test<br />Test<br />Test<br />Test<br />Test<br />Test<br />Test<br />Test<br />
+            Test<br />Test<br />Test<br />Test<br />Test<br />Test<br />Test<br />Test<br />Test<br />
             <TextInput
               onChange={onChange}
               errors={['Must be numeric']}
@@ -97,16 +91,11 @@ class App extends React.Component {
               errorAlign="right"
             />
             <br />
-            Test<br />Test<br />Test<br />Test<br />Test<br />Test<br />Test<br
-            />Test<br />Test<br />
-            Test<br />Test<br />Test<br />Test<br />Test<br />Test<br />Test<br
-            />Test<br />Test<br />
-            Test<br />Test<br />Test<br />Test<br />Test<br />Test<br />Test<br
-            />Test<br />Test<br />
-            Test<br />Test<br />Test<br />Test<br />Test<br />Test<br />Test<br
-            />Test<br />Test<br />
-            Test<br />Test<br />Test<br />Test<br />Test<br />Test<br />Test<br
-            />Test<br />Test<br />
+            Test<br />Test<br />Test<br />Test<br />Test<br />Test<br />Test<br />Test<br />Test<br />
+            Test<br />Test<br />Test<br />Test<br />Test<br />Test<br />Test<br />Test<br />Test<br />
+            Test<br />Test<br />Test<br />Test<br />Test<br />Test<br />Test<br />Test<br />Test<br />
+            Test<br />Test<br />Test<br />Test<br />Test<br />Test<br />Test<br />Test<br />Test<br />
+            Test<br />Test<br />Test<br />Test<br />Test<br />Test<br />Test<br />Test<br />Test<br />
           </div>
         );
         break;
@@ -338,7 +327,6 @@ class App extends React.Component {
                 {EVERYTHING && <MessageExample />}
                 {EVERYTHING && <IconExample />}
                 {EVERYTHING && <ButtonExample />}
-                {EVERYTHING && <HoverableExample />}
                 {EVERYTHING && <StyleUtilsExample />}
                 {EVERYTHING && <DropDownExample lang={lang} />}
                 {EVERYTHING && <ModalExample />}
@@ -477,17 +465,6 @@ const ButtonExample = () => (
     </Button>
   </div>
 );
-
-const HoverableExample0 = ({ hovering, onHoverStart, onHoverStop }) => (
-  <div
-    onMouseEnter={onHoverStart}
-    onMouseLeave={onHoverStop}
-    style={merge(style.example, style.hoverable(hovering))}
-  >
-    <ExampleLabel>Hoverable</ExampleLabel>
-  </div>
-);
-const HoverableExample = () => <Hoverable render={HoverableExample0} />;
 
 const StyleUtilsExample = () => (
   <div style={style.example}>
@@ -638,9 +615,6 @@ const style = {
     fontSize: 12,
   },
   example: exampleStyle,
-  hoverable: hovering => ({
-    backgroundColor: hovering ? '#ccc' : undefined,
-  }),
 };
 
 // -----------------------------------------------

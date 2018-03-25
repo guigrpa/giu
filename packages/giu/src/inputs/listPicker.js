@@ -1,4 +1,4 @@
-// @noflow
+// @flow
 
 import React from 'react';
 import { merge } from 'timm';
@@ -12,6 +12,7 @@ import {
 } from '../gral/constants';
 import { cancelEvent, cancelBodyScrolling } from '../gral/helpers';
 import { scrollIntoView } from '../gral/visibility';
+import type { ScrollIntoViewOptions } from '../gral/visibility';
 import {
   isDark,
   flexContainer,
@@ -20,12 +21,11 @@ import {
   INPUT_DISABLED,
   GLOW,
 } from '../gral/styles';
-import type { Choice, KeyboardEventPars } from '../gral/types';
-import Hoverable from '../wrappers/hoverable';
 import type {
-  HoverableProps,
-  PublicHoverableProps,
-} from '../wrappers/hoverable';
+  Choice,
+  KeyboardEventPars,
+  KeyboardShortcut,
+} from '../gral/types';
 
 const LIST_SEPARATOR_KEY = '__SEPARATOR__';
 
@@ -39,8 +39,8 @@ type PublicProps = {|
   curValue: string,
   keyDown?: KeyboardEventPars,
   emptyText?: string,
-  onChange: (ev: ?SyntheticEvent, value: string) => any,
-  onClickItem?: (ev: ?SyntheticEvent, value: string) => any,
+  onChange: (ev: ?SyntheticEvent<*>, value: string) => any,
+  onClickItem?: (ev: ?SyntheticEvent<*>, value: string) => any,
   disabled?: boolean,
   fFocused?: boolean,
   fFloating?: boolean,
@@ -48,7 +48,6 @@ type PublicProps = {|
   styleItem?: Object,
   twoStageStyle?: boolean,
   accentColor?: string,
-  ...PublicHoverableProps,
 |};
 
 type DefaultProps = {
@@ -58,31 +57,30 @@ type DefaultProps = {
 
 type Props = {
   ...PublicProps,
-  ...HoverableProps,
   ...$Exact<DefaultProps>,
+};
+
+type State = {
+  hovering: ?string,
 };
 
 // ==========================================
 // Component
 // ==========================================
-const HoverableListPicker = (props: PublicProps) => (
-  <Hoverable
-    onHoverStart={props.onHoverStart}
-    onHoverStop={props.onHoverStop}
-    render={hoverableProps => <ListPicker {...props} {...hoverableProps} />}
-  />
-);
+class ListPicker extends React.PureComponent<Props, State> {
+  refOuter: ?Object;
+  refItems: Array<?Object>;
 
-class ListPicker extends React.PureComponent {
-  props: Props;
   static defaultProps: DefaultProps = {
     emptyText: 'Ø',
     accentColor: COLORS.accent,
   };
-  refOuter: ?Object;
-  refItems: Array<?Object>;
 
-  componentWillReceiveProps(nextProps) {
+  state = {
+    hovering: null,
+  };
+
+  componentWillReceiveProps(nextProps: Props) {
     const { keyDown } = nextProps;
     if (keyDown && keyDown !== this.props.keyDown) this.doKeyDown(keyDown);
   }
@@ -98,15 +96,13 @@ class ListPicker extends React.PureComponent {
     }
   }
 
-  componentDidUpdate(prevProps) {
+  componentDidUpdate(prevProps: Props) {
     const { curValue } = this.props;
     if (curValue != null && curValue !== prevProps.curValue) {
       this.scrollSelectedIntoView();
     }
   }
 
-  // ==========================================
-  // Render
   // ==========================================
   render() {
     const { style: baseStyle } = this.props;
@@ -134,18 +130,16 @@ class ListPicker extends React.PureComponent {
     return items.map(this.renderItem);
   }
 
-  renderItem = (item, idx) => {
+  renderItem = (item: Choice, idx: number) => {
     const { value: itemValue, label, disabled: itemDisabled, shortcuts } = item;
     const {
       curValue,
-      hovering,
-      onHoverStart,
-      onHoverStop,
       disabled,
       styleItem,
       twoStageStyle,
       accentColor,
     } = this.props;
+    const { hovering } = this.state;
     if (label === LIST_SEPARATOR_KEY) {
       return (
         <div
@@ -180,8 +174,8 @@ class ListPicker extends React.PureComponent {
           this.refItems[idx] = c;
         }}
         id={itemValue}
-        onMouseEnter={finalDisabled ? undefined : onHoverStart}
-        onMouseLeave={finalDisabled ? undefined : onHoverStop}
+        onMouseEnter={finalDisabled ? undefined : this.onHoverStart}
+        onMouseLeave={finalDisabled ? undefined : this.onHoverStop}
         onMouseDown={cancelEvent}
         onMouseUp={IS_IOS || finalDisabled ? undefined : this.onClickItem}
         onClick={IS_IOS && !finalDisabled ? this.onClickItem : undefined}
@@ -194,15 +188,13 @@ class ListPicker extends React.PureComponent {
     );
   };
 
-  renderKeys(shortcuts) {
+  renderKeys(shortcuts: ?Array<KeyboardShortcut>) {
     if (!shortcuts) return null;
     const desc = shortcuts.map(o => o.description).join(', ');
     if (!desc) return null;
     return <span style={style.shortcut}>{desc}</span>;
   }
 
-  // ==========================================
-  // Event handlers
   // ==========================================
   registerOuterRef = (c: ?Object) => {
     this.refOuter = c;
@@ -217,10 +209,16 @@ class ListPicker extends React.PureComponent {
     if (onClickItem) onClickItem(ev, id);
   };
 
+  onHoverStart = (ev: SyntheticMouseEvent<*>) => {
+    this.setState({ hovering: ev.currentTarget.id });
+  };
+
+  onHoverStop = () => {
+    this.setState({ hovering: null });
+  };
+
   // ==========================================
-  // Helpers
-  // ==========================================
-  doKeyDown({ which, shiftKey, ctrlKey, altKey, metaKey }) {
+  doKeyDown({ which, shiftKey, ctrlKey, altKey, metaKey }: KeyboardEventPars) {
     if (shiftKey || ctrlKey || altKey || metaKey) return;
     let idx;
     switch (which) {
@@ -253,7 +251,7 @@ class ListPicker extends React.PureComponent {
     }
   }
 
-  selectMoveBy(delta, idx0) {
+  selectMoveBy(delta: number, idx0?: number) {
     const { items } = this.props;
     const len = items.length;
     let idx = idx0 != null ? idx0 : this.getCurIdx();
@@ -268,7 +266,7 @@ class ListPicker extends React.PureComponent {
     if (fFound) this.selectMoveTo(idx);
   }
 
-  selectMoveTo(idx) {
+  selectMoveTo(idx: number) {
     const { items } = this.props;
     if (!items.length) return;
     const nextValue = items[idx].value;
@@ -280,15 +278,13 @@ class ListPicker extends React.PureComponent {
     return items.findIndex(item => item.value === curValue);
   }
 
-  scrollSelectedIntoView(options) {
+  scrollSelectedIntoView(options?: ScrollIntoViewOptions) {
     const idx = this.getCurIdx();
     if (idx < 0) return;
     scrollIntoView(this.refItems[idx], options);
   }
 }
 
-// ==========================================
-// Styles
 // ==========================================
 const style = {
   outerBase: inputReset({
@@ -369,4 +365,4 @@ style.outerDisabled = merge(INPUT_DISABLED, {
 // ==========================================
 // Public
 // ==========================================
-export { HoverableListPicker as ListPicker, LIST_SEPARATOR_KEY };
+export { ListPicker, LIST_SEPARATOR_KEY };

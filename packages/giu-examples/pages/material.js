@@ -3,7 +3,6 @@
 /* eslint-disable react/prefer-stateless-function, react/jsx-no-target-blank */
 import React from 'react';
 import Head from 'next/head';
-import { merge } from 'timm';
 import moment from 'moment';
 
 import {
@@ -23,7 +22,6 @@ import {
   Notification,
   notify as createNotif,
   Hints,
-  hoverable,
   flexContainer,
   flexItem,
   boxWithShadow,
@@ -104,7 +102,6 @@ class App extends React.Component {
                 {EVERYTHING && <MessageExample />}
                 {EVERYTHING && <IconExample />}
                 {EVERYTHING && <ButtonExample />}
-                {EVERYTHING && <HoverableExample />}
                 {EVERYTHING && <StyleUtilsExample />}
                 {EVERYTHING && <DropDownExample lang={lang} />}
                 {EVERYTHING && <ModalExample />}
@@ -208,18 +205,6 @@ const ButtonExample = () => (
       Flat (disabled)
     </Button>{' '}
   </div>
-);
-
-const HoverableExample = hoverable(
-  ({ hovering, onHoverStart, onHoverStop }) => (
-    <div
-      onMouseEnter={onHoverStart}
-      onMouseLeave={onHoverStop}
-      style={merge(style.example, style.hoverable(hovering))}
-    >
-      <ExampleLabel>Hoverable (HOC)</ExampleLabel>
-    </div>
-  )
 );
 
 const StyleUtilsExample = () => (
@@ -361,9 +346,6 @@ const style = {
     overflow: 'auto',
     transform: 'translateZ(0)',
   },
-  hoverable: hovering => ({
-    backgroundColor: hovering ? '#ccc' : undefined,
-  }),
 };
 
 // -----------------------------------------------

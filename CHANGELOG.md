@@ -1,3 +1,5 @@
+* **Breaking**: Remove `hoverable`, `Hoverable`. Recommended alternative: simple state in your component, or CSS-in-JS such as styled-jsx.
+
 ## 0.15.1 (2017-12-6)
 
 * Icon: calculate size always, not relying on Font Awesome styles

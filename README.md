@@ -580,7 +580,7 @@ type PublicProps = {
   // (note: disabled when the filterValue prop is not empty)
   fetchMoreItems?: (lastRowId: string) => any, // Called when the last row is rendered
   fetching?: boolean, // When set, the FetchRowComponent will be shown
-  FetchRowComponent?: ReactClass<*>,
+  FetchRowComponent?: ComponentType<any>,
 
   // LocalStorage
   // ------------
@@ -639,7 +639,7 @@ export type DataTableColumn = {
   // ---------
   // By default, the reference value is rendered. Customize this by
   // specifying a `render` function.
-  render?: (item: Object) => React$Element<any>,
+  render?: (item: Object) => ReactElement<any>,
 
   // Functionalities
   // ---------------
@@ -751,6 +751,7 @@ export type ModalButton = {|
   left?: boolean, // align button left instead of right (default: false)
   label?: any, // button text or other contents
   disabled?: boolean,
+  plain?: boolean,
   defaultButton?: boolean, // will be highlighted and automatically selected when RETURN is pressed
   onClick?: (ev: SyntheticEvent<*>) => any, // `click` handler for the button
   style?: Object, // merged with the button's style
@@ -893,7 +894,7 @@ type AlignType = 'left' | 'right' | 'center';
 ```
 
 ```js
-export type HintArrowPars = {|
+export type HintArrowPars = {
   type: 'ARROW',
   from: Point2, // coordinates, e.g. `{ x: 5, y: 10 }`
   to: Point2, // coordinates
@@ -902,7 +903,7 @@ export type HintArrowPars = {|
   arrowAngle?: number,
   counterclockwise?: boolean,
   style?: Object,
-|};
+};
 ```
 
 
@@ -928,6 +929,7 @@ type Props = {
   primary?: boolean,
   accent?: boolean,
   fab?: boolean,
+  classNames?: Array<string>,
 
   // All other props are passed through to the `span` element
 };
@@ -979,72 +981,6 @@ A wrapper for the native HTML `progress` element (with 100% width).
 *All props are passed through to the `progress` element.
 Remember that an indeterminate progress bar will be shown if you
 don't specify the `value` prop (native HTML behaviour).*
-
-
-## Higher-order components (HOCs)
-
-[HOCs](https://medium.com/@dan_abramov/mixins-are-dead-long-live-higher-order-components-94a0d2f9e750#.v1zqfc63a) are used internally by Giu components and are also provided in the user API. They work fine with all kinds of base components: [ES6 classes](https://facebook.github.io/react/docs/reusable-components.html#es6-classes), [plain-old `createClass`-style components](https://facebook.github.io/react/docs/multiple-components.html#composition-example) and [stateless functions](https://facebook.github.io/react/docs/reusable-components.html#stateless-functions).
-
-Example usage:
-
-```js
-import { hoverable } from 'giu';
-import { Component } from 'react';
-
-class MyReactComponent extends Component {
-    /* ... */
-}
-
-export default hoverable(MyReactComponent);
-```
-
-### Hoverable HOC
-
-
-
-Keeps track of `hovering` state and passes it as prop to your base
-component. Provides `onHoverStart`/`onHoverStop` event handlers
-(for `mouseenter` and `mouseleave`, respectively)
-you can attach to any of your base component's DOM elements
-(works for multiple elements).
-If you attach these handlers to an element with an `id` attribute,
-the provided `hovering`
-prop will contain the ID of the hovered element (or `null`); otherwise,
-just `true` (or `null`).
-
-Specific props received from the parent (all other props are
-passed through):
-
-* **onHoverStart?** *HoverEventHandler (see below)*: relays the original event to
-  the parent component.
-* **onHoverStop?** *HoverEventHandler (see below)*: relays the original event to
-  the parent component.
-
-Limitations regarding Flow:
-
-* This HOC accepts both functional and class-based React components.
-* For the HOC result to be properly typed, however, the composed component
-  must be a class-based React component and have `defaultProps` defined
-  (even if empty, e.g. `static defaultProps = {};`).
-* If you're passing a functional component, just add a FlowFixMe directive
-  in a comment before the call to `hoverable()` so that Flow won't complain.
-
-Additional props passed to the base component:
-
-```js
-export type HoverableProps = {
-  // `id` element that is hovered (see description above), or `null` if none
-  hovering: Hovering,
-
-  // `onMouseEnter` event handler you can attach to your target DOM elements
-  onHoverStart: HoverEventHandler,
-
-  // `onMouseLeave` event handler you can attach to your target DOM elements
-  onHoverStop: HoverEventHandler,
-};
-type Hovering = ?(string | number | boolean); // null when nothing is hovered
-type HoverEventHandler = (ev: SyntheticEvent<*>) => any;
-```
 
 
 ## Helpers
@@ -1141,19 +1077,19 @@ Especially useful for ES6-style React components.
 
 Calls `preventDefault()` and `stopPropagation()` on the provided event.
 
-* **ev** *?SyntheticEvent*: event to be cancelled
+* **ev** *?SyntheticEvent<*>*: event to be cancelled
 
 **preventDefault()**
 
 Calls `preventDefault()` on the provided event.
 
-* **ev** *?SyntheticEvent*: event for which default behaviour is to be prevented
+* **ev** *?SyntheticEvent<*>*: event for which default behaviour is to be prevented
 
 **stopPropagation()**
 
 Calls `stopPropagation()` on the provided event.
 
-* **ev** *?SyntheticEvent*: event for which default behaviour is to be prevented
+* **ev** *?SyntheticEvent<*>*: event for which default behaviour is to be prevented
 
 **cancelBodyScrolling()**
 
@@ -1161,7 +1097,7 @@ Calls `stopPropagation()` on the provided event.
 in order to prevent `wheel` events to cause document scrolling when
 the scroller reaches the top/bottom of its contents.
 
-* **ev** *SyntheticWheelEvent*: `wheel` event
+* **ev** *SyntheticWheelEvent<*>*: `wheel` event
 
 **windowHeightWithoutScrollbar() / windowWidthWithoutScrollbar()**
 

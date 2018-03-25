@@ -2,7 +2,8 @@
 
 * **Bugs**
   * When drop-down DatePicker is visible and the input disappears from view (in a transform=0 view), the picker is still shown.
-* **Remove Hoverable** -- replace by CSS
+* Allow Selects, DateInputs and other elements with dropdown/inline pickers to work without focusing
+* **Update Font Awesome??**
 
 * [ ] Migrate to latest Flow
 
