@@ -330,11 +330,11 @@ type PublicProps = {
 
 Shown below are some examples of DateInput, one of Giu's most versatile components: date/time/date-time modes, with or without drop-down pickers, inline pickers, custom accent color, digital/analogue time picker, disabled style... Not shown: keyboard navigation, clipboard events.
 
-![DateInput screenshots](https://raw.githubusercontent.com/guigrpa/giu/master/docs/DateInputs.png)
+![DateInput screenshots](https://raw.githubusercontent.com/guigrpa/giu/master/docsPrivate/DateInputs.png)
 
 If you use [*moment*](https://github.com/moment/moment), your date picker and date/time formats will be automatically translated when you choose a different locale, e.g. `moment.locale('es')`:
 
-![Translated date picker](https://raw.githubusercontent.com/guigrpa/giu/master/docs/DateInput-i18n.png)
+![Translated date picker](https://raw.githubusercontent.com/guigrpa/giu/master/docsPrivate/DateInput-i18n.png)
 
 
 
@@ -377,7 +377,7 @@ type PickerType = 'native' | 'onlyField' | 'inlinePicker' | 'dropDownPicker';
 
 Shown below are some examples of Select and its features: `native` and custom (`inlinePicker`|`dropDownPicker`) versions, keyboard shortcuts, custom accent color, disabled style. Not shown: keyboard navigation, clipboard events, automatic scrolling.
 
-![Select screenshots](https://raw.githubusercontent.com/guigrpa/giu/master/docs/Selects2.png)
+![Select screenshots](https://raw.githubusercontent.com/guigrpa/giu/master/docsPrivate/Selects2.png)
 
 *Recommendation: use `dropDownPicker` for performance, especially if you have hundreds/thousands of Selects with many options: `native` Selects attach all of their `option` subelements to the page, whereas custom Selects only do that when the dropdown is shown.*
 
@@ -466,7 +466,7 @@ type RadioChoice = {
 
 Shown below are some examples of ColorInput and its features: inline and drop-down versions, RGB and HSV pickers, transparency slider, custom accent color, disabled style. Not shown: clipboard events.
 
-![ColorInput screenshots](https://raw.githubusercontent.com/guigrpa/giu/master/docs/ColorInputs.png)
+![ColorInput screenshots](https://raw.githubusercontent.com/guigrpa/giu/master/docsPrivate/ColorInputs.png)
 
 
 
@@ -580,7 +580,7 @@ type PublicProps = {
   // (note: disabled when the filterValue prop is not empty)
   fetchMoreItems?: (lastRowId: string) => any, // Called when the last row is rendered
   fetching?: boolean, // When set, the FetchRowComponent will be shown
-  FetchRowComponent?: ReactClass<*>,
+  FetchRowComponent?: ComponentType<any>,
 
   // LocalStorage
   // ------------
@@ -639,7 +639,7 @@ export type DataTableColumn = {
   // ---------
   // By default, the reference value is rendered. Customize this by
   // specifying a `render` function.
-  render?: (item: Object) => React$Element<any>,
+  render?: (item: Object) => ReactElement<any>,
 
   // Functionalities
   // ---------------
@@ -659,7 +659,7 @@ export type DataTableColumn = {
 
 ## DropDownMenu
 
-![DropDownMenu screenshots](https://raw.githubusercontent.com/guigrpa/giu/master/docs/DropDownMenu.png)
+![DropDownMenu screenshots](https://raw.githubusercontent.com/guigrpa/giu/master/docsPrivate/DropDownMenu.png)
 
 
 
@@ -686,7 +686,7 @@ type PublicProps = {
 
 ## Modals
 
-![Modal screenshots](https://raw.githubusercontent.com/guigrpa/giu/master/docs/Modal.png)
+![Modal screenshots](https://raw.githubusercontent.com/guigrpa/giu/master/docsPrivate/Modal.png)
 
 
 
@@ -751,6 +751,7 @@ export type ModalButton = {|
   left?: boolean, // align button left instead of right (default: false)
   label?: any, // button text or other contents
   disabled?: boolean,
+  plain?: boolean,
   defaultButton?: boolean, // will be highlighted and automatically selected when RETURN is pressed
   onClick?: (ev: SyntheticEvent<*>) => any, // `click` handler for the button
   style?: Object, // merged with the button's style
@@ -760,7 +761,7 @@ export type ModalButton = {|
 
 ## Notifications
 
-![Notifications screenshots](https://raw.githubusercontent.com/guigrpa/giu/master/docs/Notification.png)
+![Notifications screenshots](https://raw.githubusercontent.com/guigrpa/giu/master/docsPrivate/Notification.png)
 
 
 
@@ -817,7 +818,7 @@ a combination of labels (icons, images, text) and dynamically-positioned
 arrows. You can show hint screens, for example, when the user reaches a
 certain part of your application or performs an action for the first time.
 
-![Hint screen screenshots](https://raw.githubusercontent.com/guigrpa/giu/master/docs/Hints.png)
+![Hint screen screenshots](https://raw.githubusercontent.com/guigrpa/giu/master/docsPrivate/Hints.png)
 
 
 
@@ -893,7 +894,7 @@ type AlignType = 'left' | 'right' | 'center';
 ```
 
 ```js
-export type HintArrowPars = {|
+export type HintArrowPars = {
   type: 'ARROW',
   from: Point2, // coordinates, e.g. `{ x: 5, y: 10 }`
   to: Point2, // coordinates
@@ -902,7 +903,7 @@ export type HintArrowPars = {|
   arrowAngle?: number,
   counterclockwise?: boolean,
   style?: Object,
-|};
+};
 ```
 
 
@@ -928,6 +929,7 @@ type Props = {
   primary?: boolean,
   accent?: boolean,
   fab?: boolean,
+  classNames?: Array<string>,
 
   // All other props are passed through to the `span` element
 };
@@ -1075,19 +1077,19 @@ Especially useful for ES6-style React components.
 
 Calls `preventDefault()` and `stopPropagation()` on the provided event.
 
-* **ev** *?SyntheticEvent*: event to be cancelled
+* **ev** *?SyntheticEvent<*>*: event to be cancelled
 
 **preventDefault()**
 
 Calls `preventDefault()` on the provided event.
 
-* **ev** *?SyntheticEvent*: event for which default behaviour is to be prevented
+* **ev** *?SyntheticEvent<*>*: event for which default behaviour is to be prevented
 
 **stopPropagation()**
 
 Calls `stopPropagation()` on the provided event.
 
-* **ev** *?SyntheticEvent*: event for which default behaviour is to be prevented
+* **ev** *?SyntheticEvent<*>*: event for which default behaviour is to be prevented
 
 **cancelBodyScrolling()**
 
@@ -1095,7 +1097,7 @@ Calls `stopPropagation()` on the provided event.
 in order to prevent `wheel` events to cause document scrolling when
 the scroller reaches the top/bottom of its contents.
 
-* **ev** *SyntheticWheelEvent*: `wheel` event
+* **ev** *SyntheticWheelEvent<*>*: `wheel` event
 
 **windowHeightWithoutScrollbar() / windowWidthWithoutScrollbar()**
 
