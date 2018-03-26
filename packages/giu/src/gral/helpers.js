@@ -165,6 +165,15 @@ function simplifyString(str: string): string {
     .toLowerCase();
 }
 
+function isAncestorNode(ancestor: Node, descendant: Node): boolean {
+  let node = descendant;
+  while (node != null) {
+    if (node === ancestor) return true;
+    node = node.parentNode;
+  }
+  return false;
+}
+
 // ==========================================
 // Public
 // ==========================================
@@ -180,6 +189,7 @@ export {
   windowWidthWithoutScrollbar,
   propsWithDefaultsAndOverrides,
   simplifyString,
+  isAncestorNode,
 
   // delay, waitUntil, isWaiting,
 };

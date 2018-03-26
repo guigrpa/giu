@@ -132,6 +132,7 @@ export {
   getScrollbarWidth,
   IS_MAC,
   IS_IOS,
+  IS_MOBILE_OR_TABLET,
 } from './gral/constants';
 
 // Other

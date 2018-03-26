@@ -2,7 +2,14 @@
 
 import React from 'react';
 import { merge, set as timmSet } from 'timm';
-import { COLORS, KEYS, UNICODE, NULL_STRING, IS_IOS } from '../gral/constants';
+import {
+  COLORS,
+  KEYS,
+  UNICODE,
+  NULL_STRING,
+  IS_IOS,
+  IS_MOBILE_OR_TABLET,
+} from '../gral/constants';
 import {
   flexContainer,
   flexItem,
@@ -16,6 +23,7 @@ import {
   unregisterShortcut,
 } from '../gral/keys';
 import type { Choice, KeyboardEventPars } from '../gral/types';
+import { isAncestorNode } from '../gral/helpers';
 import input from '../hocs/input';
 import { ListPicker, LIST_SEPARATOR_KEY } from '../inputs/listPicker';
 import IosFloatWrapper from '../inputs/iosFloatWrapper';
@@ -42,6 +50,8 @@ const toExternalValue = val => {
 };
 const isNull = val => val === NULL_STRING;
 
+const MANAGE_FOCUS_AUTONOMOUSLY = IS_MOBILE_OR_TABLET;
+
 // ==========================================
 // Declarations
 // ==========================================
@@ -52,12 +62,15 @@ type DefaultProps = {
 type Props = {
   ...$Exact<SelectProps>,
   inlinePicker?: boolean,
+  id?: string,
   ...$Exact<DefaultProps>,
   // Input HOC
   curValue: string,
   onChange: Function,
   registerOuterRef: Function,
   fFocused: boolean,
+  onFocus: Function,
+  onBlur: Function,
   keyDown?: KeyboardEventPars,
 };
 
@@ -77,12 +90,7 @@ class SelectCustomBase extends React.Component<Props, State> {
   static defaultProps: DefaultProps = {
     accentColor: COLORS.accent,
   };
-
-  constructor() {
-    super();
-    this.state = { fFloat: false };
-    this.keyDown = undefined;
-  }
+  state = { fFloat: false };
 
   componentWillMount() {
     this.prepareItems(this.props.items, this.props.required);
@@ -90,6 +98,7 @@ class SelectCustomBase extends React.Component<Props, State> {
 
   componentDidMount() {
     this.registerShortcuts();
+    window.addEventListener('click', this.onClickWindow);
   }
 
   componentWillReceiveProps(nextProps) {
@@ -110,6 +119,7 @@ class SelectCustomBase extends React.Component<Props, State> {
   componentWillUnmount() {
     if (this.floatId != null) floatDelete(this.floatId);
     this.unregisterShortcuts();
+    window.removeEventListener('click', this.onClickWindow);
   }
 
   // ==========================================
@@ -129,6 +139,7 @@ class SelectCustomBase extends React.Component<Props, State> {
   renderProvidedTitle(children) {
     const elTitle = React.cloneElement(children, {
       ref: this.registerTitleRef,
+      onClick: this.onClickTitle,
     });
     return IS_IOS ? (
       <span style={style.providedTitleWrapperForIos}>
@@ -156,6 +167,7 @@ class SelectCustomBase extends React.Component<Props, State> {
         ref={this.registerTitleRef}
         className="giu-select-custom"
         onMouseDown={this.onMouseDownTitle}
+        onClick={this.onClickTitle}
         style={style.title(this.props)}
       >
         <span style={style.titleText}>{label}</span>
@@ -256,10 +268,29 @@ class SelectCustomBase extends React.Component<Props, State> {
     this.setState({ fFloat: !this.state.fFloat });
   };
 
+  // Close the float (if any) but retain the focus
   onClickItem = (ev: ?SyntheticEvent<*>, nextValue: string) => {
-    const { inlinePicker, onClickItem } = this.props;
-    if (!inlinePicker) this.setState({ fFloat: false });
+    this.setState({ fFloat: false });
+    const { onClickItem } = this.props;
     onClickItem && onClickItem(ev, toExternalValue(nextValue));
+  };
+
+  // Only for autonomous focus management
+  onClickTitle = (ev: SyntheticEvent<*>) => {
+    if (!MANAGE_FOCUS_AUTONOMOUSLY) return;
+    if (this.props.fFocused) this.props.onBlur(ev);
+    else this.props.onFocus(ev);
+  };
+
+  // Only for autonomous focus management
+  // Handle click on window (hopefully, they won't swallow it) to blur
+  onClickWindow = (ev: SyntheticEvent<*>) => {
+    if (!MANAGE_FOCUS_AUTONOMOUSLY) return;
+    const { refTitle } = this;
+    if (!refTitle) return;
+    const { target } = ev;
+    if (target instanceof Element && isAncestorNode(refTitle, target)) return;
+    if (this.props.fFocused) this.props.onBlur(ev);
   };
 
   // ==========================================
@@ -367,7 +398,7 @@ const SelectCustom = input(SelectCustomBase, {
   toInternalValue,
   toExternalValue,
   isNull,
-  fIncludeFocusCapture: true,
+  fIncludeFocusCapture: !MANAGE_FOCUS_AUTONOMOUSLY,
   trappedKeys: [
     KEYS.esc,
     // For ListPicker

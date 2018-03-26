@@ -295,10 +295,58 @@ function input<DP: any, P>(
     // Render
     // ==========================================
     render() {
-      const otherProps = omit(this.props, HOC_PUBLIC_PROPS);
+      return (
+        <span
+          className={className}
+          onMouseDown={
+            fIncludeFocusCapture ? this.onMouseDownWrapper : undefined
+          }
+          onClick={fIncludeFocusCapture ? this.onClickWrapper : undefined}
+          style={style.wrapper(this.props)}
+        >
+          {this.renderFocusCapture()}
 
-      // Render the basic wrapped component
-      let out = (
+          {this.renderIosErrors()}
+          {this.renderComponent()}
+        </span>
+      );
+    }
+
+    renderFocusCapture() {
+      if (!fIncludeFocusCapture) return null;
+      return (
+        <FocusCapture
+          registerRef={this.registerFocusableRef}
+          disabled={this.props.disabled}
+          onFocus={this.onFocus}
+          onBlur={this.onBlur}
+          onCopy={this.onCopyCut}
+          onCut={this.onCopyCut}
+          onPaste={this.onPaste}
+          onKeyDown={this.onKeyDown}
+        />
+      );
+    }
+
+    renderIosErrors() {
+      if (!IS_IOS) return null;
+      const { errors } = this;
+      if (!errors.length) return null;
+      const { position, align, zIndex } = this.calcFloatPosition();
+      return (
+        <IosFloatWrapper
+          floatPosition={position}
+          floatAlign={align}
+          floatZ={zIndex}
+        >
+          {this.renderErrors()}
+        </IosFloatWrapper>
+      );
+    }
+
+    renderComponent() {
+      const otherProps = omit(this.props, HOC_PUBLIC_PROPS);
+      return (
         <ComposedComponent
           registerOuterRef={this.registerOuterRef}
           registerFocusableRef={
@@ -324,57 +372,6 @@ function input<DP: any, P>(
           styleOuter={fIncludeFocusCapture ? undefined : this.props.styleOuter}
         />
       );
-
-      // Render FocusCapture if needed
-      let focusCaptureEl;
-      if (fIncludeFocusCapture) {
-        focusCaptureEl = (
-          <FocusCapture
-            registerRef={this.registerFocusableRef}
-            disabled={this.props.disabled}
-            onFocus={this.onFocus}
-            onBlur={this.onBlur}
-            onCopy={this.onCopyCut}
-            onCut={this.onCopyCut}
-            onPaste={this.onPaste}
-            onKeyDown={this.onKeyDown}
-          />
-        );
-      }
-
-      // Render errors if needed
-      let errorsEl;
-      const { errors } = this;
-      if (IS_IOS && errors.length) {
-        const { position, align, zIndex } = this.calcFloatPosition();
-        errorsEl = (
-          <IosFloatWrapper
-            floatPosition={position}
-            floatAlign={align}
-            floatZ={zIndex}
-          >
-            {this.renderErrors()}
-          </IosFloatWrapper>
-        );
-      }
-
-      // Wrap element if needed
-      if (focusCaptureEl || errorsEl) {
-        out = (
-          <span
-            className={className}
-            onMouseDown={focusCaptureEl ? this.onMouseDownWrapper : undefined}
-            onClick={focusCaptureEl ? this.onClickWrapper : undefined}
-            style={style.wrapper(this.props)}
-          >
-            {focusCaptureEl}
-            {errorsEl}
-            {out}
-          </span>
-        );
-      }
-
-      return out;
     }
 
     renderErrorFloat = () => {
