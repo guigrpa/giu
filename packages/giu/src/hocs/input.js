@@ -24,7 +24,7 @@ import FocusCapture from '../components/focusCapture';
 import IosFloatWrapper from '../inputs/iosFloatWrapper';
 
 // ==========================================
-// Types
+// Declarations
 // ==========================================
 // Configuration object, passed to the HOC along with the
 // component to be wrapped

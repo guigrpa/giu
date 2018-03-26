@@ -85,7 +85,7 @@ const GRADIENTS = {
 };
 
 // ==========================================
-// Types
+// Declarations
 // ==========================================
 type PublicProps = {|
   registerOuterRef: Function,

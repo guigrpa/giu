@@ -43,7 +43,7 @@ const toExternalValue = val => {
 const isNull = val => val === NULL_STRING;
 
 // ==========================================
-// Types
+// Declarations
 // ==========================================
 type DefaultProps = {
   accentColor: string,

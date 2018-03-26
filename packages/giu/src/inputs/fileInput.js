@@ -13,7 +13,7 @@ import Icon from '../components/icon';
 const isNull = val => val == null;
 
 // ==========================================
-// Types
+// Declarations
 // ==========================================
 // -- Props:
 // -- START_DOCS

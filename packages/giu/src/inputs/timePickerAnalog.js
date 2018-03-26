@@ -33,7 +33,7 @@ const correctLeaps = (prevVal, nextVal, steps) => {
 };
 
 // ==========================================
-// Types
+// Declarations
 // ==========================================
 type PublicProps = {|
   disabled: boolean,

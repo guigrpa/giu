@@ -13,7 +13,7 @@ const ROW_HEIGHT = '1.3em';
 const DAY_WIDTH = '2em';
 
 // ==========================================
-// Types
+// Declarations
 // ==========================================
 type Props = {|
   disabled: boolean,

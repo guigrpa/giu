@@ -25,7 +25,7 @@ const getPlaceholderText = val => {
 let cntId = 0;
 
 // ==========================================
-// Types
+// Declarations
 // ==========================================
 // -- Props:
 // -- START_DOCS

@@ -30,7 +30,7 @@ const TRAPPED_KEYS = [
 ];
 
 // ==========================================
-// Types
+// Declarations
 // ==========================================
 type PublicProps = {|
   registerOuterRef?: Function,

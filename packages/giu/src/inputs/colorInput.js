@@ -20,7 +20,7 @@ const SWATCH_WIDTH = 25;
 const SWATCH_HEIGHT = 10;
 
 // ==========================================
-// Types
+// Declarations
 // ==========================================
 // -- Props:
 // -- START_DOCS

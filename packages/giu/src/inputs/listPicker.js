@@ -30,7 +30,7 @@ import type {
 const LIST_SEPARATOR_KEY = '__SEPARATOR__';
 
 // ==========================================
-// Types
+// Declarations
 // ==========================================
 type PublicProps = {|
   registerOuterRef?: Function,
