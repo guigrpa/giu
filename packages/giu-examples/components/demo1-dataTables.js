@@ -1,4 +1,4 @@
-// @noflow
+// @flow
 
 /* eslint-disable no-console, no-alert, max-len */
 /* eslint-disable react/prop-types, react/no-multi-comp, react/jsx-no-bind, react/jsx-boolean-value */
@@ -172,7 +172,7 @@ const FetchRowComponent = () => (
   </div>
 );
 
-class DevelopmentExample extends React.Component {
+class DevelopmentExample extends React.Component<*, *> {
   commonCellProps: Object;
   selectedIds: Array<string>;
 
@@ -392,11 +392,13 @@ const COLS = [
   { attr: 'phone', minWidth: 150, flexGrow: 1, style: CELL_WITH_ELLIPSIS },
 ];
 
-class CustomSortPaginateExample extends React.Component {
+class CustomSortPaginateExample extends React.Component<
+  *,
+  { sortBy: ?string, page: number }
+> {
   itemsById: Object;
   numPages: number;
   shownIds: Array<string>;
-  state: { sortBy: ?string, page: number };
 
   constructor() {
     super();
@@ -547,7 +549,7 @@ const COLLECT_FIELDS_ON_SUBMIT = [
   'phone',
 ];
 
-class EditAndValidateExample extends React.Component {
+class EditAndValidateExample extends React.Component<*, *> {
   commonCellProps: Object;
   inputRefs: Object;
 
@@ -706,11 +708,10 @@ class EditAndValidateExample extends React.Component {
 // -----------------------------------------------
 // Index
 // -----------------------------------------------
-class AllExamples extends React.PureComponent {
+class AllExamples extends React.PureComponent<*, { fModal: boolean }> {
   itemsById: Object;
   shownIds: Array<string>;
   cols: Array<DataTableColumn>;
-  state: { fModal: boolean };
 
   constructor() {
     super();

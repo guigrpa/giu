@@ -1,4 +1,4 @@
-// @noflow
+// @flow
 
 import React from 'react';
 import { merge, set as timmSet } from 'timm';
@@ -55,11 +55,11 @@ type Props = {
 // ==========================================
 // Component
 // ==========================================
-class RadioGroup extends React.Component {
-  static defaultProps = {};
-  props: Props;
+class RadioGroup extends React.Component<Props> {
   items: Array<RadioChoice>;
   buttonGroupName: string;
+
+  static defaultProps = {};
 
   constructor() {
     super();

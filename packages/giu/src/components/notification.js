@@ -11,7 +11,7 @@ import {
   darken,
 } from '../gral/styles';
 import { COLORS, FONTS } from '../gral/constants';
-import type { NotificationType, NotificationPars } from './notificationTypes';
+import type { NotificationPars } from './notificationTypes';
 import Icon from './icon';
 
 // ==========================================
@@ -21,7 +21,6 @@ type Props = {
   ...NotificationPars,
   onHoverStart?: (ev: SyntheticEvent<*>) => any,
   onHoverStop?: (ev: SyntheticEvent<*>) => any,
-  type: NotificationType,
 };
 type State = {
   hovering: boolean,
@@ -31,9 +30,7 @@ type State = {
 // Component
 // ==========================================
 class Notification extends React.PureComponent<Props, State> {
-  static defaultProps = {
-    type: ('info': NotificationType),
-  };
+  static defaultProps = {};
   state = { hovering: false };
 
   // ==========================================
@@ -82,7 +79,8 @@ const style = {
     { hovering },
     theme
   ) => {
-    let bgColor = COLORS.notifs[type] || COLORS.notifs.info;
+    const finalType = type || 'info';
+    let bgColor = COLORS.notifs[finalType] || COLORS.notifs.info;
     if (hovering && onClick) bgColor = darken(bgColor, 10);
     const fgColor = COLORS[isDark(bgColor) ? 'lightText' : 'darkText'];
     let out = flexContainer('row', {

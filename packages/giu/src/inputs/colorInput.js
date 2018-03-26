@@ -1,4 +1,4 @@
-// @noflow
+// @flow
 
 import React from 'react';
 import { merge } from 'timm';
@@ -46,22 +46,19 @@ type Props = {
   keyDown?: KeyboardEventPars,
 };
 
+type State = {
+  fFloat: boolean,
+};
+
 // ==========================================
 // Component
 // ==========================================
-class ColorInput extends React.Component {
-  static defaultProps = {};
-  props: Props;
-  state: {
-    fFloat: boolean,
-  };
+class ColorInput extends React.Component<Props, State> {
   floatId: ?string;
   refTitle: ?Object;
 
-  constructor() {
-    super();
-    this.state = { fFloat: false };
-  }
+  static defaultProps = {};
+  state = { fFloat: false };
 
   componentWillReceiveProps(nextProps: Props) {
     const { keyDown, fFocused } = nextProps;
@@ -79,16 +76,8 @@ class ColorInput extends React.Component {
   }
 
   // ==========================================
-  // Render
-  // ==========================================
   render() {
-    let out;
-    if (this.props.inlinePicker) {
-      out = this.renderPicker();
-    } else {
-      out = this.renderTitle();
-    }
-    return out;
+    return this.props.inlinePicker ? this.renderPicker() : this.renderTitle();
   }
 
   renderTitle() {
@@ -168,14 +157,12 @@ class ColorInput extends React.Component {
         curValue={curValue}
         onChange={onChange}
         disabled={disabled}
-        fFocused={inlinePicker && fFocused}
+        fFocused={!!inlinePicker && fFocused}
         accentColor={accentColor}
       />
     );
   }
 
-  // ==========================================
-  // Event handlers
   // ==========================================
   registerTitleRef = c => {
     this.refTitle = c;
@@ -190,8 +177,6 @@ class ColorInput extends React.Component {
   };
 
   // ==========================================
-  // Helpers
-  // ==========================================
   processKeyDown(keyDown) {
     if (keyDown && keyDown.which === KEYS.esc && !this.props.inlinePicker) {
       this.setState({ fFloat: !this.state.fFloat });
@@ -199,8 +184,6 @@ class ColorInput extends React.Component {
   }
 }
 
-// ==========================================
-// Styles
 // ==========================================
 const style = {
   title: ({ disabled, fFocused }) => {

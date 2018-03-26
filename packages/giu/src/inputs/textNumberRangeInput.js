@@ -1,4 +1,4 @@
-// @noflow
+// @flow
 
 import React from 'react';
 import PropTypes from 'prop-types';
@@ -35,7 +35,7 @@ const classOptions = {
 let cntId = 0;
 
 // ==========================================
-// Types
+// Declarations
 // ==========================================
 // -- Props:
 // -- START_DOCS
@@ -50,6 +50,8 @@ type PublicProps = {
 
 type Props = {
   ...$Exact<PublicProps>,
+  id?: string,
+  placeholder?: string,
   // Input HOC
   curValue: any,
   errors: Array<string>,
@@ -72,16 +74,16 @@ const FILTERED_OUT_PROPS_MDL = FILTERED_OUT_PROPS.concat(['placeholder']);
 // Component
 // ==========================================
 function createClass(name, inputType) {
-  const Klass = class extends React.Component {
-    static displayName = name;
-    props: Props;
-    static defaultProps = {};
+  const Klass = class extends React.Component<Props> {
     labelId: string;
     refMdl: ?Object;
 
+    static displayName = name;
+    static defaultProps = {};
+
     constructor(props: Props) {
       super(props);
-      this.labelId = this.props.id || `giu-${inputType}-input_${cntId}`;
+      this.labelId = props.id || `giu-${inputType}-input_${cntId}`;
       cntId += 1;
     }
 
@@ -91,8 +93,6 @@ function createClass(name, inputType) {
       }
     }
 
-    // ==========================================
-    // Render
     // ==========================================
     render() {
       if (
@@ -176,8 +176,6 @@ function createClass(name, inputType) {
   return input(Klass, classOptions[inputType]);
 }
 
-// ==========================================
-// Styles
 // ==========================================
 const style = {
   fieldBase: inputReset(),

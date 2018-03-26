@@ -1,4 +1,4 @@
-// @noflow
+// @flow
 
 /* eslint-disable react/no-multi-comp */
 
@@ -150,6 +150,7 @@ type DefaultProps = {
 type Props = {
   ...$Exact<PublicProps>,
   ...$Exact<DefaultProps>,
+  id?: string,
   // Input HOC
   curValue: string,
   errors: Array<string>,
@@ -162,6 +163,10 @@ type Props = {
   onCopy: Function,
   onCut: Function,
   onPaste: Function,
+};
+
+type State = {
+  fFloat: boolean,
 };
 
 const FILTERED_OUT_PROPS = [
@@ -191,12 +196,7 @@ const FILTERED_OUT_PROPS_MDL = FILTERED_OUT_PROPS.concat(['placeholder']);
 //------------------------------------------
 // Component
 //------------------------------------------
-class BaseDateInput extends React.Component {
-  props: Props;
-  static defaultProps = {};
-  state: {
-    fFloat: boolean,
-  };
+class BaseDateInput extends React.Component<Props, State> {
   cmdsToPicker: ?Array<Command>;
   keyDown: void | KeyboardEventPars;
   lastExtValue: ?Moment;
@@ -204,6 +204,8 @@ class BaseDateInput extends React.Component {
   floatId: ?string;
   refMdl: ?Object;
   refInput: ?Object;
+
+  static defaultProps = {};
 
   constructor(props: Props) {
     super(props);
@@ -572,8 +574,7 @@ const DateInput = input(BaseDateInput, {
 // ==========================================
 // Wrapper to adapt props (adding defaults) to the DateInput.
 // Also wires the imperative API through
-class DateInputWrapper extends React.Component {
-  props: PublicProps;
+class DateInputWrapper extends React.Component<PublicProps> {
   refInput: ?Object;
 
   // ==========================================

@@ -1,4 +1,4 @@
-// @noflow
+// @flow
 
 import React from 'react';
 import PropTypes from 'prop-types';
@@ -38,6 +38,8 @@ type PublicProps = {
 
 type Props = {
   ...$Exact<PublicProps>,
+  id?: string,
+  placeholder?: string,
   // Input HOC
   curValue: string,
   disabled?: boolean,
@@ -58,13 +60,13 @@ const FILTERED_OUT_PROPS_MDL = [...FILTERED_OUT_PROPS, 'placeholder'];
 // ==========================================
 // Component
 // ==========================================
-class Textarea extends React.Component {
-  static defaultProps = {};
-  props: Props;
+class Textarea extends React.Component<Props> {
   labelId: string;
   refInput: ?Object;
   refOuter: ?Object;
   refTaPlaceholder: ?Object;
+
+  static defaultProps = {};
 
   constructor(props: Props) {
     super(props);

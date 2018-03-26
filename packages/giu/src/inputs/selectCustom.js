@@ -1,4 +1,4 @@
-// @noflow
+// @flow
 
 import React from 'react';
 import { merge, set as timmSet } from 'timm';
@@ -61,21 +61,22 @@ type Props = {
   keyDown?: KeyboardEventPars,
 };
 
+type State = {
+  fFloat: boolean,
+};
+
 // ==========================================
 // Component
 // ==========================================
-class SelectCustomBase extends React.Component {
-  props: Props;
-  static defaultProps: DefaultProps = {
-    accentColor: COLORS.accent,
-  };
-  state: {
-    fFloat: boolean,
-  };
+class SelectCustomBase extends React.Component<Props, State> {
   floatId: ?string;
   keyDown: void | KeyboardEventPars;
   items: Array<Choice>;
   refTitle: ?Object;
+
+  static defaultProps: DefaultProps = {
+    accentColor: COLORS.accent,
+  };
 
   constructor() {
     super();
@@ -111,8 +112,6 @@ class SelectCustomBase extends React.Component {
     this.unregisterShortcuts();
   }
 
-  // ==========================================
-  // Render
   // ==========================================
   render() {
     const { children } = this.props;
@@ -245,8 +244,6 @@ class SelectCustomBase extends React.Component {
   }
 
   // ==========================================
-  // Event handlers
-  // ==========================================
   registerTitleRef = c => {
     this.refTitle = c;
     this.props.registerOuterRef(c);
@@ -259,14 +256,12 @@ class SelectCustomBase extends React.Component {
     this.setState({ fFloat: !this.state.fFloat });
   };
 
-  onClickItem = (ev: ?SyntheticEvent, nextValue: string) => {
+  onClickItem = (ev: ?SyntheticEvent<*>, nextValue: string) => {
     const { inlinePicker, onClickItem } = this.props;
     if (!inlinePicker) this.setState({ fFloat: false });
     onClickItem && onClickItem(ev, toExternalValue(nextValue));
   };
 
-  // ==========================================
-  // Helpers
   // ==========================================
   processKeyDown(keyDown) {
     if (keyDown == null) return;
@@ -326,8 +321,6 @@ class SelectCustomBase extends React.Component {
   }
 }
 
-// ==========================================
-// Styles
 // ==========================================
 const style = {
   titleBase: flexContainer(

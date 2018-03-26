@@ -1,4 +1,4 @@
-// @noflow
+// @flow
 
 import React from 'react';
 import { omit, merge } from 'timm';
@@ -45,8 +45,7 @@ const FILTERED_OUT_PROPS = [
 // ==========================================
 // Component
 // ==========================================
-class SelectNative extends React.Component {
-  props: Props;
+class SelectNative extends React.Component<Props> {
   static defaultProps = {};
 
   // ==========================================

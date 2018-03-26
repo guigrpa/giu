@@ -1,4 +1,4 @@
-// @noflow
+// @flow
 
 /* eslint-disable no-console, no-alert, max-len */
 /* eslint-disable react/prop-types, react/no-multi-comp, react/jsx-no-bind, react/jsx-boolean-value */
@@ -27,15 +27,11 @@ import {
   onChange,
 } from './demo1-common';
 
-class ModalExample extends React.Component {
-  state: { fEmbeddedModal: boolean };
-  refInput: Object;
-  refName: Object;
+class ModalExample extends React.Component<{}, { fEmbeddedModal: boolean }> {
+  refInput: ?Object;
+  refName: ?Object;
 
-  constructor() {
-    super();
-    this.state = { fEmbeddedModal: false };
-  }
+  state = { fEmbeddedModal: false };
 
   render() {
     return (
@@ -60,7 +56,7 @@ class ModalExample extends React.Component {
       {
         label: 'Introduce me',
         onClick: () => {
-          alert(this.refInput.getValue());
+          if (this.refInput) alert(this.refInput.getValue());
           close();
         },
         defaultButton: true,
@@ -166,7 +162,7 @@ class ModalExample extends React.Component {
     const title = 'Introduction';
     const children = (
       <div>
-        Nice to meet you, {this.refName.getValue()}!<br />
+        Nice to meet you, {this.refName ? this.refName.getValue() : '?'}!<br />
         This is some really long text:<br />
         {LONG_TEXT}
         <br />

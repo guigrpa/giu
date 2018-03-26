@@ -1,4 +1,4 @@
-// @noflow
+// @flow
 
 import React from 'react';
 import { MISC } from '../gral/constants';

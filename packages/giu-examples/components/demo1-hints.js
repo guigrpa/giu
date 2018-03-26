@@ -1,4 +1,4 @@
-// @noflow
+// @flow
 
 /* eslint-disable no-console, no-alert, max-len */
 /* eslint-disable react/prop-types, react/no-multi-comp, react/jsx-no-bind, react/jsx-boolean-value */
@@ -15,13 +15,8 @@ import {
 } from 'giu';
 import { ExampleLabel, exampleStyle } from './demo1-common';
 
-class HintExample extends React.Component {
-  state: { fEmbeddedHint: boolean };
-
-  constructor() {
-    super();
-    this.state = { fEmbeddedHint: false };
-  }
+class HintExample extends React.Component<{}, { fEmbeddedHint: boolean }> {
+  state = { fEmbeddedHint: false };
 
   componentWillMount() {
     hintDefine('hintExample', {

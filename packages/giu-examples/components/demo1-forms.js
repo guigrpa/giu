@@ -1,4 +1,4 @@
-// @noflow
+// @flow
 
 /* eslint-disable no-console, no-alert, max-len */
 /* eslint-disable react/prop-types, react/no-multi-comp, react/jsx-no-bind, react/jsx-boolean-value */
@@ -34,12 +34,13 @@ import {
   onChangeJson,
 } from './demo1-common';
 
-class FormExample extends React.Component {
-  props: { lang: string };
-  state: {
+class FormExample extends React.Component<
+  { lang: string },
+  {
     fShowDateInput: boolean,
     fixedDate: Date,
-  };
+  }
+> {
   cmds: Array<any>;
 
   constructor() {
@@ -368,11 +369,7 @@ class FormExample extends React.Component {
             (keyboard-controlled, clipboard; local for date+time, UTC otherwise)
           </ExampleLabel>
           <div>
-            <DateInput
-              onChange={onChange}
-              lang={lang}
-              style={{ width: 130 }}
-            />&nbsp;&nbsp;
+            <DateInput onChange={onChange} lang={lang} style={{ width: 130 }} />&nbsp;&nbsp;
             <DateInput
               date
               time
@@ -637,13 +634,13 @@ class FormExample extends React.Component {
   }
 }
 
-class TimePickerNow extends React.Component {
-  constructor(props) {
-    super(props);
-    this.state = {
-      curDate: new Date(),
-    };
-  }
+class TimePickerNow extends React.Component<
+  { lang: string },
+  { curDate: Object }
+> {
+  state = {
+    curDate: new Date(),
+  };
   componentDidMount() {
     setInterval(() => {
       this.setState({ curDate: new Date() });

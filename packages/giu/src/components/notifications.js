@@ -150,8 +150,9 @@ type Props = {
 };
 
 class Notifications extends React.PureComponent<Props> {
-  static defaultProps = { notifs: null };
   storeUnsubscribe: () => void;
+
+  static defaultProps = { notifs: null };
 
   constructor(props: Props) {
     super(props);

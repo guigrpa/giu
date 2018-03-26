@@ -1,4 +1,4 @@
-// @noflow
+// @flow
 
 import React from 'react';
 import SelectNative from '../inputs/selectNative';
@@ -6,24 +6,23 @@ import { SelectCustom } from '../inputs/selectCustom';
 import type { SelectProps, SelectPickerType } from '../inputs/selectTypes';
 
 // ==========================================
-// Component
+// Declarations
 // ==========================================
-type DefaultProps = {
-  type: SelectPickerType,
-};
-
 type Props = {
   ...$Exact<SelectProps>,
-  ...$Exact<DefaultProps>,
+  type?: SelectPickerType,
 };
 
-class Select extends React.Component {
-  props: Props;
-  static defaultProps: DefaultProps = {
-    type: 'native',
-  };
+// ==========================================
+// Component
+// ==========================================
+class Select extends React.Component<Props> {
   refInput: ?Object;
 
+  static defaultProps = {};
+
+  // ==========================================
+  // Forward imperative interface
   // ==========================================
   getValue() {
     return this.refInput ? this.refInput.getValue() : null;
@@ -38,7 +37,7 @@ class Select extends React.Component {
   // ==========================================
   render() {
     const { type } = this.props;
-    const Component = type === 'native' ? SelectNative : SelectCustom;
+    const Component = !type || type === 'native' ? SelectNative : SelectCustom;
     return (
       <Component
         ref={this.registerInputRef}

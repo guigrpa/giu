@@ -1,4 +1,4 @@
-// @noflow
+// @flow
 
 import React from 'react';
 import { merge } from 'timm';
@@ -45,7 +45,7 @@ type PublicProps = {|
   todayName?: string,
   onMouseDown?: Function,
   onClick?: Function,
-  onChange: (ev: ?SyntheticEvent, nextValue: ?Moment) => any,
+  onChange: (ev: ?SyntheticEvent<*>, nextValue: ?Moment) => any,
   fFocused?: boolean,
   style?: Object,
   accentColor?: string,
@@ -66,13 +66,20 @@ type Props = {
   ...$Exact<DefaultProps>,
 };
 
+type State = {
+  focusedSubpicker: Picker,
+};
+
 type Picker = 'date' | 'time';
 
 // ==========================================
 // Component
 // ==========================================
-class DateTimePicker extends React.Component {
-  props: Props;
+class DateTimePicker extends React.Component<Props, State> {
+  keyDown: void | KeyboardEventPars;
+  utc: boolean;
+  refOuter: ?Object;
+
   static defaultProps: DefaultProps = {
     disabled: false,
     date: true,
@@ -82,12 +89,6 @@ class DateTimePicker extends React.Component {
     todayName: 'Today',
     accentColor: COLORS.accent,
   };
-  state: {
-    focusedSubpicker: Picker,
-  };
-  keyDown: void | KeyboardEventPars;
-  utc: boolean;
-  refOuter: ?Object;
 
   constructor(props: Props) {
     super(props);
@@ -109,8 +110,6 @@ class DateTimePicker extends React.Component {
     }
   }
 
-  // ==========================================
-  // Render
   // ==========================================
   render() {
     const {
@@ -194,8 +193,6 @@ class DateTimePicker extends React.Component {
   }
 
   // ==========================================
-  // Event handlers
-  // ==========================================
   registerOuterRef = (c: ?Object) => {
     this.refOuter = c;
     this.props.registerOuterRef && this.props.registerOuterRef(c);
@@ -224,8 +221,6 @@ class DateTimePicker extends React.Component {
   }
 }
 
-// ==========================================
-// Styles
 // ==========================================
 const style = {
   outerBase: inputReset(

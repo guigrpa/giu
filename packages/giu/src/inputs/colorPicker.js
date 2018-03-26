@@ -1,4 +1,4 @@
-// @noflow
+// @flow
 
 import React from 'react';
 import tinycolor from 'tinycolor2';
@@ -88,7 +88,7 @@ const GRADIENTS = {
 // Declarations
 // ==========================================
 type PublicProps = {|
-  registerOuterRef: Function,
+  registerOuterRef: ?Function,
   curValue: ?string,
   onChange: Function,
   disabled?: boolean,
@@ -105,18 +105,15 @@ type Props = {
   ...DefaultProps,
 };
 
+type State = {
+  mode: string,
+  activeAttr: string,
+};
+
 // ==========================================
 // Component
 // ==========================================
-class ColorPicker extends React.PureComponent {
-  props: Props;
-  static defaultProps: DefaultProps = {
-    accentColor: COLORS.accent,
-  };
-  state: {
-    mode: string,
-    activeAttr: string,
-  };
+class ColorPicker extends React.PureComponent<Props, State> {
   rgba: Object;
   hsva: Object;
   rgbhsva: Object;
@@ -125,13 +122,11 @@ class ColorPicker extends React.PureComponent {
   refColorSelector: ?Object;
   refAttrSlider: ?Object;
 
-  constructor() {
-    super();
-    this.state = {
-      mode: 'hsv',
-      activeAttr: 'h',
-    };
-  }
+  static defaultProps: DefaultProps = {
+    accentColor: COLORS.accent,
+  };
+
+  state = { mode: 'hsv', activeAttr: 'h' };
 
   componentWillUnmount() {
     window.removeEventListener('mousemove', this.onMouseMoveColorSelector);
@@ -142,8 +137,6 @@ class ColorPicker extends React.PureComponent {
     window.removeEventListener('mouseup', this.onMouseUpAlphaSlider);
   }
 
-  // ==========================================
-  // Render
   // ==========================================
   render() {
     const { registerOuterRef, curValue } = this.props;
@@ -385,8 +378,6 @@ class ColorPicker extends React.PureComponent {
   }
 
   // ==========================================
-  // Event handlers
-  // ==========================================
   onMouseDownMode = (ev: any) => {
     const mode = ev.target.id;
     if (mode === this.state.mode) return;
@@ -472,14 +463,8 @@ class ColorPicker extends React.PureComponent {
 }
 
 // ==========================================
-// Styles
-// ==========================================
 const style = {
-  outerBase: inputReset(
-    flexContainer('row', {
-      padding: 6,
-    })
-  ),
+  outerBase: inputReset(flexContainer('row', { padding: 6 })),
   outer: ({ disabled, fFocused }) => {
     let out = style.outerBase;
     if (disabled) out = merge(out, INPUT_DISABLED);

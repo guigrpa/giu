@@ -1,4 +1,4 @@
-// @noflow
+// @flow
 
 import type { FloatPosition, FloatAlign } from '../components/floats';
 import type { Choice } from '../gral/types';

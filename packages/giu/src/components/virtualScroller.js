@@ -66,17 +66,6 @@ type Props = {
 };
 
 class VirtualScroller extends React.PureComponent<Props> {
-  props: Props;
-  static defaultProps: DefaultProps = {
-    itemsById: {},
-    shownIds: ([]: Array<string>),
-    alwaysRenderIds: ([]: Array<string>),
-
-    uniformRowHeight: false,
-
-    estimatedMinRowHeight: Infinity,
-    maxRowsToRenderInOneGo: 1000,
-  };
   rowHeight: ?number;
   idxFirst: ?number;
   idxLast: ?number;
@@ -98,6 +87,17 @@ class VirtualScroller extends React.PureComponent<Props> {
   throttledRecalcViewport: (ev: Object) => any;
   refItems: { [key: string]: ?Object };
   refScroller: ?Object;
+
+  static defaultProps: DefaultProps = {
+    itemsById: {},
+    shownIds: ([]: Array<string>),
+    alwaysRenderIds: ([]: Array<string>),
+
+    uniformRowHeight: false,
+
+    estimatedMinRowHeight: Infinity,
+    maxRowsToRenderInOneGo: 1000,
+  };
 
   constructor(props: Props) {
     super(props);

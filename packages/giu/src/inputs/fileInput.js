@@ -1,4 +1,4 @@
-// @noflow
+// @flow
 
 import React from 'react';
 import PropTypes from 'prop-types';
@@ -48,11 +48,11 @@ const FILTERED_OUT_PROPS = [
 // ==========================================
 // Component
 // ==========================================
-class FileInput extends React.Component {
-  static defaultProps = {};
-  props: Props;
+class FileInput extends React.Component<Props> {
   cntCleared: number;
   refInput: ?Object;
+
+  static defaultProps = {};
 
   constructor() {
     super();
