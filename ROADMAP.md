@@ -2,9 +2,11 @@
 
 * **Bugs**
   * When drop-down DatePicker is visible and the input disappears from view (in a transform=0 view), the picker is still shown.
-* Allow Selects, DateInputs and other elements with dropdown/inline pickers to work without focusing
+  * Inline DateInputs no longer shown correctly on iOS
+* Allow DateInputs with dropdown/inline pickers to work without focusing
+* DataTable: remove focus capture on mobile and tablets
 
-* [ ] Migrate to latest Flow
+* [ ] Migrate input HOC to latest Flow
 * Update Font Awesome (later)
 
 * [ ] Unit tests (with Jest snapshots)

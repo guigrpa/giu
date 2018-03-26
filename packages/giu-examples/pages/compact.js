@@ -298,21 +298,6 @@ class App extends React.Component {
           </div>
         );
         break;
-      case 9:
-        out = (
-          <div>
-            <Floats />
-            <Select
-              type="dropDownPicker"
-              required
-              value="a"
-              onChange={onChangeJson}
-              items={NORMAL_OPTIONS}
-              lang={lang}
-            />
-          </div>
-        );
-        break;
       default:
         out = (
           <div style={style.outer}>

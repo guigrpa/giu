@@ -1,4 +1,6 @@
+* Select, DropDownMenu, ColorInput: **improved behaviour on mobile and tablet**.
 * **Breaking**: Remove `hoverable`, `Hoverable`. Recommended alternative: simple state in your component, or CSS-in-JS such as styled-jsx.
+* **Breaking**: Input HOC has changed so that it *always* wraps inputs in a span. This may break some layouts.
 
 ## 0.15.1 (2017-12-6)
 
