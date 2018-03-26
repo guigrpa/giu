@@ -75,10 +75,7 @@ class ListPicker extends React.PureComponent<Props, State> {
     emptyText: 'Ø',
     accentColor: COLORS.accent,
   };
-
-  state = {
-    hovering: null,
-  };
+  state = { hovering: null };
 
   componentWillReceiveProps(nextProps: Props) {
     const { keyDown } = nextProps;
@@ -354,9 +351,7 @@ const style = {
     borderTop: `1px solid ${COLORS.line}`,
     height: 1,
   },
-  shortcut: {
-    marginLeft: 20,
-  },
+  shortcut: { marginLeft: 20 },
 };
 style.outerDisabled = merge(INPUT_DISABLED, {
   pointerEvents: null,

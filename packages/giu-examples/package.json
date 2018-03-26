@@ -3,9 +3,10 @@
   "private": true,
   "version": "0.15.0",
   "scripts": {
-    "start": "next",
+    "start": "yarn clean && next",
     "build": "BASE_URL=/giu yarn _build",
-    "_build": "next build && next export"
+    "_build": "yarn clean && next build && next export",
+    "clean": "rm -rf ./.next ./node_modules/.cache/babel-loader"
   },
   "_dependencies": "Hoisted (to avoid dep conflicts): moment, react, react-dom",
   "dependencies": {

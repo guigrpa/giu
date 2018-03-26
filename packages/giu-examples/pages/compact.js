@@ -4,7 +4,6 @@
 /* eslint-disable react/no-string-refs */
 import React from 'react';
 import Head from 'next/head';
-import { merge } from 'timm';
 import moment from 'moment';
 import {
   DateInput,
@@ -150,6 +149,20 @@ class App extends React.Component {
             <Select
               type="inlinePicker"
               items={TALL_OPTIONS}
+              curValue={33}
+              onClickItem={onChange}
+              style={{ width: 300, height: 150 }}
+            />
+          </div>
+        );
+        break;
+      case 3.6:
+        out = (
+          <div>
+            <Floats />
+            <Select
+              type="dropDownPicker"
+              items={NORMAL_OPTIONS}
               curValue={33}
               onClickItem={onChange}
               style={{ width: 300, height: 150 }}
