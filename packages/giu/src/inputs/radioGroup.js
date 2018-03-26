@@ -3,7 +3,7 @@
 import React from 'react';
 import { merge, set as timmSet } from 'timm';
 import { preventDefault } from '../gral/helpers';
-import { NULL_STRING } from '../gral/constants';
+import { NULL_STRING, IS_IOS } from '../gral/constants';
 import { LIST_SEPARATOR_KEY } from '../inputs/listPicker';
 import { GLOW } from '../gral/styles';
 import input from '../hocs/input';
@@ -25,7 +25,7 @@ const isNull = val => val === NULL_STRING;
 let cntId = 0;
 
 // ==========================================
-// Types
+// Declarations
 // ==========================================
 // -- Props:
 // -- START_DOCS
@@ -156,6 +156,6 @@ export default input(RadioGroup, {
   toInternalValue,
   toExternalValue,
   isNull,
-  fIncludeFocusCapture: true,
+  fIncludeFocusCapture: !IS_IOS,
   className: 'giu-radio-buttons',
 });
