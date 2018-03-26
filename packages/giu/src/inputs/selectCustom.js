@@ -286,10 +286,9 @@ class SelectCustomBase extends React.Component<Props, State> {
   // Handle click on window (hopefully, they won't swallow it) to blur
   onClickWindow = (ev: SyntheticEvent<*>) => {
     if (!MANAGE_FOCUS_AUTONOMOUSLY) return;
-    const { refTitle } = this;
-    if (!refTitle) return;
     const { target } = ev;
-    if (target instanceof Element && isAncestorNode(refTitle, target)) return;
+    if (target instanceof Element && isAncestorNode(this.refTitle, target))
+      return;
     if (this.props.fFocused) this.props.onBlur(ev);
   };
 

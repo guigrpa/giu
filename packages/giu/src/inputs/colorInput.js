@@ -3,9 +3,10 @@
 import React from 'react';
 import { merge } from 'timm';
 import tinycolor from 'tinycolor2';
-import { COLORS, KEYS, IS_IOS } from '../gral/constants';
+import { COLORS, KEYS, IS_IOS, IS_MOBILE_OR_TABLET } from '../gral/constants';
 import { GLOW, inputReset, INPUT_DISABLED } from '../gral/styles';
 import type { KeyboardEventPars } from '../gral/types';
+import { isAncestorNode } from '../gral/helpers';
 import input from '../hocs/input';
 import { floatAdd, floatDelete, floatUpdate } from '../components/floats';
 import type { FloatPosition, FloatAlign } from '../components/floats';
@@ -18,6 +19,8 @@ const isNull = val => val == null;
 
 const SWATCH_WIDTH = 25;
 const SWATCH_HEIGHT = 10;
+
+const MANAGE_FOCUS_AUTONOMOUSLY = IS_MOBILE_OR_TABLET;
 
 // ==========================================
 // Declarations
@@ -43,6 +46,8 @@ type Props = {
   onChange: Function,
   registerOuterRef: Function,
   fFocused: boolean,
+  onFocus: Function,
+  onBlur: Function,
   keyDown?: KeyboardEventPars,
 };
 
@@ -56,6 +61,7 @@ type State = {
 class ColorInput extends React.Component<Props, State> {
   floatId: ?string;
   refTitle: ?Object;
+  refPicker: ?Object;
 
   static defaultProps = {};
   state = { fFloat: false };
@@ -71,8 +77,14 @@ class ColorInput extends React.Component<Props, State> {
   componentDidUpdate() {
     this.renderFloat();
   }
+
+  componentDidMount() {
+    window.addEventListener('click', this.onClickWindow);
+  }
+
   componentWillUnmount() {
     if (this.floatId != null) floatDelete(this.floatId);
+    window.removeEventListener('click', this.onClickWindow);
   }
 
   // ==========================================
@@ -86,6 +98,7 @@ class ColorInput extends React.Component<Props, State> {
       <div
         ref={this.registerTitleRef}
         onMouseDown={this.onMouseDownTitle}
+        onClick={this.onClickTitle}
         style={style.title(this.props)}
       >
         x
@@ -153,7 +166,9 @@ class ColorInput extends React.Component<Props, State> {
     } = this.props;
     return (
       <ColorPicker
-        registerOuterRef={inlinePicker ? registerOuterRef : undefined}
+        registerOuterRef={
+          inlinePicker ? registerOuterRef : this.registerPickerRef
+        }
         curValue={curValue}
         onChange={onChange}
         disabled={disabled}
@@ -169,11 +184,33 @@ class ColorInput extends React.Component<Props, State> {
     this.props.registerOuterRef(c);
   };
 
+  registerPickerRef = c => {
+    this.refPicker = c;
+  };
+
   // If the menu is not focused, ignore it: it will be handled by the `input` HOC.
   // ...but if it is focused, we want to toggle it
   onMouseDownTitle = () => {
     if (!this.props.fFocused) return;
     this.setState({ fFloat: !this.state.fFloat });
+  };
+
+  // Only for autonomous focus management
+  onClickTitle = (ev: SyntheticEvent<*>) => {
+    if (!MANAGE_FOCUS_AUTONOMOUSLY) return;
+    if (this.props.fFocused) this.props.onBlur(ev);
+    else this.props.onFocus(ev);
+  };
+
+  // Only for autonomous focus management
+  // Handle click on window (hopefully, they won't swallow it) to blur
+  onClickWindow = (ev: SyntheticEvent<*>) => {
+    if (!MANAGE_FOCUS_AUTONOMOUSLY) return;
+    const { target } = ev;
+    if (target instanceof Element && isAncestorNode(this.refTitle, target)) {
+      return;
+    }
+    if (this.props.fFocused) this.props.onBlur(ev);
   };
 
   // ==========================================
@@ -232,7 +269,7 @@ export default input(ColorInput, {
   toInternalValue,
   toExternalValue,
   isNull,
-  fIncludeFocusCapture: true,
+  fIncludeFocusCapture: !MANAGE_FOCUS_AUTONOMOUSLY,
   trappedKeys: [KEYS.esc],
   className: 'giu-color-input',
 });

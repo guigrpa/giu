@@ -165,7 +165,8 @@ function simplifyString(str: string): string {
     .toLowerCase();
 }
 
-function isAncestorNode(ancestor: Node, descendant: Node): boolean {
+function isAncestorNode(ancestor: ?Node, descendant: ?Node): boolean {
+  if (ancestor == null || descendant == null) return false;
   let node = descendant;
   while (node != null) {
     if (node === ancestor) return true;
