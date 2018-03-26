@@ -1,5 +1,6 @@
 // @noflow
 
+/* eslint-disable */
 /* eslint-disable no-unused-vars, max-len */
 
 import React from 'react';
