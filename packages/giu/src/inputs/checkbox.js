@@ -1,4 +1,4 @@
-// @noflow
+// @flow
 
 import React from 'react';
 import PropTypes from 'prop-types';
@@ -12,7 +12,7 @@ const isNull = val => val == null;
 let cntId = 0;
 
 // ==========================================
-// Types
+// Declarations
 // ==========================================
 // -- Props:
 // -- START_DOCS
@@ -46,11 +46,11 @@ type Props = {
 // ==========================================
 // Component
 // ==========================================
-class Checkbox extends React.Component {
-  static defaultProps = {};
-  props: Props;
+class Checkbox extends React.Component<Props> {
   labelId: string;
   refCheckbox: ?Object;
+
+  static defaultProps = {};
 
   constructor(props: Props) {
     super(props);
@@ -64,8 +64,6 @@ class Checkbox extends React.Component {
     }
   }
 
-  // ==========================================
-  // Render
   // ==========================================
   render() {
     if (!this.props.skipTheme && this.context.theme === 'mdl') {
@@ -145,12 +143,8 @@ class Checkbox extends React.Component {
 Checkbox.contextTypes = { theme: PropTypes.any };
 
 // ==========================================
-// Styles
-// ==========================================
 const style = {
-  wrapper: {
-    whiteSpace: 'nowrap',
-  },
+  wrapper: { whiteSpace: 'nowrap' },
   wrapperMdl: {
     whiteSpace: 'nowrap',
     width: 'initial',
