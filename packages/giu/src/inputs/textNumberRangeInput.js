@@ -76,10 +76,10 @@ const FILTERED_OUT_PROPS_MDL = FILTERED_OUT_PROPS.concat(['placeholder']);
 function createClass(name, inputType) {
   const Klass = class extends React.Component<Props> {
     labelId: string;
-    refMdl: ?Object;
 
     static displayName = name;
     static defaultProps = {};
+    refMdl = React.createRef();
 
     constructor(props: Props) {
       super(props);
@@ -88,8 +88,8 @@ function createClass(name, inputType) {
     }
 
     componentDidMount() {
-      if (this.context.theme === 'mdl' && this.refMdl) {
-        window.componentHandler.upgradeElement(this.refMdl);
+      if (this.context.theme === 'mdl' && this.refMdl.current) {
+        window.componentHandler.upgradeElement(this.refMdl.current);
       }
     }
 
@@ -132,9 +132,7 @@ function createClass(name, inputType) {
       if (curValue !== '' || fFocused) className += ' is-dirty';
       return (
         <div
-          ref={c => {
-            this.refMdl = c;
-          }}
+          ref={this.refMdl}
           className={className}
           style={style.mdlField(this.props)}
         >

@@ -202,10 +202,10 @@ class BaseDateInput extends React.Component<Props, State> {
   lastExtValue: ?Moment;
   labelId: string;
   floatId: ?string;
-  refMdl: ?Object;
   refInput: ?Object;
 
   static defaultProps = {};
+  refMdl = React.createRef();
 
   constructor(props: Props) {
     super(props);
@@ -224,8 +224,8 @@ class BaseDateInput extends React.Component<Props, State> {
   }
 
   componentDidMount() {
-    if (this.context.theme === 'mdl' && this.refMdl)
-      window.componentHandler.upgradeElement(this.refMdl);
+    if (this.context.theme === 'mdl' && this.refMdl.current)
+      window.componentHandler.upgradeElement(this.refMdl.current);
   }
 
   componentDidUpdate(prevProps) {
@@ -367,9 +367,7 @@ class BaseDateInput extends React.Component<Props, State> {
     if (curValue !== '' || fFocused) className += ' is-dirty';
     return (
       <div
-        ref={c => {
-          this.refMdl = c;
-        }}
+        ref={this.refMdl}
         className={className}
         style={style.mdlField(this.props)}
       >

@@ -15,12 +15,13 @@ Remember that an indeterminate progress bar will be shown if you
 don't specify the `value` prop (native HTML behaviour).*
 -- */
 class Progress extends React.PureComponent<Props> {
-  refMdl: ?Object;
+  refMdl = React.createRef();
 
   componentDidMount() {
-    if (this.context.theme === 'mdl' && this.refMdl) {
-      this.refMdl.addEventListener('mdl-componentupgraded', this.mdlRefresh);
-      window.componentHandler.upgradeElement(this.refMdl);
+    const nodeMdl = this.refMdl.current;
+    if (this.context.theme === 'mdl' && nodeMdl) {
+      nodeMdl.addEventListener('mdl-componentupgraded', this.mdlRefresh);
+      window.componentHandler.upgradeElement(nodeMdl);
     }
   }
 
@@ -38,22 +39,16 @@ class Progress extends React.PureComponent<Props> {
     let className = 'mdl-progress mdl-js-progress';
     if (this.props.value == null) className += ' mdl-progress--indeterminate';
     return (
-      <div
-        ref={c => {
-          this.refMdl = c;
-        }}
-        className={className}
-        style={style.progress}
-      />
+      <div ref={this.refMdl} className={className} style={style.progress} />
     );
   }
 
   // ==========================================
   mdlRefresh = () => {
-    if (!this.refMdl) return;
+    if (!this.refMdl.current) return;
     const { value } = this.props;
     if (value == null) return;
-    this.refMdl.MaterialProgress.setProgress(value * 100);
+    this.refMdl.current.MaterialProgress.setProgress(value * 100);
   };
 }
 
@@ -61,9 +56,7 @@ Progress.contextTypes = { theme: PropTypes.any };
 
 // ==========================================
 const style = {
-  progress: {
-    width: '100%',
-  },
+  progress: { width: '100%' },
 };
 
 // ==========================================

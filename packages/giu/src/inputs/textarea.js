@@ -64,9 +64,9 @@ class Textarea extends React.Component<Props> {
   labelId: string;
   refInput: ?Object;
   refOuter: ?Object;
-  refTaPlaceholder: ?Object;
 
   static defaultProps = {};
+  refTaPlaceholder = React.createRef();
 
   constructor(props: Props) {
     super(props);
@@ -102,9 +102,7 @@ class Textarea extends React.Component<Props> {
         style={style.taWrapper}
       >
         <div
-          ref={c => {
-            this.refTaPlaceholder = c;
-          }}
+          ref={this.refTaPlaceholder}
           style={merge(style.hiddenPlaceholder, styleField)}
         >
           {getPlaceholderText(curValue)}
@@ -158,9 +156,9 @@ class Textarea extends React.Component<Props> {
   };
 
   resize = () => {
-    if (!this.refTaPlaceholder) return;
+    if (!this.refTaPlaceholder.current) return;
     if (!this.props.skipTheme && this.context.theme === 'mdl') return;
-    const height = this.refTaPlaceholder.offsetHeight;
+    const height = this.refTaPlaceholder.current.offsetHeight;
     if (!this.refInput) return;
     this.refInput.style.height = `${height}px`;
     if (this.props.onResizeOuter) this.props.onResizeOuter();

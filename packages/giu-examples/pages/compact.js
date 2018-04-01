@@ -31,6 +31,7 @@ import {
   flexItem,
   boxWithShadow,
   AnimatedCounter,
+  HeightMeasurer,
 } from 'giu';
 import {
   ExampleLabel,
@@ -337,6 +338,7 @@ class App extends React.Component {
                 {EVERYTHING && <FormExample lang={lang} />}
                 {EVERYTHING && <FormExample2 />}
                 {EVERYTHING && <AnimatedCounterExample />}
+                {EVERYTHING && <HeightMeasurerExample />}
               </div>
             </div>
             <div style={{ textAlign: 'right', padding: 10, fontSize: '1.2em' }}>
@@ -604,6 +606,18 @@ class AnimatedCounterExample extends React.Component {
     this.setState({ value });
   };
 }
+
+const HeightMeasurerExample = () => (
+  <div style={style.example}>
+    <ExampleLabel>HeightMeasurer</ExampleLabel>
+    <div style={flexContainer('column', { height: 150 })}>
+      <div style={{ height: 30 }}>This takes 30 px</div>
+      <div style={flexItem(1)}>
+        <HeightMeasurer>{height => <div>{height} px high</div>}</HeightMeasurer>
+      </div>
+    </div>
+  </div>
+);
 
 // -----------------------------------------------
 // Styles

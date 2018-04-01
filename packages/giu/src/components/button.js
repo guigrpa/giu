@@ -48,11 +48,11 @@ const FILTERED_PROPS = [
 ];
 
 class Button extends React.PureComponent<Props> {
-  refButton: ?Object;
+  refButton = React.createRef();
 
   componentDidMount() {
-    if (this.context.theme === 'mdl' && this.refButton) {
-      window.componentHandler.upgradeElement(this.refButton);
+    if (this.context.theme === 'mdl' && this.refButton.current) {
+      window.componentHandler.upgradeElement(this.refButton.current);
     }
   }
 
@@ -92,9 +92,7 @@ class Button extends React.PureComponent<Props> {
     const otherProps = omit(this.props, FILTERED_PROPS_MDL);
     return (
       <button
-        ref={c => {
-          this.refButton = c;
-        }}
+        ref={this.refButton}
         className={classNames.join(' ')}
         {...otherProps}
       />

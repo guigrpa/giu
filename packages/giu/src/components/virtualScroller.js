@@ -86,7 +86,6 @@ class VirtualScroller extends React.PureComponent<Props> {
   timerCheckScrollbar: ?IntervalID;
   throttledRecalcViewport: (ev: Object) => any;
   refItems: { [key: string]: ?Object };
-  refScroller: ?Object;
 
   static defaultProps: DefaultProps = {
     itemsById: {},
@@ -98,6 +97,7 @@ class VirtualScroller extends React.PureComponent<Props> {
     estimatedMinRowHeight: Infinity,
     maxRowsToRenderInOneGo: 1000,
   };
+  refScroller = React.createRef();
 
   constructor(props: Props) {
     super(props);
@@ -175,8 +175,8 @@ class VirtualScroller extends React.PureComponent<Props> {
   };
 
   recalcViewport = (ev: Object = {}) => {
-    if (!this.refScroller) return;
-    const { scrollTop, clientHeight } = this.refScroller;
+    if (!this.refScroller.current) return;
+    const { scrollTop, clientHeight } = this.refScroller.current;
     if (scrollTop !== this.scrollTop || clientHeight !== this.clientHeight) {
       this.scrollTop = scrollTop;
       this.clientHeight = Math.max(clientHeight, 0);
@@ -197,8 +197,8 @@ class VirtualScroller extends React.PureComponent<Props> {
   };
 
   checkScrollbar = () => {
-    if (!this.refScroller) return;
-    const { scrollHeight, clientHeight } = this.refScroller;
+    if (!this.refScroller.current) return;
+    const { scrollHeight, clientHeight } = this.refScroller.current;
     const { onChangeScrollbarWidth } = this.props;
     const fHasScrollbar = scrollHeight > clientHeight;
     const scrollbarWidth = fHasScrollbar ? getScrollbarWidth() : 0;
@@ -248,16 +248,16 @@ class VirtualScroller extends React.PureComponent<Props> {
   // Imperative
   // ===============================================================
   scrollToTop() {
-    if (this.refScroller) this.refScroller.scrollTop = 0;
+    if (this.refScroller.current) this.refScroller.current.scrollTop = 0;
     this.initPendingScroll();
     this.recalcViewport();
   }
 
   scrollPageUpDown(sign: number) {
     const { refScroller } = this;
-    if (refScroller == null) return;
+    if (refScroller.current == null) return;
     const delta = sign * Math.max(this.clientHeight - 15, 0);
-    refScroller.scrollTop += delta;
+    refScroller.current.scrollTop += delta;
     this.initPendingScroll();
     this.recalcViewport();
   }
@@ -309,9 +309,7 @@ class VirtualScroller extends React.PureComponent<Props> {
       );
     return (
       <div
-        ref={c => {
-          this.refScroller = c;
-        }}
+        ref={this.refScroller}
         className="giu-virtual-scroller"
         onWheel={cancelBodyScrolling}
         onScroll={this.onScroll}

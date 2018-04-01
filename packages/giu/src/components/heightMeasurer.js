@@ -20,14 +20,8 @@ type State = {
 // height (ie. a height that is not determined by its children, but rather
 // by its parents, e.g. a flex item with "overflow: hidden")
 class HeightMeasurer extends React.Component<Props, State> {
-  refOuter: ?Object;
-  throttledRecalcHeight: Function;
-
-  constructor() {
-    super();
-    this.state = { height: undefined };
-    this.throttledRecalcHeight = throttle(this.recalcHeight, 100);
-  }
+  state = { height: undefined };
+  refOuter = React.createRef();
 
   componentDidMount() {
     window.addEventListener('resize', this.throttledRecalcHeight);
@@ -39,21 +33,16 @@ class HeightMeasurer extends React.Component<Props, State> {
   }
 
   recalcHeight = () => {
-    const node = this.refOuter;
-    if (node) this.setState({ height: node.parentNode.clientHeight });
+    const node = this.refOuter.current;
+    if (!node) return;
+    this.setState({ height: node.parentNode.clientHeight });
   };
+  throttledRecalcHeight = throttle(this.recalcHeight, 100);
 
+  // ================================================
   render() {
     const { children: child } = this.props;
-    return (
-      <div
-        ref={c => {
-          this.refOuter = c;
-        }}
-      >
-        {child(this.state.height)}
-      </div>
-    );
+    return <div ref={this.refOuter}>{child(this.state.height)}</div>;
   }
 }
 

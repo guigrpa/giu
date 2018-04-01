@@ -37,11 +37,11 @@ const FILTERED_PROPS = [
 ];
 
 class Icon extends React.PureComponent<Props> {
-  refIcon: ?Object;
+  refButton = React.createRef();
 
   componentDidMount() {
-    if (this.context.theme === 'mdl' && this.refIcon) {
-      window.componentHandler.upgradeElement(this.refIcon);
+    if (this.context.theme === 'mdl' && this.refIcon.current) {
+      window.componentHandler.upgradeElement(this.refIcon.current);
     }
   }
 
@@ -78,9 +78,7 @@ class Icon extends React.PureComponent<Props> {
     const otherProps = omit(this.props, FILTERED_PROPS);
     return (
       <div
-        ref={c => {
-          this.refIcon = c;
-        }}
+        ref={this.refIcon}
         className="mdl-spinner mdl-js-spinner is-active"
         {...otherProps}
         style={style.mdlSpinner(this.props)}

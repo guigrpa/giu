@@ -76,17 +76,16 @@ class TimePickerAnalog extends React.PureComponent<Props, State> {
   dragUnits: Unit;
   dragDeltaPhi: number;
   dragSteps: number;
-  refSvg: ?Object;
 
   static defaultProps: DefaultProps = {
     size: DEFAULT_SIZE,
   };
-
   state = {
     dragging: null,
     hint: null,
     hovering: null,
   };
+  refSvg = React.createRef();
 
   componentWillUnmount() {
     window.removeEventListener('mousemove', this.onMouseMoveHand);
@@ -115,9 +114,7 @@ class TimePickerAnalog extends React.PureComponent<Props, State> {
     return (
       <div className="giu-time-picker-analog" style={style.outer}>
         <svg
-          ref={c => {
-            this.refSvg = c;
-          }}
+          ref={this.refSvg}
           onClick={this.onClickBackground}
           onMouseMove={this.onMouseMoveBackground}
           onMouseLeave={this.onMouseLeaveBackground}
@@ -386,7 +383,7 @@ class TimePickerAnalog extends React.PureComponent<Props, State> {
   }
 
   getPhiFromMousePosition(ev: SyntheticMouseEvent<*>) {
-    const refSvg = this.refSvg;
+    const refSvg = this.refSvg.current;
     if (!refSvg) return 0;
     const bcr = refSvg.getBoundingClientRect();
     const x = ev.clientX - bcr.left - refSvg.clientLeft - this.translate;

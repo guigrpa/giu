@@ -118,15 +118,14 @@ class ColorPicker extends React.PureComponent<Props, State> {
   hsva: Object;
   rgbhsva: Object;
   fRgb: boolean;
-  refAlphaSlider: ?Object;
-  refColorSelector: ?Object;
-  refAttrSlider: ?Object;
 
   static defaultProps: DefaultProps = {
     accentColor: COLORS.accent,
   };
-
   state = { mode: 'hsv', activeAttr: 'h' };
+  refAlphaSlider = React.createRef();
+  refColorSelector = React.createRef();
+  refAttrSlider = React.createRef();
 
   componentWillUnmount() {
     window.removeEventListener('mousemove', this.onMouseMoveColorSelector);
@@ -183,9 +182,7 @@ class ColorPicker extends React.PureComponent<Props, State> {
     }
     return (
       <div
-        ref={c => {
-          this.refColorSelector = c;
-        }}
+        ref={this.refColorSelector}
         onMouseDown={this.onMouseDownColorSelector}
         style={style.colorSelector}
       >
@@ -259,9 +256,7 @@ class ColorPicker extends React.PureComponent<Props, State> {
   renderActiveAttrSlider() {
     return (
       <div
-        ref={c => {
-          this.refAttrSlider = c;
-        }}
+        ref={this.refAttrSlider}
         onMouseDown={this.onMouseDownAttrSlider}
         style={style.activeAttrSlider(this.state, this.hsva)}
       >
@@ -328,9 +323,7 @@ class ColorPicker extends React.PureComponent<Props, State> {
   renderAlphaSlider() {
     return (
       <div
-        ref={c => {
-          this.refAlphaSlider = c;
-        }}
+        ref={this.refAlphaSlider}
         onMouseDown={this.onMouseDownAlphaSlider}
         style={style.alphaSlider}
       >
@@ -394,8 +387,8 @@ class ColorPicker extends React.PureComponent<Props, State> {
     this.onMouseMoveColorSelector(ev);
   };
   onMouseMoveColorSelector = (ev: any) => {
-    if (this.refColorSelector == null) return;
-    const bcr = this.refColorSelector.getBoundingClientRect();
+    if (this.refColorSelector.current == null) return;
+    const bcr = this.refColorSelector.current.getBoundingClientRect();
     const xNorm = clamp((ev.clientX - bcr.left) / SIZE, 0, 1);
     const yNorm = 1 - clamp((ev.clientY - bcr.top) / SIZE, 0, 1);
     const attrs = xyToCol(this.state.activeAttr, xNorm, yNorm);
@@ -412,8 +405,8 @@ class ColorPicker extends React.PureComponent<Props, State> {
     this.onMouseMoveAttrSlider(ev);
   };
   onMouseMoveAttrSlider = (ev: any) => {
-    if (this.refAttrSlider == null) return;
-    const bcr = this.refAttrSlider.getBoundingClientRect();
+    if (this.refAttrSlider.current == null) return;
+    const bcr = this.refAttrSlider.current.getBoundingClientRect();
     const attrNorm = 1 - clamp((ev.clientY - bcr.top) / SIZE, 0, 1);
     const attr = this.state.activeAttr;
     this.onChange(ev, { [attr]: denormalize(attrNorm, attr) });
@@ -429,8 +422,8 @@ class ColorPicker extends React.PureComponent<Props, State> {
     this.onMouseMoveAlphaSlider(ev);
   };
   onMouseMoveAlphaSlider = (ev: any) => {
-    if (this.refAlphaSlider == null) return;
-    const bcr = this.refAlphaSlider.getBoundingClientRect();
+    if (this.refAlphaSlider.current == null) return;
+    const bcr = this.refAlphaSlider.current.getBoundingClientRect();
     const attrNorm = clamp((ev.clientX - bcr.left) / ALPHA_SLIDER_SIZE, 0, 1);
     this.onChange(ev, { a: attrNorm });
   };

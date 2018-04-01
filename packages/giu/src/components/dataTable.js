@@ -199,6 +199,27 @@ type Props = {
 };
 
 class DataTable extends React.PureComponent<Props> {
+  cols: Array<DataTableColumn>;
+  maxLabelLevel: number;
+  scrollbarWidth: number;
+  fDragging: boolean;
+  filterValue: string;
+  sortBy: ?string;
+  sortDescending: boolean;
+  manuallyOrderedIds: ?Array<string>;
+  shownIds: Array<string>;
+  prevShownIds: Array<string>;
+  selectedIds: Array<string>;
+  prevSelectedIds: Array<string>;
+  commonRowProps: Object;
+  selectedBgColor: string;
+  selectedFgColor: string;
+  fPendingInitialScrollIntoView: boolean;
+  RowComponents: { [key: string]: ComponentType<any> };
+  refVirtualScroller: ?Object;
+
+  refOuter = React.createRef();
+  refFocusCapture = React.createRef();
   static defaultProps: DefaultProps = {
     itemsById: {},
     shownIds: ([]: Array<string>),
@@ -222,26 +243,6 @@ class DataTable extends React.PureComponent<Props> {
     height: 200,
     accentColor: COLORS.accent,
   };
-  cols: Array<DataTableColumn>;
-  maxLabelLevel: number;
-  scrollbarWidth: number;
-  fDragging: boolean;
-  filterValue: string;
-  sortBy: ?string;
-  sortDescending: boolean;
-  manuallyOrderedIds: ?Array<string>;
-  shownIds: Array<string>;
-  prevShownIds: Array<string>;
-  selectedIds: Array<string>;
-  prevSelectedIds: Array<string>;
-  commonRowProps: Object;
-  selectedBgColor: string;
-  selectedFgColor: string;
-  fPendingInitialScrollIntoView: boolean;
-  RowComponents: { [key: string]: ComponentType<any> };
-  refOuter: ?Object;
-  refFocusCapture: ?Object;
-  refVirtualScroller: ?Object;
 
   constructor(props: Props) {
     super(props);
@@ -279,7 +280,7 @@ class DataTable extends React.PureComponent<Props> {
     this.fPendingInitialScrollIntoView = true;
     setTimeout(() => {
       this.fPendingInitialScrollIntoView = false;
-      this.scrollSelectedIntoView({ topAncestor: this.refOuter });
+      this.scrollSelectedIntoView({ topAncestor: this.refOuter.current });
     }, DEFER_SCROLL_INTO_VIEW_INITIAL);
   }
 
@@ -416,7 +417,7 @@ class DataTable extends React.PureComponent<Props> {
   // Imperative API
   // ==========================================
   focus() {
-    this.refFocusCapture && this.refFocusCapture.focus();
+    this.refFocusCapture.current.focus();
   }
   // scrollToTop: see below
 
@@ -431,9 +432,7 @@ class DataTable extends React.PureComponent<Props> {
     if (this.props.animated) className += ' animated';
     return (
       <div
-        ref={c => {
-          this.refOuter = c;
-        }}
+        ref={this.refOuter}
         className={className}
         onClick={this.onClickOuter}
         style={style.outer(this.props)}
@@ -449,9 +448,7 @@ class DataTable extends React.PureComponent<Props> {
   renderFocusCapture() {
     return (
       <FocusCapture
-        registerRef={c => {
-          this.refFocusCapture = c;
-        }}
+        registerRef={this.refFocusCapture}
         onKeyDown={this.onKeyDown}
         onCopy={this.onCopyCut}
         onCut={this.onCopyCut}
