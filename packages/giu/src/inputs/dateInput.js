@@ -572,39 +572,14 @@ const DateInput = input(BaseDateInput, {
 // ==========================================
 // DateInputWrapper
 // ==========================================
-// Wrapper to adapt props (adding defaults) to the DateInput.
-// Also wires the imperative API through
-class DateInputWrapper extends React.Component<PublicProps> {
-  refInput: ?Object;
-
-  // ==========================================
-  getValue() {
-    return this.refInput ? this.refInput.getValue() : null;
-  }
-  getErrors() {
-    return this.refInput ? this.refInput.getErrors() : null;
-  }
-  validateAndGetValue() {
-    return this.refInput ? this.refInput.validateAndGetValue() : null;
-  }
-
-  // ==========================================
-  render() {
-    let props = addDefaults(this.props, DEFAULT_PROPS);
-    if (IS_IOS && props.checkIos) {
-      props = timmSet(props, 'analogTime', false);
-    }
-    props = omit(props, ['checkIos']);
-    return <DateInput ref={this.registerInputRef} {...props} />;
-  }
-
-  // ==========================================
-  registerInputRef = (c: ?Object) => {
-    this.refInput = c;
-  };
-}
+const DateInputWrapper = (props0: PublicProps, ref) => {
+  let props = addDefaults(props0, DEFAULT_PROPS);
+  if (IS_IOS && props.checkIos) props = timmSet(props, 'analogTime', false);
+  props = omit(props, ['checkIos']);
+  return <DateInput ref={ref} {...props} />;
+};
 
 // ==========================================
 // Public
 // ==========================================
-export default DateInputWrapper;
+export default React.forwardRef(DateInputWrapper);

@@ -15,8 +15,8 @@
   },
   "peerDependencies": {
     "moment": "^2.0.0",
-    "react": "^16.2.0",
-    "react-dom": "^16.2.0"
+    "react": "^16.3.0",
+    "react-dom": "^16.3.0"
   },
   "dependencies": {
     "filesize": "3.5.10",

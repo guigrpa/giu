@@ -15,7 +15,7 @@
     "faker": "3.0.1",
     "font-awesome": "^4.7.0",
     "fontfaceobserver": "1.7.1",
-    "giu": "*",
+    "giu": "^0.16.0-alpha.0",
     "highlight.js": "^9.11.0",
     "lodash": "^4.17.4",
     "marked": "^0.3.6",
@@ -31,7 +31,7 @@
     "typeface-roboto": "^0.0.54"
   },
   "peerDependencies": {
-    "react": "^16.2.0"
+    "react": "^16.3.0"
   },
   "_browser": "Prevent these from being included in the client bundle",
   "browser": {

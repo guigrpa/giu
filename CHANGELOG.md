@@ -1,3 +1,5 @@
+* **Breaking**: Requires React 16.3.0 or higher (uses ref forwarding, etc.).
+
 ## 0.16.0-alpha.0 (2018-3-26)
 
 * Select, DropDownMenu, ColorInput: **improved behaviour on mobile and tablet**.

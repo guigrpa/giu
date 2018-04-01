@@ -3,6 +3,7 @@
 * **Bugs**
   * When drop-down DatePicker is visible and the input disappears from view (in a transform=0 view), the picker is still shown.
   * Inline DateInputs no longer shown correctly on iOS
+  * Android Select: when item is selected, it retains focus
 * Allow DateInputs with dropdown/inline pickers to work without focusing
 * DataTable: remove focus capture on mobile and tablets
 

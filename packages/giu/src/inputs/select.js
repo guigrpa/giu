@@ -16,44 +16,15 @@ type Props = {
 // ==========================================
 // Component
 // ==========================================
-class Select extends React.Component<Props> {
-  refInput: ?Object;
-
-  static defaultProps = {};
-
-  // ==========================================
-  // Forward imperative interface
-  // ==========================================
-  getValue() {
-    return this.refInput ? this.refInput.getValue() : null;
-  }
-  getErrors() {
-    return this.refInput ? this.refInput.getErrors() : null;
-  }
-  validateAndGetValue() {
-    return this.refInput ? this.refInput.validateAndGetValue() : null;
-  }
-
-  // ==========================================
-  render() {
-    const { type } = this.props;
-    const Component = !type || type === 'native' ? SelectNative : SelectCustom;
-    return (
-      <Component
-        ref={this.registerInputRef}
-        {...this.props}
-        inlinePicker={type === 'inlinePicker'}
-      />
-    );
-  }
-
-  // ==========================================
-  registerInputRef = (c: ?Object) => {
-    this.refInput = c;
-  };
-}
+const Select = (props: Props, ref) => {
+  const { type } = props;
+  const Component = !type || type === 'native' ? SelectNative : SelectCustom;
+  return (
+    <Component ref={ref} {...props} inlinePicker={type === 'inlinePicker'} />
+  );
+};
 
 // ==========================================
 // Public
 // ==========================================
-export default Select;
+export default React.forwardRef(Select);
