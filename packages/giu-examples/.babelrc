@@ -8,7 +8,6 @@
         "polyfill": false,
         "regenerator": true
       }
-    ],
-    ["inline-import", { "extensions": [".css"] }]
+    ]
   ]
 }

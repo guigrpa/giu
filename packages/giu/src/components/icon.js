@@ -37,7 +37,7 @@ const FILTERED_PROPS = [
 ];
 
 class Icon extends React.PureComponent<Props> {
-  refButton = React.createRef();
+  refIcon = React.createRef();
 
   componentDidMount() {
     if (this.context.theme === 'mdl' && this.refIcon.current) {

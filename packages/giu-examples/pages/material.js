@@ -27,7 +27,6 @@ import {
   boxWithShadow,
   TextInput,
 } from 'giu';
-import mdlCss from 'material-design-lite/material.min.css';
 import {
   ExampleLabel,
   exampleStyle,
@@ -382,6 +381,10 @@ class AppWrapper extends React.Component {
           />
           <link
             rel="stylesheet"
+            href={`${baseUrl}/static/material-design-lite/material.min.css`}
+          />
+          <link
+            rel="stylesheet"
             href="https://fonts.googleapis.com/icon?family=Material+Icons"
           />
           <link
@@ -400,9 +403,6 @@ class AppWrapper extends React.Component {
             background: #f9fff2;
           }
         `}</style>
-        <style jsx global>
-          {mdlCss}
-        </style>
       </div>
     );
   }
