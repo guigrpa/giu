@@ -11,9 +11,9 @@
   "_dependencies": "Hoisted (to avoid dep conflicts): moment, react, react-dom",
   "dependencies": {
     "express": "^4.15.2",
-    "faker": "3.0.1",
+    "faker": "^4.1.0",
     "font-awesome": "^4.7.0",
-    "fontfaceobserver": "1.7.1",
+    "fontfaceobserver": "^2.0.13",
     "giu": "^0.16.0-alpha.0",
     "highlight.js": "^9.11.0",
     "lodash": "^4.17.5",

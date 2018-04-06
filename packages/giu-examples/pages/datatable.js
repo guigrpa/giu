@@ -21,6 +21,8 @@ import {
 } from 'giu';
 import faker from 'faker';
 
+faker.seed(0);
+
 const SIDEBAR_WIDTH = 200;
 const TOP_HEIGHT = 80;
 const DATATABLE_HEADER_HEIGHT = 40;

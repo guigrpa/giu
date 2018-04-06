@@ -28,6 +28,8 @@ import {
 import type { DataTableColumn } from 'giu/lib/components/dataTableRow';
 import { ExampleLabel, exampleStyle } from './demo1-common';
 
+faker.seed(0);
+
 const DEBUG = false && process.env.NODE_ENV !== 'production';
 
 const CELL_WITH_ELLIPSIS = {
