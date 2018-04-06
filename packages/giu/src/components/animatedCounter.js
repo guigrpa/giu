@@ -69,7 +69,7 @@ class AnimatedCounter extends React.PureComponent<Props> {
     const curValue = this.value != null ? this.value : 0;
     const targetValue = this.targetValue != null ? this.targetValue : 0;
     this.value += (targetValue - curValue) * REFRESH_PERIOD / this.timerLeft;
-    if (isNaN(this.value)) this.value = targetValue;
+    if (Number.isNaN(this.value)) this.value = targetValue;
     this.forceUpdate();
   };
 

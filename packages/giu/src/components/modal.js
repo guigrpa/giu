@@ -179,13 +179,12 @@ class Modal extends React.PureComponent<Props> {
   // ==========================================
   onKeyDown = (ev: SyntheticKeyboardEvent<*>) => {
     const { which } = ev;
-    let buttons;
     switch (which) {
       case KEYS.esc:
         if (this.props.onEsc) this.props.onEsc(ev);
         break;
-      case KEYS.return:
-        buttons = this.props.buttons;
+      case KEYS.return: {
+        const { buttons } = this.props;
         for (let i = 0; i < buttons.length; i++) {
           const button = buttons[i];
           if (button.defaultButton && button.onClick) {
@@ -194,6 +193,7 @@ class Modal extends React.PureComponent<Props> {
           }
         }
         break;
+      }
       case KEYS.pageUp:
       case KEYS.pageDown:
       case KEYS.home:
@@ -208,8 +208,7 @@ class Modal extends React.PureComponent<Props> {
   // Except when clicking on an embedded focusable node, refocus on this modal
   onClickOuter = (ev: SyntheticMouseEvent<*>) => {
     if (ev.target instanceof Element) {
-      const target: any = ev.target;
-      const { tagName, disabled } = target;
+      const { tagName, disabled } = (ev.target: any);
       if (FOCUSABLE.indexOf(tagName.toLowerCase()) >= 0 && !disabled) return;
     }
     this.focus();

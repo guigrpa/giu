@@ -1,6 +1,6 @@
 // @noflow
 
-/* eslint-disable no-underscore-dangle, max-len */
+/* eslint-disable no-underscore-dangle, max-len, react/default-props-match-prop-types */
 
 import React from 'react';
 import { omit, merge } from 'timm';
@@ -448,7 +448,7 @@ function input<DP: any, P>(
       if (disabled) return;
       let curValue = providedValue;
       if (curValue === undefined) {
-        const currentTarget: any = ev.currentTarget;
+        const currentTarget: any = ev.currentTarget; // eslint-disable-line
         curValue = currentTarget[valueAttr];
       }
       this.setCurValue(curValue);

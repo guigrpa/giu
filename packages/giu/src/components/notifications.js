@@ -57,36 +57,28 @@ function initStore() {
 const INITIAL_STATE: State = [];
 const reducer: Reducer<State, Action> = (state0 = INITIAL_STATE, action) => {
   let state = state0;
-  let id;
-  let name;
-  let idx;
-  switch (action.type) {
-    case 'NOTIFY':
-      state = addLast(state, action.pars);
-      break;
-    case 'NOTIF_RETAIN':
-      id = action.id;
-      idx = state.findIndex(o => o.id === id);
-      if (idx >= 0) {
-        state = updateIn(state, [idx, 'retained'], () => true);
-      }
-      break;
-    case 'NOTIF_DELETE':
-      id = action.id;
-      idx = state.findIndex(o => o.id === id);
-      if (idx >= 0 && !(action.fAuto && state[idx].retained)) {
-        state = removeAt(state, idx);
-      }
-      break;
-    case 'NOTIF_DELETE_BY_NAME':
-      name = action.name;
-      idx = state.findIndex(o => o.name === name);
-      if (idx >= 0) {
-        state = removeAt(state, idx);
-      }
-      break;
-    default:
-      break;
+  if (action.type === 'NOTIFY') {
+    return addLast(state, action.pars);
+  }
+  if (action.type === 'NOTIF_RETAIN') {
+    const { id } = action;
+    const idx = state.findIndex(o => o.id === id);
+    if (idx >= 0) state = updateIn(state, [idx, 'retained'], () => true);
+    return state;
+  }
+  if (action.type === 'NOTIF_DELETE') {
+    const { id } = action;
+    const idx = state.findIndex(o => o.id === id);
+    if (idx >= 0 && !(action.fAuto && state[idx].retained)) {
+      state = removeAt(state, idx);
+    }
+    return state;
+  }
+  if (action.type === 'NOTIF_DELETE_BY_NAME') {
+    const { name } = action;
+    const idx = state.findIndex(o => o.name === name);
+    if (idx >= 0) state = removeAt(state, idx);
+    return state;
   }
   return state;
 };

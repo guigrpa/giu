@@ -69,32 +69,26 @@ const INITIAL_STATE: State = {
 };
 const reducer: Reducer<State, Action> = (state0 = INITIAL_STATE, action) => {
   let state = state0;
-  let idx;
-  let id;
-  switch (action.type) {
-    case 'FLOAT_ADD':
-      state = timmSet(state, 'floats', addLast(state.floats, action.pars));
-      state = timmSet(state, 'cntReposition', state.cntReposition + 1);
-      break;
-    case 'FLOAT_DELETE':
-      id = action.id;
-      idx = state.floats.findIndex(o => o.id === id);
-      if (idx >= 0) {
-        state = timmSet(state, 'floats', removeAt(state.floats, idx));
-      }
-      break;
-    case 'FLOAT_UPDATE':
-      id = action.id;
-      idx = state.floats.findIndex(o => o.id === id);
-      if (idx >= 0) {
-        state = mergeIn(state, ['floats', idx], action.pars);
-      }
-      break;
-    case 'FLOAT_REPOSITION':
-      state = timmSet(state, 'cntReposition', state.cntReposition + 1);
-      break;
-    default:
-      break;
+  if (action.type === 'FLOAT_ADD') {
+    state = timmSet(state, 'floats', addLast(state.floats, action.pars));
+    state = timmSet(state, 'cntReposition', state.cntReposition + 1);
+    return state;
+  }
+  if (action.type === 'FLOAT_DELETE') {
+    const { id } = action;
+    const idx = state.floats.findIndex(o => o.id === id);
+    if (idx >= 0) state = timmSet(state, 'floats', removeAt(state.floats, idx));
+    return state;
+  }
+  if (action.type === 'FLOAT_UPDATE') {
+    const { id } = action;
+    const idx = state.floats.findIndex(o => o.id === id);
+    if (idx >= 0) state = mergeIn(state, ['floats', idx], action.pars);
+    return state;
+  }
+  if (action.type === 'FLOAT_REPOSITION') {
+    state = timmSet(state, 'cntReposition', state.cntReposition + 1);
+    return state;
   }
   return state;
 };
@@ -248,7 +242,7 @@ class Floats extends React.PureComponent<Props> {
     // (faster than a task)
     Promise.resolve().then(() => {
       // setTimeout(() => {
-      const floats = this.floats;
+      const { floats } = this;
       for (let idx = 0; idx < floats.length; idx++) {
         this.repositionFloat(floats[idx], idx);
       }

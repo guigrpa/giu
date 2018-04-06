@@ -39,6 +39,7 @@ rules:
   object-property-newline: off
   class-methods-use-this: off
   arrow-parens: off
+  prefer-destructuring: off
   react/sort-comp: off
   react/jsx-first-prop-new-line: off
   react/jsx-indent: off
@@ -54,6 +55,7 @@ rules:
   react/prefer-stateless-function: off
   react/jsx-max-props-per-line: off
   react/jsx-wrap-multilines: off
+  react/jsx-closing-tag-location: off
   import/no-extraneous-dependencies:
     - error
     - devDependencies: true
@@ -63,6 +65,8 @@ rules:
   jsx-a11y/no-static-element-interactions: off
   jsx-a11y/href-no-hash: off
   jsx-a11y/label-has-for: off
+  jsx-a11y/anchor-is-valid: off
+  jsx-a11y/click-events-have-key-events: off
 globals:
   # Legacy
   React$Component: false # remove when input HOC is upgrade to Flow 66

@@ -89,40 +89,35 @@ function initStore() {
 
 const reducer: Reducer<State, Action> = (state0 = INITIAL_STATE, action) => {
   let state = state0;
-  let id;
-  switch (action.type) {
-    case 'HINT_DEFINE':
-      state = updateIn(state, ['catalogue'], catalogue =>
-        timmSet(catalogue, action.id, action.pars)
-      );
-      break;
-    case 'HINT_DISABLE_ALL':
-      state = timmSet(state, 'fDisableAll', true);
-      state = timmSet(state, 'shown', null);
-      break;
-    case 'HINT_RESET':
-      state = merge(state, {
-        fDisableAll: false,
-        disabled: [],
-      });
-      break;
-    case 'HINT_SHOW':
-      id = action.id;
-      if (
-        action.force ||
-        (!state.fDisableAll && state.disabled.indexOf(id) < 0)
-      ) {
-        state = timmSet(state, 'shown', id);
-        if (state.disabled.indexOf(id) < 0) {
-          state = timmSet(state, 'disabled', state.disabled.concat(id));
-        }
+  if (action.type === 'HINT_DEFINE') {
+    state = updateIn(state, ['catalogue'], catalogue =>
+      timmSet(catalogue, action.id, action.pars)
+    );
+    return state;
+  }
+  if (action.type === 'HINT_DISABLE_ALL') {
+    state = timmSet(state, 'fDisableAll', true);
+    state = timmSet(state, 'shown', null);
+    return state;
+  }
+  if (action.type === 'HINT_RESET') {
+    return merge(state, { fDisableAll: false, disabled: [] });
+  }
+  if (action.type === 'HINT_SHOW') {
+    const { id } = action;
+    if (
+      action.force ||
+      (!state.fDisableAll && state.disabled.indexOf(id) < 0)
+    ) {
+      state = timmSet(state, 'shown', id);
+      if (state.disabled.indexOf(id) < 0) {
+        state = timmSet(state, 'disabled', state.disabled.concat(id));
       }
-      break;
-    case 'HINT_HIDE':
-      state = timmSet(state, 'shown', null);
-      break;
-    default:
-      break;
+    }
+    return state;
+  }
+  if (action.type === 'HINT_HIDE') {
+    return timmSet(state, 'shown', null);
   }
   return state;
 };

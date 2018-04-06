@@ -36,20 +36,11 @@ import {
 
 class FormExample extends React.Component<
   { lang: string },
-  {
-    fShowDateInput: boolean,
-    fixedDate: Date,
-  }
+  { fixedDate: Date }
 > {
   cmds: Array<any>;
 
-  constructor() {
-    super();
-    this.state = {
-      fShowDateInput: true,
-      fixedDate: new Date(),
-    };
-  }
+  state = { fixedDate: new Date() };
 
   render() {
     const { lang } = this.props;
