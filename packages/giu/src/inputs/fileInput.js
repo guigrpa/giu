@@ -1,12 +1,13 @@
 // @flow
 
 import React from 'react';
-import PropTypes from 'prop-types';
 import { omit, merge } from 'timm';
 import filesize from 'filesize';
 import { GLOW, HIDDEN_FOCUS_CAPTURE } from '../gral/styles';
 import input, { INPUT_HOC_INVALID_HTML_PROPS } from '../hocs/input';
 import type { Command } from '../gral/types';
+import { ThemeContext } from '../gral/themeContext';
+import type { Theme } from '../gral/themeContext';
 import Button from '../components/button';
 import Icon from '../components/icon';
 
@@ -29,6 +30,8 @@ type PublicProps = {
 
 type Props = {
   ...$Exact<PublicProps>,
+  // Context
+  theme: Theme,
   // Input HOC
   curValue: ?Object,
   onChange: (ev: SyntheticEvent<*>, providedValue: any) => any,
@@ -42,6 +45,7 @@ const FILTERED_OUT_PROPS = [
   'style',
   'skipTheme',
   'children',
+  'theme',
   ...INPUT_HOC_INVALID_HTML_PROPS,
 ];
 
@@ -49,15 +53,10 @@ const FILTERED_OUT_PROPS = [
 // Component
 // ==========================================
 class FileInput extends React.Component<Props> {
-  cntCleared: number;
   refInput: ?Object;
 
   static defaultProps = {};
-
-  constructor() {
-    super();
-    this.cntCleared = 0;
-  }
+  cntCleared: number = 0;
 
   componentDidUpdate(prevProps) {
     const { cmds } = this.props;
@@ -108,7 +107,7 @@ class FileInput extends React.Component<Props> {
       <span>
         {name} [{sizeDesc}]{' '}
         <Icon
-          icon={!skipTheme && this.context.theme === 'mdl' ? 'clear' : 'times'}
+          icon={!skipTheme && this.props.theme.id === 'mdl' ? 'clear' : 'times'}
           onClick={this.onClickClear}
           skipTheme={skipTheme}
         />
@@ -137,7 +136,12 @@ class FileInput extends React.Component<Props> {
   };
 }
 
-FileInput.contextTypes = { theme: PropTypes.any };
+// ==========================================
+const ThemedFileInput = props => (
+  <ThemeContext.Consumer>
+    {theme => <FileInput {...props} theme={theme} />}
+  </ThemeContext.Consumer>
+);
 
 // ==========================================
 const style = {
@@ -153,4 +157,4 @@ const style = {
 // ==========================================
 // Public
 // ==========================================
-export default input(FileInput, { isNull, valueAttr: 'files' });
+export default input(ThemedFileInput, { isNull, valueAttr: 'files' });

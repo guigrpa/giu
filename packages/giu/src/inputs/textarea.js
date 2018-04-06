@@ -1,12 +1,13 @@
 // @flow
 
 import React from 'react';
-import PropTypes from 'prop-types';
 import { omit, merge } from 'timm';
 import { preventDefault, stopPropagation } from '../gral/helpers';
 import { KEYS } from '../gral/constants';
 import { inputReset, INPUT_DISABLED } from '../gral/styles';
 import { isAnyModifierPressed } from '../gral/keys';
+import { ThemeContext } from '../gral/themeContext';
+import type { Theme } from '../gral/themeContext';
 import input, { INPUT_HOC_INVALID_HTML_PROPS } from '../hocs/input';
 
 const DEBUG = false && process.env.NODE_ENV !== 'production';
@@ -40,6 +41,8 @@ type Props = {
   ...$Exact<PublicProps>,
   id?: string,
   placeholder?: string,
+  // Context
+  theme: Theme,
   // Input HOC
   curValue: string,
   disabled?: boolean,
@@ -53,6 +56,7 @@ const FILTERED_OUT_PROPS = [
   'style',
   'skipTheme',
   'required',
+  'theme',
   ...INPUT_HOC_INVALID_HTML_PROPS,
 ];
 const FILTERED_OUT_PROPS_MDL = [...FILTERED_OUT_PROPS, 'placeholder'];
@@ -77,7 +81,7 @@ class Textarea extends React.Component<Props> {
   componentDidMount() {
     this.resize();
     window.addEventListener('resize', this.resize);
-    if (this.context.theme === 'mdl' && this.refOuter) {
+    if (this.props.theme.id === 'mdl' && this.refOuter) {
       window.componentHandler.upgradeElement(this.refOuter);
     }
   }
@@ -90,7 +94,7 @@ class Textarea extends React.Component<Props> {
 
   // ==========================================
   render() {
-    if (!this.props.skipTheme && this.context.theme === 'mdl') {
+    if (!this.props.skipTheme && this.props.theme.id === 'mdl') {
       return this.renderMdl();
     }
     const { curValue, disabled, style: styleField } = this.props;
@@ -157,7 +161,11 @@ class Textarea extends React.Component<Props> {
 
   resize = () => {
     if (!this.refTaPlaceholder.current) return;
-    if (!this.props.skipTheme && this.context.theme === 'mdl') return;
+
+    // Auto-resize is not supported in the MDL theme
+    if (!this.props.skipTheme && this.props.theme.id === 'mdl') return;
+
+    // Determine the height of the placeholder and apply it to the input
     const height = this.refTaPlaceholder.current.offsetHeight;
     if (!this.refInput) return;
     this.refInput.style.height = `${height}px`;
@@ -177,7 +185,12 @@ class Textarea extends React.Component<Props> {
   };
 }
 
-Textarea.contextTypes = { theme: PropTypes.any };
+// ==========================================
+const ThemedTextarea = props => (
+  <ThemeContext.Consumer>
+    {theme => <Textarea {...props} theme={theme} />}
+  </ThemeContext.Consumer>
+);
 
 // ==========================================
 const style = {
@@ -236,4 +249,8 @@ const style = {
 // ==========================================
 // Public
 // ==========================================
-export default input(Textarea, { toInternalValue, toExternalValue, isNull });
+export default input(ThemedTextarea, {
+  toInternalValue,
+  toExternalValue,
+  isNull,
+});

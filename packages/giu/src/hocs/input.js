@@ -3,7 +3,6 @@
 /* eslint-disable no-underscore-dangle, max-len */
 
 import React from 'react';
-import PropTypes from 'prop-types';
 import { omit, merge } from 'timm';
 import { cancelEvent, stopPropagation } from '../gral/helpers';
 import { COLORS, MISC, IS_IOS, FONTS } from '../gral/constants';
@@ -12,6 +11,8 @@ import { isDark } from '../gral/styles';
 import { isRequired } from '../gral/validators';
 import type { Validator } from '../gral/validators';
 import type { Command, KeyboardEventPars } from '../gral/types';
+import { ThemeContext } from '../gral/themeContext';
+import type { Theme } from '../gral/themeContext';
 import {
   floatAdd,
   floatDelete,
@@ -101,6 +102,7 @@ const INPUT_HOC_INVALID_HTML_PROPS = [
   'floatPosition',
   'onResizeOuter',
   'styleOuter',
+  'theme',
 ];
 
 // Defaults for some of the HOC's public props
@@ -129,6 +131,8 @@ type HocGeneratedProps = {
   onPaste: Function,
   onResizeOuter: Function,
   styleOuter: Object,
+  // Context
+  theme: Theme,
 };
 
 type Props = {
@@ -413,7 +417,7 @@ function input<DP: any, P>(
           ? curValue !== lastValidatedValue
           : curValue !== toInternalValue(this.props.value, this.props);
       return (
-        <div style={style.errors(fModified, this.context.theme)}>
+        <div style={style.errors(fModified, this.props.theme.id)}>
           {errors.join(' | ')}
         </div>
       );
@@ -630,9 +634,14 @@ function input<DP: any, P>(
     }
   }
 
-  Klass.contextTypes = { theme: PropTypes.any };
+  // ==========================================
+  const ThemedKlass = React.forwardRef((props, ref) => (
+    <ThemeContext.Consumer>
+      {theme => <Klass {...props} theme={theme} ref={ref} />}
+    </ThemeContext.Consumer>
+  ));
 
-  return (Klass: any);
+  return (ThemedKlass: any);
 }
 
 // ==========================================

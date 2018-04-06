@@ -1,14 +1,15 @@
 // @flow
 
 import React from 'react';
-import PropTypes from 'prop-types';
 import { merge, omit } from 'timm';
 import { COLORS } from '../gral/constants';
+import { ThemeContext } from '../gral/themeContext';
+import type { Theme } from '../gral/themeContext';
 
 const SPINNER_ICON = 'circle-o-notch';
 
 // ==========================================
-// Component
+// Declaration
 // ==========================================
 // -- A wrapper for Font Awesome icons. Props:
 // --
@@ -22,6 +23,10 @@ type Props = {
   disabled?: boolean,
   style?: Object, // merged with the `i` element style
   skipTheme?: boolean,
+
+  // Context
+  theme: Theme,
+
   // All other props are passed through to the `i` element
 };
 // -- END_DOCS
@@ -34,20 +39,24 @@ const FILTERED_PROPS = [
   'disabled',
   'style',
   'skipTheme',
+  'theme',
 ];
 
+// ==========================================
+// Component
+// ==========================================
 class Icon extends React.PureComponent<Props> {
   refIcon = React.createRef();
 
   componentDidMount() {
-    if (this.context.theme === 'mdl' && this.refIcon.current) {
+    if (this.props.theme.id === 'mdl' && this.refIcon.current) {
       window.componentHandler.upgradeElement(this.refIcon.current);
     }
   }
 
   // ==========================================
   render() {
-    if (!this.props.skipTheme && this.context.theme === 'mdl') {
+    if (!this.props.skipTheme && this.props.theme.id === 'mdl') {
       return this.renderMdl();
     }
     const { icon, spin, disabled } = this.props;
@@ -87,10 +96,13 @@ class Icon extends React.PureComponent<Props> {
   }
 }
 
-Icon.contextTypes = { theme: PropTypes.any };
-
 // ==========================================
-// Styles
+const ThemedIcon = props => (
+  <ThemeContext.Consumer>
+    {theme => <Icon {...props} theme={theme} />}
+  </ThemeContext.Consumer>
+);
+
 // ==========================================
 const style = {
   icon: ({ onClick, disabled, size, fixedWidth, style: base }) =>
@@ -131,5 +143,5 @@ const calcSize = size => {
 // ==========================================
 // Public
 // ==========================================
-export default Icon;
+export default ThemedIcon;
 export { SPINNER_ICON };

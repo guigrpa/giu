@@ -127,7 +127,7 @@ class App extends React.Component {
         break;
     }
     // return out;
-    return <Giu theme="mdl">{out}</Giu>;
+    return <Giu themeId="mdl">{out}</Giu>;
   }
 }
 

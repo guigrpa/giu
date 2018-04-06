@@ -4,7 +4,6 @@
 /* eslint-disable react/prop-types, react/no-multi-comp, react/jsx-no-bind, react/jsx-boolean-value */
 /* eslint-disable react/prefer-stateless-function */
 import React from 'react';
-import PropTypes from 'prop-types';
 import {
   Modal,
   modalPush,
@@ -18,6 +17,7 @@ import {
   Icon,
   DropDownMenu,
   Checkbox,
+  ThemeContext,
 } from 'giu';
 import {
   ExampleLabel,
@@ -119,7 +119,7 @@ class ModalExample extends React.Component<{}, { fEmbeddedModal: boolean }> {
             items={NORMAL_OPTIONS}
             onClickItem={onChange}
           >
-            <Icon icon={this.context.theme === 'mdl' ? 'menu' : 'bars'} /> Menu
+            <Icon icon={this.props.theme.id === 'mdl' ? 'menu' : 'bars'} /> Menu
           </DropDownMenu>
           <Checkbox />
           <Checkbox disabled />
@@ -186,6 +186,11 @@ class ModalExample extends React.Component<{}, { fEmbeddedModal: boolean }> {
   }
 }
 
-ModalExample.contextTypes = { theme: PropTypes.any };
+// ==========================================
+const ThemedModalExample = props => (
+  <ThemeContext.Consumer>
+    {theme => <ModalExample {...props} theme={theme} />}
+  </ThemeContext.Consumer>
+);
 
-export default ModalExample;
+export default ThemedModalExample;

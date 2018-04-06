@@ -1,7 +1,6 @@
 // @flow
 
 import React from 'react';
-import PropTypes from 'prop-types';
 import { merge } from 'timm';
 import {
   flexContainer,
@@ -11,6 +10,8 @@ import {
   darken,
 } from '../gral/styles';
 import { COLORS, FONTS } from '../gral/constants';
+import { ThemeContext } from '../gral/themeContext';
+import type { Theme } from '../gral/themeContext';
 import type { NotificationPars } from './notificationTypes';
 import Icon from './icon';
 
@@ -21,6 +22,8 @@ type Props = {
   ...NotificationPars,
   onHoverStart?: (ev: SyntheticEvent<*>) => any,
   onHoverStop?: (ev: SyntheticEvent<*>) => any,
+  // Context
+  theme: Theme,
 };
 type State = {
   hovering: boolean,
@@ -30,14 +33,13 @@ type State = {
 // Component
 // ==========================================
 class Notification extends React.PureComponent<Props, State> {
-  static defaultProps = {};
   state = { hovering: false };
 
   // ==========================================
   render() {
-    const { theme } = this.context;
+    const { theme } = this.props;
     const icon =
-      this.props.icon || (theme === 'mdl' ? 'announcement' : 'exclamation');
+      this.props.icon || (theme.id === 'mdl' ? 'announcement' : 'exclamation');
     return (
       <div
         className="giu-notification"
@@ -45,7 +47,7 @@ class Notification extends React.PureComponent<Props, State> {
         onMouseEnter={this.onHoverStart}
         onMouseLeave={this.onHoverStop}
         onClick={this.props.onClick}
-        style={style.outer(this.props, this.state, this.context.theme)}
+        style={style.outer(this.props, this.state)}
       >
         <div style={style.icon}>
           <Icon icon={icon} size="2x" spin={this.props.iconSpin} />
@@ -70,14 +72,18 @@ class Notification extends React.PureComponent<Props, State> {
   };
 }
 
-Notification.contextTypes = { theme: PropTypes.any };
+// ==========================================
+const ThemedNotification = props => (
+  <ThemeContext.Consumer>
+    {theme => <Notification {...props} theme={theme} />}
+  </ThemeContext.Consumer>
+);
 
 // ==========================================
 const style = {
   outer: (
-    { type, onClick, style: baseStyle, noStylePosition, noStyleShadow },
-    { hovering },
-    theme
+    { type, onClick, style: baseStyle, noStylePosition, noStyleShadow, theme },
+    { hovering }
   ) => {
     const finalType = type || 'info';
     let bgColor = COLORS.notifs[finalType] || COLORS.notifs.info;
@@ -91,7 +97,7 @@ const style = {
       cursor: onClick ? 'pointer' : undefined,
       backgroundColor: bgColor,
       color: fgColor,
-      fontFamily: theme === 'mdl' ? FONTS.mdl : undefined,
+      fontFamily: theme.id === 'mdl' ? FONTS.mdl : undefined,
     });
     if (!noStyleShadow) out = boxWithShadow(out);
     if (!noStylePosition) {
@@ -117,4 +123,4 @@ const style = {
 // ==========================================
 // Public
 // ==========================================
-export default Notification;
+export default ThemedNotification;

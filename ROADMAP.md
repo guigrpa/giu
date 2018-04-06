@@ -4,13 +4,17 @@
   * When drop-down DatePicker is visible and the input disappears from view (in a transform=0 view), the picker is still shown.
   * Inline DateInputs no longer shown correctly on iOS
   * Android Select: when item is selected, it retains focus
+  * DataTable example (one of them): TextArea does not cover full
 * Allow DateInputs with dropdown/inline pickers to work without focusing
 * DataTable: remove focus capture on mobile and tablets
-* Add theming via new Context
-* Use Portals?
-* ONGOING: migrate refs to use the new React.createRef() and forwardRef(). Is it useful for cases in which we are currently using register functions?
+* Migrate to the latest React:
+    * ONGOING: migrate refs to use the new React.createRef() and forwardRef(). Is it useful for cases in which we are currently using register functions?
+    * Context: use `accentColor` from context, and remove prop.
+    * Remove deprecated lifecycle hooks
+    * Use Portals?
+    * DateInput: use same wrapping approach as for other inputs (ThemedXxxx below Input HOC) and remove DateInputWrapper. Use defaults internally in the render method.
+* [ ] ONGOING: Migrate input HOC to latest Flow
 
-* [ ] Migrate input HOC to latest Flow
 * Update Font Awesome (later)
 
 * [ ] Unit tests (with Jest snapshots)

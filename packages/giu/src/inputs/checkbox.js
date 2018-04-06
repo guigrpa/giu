@@ -1,9 +1,10 @@
 // @flow
 
 import React from 'react';
-import PropTypes from 'prop-types';
 import { omit } from 'timm';
 import input, { INPUT_HOC_INVALID_HTML_PROPS } from '../hocs/input';
+import { ThemeContext } from '../gral/themeContext';
+import type { Theme } from '../gral/themeContext';
 
 const toInternalValue = val => (val != null ? val : false);
 const toExternalValue = val => val;
@@ -26,22 +27,25 @@ type PublicProps = {
 };
 // -- END_DOCS
 
+type Props = {
+  ...$Exact<PublicProps>,
+  // Context
+  theme: Theme,
+  // Input HOC
+  curValue: boolean,
+  registerOuterRef: Function,
+  registerFocusableRef: Function,
+};
+
 const FILTERED_OUT_PROPS = [
   'id',
   'label',
   'disabled',
   'styleLabel',
   'skipTheme',
+  'theme',
   ...INPUT_HOC_INVALID_HTML_PROPS,
 ];
-
-type Props = {
-  ...$Exact<PublicProps>,
-  // Input HOC
-  curValue: boolean,
-  registerOuterRef: Function,
-  registerFocusableRef: Function,
-};
 
 // ==========================================
 // Component
@@ -59,14 +63,14 @@ class Checkbox extends React.Component<Props> {
   }
 
   componentDidMount() {
-    if (this.context.theme === 'mdl' && this.refCheckbox) {
+    if (this.props.theme.id === 'mdl' && this.refCheckbox) {
       window.componentHandler.upgradeElement(this.refCheckbox);
     }
   }
 
   // ==========================================
   render() {
-    if (!this.props.skipTheme && this.context.theme === 'mdl') {
+    if (!this.props.skipTheme && this.props.theme.id === 'mdl') {
       return this.renderMdl();
     }
     return this.props.label
@@ -140,7 +144,12 @@ class Checkbox extends React.Component<Props> {
   };
 }
 
-Checkbox.contextTypes = { theme: PropTypes.any };
+// ==========================================
+const ThemedCheckbox = props => (
+  <ThemeContext.Consumer>
+    {theme => <Checkbox {...props} theme={theme} />}
+  </ThemeContext.Consumer>
+);
 
 // ==========================================
 const style = {
@@ -159,7 +168,7 @@ const style = {
 // ==========================================
 // Public
 // ==========================================
-export default input(Checkbox, {
+export default input(ThemedCheckbox, {
   toInternalValue,
   toExternalValue,
   isNull,

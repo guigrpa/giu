@@ -1,25 +1,40 @@
 // @flow
 
 import React from 'react';
-import PropTypes from 'prop-types';
+import { omit } from 'timm';
+import { ThemeContext } from '../gral/themeContext';
+import type { Theme } from '../gral/themeContext';
 
 // ==========================================
-// Component
+// Declarations
 // ==========================================
-type Props = Object;
-
 /* --
 A wrapper for the native HTML `progress` element (with 100% width).
 *All props are passed through to the `progress` element.
 Remember that an indeterminate progress bar will be shown if you
 don't specify the `value` prop (native HTML behaviour).*
 -- */
+// -- START_DOCS
+type Props = {
+  value: any,
+  // Context
+  theme: Theme,
+  // All other props are passed through to the `progress` element
+  // (except in the `mdl` theme, in which no props are passed)
+};
+// -- END_DOCS
+
+const FILTERED_PROPS = ['theme'];
+
+// ==========================================
+// Component
+// ==========================================
 class Progress extends React.PureComponent<Props> {
   refMdl = React.createRef();
 
   componentDidMount() {
     const nodeMdl = this.refMdl.current;
-    if (this.context.theme === 'mdl' && nodeMdl) {
+    if (this.props.theme.id === 'mdl' && nodeMdl) {
       nodeMdl.addEventListener('mdl-componentupgraded', this.mdlRefresh);
       window.componentHandler.upgradeElement(nodeMdl);
     }
@@ -31,8 +46,9 @@ class Progress extends React.PureComponent<Props> {
 
   // ==========================================
   render() {
-    if (this.context.theme === 'mdl') return this.renderMdl();
-    return <progress {...this.props} style={style.progress} />;
+    if (this.props.theme.id === 'mdl') return this.renderMdl();
+    const otherProps = omit(this.props, FILTERED_PROPS);
+    return <progress {...otherProps} style={style.progress} />;
   }
 
   renderMdl() {
@@ -52,7 +68,12 @@ class Progress extends React.PureComponent<Props> {
   };
 }
 
-Progress.contextTypes = { theme: PropTypes.any };
+// ==========================================
+const ThemedProgress = props => (
+  <ThemeContext.Consumer>
+    {theme => <Progress {...props} theme={theme} />}
+  </ThemeContext.Consumer>
+);
 
 // ==========================================
 const style = {
@@ -62,4 +83,4 @@ const style = {
 // ==========================================
 // Public
 // ==========================================
-export default Progress;
+export default ThemedProgress;

@@ -23,6 +23,8 @@ export { tinycolor };
 // Components
 import Giu from './components/giu';
 export { Giu };
+import { ThemeContext } from './gral/themeContext';
+export { ThemeContext };
 
 import Select from './inputs/select';
 export { Select };

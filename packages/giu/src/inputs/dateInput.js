@@ -3,7 +3,6 @@
 /* eslint-disable react/no-multi-comp */
 
 import React from 'react';
-import PropTypes from 'prop-types';
 import { omit, merge, set as timmSet, addDefaults } from 'timm';
 import moment from '../vendor/moment';
 import { cancelEvent, stopPropagation } from '../gral/helpers';
@@ -24,6 +23,8 @@ import {
 } from '../gral/dates';
 import type { Command, KeyboardEventPars, Moment } from '../gral/types';
 import { isDate } from '../gral/validators';
+import { ThemeContext } from '../gral/themeContext';
+import type { Theme } from '../gral/themeContext';
 import input, { INPUT_HOC_INVALID_HTML_PROPS } from '../hocs/input';
 import { floatAdd, floatDelete, floatUpdate } from '../components/floats';
 import type { FloatPosition, FloatAlign } from '../components/floats';
@@ -151,6 +152,8 @@ type Props = {
   ...$Exact<PublicProps>,
   ...$Exact<DefaultProps>,
   id?: string,
+  // Context
+  theme: Theme,
   // Input HOC
   curValue: string,
   errors: Array<string>,
@@ -189,6 +192,7 @@ const FILTERED_OUT_PROPS = [
   'accentColor',
   ...INPUT_HOC_INVALID_HTML_PROPS,
   'required',
+  'theme',
 ];
 
 const FILTERED_OUT_PROPS_MDL = FILTERED_OUT_PROPS.concat(['placeholder']);
@@ -197,21 +201,19 @@ const FILTERED_OUT_PROPS_MDL = FILTERED_OUT_PROPS.concat(['placeholder']);
 // Component
 //------------------------------------------
 class BaseDateInput extends React.Component<Props, State> {
-  cmdsToPicker: ?Array<Command>;
   keyDown: void | KeyboardEventPars;
   lastExtValue: ?Moment;
   labelId: string;
   floatId: ?string;
   refInput: ?Object;
 
+  state = { fFloat: false };
   static defaultProps = {};
+  cmdsToPicker: ?Array<Command> = null;
   refMdl = React.createRef();
 
   constructor(props: Props) {
     super(props);
-    this.state = { fFloat: false };
-    this.cmdsToPicker = null;
-    this.keyDown = undefined;
     this.lastExtValue = toExternalValue(props.curValue, props);
     this.labelId = this.props.id || `giu-date-input_${cntId}`;
     cntId += 1;
@@ -224,7 +226,7 @@ class BaseDateInput extends React.Component<Props, State> {
   }
 
   componentDidMount() {
-    if (this.context.theme === 'mdl' && this.refMdl.current)
+    if (this.props.theme.id === 'mdl' && this.refMdl.current)
       window.componentHandler.upgradeElement(this.refMdl.current);
   }
 
@@ -313,7 +315,7 @@ class BaseDateInput extends React.Component<Props, State> {
   }
 
   renderField(fHidden) {
-    if (!fHidden && !this.props.skipTheme && this.context.theme === 'mdl') {
+    if (!fHidden && !this.props.skipTheme && this.props.theme.id === 'mdl') {
       return this.renderFieldMdl();
     }
     const {
@@ -530,8 +532,6 @@ class BaseDateInput extends React.Component<Props, State> {
   };
 }
 
-BaseDateInput.contextTypes = { theme: PropTypes.any };
-
 // ==========================================
 const style = {
   outerInline: ({ styleOuter }) => {
@@ -574,7 +574,11 @@ const DateInputWrapper = (props0: PublicProps, ref) => {
   let props = addDefaults(props0, DEFAULT_PROPS);
   if (IS_IOS && props.checkIos) props = timmSet(props, 'analogTime', false);
   props = omit(props, ['checkIos']);
-  return <DateInput ref={ref} {...props} />;
+  return (
+    <ThemeContext.Consumer>
+      {theme => <DateInput {...props} theme={theme} ref={ref} />}
+    </ThemeContext.Consumer>
+  );
 };
 
 // ==========================================

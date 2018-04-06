@@ -3,29 +3,24 @@
 /* eslint-disable global-require */
 
 import React from 'react';
-import PropTypes from 'prop-types';
+import { addDefaults } from 'timm';
+import { ThemeContext, DEFAULT_THEME } from '../gral/themeContext';
 
 // ==========================================
 // Component
 // ==========================================
 // -- A root component that can be used for custom themes.
 type Props = {
-  theme: string | Object,
+  themeId: string | Object,
+  accentColor?: string,
   children: any,
 };
 
-class Giu extends React.PureComponent<Props> {
-  getChildContext() {
-    return { theme: this.props.theme };
-  }
-
-  render() {
-    return this.props.children;
-  }
-}
-
-Giu.childContextTypes = {
-  theme: PropTypes.any,
+const Giu = ({ themeId: id, accentColor, children }: Props) => {
+  const theme = addDefaults({ id, accentColor }, DEFAULT_THEME);
+  return (
+    <ThemeContext.Provider value={theme}>{children}</ThemeContext.Provider>
+  );
 };
 
 // ==========================================

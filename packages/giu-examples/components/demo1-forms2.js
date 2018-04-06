@@ -3,13 +3,12 @@
 /* eslint-disable react/no-string-refs */
 
 import React from 'react';
-import PropTypes from 'prop-types';
-import { NumberInput, isLte, Button, Select, notify } from 'giu';
+import { NumberInput, isLte, Button, Select, notify, ThemeContext } from 'giu';
 import { ExampleLabel, exampleStyle, NORMAL_OPTIONS } from './demo1-common';
 
 class FormExample extends React.Component<{}, { a: any, b: any }> {
   refs: any;
-  state = { a: null, b: 4, c: null };
+  state: Object = { a: null, b: 4, c: null };
 
   render() {
     return (
@@ -74,13 +73,13 @@ class FormExample extends React.Component<{}, { a: any, b: any }> {
       ]);
       notify({
         msg: `Values: ${a}, ${b}, ${c}`,
-        icon: this.context.theme === 'mdl' ? 'thumb_up' : 'thumbs-up',
+        icon: this.props.theme.id === 'mdl' ? 'thumb_up' : 'thumbs-up',
       });
     } catch (err) {
       notify({
         msg: 'Validation failed',
         type: 'error',
-        icon: this.context.theme === 'mdl' ? 'warning' : 'bullhorn',
+        icon: this.props.theme.id === 'mdl' ? 'warning' : 'bullhorn',
       });
     }
   };
@@ -88,6 +87,11 @@ class FormExample extends React.Component<{}, { a: any, b: any }> {
   readValues = async () => {};
 }
 
-FormExample.contextTypes = { theme: PropTypes.any };
+// ==========================================
+const ThemedFormExample = props => (
+  <ThemeContext.Consumer>
+    {theme => <FormExample {...props} theme={theme} />}
+  </ThemeContext.Consumer>
+);
 
-export default FormExample;
+export default ThemedFormExample;

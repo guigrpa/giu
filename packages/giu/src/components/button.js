@@ -1,12 +1,13 @@
 // @flow
 
 import React from 'react';
-import PropTypes from 'prop-types';
 import { omit, merge } from 'timm';
 import { COLORS } from '../gral/constants';
+import { ThemeContext } from '../gral/themeContext';
+import type { Theme } from '../gral/themeContext';
 
 // ==========================================
-// Component
+// Declarations
 // ==========================================
 // -- An inconspicuous-looking button-in-a-`span`. Props:
 // --
@@ -26,6 +27,9 @@ type Props = {
   fab?: boolean,
   classNames?: Array<string>,
 
+  // Context
+  theme: Theme,
+
   // All other props are passed through to the `span` element
 };
 // -- END_DOCS
@@ -38,6 +42,7 @@ const FILTERED_PROPS_MDL = [
   'accent',
   'fab',
   'classNames',
+  'theme',
 ];
 const FILTERED_PROPS = [
   ...FILTERED_PROPS_MDL,
@@ -47,17 +52,21 @@ const FILTERED_PROPS = [
   'style',
 ];
 
+// ==========================================
+// Component
+// ==========================================
 class Button extends React.PureComponent<Props> {
   refButton = React.createRef();
 
   componentDidMount() {
-    if (this.context.theme === 'mdl' && this.refButton.current) {
+    if (this.props.theme.id === 'mdl' && this.refButton.current) {
       window.componentHandler.upgradeElement(this.refButton.current);
     }
   }
 
+  // ==========================================
   render() {
-    if (!this.props.skipTheme && this.context.theme === 'mdl') {
+    if (!this.props.skipTheme && this.props.theme.id === 'mdl') {
       return this.renderMdl();
     }
     const { children, disabled, onClick } = this.props;
@@ -100,10 +109,13 @@ class Button extends React.PureComponent<Props> {
   }
 }
 
-Button.contextTypes = { theme: PropTypes.any };
-
 // ==========================================
-// Styles
+const ThemedButton = props => (
+  <ThemeContext.Consumer>
+    {theme => <Button {...props} theme={theme} />}
+  </ThemeContext.Consumer>
+);
+
 // ==========================================
 const style = {
   plainBase: {
@@ -137,4 +149,4 @@ const style = {
 // ==========================================
 // Public
 // ==========================================
-export default Button;
+export default ThemedButton;

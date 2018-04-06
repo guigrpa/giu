@@ -1,10 +1,11 @@
 // @flow
 
 import React from 'react';
-import PropTypes from 'prop-types';
 import { omit, merge, set as timmSet } from 'timm';
 import { inputReset, INPUT_DISABLED } from '../gral/styles';
 import { isNumber } from '../gral/validators';
+import { ThemeContext } from '../gral/themeContext';
+import type { Theme } from '../gral/themeContext';
 import input, { INPUT_HOC_INVALID_HTML_PROPS } from '../hocs/input';
 
 const NULL_VALUE = '';
@@ -52,6 +53,8 @@ type Props = {
   ...$Exact<PublicProps>,
   id?: string,
   placeholder?: string,
+  // Context
+  theme: Theme,
   // Input HOC
   curValue: any,
   errors: Array<string>,
@@ -65,6 +68,7 @@ const FILTERED_OUT_PROPS = [
   'skipTheme',
   'vertical',
   'required',
+  'theme',
   ...INPUT_HOC_INVALID_HTML_PROPS,
 ];
 
@@ -88,7 +92,7 @@ function createClass(name, inputType) {
     }
 
     componentDidMount() {
-      if (this.context.theme === 'mdl' && this.refMdl.current) {
+      if (this.props.theme.id === 'mdl' && this.refMdl.current) {
         window.componentHandler.upgradeElement(this.refMdl.current);
       }
     }
@@ -97,7 +101,7 @@ function createClass(name, inputType) {
     render() {
       if (
         !this.props.skipTheme &&
-        this.context.theme === 'mdl' &&
+        this.props.theme.id === 'mdl' &&
         !this.props.vertical
       ) {
         return this.renderMdl();
@@ -169,9 +173,13 @@ function createClass(name, inputType) {
     }
   };
 
-  Klass.contextTypes = { theme: PropTypes.any };
+  const ThemedKlass = props => (
+    <ThemeContext.Consumer>
+      {theme => <Klass {...props} theme={theme} />}
+    </ThemeContext.Consumer>
+  );
 
-  return input(Klass, classOptions[inputType]);
+  return input(ThemedKlass, classOptions[inputType]);
 }
 
 // ==========================================

@@ -1,11 +1,12 @@
 // @flow
 
 import React from 'react';
-import PropTypes from 'prop-types';
 import { merge } from 'timm';
 import { KEYS, MISC } from '../gral/constants';
 import { cancelEvent, cancelBodyScrolling } from '../gral/helpers';
 import { flexContainer, flexItem, boxWithShadow } from '../gral/styles';
+import { ThemeContext } from '../gral/themeContext';
+import type { Theme } from '../gral/themeContext';
 import Button from './button';
 import Backdrop from './backdrop';
 import FocusCapture from './focusCapture';
@@ -15,7 +16,7 @@ import type { ModalPars, ModalButton } from './modalTypes'; // eslint-disable-li
 const FOCUSABLE = ['input', 'textarea', 'select'];
 
 // ==========================================
-// Component
+// Declarations
 // ==========================================
 /* --
 A simple example with an embedded Modal:
@@ -61,14 +62,20 @@ type DefaultProps = {|
 type Props = {
   ...ModalPars,
   ...DefaultProps,
+  // Context
+  theme: Theme,
 };
 
+// ==========================================
+// Component
+// ==========================================
 class Modal extends React.PureComponent<Props> {
+  refFocusCapture: any;
+
   static defaultProps: DefaultProps = {
     buttons: ([]: Array<ModalButton>),
     zIndex: MISC.zModalBase,
   };
-  refFocusCapture: any;
 
   // ==========================================
   // Imperative API
@@ -209,7 +216,12 @@ class Modal extends React.PureComponent<Props> {
   };
 }
 
-Modal.contextTypes = { theme: PropTypes.any };
+// ==========================================
+const ThemedModal = React.forwardRef((props, ref) => (
+  <ThemeContext.Consumer>
+    {theme => <Modal {...props} theme={theme} ref={ref} />}
+  </ThemeContext.Consumer>
+));
 
 // ==========================================
 const style = {
@@ -258,4 +270,4 @@ const style = {
 // ==========================================
 // Public
 // ==========================================
-export default Modal;
+export default ThemedModal;
