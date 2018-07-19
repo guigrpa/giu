@@ -3,7 +3,7 @@
 /* eslint-disable no-underscore-dangle, max-len, react/default-props-match-prop-types */
 
 import React from 'react';
-import { omit, merge } from 'timm';
+import { omit, merge, addDefaults } from 'timm';
 import { cancelEvent, stopPropagation } from '../gral/helpers';
 import { COLORS, MISC, IS_IOS, FONTS } from '../gral/constants';
 import { scrollIntoView } from '../gral/visibility';
@@ -656,7 +656,7 @@ const errorFgColorModified =
 const style = {
   wrapper: ({ styleOuter }) => {
     let out = styleOuter || {};
-    out = merge(out, {
+    out = addDefaults(out, {
       position: 'relative',
       display: 'inline-block',
     });
