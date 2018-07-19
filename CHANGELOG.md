@@ -1,3 +1,5 @@
+## 0.16.0-alpha.1 (2018-7-19)
+
 * **Breaking**: Requires React 16.3.0 or higher (uses ref forwarding, new Context API, etc.).
 * **Breaking**: Giu component: `theme` prop is now called `themeId`, and it also supports an `accentColor` prop which is passed down to components that previously had their own `accentColor` props. Giu now uses the new React 16.3 Context API extensively. Theming is expected to be expanded in future releases.
 
