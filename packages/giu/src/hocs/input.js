@@ -635,6 +635,7 @@ function input<DP: any, P>(
   }
 
   // ==========================================
+  // $FlowFixMe
   const ThemedKlass = React.forwardRef((props, ref) => (
     <ThemeContext.Consumer>
       {theme => <Klass {...props} theme={theme} ref={ref} />}

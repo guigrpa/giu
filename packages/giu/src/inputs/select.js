@@ -27,4 +27,5 @@ const Select = (props: Props, ref) => {
 // ==========================================
 // Public
 // ==========================================
+// $FlowFixMe
 export default React.forwardRef(Select);

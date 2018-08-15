@@ -92,12 +92,14 @@ class HintScreen extends React.PureComponent<Props> {
     if (!arrows || !arrows.length) return null;
     return (
       <svg style={style.svg}>
-        {arrows.map((arrow, idx) => <HintArrow key={idx} {...arrow} />)}
+        {arrows.map((arrow, idx) => (
+          <HintArrow key={idx} {...arrow} />
+        ))}
       </svg>
     );
   }
 
-  renderLabels(elements: Array<Element>) {
+  renderLabels(elements: Array<Element>): ?Array<*> {
     const labels: Array<HintLabelPars> = (elements.filter(
       o => o.type === 'LABEL'
     ): Array<any>);

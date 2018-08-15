@@ -218,8 +218,8 @@ class DataTable extends React.PureComponent<Props> {
   RowComponents: { [key: string]: ComponentType<any> };
   refVirtualScroller: ?Object;
 
-  refOuter = React.createRef();
-  refFocusCapture = React.createRef();
+  refOuter: any = React.createRef();
+  refFocusCapture: any = React.createRef();
   static defaultProps: DefaultProps = {
     itemsById: {},
     shownIds: ([]: Array<string>),
@@ -417,7 +417,7 @@ class DataTable extends React.PureComponent<Props> {
   // Imperative API
   // ==========================================
   focus() {
-    this.refFocusCapture.current.focus();
+    if (this.refFocusCapture.current) this.refFocusCapture.current.focus();
   }
   // scrollToTop: see below
 
@@ -896,7 +896,7 @@ class DataTable extends React.PureComponent<Props> {
       const id = ids[i];
       sortValues[id] = getSortValue(itemsById[id]);
     }
-    const sortedIds = ids.slice();
+    const sortedIds: Array<string> = ids.slice();
     sortedIds.sort((idA, idB) => {
       const valueA = sortValues[idA];
       const valueB = sortValues[idB];
@@ -915,7 +915,7 @@ class DataTable extends React.PureComponent<Props> {
     return sortedIds;
   }
 
-  processCustomPositions(ids: Array<string>, props: Props) {
+  processCustomPositions(ids: Array<string>, props: Props): Array<string> {
     const { customPositions } = props;
     if (!customPositions) return ids;
     if (!Object.keys(customPositions).length) return ids;

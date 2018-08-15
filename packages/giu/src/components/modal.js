@@ -167,7 +167,9 @@ class Modal extends React.PureComponent<Props> {
         plain={
           btn.plain != null
             ? btn.plain
-            : theme === 'mdl' && !btn.defaultButton ? true : undefined
+            : theme === 'mdl' && !btn.defaultButton
+              ? true
+              : undefined
         }
         accent={btn.accent}
       >
@@ -216,6 +218,7 @@ class Modal extends React.PureComponent<Props> {
 }
 
 // ==========================================
+// $FlowFixMe
 const ThemedModal = React.forwardRef((props, ref) => (
   <ThemeContext.Consumer>
     {theme => <Modal {...props} theme={theme} ref={ref} />}

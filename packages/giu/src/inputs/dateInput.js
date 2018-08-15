@@ -584,4 +584,5 @@ const DateInputWrapper = (props0: PublicProps, ref) => {
 // ==========================================
 // Public
 // ==========================================
+// $FlowFixMe
 export default React.forwardRef(DateInputWrapper);

@@ -4,9 +4,10 @@
 
 import React from 'react';
 import { NumberInput, isLte, Button, Select, notify, ThemeContext } from 'giu';
+import type { Theme } from 'giu/lib/gral/themeContext';
 import { ExampleLabel, exampleStyle, NORMAL_OPTIONS } from './demo1-common';
 
-class FormExample extends React.Component<{}, { a: any, b: any }> {
+class FormExample extends React.Component<{ theme: Theme }, { a: any, b: any, c: any }> {
   refs: any;
   state: Object = { a: null, b: 4, c: null };
 
@@ -88,7 +89,7 @@ class FormExample extends React.Component<{}, { a: any, b: any }> {
 }
 
 // ==========================================
-const ThemedFormExample = props => (
+const ThemedFormExample = (props: Object) => (
   <ThemeContext.Consumer>
     {theme => <FormExample {...props} theme={theme} />}
   </ThemeContext.Consumer>

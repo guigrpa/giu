@@ -14,7 +14,7 @@ const SPINNER_ICON = 'circle-o-notch';
 // -- A wrapper for Font Awesome icons. Props:
 // --
 // -- START_DOCS
-type Props = {
+type PublicProps = {
   icon: string, // e.g. `ambulance`, `cogs`...
   size?: 'lg' | '2x' | '3x' | '4x' | '5x',
   fixedWidth?: boolean,
@@ -24,12 +24,15 @@ type Props = {
   style?: Object, // merged with the `i` element style
   skipTheme?: boolean,
 
-  // Context
-  theme: Theme,
-
   // All other props are passed through to the `i` element
 };
 // -- END_DOCS
+
+type Props = {
+  ...$Exact<PublicProps>,
+  // Context
+  theme: Theme,
+};
 
 const FILTERED_PROPS = [
   'icon',
@@ -97,7 +100,7 @@ class Icon extends React.PureComponent<Props> {
 }
 
 // ==========================================
-const ThemedIcon = props => (
+const ThemedIcon = (props: PublicProps) => (
   <ThemeContext.Consumer>
     {theme => <Icon {...props} theme={theme} />}
   </ThemeContext.Consumer>

@@ -15,15 +15,17 @@ Remember that an indeterminate progress bar will be shown if you
 don't specify the `value` prop (native HTML behaviour).*
 -- */
 // -- START_DOCS
-type Props = {
+type PublicProps = {
   value: any,
-  // Context
-  theme: Theme,
   // All other props are passed through to the `progress` element
   // (except in the `mdl` theme, in which no props are passed)
 };
 // -- END_DOCS
-
+type Props = {
+  ...$Exact<PublicProps>,
+  // Context
+  theme: Theme,
+};
 const FILTERED_PROPS = ['theme'];
 
 // ==========================================
@@ -69,7 +71,7 @@ class Progress extends React.PureComponent<Props> {
 }
 
 // ==========================================
-const ThemedProgress = props => (
+const ThemedProgress = (props: PublicProps) => (
   <ThemeContext.Consumer>
     {theme => <Progress {...props} theme={theme} />}
   </ThemeContext.Consumer>

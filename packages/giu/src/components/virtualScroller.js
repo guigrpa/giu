@@ -257,6 +257,7 @@ class VirtualScroller extends React.PureComponent<Props> {
     const { refScroller } = this;
     if (refScroller.current == null) return;
     const delta = sign * Math.max(this.clientHeight - 15, 0);
+    // $FlowFixMe
     refScroller.current.scrollTop += delta;
     this.initPendingScroll();
     this.recalcViewport();
@@ -340,7 +341,7 @@ class VirtualScroller extends React.PureComponent<Props> {
     const { shownIds } = this.props;
     const numVisibleRows = idxLast - idxFirst + 1;
     this.pendingHeights = [];
-    let rows = new Array(numVisibleRows);
+    let rows: Array<*> = new Array(numVisibleRows);
     for (let i = 0; i < numVisibleRows; i++) {
       const idx = idxFirst + i;
       const id = shownIds[idx];

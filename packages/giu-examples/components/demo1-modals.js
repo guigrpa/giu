@@ -19,6 +19,7 @@ import {
   Checkbox,
   ThemeContext,
 } from 'giu';
+import type { Theme } from 'giu/lib/gral/themeContext';
 import {
   ExampleLabel,
   exampleStyle,
@@ -27,7 +28,7 @@ import {
   onChange,
 } from './demo1-common';
 
-class ModalExample extends React.Component<{}, { fEmbeddedModal: boolean }> {
+class ModalExample extends React.Component<{ theme: Theme }, { fEmbeddedModal: boolean }> {
   refInput: ?Object;
   refName: ?Object;
 
@@ -187,7 +188,7 @@ class ModalExample extends React.Component<{}, { fEmbeddedModal: boolean }> {
 }
 
 // ==========================================
-const ThemedModalExample = props => (
+const ThemedModalExample = (props: Object) => (
   <ThemeContext.Consumer>
     {theme => <ModalExample {...props} theme={theme} />}
   </ThemeContext.Consumer>

@@ -12,7 +12,7 @@ import type { Theme } from '../gral/themeContext';
 // -- An inconspicuous-looking button-in-a-`span`. Props:
 // --
 // -- START_DOCS
-type Props = {
+type PublicProps = {
   plain?: boolean, // removes most button styles
   children?: any, // button contents (can include `Icon` components, etc.)
   onClick?: (ev: SyntheticMouseEvent<*>) => any,
@@ -27,12 +27,15 @@ type Props = {
   fab?: boolean,
   classNames?: Array<string>,
 
-  // Context
-  theme: Theme,
-
   // All other props are passed through to the `span` element
 };
 // -- END_DOCS
+
+type Props = {
+  ...$Exact<PublicProps>,
+  // Context
+  theme: Theme,
+};
 
 const FILTERED_PROPS_MDL = [
   'skipTheme',
@@ -111,7 +114,7 @@ class Button extends React.PureComponent<Props> {
 }
 
 // ==========================================
-const ThemedButton = props => (
+const ThemedButton = (props: PublicProps) => (
   <ThemeContext.Consumer>
     {theme => <Button {...props} theme={theme} />}
   </ThemeContext.Consumer>

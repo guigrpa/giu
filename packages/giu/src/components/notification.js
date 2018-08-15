@@ -18,10 +18,13 @@ import Icon from './icon';
 // ==========================================
 // Declarations
 // ==========================================
-type Props = {
+type PublicProps = {
   ...NotificationPars,
   onHoverStart?: (ev: SyntheticEvent<*>) => any,
   onHoverStop?: (ev: SyntheticEvent<*>) => any,
+};
+type Props = {
+  ...$Exact<PublicProps>,
   // Context
   theme: Theme,
 };
@@ -73,7 +76,7 @@ class Notification extends React.PureComponent<Props, State> {
 }
 
 // ==========================================
-const ThemedNotification = props => (
+const ThemedNotification = (props: PublicProps) => (
   <ThemeContext.Consumer>
     {theme => <Notification {...props} theme={theme} />}
   </ThemeContext.Consumer>
