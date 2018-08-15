@@ -10,8 +10,6 @@ const toInternalValue = val => (val != null ? val : false);
 const toExternalValue = val => val;
 const isNull = val => val == null;
 
-let cntId = 0;
-
 // ==========================================
 // Declarations
 // ==========================================
@@ -51,16 +49,9 @@ const FILTERED_OUT_PROPS = [
 // Component
 // ==========================================
 class Checkbox extends React.Component<Props> {
-  labelId: string;
   refCheckbox: ?Object;
 
   static defaultProps = {};
-
-  constructor(props: Props) {
-    super(props);
-    this.labelId = this.props.id || `giu-checkbox_${cntId}`;
-    cntId += 1;
-  }
 
   componentDidMount() {
     if (this.props.theme.id === 'mdl' && this.refCheckbox) {
@@ -87,7 +78,7 @@ class Checkbox extends React.Component<Props> {
         style={style.wrapper}
       >
         {this.renderInput()}
-        <label htmlFor={this.labelId} style={styleLabel}>
+        <label htmlFor={this.props.id} style={styleLabel}>
           {label}
         </label>
       </span>
@@ -100,7 +91,7 @@ class Checkbox extends React.Component<Props> {
     return (
       <input
         ref={registerFocusableRef}
-        id={this.labelId}
+        id={this.props.id}
         className={className}
         type="checkbox"
         checked={curValue}
@@ -113,16 +104,17 @@ class Checkbox extends React.Component<Props> {
 
   renderMdl() {
     const inputProps = omit(this.props, FILTERED_OUT_PROPS);
+    const { id } = this.props;
     return (
       <label
         ref={this.registerOuterRefMdl}
         className="mdl-switch mdl-js-switch mdl-js-ripple-effect"
-        htmlFor={this.labelId}
+        htmlFor={id}
         style={style.wrapperMdl}
       >
         <input
           ref={this.props.registerFocusableRef}
-          id={this.labelId}
+          id={id}
           className="mdl-switch__input"
           type="checkbox"
           checked={this.props.curValue}

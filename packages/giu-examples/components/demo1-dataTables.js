@@ -272,6 +272,7 @@ class DevelopmentExample extends React.Component<*, *> {
             Select random row
           </Button>
           <Checkbox
+            id="demo-data-tables-altLayout"
             label={
               curLang === 'es' ? 'Layout alternativo' : 'Alternative layout'
             }

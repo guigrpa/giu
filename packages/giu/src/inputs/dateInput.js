@@ -84,8 +84,6 @@ const displayToMoment = (str, props) => {
   return mom.isValid() ? mom : null;
 };
 
-let cntId = 0;
-
 // ==========================================
 // DateInput
 // ==========================================
@@ -203,7 +201,6 @@ const FILTERED_OUT_PROPS_MDL = FILTERED_OUT_PROPS.concat(['placeholder']);
 class BaseDateInput extends React.Component<Props, State> {
   keyDown: void | KeyboardEventPars;
   lastExtValue: ?Moment;
-  labelId: string;
   floatId: ?string;
   refInput: ?Object;
 
@@ -215,8 +212,6 @@ class BaseDateInput extends React.Component<Props, State> {
   constructor(props: Props) {
     super(props);
     this.lastExtValue = toExternalValue(props.curValue, props);
-    this.labelId = this.props.id || `giu-date-input_${cntId}`;
-    cntId += 1;
   }
 
   componentWillReceiveProps(nextProps) {
@@ -354,6 +349,7 @@ class BaseDateInput extends React.Component<Props, State> {
 
   renderFieldMdl() {
     const {
+      id,
       curValue,
       onChange,
       placeholder,
@@ -378,7 +374,7 @@ class BaseDateInput extends React.Component<Props, State> {
           className="mdl-textfield__input"
           type="text"
           value={curValue}
-          id={this.labelId}
+          id={id}
           {...otherProps}
           onFocus={this.onFocus}
           onBlur={this.onBlur}
@@ -386,7 +382,7 @@ class BaseDateInput extends React.Component<Props, State> {
           onKeyDown={this.onKeyDown}
           tabIndex={disabled ? -1 : undefined}
         />
-        <label className="mdl-textfield__label" htmlFor={this.labelId}>
+        <label className="mdl-textfield__label" htmlFor={id}>
           {placeholder || dateTimeFormat(date, time, seconds)}
         </label>
       </div>

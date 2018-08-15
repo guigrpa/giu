@@ -347,7 +347,7 @@ class InputTypes extends React.Component {
           <li>
             <a href="#radiogroup">RadioGroup</a>:
             <div>
-              <RadioGroup items={getExampleItems()} value="cherries" />
+              <RadioGroup id="group-example-a" items={getExampleItems()} value="cherries" />
             </div>
           </li>
           <li>
@@ -918,7 +918,7 @@ const Selects = () => (
 
 const RadioGroups = () => (
   <CenteredFlex>
-    <RadioGroup items={getExampleItems()} value="cherries" />
+    <RadioGroup id="group-example-zzz" items={getExampleItems()} value="cherries" />
   </CenteredFlex>
 );
 

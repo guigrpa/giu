@@ -22,14 +22,13 @@ const toExternalValue = val => {
 };
 const isNull = val => val === NULL_STRING;
 
-let cntId = 0;
-
 // ==========================================
 // Declarations
 // ==========================================
 // -- Props:
 // -- START_DOCS
 type PublicProps = {
+  id: string,
   items: Array<RadioChoice>,
   lang?: string, // current language (used just for force-render)
   disabled?: boolean,
@@ -57,15 +56,8 @@ type Props = {
 // ==========================================
 class RadioGroup extends React.Component<Props> {
   items: Array<RadioChoice>;
-  buttonGroupName: string;
 
   static defaultProps = {};
-
-  constructor() {
-    super();
-    this.buttonGroupName = `giu-radio-group_${cntId}`;
-    cntId += 1;
-  }
 
   componentWillMount() {
     this.prepareItems(this.props.items);
@@ -86,17 +78,17 @@ class RadioGroup extends React.Component<Props> {
   }
 
   renderItem = (item, idx) => {
-    const { curValue } = this.props;
+    const { id, curValue } = this.props;
     const { value, label, labelExtra } = item;
-    const id = `${this.buttonGroupName}_${idx}`;
+    const itemId = `${id}_${idx}`;
     const finalLabel =
       label && typeof label === 'function' ? label(this.props.lang) : label;
     return (
       <div key={value} id={idx} onClick={this.onClickItem}>
         <input
           type="radio"
-          name={this.buttonGroupName}
-          id={id}
+          name={id}
+          id={itemId}
           value={value}
           checked={curValue === value}
           onMouseDown={preventDefault}

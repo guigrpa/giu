@@ -33,8 +33,6 @@ const classOptions = {
   },
 };
 
-let cntId = 0;
-
 // ==========================================
 // Declarations
 // ==========================================
@@ -79,17 +77,9 @@ const FILTERED_OUT_PROPS_MDL = FILTERED_OUT_PROPS.concat(['placeholder']);
 // ==========================================
 function createClass(name, inputType) {
   const Klass = class extends React.Component<Props> {
-    labelId: string;
-
     static displayName = name;
     static defaultProps = {};
     refMdl = React.createRef();
-
-    constructor(props: Props) {
-      super(props);
-      this.labelId = props.id || `giu-${inputType}-input_${cntId}`;
-      cntId += 1;
-    }
 
     componentDidMount() {
       if (this.props.theme.id === 'mdl' && this.refMdl.current) {
@@ -130,7 +120,13 @@ function createClass(name, inputType) {
 
     renderMdl() {
       if (inputType === 'range') return this.renderMdlSlider();
-      const { curValue, disabled, registerFocusableRef, fFocused } = this.props;
+      const {
+        id,
+        curValue,
+        disabled,
+        registerFocusableRef,
+        fFocused,
+      } = this.props;
       const otherProps = omit(this.props, FILTERED_OUT_PROPS_MDL);
       let className = `giu-${inputType}-input mdl-textfield mdl-js-textfield mdl-textfield--floating-label`;
       if (curValue !== '' || fFocused) className += ' is-dirty';
@@ -145,11 +141,11 @@ function createClass(name, inputType) {
             className="mdl-textfield__input"
             type={inputType === 'password' ? 'password' : 'text'}
             value={curValue}
-            id={this.labelId}
+            id={id}
             {...otherProps}
             tabIndex={disabled ? -1 : undefined}
           />
-          <label className="mdl-textfield__label" htmlFor={this.labelId}>
+          <label className="mdl-textfield__label" htmlFor={id}>
             {this.props.placeholder || ''}
           </label>
         </div>

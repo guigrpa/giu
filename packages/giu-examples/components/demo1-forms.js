@@ -78,6 +78,7 @@ class FormExample extends React.Component<
           <Checkbox
             value={true}
             onChange={onChange}
+            id="checkbox"
             label="checkbox"
             errors={['Example error below']}
           />&nbsp;
@@ -97,18 +98,21 @@ class FormExample extends React.Component<
                 </ExampleLabel>
                 <div style={flexContainer('row')}>
                   <RadioGroup
+                    id="group-a"
                     items={NORMAL_OPTIONS}
                     lang={lang}
                     required
                     onChange={onChange}
                   />
                   <RadioGroup
+                    id="group-b"
                     items={NORMAL_OPTIONS}
                     lang={lang}
                     value="a"
                     disabled
                   />
                   <RadioGroup
+                    id="group-c"
                     items={[
                       { value: 1, label: 'A simple text label' },
                       {

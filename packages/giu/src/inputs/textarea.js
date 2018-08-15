@@ -23,8 +23,6 @@ const getPlaceholderText = val => {
   return out;
 };
 
-let cntId = 0;
-
 // ==========================================
 // Declarations
 // ==========================================
@@ -65,18 +63,11 @@ const FILTERED_OUT_PROPS_MDL = [...FILTERED_OUT_PROPS, 'placeholder'];
 // Component
 // ==========================================
 class Textarea extends React.Component<Props> {
-  labelId: string;
   refInput: ?Object;
   refOuter: ?Object;
 
   static defaultProps = {};
   refTaPlaceholder = React.createRef();
-
-  constructor(props: Props) {
-    super(props);
-    this.labelId = props.id || `giu-textarea_${cntId}`;
-    cntId += 1;
-  }
 
   componentDidMount() {
     this.resize();
@@ -124,7 +115,7 @@ class Textarea extends React.Component<Props> {
   }
 
   renderMdl() {
-    const { curValue, disabled, fFocused } = this.props;
+    const { id, curValue, disabled, fFocused } = this.props;
     const otherProps = omit(this.props, FILTERED_OUT_PROPS_MDL);
     let className =
       'giu-textarea mdl-textfield mdl-js-textfield mdl-textfield--floating-label';
@@ -135,13 +126,13 @@ class Textarea extends React.Component<Props> {
           ref={this.registerInputRef}
           className="mdl-textfield__input"
           value={curValue}
-          id={this.labelId}
+          id={id}
           onKeyDown={this.onKeyDown}
           rows={3}
           {...otherProps}
           tabIndex={disabled ? -1 : undefined}
         />
-        <label className="mdl-textfield__label" htmlFor={this.labelId}>
+        <label className="mdl-textfield__label" htmlFor={id}>
           {this.props.placeholder || ''}
         </label>
       </div>

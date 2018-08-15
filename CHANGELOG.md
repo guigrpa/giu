@@ -1,3 +1,4 @@
+* **Breaking**: Remove automatic input ID. If you use input labels or radio groups, make sure you manually set the input's `id` prop.
 * Upgrade to Flow v0.78.
 
 ## 0.16.0-alpha.1 (2018-7-19)
