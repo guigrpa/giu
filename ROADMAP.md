@@ -10,7 +10,7 @@
 * Migrate to the latest React:
     * ONGOING: migrate refs to use the new React.createRef() and forwardRef(). Is it useful for cases in which we are currently using register functions?
     * Context: use `accentColor` from context, and remove prop.
-    * Remove deprecated lifecycle hooks
+    * **Remove deprecated lifecycle hooks**
     * Use Portals?
     * DateInput: use same wrapping approach as for other inputs (ThemedXxxx below Input HOC) and remove DateInputWrapper. Use defaults internally in the render method.
 * [ ] ONGOING: Migrate input HOC to latest Flow

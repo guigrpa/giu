@@ -161,7 +161,9 @@ type PublicDefaultProps<DP> = {
 // the imperative calls to this HOC.
 function input<DP: any, P>(
   ComposedComponent: Class<React$Component<DP, P, *>>,
-  {
+  hocOptions: HocOptions
+): Class<React$Component<PublicDefaultProps<DP>, PublicProps<P>, *>> {
+  const {
     toInternalValue = o => o,
     toExternalValue = o => o,
     isNull,
@@ -172,8 +174,7 @@ function input<DP: any, P>(
     trappedKeys = [],
     className,
     fIncludeClipboardProps: fIncludeClipboardProps0,
-  }: HocOptions
-): Class<React$Component<PublicDefaultProps<DP>, PublicProps<P>, *>> {
+  } = hocOptions;
   const fIncludeClipboardProps =
     fIncludeClipboardProps0 != null
       ? fIncludeClipboardProps0
