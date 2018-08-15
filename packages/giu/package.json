@@ -23,7 +23,7 @@
     "keycode": "^2.2.0",
     "lodash": "^4.17.10",
     "react-sortable-hoc": "^0.6.8",
-    "redux": "3.7.2",
+    "redux": "^4.0.0",
     "redux-thunk": "^2.3.0",
     "styled-jsx": "^2.2.6",
     "timm": "^1.6.1",

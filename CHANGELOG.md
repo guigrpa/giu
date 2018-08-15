@@ -1,3 +1,5 @@
+* Upgrade to Flow v0.78.
+
 ## 0.16.0-alpha.1 (2018-7-19)
 
 * **Breaking**: Requires React 16.3.0 or higher (uses ref forwarding, new Context API, etc.).
