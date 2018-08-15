@@ -6,7 +6,7 @@ import React from 'react';
 import { omit, merge, set as timmSet, addDefaults } from 'timm';
 import moment from '../vendor/moment';
 import { cancelEvent, stopPropagation } from '../gral/helpers';
-import { COLORS, KEYS, IS_IOS } from '../gral/constants';
+import { KEYS, IS_IOS } from '../gral/constants';
 import {
   HIDDEN_FOCUS_CAPTURE,
   HIDDEN_FOCUS_CAPTURE_IOS,
