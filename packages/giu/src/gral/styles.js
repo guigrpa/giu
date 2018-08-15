@@ -2,7 +2,7 @@
 
 import tinycolor from 'tinycolor2';
 import { merge } from 'timm';
-import { COLORS } from '../gral/constants';
+import { COLORS } from './constants';
 
 /* --
 **flexContainer()**

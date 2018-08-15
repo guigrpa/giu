@@ -4,7 +4,7 @@ import React from 'react';
 import { merge, set as timmSet } from 'timm';
 import { preventDefault } from '../gral/helpers';
 import { NULL_STRING, IS_IOS } from '../gral/constants';
-import { LIST_SEPARATOR_KEY } from '../inputs/listPicker';
+import { LIST_SEPARATOR_KEY } from './listPicker';
 import { GLOW } from '../gral/styles';
 import input from '../hocs/input';
 

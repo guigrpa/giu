@@ -5,8 +5,8 @@ import { set as timmSet } from 'timm';
 import {
   windowHeightWithoutScrollbar,
   windowWidthWithoutScrollbar,
-} from '../gral/helpers';
-import { MISC } from '../gral/constants';
+} from './helpers';
+import { MISC } from './constants';
 
 export type ScrollIntoViewOptions = {
   fHoriz?: ?boolean,

@@ -1,9 +1,9 @@
 // @flow
 
 import keycode from 'keycode';
-import { UNICODE, IS_MAC } from '../gral/constants';
-import { cancelEvent } from '../gral/helpers';
-import type { KeyboardModifiers, KeyboardShortcut } from '../gral/types';
+import { UNICODE, IS_MAC } from './constants';
+import { cancelEvent } from './helpers';
+import type { KeyboardModifiers, KeyboardShortcut } from './types';
 
 type KeyboardShortcutCallbackT = (ev: SyntheticKeyboardEvent<*>) => any;
 

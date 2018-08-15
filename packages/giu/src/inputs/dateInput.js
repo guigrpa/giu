@@ -28,8 +28,8 @@ import type { Theme } from '../gral/themeContext';
 import input, { INPUT_HOC_INVALID_HTML_PROPS } from '../hocs/input';
 import { floatAdd, floatDelete, floatUpdate } from '../components/floats';
 import type { FloatPosition, FloatAlign } from '../components/floats';
-import { DateTimePicker, TRAPPED_KEYS } from '../inputs/dateTimePicker';
-import IosFloatWrapper from '../inputs/iosFloatWrapper';
+import { DateTimePicker, TRAPPED_KEYS } from './dateTimePicker';
+import IosFloatWrapper from './iosFloatWrapper';
 
 // External value: `Date?`
 // Internal value: `String` (introduced by the user, copied & pasted, via dropdown...)

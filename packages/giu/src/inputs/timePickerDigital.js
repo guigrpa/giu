@@ -5,7 +5,7 @@ import moment from '../vendor/moment';
 import { startOfToday, getTimeInSecs } from '../gral/dates';
 import type { Moment, Choice, KeyboardEventPars } from '../gral/types';
 import { getScrollbarWidth, NULL_STRING } from '../gral/constants';
-import { ListPicker } from '../inputs/listPicker';
+import { ListPicker } from './listPicker';
 
 const ROW_HEIGHT = '1.3em';
 

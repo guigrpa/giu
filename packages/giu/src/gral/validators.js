@@ -2,7 +2,7 @@
 
 /* eslint-disable no-restricted-globals */
 
-import { dateTimeFormat } from '../gral/dates';
+import { dateTimeFormat } from './dates';
 
 /* --
 ```js

@@ -2,7 +2,7 @@
 
 import { merge, addDefaults } from 'timm';
 import unorm from 'unorm';
-import { getScrollbarWidth } from '../gral/constants';
+import { getScrollbarWidth } from './constants';
 
 /* --
 **bindAll()**

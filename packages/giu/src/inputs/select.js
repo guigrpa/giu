@@ -1,9 +1,9 @@
 // @flow
 
 import React from 'react';
-import SelectNative from '../inputs/selectNative';
-import { SelectCustom } from '../inputs/selectCustom';
-import type { SelectProps, SelectPickerType } from '../inputs/selectTypes';
+import SelectNative from './selectNative';
+import { SelectCustom } from './selectCustom';
+import type { SelectProps, SelectPickerType } from './selectTypes';
 
 // ==========================================
 // Declarations

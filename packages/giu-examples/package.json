@@ -16,20 +16,20 @@
     "fontfaceobserver": "^2.0.13",
     "giu": "^0.16.0-alpha.0",
     "highlight.js": "^9.11.0",
-    "lodash": "^4.17.5",
+    "lodash": "^4.17.10",
     "marked": "^0.3.19",
     "material-design-lite": "^1.3.0",
-    "moment": "^2.22.0",
+    "moment": "^2.22.2",
     "next": "^5.1.0",
-    "prettier": "^1.11.1",
-    "storyboard": "^3.0.0",
-    "storyboard-preset-console": "^3.0.0",
-    "timm": "^1.4.2",
+    "prettier": "^1.14.2",
+    "storyboard": "^3.1.4",
+    "storyboard-preset-console": "^3.1.4",
+    "timm": "^1.6.1",
     "typeface-gloria-hallelujah": "^0.0.54",
     "typeface-roboto": "^0.0.54"
   },
   "peerDependencies": {
-    "react": "^16.3.1"
+    "react": "^16.4.2"
   },
   "_browser": "Prevent these from being included in the client bundle",
   "browser": {

@@ -5,7 +5,7 @@
 import React from 'react';
 import renderer from 'react-test-renderer'; // eslint-disable-line
 import DropDownMenu from '../dropDownMenu';
-import { LIST_SEPARATOR } from '../../';
+import { LIST_SEPARATOR } from '../..';
 import { floatAdd, floatDelete } from '../floats';
 
 const lang = 'es';

@@ -25,8 +25,8 @@ import {
 import type { Choice, KeyboardEventPars } from '../gral/types';
 import { isAncestorNode } from '../gral/helpers';
 import input from '../hocs/input';
-import { ListPicker, LIST_SEPARATOR_KEY } from '../inputs/listPicker';
-import IosFloatWrapper from '../inputs/iosFloatWrapper';
+import { ListPicker, LIST_SEPARATOR_KEY } from './listPicker';
+import IosFloatWrapper from './iosFloatWrapper';
 import { floatAdd, floatDelete, floatUpdate } from '../components/floats';
 import Icon from '../components/icon';
 import type { SelectProps } from './selectTypes';
@@ -265,7 +265,8 @@ class SelectCustomBase extends React.Component<Props, State> {
   // ...but if it is focused, we want to toggle it
   onMouseDownTitle = () => {
     if (!this.props.fFocused) return;
-    this.setState({ fFloat: !this.state.fFloat });
+    const { fFloat } = this.state;
+    this.setState({ fFloat: !fFloat });
   };
 
   // Close the float (if any) but retain the focus
@@ -296,7 +297,8 @@ class SelectCustomBase extends React.Component<Props, State> {
   processKeyDown(keyDown) {
     if (keyDown == null) return;
     if (keyDown.which === KEYS.esc && !this.props.inlinePicker) {
-      this.setState({ fFloat: !this.state.fFloat });
+      const { fFloat } = this.state;
+      this.setState({ fFloat: !fFloat });
       this.keyDown = undefined;
       return;
     }

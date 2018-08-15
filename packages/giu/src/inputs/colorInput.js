@@ -10,8 +10,8 @@ import { isAncestorNode } from '../gral/helpers';
 import input from '../hocs/input';
 import { floatAdd, floatDelete, floatUpdate } from '../components/floats';
 import type { FloatPosition, FloatAlign } from '../components/floats';
-import ColorPicker from '../inputs/colorPicker';
-import IosFloatWrapper from '../inputs/iosFloatWrapper';
+import ColorPicker from './colorPicker';
+import IosFloatWrapper from './iosFloatWrapper';
 
 const toInternalValue = val => val;
 const toExternalValue = val => val;
@@ -101,8 +101,7 @@ class ColorInput extends React.Component<Props, State> {
         onClick={this.onClickTitle}
         style={style.title(this.props)}
       >
-        x
-        <div className="giu-transparency-tiles" style={style.swatchTiles} />
+        x<div className="giu-transparency-tiles" style={style.swatchTiles} />
         <div style={style.swatch(this.props)} />
         {IS_IOS && this.renderFloatForIos()}
       </div>
@@ -192,7 +191,8 @@ class ColorInput extends React.Component<Props, State> {
   // ...but if it is focused, we want to toggle it
   onMouseDownTitle = () => {
     if (!this.props.fFocused) return;
-    this.setState({ fFloat: !this.state.fFloat });
+    const { fFloat } = this.state;
+    this.setState({ fFloat: !fFloat });
   };
 
   // Only for autonomous focus management
@@ -216,7 +216,8 @@ class ColorInput extends React.Component<Props, State> {
   // ==========================================
   processKeyDown(keyDown) {
     if (keyDown && keyDown.which === KEYS.esc && !this.props.inlinePicker) {
-      this.setState({ fFloat: !this.state.fFloat });
+      const { fFloat } = this.state;
+      this.setState({ fFloat: !fFloat });
     }
   }
 }

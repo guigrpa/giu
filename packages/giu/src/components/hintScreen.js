@@ -4,11 +4,11 @@
 
 import React from 'react';
 import { COLORS, MISC } from '../gral/constants';
-import Backdrop from '../components/backdrop';
-import HintLabel from '../components/hintLabel';
-import HintArrow from '../components/hintArrow';
-import type { HintLabelPars } from '../components/hintLabel'; // eslint-disable-line
-import type { HintArrowPars } from '../components/hintArrow'; // eslint-disable-line
+import Backdrop from './backdrop';
+import HintLabel from './hintLabel';
+import HintArrow from './hintArrow';
+import type { HintLabelPars } from './hintLabel'; // eslint-disable-line
+import type { HintArrowPars } from './hintArrow'; // eslint-disable-line
 
 const FONT_SIZE = 20;
 const FONT_FAMILY = '"Gloria Hallelujah", sans-serif';

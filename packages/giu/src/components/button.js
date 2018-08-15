@@ -102,6 +102,7 @@ class Button extends React.PureComponent<Props> {
     return (
       <button
         ref={this.refButton}
+        type="button"
         className={classNames.join(' ')}
         {...otherProps}
       />

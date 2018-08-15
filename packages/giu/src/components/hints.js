@@ -5,10 +5,10 @@ import { createStore, applyMiddleware } from 'redux';
 import type { Reducer } from 'redux';
 import thunk from 'redux-thunk';
 import { merge, updateIn, set as timmSet } from 'timm';
-import HintScreen from './hintScreen';
-import type { HintScreenPars } from './hintScreen';
 import { localGet, localSet } from '../gral/storage';
 import type { Action } from '../gral/types';
+import HintScreen from './hintScreen';
+import type { HintScreenPars } from './hintScreen';
 
 /* --
 **Include the `<Hints />` component at (or near)

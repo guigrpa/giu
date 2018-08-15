@@ -212,7 +212,7 @@ class DatePicker extends React.Component<Props, State> {
     this.changeShownMonth('add');
   };
   changeShownMonth(op: 'subtract' | 'add') {
-    const shownMonthStart = this.state.shownMonthStart.clone();
+    const shownMonthStart = this.state.shownMonthStart.clone(); // eslint-disable-line
     if (op === 'add') {
       shownMonthStart.add(1, 'month');
     } else {

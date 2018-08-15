@@ -12,9 +12,9 @@ import {
 } from '../gral/styles';
 import { COLORS, KEYS } from '../gral/constants';
 import type { Moment, KeyboardEventPars } from '../gral/types';
-import DatePicker from '../inputs/datePicker';
-import TimePickerDigital from '../inputs/timePickerDigital';
-import TimePickerAnalog from '../inputs/timePickerAnalog';
+import DatePicker from './datePicker';
+import TimePickerDigital from './timePickerDigital';
+import TimePickerAnalog from './timePickerAnalog';
 
 const TRAPPED_KEYS = [
   KEYS.home,

@@ -9,7 +9,7 @@ import { cancelBodyScrolling } from '../gral/helpers';
 import { getScrollbarWidth } from '../gral/constants';
 import { scrollIntoView } from '../gral/visibility';
 import type { ScrollIntoViewOptions } from '../gral/visibility';
-import { floatReposition } from '../components/floats';
+import { floatReposition } from './floats';
 import VerticalManager from './verticalManager';
 import LargeMessage from './largeMessage';
 

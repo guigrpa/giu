@@ -15,7 +15,7 @@ import { COLORS, KEYS } from '../gral/constants';
 import { isDark } from '../gral/styles';
 import { cancelEvent, stopPropagation, simplifyString } from '../gral/helpers';
 import { localGet, localSet } from '../gral/storage';
-import { floatReposition } from '../components/floats';
+import { floatReposition } from './floats';
 import VirtualScroller, { DEFAULT_ROW } from './virtualScroller';
 import {
   DataTableHeader,
@@ -806,7 +806,9 @@ class DataTable extends React.PureComponent<Props> {
         const col = cols[k];
         let haystack = col.filterValue
           ? col.filterValue(item)
-          : col.rawValue ? col.rawValue(item) : item[col.attr];
+          : col.rawValue
+            ? col.rawValue(item)
+            : item[col.attr];
         if (haystack == null || !haystack.toLowerCase) continue;
         haystack = simplifyString(haystack);
         if (haystack.indexOf && haystack.indexOf(needle) >= 0) {

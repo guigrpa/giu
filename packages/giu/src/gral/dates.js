@@ -1,7 +1,7 @@
 // @flow
 
 import moment from '../vendor/moment';
-import type { Moment } from '../gral/types';
+import type { Moment } from './types';
 
 function getUtcFlag(fDate: boolean, fTime: boolean, fUtc: ?boolean): boolean {
   return fUtc != null ? fUtc : !(fDate && fTime);

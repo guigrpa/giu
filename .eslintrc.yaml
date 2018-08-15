@@ -40,6 +40,7 @@ rules:
   class-methods-use-this: off
   arrow-parens: off
   prefer-destructuring: off
+  lines-between-class-members: off
   react/sort-comp: off
   react/jsx-first-prop-new-line: off
   react/jsx-indent: off
@@ -56,6 +57,8 @@ rules:
   react/jsx-max-props-per-line: off
   react/jsx-wrap-multilines: off
   react/jsx-closing-tag-location: off
+  react/jsx-one-expression-per-line: off
+  react/destructuring-assignment: off
   import/no-extraneous-dependencies:
     - error
     - devDependencies: true
@@ -68,8 +71,9 @@ rules:
   jsx-a11y/anchor-is-valid: off
   jsx-a11y/click-events-have-key-events: off
 globals:
+  ClientRect: false
   # Legacy
-  React$Component: false # remove when input HOC is upgrade to Flow 66
+  React$Component: false # remove when input HOC is upgraded to Flow 66
   # Flow
   Class: false
   $Exact: false
