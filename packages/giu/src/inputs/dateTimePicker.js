@@ -48,7 +48,7 @@ type PublicProps = {|
   onChange: (ev: ?SyntheticEvent<*>, nextValue: ?Moment) => any,
   fFocused?: boolean,
   style?: Object,
-  accentColor?: string,
+  accentColor: string,
 |};
 
 type DefaultProps = {
@@ -58,7 +58,6 @@ type DefaultProps = {
   analogTime: boolean,
   seconds: boolean,
   todayName: string,
-  accentColor: string,
 };
 
 type Props = {
@@ -87,7 +86,6 @@ class DateTimePicker extends React.Component<Props, State> {
     analogTime: true,
     seconds: false,
     todayName: 'Today',
-    accentColor: COLORS.accent,
   };
 
   constructor(props: Props) {

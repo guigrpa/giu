@@ -25,14 +25,18 @@ type PublicProps = {
 };
 // -- END_DOCS
 
-type Props = {
+type UnthemedProps = {
   ...$Exact<PublicProps>,
-  // Context
-  theme: Theme,
   // Input HOC
   curValue: boolean,
   registerOuterRef: Function,
   registerFocusableRef: Function,
+};
+
+type Props = {
+  ...$Exact<UnthemedProps>,
+  // Context
+  theme: Theme,
 };
 
 const FILTERED_OUT_PROPS = [
@@ -137,7 +141,7 @@ class Checkbox extends React.Component<Props> {
 }
 
 // ==========================================
-const ThemedCheckbox = props => (
+const ThemedCheckbox = (props: UnthemedProps) => (
   <ThemeContext.Consumer>
     {theme => <Checkbox {...props} theme={theme} />}
   </ThemeContext.Consumer>

@@ -47,12 +47,11 @@ type PublicProps = {|
   style?: Object,
   styleItem?: Object,
   twoStageStyle?: boolean,
-  accentColor?: string,
+  accentColor: string,
 |};
 
 type DefaultProps = {
   emptyText: string,
-  accentColor: string,
 };
 
 type Props = {
@@ -73,7 +72,6 @@ class ListPicker extends React.PureComponent<Props, State> {
 
   static defaultProps: DefaultProps = {
     emptyText: 'Ø',
-    accentColor: COLORS.accent,
   };
   state = { hovering: null };
 

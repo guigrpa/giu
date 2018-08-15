@@ -118,7 +118,6 @@ type PublicProps = {
   style?: Object, // merged with the `input` style
   styleOuter?: Object, // when `type === 'inlinePicker'`, merged with the outermost `span` style
   skipTheme?: boolean,
-  accentColor?: string, // CSS color descriptor (e.g. `darkgray`, `#ccffaa`...)
   // all others are passed through to the `input` unchanged
 };
 
@@ -133,7 +132,6 @@ const DEFAULT_PROPS = {
   analogTime: true,
   seconds: false,
   todayName: 'Today',
-  accentColor: COLORS.accent,
 };
 
 type DefaultProps = {
@@ -143,7 +141,6 @@ type DefaultProps = {
   analogTime: boolean,
   seconds: boolean,
   todayName: string,
-  accentColor: string,
 };
 
 type Props = {
@@ -445,7 +442,6 @@ class BaseDateInput extends React.Component<Props, State> {
       seconds,
       utc,
       todayName,
-      accentColor,
     } = this.props;
     const mom = displayToMoment(curValue, this.props);
     const registerOuterRef =
@@ -467,7 +463,7 @@ class BaseDateInput extends React.Component<Props, State> {
         todayName={todayName}
         cmds={this.cmdsToPicker}
         keyDown={this.keyDown}
-        accentColor={accentColor}
+        accentColor={this.props.theme.accentColor}
       />
     );
   }
@@ -564,9 +560,10 @@ const DateInput = input(BaseDateInput, {
 });
 
 // ==========================================
-// DateInputWrapper
+// ThemedDateInput
 // ==========================================
-const DateInputWrapper = (props0: PublicProps, ref) => {
+// $FlowFixMe
+const ThemedDateInput = React.forwardRef((props0: PublicProps, ref) => {
   let props = addDefaults(props0, DEFAULT_PROPS);
   if (IS_IOS && props.checkIos) props = timmSet(props, 'analogTime', false);
   props = omit(props, ['checkIos']);
@@ -575,10 +572,9 @@ const DateInputWrapper = (props0: PublicProps, ref) => {
       {theme => <DateInput {...props} theme={theme} ref={ref} />}
     </ThemeContext.Consumer>
   );
-};
+});
 
 // ==========================================
 // Public
 // ==========================================
-// $FlowFixMe
-export default React.forwardRef(DateInputWrapper);
+export default ThemedDateInput;

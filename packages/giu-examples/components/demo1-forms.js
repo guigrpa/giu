@@ -326,7 +326,6 @@ class FormExample extends React.Component<
               onChange={onChangeJson}
               styleOuter={flexItem(1, { marginRight: 4 })}
               style={{ height: 150 }}
-              accentColor="gray"
             />
             <Select
               type="inlinePicker"
@@ -336,7 +335,6 @@ class FormExample extends React.Component<
               twoStageStyle
               styleOuter={flexItem(1, { marginRight: 4 })}
               style={{ height: 150 }}
-              accentColor="lightGray"
             />
             <Select
               type="inlinePicker"
@@ -353,7 +351,6 @@ class FormExample extends React.Component<
               onChange={onChangeJson}
               styleOuter={flexItem(1)}
               style={{ height: 150 }}
-              accentColor="lightGray"
             />
           </div>
         </div>
@@ -506,7 +503,6 @@ class FormExample extends React.Component<
               time
               analogTime={false}
               lang={lang}
-              accentColor="lightgray"
               styleOuter={{ flexShrink: 0 }}
             />
             &nbsp;&nbsp;
@@ -515,7 +511,6 @@ class FormExample extends React.Component<
               value={this.state.fixedDate}
               onChange={onChange}
               lang={lang}
-              accentColor="darkblue"
               styleOuter={{ flexShrink: 0 }}
             />
           </div>
@@ -528,7 +523,6 @@ class FormExample extends React.Component<
               value={this.state.fixedDate}
               onChange={onChange}
               lang={lang}
-              accentColor="darkgreen"
               styleOuter={{ flexShrink: 0 }}
             />
             &nbsp;&nbsp;
@@ -539,7 +533,6 @@ class FormExample extends React.Component<
               time
               analogTime={false}
               lang={lang}
-              accentColor="turquoise"
               styleOuter={{ flexShrink: 0 }}
             />
             <TimePickerNow lang={lang} />
@@ -565,7 +558,6 @@ class FormExample extends React.Component<
             <ColorInput
               value="dc5400aa"
               onChange={onChange}
-              accentColor="darkmagenta"
               styleOuter={{ flexShrink: 0 }}
             />
             <ColorInput
@@ -578,7 +570,6 @@ class FormExample extends React.Component<
               inlinePicker
               value="cca500ff"
               onChange={onChange}
-              accentColor="lightGray"
               styleOuter={{ flexShrink: 0 }}
             />
           </div>
@@ -588,7 +579,6 @@ class FormExample extends React.Component<
               value="cca500ff"
               onChange={onChange}
               disabled
-              accentColor="lightGray"
               styleOuter={{ flexShrink: 0 }}
             />
           </div>

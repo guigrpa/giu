@@ -38,7 +38,6 @@ export type SelectProps = {
   // to an item depending on whether it is just *hovered* or also *selected*. If disabled,
   // a single style is used to highlight the selected or the hovered item
   twoStageStyle?: boolean,
-  accentColor?: string, // CSS color descriptor (e.g. `darkgray`, `#ccffaa`...)
 
   // SelectNative only
   // -----------------

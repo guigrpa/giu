@@ -3,7 +3,6 @@
 import React from 'react';
 import { merge, set as timmSet } from 'timm';
 import {
-  COLORS,
   KEYS,
   UNICODE,
   NULL_STRING,
@@ -24,6 +23,8 @@ import {
 } from '../gral/keys';
 import type { Choice, KeyboardEventPars } from '../gral/types';
 import { isAncestorNode } from '../gral/helpers';
+import { ThemeContext } from '../gral/themeContext';
+import type { Theme } from '../gral/themeContext';
 import input from '../hocs/input';
 import { ListPicker, LIST_SEPARATOR_KEY } from './listPicker';
 import IosFloatWrapper from './iosFloatWrapper';
@@ -55,15 +56,10 @@ const MANAGE_FOCUS_AUTONOMOUSLY = IS_MOBILE_OR_TABLET;
 // ==========================================
 // Declarations
 // ==========================================
-type DefaultProps = {
-  accentColor: string,
-};
-
-type Props = {
+type UnthemedProps = {
   ...$Exact<SelectProps>,
   inlinePicker?: boolean,
   id?: string,
-  ...$Exact<DefaultProps>,
   // Input HOC
   curValue: string,
   onChange: Function,
@@ -72,6 +68,12 @@ type Props = {
   onFocus: Function,
   onBlur: Function,
   keyDown?: KeyboardEventPars,
+};
+
+type Props = {
+  ...$Exact<UnthemedProps>,
+  // Context
+  theme: Theme,
 };
 
 type State = {
@@ -87,9 +89,6 @@ class SelectCustomBase extends React.Component<Props, State> {
   items: Array<Choice>;
   refTitle: ?Object;
 
-  static defaultProps: DefaultProps = {
-    accentColor: COLORS.accent,
-  };
   state = { fFloat: false };
 
   componentWillMount() {
@@ -234,7 +233,6 @@ class SelectCustomBase extends React.Component<Props, State> {
       lang,
       style: styleList,
       twoStageStyle,
-      accentColor,
     } = this.props;
     return (
       <ListPicker
@@ -250,7 +248,7 @@ class SelectCustomBase extends React.Component<Props, State> {
         fFloating={!inlinePicker}
         style={styleList}
         twoStageStyle={twoStageStyle}
-        accentColor={accentColor}
+        accentColor={this.props.theme.accentColor}
       />
     );
   }
@@ -354,6 +352,13 @@ class SelectCustomBase extends React.Component<Props, State> {
 }
 
 // ==========================================
+const ThemedSelectCustomBase = (props: UnthemedProps) => (
+  <ThemeContext.Consumer>
+    {theme => <SelectCustomBase {...props} theme={theme} />}
+  </ThemeContext.Consumer>
+);
+
+// ==========================================
 const style = {
   titleBase: flexContainer(
     'row',
@@ -395,7 +400,7 @@ const style = {
 // ==========================================
 // Public
 // ==========================================
-const SelectCustom = input(SelectCustomBase, {
+const SelectCustom = input(ThemedSelectCustomBase, {
   toInternalValue,
   toExternalValue,
   isNull,

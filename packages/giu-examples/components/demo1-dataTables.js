@@ -244,7 +244,6 @@ class DevelopmentExample extends React.Component<*, *> {
           allowSelect
           multipleSelection
           onChangeSelection={this.logArgs}
-          accentColor="lightgray"
           styleHeader={style.header}
           styleRow={style.row}
           animated
@@ -581,7 +580,6 @@ class EditAndValidateExample extends React.Component<*, *> {
         commonCellProps={this.commonCellProps}
         collectionName="editAndValidateExample"
         uniformRowHeight
-        accentColor="lightgray"
       />
     );
   }
@@ -599,7 +597,7 @@ class EditAndValidateExample extends React.Component<*, *> {
             onChange={() => onChange(id)}
             required
             skipTheme
-            style={{ width: '100%' }}
+            style={{ backgroundColor: 'inherit', width: '100%' }}
           />
         ),
       },
@@ -613,7 +611,7 @@ class EditAndValidateExample extends React.Component<*, *> {
             value={item[attr]}
             onChange={() => onChange(id)}
             required
-            style={{ width: '100%' }}
+            style={{ backgroundColor: 'inherit', width: '100%' }}
           />
         ),
       },
@@ -629,7 +627,7 @@ class EditAndValidateExample extends React.Component<*, *> {
             onChange={() => onChange(id)}
             required
             skipTheme
-            style={{ width: '100%' }}
+            style={{ backgroundColor: 'inherit', width: '100%' }}
           />
         ),
       },
@@ -656,7 +654,7 @@ class EditAndValidateExample extends React.Component<*, *> {
             onChange={() => onChange(id)}
             required
             skipTheme
-            style={{ width: '100%' }}
+            style={{ backgroundColor: 'inherit', width: '100%' }}
           />
         ),
       },

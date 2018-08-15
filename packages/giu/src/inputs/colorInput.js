@@ -7,6 +7,8 @@ import { COLORS, KEYS, IS_IOS, IS_MOBILE_OR_TABLET } from '../gral/constants';
 import { GLOW, inputReset, INPUT_DISABLED } from '../gral/styles';
 import type { KeyboardEventPars } from '../gral/types';
 import { isAncestorNode } from '../gral/helpers';
+import { ThemeContext } from '../gral/themeContext';
+import type { Theme } from '../gral/themeContext';
 import input from '../hocs/input';
 import { floatAdd, floatDelete, floatUpdate } from '../components/floats';
 import type { FloatPosition, FloatAlign } from '../components/floats';
@@ -35,11 +37,10 @@ type PublicProps = {
   floatPosition?: FloatPosition,
   floatAlign?: FloatAlign,
   floatZ?: number,
-  accentColor?: string, // CSS color descriptor (e.g. `darkgray`, `#ccffaa`...)
 };
 // -- END_DOCS
 
-type Props = {
+type UnthemedProps = {
   ...$Exact<PublicProps>,
   // Input HOC
   curValue: ?string,
@@ -49,6 +50,12 @@ type Props = {
   onFocus: Function,
   onBlur: Function,
   keyDown?: KeyboardEventPars,
+};
+
+type Props = {
+  ...$Exact<UnthemedProps>,
+  // Context
+  theme: Theme,
 };
 
 type State = {
@@ -159,7 +166,6 @@ class ColorInput extends React.Component<Props, State> {
       registerOuterRef,
       curValue,
       onChange,
-      accentColor,
       disabled,
       fFocused,
     } = this.props;
@@ -172,7 +178,7 @@ class ColorInput extends React.Component<Props, State> {
         onChange={onChange}
         disabled={disabled}
         fFocused={!!inlinePicker && fFocused}
-        accentColor={accentColor}
+        accentColor={this.props.theme.accentColor}
       />
     );
   }
@@ -223,6 +229,13 @@ class ColorInput extends React.Component<Props, State> {
 }
 
 // ==========================================
+const ThemedColorInput = (props: UnthemedProps) => (
+  <ThemeContext.Consumer>
+    {theme => <ColorInput {...props} theme={theme} />}
+  </ThemeContext.Consumer>
+);
+
+// ==========================================
 const style = {
   title: ({ disabled, fFocused }) => {
     let out = inputReset({
@@ -266,7 +279,7 @@ const style = {
 // ==========================================
 // Public
 // ==========================================
-export default input(ColorInput, {
+export default input(ThemedColorInput, {
   toInternalValue,
   toExternalValue,
   isNull,

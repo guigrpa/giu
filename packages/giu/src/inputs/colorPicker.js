@@ -87,23 +87,14 @@ const GRADIENTS = {
 // ==========================================
 // Declarations
 // ==========================================
-type PublicProps = {|
+type Props = {|
   registerOuterRef: ?Function,
   curValue: ?string,
   onChange: Function,
   disabled?: boolean,
   fFocused: boolean,
-  accentColor?: string,
-|};
-
-type DefaultProps = {|
   accentColor: string,
 |};
-
-type Props = {
-  ...PublicProps,
-  ...DefaultProps,
-};
 
 type State = {
   mode: string,
@@ -119,9 +110,6 @@ class ColorPicker extends React.PureComponent<Props, State> {
   rgbhsva: Object;
   fRgb: boolean;
 
-  static defaultProps: DefaultProps = {
-    accentColor: COLORS.accent,
-  };
   state = { mode: 'hsv', activeAttr: 'h' };
   refAlphaSlider = React.createRef();
   refColorSelector = React.createRef();

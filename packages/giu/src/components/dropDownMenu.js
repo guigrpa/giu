@@ -5,6 +5,8 @@ import { omit, merge } from 'timm';
 import type { Choice, Command } from '../gral/types';
 import { COLORS } from '../gral/constants';
 import { isDark } from '../gral/styles';
+import { ThemeContext } from '../gral/themeContext';
+import type { Theme } from '../gral/themeContext';
 import Select from '../inputs/select';
 
 // ==========================================
@@ -25,20 +27,17 @@ type PublicProps = {
     val: any // the item's `value` (as specified in the `items` prop)
   ) => any,
   style?: Object, // will be merged with the menu title's `div` wrapper
-  accentColor?: string, // CSS color descriptor (e.g. `darkgray`, `#ccffaa`...)
 
   // All other props are passed through to the Select input component
 };
 /* -- END_DOCS -- */
 
-type DefaultProps = {
-  accentColor: string,
-};
-
 type Props = {
   ...$Exact<PublicProps>,
-  ...$Exact<DefaultProps>,
+  // Context
+  theme: Theme,
 };
+
 const FILTERED_PROPS = [
   'items',
   'lang',
@@ -54,20 +53,11 @@ type State = {
 };
 
 class DropDownMenu extends React.PureComponent<Props, State> {
-  static defaultProps: DefaultProps = {
-    accentColor: COLORS.accent,
+  state = {
+    fFocused: false,
+    cmds: null,
   };
 
-  constructor(props: Props) {
-    super(props);
-    this.state = {
-      fFocused: false,
-      cmds: null,
-    };
-  }
-
-  // ==========================================
-  // Render
   // ==========================================
   render() {
     const props = omit(this.props, FILTERED_PROPS);
@@ -82,7 +72,6 @@ class DropDownMenu extends React.PureComponent<Props, State> {
         onFocus={this.onFocus}
         onBlur={this.onBlur}
         styleOuter={style.selectOuter}
-        accentColor={this.props.accentColor}
         {...props}
         required
         noErrors
@@ -104,8 +93,6 @@ class DropDownMenu extends React.PureComponent<Props, State> {
     );
   }
 
-  // ==========================================
-  // Handlers
   // ==========================================
   // If the menu is not focused, ignore it: it will be handled by the `input` HOC.
   // ...but if it is focused, we want it to close
@@ -138,22 +125,25 @@ class DropDownMenu extends React.PureComponent<Props, State> {
   };
 
   // ==========================================
-  // Helpers
-  // ==========================================
   closeMenu = () => {
     this.setState({ cmds: [{ type: 'BLUR' }, { type: 'REVERT' }] });
   };
 }
 
 // ==========================================
-// Styles
+const ThemedDropDownMenu = (props: PublicProps) => (
+  <ThemeContext.Consumer>
+    {theme => <DropDownMenu {...props} theme={theme} />}
+  </ThemeContext.Consumer>
+);
+
 // ==========================================
 const style = {
   selectOuter: {
     display: 'inline-block',
   },
-  title: ({ accentColor, style: baseStyle }, { fFocused }) => {
-    const backgroundColor = fFocused ? accentColor : undefined;
+  title: ({ theme, style: baseStyle }, { fFocused }) => {
+    const backgroundColor = fFocused ? theme.accentColor : undefined;
     let color;
     if (backgroundColor != null) {
       color = COLORS[isDark(backgroundColor) ? 'lightText' : 'darkText'];
@@ -171,4 +161,4 @@ const style = {
 // ==========================================
 // Public
 // ==========================================
-export default DropDownMenu;
+export default ThemedDropDownMenu;

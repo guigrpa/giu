@@ -15,6 +15,8 @@ import { COLORS, KEYS } from '../gral/constants';
 import { isDark } from '../gral/styles';
 import { cancelEvent, stopPropagation, simplifyString } from '../gral/helpers';
 import { localGet, localSet } from '../gral/storage';
+import { ThemeContext } from '../gral/themeContext';
+import type { Theme } from '../gral/themeContext';
 import { floatReposition } from './floats';
 import VirtualScroller, { DEFAULT_ROW } from './virtualScroller';
 import {
@@ -163,7 +165,6 @@ type PublicProps = {
   rowHeight?: number, // Auto-calculated if unspecified
   uniformRowHeight?: boolean, // Are rows of the same height (even if unknown a priori)? (default: false)
   showHeader?: boolean, // (default: true)
-  accentColor?: string, // Used for selections
   style?: Object,
   styleHeader?: Object,
   styleRow?: Object,
@@ -190,12 +191,17 @@ type DefaultProps = {
   fetching: boolean,
   FetchRowComponent: ComponentType<any>,
   height: number,
-  accentColor: string,
+};
+
+type UnthemedProps = {
+  ...$Exact<PublicProps>,
+  ...$Exact<DefaultProps>,
 };
 
 type Props = {
-  ...$Exact<PublicProps>,
-  ...$Exact<DefaultProps>,
+  ...$Exact<UnthemedProps>,
+  // Context
+  theme: Theme,
 };
 
 class DataTable extends React.PureComponent<Props> {
@@ -241,7 +247,6 @@ class DataTable extends React.PureComponent<Props> {
 
     showHeader: true,
     height: 200,
-    accentColor: COLORS.accent,
   };
 
   constructor(props: Props) {
@@ -297,7 +302,7 @@ class DataTable extends React.PureComponent<Props> {
       manuallyOrderedIds,
       selectedIds,
       FetchRowComponent,
-      accentColor,
+      theme,
     } = nextProps;
     let fRecalcShownIds = false;
     if (itemsById !== this.props.itemsById) fRecalcShownIds = true;
@@ -347,7 +352,8 @@ class DataTable extends React.PureComponent<Props> {
     ) {
       this.recalcRowComponents(nextProps);
     }
-    if (accentColor !== this.props.accentColor) this.recalcColors(nextProps);
+    if (theme.accentColor !== this.props.theme.accentColor)
+      this.recalcColors(nextProps);
   }
 
   recalcCols(props: Props) {
@@ -384,7 +390,7 @@ class DataTable extends React.PureComponent<Props> {
   }
 
   recalcColors(props: Props) {
-    const { accentColor } = props;
+    const { accentColor } = props.theme;
     this.selectedBgColor = accentColor;
     this.selectedFgColor =
       COLORS[isDark(accentColor) ? 'lightText' : 'darkText'];
@@ -1006,6 +1012,15 @@ class DataTable extends React.PureComponent<Props> {
   }
 }
 
+// ==========================================
+// Theme
+// ===============================================================
+const ThemedDataTable = (props: UnthemedProps) => (
+  <ThemeContext.Consumer>
+    {theme => <DataTable {...props} theme={theme} />}
+  </ThemeContext.Consumer>
+);
+
 // ===============================================================
 // Styles
 // ===============================================================
@@ -1050,5 +1065,5 @@ const STYLES = (
 // ===============================================================
 // Public
 // ===============================================================
-export default DataTable;
+export default ThemedDataTable;
 export { SORT_MANUALLY };
