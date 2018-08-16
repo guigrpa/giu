@@ -272,14 +272,7 @@ class BaseDateInput extends React.Component<Props, State> {
   }
 
   renderNativeField() {
-    const {
-      curValue,
-      onChange,
-      placeholder,
-      date,
-      time,
-      disabled,
-    } = this.props;
+    const { placeholder, date, time } = this.props;
     const otherProps = omit(this.props, FILTERED_OUT_PROPS);
     let htmlInputType;
     if (date && time) {
@@ -294,13 +287,13 @@ class BaseDateInput extends React.Component<Props, State> {
         ref={this.registerInputRef}
         className="giu-date-input"
         type={htmlInputType}
-        value={curValue}
+        value={this.props.curValue}
         {...otherProps}
         placeholder={placeholder || dateTimeFormatNative(date, time)}
         onFocus={this.onFocus}
         onBlur={this.onBlur}
-        onChange={onChange}
-        tabIndex={disabled ? -1 : undefined}
+        onChange={this.props.onChange}
+        tabIndex={this.props.disabled ? -1 : undefined}
         style={style.field(this.props)}
       />
     );
@@ -310,35 +303,24 @@ class BaseDateInput extends React.Component<Props, State> {
     if (!fHidden && !this.props.skipTheme && this.props.theme.id === 'mdl') {
       return this.renderFieldMdl();
     }
-    const {
-      curValue,
-      onChange,
-      placeholder,
-      date,
-      time,
-      seconds,
-      disabled,
-      onCopy,
-      onCut,
-      onPaste,
-    } = this.props;
+    const { placeholder, date, time, seconds } = this.props;
     const otherProps = omit(this.props, FILTERED_OUT_PROPS);
     return (
       <input
         ref={this.registerInputRef}
         className={fHidden ? undefined : 'giu-date-input'}
         type="text"
-        value={curValue}
+        value={this.props.curValue}
         {...otherProps}
         placeholder={placeholder || dateTimeFormat(date, time, seconds)}
         onFocus={this.onFocus}
         onBlur={this.onBlur}
-        onCopy={fHidden ? onCopy : undefined}
-        onCut={fHidden ? onCut : undefined}
-        onPaste={fHidden ? onPaste : undefined}
-        onChange={onChange}
+        onCopy={fHidden ? this.props.onCopy : undefined}
+        onCut={fHidden ? this.props.onCut : undefined}
+        onPaste={fHidden ? this.props.onPaste : undefined}
+        onChange={this.props.onChange}
         onKeyDown={this.onKeyDown}
-        tabIndex={disabled ? -1 : undefined}
+        tabIndex={this.props.disabled ? -1 : undefined}
         style={fHidden ? style.fieldHidden : style.field(this.props)}
       />
     );
@@ -348,12 +330,10 @@ class BaseDateInput extends React.Component<Props, State> {
     const {
       id,
       curValue,
-      onChange,
       placeholder,
       date,
       time,
       seconds,
-      disabled,
       fFocused,
     } = this.props;
     const otherProps = omit(this.props, FILTERED_OUT_PROPS_MDL);
@@ -375,9 +355,9 @@ class BaseDateInput extends React.Component<Props, State> {
           {...otherProps}
           onFocus={this.onFocus}
           onBlur={this.onBlur}
-          onChange={onChange}
+          onChange={this.props.onChange}
           onKeyDown={this.onKeyDown}
-          tabIndex={disabled ? -1 : undefined}
+          tabIndex={this.props.disabled ? -1 : undefined}
         />
         <label className="mdl-textfield__label" htmlFor={id}>
           {placeholder || dateTimeFormat(date, time, seconds)}
@@ -418,12 +398,11 @@ class BaseDateInput extends React.Component<Props, State> {
 
   renderFloatForIos() {
     if (!this.state.fFloat) return null;
-    const { floatPosition, floatAlign, floatZ } = this.props;
     return (
       <IosFloatWrapper
-        floatPosition={floatPosition}
-        floatAlign={floatAlign}
-        floatZ={floatZ}
+        floatPosition={this.props.floatPosition}
+        floatAlign={this.props.floatAlign}
+        floatZ={this.props.floatZ}
       >
         {this.renderPicker(false)}
       </IosFloatWrapper>
@@ -431,36 +410,25 @@ class BaseDateInput extends React.Component<Props, State> {
   }
 
   renderPicker(fInline) {
-    const {
-      type,
-      curValue,
-      disabled,
-      fFocused,
-      date,
-      time,
-      analogTime,
-      seconds,
-      utc,
-      todayName,
-    } = this.props;
-    const mom = displayToMoment(curValue, this.props);
+    const mom = displayToMoment(this.props.curValue, this.props);
+    const { type } = this.props;
     const registerOuterRef =
       type === 'inlinePicker' ? this.props.registerOuterRef : undefined;
     return (
       <DateTimePicker
         registerOuterRef={registerOuterRef}
-        disabled={disabled}
-        fFocused={fInline && fFocused}
+        disabled={this.props.disabled}
+        fFocused={fInline && this.props.fFocused}
         curValue={mom}
         onMouseDown={this.onMouseDown}
         onClick={this.onClick}
         onChange={this.onChangePicker}
-        date={date}
-        time={time}
-        analogTime={analogTime}
-        seconds={seconds}
-        utc={utc}
-        todayName={todayName}
+        date={this.props.date}
+        time={this.props.time}
+        analogTime={this.props.analogTime}
+        seconds={this.props.seconds}
+        utc={this.props.utc}
+        todayName={this.props.todayName}
         cmds={this.cmdsToPicker}
         keyDown={this.keyDown}
         accentColor={this.props.theme.accentColor}

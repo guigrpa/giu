@@ -210,12 +210,11 @@ class SelectCustomBase extends React.Component<Props, State> {
 
   renderFloatForIos() {
     if (!this.state.fFloat) return null;
-    const { floatPosition, floatAlign, floatZ } = this.props;
     return (
       <IosFloatWrapper
-        floatPosition={floatPosition}
-        floatAlign={floatAlign}
-        floatZ={floatZ}
+        floatPosition={this.props.floatPosition}
+        floatAlign={this.props.floatAlign}
+        floatZ={this.props.floatZ}
       >
         {this.renderPicker()}
       </IosFloatWrapper>
