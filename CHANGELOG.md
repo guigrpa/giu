@@ -1,4 +1,5 @@
 * **Breaking**: We no longer set input `id`/`name` on many components by default (e.g. checkboxes, text/password/number inputs, selects, etc.). If you use input labels or radio groups, make sure you explicitly set the input's `id` prop.
+* Add iOS-specific styles in the Giu component – **if you target the iOS platform, please include this component above all other Giu components**.
 * Upgrade to Flow v0.78.
 * Floats: fix bug in which floats where incorrectly drawn even when having a cropping ancestor (when the cropping ancestor's style was not inlined)
 
