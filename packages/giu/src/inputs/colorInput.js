@@ -108,7 +108,8 @@ class ColorInput extends React.Component<Props, State> {
         onClick={this.onClickTitle}
         style={style.title(this.props)}
       >
-        x<div className="giu-transparency-tiles" style={style.swatchTiles} />
+        <span style={style.placeholder}>x</span>
+        <div className="giu-transparency-tiles" style={style.swatchTiles} />
         <div style={style.swatch(this.props)} />
         {IS_IOS && this.renderFloatForIos()}
       </div>
@@ -246,12 +247,14 @@ const style = {
       padding: '2px 4px 6px 4px',
       height: SWATCH_HEIGHT + 2 * 4 + 2,
       width: SWATCH_WIDTH + 2 * 4 + 2,
-      color: 'transparent', // hide the placeholder text that keeps baselines aligned
       lineHeight: '1em',
     });
     if (disabled) out = merge(out, INPUT_DISABLED);
     if (fFocused) out = merge(out, GLOW);
     return out;
+  },
+  placeholder: {
+    color: 'transparent', // hide the placeholder text that keeps baselines aligned
   },
   swatchTiles: {
     position: 'absolute',

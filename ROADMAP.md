@@ -3,7 +3,6 @@
 * **Bugs**
   * Inline DateInputs no longer shown correctly on iOS
   * Android Select: when item is selected, it retains focus
-  * Drop-down ColorInput: incorrect control colors
 * Allow DateInputs with dropdown/inline pickers to work without focusing
 * DataTable: remove focus capture on mobile and tablets
 * Migrate to the latest React:
@@ -12,6 +11,7 @@
     * Use Portals?
 * [ ] ONGOING: Migrate input HOC to latest Flow
 * [ ] Proof-of-concept with `giu-examples` with Next 6 and Babel 7
+* [ ] **Test on Android**
 
 * Update Font Awesome (later)
 
