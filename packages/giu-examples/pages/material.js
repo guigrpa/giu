@@ -26,6 +26,8 @@ import {
   flexItem,
   boxWithShadow,
   TextInput,
+  ColorInput,
+  COLORS,
 } from 'giu';
 import {
   ExampleLabel,
@@ -70,6 +72,11 @@ const notify = msg =>
 const TEST = 0;
 const EVERYTHING = true;
 class App extends React.Component {
+  state = {
+    accentColor: COLORS.accent,
+  };
+
+  // -----------------------------------------------
   render() {
     let out;
     const lang = getLang();
@@ -86,12 +93,16 @@ class App extends React.Component {
                 Giu
               </a>{' '}
               demo page
-              <LangSelector
+              <Configs
                 lang={lang}
-                onChange={(ev, newLang) => {
+                onChangeLang={(ev, newLang) => {
                   setLang(newLang);
                   moment.locale(newLang);
                   this.forceUpdate();
+                }}
+                accentColor={this.state.accentColor}
+                onChangeColor={(ev, accentColor) => {
+                  this.setState({ accentColor });
                 }}
               />
             </div>
@@ -126,12 +137,11 @@ class App extends React.Component {
         );
         break;
     }
-    // return out;
-    return <Giu themeId="mdl">{out}</Giu>;
+    return <Giu themeId="mdl" accentColor={this.state.accentColor}>{out}</Giu>;
   }
 }
 
-const LangSelector = ({ lang, onChange: onValueChange }) => (
+const Configs = ({ lang, onChangeLang, accentColor, onChangeColor }) => (
   <span
     style={{
       fontWeight: 'normal',
@@ -147,8 +157,13 @@ const LangSelector = ({ lang, onChange: onValueChange }) => (
         { value: 'es', label: 'Español' },
       ]}
       value={lang}
-      onChange={onValueChange}
+      onChange={onChangeLang}
       required
+    />
+    &nbsp;&nbsp; Theme color:{' '}
+    <ColorInput
+      value={accentColor}
+      onChange={onChangeColor}
     />
   </span>
 );
