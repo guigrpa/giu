@@ -12,7 +12,7 @@
     * **Remove deprecated lifecycle hooks**
     * Use Portals?
 * [ ] ONGOING: Migrate input HOC to latest Flow
-* [ ] Proof-of-concept with `giu-examples` with Next 6 anb Babel 7
+* [ ] Proof-of-concept with `giu-examples` with Next 6 and Babel 7
 
 * Update Font Awesome (later)
 

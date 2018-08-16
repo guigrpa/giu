@@ -20,9 +20,10 @@ Online demos: [an extremely compact one](http://guigrpa.github.io/giu/compact/) 
     + Smart positioning of floating pickers (date and color inputs, drop-down menus, validation errors, etc.)
     + Ultra-customisable [date/time inputs](#dateinput)
     + Textarea with auto-resize
-    + Uniform, lightweight styles with key accents that can easily be overriden
+    + Uniform, lightweight styles that can easily be overriden
     * An extremely flexible [data table](#datatable) component
     + ... and a gorgeous [analog time picker](#dateinput)!
+- Simple theme settings: overall style (default vs. Material Design Lite), accent color...
 - Easy creation of [hint screens](#hint-screens) with dynamically-positioned labels and arrows
 - Lots of [helper functions](#helpers)
 
@@ -366,7 +367,6 @@ type PublicProps = {
   style?: Object, // merged with the `input` style
   styleOuter?: Object, // when `type === 'inlinePicker'`, merged with the outermost `span` style
   skipTheme?: boolean,
-  accentColor?: string, // CSS color descriptor (e.g. `darkgray`, `#ccffaa`...)
   // all others are passed through to the `input` unchanged
 };
 
@@ -418,7 +418,6 @@ export type SelectProps = {
   // to an item depending on whether it is just *hovered* or also *selected*. If disabled,
   // a single style is used to highlight the selected or the hovered item
   twoStageStyle?: boolean,
-  accentColor?: string, // CSS color descriptor (e.g. `darkgray`, `#ccffaa`...)
 
   // SelectNative only
   // -----------------
@@ -449,6 +448,7 @@ import { Select, LIST_SEPARATOR } from 'giu';
 Props:
 ```js
 type PublicProps = {
+  id: string, // mandatory!
   items: Array<RadioChoice>,
   lang?: string, // current language (used just for force-render)
   disabled?: boolean,
@@ -480,7 +480,6 @@ type PublicProps = {
   floatPosition?: FloatPosition,
   floatAlign?: FloatAlign,
   floatZ?: number,
-  accentColor?: string, // CSS color descriptor (e.g. `darkgray`, `#ccffaa`...)
 };
 ```
 
@@ -599,7 +598,6 @@ type PublicProps = {
   rowHeight?: number, // Auto-calculated if unspecified
   uniformRowHeight?: boolean, // Are rows of the same height (even if unknown a priori)? (default: false)
   showHeader?: boolean, // (default: true)
-  accentColor?: string, // Used for selections
   style?: Object,
   styleHeader?: Object,
   styleRow?: Object,
@@ -678,7 +676,6 @@ type PublicProps = {
     val: any // the item's `value` (as specified in the `items` prop)
   ) => any,
   style?: Object, // will be merged with the menu title's `div` wrapper
-  accentColor?: string, // CSS color descriptor (e.g. `darkgray`, `#ccffaa`...)
 
   // All other props are passed through to the Select input component
 };
@@ -916,7 +913,7 @@ export type HintArrowPars = {
 An inconspicuous-looking button-in-a-`span`. Props:
 
 ```js
-type Props = {
+type PublicProps = {
   plain?: boolean, // removes most button styles
   children?: any, // button contents (can include `Icon` components, etc.)
   onClick?: (ev: SyntheticMouseEvent<*>) => any,
@@ -942,7 +939,7 @@ type Props = {
 A wrapper for Font Awesome icons. Props:
 
 ```js
-type Props = {
+type PublicProps = {
   icon: string, // e.g. `ambulance`, `cogs`...
   size?: 'lg' | '2x' | '3x' | '4x' | '5x',
   fixedWidth?: boolean,
@@ -951,6 +948,7 @@ type Props = {
   disabled?: boolean,
   style?: Object, // merged with the `i` element style
   skipTheme?: boolean,
+
   // All other props are passed through to the `i` element
 };
 ```
@@ -981,6 +979,14 @@ A wrapper for the native HTML `progress` element (with 100% width).
 *All props are passed through to the `progress` element.
 Remember that an indeterminate progress bar will be shown if you
 don't specify the `value` prop (native HTML behaviour).*
+
+```js
+type PublicProps = {
+  value: any,
+  // All other props are passed through to the `progress` element
+  // (except in the `mdl` theme, in which no props are passed)
+};
+```
 
 
 ## Helpers

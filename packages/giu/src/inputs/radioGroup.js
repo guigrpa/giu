@@ -28,7 +28,7 @@ const isNull = val => val === NULL_STRING;
 // -- Props:
 // -- START_DOCS
 type PublicProps = {
-  id: string,
+  id: string, // mandatory!
   items: Array<RadioChoice>,
   lang?: string, // current language (used just for force-render)
   disabled?: boolean,

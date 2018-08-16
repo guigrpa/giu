@@ -20,9 +20,10 @@ Online demos: [an extremely compact one](http://guigrpa.github.io/giu/compact/) 
     + Smart positioning of floating pickers (date and color inputs, drop-down menus, validation errors, etc.)
     + Ultra-customisable [date/time inputs](#dateinput)
     + Textarea with auto-resize
-    + Uniform, lightweight styles with key accents that can easily be overriden
+    + Uniform, lightweight styles that can easily be overriden
     * An extremely flexible [data table](#datatable) component
     + ... and a gorgeous [analog time picker](#dateinput)!
+- Simple theme settings: overall style (default vs. Material Design Lite), accent color...
 - Easy creation of [hint screens](#hint-screens) with dynamically-positioned labels and arrows
 - Lots of [helper functions](#helpers)
 
