@@ -1,7 +1,6 @@
 # Roadmap
 
 * **Bugs**
-  * When drop-down DatePicker is visible and the input disappears from view (in a transform=0 view), the picker is still shown.
   * Inline DateInputs no longer shown correctly on iOS
   * Android Select: when item is selected, it retains focus
   * DataTable example (one of them): TextArea does not cover full
@@ -13,6 +12,7 @@
     * **Remove deprecated lifecycle hooks**
     * Use Portals?
 * [ ] ONGOING: Migrate input HOC to latest Flow
+* [ ] Proof-of-concept with `giu-examples` with Next 6 anb Babel 7
 
 * Update Font Awesome (later)
 

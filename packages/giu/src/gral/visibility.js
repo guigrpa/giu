@@ -66,8 +66,9 @@ function _getCroppingAncestor(
   const ancestorBcr = ancestor.getBoundingClientRect();
   let fCropped = false;
   let fOverflowHidden;
+  const style = window.getComputedStyle(ancestor);
   if (fHoriz == null || fHoriz === false) {
-    fOverflowHidden = !_isOverflowVisible(ancestor.style.overflowY);
+    fOverflowHidden = !_isOverflowVisible(style.getPropertyValue('overflow-y'));
     if (
       fOverflowHidden &&
       (refBcr.top < ancestorBcr.top || refBcr.bottom > ancestorBcr.bottom)
@@ -76,7 +77,7 @@ function _getCroppingAncestor(
     }
   }
   if (fHoriz == null || fHoriz === true) {
-    fOverflowHidden = !_isOverflowVisible(ancestor.style.overflowX);
+    fOverflowHidden = !_isOverflowVisible(style.getPropertyValue('overflow-x'));
     if (
       fOverflowHidden &&
       (refBcr.left < ancestorBcr.left || refBcr.right > ancestorBcr.right)
