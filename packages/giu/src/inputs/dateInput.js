@@ -6,7 +6,7 @@ import React from 'react';
 import { omit, merge, set as timmSet, addDefaults } from 'timm';
 import moment from '../vendor/moment';
 import { cancelEvent, stopPropagation } from '../gral/helpers';
-import { KEYS, IS_IOS } from '../gral/constants';
+import { KEYS, IS_IOS, IS_MOBILE_OR_TABLET } from '../gral/constants';
 import {
   HIDDEN_FOCUS_CAPTURE,
   HIDDEN_FOCUS_CAPTURE_IOS,
@@ -83,6 +83,8 @@ const displayToMoment = (str, props) => {
   }
   return mom.isValid() ? mom : null;
 };
+
+const MANAGE_FOCUS_AUTONOMOUSLY = IS_MOBILE_OR_TABLET;
 
 // ==========================================
 // DateInput
@@ -250,7 +252,7 @@ class BaseDateInput extends React.Component<Props, State> {
           className="giu-date-input giu-date-input-inline-picker"
           style={style.outerInline(this.props)}
         >
-          {this.renderField(true)}
+          {MANAGE_FOCUS_AUTONOMOUSLY ? null : this.renderField(true)}
           {this.renderPicker(true)}
         </span>
       );
