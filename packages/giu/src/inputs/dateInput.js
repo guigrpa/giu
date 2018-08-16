@@ -21,7 +21,7 @@ import {
   getUtcFlag,
   startOfDefaultDay,
 } from '../gral/dates';
-import type { Command, KeyboardEventPars, Moment } from '../gral/types';
+import type { KeyboardEventPars, Moment } from '../gral/types';
 import { isDate } from '../gral/validators';
 import { ThemeContext } from '../gral/themeContext';
 import type { Theme } from '../gral/themeContext';
@@ -205,7 +205,6 @@ class BaseDateInput extends React.Component<Props, State> {
 
   state = { fFloat: false };
   static defaultProps = {};
-  cmdsToPicker: ?Array<Command> = null;
   refMdl = React.createRef();
 
   constructor(props: Props) {
@@ -419,7 +418,7 @@ class BaseDateInput extends React.Component<Props, State> {
     return (
       <DateTimePicker
         registerOuterRef={registerOuterRef}
-        disabled={this.props.disabled}
+        disabled={!!this.props.disabled}
         fFocused={fInline && this.props.fFocused}
         curValue={mom}
         onMouseDown={this.onMouseDown}
@@ -429,9 +428,8 @@ class BaseDateInput extends React.Component<Props, State> {
         time={this.props.time}
         analogTime={this.props.analogTime}
         seconds={this.props.seconds}
-        utc={this.props.utc}
+        utc={getUtcFlag(this.props.date, this.props.time, this.props.utc)}
         todayName={this.props.todayName}
-        cmds={this.cmdsToPicker}
         keyDown={this.keyDown}
         accentColor={this.props.theme.accentColor}
       />
