@@ -133,7 +133,8 @@ class ColorPicker extends React.PureComponent<Props, State> {
       !this.rgba ||
       rgba.r !== this.rgba.r ||
       rgba.g !== this.rgba.g ||
-      rgba.b !== this.rgba.b
+      rgba.b !== this.rgba.b ||
+      rgba.a !== this.rgba.a
     ) {
       this.rgba = rgba;
       this.hsva = col.toHsv();
