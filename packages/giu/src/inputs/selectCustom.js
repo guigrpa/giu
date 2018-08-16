@@ -223,31 +223,21 @@ class SelectCustomBase extends React.Component<Props, State> {
   }
 
   renderPicker() {
-    const {
-      inlinePicker,
-      registerOuterRef,
-      curValue,
-      onChange,
-      disabled,
-      fFocused,
-      lang,
-      style: styleList,
-      twoStageStyle,
-    } = this.props;
+    const { inlinePicker, registerOuterRef } = this.props;
     return (
       <ListPicker
         registerOuterRef={inlinePicker ? registerOuterRef : undefined}
         items={this.items}
-        lang={lang}
-        curValue={curValue}
-        onChange={onChange}
+        lang={this.props.lang}
+        curValue={this.props.curValue}
+        onChange={this.props.onChange}
         onClickItem={this.onClickItem}
         keyDown={this.keyDown}
-        disabled={disabled}
-        fFocused={inlinePicker && fFocused}
+        disabled={this.props.disabled}
+        fFocused={inlinePicker && this.props.fFocused}
         fFloating={!inlinePicker}
-        style={styleList}
-        twoStageStyle={twoStageStyle}
+        style={this.props.style}
+        twoStageStyle={this.props.twoStageStyle}
         accentColor={this.props.theme.accentColor}
       />
     );

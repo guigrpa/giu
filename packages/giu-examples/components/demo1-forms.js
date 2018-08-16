@@ -255,12 +255,15 @@ class FormExample extends React.Component<
           <ExampleLabel>Textarea (with auto-resize)</ExampleLabel>
           <Textarea
             value="En un lugar de la Mancha..."
-            style={{ minHeight: '1.5em' }}
+            styleOuter={{ display: 'block' }}
+            style={{ display: 'block', minHeight: '1.5em' }}
+            required
           />
           <Textarea
             disabled
             value="En un lugar de la Mancha..."
-            style={{ minHeight: '1.5em' }}
+            styleOuter={{ display: 'block' }}
+            style={{ display: 'block', minHeight: '1.5em' }}
           />
         </div>
         <br />

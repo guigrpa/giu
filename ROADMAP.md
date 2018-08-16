@@ -3,6 +3,7 @@
 * **Bugs**
   * Inline DateInputs no longer shown correctly on iOS
   * Android Select: when item is selected, it retains focus
+  * Drop-down ColorInput: incorrect control colors
 * Allow DateInputs with dropdown/inline pickers to work without focusing
 * DataTable: remove focus capture on mobile and tablets
 * Migrate to the latest React:
