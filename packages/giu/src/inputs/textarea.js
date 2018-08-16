@@ -189,6 +189,7 @@ const style = {
     position: 'relative',
   },
   fieldBase: inputReset({
+    display: 'block',
     width: '100%',
     lineHeight: 'inherit',
     height: 1, // initial value; for sure < than the placeholder
