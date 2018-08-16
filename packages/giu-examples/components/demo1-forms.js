@@ -499,6 +499,7 @@ class FormExample extends React.Component<
             />
             &nbsp;disabled
           </div>
+          <div>Inline pickers with date:</div>
           <div style={flexContainer('row')}>
             <DateInput
               type="inlinePicker"
@@ -517,6 +518,7 @@ class FormExample extends React.Component<
               styleOuter={{ flexShrink: 0 }}
             />
           </div>
+          <div>Analogue and digital time pickers:</div>
           <div style={flexContainer('row')}>
             <DateInput
               type="inlinePicker"
@@ -538,9 +540,9 @@ class FormExample extends React.Component<
               lang={lang}
               styleOuter={{ flexShrink: 0 }}
             />
-            <TimePickerNow lang={lang} />
           </div>
           <div style={flexContainer('row', { marginTop: 5 })}>
+            <TimePickerNow lang={lang} />
             <DateInput
               type="inlinePicker"
               onChange={onChange}
