@@ -156,7 +156,7 @@ class ColorPicker extends React.PureComponent<Props, State> {
   }
 
   // ------------------------------------------
-  // Color selector
+  // Column 1: color selector
   // ------------------------------------------
   renderColorSelector() {
     const { activeAttr } = this.state;
@@ -239,7 +239,7 @@ class ColorPicker extends React.PureComponent<Props, State> {
   }
 
   // ------------------------------------------
-  // Active attribute slider
+  // Column 2: active attribute slider
   // ------------------------------------------
   renderActiveAttrSlider() {
     return (
@@ -265,7 +265,7 @@ class ColorPicker extends React.PureComponent<Props, State> {
   }
 
   // ------------------------------------------
-  // Controls
+  // Column 3: controls
   // ------------------------------------------
   renderControls() {
     const { mode, activeAttr } = this.state;
@@ -424,14 +424,13 @@ class ColorPicker extends React.PureComponent<Props, State> {
     let hex8;
     if (this.fRgb) {
       hex8 = tinycolor(merge({}, this.rgba, attrs)).toHex8();
-
+    } else {
       // In HSV mode, we need to avoid singularities (e.g. at v = 0).
       // We keep the HSV values chosen by the user in `this.hsva` and
       // don't modify them when the RGB value doesn't change (see `render()`).
       // If `hex8` doesn't change, we trigger a forceUpdate() here, so that
       // the control reflects the updated value (no owner element will trigger
       // this refresh, since the control's `value` has not changed).
-    } else {
       const prevHex8 = tinycolor(merge({}, this.hsva)).toHex8();
       this.hsva = merge(this.hsva, attrs);
       const col = tinycolor(merge({}, this.hsva, attrs));

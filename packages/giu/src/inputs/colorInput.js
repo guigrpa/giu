@@ -214,6 +214,7 @@ class ColorInput extends React.Component<Props, State> {
   onClickWindow = (ev: SyntheticEvent<*>) => {
     if (!MANAGE_FOCUS_AUTONOMOUSLY) return;
     const { target } = ev;
+    // Discard click if it's on our own component (we'll handle it ourselves)
     if (target instanceof Element && isAncestorNode(this.refTitle, target)) {
       return;
     }
