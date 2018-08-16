@@ -179,6 +179,7 @@ class DateTimePicker extends React.Component<Props, State> {
     const Component = analogTime ? TimePickerAnalog : TimePickerDigital;
     return (
       <Component
+        key={String(analogTime)}
         disabled={disabled}
         curValue={curValue}
         onChange={this.onChange('time')}

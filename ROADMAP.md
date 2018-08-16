@@ -1,9 +1,7 @@
 # Roadmap
 
 * **Bugs**
-  * **Inline DateInputs no longer shown correctly on iOS**
   * Android Select: when item is selected, it retains focus
-* Allow DateInputs with dropdown/inline pickers to work without focusing
 * **DataTable: remove focus capture on mobile and tablets**
 * Migrate to the latest React:
     * ONGOING: migrate refs to use the new React.createRef() and forwardRef(). Is it useful for cases in which we are currently using register functions?
