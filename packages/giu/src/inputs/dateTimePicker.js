@@ -136,10 +136,10 @@ class DateTimePicker extends React.Component<Props, State> {
     if (!disabled && this.state.focusedSubpicker === 'time') {
       keyDown = this.keyDown;
     }
+    if (typeof window === 'undefined') return null;
     const Component = analogTime ? TimePickerAnalog : TimePickerDigital;
     return (
       <Component
-        key={String(analogTime)}
         disabled={disabled}
         curValue={this.props.curValue}
         onChange={this.onChange('time')}
