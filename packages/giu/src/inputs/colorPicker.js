@@ -146,6 +146,7 @@ class ColorPicker extends React.PureComponent<Props, State> {
         ref={registerOuterRef}
         className="giu-color-picker"
         onMouseDown={cancelEvent}
+        onClick={cancelEvent}
         style={style.outer(this.props)}
       >
         {this.renderColorSelector()}
