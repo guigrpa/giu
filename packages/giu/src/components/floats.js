@@ -180,9 +180,6 @@ class Floats extends React.PureComponent<Props> {
     super(props);
     if (!store) initStore();
     this.storeUnsubscribe = store.subscribe(this.forceUpdate.bind(this));
-  }
-
-  componentWillMount() {
     fFloatsMounted = true;
     this.refFloats = [];
   }

@@ -59,9 +59,11 @@ type Props = {
 class BaseRadioGroup extends React.Component<Props> {
   items: Array<RadioChoice>;
 
-  componentWillMount() {
-    this.prepareItems(this.props.items);
+  constructor(props: Props) {
+    super(props);
+    this.prepareItems(props.items);
   }
+
   componentWillReceiveProps(nextProps: Props) {
     const { items } = nextProps;
     if (items !== this.props.items) this.prepareItems(items);

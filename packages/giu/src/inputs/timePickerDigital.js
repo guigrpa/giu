@@ -39,7 +39,8 @@ class TimePickerDigital extends React.Component<Props> {
 
   static defaultProps: DefaultProps = { stepMinutes: 30 };
 
-  componentWillMount() {
+  constructor(props: Props) {
+    super(props);
     this.initTimeItems();
   }
 

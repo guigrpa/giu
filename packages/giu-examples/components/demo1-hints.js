@@ -18,7 +18,7 @@ import { ExampleLabel, exampleStyle } from './demo1-common';
 class HintExample extends React.Component<{}, { fEmbeddedHint: boolean }> {
   state = { fEmbeddedHint: false };
 
-  componentWillMount() {
+  componentDidMount() {
     hintDefine('hintExample', {
       elements: () => {
         const out = [];

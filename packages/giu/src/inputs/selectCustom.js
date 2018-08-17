@@ -89,10 +89,10 @@ class BaseSelectCustom extends React.Component<Props, State> {
   items: Array<Choice>;
   refTitle: ?Object;
 
-  state = { fFloat: false };
-
-  componentWillMount() {
-    this.prepareItems(this.props.items, this.props.required);
+  constructor(props: Props) {
+    super(props);
+    this.state = { fFloat: false };
+    this.prepareItems(props.items, props.required);
   }
 
   componentDidMount() {

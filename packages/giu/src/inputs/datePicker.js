@@ -37,16 +37,12 @@ class DatePicker extends React.Component<Props, State> {
   startOfCurValue: ?Moment;
   shownMonthNumber: number;
 
-  constructor() {
-    super();
+  constructor(props: Props) {
+    super(props);
     this.state = ({
-      shownMonthStart: null,
+      shownMonthStart: this.getShownMonthStart(props),
       hovering: null,
     }: any);
-  }
-
-  componentWillMount() {
-    this.updateShownMonth(this.props);
   }
 
   componentWillReceiveProps(nextProps: Props) {
@@ -58,18 +54,18 @@ class DatePicker extends React.Component<Props, State> {
         nextValue == null ||
         !prevValue.isSame(nextValue)
       ) {
-        this.updateShownMonth(nextProps);
+        const shownMonthStart = this.getShownMonthStart(nextProps);
+        this.setState({ shownMonthStart });
       }
     }
     const { keyDown } = nextProps;
     if (keyDown && keyDown !== this.props.keyDown) this.doKeyDown(keyDown);
   }
 
-  updateShownMonth(props: Props) {
+  getShownMonthStart(props: Props) {
     const { curValue, utc } = props;
     const refMoment = curValue != null ? curValue.clone() : startOfToday(utc);
-    const shownMonthStart = refMoment.startOf('month');
-    this.setState({ shownMonthStart });
+    return refMoment.startOf('month');
   }
 
   // ==========================================

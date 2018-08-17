@@ -827,7 +827,7 @@ afterwards:
 ```js
 import { hintShow, Button } from 'giu';
 class HintExample extends React.Component {
-  componentWillMount() {
+  componentDidMount() {
     hintDefine('hintExample', {
       elements: [
         {
