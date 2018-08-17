@@ -3,7 +3,7 @@
 /* eslint-disable no-underscore-dangle, max-len, react/default-props-match-prop-types */
 
 import * as React from 'react';
-import { merge, addDefaults } from 'timm';
+import { omit, merge, addDefaults } from 'timm';
 import { cancelEvent, stopPropagation } from '../gral/helpers';
 import { COLORS, MISC, IS_IOS, FONTS } from '../gral/constants';
 import { scrollIntoView } from '../gral/visibility';
@@ -98,6 +98,29 @@ type ChildProps = {
   onResizeOuter: Function,
   styleOuter: Object,
 };
+
+const HOC_PUBLIC_PROPS = [
+  'hocOptions',
+  'render',
+  // ... and now all keys in InputHocPublicProps
+  'value',
+  'errors',
+  'required',
+  'validators',
+  'noErrors',
+  'cmds',
+  'disabled',
+  'floatZ',
+  'floatPosition',
+  'focusOnChange',
+  'errorZ',
+  'errorPosition',
+  'errorAlign',
+  'onChange',
+  'onFocus',
+  'onBlur',
+  'styleOuter',
+];
 
 // Don't pass these HOC props to an <input>
 const INPUT_HOC_INVALID_HTML_PROPS = [
@@ -265,7 +288,7 @@ class Input extends React.PureComponent<Props> {
   renderIosErrors() {
     if (!IS_IOS) return null;
     const { errors } = this;
-    if (!errors) return null;
+    if (!errors.length) return null;
     const { position, align, zIndex } = this.calcFloatPosition();
     return (
       <IosFloatWrapper
@@ -279,13 +302,13 @@ class Input extends React.PureComponent<Props> {
   }
 
   renderComponent() {
-    const { hocOptions, render, theme, ...otherProps } = this.props;
+    const { hocOptions, render } = this.props;
+    const otherProps = omit(this.props, HOC_PUBLIC_PROPS);
     const { fIncludeFocusCapture } = hocOptions;
     let { fIncludeClipboardProps } = hocOptions;
     if (fIncludeClipboardProps == null)
       fIncludeClipboardProps = fIncludeFocusCapture;
     const childProps = {
-      theme,
       registerOuterRef: this.registerOuterRef,
       registerFocusableRef: fIncludeFocusCapture
         ? undefined
@@ -317,7 +340,7 @@ class Input extends React.PureComponent<Props> {
     const { errors } = this;
 
     // Remove float
-    if (!errors && this.errorFloatId != null) {
+    if (!errors.length && this.errorFloatId != null) {
       floatDelete(this.errorFloatId);
       this.errorFloatId = null;
       return;
@@ -328,7 +351,7 @@ class Input extends React.PureComponent<Props> {
     // hints on how to properly position the error float; e.g. if another float
     // will open `below`, position the error float `above`; also adjust `z-index`
     // to be below another float's level, so that it doesn't obscure the main float).
-    if (errors) {
+    if (errors.length) {
       const floatOptions = {
         ...this.calcFloatPosition(),
         getAnchorNode: () => this.refOuter || this.refFocusable,
