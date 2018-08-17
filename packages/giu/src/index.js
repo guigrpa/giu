@@ -113,8 +113,8 @@ import AnimatedCounter from './components/animatedCounter';
 export { AnimatedCounter };
 
 // HOCs and wrappers
-import input from './hocs/input';
-export { input };
+import Input from './hocs/input';
+export { Input };
 
 // Styles
 export {
