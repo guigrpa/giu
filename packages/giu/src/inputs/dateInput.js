@@ -1,7 +1,5 @@
 // @flow
 
-/* eslint-disable react/no-multi-comp */
-
 import React from 'react';
 import { omit, merge, set as timmSet, addDefaults } from 'timm';
 import moment from '../vendor/moment';
@@ -23,9 +21,9 @@ import {
 } from '../gral/dates';
 import type { KeyboardEventPars, Moment } from '../gral/types';
 import { isDate } from '../gral/validators';
-import { ThemeContext } from '../gral/themeContext';
 import type { Theme } from '../gral/themeContext';
-import input, { INPUT_HOC_INVALID_HTML_PROPS } from '../hocs/inputOld';
+import Input, { INPUT_HOC_INVALID_HTML_PROPS } from '../hocs/input';
+import type { InputHocPublicProps } from '../hocs/input';
 import { floatAdd, floatDelete, floatUpdate } from '../components/floats';
 import type { FloatPosition, FloatAlign } from '../components/floats';
 import { DateTimePicker, TRAPPED_KEYS } from './dateTimePicker';
@@ -95,6 +93,8 @@ const MANAGE_FOCUS_AUTONOMOUSLY = IS_MOBILE_OR_TABLET;
 // -- Props:
 // -- START_DOCS
 type PublicProps = {
+  ...$Exact<InputHocPublicProps>, // common to all inputs (check the docs!)
+  id?: string,
   type?: PickerType, // see below (default: 'dropDownPicker')
   // Whether Giu should check for iOS in order to simplify certain components
   // (e.g. do not use analogue time picker) -- default: true
@@ -105,11 +105,11 @@ type PublicProps = {
   time?: boolean, // whether the time is part of the value (default: false)
   // Whether the time picker should be analogue (traditional clock)
   // or digital (list) (default: true)
-  analogTime?: boolean,
+  analogTime?: boolean, // (default: true [in iOS: false])
   seconds?: boolean, // whether seconds should be included in the time value (default: false)
   // UTC mode; by default, it is `true` *unless* `date` and `time` are both `true`.
   // In other words, local time is only used by default if both `date` and `time` are enabled
-  utc?: boolean,
+  utc?: boolean, // (default: !(date && time))
   todayName?: string, // label for the *Today* button (default: 'Today')
   // Current language (used just for force-render).
   // Use it to inform Giu that you have changed `moment`'s language.
@@ -148,10 +148,8 @@ type DefaultProps = {
 type Props = {
   ...$Exact<PublicProps>,
   ...$Exact<DefaultProps>,
-  id?: string,
-  // Context
-  theme: Theme,
   // Input HOC
+  theme: Theme,
   curValue: string,
   errors: Array<string>,
   registerOuterRef: Function,
@@ -204,7 +202,6 @@ class BaseDateInput extends React.Component<Props, State> {
   refInput: ?Object;
 
   state = { fFloat: false };
-  static defaultProps = {};
   refMdl = React.createRef();
 
   constructor(props: Props) {
@@ -493,6 +490,24 @@ class BaseDateInput extends React.Component<Props, State> {
 }
 
 // ==========================================
+const hocOptions = {
+  componentName: 'DateInput',
+  toInternalValue,
+  toExternalValue,
+  isNull,
+  defaultValidators: { isDate: isDate() },
+  validatorContext: { moment },
+  fIncludeClipboardProps: true,
+};
+const render = props => <BaseDateInput {...props} />;
+const DateInput = (publicProps: PublicProps) => {
+  let props = addDefaults(publicProps, DEFAULT_PROPS);
+  if (IS_IOS && props.checkIos) props = timmSet(props, 'analogTime', false);
+  props = omit(props, ['checkIos']);
+  return <Input hocOptions={hocOptions} render={render} {...props} />;
+};
+
+// ==========================================
 const style = {
   outerInline: ({ styleOuter }) => {
     let out = styleOuter;
@@ -518,31 +533,6 @@ const style = {
 };
 
 // ==========================================
-const DateInput = input(BaseDateInput, {
-  toInternalValue,
-  toExternalValue,
-  isNull,
-  defaultValidators: { isDate: isDate() },
-  validatorContext: { moment },
-  fIncludeClipboardProps: true,
-});
-
-// ==========================================
-// ThemedDateInput
-// ==========================================
-// $FlowFixMe
-const ThemedDateInput = React.forwardRef((props0: PublicProps, ref) => {
-  let props = addDefaults(props0, DEFAULT_PROPS);
-  if (IS_IOS && props.checkIos) props = timmSet(props, 'analogTime', false);
-  props = omit(props, ['checkIos']);
-  return (
-    <ThemeContext.Consumer>
-      {theme => <DateInput {...props} theme={theme} ref={ref} />}
-    </ThemeContext.Consumer>
-  );
-});
-
-// ==========================================
 // Public
 // ==========================================
-export default ThemedDateInput;
+export default DateInput;
