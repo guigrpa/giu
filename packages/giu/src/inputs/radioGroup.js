@@ -6,7 +6,8 @@ import { preventDefault } from '../gral/helpers';
 import { NULL_STRING, IS_IOS } from '../gral/constants';
 import { LIST_SEPARATOR_KEY } from './listPicker';
 import { GLOW } from '../gral/styles';
-import input from '../hocs/inputOld';
+import Input from '../hocs/input';
+import type { InputHocPublicProps } from '../hocs/input';
 
 const toInternalValue = val =>
   val != null ? JSON.stringify(val) : NULL_STRING;
@@ -28,6 +29,7 @@ const isNull = val => val === NULL_STRING;
 // -- Props:
 // -- START_DOCS
 type PublicProps = {
+  ...$Exact<InputHocPublicProps>, // common to all inputs (check the docs!)
   id: string, // mandatory!
   items: Array<RadioChoice>,
   lang?: string, // current language (used just for force-render)
@@ -54,10 +56,8 @@ type Props = {
 // ==========================================
 // Component
 // ==========================================
-class RadioGroup extends React.Component<Props> {
+class BaseRadioGroup extends React.Component<Props> {
   items: Array<RadioChoice>;
-
-  static defaultProps = {};
 
   componentWillMount() {
     this.prepareItems(this.props.items);
@@ -120,6 +120,20 @@ class RadioGroup extends React.Component<Props> {
 }
 
 // ==========================================
+const hocOptions = {
+  componentName: 'RadioGroup',
+  toInternalValue,
+  toExternalValue,
+  isNull,
+  fIncludeFocusCapture: !IS_IOS,
+  className: 'giu-radio-buttons',
+};
+const render = props => <BaseRadioGroup {...props} />;
+const RadioGroup = (publicProps: PublicProps) => (
+  <Input hocOptions={hocOptions} render={render} {...publicProps} />
+);
+
+// ==========================================
 const style = {
   outerBase: {
     border: '1px solid transparent',
@@ -144,10 +158,4 @@ const style = {
 // ==========================================
 // Public
 // ==========================================
-export default input(RadioGroup, {
-  toInternalValue,
-  toExternalValue,
-  isNull,
-  fIncludeFocusCapture: !IS_IOS,
-  className: 'giu-radio-buttons',
-});
+export default RadioGroup;

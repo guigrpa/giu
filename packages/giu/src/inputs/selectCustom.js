@@ -23,9 +23,9 @@ import {
 } from '../gral/keys';
 import type { Choice, KeyboardEventPars } from '../gral/types';
 import { isAncestorNode } from '../gral/helpers';
-import { ThemeContext } from '../gral/themeContext';
 import type { Theme } from '../gral/themeContext';
-import input from '../hocs/inputOld';
+import Input from '../hocs/input';
+import type { InputHocPublicProps } from '../hocs/input';
 import { ListPicker, LIST_SEPARATOR_KEY } from './listPicker';
 import IosFloatWrapper from './iosFloatWrapper';
 import { floatAdd, floatDelete, floatUpdate } from '../components/floats';
@@ -56,11 +56,17 @@ const MANAGE_FOCUS_AUTONOMOUSLY = IS_MOBILE_OR_TABLET;
 // ==========================================
 // Declarations
 // ==========================================
-type UnthemedProps = {
+type PublicProps = {
+  ...$Exact<InputHocPublicProps>, // common to all inputs (check the docs!)
   ...$Exact<SelectProps>,
   inlinePicker?: boolean,
   id?: string,
+};
+
+type Props = {
+  ...$Exact<PublicProps>,
   // Input HOC
+  theme: Theme,
   curValue: string,
   onChange: Function,
   registerOuterRef: Function,
@@ -70,12 +76,6 @@ type UnthemedProps = {
   keyDown?: KeyboardEventPars,
 };
 
-type Props = {
-  ...$Exact<UnthemedProps>,
-  // Context
-  theme: Theme,
-};
-
 type State = {
   fFloat: boolean,
 };
@@ -83,7 +83,7 @@ type State = {
 // ==========================================
 // Component
 // ==========================================
-class SelectCustomBase extends React.Component<Props, State> {
+class BaseSelectCustom extends React.Component<Props, State> {
   floatId: ?string;
   keyDown: void | KeyboardEventPars;
   items: Array<Choice>;
@@ -342,10 +342,28 @@ class SelectCustomBase extends React.Component<Props, State> {
 }
 
 // ==========================================
-const ThemedSelectCustomBase = (props: UnthemedProps) => (
-  <ThemeContext.Consumer>
-    {theme => <SelectCustomBase {...props} theme={theme} />}
-  </ThemeContext.Consumer>
+const hocOptions = {
+  componentName: 'SelectCustom',
+  toInternalValue,
+  toExternalValue,
+  isNull,
+  fIncludeFocusCapture: !MANAGE_FOCUS_AUTONOMOUSLY,
+  trappedKeys: [
+    KEYS.esc,
+    // For ListPicker
+    KEYS.down,
+    KEYS.up,
+    KEYS.home,
+    KEYS.end,
+    KEYS.return,
+    KEYS.del,
+    KEYS.backspace,
+  ],
+  className: 'giu-select-custom',
+};
+const render = props => <BaseSelectCustom {...props} />;
+const SelectCustom = (publicProps: PublicProps) => (
+  <Input hocOptions={hocOptions} render={render} {...publicProps} />
 );
 
 // ==========================================
@@ -390,23 +408,4 @@ const style = {
 // ==========================================
 // Public
 // ==========================================
-const SelectCustom = input(ThemedSelectCustomBase, {
-  toInternalValue,
-  toExternalValue,
-  isNull,
-  fIncludeFocusCapture: !MANAGE_FOCUS_AUTONOMOUSLY,
-  trappedKeys: [
-    KEYS.esc,
-    // For ListPicker
-    KEYS.down,
-    KEYS.up,
-    KEYS.home,
-    KEYS.end,
-    KEYS.return,
-    KEYS.del,
-    KEYS.backspace,
-  ],
-  className: 'giu-select-custom',
-});
-
 export { SelectCustom, LIST_SEPARATOR };

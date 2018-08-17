@@ -4,7 +4,8 @@ import React from 'react';
 import { omit, merge } from 'timm';
 import { NULL_STRING } from '../gral/constants';
 import { inputReset, INPUT_DISABLED } from '../gral/styles';
-import input, { INPUT_HOC_INVALID_HTML_PROPS } from '../hocs/inputOld';
+import Input, { INPUT_HOC_INVALID_HTML_PROPS } from '../hocs/input';
+import type { InputHocPublicProps } from '../hocs/input';
 import { LIST_SEPARATOR_KEY } from './listPicker';
 import type { SelectProps } from './selectTypes';
 
@@ -25,8 +26,13 @@ const isNull = val => val === NULL_STRING;
 // ==========================================
 // Declarations
 // ==========================================
-type Props = {
+type PublicProps = {
+  ...$Exact<InputHocPublicProps>, // common to all inputs (check the docs!)
   ...$Exact<SelectProps>,
+};
+
+type Props = {
+  ...$Exact<PublicProps>,
   // Input HOC
   curValue: string,
   registerFocusableRef: Function,
@@ -45,10 +51,7 @@ const FILTERED_OUT_PROPS = [
 // ==========================================
 // Component
 // ==========================================
-class SelectNative extends React.Component<Props> {
-  static defaultProps = {};
-
-  // ==========================================
+class BaseSelectNative extends React.Component<Props> {
   render() {
     const {
       curValue,
@@ -89,6 +92,18 @@ class SelectNative extends React.Component<Props> {
 }
 
 // ==========================================
+const hocOptions = {
+  componentName: 'SelectNative',
+  toInternalValue,
+  toExternalValue,
+  isNull,
+};
+const render = props => <BaseSelectNative {...props} />;
+const SelectNative = (publicProps: PublicProps) => (
+  <Input hocOptions={hocOptions} render={render} {...publicProps} />
+);
+
+// ==========================================
 const style = {
   fieldBase: inputReset({
     backgroundColor: 'default',
@@ -105,8 +120,4 @@ const style = {
 // ==========================================
 // Public
 // ==========================================
-export default input(SelectNative, {
-  toInternalValue,
-  toExternalValue,
-  isNull,
-});
+export default SelectNative;
