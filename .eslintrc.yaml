@@ -59,6 +59,7 @@ rules:
   react/jsx-closing-tag-location: off
   react/jsx-one-expression-per-line: off
   react/destructuring-assignment: off
+  react/no-did-update-set-state: off
   import/no-extraneous-dependencies:
     - error
     - devDependencies: true
