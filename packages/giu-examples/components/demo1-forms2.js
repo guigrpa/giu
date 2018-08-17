@@ -77,6 +77,7 @@ class FormExample extends React.Component<{ theme: Theme }, { a: any, b: any, c:
         icon: this.props.theme.id === 'mdl' ? 'thumb_up' : 'thumbs-up',
       });
     } catch (err) {
+      console.error(err);
       notify({
         msg: 'Validation failed',
         type: 'error',
