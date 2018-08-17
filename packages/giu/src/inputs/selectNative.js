@@ -4,7 +4,7 @@ import React from 'react';
 import { omit, merge } from 'timm';
 import { NULL_STRING } from '../gral/constants';
 import { inputReset, INPUT_DISABLED } from '../gral/styles';
-import input, { INPUT_HOC_INVALID_HTML_PROPS } from '../hocs/input';
+import input, { INPUT_HOC_INVALID_HTML_PROPS } from '../hocs/inputOld';
 import { LIST_SEPARATOR_KEY } from './listPicker';
 import type { SelectProps } from './selectTypes';
 

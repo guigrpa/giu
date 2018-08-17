@@ -25,7 +25,7 @@ import type { Choice, KeyboardEventPars } from '../gral/types';
 import { isAncestorNode } from '../gral/helpers';
 import { ThemeContext } from '../gral/themeContext';
 import type { Theme } from '../gral/themeContext';
-import input from '../hocs/input';
+import input from '../hocs/inputOld';
 import { ListPicker, LIST_SEPARATOR_KEY } from './listPicker';
 import IosFloatWrapper from './iosFloatWrapper';
 import { floatAdd, floatDelete, floatUpdate } from '../components/floats';

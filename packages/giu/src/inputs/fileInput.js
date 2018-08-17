@@ -4,7 +4,7 @@ import React from 'react';
 import { omit, merge } from 'timm';
 import filesize from 'filesize';
 import { GLOW, HIDDEN_FOCUS_CAPTURE } from '../gral/styles';
-import input, { INPUT_HOC_INVALID_HTML_PROPS } from '../hocs/input';
+import input, { INPUT_HOC_INVALID_HTML_PROPS } from '../hocs/inputOld';
 import type { Command } from '../gral/types';
 import { ThemeContext } from '../gral/themeContext';
 import type { Theme } from '../gral/themeContext';

@@ -9,7 +9,7 @@ import type { KeyboardEventPars } from '../gral/types';
 import { isAncestorNode } from '../gral/helpers';
 import { ThemeContext } from '../gral/themeContext';
 import type { Theme } from '../gral/themeContext';
-import input from '../hocs/input';
+import input from '../hocs/inputOld';
 import { floatAdd, floatDelete, floatUpdate } from '../components/floats';
 import type { FloatPosition, FloatAlign } from '../components/floats';
 import ColorPicker from './colorPicker';

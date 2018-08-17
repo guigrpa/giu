@@ -8,7 +8,7 @@ import { inputReset, INPUT_DISABLED } from '../gral/styles';
 import { isAnyModifierPressed } from '../gral/keys';
 import { ThemeContext } from '../gral/themeContext';
 import type { Theme } from '../gral/themeContext';
-import input, { INPUT_HOC_INVALID_HTML_PROPS } from '../hocs/input';
+import input, { INPUT_HOC_INVALID_HTML_PROPS } from '../hocs/inputOld';
 
 const DEBUG = false && process.env.NODE_ENV !== 'production';
 

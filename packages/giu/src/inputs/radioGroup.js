@@ -6,7 +6,7 @@ import { preventDefault } from '../gral/helpers';
 import { NULL_STRING, IS_IOS } from '../gral/constants';
 import { LIST_SEPARATOR_KEY } from './listPicker';
 import { GLOW } from '../gral/styles';
-import input from '../hocs/input';
+import input from '../hocs/inputOld';
 
 const toInternalValue = val =>
   val != null ? JSON.stringify(val) : NULL_STRING;

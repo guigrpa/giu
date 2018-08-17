@@ -25,7 +25,7 @@ import type { KeyboardEventPars, Moment } from '../gral/types';
 import { isDate } from '../gral/validators';
 import { ThemeContext } from '../gral/themeContext';
 import type { Theme } from '../gral/themeContext';
-import input, { INPUT_HOC_INVALID_HTML_PROPS } from '../hocs/input';
+import input, { INPUT_HOC_INVALID_HTML_PROPS } from '../hocs/inputOld';
 import { floatAdd, floatDelete, floatUpdate } from '../components/floats';
 import type { FloatPosition, FloatAlign } from '../components/floats';
 import { DateTimePicker, TRAPPED_KEYS } from './dateTimePicker';

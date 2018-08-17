@@ -6,7 +6,7 @@ import { inputReset, INPUT_DISABLED } from '../gral/styles';
 import { isNumber } from '../gral/validators';
 import { ThemeContext } from '../gral/themeContext';
 import type { Theme } from '../gral/themeContext';
-import input, { INPUT_HOC_INVALID_HTML_PROPS } from '../hocs/input';
+import input, { INPUT_HOC_INVALID_HTML_PROPS } from '../hocs/inputOld';
 
 const NULL_VALUE = '';
 const classOptions = {
