@@ -11,7 +11,7 @@ import {
   arrayMove,
 } from 'react-sortable-hoc';
 import type { ScrollIntoViewOptions } from '../gral/visibility';
-import { COLORS, KEYS } from '../gral/constants';
+import { COLORS, KEYS, IS_MOBILE_OR_TABLET } from '../gral/constants';
 import { isDark } from '../gral/styles';
 import { cancelEvent, stopPropagation, simplifyString } from '../gral/helpers';
 import { localGet, localSet } from '../gral/storage';
@@ -62,6 +62,8 @@ const SortableDataTableRow = sortableElement(DataTableRow);
 const SortableVirtualScroller = sortableContainer(VirtualScroller, {
   withRef: true,
 });
+
+const MANAGE_FOCUS_AUTONOMOUSLY = IS_MOBILE_OR_TABLET;
 
 // ===============================================================
 // Component
@@ -443,7 +445,7 @@ class DataTable extends React.PureComponent<Props> {
         onClick={this.onClickOuter}
         style={style.outer(this.props)}
       >
-        {this.renderFocusCapture()}
+        {MANAGE_FOCUS_AUTONOMOUSLY ? null : this.renderFocusCapture()}
         {this.props.showHeader && this.renderHeader()}
         {this.renderVirtualScroller()}
         {STYLES}
