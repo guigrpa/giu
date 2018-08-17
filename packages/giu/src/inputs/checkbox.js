@@ -1,9 +1,9 @@
 // @flow
 
-import React from 'react';
+import * as React from 'react';
 import { omit } from 'timm';
-import input, { INPUT_HOC_INVALID_HTML_PROPS } from '../hocs/input';
-import { ThemeContext } from '../gral/themeContext';
+import Input, { INPUT_HOC_INVALID_HTML_PROPS } from '../hocs/input';
+import type { InputHocProps } from '../hocs/input';
 import type { Theme } from '../gral/themeContext';
 
 const toInternalValue = val => (val != null ? val : false);
@@ -16,8 +16,9 @@ const isNull = val => val == null;
 // -- Props:
 // -- START_DOCS
 type PublicProps = {
+  ...$Exact<InputHocProps>,
   id?: string,
-  label?: any, // React components to be included in the checkbox's `label` element
+  label?: React.Node, // React components to be included in the checkbox's `label` element
   disabled?: boolean,
   styleLabel?: Object, // merged with the `label` style
   skipTheme?: boolean,
@@ -25,18 +26,13 @@ type PublicProps = {
 };
 // -- END_DOCS
 
-type UnthemedProps = {
+type Props = {
   ...$Exact<PublicProps>,
   // Input HOC
+  theme: Theme,
   curValue: boolean,
   registerOuterRef: Function,
   registerFocusableRef: Function,
-};
-
-type Props = {
-  ...$Exact<UnthemedProps>,
-  // Context
-  theme: Theme,
 };
 
 const FILTERED_OUT_PROPS = [
@@ -52,10 +48,8 @@ const FILTERED_OUT_PROPS = [
 // ==========================================
 // Component
 // ==========================================
-class Checkbox extends React.Component<Props> {
+class BaseCheckbox extends React.Component<Props> {
   refCheckbox: ?Object;
-
-  static defaultProps = {};
 
   componentDidMount() {
     if (this.props.theme.id === 'mdl' && this.refCheckbox) {
@@ -74,31 +68,30 @@ class Checkbox extends React.Component<Props> {
   }
 
   renderWithLabel() {
-    const { label, registerOuterRef, styleLabel } = this.props;
     return (
       <span
-        ref={registerOuterRef}
+        ref={this.props.registerOuterRef}
         className="giu-checkbox"
         style={style.wrapper}
       >
         {this.renderInput()}
-        <label htmlFor={this.props.id} style={styleLabel}>
-          {label}
+        <label htmlFor={this.props.id} style={this.props.styleLabel}>
+          {this.props.label}
         </label>
       </span>
     );
   }
 
   renderInput(className?: string) {
-    const { curValue, disabled, registerFocusableRef } = this.props;
+    const { disabled } = this.props;
     const inputProps = omit(this.props, FILTERED_OUT_PROPS);
     return (
       <input
-        ref={registerFocusableRef}
+        ref={this.props.registerFocusableRef}
         id={this.props.id}
         className={className}
         type="checkbox"
-        checked={curValue}
+        checked={this.props.curValue}
         tabIndex={disabled ? -1 : undefined}
         {...inputProps}
         disabled={disabled}
@@ -141,10 +134,16 @@ class Checkbox extends React.Component<Props> {
 }
 
 // ==========================================
-const ThemedCheckbox = (props: UnthemedProps) => (
-  <ThemeContext.Consumer>
-    {theme => <Checkbox {...props} theme={theme} />}
-  </ThemeContext.Consumer>
+const hocOptions = {
+  componentName: 'Checkbox',
+  toInternalValue,
+  toExternalValue,
+  isNull,
+  valueAttr: 'checked',
+};
+const render = props => <BaseCheckbox {...props} />;
+const Checkbox = (publicProps: PublicProps) => (
+  <Input hocOptions={hocOptions} render={render} {...publicProps} />
 );
 
 // ==========================================
@@ -164,9 +163,4 @@ const style = {
 // ==========================================
 // Public
 // ==========================================
-export default input(ThemedCheckbox, {
-  toInternalValue,
-  toExternalValue,
-  isNull,
-  valueAttr: 'checked',
-});
+export default Checkbox;
