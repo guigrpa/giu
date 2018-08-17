@@ -131,9 +131,10 @@ const hocOptions = {
   className: 'giu-radio-buttons',
 };
 const render = props => <BaseRadioGroup {...props} />;
-const RadioGroup = (publicProps: PublicProps) => (
-  <Input hocOptions={hocOptions} render={render} {...publicProps} />
-);
+// $FlowFixMe
+const RadioGroup = React.forwardRef((publicProps: PublicProps, ref) => (
+  <Input hocOptions={hocOptions} render={render} {...publicProps} ref={ref} />
+));
 
 // ==========================================
 const style = {

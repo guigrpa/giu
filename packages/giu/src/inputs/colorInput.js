@@ -236,9 +236,10 @@ const hocOptions = {
   className: 'giu-color-input',
 };
 const render = props => <BaseColorInput {...props} />;
-const ColorInput = (publicProps: PublicProps) => (
-  <Input hocOptions={hocOptions} render={render} {...publicProps} />
-);
+// $FlowFixMe
+const ColorInput = React.forwardRef((publicProps: PublicProps, ref) => (
+  <Input hocOptions={hocOptions} render={render} {...publicProps} ref={ref} />
+));
 
 // ==========================================
 const style = {

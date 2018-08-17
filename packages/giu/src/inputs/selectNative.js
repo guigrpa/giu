@@ -99,9 +99,10 @@ const hocOptions = {
   isNull,
 };
 const render = props => <BaseSelectNative {...props} />;
-const SelectNative = (publicProps: PublicProps) => (
-  <Input hocOptions={hocOptions} render={render} {...publicProps} />
-);
+// $FlowFixMe
+const SelectNative = React.forwardRef((publicProps: PublicProps, ref) => (
+  <Input hocOptions={hocOptions} render={render} {...publicProps} ref={ref} />
+));
 
 // ==========================================
 const style = {

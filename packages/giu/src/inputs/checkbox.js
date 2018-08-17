@@ -142,9 +142,10 @@ const hocOptions = {
   valueAttr: 'checked',
 };
 const render = props => <BaseCheckbox {...props} />;
-const Checkbox = (publicProps: PublicProps) => (
-  <Input hocOptions={hocOptions} render={render} {...publicProps} />
-);
+// $FlowFixMe
+const Checkbox = React.forwardRef((publicProps: PublicProps, ref) => (
+  <Input hocOptions={hocOptions} render={render} {...publicProps} ref={ref} />
+));
 
 // ==========================================
 const style = {

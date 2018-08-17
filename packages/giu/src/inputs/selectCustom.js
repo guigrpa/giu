@@ -362,9 +362,10 @@ const hocOptions = {
   className: 'giu-select-custom',
 };
 const render = props => <BaseSelectCustom {...props} />;
-const SelectCustom = (publicProps: PublicProps) => (
-  <Input hocOptions={hocOptions} render={render} {...publicProps} />
-);
+// $FlowFixMe
+const SelectCustom = React.forwardRef((publicProps: PublicProps, ref) => (
+  <Input hocOptions={hocOptions} render={render} {...publicProps} ref={ref} />
+));
 
 // ==========================================
 const style = {

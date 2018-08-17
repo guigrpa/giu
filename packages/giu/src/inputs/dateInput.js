@@ -500,12 +500,13 @@ const hocOptions = {
   fIncludeClipboardProps: true,
 };
 const render = props => <BaseDateInput {...props} />;
-const DateInput = (publicProps: PublicProps) => {
+// $FlowFixMe
+const DateInput = React.forwardRef((publicProps: PublicProps, ref) => {
   let props = addDefaults(publicProps, DEFAULT_PROPS);
   if (IS_IOS && props.checkIos) props = timmSet(props, 'analogTime', false);
   props = omit(props, ['checkIos']);
-  return <Input hocOptions={hocOptions} render={render} {...props} />;
-};
+  return <Input hocOptions={hocOptions} render={render} {...props} ref={ref} />;
+});
 
 // ==========================================
 const style = {

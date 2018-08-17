@@ -174,9 +174,10 @@ function createClass(componentName, inputType) {
     ...CLASS_OPTIONS[inputType],
   };
   const render = props => <BaseKlass {...props} />;
-  const Klass = (publicProps: PublicProps) => (
-    <Input hocOptions={hocOptions} render={render} {...publicProps} />
-  );
+  // $FlowFixMe
+  const Klass = React.forwardRef((publicProps: PublicProps, ref) => (
+    <Input hocOptions={hocOptions} render={render} {...publicProps} ref={ref} />
+  ));
 
   return Klass;
 }

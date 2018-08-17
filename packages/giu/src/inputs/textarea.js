@@ -183,9 +183,10 @@ const hocOptions = {
   isNull,
 };
 const render = props => <BaseTextarea {...props} />;
-const Textarea = (publicProps: PublicProps) => (
-  <Input hocOptions={hocOptions} render={render} {...publicProps} />
-);
+// $FlowFixMe
+const Textarea = React.forwardRef((publicProps: PublicProps, ref) => (
+  <Input hocOptions={hocOptions} render={render} {...publicProps} ref={ref} />
+));
 
 // ==========================================
 const style = {

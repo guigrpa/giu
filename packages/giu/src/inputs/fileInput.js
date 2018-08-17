@@ -142,9 +142,10 @@ const hocOptions = {
   valueAttr: 'files',
 };
 const render = props => <BaseFileInput {...props} />;
-const FileInput = (publicProps: PublicProps) => (
-  <Input hocOptions={hocOptions} render={render} {...publicProps} />
-);
+// $FlowFixMe
+const FileInput = React.forwardRef((publicProps: PublicProps, ref) => (
+  <Input hocOptions={hocOptions} render={render} {...publicProps} ref={ref} />
+));
 
 // ==========================================
 const style = {
