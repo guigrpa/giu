@@ -4,9 +4,9 @@ import React from 'react';
 import { omit, merge } from 'timm';
 import filesize from 'filesize';
 import { GLOW, HIDDEN_FOCUS_CAPTURE } from '../gral/styles';
-import input, { INPUT_HOC_INVALID_HTML_PROPS } from '../hocs/inputOld';
+import Input, { INPUT_HOC_INVALID_HTML_PROPS } from '../hocs/input';
+import type { InputHocPublicProps } from '../hocs/input';
 import type { Command } from '../gral/types';
-import { ThemeContext } from '../gral/themeContext';
 import type { Theme } from '../gral/themeContext';
 import Button from '../components/button';
 import Icon from '../components/icon';
@@ -19,6 +19,7 @@ const isNull = val => val == null;
 // -- Props:
 // -- START_DOCS
 type PublicProps = {
+  ...$Exact<InputHocPublicProps>, // common to all inputs (check the docs!)
   children?: any, // React elements that will be shown inside the button(default: `Choose file…`)
   cmds?: Array<Command>,
   disabled?: boolean,
@@ -30,9 +31,8 @@ type PublicProps = {
 
 type Props = {
   ...$Exact<PublicProps>,
-  // Context
-  theme: Theme,
   // Input HOC
+  theme: Theme,
   curValue: ?Object,
   onChange: (ev: SyntheticEvent<*>, providedValue: any) => any,
   registerOuterRef: Function,
@@ -52,10 +52,9 @@ const FILTERED_OUT_PROPS = [
 // ==========================================
 // Component
 // ==========================================
-class FileInput extends React.Component<Props> {
+class BaseFileInput extends React.Component<Props> {
   refInput: ?Object;
 
-  static defaultProps = {};
   cntCleared: number = 0;
 
   componentDidUpdate(prevProps) {
@@ -137,10 +136,14 @@ class FileInput extends React.Component<Props> {
 }
 
 // ==========================================
-const ThemedFileInput = props => (
-  <ThemeContext.Consumer>
-    {theme => <FileInput {...props} theme={theme} />}
-  </ThemeContext.Consumer>
+const hocOptions = {
+  componentName: 'FileInput',
+  isNull,
+  valueAttr: 'files',
+};
+const render = props => <BaseFileInput {...props} />;
+const FileInput = (publicProps: PublicProps) => (
+  <Input hocOptions={hocOptions} render={render} {...publicProps} />
 );
 
 // ==========================================
@@ -157,4 +160,4 @@ const style = {
 // ==========================================
 // Public
 // ==========================================
-export default input(ThemedFileInput, { isNull, valueAttr: 'files' });
+export default FileInput;

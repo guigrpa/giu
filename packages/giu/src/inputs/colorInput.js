@@ -7,9 +7,9 @@ import { COLORS, KEYS, IS_IOS, IS_MOBILE_OR_TABLET } from '../gral/constants';
 import { GLOW, inputReset, INPUT_DISABLED } from '../gral/styles';
 import type { KeyboardEventPars } from '../gral/types';
 import { isAncestorNode } from '../gral/helpers';
-import { ThemeContext } from '../gral/themeContext';
 import type { Theme } from '../gral/themeContext';
-import input from '../hocs/inputOld';
+import Input from '../hocs/input';
+import type { InputHocPublicProps } from '../hocs/input';
 import { floatAdd, floatDelete, floatUpdate } from '../components/floats';
 import type { FloatPosition, FloatAlign } from '../components/floats';
 import ColorPicker from './colorPicker';
@@ -30,6 +30,7 @@ const MANAGE_FOCUS_AUTONOMOUSLY = IS_MOBILE_OR_TABLET;
 // -- Props:
 // -- START_DOCS
 type PublicProps = {
+  ...$Exact<InputHocPublicProps>, // common to all inputs (check the docs!)
   disabled?: boolean,
   // Whether the complete color picker should be inlined or appear as a dropdown when clicked
   inlinePicker?: boolean,
@@ -40,9 +41,10 @@ type PublicProps = {
 };
 // -- END_DOCS
 
-type UnthemedProps = {
+type Props = {
   ...$Exact<PublicProps>,
   // Input HOC
+  theme: Theme,
   curValue: ?string,
   onChange: Function,
   registerOuterRef: Function,
@@ -52,12 +54,6 @@ type UnthemedProps = {
   keyDown?: KeyboardEventPars,
 };
 
-type Props = {
-  ...$Exact<UnthemedProps>,
-  // Context
-  theme: Theme,
-};
-
 type State = {
   fFloat: boolean,
 };
@@ -65,12 +61,11 @@ type State = {
 // ==========================================
 // Component
 // ==========================================
-class ColorInput extends React.Component<Props, State> {
+class BaseColorInput extends React.Component<Props, State> {
   floatId: ?string;
   refTitle: ?Object;
   refPicker: ?Object;
 
-  static defaultProps = {};
   state = { fFloat: false };
 
   componentWillReceiveProps(nextProps: Props) {
@@ -231,10 +226,18 @@ class ColorInput extends React.Component<Props, State> {
 }
 
 // ==========================================
-const ThemedColorInput = (props: UnthemedProps) => (
-  <ThemeContext.Consumer>
-    {theme => <ColorInput {...props} theme={theme} />}
-  </ThemeContext.Consumer>
+const hocOptions = {
+  componentName: 'ColorInput',
+  toInternalValue,
+  toExternalValue,
+  isNull,
+  fIncludeFocusCapture: !MANAGE_FOCUS_AUTONOMOUSLY,
+  trappedKeys: [KEYS.esc],
+  className: 'giu-color-input',
+};
+const render = props => <BaseColorInput {...props} />;
+const ColorInput = (publicProps: PublicProps) => (
+  <Input hocOptions={hocOptions} render={render} {...publicProps} />
 );
 
 // ==========================================
@@ -283,11 +286,4 @@ const style = {
 // ==========================================
 // Public
 // ==========================================
-export default input(ThemedColorInput, {
-  toInternalValue,
-  toExternalValue,
-  isNull,
-  fIncludeFocusCapture: !MANAGE_FOCUS_AUTONOMOUSLY,
-  trappedKeys: [KEYS.esc],
-  className: 'giu-color-input',
-});
+export default ColorInput;

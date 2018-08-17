@@ -43,7 +43,7 @@ type HocOptions = {|
   fIncludeClipboardProps?: boolean,
 |};
 
-export type InputHocProps = {
+export type InputHocPublicProps = {
   // Public props (all optional)
   // Some of these are passed down unmodified (see list),
   // others *might* be modified, others are simply *not passed*.
@@ -68,13 +68,15 @@ export type InputHocProps = {
 };
 
 type Props = {
+  ...$Exact<InputHocPublicProps>,
+
+  // Configured by the specific input
   hocOptions: HocOptions,
   render: (props: ChildProps) => React.Element<any>,
 
   // Context
-  theme: Theme,
+  theme: Theme, // passed through unchanged
 
-  ...$Exact<InputHocProps>,
   // all others are passed through unchanged
 };
 
@@ -247,8 +249,9 @@ class Input extends React.PureComponent<Props> {
   getErrors() {
     return this.errors;
   }
-  validateAndGetValue() {
-    return this._validate().then(() => this.getValue());
+  async validateAndGetValue() {
+    await this._validate(); // may throw
+    return this.getValue();
   }
 
   // ==========================================

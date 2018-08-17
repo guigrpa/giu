@@ -4,12 +4,12 @@ import React from 'react';
 import { omit, merge, set as timmSet } from 'timm';
 import { inputReset, INPUT_DISABLED } from '../gral/styles';
 import { isNumber } from '../gral/validators';
-import { ThemeContext } from '../gral/themeContext';
 import type { Theme } from '../gral/themeContext';
-import input, { INPUT_HOC_INVALID_HTML_PROPS } from '../hocs/inputOld';
+import Input, { INPUT_HOC_INVALID_HTML_PROPS } from '../hocs/input';
+import type { InputHocPublicProps } from '../hocs/input';
 
 const NULL_VALUE = '';
-const classOptions = {
+const CLASS_OPTIONS = {
   text: {
     toInternalValue: val => (val != null ? val : NULL_VALUE),
     toExternalValue: val => (val !== NULL_VALUE ? val : null),
@@ -39,6 +39,7 @@ const classOptions = {
 // -- Props:
 // -- START_DOCS
 type PublicProps = {
+  ...$Exact<InputHocPublicProps>, // common to all inputs (check the docs!)
   disabled?: boolean,
   style?: Object, // merged with the `input`/`textarea` style
   skipTheme?: boolean,
@@ -51,9 +52,8 @@ type Props = {
   ...$Exact<PublicProps>,
   id?: string,
   placeholder?: string,
-  // Context
-  theme: Theme,
   // Input HOC
+  theme: Theme,
   curValue: any,
   errors: Array<string>,
   registerOuterRef: Function,
@@ -75,10 +75,9 @@ const FILTERED_OUT_PROPS_MDL = FILTERED_OUT_PROPS.concat(['placeholder']);
 // ==========================================
 // Component
 // ==========================================
-function createClass(name, inputType) {
-  const Klass = class extends React.Component<Props> {
-    static displayName = name;
-    static defaultProps = {};
+function createClass(componentName, inputType) {
+  const BaseKlass = class extends React.Component<Props> {
+    static displayName = componentName;
     refMdl = React.createRef();
 
     componentDidMount() {
@@ -169,13 +168,17 @@ function createClass(name, inputType) {
     }
   };
 
-  const ThemedKlass = props => (
-    <ThemeContext.Consumer>
-      {theme => <Klass {...props} theme={theme} />}
-    </ThemeContext.Consumer>
+  // ==========================================
+  const hocOptions = {
+    componentName,
+    ...CLASS_OPTIONS[inputType],
+  };
+  const render = props => <BaseKlass {...props} />;
+  const Klass = (publicProps: PublicProps) => (
+    <Input hocOptions={hocOptions} render={render} {...publicProps} />
   );
 
-  return input(ThemedKlass, classOptions[inputType]);
+  return Klass;
 }
 
 // ==========================================

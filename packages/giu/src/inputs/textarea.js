@@ -6,9 +6,9 @@ import { preventDefault, stopPropagation } from '../gral/helpers';
 import { KEYS } from '../gral/constants';
 import { inputReset, INPUT_DISABLED } from '../gral/styles';
 import { isAnyModifierPressed } from '../gral/keys';
-import { ThemeContext } from '../gral/themeContext';
 import type { Theme } from '../gral/themeContext';
-import input, { INPUT_HOC_INVALID_HTML_PROPS } from '../hocs/inputOld';
+import Input, { INPUT_HOC_INVALID_HTML_PROPS } from '../hocs/input';
+import type { InputHocPublicProps } from '../hocs/input';
 
 const DEBUG = false && process.env.NODE_ENV !== 'production';
 
@@ -29,6 +29,7 @@ const getPlaceholderText = val => {
 // -- Props:
 // -- START_DOCS
 type PublicProps = {
+  ...$Exact<InputHocPublicProps>, // common to all inputs (check the docs!)
   style?: Object,
   skipTheme?: boolean,
   // all others are passed through unchanged
@@ -39,9 +40,8 @@ type Props = {
   ...$Exact<PublicProps>,
   id?: string,
   placeholder?: string,
-  // Context
-  theme: Theme,
   // Input HOC
+  theme: Theme,
   curValue: string,
   disabled?: boolean,
   registerOuterRef: Function,
@@ -62,11 +62,10 @@ const FILTERED_OUT_PROPS_MDL = [...FILTERED_OUT_PROPS, 'placeholder'];
 // ==========================================
 // Component
 // ==========================================
-class Textarea extends React.Component<Props> {
+class BaseTextarea extends React.Component<Props> {
   refInput: ?Object;
   refOuter: ?Object;
 
-  static defaultProps = {};
   refTaPlaceholder = React.createRef();
 
   componentDidMount() {
@@ -177,10 +176,15 @@ class Textarea extends React.Component<Props> {
 }
 
 // ==========================================
-const ThemedTextarea = props => (
-  <ThemeContext.Consumer>
-    {theme => <Textarea {...props} theme={theme} />}
-  </ThemeContext.Consumer>
+const hocOptions = {
+  componentName: 'Textarea',
+  toInternalValue,
+  toExternalValue,
+  isNull,
+};
+const render = props => <BaseTextarea {...props} />;
+const Textarea = (publicProps: PublicProps) => (
+  <Input hocOptions={hocOptions} render={render} {...publicProps} />
 );
 
 // ==========================================
@@ -241,8 +245,4 @@ const style = {
 // ==========================================
 // Public
 // ==========================================
-export default input(ThemedTextarea, {
-  toInternalValue,
-  toExternalValue,
-  isNull,
-});
+export default Textarea;

@@ -3,7 +3,7 @@
 import * as React from 'react';
 import { omit } from 'timm';
 import Input, { INPUT_HOC_INVALID_HTML_PROPS } from '../hocs/input';
-import type { InputHocProps } from '../hocs/input';
+import type { InputHocPublicProps } from '../hocs/input';
 import type { Theme } from '../gral/themeContext';
 
 const toInternalValue = val => (val != null ? val : false);
@@ -16,7 +16,7 @@ const isNull = val => val == null;
 // -- Props:
 // -- START_DOCS
 type PublicProps = {
-  ...$Exact<InputHocProps>,
+  ...$Exact<InputHocPublicProps>, // common to all inputs (check the docs!)
   id?: string,
   label?: React.Node, // React components to be included in the checkbox's `label` element
   disabled?: boolean,
