@@ -197,11 +197,11 @@ type DefaultProps = {
 
 type UnthemedProps = {
   ...$Exact<PublicProps>,
-  ...$Exact<DefaultProps>,
 };
 
 type Props = {
   ...$Exact<UnthemedProps>,
+  ...$Exact<DefaultProps>,
   // Context
   theme: Theme,
 };
