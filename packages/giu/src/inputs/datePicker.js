@@ -25,8 +25,10 @@ type Props = {|
 |};
 
 type State = {
-  shownMonthStart: Moment,
   hovering: ?string,
+  shownMonthStart: Moment,
+  // Copy of props for getDerivedState...
+  curValue: ?Moment,
 };
 
 // ==========================================
@@ -36,33 +38,26 @@ class DatePicker extends React.Component<Props, State> {
   startOfCurValue: ?Moment;
   shownMonthNumber: number;
 
-  constructor(props: Props) {
-    super(props);
-    this.state = ({
-      shownMonthStart: this.getShownMonthStart(props),
-      hovering: null,
-    }: any);
-  }
+  state: any = { hovering: null };
 
-  componentWillReceiveProps(nextProps: Props) {
-    const prevValue = this.props.curValue;
-    const nextValue = nextProps.curValue;
-    if (prevValue != null || nextValue != null) {
-      if (
-        prevValue == null ||
-        nextValue == null ||
-        !prevValue.isSame(nextValue)
-      ) {
-        const shownMonthStart = this.getShownMonthStart(nextProps);
-        this.setState({ shownMonthStart });
-      }
+  // If curValue changes, reset the shownMonthStart (otherwise, the user
+  // can modify shownMonthStart to see another month without selecting a
+  // new date)
+  static getDerivedStateFromProps(props: Props, prevState: State) {
+    const nextValue = props.curValue;
+    const prevValue = prevState.curValue;
+    const state: Object = { curValue: nextValue };
+    if (
+      prevState.shownMonthStart == null ||
+      (prevValue == null && nextValue != null) ||
+      (prevValue != null && nextValue == null) ||
+      (prevValue != null && nextValue != null && !prevValue.isSame(nextValue))
+    ) {
+      const refMoment =
+        nextValue != null ? nextValue.clone() : startOfToday(props.utc);
+      state.shownMonthStart = refMoment.startOf('month');
     }
-  }
-
-  getShownMonthStart(props: Props) {
-    const { curValue, utc } = props;
-    const refMoment = curValue != null ? curValue.clone() : startOfToday(utc);
-    return refMoment.startOf('month');
+    return state;
   }
 
   // ==========================================
