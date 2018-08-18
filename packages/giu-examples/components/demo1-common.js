@@ -36,7 +36,7 @@ const NORMAL_OPTIONS = [
   {
     label: () => (lang === 'es' ? 'Manzanas' : 'Apples'),
     value: 'a',
-    keys: 'mod+a',
+    keys: 'shift+mod+a',
     onClick: () => console.log('Custom click Apples'),
   },
   { label: '2', value: 2, keys: 'mod+2' },
