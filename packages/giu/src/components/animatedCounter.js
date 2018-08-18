@@ -21,35 +21,43 @@ type Props = {
 class AnimatedCounter extends React.PureComponent<Props> {
   timer: ?IntervalID;
   timerLeft: number;
-  value: ?number;
+  shownValue: ?number;
   targetValue: ?number;
 
-  constructor(props: Props) {
-    super(props);
-    this.value = null;
-    this.targetValue = props.value;
-  }
-
   componentDidMount() {
-    if (this.targetValue != null) this.startTimer();
+    this.componentDidUpdate();
   }
 
   componentWillUnmount() {
     this.stopTimer();
   }
 
-  componentWillReceiveProps(nextProps: Props) {
-    const { value } = nextProps;
-    if (value !== this.props.value) {
+  componentDidUpdate() {
+    const { value } = this.props;
+    if (value !== this.targetValue) {
       this.targetValue = value;
       this.startTimer();
     }
   }
 
+  // ==========================================
+  render() {
+    let shownValue;
+    if (this.props.formatter) {
+      shownValue = this.props.formatter(this.shownValue);
+    } else if (this.shownValue == null) {
+      shownValue = this.props.nullLabel || '–';
+    } else {
+      shownValue = this.shownValue.toFixed(this.props.decimals || 0);
+    }
+    return <span>{shownValue}</span>;
+  }
+
+  // ==========================================
   startTimer() {
     this.stopTimer();
     this.timerLeft = TRANSITION_DURATION;
-    this.timer = setInterval(this.recalcValue, REFRESH_PERIOD);
+    this.timer = setInterval(this.refreshValue, REFRESH_PERIOD);
   }
 
   stopTimer() {
@@ -57,34 +65,22 @@ class AnimatedCounter extends React.PureComponent<Props> {
     this.timer = null;
   }
 
-  recalcValue = () => {
+  refreshValue = () => {
     this.timerLeft -= REFRESH_PERIOD;
     if (this.timerLeft <= 0) {
-      this.value = this.targetValue;
+      this.shownValue = this.targetValue;
       this.timerLeft = 0;
       this.forceUpdate();
       this.stopTimer();
       return;
     }
-    const curValue = this.value != null ? this.value : 0;
+    const curValue = this.shownValue != null ? this.shownValue : 0;
     const targetValue = this.targetValue != null ? this.targetValue : 0;
-    this.value += (targetValue - curValue) * REFRESH_PERIOD / this.timerLeft;
-    if (Number.isNaN(this.value)) this.value = targetValue;
+    this.shownValue +=
+      ((targetValue - curValue) * REFRESH_PERIOD) / this.timerLeft;
+    if (Number.isNaN(this.shownValue)) this.shownValue = targetValue;
     this.forceUpdate();
   };
-
-  // ==========================================
-  render() {
-    let value;
-    if (this.props.formatter) {
-      value = this.props.formatter(this.value);
-    } else if (this.value == null) {
-      value = this.props.nullLabel || '–';
-    } else {
-      value = this.value.toFixed(this.props.decimals || 0);
-    }
-    return <span>{value}</span>;
-  }
 }
 
 // ==========================================

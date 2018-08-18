@@ -28,16 +28,16 @@ import type {
 } from '../gral/types';
 
 const LIST_SEPARATOR_KEY = '__SEPARATOR__';
+const DEFAULT_EMPTY_TEXT = 'Ø';
 
 // ==========================================
 // Declarations
 // ==========================================
-type PublicProps = {|
+type Props = {|
   registerOuterRef?: Function,
   items: Array<Choice>,
   lang?: string,
   curValue: string,
-  keyDown?: KeyboardEventPars,
   emptyText?: string,
   onChange: (ev: ?SyntheticEvent<*>, value: string) => any,
   onClickItem?: (ev: ?SyntheticEvent<*>, value: string) => any,
@@ -50,15 +50,6 @@ type PublicProps = {|
   accentColor: string,
 |};
 
-type DefaultProps = {
-  emptyText: string,
-};
-
-type Props = {
-  ...PublicProps,
-  ...$Exact<DefaultProps>,
-};
-
 type State = {
   hovering: ?string,
 };
@@ -70,15 +61,7 @@ class ListPicker extends React.PureComponent<Props, State> {
   refOuter: ?Object;
   refItems: Array<?Object>;
 
-  static defaultProps: DefaultProps = {
-    emptyText: 'Ø',
-  };
   state = { hovering: null };
-
-  componentWillReceiveProps(nextProps: Props) {
-    const { keyDown } = nextProps;
-    if (keyDown && keyDown !== this.props.keyDown) this.doKeyDown(keyDown);
-  }
 
   // For floating pickers, we need to wait until the float update cycle has finished.
   componentDidMount() {
@@ -95,6 +78,42 @@ class ListPicker extends React.PureComponent<Props, State> {
     const { curValue } = this.props;
     if (curValue != null && curValue !== prevProps.curValue) {
       this.scrollSelectedIntoView();
+    }
+  }
+
+  // ==========================================
+  // Imperative API
+  // ==========================================
+  doKeyDown({ which, shiftKey, ctrlKey, altKey, metaKey }: KeyboardEventPars) {
+    if (shiftKey || ctrlKey || altKey || metaKey) return;
+    let idx;
+    switch (which) {
+      case KEYS.down:
+        this.selectMoveBy(+1);
+        break;
+      case KEYS.up:
+        this.selectMoveBy(-1);
+        break;
+      case KEYS.home:
+        this.selectMoveBy(+1, -1);
+        break;
+      case KEYS.end:
+        this.selectMoveBy(-1, this.props.items.length);
+        break;
+      case KEYS.return: {
+        const { onClickItem } = this.props;
+        if (onClickItem) {
+          idx = this.getCurIdx();
+          if (idx >= 0) onClickItem(null, this.props.items[idx].value);
+        }
+        break;
+      }
+      case KEYS.del:
+      case KEYS.backspace:
+        this.props.onChange(null, NULL_STRING);
+        break;
+      default:
+        break;
     }
   }
 
@@ -119,7 +138,8 @@ class ListPicker extends React.PureComponent<Props, State> {
       !items.length ||
       (items.length === 1 && items[0].value === '' && items[0].label === '')
     ) {
-      return <div style={style.empty}>{this.props.emptyText}</div>;
+      const { emptyText = DEFAULT_EMPTY_TEXT } = this.props;
+      return <div style={style.empty}>{emptyText}</div>;
     }
     this.refItems = [];
     return items.map(this.renderItem);
@@ -213,39 +233,6 @@ class ListPicker extends React.PureComponent<Props, State> {
   };
 
   // ==========================================
-  doKeyDown({ which, shiftKey, ctrlKey, altKey, metaKey }: KeyboardEventPars) {
-    if (shiftKey || ctrlKey || altKey || metaKey) return;
-    let idx;
-    switch (which) {
-      case KEYS.down:
-        this.selectMoveBy(+1);
-        break;
-      case KEYS.up:
-        this.selectMoveBy(-1);
-        break;
-      case KEYS.home:
-        this.selectMoveBy(+1, -1);
-        break;
-      case KEYS.end:
-        this.selectMoveBy(-1, this.props.items.length);
-        break;
-      case KEYS.return: {
-        const { onClickItem } = this.props;
-        if (onClickItem) {
-          idx = this.getCurIdx();
-          if (idx >= 0) onClickItem(null, this.props.items[idx].value);
-        }
-        break;
-      }
-      case KEYS.del:
-      case KEYS.backspace:
-        this.props.onChange(null, NULL_STRING);
-        break;
-      default:
-        break;
-    }
-  }
-
   selectMoveBy(delta: number, idx0?: number) {
     const { items } = this.props;
     const len = items.length;

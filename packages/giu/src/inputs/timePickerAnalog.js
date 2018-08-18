@@ -35,25 +35,15 @@ const correctLeaps = (prevVal, nextVal, steps) => {
 // ==========================================
 // Declarations
 // ==========================================
-type PublicProps = {|
+type Props = {
   disabled: boolean,
   curValue: ?Moment,
   onChange: Function,
   seconds?: boolean,
   utc: boolean,
-  keyDown?: KeyboardEventPars,
   stepMinutes?: number,
   accentColor: string,
   size?: number,
-|};
-
-type DefaultProps = {
-  size: number,
-};
-
-type Props = {
-  ...PublicProps,
-  ...$Exact<DefaultProps>,
 };
 
 type State = {
@@ -77,9 +67,6 @@ class TimePickerAnalog extends React.PureComponent<Props, State> {
   dragDeltaPhi: number;
   dragSteps: number;
 
-  static defaultProps: DefaultProps = {
-    size: DEFAULT_SIZE,
-  };
   state = {
     dragging: null,
     hint: null,
@@ -92,14 +79,38 @@ class TimePickerAnalog extends React.PureComponent<Props, State> {
     window.removeEventListener('mouseup', this.onMouseUpHand);
   }
 
-  componentWillReceiveProps(nextProps: Props) {
-    const { keyDown } = nextProps;
-    if (keyDown && keyDown !== this.props.keyDown) this.doKeyDown(keyDown);
+  // ==========================================
+  // Imperative API
+  // ==========================================
+  doKeyDown({ which, shiftKey, ctrlKey, altKey, metaKey }: KeyboardEventPars) {
+    if (shiftKey || ctrlKey || altKey || metaKey) return;
+    switch (which) {
+      case KEYS.pageDown:
+        this.changeTimeByMins(+60);
+        break;
+      case KEYS.pageUp:
+        this.changeTimeByMins(-60);
+        break;
+      case KEYS.down:
+      case KEYS.right:
+        this.changeTimeByMins(+UP_DOWN_STEP);
+        break;
+      case KEYS.up:
+      case KEYS.left:
+        this.changeTimeByMins(-UP_DOWN_STEP);
+        break;
+      case KEYS.del:
+      case KEYS.backspace:
+        this.props.onChange(null, null);
+        break;
+      default:
+        break;
+    }
   }
 
   // ==========================================
   render() {
-    const { curValue, size } = this.props;
+    const { curValue, size = DEFAULT_SIZE } = this.props;
     if (curValue != null) {
       this.hours = curValue.hours();
       this.minutes = curValue.minutes();
@@ -272,7 +283,7 @@ class TimePickerAnalog extends React.PureComponent<Props, State> {
     this.setState({ dragging: name });
     this.dragUnits = name;
     this.dragSteps = name === 'hours' ? 12 : 60;
-    this.dragDeltaPhi = (this.getUnits(name) % 1) * PI2 / this.dragSteps;
+    this.dragDeltaPhi = ((this.getUnits(name) % 1) * PI2) / this.dragSteps;
     window.addEventListener('mousemove', this.onMouseMoveHand);
     window.addEventListener('mouseup', this.onMouseUpHand);
   };
@@ -303,32 +314,6 @@ class TimePickerAnalog extends React.PureComponent<Props, State> {
     const nextHours = this.hours >= 12 ? this.hours - 12 : this.hours + 12;
     this.setUnits(ev, nextHours, 'hours');
   };
-
-  doKeyDown({ which, shiftKey, ctrlKey, altKey, metaKey }: KeyboardEventPars) {
-    if (shiftKey || ctrlKey || altKey || metaKey) return;
-    switch (which) {
-      case KEYS.pageDown:
-        this.changeTimeByMins(+60);
-        break;
-      case KEYS.pageUp:
-        this.changeTimeByMins(-60);
-        break;
-      case KEYS.down:
-      case KEYS.right:
-        this.changeTimeByMins(+UP_DOWN_STEP);
-        break;
-      case KEYS.up:
-      case KEYS.left:
-        this.changeTimeByMins(-UP_DOWN_STEP);
-        break;
-      case KEYS.del:
-      case KEYS.backspace:
-        this.props.onChange(null, null);
-        break;
-      default:
-        break;
-    }
-  }
 
   onHoverStart = (ev: SyntheticMouseEvent<*>) => {
     this.setState({ hovering: ev.currentTarget.id });

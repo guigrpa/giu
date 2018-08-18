@@ -2,7 +2,7 @@
 
 import React from 'react';
 import { merge, set as timmSet } from 'timm';
-import { preventDefault } from '../gral/helpers';
+import { preventDefault, memoize } from '../gral/helpers';
 import { NULL_STRING, IS_IOS } from '../gral/constants';
 import { LIST_SEPARATOR_KEY } from './listPicker';
 import { GLOW } from '../gral/styles';
@@ -59,18 +59,9 @@ type Props = {
 class BaseRadioGroup extends React.Component<Props> {
   items: Array<RadioChoice>;
 
-  constructor(props: Props) {
-    super(props);
-    this.prepareItems(props.items);
-  }
-
-  componentWillReceiveProps(nextProps: Props) {
-    const { items } = nextProps;
-    if (items !== this.props.items) this.prepareItems(items);
-  }
-
   // ==========================================
   render() {
+    this.items = this.prepareItems(this.props.items);
     const { registerOuterRef } = this.props;
     return (
       <div ref={registerOuterRef} style={style.outer(this.props)}>
@@ -112,13 +103,15 @@ class BaseRadioGroup extends React.Component<Props> {
   };
 
   // ==========================================
-  prepareItems(rawItems) {
-    this.items = [];
-    rawItems.forEach(item => {
-      if (item.label === LIST_SEPARATOR_KEY) return;
-      this.items.push(timmSet(item, 'value', toInternalValue(item.value)));
-    });
-  }
+  prepareItems = memoize(rawItems => {
+    const items = [];
+    for (let i = 0; i < rawItems.length; i++) {
+      const rawItem = rawItems[i];
+      if (rawItem.label === LIST_SEPARATOR_KEY) continue;
+      items.push(timmSet(rawItem, 'value', toInternalValue(rawItem.value)));
+    }
+    return items;
+  });
 }
 
 // ==========================================

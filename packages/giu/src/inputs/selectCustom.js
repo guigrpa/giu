@@ -22,7 +22,7 @@ import {
   unregisterShortcut,
 } from '../gral/keys';
 import type { Choice, KeyboardEventPars } from '../gral/types';
-import { isAncestorNode } from '../gral/helpers';
+import { isAncestorNode, memoize } from '../gral/helpers';
 import type { Theme } from '../gral/themeContext';
 import Input from '../hocs/input';
 import type { InputHocPublicProps } from '../hocs/input';
@@ -73,7 +73,6 @@ type Props = {
   fFocused: boolean,
   onFocus: Function,
   onBlur: Function,
-  keyDown?: KeyboardEventPars,
 };
 
 type State = {
@@ -85,44 +84,46 @@ type State = {
 // ==========================================
 class BaseSelectCustom extends React.Component<Props, State> {
   floatId: ?string;
-  keyDown: void | KeyboardEventPars;
   items: Array<Choice>;
   refTitle: ?Object;
 
-  constructor(props: Props) {
-    super(props);
-    this.state = { fFloat: false };
-    this.prepareItems(props.items, props.required);
-  }
+  refPicker = React.createRef();
+  state = { fFloat: false };
 
   componentDidMount() {
-    this.registerShortcuts();
     window.addEventListener('click', this.onClickWindow);
-  }
-
-  componentWillReceiveProps(nextProps) {
-    const { keyDown, items, required, fFocused } = nextProps;
-    if (keyDown !== this.props.keyDown) this.processKeyDown(keyDown);
-    if (items !== this.props.items || required !== this.props.required) {
-      this.prepareItems(items, required);
-    }
-    if (fFocused !== this.props.fFocused) {
-      this.setState({ fFloat: fFocused });
-    }
-  }
-
-  componentDidUpdate() {
-    this.renderFloat();
+    this.registerShortcuts();
   }
 
   componentWillUnmount() {
     if (this.floatId != null) floatDelete(this.floatId);
-    this.unregisterShortcuts();
     window.removeEventListener('click', this.onClickWindow);
+    this.unregisterShortcuts();
+  }
+
+  componentDidUpdate(prevProps: Props) {
+    this.renderFloat();
+    const { fFocused } = this.props;
+    if (fFocused !== prevProps.fFocused) this.setState({ fFloat: fFocused });
+  }
+
+  // ==========================================
+  // Imperative API
+  // ==========================================
+  // Process ESC ourselves; pass down other keystrokes
+  doKeyDown(keyDown: KeyboardEventPars) {
+    if (keyDown.which === KEYS.esc && !this.props.inlinePicker) {
+      const { fFloat } = this.state;
+      this.setState({ fFloat: !fFloat });
+    } else {
+      const target = this.refPicker.current;
+      if (target && target.doKeyDown) target.doKeyDown(keyDown);
+    }
   }
 
   // ==========================================
   render() {
+    this.items = this.prepareItems(this.props.items, this.props.required);
     const { children } = this.props;
     let out;
     if (this.props.inlinePicker) {
@@ -225,13 +226,13 @@ class BaseSelectCustom extends React.Component<Props, State> {
     const { inlinePicker, registerOuterRef } = this.props;
     return (
       <ListPicker
+        ref={this.refPicker}
         registerOuterRef={inlinePicker ? registerOuterRef : undefined}
         items={this.items}
         lang={this.props.lang}
         curValue={this.props.curValue}
         onChange={this.props.onChange}
         onClickItem={this.onClickItem}
-        keyDown={this.keyDown}
         disabled={this.props.disabled}
         fFocused={inlinePicker && this.props.fFocused}
         fFloating={!inlinePicker}
@@ -282,45 +283,36 @@ class BaseSelectCustom extends React.Component<Props, State> {
   };
 
   // ==========================================
-  processKeyDown(keyDown) {
-    if (keyDown == null) return;
-    if (keyDown.which === KEYS.esc && !this.props.inlinePicker) {
-      const { fFloat } = this.state;
-      this.setState({ fFloat: !fFloat });
-      this.keyDown = undefined;
-      return;
-    }
-    this.keyDown = keyDown;
-  }
-
-  prepareItems(rawItems, required) {
-    this.items = [];
+  prepareItems = memoize((rawItems, required) => {
+    const items = [];
     if (!required && rawItems.length) {
-      this.items.push({
+      items.push({
         value: NULL_STRING,
         label: '',
         shortcuts: [],
       });
     }
-    rawItems.forEach(item => {
-      const { value } = item;
+    for (let i = 0; i < rawItems.length; i++) {
+      const rawItem = rawItems[i];
+      const { value } = rawItem;
       if (value === LIST_SEPARATOR_KEY) {
-        this.items.push({
+        items.push({
           value: LIST_SEPARATOR_KEY,
           label: LIST_SEPARATOR_KEY,
           shortcuts: [],
         });
-        return;
+        continue;
       }
-      let keys = item.keys || [];
+      let keys = rawItem.keys || [];
       if (!Array.isArray(keys)) keys = [keys];
-      const newItem: any = merge(item, {
+      const newItem: any = merge(rawItem, {
         value: toInternalValue(value),
         shortcuts: keys.map(createShortcut),
       });
-      this.items.push(newItem);
-    });
-  }
+      items.push(newItem);
+    }
+    return items;
+  });
 
   registerShortcuts() {
     this.items.forEach(item => {
@@ -361,7 +353,7 @@ const hocOptions = {
   ],
   className: 'giu-select-custom',
 };
-const render = props => <BaseSelectCustom {...props} />;
+const render = (props, ref) => <BaseSelectCustom {...props} ref={ref} />;
 // $FlowFixMe
 const SelectCustom = React.forwardRef((publicProps: PublicProps, ref) => (
   <Input hocOptions={hocOptions} render={render} {...publicProps} ref={ref} />

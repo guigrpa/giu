@@ -51,7 +51,6 @@ type Props = {
   fFocused: boolean,
   onFocus: Function,
   onBlur: Function,
-  keyDown?: KeyboardEventPars,
 };
 
 type State = {
@@ -68,18 +67,6 @@ class BaseColorInput extends React.Component<Props, State> {
 
   state = { fFloat: false };
 
-  componentWillReceiveProps(nextProps: Props) {
-    const { keyDown, fFocused } = nextProps;
-    if (keyDown !== this.props.keyDown) this.processKeyDown(keyDown);
-    if (fFocused !== this.props.fFocused) {
-      this.setState({ fFloat: fFocused });
-    }
-  }
-
-  componentDidUpdate() {
-    this.renderFloat();
-  }
-
   componentDidMount() {
     window.addEventListener('click', this.onClickWindow);
   }
@@ -87,6 +74,22 @@ class BaseColorInput extends React.Component<Props, State> {
   componentWillUnmount() {
     if (this.floatId != null) floatDelete(this.floatId);
     window.removeEventListener('click', this.onClickWindow);
+  }
+
+  componentDidUpdate(prevProps: Props) {
+    this.renderFloat();
+    const { fFocused } = this.props;
+    if (fFocused !== prevProps.fFocused) this.setState({ fFloat: fFocused });
+  }
+
+  // ==========================================
+  // Imperative API
+  // ==========================================
+  doKeyDown(keyDown: KeyboardEventPars) {
+    if (keyDown.which === KEYS.esc && !this.props.inlinePicker) {
+      const { fFloat } = this.state;
+      this.setState({ fFloat: !fFloat });
+    }
   }
 
   // ==========================================
@@ -215,14 +218,6 @@ class BaseColorInput extends React.Component<Props, State> {
     }
     if (this.props.fFocused) this.props.onBlur(ev);
   };
-
-  // ==========================================
-  processKeyDown(keyDown) {
-    if (keyDown && keyDown.which === KEYS.esc && !this.props.inlinePicker) {
-      const { fFloat } = this.state;
-      this.setState({ fFloat: !fFloat });
-    }
-  }
 }
 
 // ==========================================
@@ -235,7 +230,7 @@ const hocOptions = {
   trappedKeys: [KEYS.esc],
   className: 'giu-color-input',
 };
-const render = props => <BaseColorInput {...props} />;
+const render = (props, ref) => <BaseColorInput {...props} ref={ref} />;
 // $FlowFixMe
 const ColorInput = React.forwardRef((publicProps: PublicProps, ref) => (
   <Input hocOptions={hocOptions} render={render} {...publicProps} ref={ref} />

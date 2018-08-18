@@ -35,7 +35,6 @@ const TRAPPED_KEYS = [
 type Props = {|
   registerOuterRef?: Function,
   curValue: ?Moment,
-  keyDown: void | KeyboardEventPars,
   disabled: boolean,
   date: boolean,
   time: boolean,
@@ -61,27 +60,27 @@ type Picker = 'date' | 'time';
 // Component
 // ==========================================
 class DateTimePicker extends React.Component<Props, State> {
-  keyDown: void | KeyboardEventPars;
   refOuter: ?Object;
+  refDatePicker = React.createRef();
+  refTimePicker = React.createRef();
 
   constructor(props: Props) {
     super(props);
     this.state = {
       focusedSubpicker: props.date ? 'date' : 'time',
     };
-    this.keyDown = undefined;
   }
 
-  // In order to route the `keyDown` to the DatePicker or
-  // the TimePicker, depending on the last user action,
-  // we keep a local variable with the value that will be passed
-  // down. When the subpicker focus changes, we set this value to null.
-  // When the owner component updates this prop, we update this value.
-  componentWillReceiveProps(nextProps: Props) {
-    const { keyDown } = nextProps;
-    if (keyDown !== this.props.keyDown) {
-      this.keyDown = keyDown;
-    }
+  // ==========================================
+  // Imperative API
+  // ==========================================
+  doKeyDown(keyDown: KeyboardEventPars) {
+    if (this.props.disabled) return;
+    const target =
+      this.state.focusedSubpicker === 'date'
+        ? this.refDatePicker.current
+        : this.refTimePicker.current;
+    if (target && target.doKeyDown) target.doKeyDown(keyDown);
   }
 
   // ==========================================
@@ -106,18 +105,14 @@ class DateTimePicker extends React.Component<Props, State> {
   renderDate() {
     if (!this.props.date) return null;
     const { disabled } = this.props;
-    let keyDown;
-    if (!disabled && this.state.focusedSubpicker === 'date') {
-      keyDown = this.keyDown;
-    }
     return (
       <DatePicker
+        ref={this.refDatePicker}
         disabled={disabled}
         curValue={this.props.curValue}
         onChange={this.onChange('date')}
         utc={this.props.utc}
         todayName={this.props.todayName}
-        keyDown={keyDown}
         accentColor={this.props.accentColor}
       />
     );
@@ -132,20 +127,16 @@ class DateTimePicker extends React.Component<Props, State> {
   renderTime() {
     const { disabled, analogTime } = this.props;
     if (!this.props.time) return null;
-    let keyDown;
-    if (!disabled && this.state.focusedSubpicker === 'time') {
-      keyDown = this.keyDown;
-    }
     if (typeof window === 'undefined') return null;
     const Component = analogTime ? TimePickerAnalog : TimePickerDigital;
     return (
       <Component
+        ref={this.refTimePicker}
         disabled={disabled}
         curValue={this.props.curValue}
         onChange={this.onChange('time')}
         utc={this.props.utc}
         seconds={this.props.seconds}
-        keyDown={keyDown}
         accentColor={this.props.accentColor}
       />
     );
@@ -170,14 +161,8 @@ class DateTimePicker extends React.Component<Props, State> {
       }
     }
     this.props.onChange(ev, nextValue);
-    this.changeFocusedSubpicker(focusedSubpicker);
-  };
-
-  changeFocusedSubpicker(focusedSubpicker: Picker) {
-    if (focusedSubpicker === this.state.focusedSubpicker) return;
-    this.keyDown = undefined;
     this.setState({ focusedSubpicker });
-  }
+  };
 }
 
 // ==========================================

@@ -5,6 +5,7 @@
 * Migrate to the latest React:
     * **Remove deprecated lifecycle hooks**
     * Use Portals?
+* [ ] Use imperative API for commands (**breaking**)
 * [ ] Proof-of-concept with `giu-examples` with Next 6 and Babel 7
 * [ ] **Test on Android**
 

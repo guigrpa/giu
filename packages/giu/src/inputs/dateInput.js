@@ -196,12 +196,12 @@ const FILTERED_OUT_PROPS_MDL = FILTERED_OUT_PROPS.concat(['placeholder']);
 // Component
 //------------------------------------------
 class BaseDateInput extends React.Component<Props, State> {
-  keyDown: void | KeyboardEventPars;
   lastExtValue: ?Moment;
   floatId: ?string;
   refInput: ?Object;
 
   state = { fFloat: false };
+  refPicker = React.createRef();
   refMdl = React.createRef();
 
   constructor(props: Props) {
@@ -209,31 +209,29 @@ class BaseDateInput extends React.Component<Props, State> {
     this.lastExtValue = toExternalValue(props.curValue, props);
   }
 
-  componentWillReceiveProps(nextProps) {
-    if (nextProps.curValue !== this.props.curValue) {
-      this.lastExtValue = toExternalValue(nextProps.curValue, nextProps);
-    }
-  }
-
   componentDidMount() {
     if (this.props.theme.id === 'mdl' && this.refMdl.current)
       window.componentHandler.upgradeElement(this.refMdl.current);
   }
 
+  componentWillUnmount() {
+    if (this.floatId != null) floatDelete(this.floatId);
+  }
+
   componentDidUpdate(prevProps) {
     this.renderFloat();
-    const { lang, onChange } = this.props;
 
     // When the external language changes, we must update the internal value (a string)
     // to reflect the new date format
-    if (prevProps.lang !== lang && this.lastExtValue != null) {
+    const { lang, onChange, curValue } = this.props;
+    if (curValue !== prevProps.curValue) {
+      this.lastExtValue = toExternalValue(curValue, this.props);
+    }
+    if (lang !== prevProps.lang && this.lastExtValue != null) {
       onChange(null, toInternalValue(this.lastExtValue, this.props), {
         fDontFocus: true,
       });
     }
-  }
-  componentWillUnmount() {
-    if (this.floatId != null) floatDelete(this.floatId);
   }
 
   // ==========================================
@@ -414,6 +412,7 @@ class BaseDateInput extends React.Component<Props, State> {
       type === 'inlinePicker' ? this.props.registerOuterRef : undefined;
     return (
       <DateTimePicker
+        ref={this.refPicker}
         registerOuterRef={registerOuterRef}
         disabled={!!this.props.disabled}
         fFocused={fInline && this.props.fFocused}
@@ -427,7 +426,6 @@ class BaseDateInput extends React.Component<Props, State> {
         seconds={this.props.seconds}
         utc={getUtcFlag(this.props.date, this.props.time, this.props.utc)}
         todayName={this.props.todayName}
-        keyDown={this.keyDown}
         accentColor={this.props.theme.accentColor}
       />
     );
@@ -469,7 +467,6 @@ class BaseDateInput extends React.Component<Props, State> {
     if (which === KEYS.esc) {
       cancelEvent(ev);
       this.setState({ fFloat: !fFloat });
-      this.keyDown = undefined;
       return;
     }
 
@@ -479,8 +476,9 @@ class BaseDateInput extends React.Component<Props, State> {
     ) {
       cancelEvent(ev);
       const { keyCode, metaKey, shiftKey, altKey, ctrlKey } = ev;
-      this.keyDown = { which, keyCode, metaKey, shiftKey, altKey, ctrlKey };
-      this.forceUpdate();
+      const keyDown = { which, keyCode, metaKey, shiftKey, altKey, ctrlKey };
+      const target = this.refPicker.current;
+      if (target && target.doKeyDown) target.doKeyDown(keyDown);
     }
   };
 
@@ -499,7 +497,7 @@ const hocOptions = {
   validatorContext: { moment },
   fIncludeClipboardProps: true,
 };
-const render = props => <BaseDateInput {...props} />;
+const render = (props, ref) => <BaseDateInput {...props} ref={ref} />;
 // $FlowFixMe
 const DateInput = React.forwardRef((publicProps: PublicProps, ref) => {
   let props = addDefaults(publicProps, DEFAULT_PROPS);

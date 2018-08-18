@@ -16,16 +16,16 @@ type Props = {
 // ==========================================
 // Component
 // ==========================================
-const Select = (props: Props, ref) => {
+// $FlowFixMe
+const Select = React.forwardRef((props: Props, ref) => {
   const { type } = props;
   const Component = !type || type === 'native' ? SelectNative : SelectCustom;
   return (
     <Component ref={ref} {...props} inlinePicker={type === 'inlinePicker'} />
   );
-};
+});
 
 // ==========================================
 // Public
 // ==========================================
-// $FlowFixMe
-export default React.forwardRef(Select);
+export default Select;

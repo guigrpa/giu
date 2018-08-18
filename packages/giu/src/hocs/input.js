@@ -72,7 +72,7 @@ type Props = {
 
   // Configured by the specific input
   hocOptions: HocOptions,
-  render: (props: ChildProps) => React.Element<any>,
+  render: (props: ChildProps, ref?: Object) => React.Element<any>,
 
   // Context
   theme: Theme, // passed through unchanged
@@ -85,7 +85,6 @@ type ChildProps = {
   registerOuterRef: Function,
   registerFocusableRef: ?Function,
   curValue: any,
-  keyDown: ?KeyboardEventPars,
   fFocused: boolean,
   onChange: (
     ev: SyntheticEvent<*>,
@@ -131,7 +130,6 @@ const INPUT_HOC_INVALID_HTML_PROPS = [
   'registerFocusableRef',
   'cmds',
   'errors',
-  'keyDown',
   'fFocused',
   'floatZ',
   'floatPosition',
@@ -153,9 +151,9 @@ class Input extends React.PureComponent<Props> {
   lastValidatedValue: any;
   fFocused: boolean;
   pendingFocusBlur: null | 'FOCUS' | 'BLUR';
-  keyDown: ?KeyboardEventPars;
   refOuter: ?Object;
   refFocusable: ?Object;
+  refChild = React.createRef();
 
   constructor(props: Props) {
     super(props);
@@ -164,7 +162,6 @@ class Input extends React.PureComponent<Props> {
     this.prevValue = this.curValue;
     this.resetErrors(props);
     this.fFocused = false;
-    this.keyDown = null;
   }
 
   componentDidMount() {
@@ -321,7 +318,6 @@ class Input extends React.PureComponent<Props> {
       errors: this.errors,
       required: this.props.required,
       cmds: this.props.cmds,
-      keyDown: this.keyDown,
       disabled: this.props.disabled,
       fFocused: this.fFocused,
       floatZ: this.props.floatZ,
@@ -335,7 +331,7 @@ class Input extends React.PureComponent<Props> {
       onResizeOuter: floatReposition,
       styleOuter: fIncludeFocusCapture ? undefined : this.props.styleOuter,
     };
-    return render(childProps);
+    return render(childProps, this.refChild);
   }
 
   renderErrorFloat = () => {
@@ -460,9 +456,10 @@ class Input extends React.PureComponent<Props> {
     const { which, keyCode, metaKey, shiftKey, altKey, ctrlKey } = ev;
     const { trappedKeys = [] } = this.props.hocOptions;
     if (trappedKeys.indexOf(which) < 0) return;
-    this.keyDown = { which, keyCode, metaKey, shiftKey, altKey, ctrlKey };
-    ev.preventDefault();
-    this.forceUpdate();
+    const keyDown = { which, keyCode, metaKey, shiftKey, altKey, ctrlKey };
+    cancelEvent(ev);
+    const target = this.refChild.current;
+    if (target && target.doKeyDown) target.doKeyDown(keyDown);
   };
 
   onCopyCut = (ev: SyntheticClipboardEvent<*>) => {

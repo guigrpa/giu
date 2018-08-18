@@ -8,27 +8,18 @@ import { getScrollbarWidth, NULL_STRING } from '../gral/constants';
 import { ListPicker } from './listPicker';
 
 const ROW_HEIGHT = '1.3em';
+const DEFAULT_STEP_MINUTES = 30;
 
 // ==========================================
 // Declarations
 // ==========================================
-type PublicProps = {|
+type Props = {
   disabled: boolean,
   curValue: ?Moment,
   onChange: (ev: ?SyntheticEvent<*>, value: ?Moment) => any,
   utc: boolean,
-  keyDown?: KeyboardEventPars,
   stepMinutes?: number,
   accentColor: string,
-|};
-
-type DefaultProps = {
-  stepMinutes: number,
-};
-
-type Props = {
-  ...PublicProps,
-  ...$Exact<DefaultProps>,
 };
 
 // ==========================================
@@ -36,8 +27,7 @@ type Props = {
 // ==========================================
 class TimePickerDigital extends React.Component<Props> {
   timeItems: Array<Choice>;
-
-  static defaultProps: DefaultProps = { stepMinutes: 30 };
+  refListPicker = React.createRef();
 
   constructor(props: Props) {
     super(props);
@@ -45,14 +35,22 @@ class TimePickerDigital extends React.Component<Props> {
   }
 
   // ==========================================
+  // Imperative API
+  // ==========================================
+  doKeyDown(keyDown: KeyboardEventPars) {
+    const target = this.refListPicker.current;
+    if (target && target.doKeyDown) target.doKeyDown(keyDown);
+  }
+
+  // ==========================================
   render() {
-    const { keyDown, disabled, accentColor } = this.props;
+    const { disabled, accentColor } = this.props;
     return (
       <ListPicker
+        ref={this.refListPicker}
         items={this.timeItems}
         curValue={this.getSeconds()}
         onChange={this.onChange}
-        keyDown={keyDown}
         disabled={disabled}
         style={style.outer}
         twoStageStyle
@@ -82,7 +80,7 @@ class TimePickerDigital extends React.Component<Props> {
 
   // ==========================================
   initTimeItems() {
-    const { stepMinutes } = this.props;
+    const { stepMinutes = DEFAULT_STEP_MINUTES } = this.props;
     this.timeItems = [];
     const curTime = moment.utc('2013-04-27T00:00:00Z');
     const endTime = moment(curTime).add(1, 'day');
@@ -95,7 +93,7 @@ class TimePickerDigital extends React.Component<Props> {
   }
 
   getSeconds() {
-    const { curValue, stepMinutes } = this.props;
+    const { curValue, stepMinutes = DEFAULT_STEP_MINUTES } = this.props;
     if (curValue == null) return NULL_STRING;
     let secs = getTimeInSecs(curValue);
     secs = Math.round(secs / 60 / stepMinutes) * stepMinutes * 60;

@@ -21,7 +21,6 @@ type Props = {|
   onChange: (ev: ?SyntheticEvent<*>, nextValue: ?Moment) => any,
   utc: boolean,
   todayName: string,
-  keyDown: ?KeyboardEventPars,
   accentColor: string,
 |};
 
@@ -58,8 +57,6 @@ class DatePicker extends React.Component<Props, State> {
         this.setState({ shownMonthStart });
       }
     }
-    const { keyDown } = nextProps;
-    if (keyDown && keyDown !== this.props.keyDown) this.doKeyDown(keyDown);
   }
 
   getShownMonthStart(props: Props) {
@@ -69,7 +66,44 @@ class DatePicker extends React.Component<Props, State> {
   }
 
   // ==========================================
-  // Render
+  // Imperative API
+  // ==========================================
+  doKeyDown({ which, shiftKey, ctrlKey, altKey, metaKey }: KeyboardEventPars) {
+    if (shiftKey || ctrlKey || altKey || metaKey) return;
+    switch (which) {
+      case KEYS.pageUp:
+        this.onClickPrevMonth();
+        break;
+      case KEYS.pageDown:
+        this.onClickNextMonth();
+        break;
+      case KEYS.right:
+        this.changeDateByDays(+1);
+        break;
+      case KEYS.left:
+        this.changeDateByDays(-1);
+        break;
+      case KEYS.down:
+        this.changeDateByDays(+7);
+        break;
+      case KEYS.up:
+        this.changeDateByDays(-7);
+        break;
+      case KEYS.home:
+        this.goToStartEndOfMonth('start');
+        break;
+      case KEYS.end:
+        this.goToStartEndOfMonth('end');
+        break;
+      case KEYS.del:
+      case KEYS.backspace:
+        this.props.onChange(null, null);
+        break;
+      default:
+        break;
+    }
+  }
+
   // ==========================================
   render() {
     const { curValue, utc } = this.props;
@@ -231,42 +265,6 @@ class DatePicker extends React.Component<Props, State> {
     this.changeDateTo(ev, startOfDay);
     this.onClickMonthName();
   };
-
-  doKeyDown({ which, shiftKey, ctrlKey, altKey, metaKey }: KeyboardEventPars) {
-    if (shiftKey || ctrlKey || altKey || metaKey) return;
-    switch (which) {
-      case KEYS.pageUp:
-        this.onClickPrevMonth();
-        break;
-      case KEYS.pageDown:
-        this.onClickNextMonth();
-        break;
-      case KEYS.right:
-        this.changeDateByDays(+1);
-        break;
-      case KEYS.left:
-        this.changeDateByDays(-1);
-        break;
-      case KEYS.down:
-        this.changeDateByDays(+7);
-        break;
-      case KEYS.up:
-        this.changeDateByDays(-7);
-        break;
-      case KEYS.home:
-        this.goToStartEndOfMonth('start');
-        break;
-      case KEYS.end:
-        this.goToStartEndOfMonth('end');
-        break;
-      case KEYS.del:
-      case KEYS.backspace:
-        this.props.onChange(null, null);
-        break;
-      default:
-        break;
-    }
-  }
 
   onHoverStart = (ev: SyntheticMouseEvent<*>) => {
     this.setState({ hovering: ev.currentTarget.id });
