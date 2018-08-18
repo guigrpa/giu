@@ -461,6 +461,7 @@ class Input extends React.PureComponent<Props> {
     const { trappedKeys = [] } = this.props.hocOptions;
     if (trappedKeys.indexOf(which) < 0) return;
     this.keyDown = { which, keyCode, metaKey, shiftKey, altKey, ctrlKey };
+    ev.preventDefault();
     this.forceUpdate();
   };
 
