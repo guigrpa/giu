@@ -175,6 +175,28 @@ function isAncestorNode(ancestor: ?Node, descendant: ?Node): boolean {
   return false;
 }
 
+const memoize = (fn: Function) => {
+  let hasRun = false;
+  let lastArgs;
+  let lastResult;
+  return (...args: any) => {
+    if (hasRun) {
+      let areSameArgs = true;
+      for (let i = 0; i < args.length; i++) {
+        if (args[i] !== lastArgs[i]) {
+          areSameArgs = false;
+          break;
+        }
+      }
+      if (areSameArgs) return lastResult;
+    }
+    hasRun = true;
+    lastArgs = args;
+    lastResult = fn(...args);
+    return lastResult;
+  };
+};
+
 // ==========================================
 // Public
 // ==========================================
@@ -191,6 +213,7 @@ export {
   propsWithDefaultsAndOverrides,
   simplifyString,
   isAncestorNode,
+  memoize,
 
   // delay, waitUntil, isWaiting,
 };

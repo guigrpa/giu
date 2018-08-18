@@ -147,6 +147,7 @@ export {
   windowHeightWithoutScrollbar,
   windowWidthWithoutScrollbar,
   simplifyString,
+  memoize,
 } from './gral/helpers';
 export * from './gral/wait';
 export * from './gral/validators';
