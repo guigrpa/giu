@@ -17,9 +17,9 @@
 
 ## 0.16.0-alpha.0 (2018-3-26)
 
-* Select, DropDownMenu, ColorInput: **improved behaviour on touch-based devices**.
 * **Breaking**: Remove `hoverable`, `Hoverable`. Recommended alternative: simple state in your component, or CSS-in-JS such as styled-jsx.
 * **Breaking**: Input HOC has changed so that it *always* wraps inputs in a span. This may break some layouts. Edit the input HOC's style by passing it a `styleOuter` prop (e.g. with `display: block`).
+* Select, DropDownMenu, ColorInput: **improved behaviour on touch-based devices**.
 
 ## 0.15.1 (2017-12-6)
 
