@@ -10,7 +10,7 @@ import { scrollIntoView } from '../gral/visibility';
 import { isDark } from '../gral/styles';
 import { isRequired } from '../gral/validators';
 import type { Validator } from '../gral/validators';
-import type { Command, KeyboardEventPars } from '../gral/types';
+import type { Command } from '../gral/types';
 import { ThemeContext } from '../gral/themeContext';
 import type { Theme } from '../gral/themeContext';
 import {
@@ -142,11 +142,13 @@ const INPUT_HOC_INVALID_HTML_PROPS = [
 // HOC
 // ==========================================
 class Input extends React.PureComponent<Props> {
+  fInitialised: boolean;
+  prevExtValue: any;
+  prevExtErrors: any;
   curValue: any;
-  prevValue: any;
   validationErrors: Array<?string>;
   errors: Array<?string>; // = this.props.errors (user-provided) + this.validationErrors
-  prevErrors: Array<?string>;
+  fDirtyErrorFloat: boolean;
   errorFloatId: ?string;
   lastValidatedValue: any;
   fFocused: boolean;
@@ -157,11 +159,9 @@ class Input extends React.PureComponent<Props> {
 
   constructor(props: Props) {
     super(props);
-    const { toInternalValue = fnIdentity } = props.hocOptions;
-    this.curValue = toInternalValue(props.value, props);
-    this.prevValue = this.curValue;
-    this.resetErrors(props);
+    this.fDirtyErrorFloat = false;
     this.fFocused = false;
+    this.fInitialised = false;
   }
 
   componentDidMount() {
@@ -169,24 +169,14 @@ class Input extends React.PureComponent<Props> {
     this.renderErrorFloat();
   }
 
-  componentWillReceiveProps(nextProps: Props) {
-    const { value, errors, cmds } = nextProps;
-    if (value !== this.props.value) {
-      const { toInternalValue = fnIdentity } = nextProps.hocOptions;
-      this.setCurValue(toInternalValue(value, nextProps));
-    }
-    if (errors !== this.props.errors) this.recalcErrors(nextProps);
-    if (cmds !== this.props.cmds) this.processCmds(cmds, nextProps);
-  }
+  // componentWillReceiveProps(nextProps: Props) {
+  //   const { cmds } = nextProps;
+  //   if (cmds !== this.props.cmds) this.processCmds(cmds, nextProps);
+  // }
 
-  componentDidUpdate(prevProps: Props) {
-    const { value } = this.props;
-    const { curValue, prevValue } = this;
-    if (
-      this.errors !== this.prevErrors ||
-      value !== prevProps.value ||
-      curValue !== prevValue
-    ) {
+  componentDidUpdate() {
+    if (this.fDirtyErrorFloat) {
+      this.fDirtyErrorFloat = false;
       this.renderErrorFloat();
     }
     if (this.pendingFocusBlur) {
@@ -199,8 +189,6 @@ class Input extends React.PureComponent<Props> {
         this.pendingFocusBlur = null;
       });
     }
-    this.prevValue = this.curValue;
-    this.prevErrors = this.errors;
   }
 
   componentWillUnmount() {
@@ -255,10 +243,27 @@ class Input extends React.PureComponent<Props> {
   // Render
   // ==========================================
   render() {
-    const { className, fIncludeFocusCapture } = this.props.hocOptions;
+    const { hocOptions } = this.props;
+
+    // Process external prop changes (value, errors)
+    const { value, errors } = this.props;
+    if (!this.fInitialised || value !== this.prevExtValue) {
+      const { toInternalValue = fnIdentity } = hocOptions;
+      this.curValue = toInternalValue(value, this.props);
+      this.prevExtValue = value;
+      this.fDirtyErrorFloat = true;
+    }
+    if (!this.fInitialised || errors !== this.prevExtErrors) {
+      this.recalcErrors(this.props);
+      this.prevExtErrors = errors;
+      this.fDirtyErrorFloat = true;
+    }
+    this.fInitialised = true;
+
+    const { fIncludeFocusCapture } = hocOptions;
     return (
       <span
-        className={className}
+        className={hocOptions.className}
         onMouseDown={fIncludeFocusCapture ? this.onMouseDownWrapper : undefined}
         onClick={fIncludeFocusCapture ? this.onClickWrapper : undefined}
         style={style.wrapper(this.props)}
@@ -393,6 +398,7 @@ class Input extends React.PureComponent<Props> {
   setCurValue(curValue: any) {
     if (curValue === this.curValue) return;
     this.curValue = curValue;
+    this.fDirtyErrorFloat = true;
     this.forceUpdate();
   }
 
@@ -571,31 +577,25 @@ class Input extends React.PureComponent<Props> {
     this.validationErrors = [];
     this.lastValidatedValue = undefined;
     this.recalcErrors(props);
-    this.prevErrors = this.errors;
   }
 
   recalcErrors(props: Props) {
-    this.errors = (props.errors || []).concat(this.validationErrors);
+    this.errors = (props.errors || []).concat(this.validationErrors || []);
+    this.fDirtyErrorFloat = true;
   }
 
   calcFloatPosition() {
-    const {
-      floatZ,
-      floatPosition,
-      errorZ,
-      errorPosition,
-      errorAlign,
-    } = this.props;
-    let zIndex = errorZ;
+    const { floatZ } = this.props;
+    let zIndex = this.props.errorZ;
     if (zIndex == null) {
       zIndex =
         floatZ != null ? floatZ - MISC.zErrorFloatDelta : MISC.zErrorFloatDelta;
     }
-    let position = errorPosition;
+    let position = this.props.errorPosition;
     if (position == null) {
-      position = floatPosition === 'below' ? 'above' : 'below';
+      position = this.props.floatPosition === 'below' ? 'above' : 'below';
     }
-    return { position, align: errorAlign, zIndex };
+    return { position, align: this.props.errorAlign, zIndex };
   }
 }
 
