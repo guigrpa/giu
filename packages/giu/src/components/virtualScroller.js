@@ -151,12 +151,6 @@ class VirtualScroller extends React.PureComponent<Props> {
     }
   }
 
-  componentWillReceiveProps(nextProps: Props) {
-    if (nextProps.shownIds !== this.props.shownIds) {
-      this.recalcTops(nextProps);
-    }
-  }
-
   componentDidUpdate() {
     this.recalcViewport();
     this.checkRenderLastRow();
@@ -300,6 +294,7 @@ class VirtualScroller extends React.PureComponent<Props> {
 
   // ===============================================================
   render() {
+    this.recalcTops();
     this.determineRenderInterval();
     DEBUG &&
       console.log(
@@ -335,6 +330,9 @@ class VirtualScroller extends React.PureComponent<Props> {
   }
 
   renderRows() {
+    // Server-side rendering: render no rows
+    if (typeof window === 'undefined') return null;
+
     // Render visible rows
     const { idxFirst, idxLast } = this;
     if (idxFirst == null || idxLast == null) return this.renderEmpty();
@@ -440,7 +438,6 @@ class VirtualScroller extends React.PureComponent<Props> {
     }
     this.cachedHeights[id] = height;
     if (!this.pendingHeights.length) {
-      this.recalcTops(this.props);
       // console.log('VirtualScroller: onChangeRowHeight: re-rendering...');
       this.forceUpdate();
     }
@@ -449,6 +446,29 @@ class VirtualScroller extends React.PureComponent<Props> {
   // ===============================================================
   // Virtual list
   // ===============================================================
+  recalcTops() {
+    const { shownIds } = this.props;
+    let top = 0;
+    const numRows = shownIds.length;
+    let i;
+    this.rowTops = {};
+    if (!numRows) {
+      this.totalHeight = 0;
+      return;
+    }
+    for (i = 0; i < numRows; i++) {
+      const id = shownIds[i];
+      this.rowTops[id] = top;
+      const height = this.cachedHeights[id];
+      if (height == null) break;
+      top += height;
+    }
+    if (i > 0) {
+      this.avgHeight = top / i;
+      this.totalHeight = top + (numRows - i) * this.avgHeight;
+    }
+  }
+
   determineRenderInterval() {
     const { shownIds, height, uniformRowHeight } = this.props;
     const { rowHeight, scrollTop = 0, scrollBottom = height } = this;
@@ -607,30 +627,6 @@ class VirtualScroller extends React.PureComponent<Props> {
           this.idxFirst = this.idxLast - intervalLength;
         }
       }
-    }
-  }
-
-  recalcTops(props: Props) {
-    // console.log('Recalculating tops...');
-    const { shownIds } = props;
-    let top = 0;
-    const numRows = shownIds.length;
-    let i;
-    this.rowTops = {};
-    if (!numRows) {
-      this.totalHeight = 0;
-      return;
-    }
-    for (i = 0; i < numRows; i++) {
-      const id = shownIds[i];
-      this.rowTops[id] = top;
-      const height = this.cachedHeights[id];
-      if (height == null) break;
-      top += height;
-    }
-    if (i > 0) {
-      this.avgHeight = top / i;
-      this.totalHeight = top + (numRows - i) * this.avgHeight;
     }
   }
 }
