@@ -2,7 +2,7 @@
 
 import React from 'react';
 import { omit, merge } from 'timm';
-import type { Choice, Command } from '../gral/types';
+import type { Choice } from '../gral/types';
 import { COLORS } from '../gral/constants';
 import { isDark } from '../gral/styles';
 import { ThemeContext } from '../gral/themeContext';

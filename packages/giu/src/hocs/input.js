@@ -140,10 +140,10 @@ const INPUT_HOC_INVALID_HTML_PROPS = [
 class Input extends React.PureComponent<Props> {
   fInitialised = false;
   prevExtValue: any;
-  prevExtErrors: Array<?string>;
+  prevExtErrors: ?Array<string>;
   curValue: any;
-  validationErrors: Array<?string>;
-  errors: Array<?string>; // = this.props.errors (user-provided) + this.validationErrors
+  validationErrors: Array<string>;
+  errors: Array<string>; // = this.props.errors (user-provided) + this.validationErrors
   fDirtyErrorFloat = false;
   errorFloatId: ?string;
   lastValidatedValue: any;
