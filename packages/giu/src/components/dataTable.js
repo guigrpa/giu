@@ -207,10 +207,23 @@ type Props = {
 };
 
 class DataTable extends React.PureComponent<Props> {
+  fInit = false;
+  prevExtItemsById: ?Object;
+  prevExtCols: Array<DataTableColumn>;
+  prevExtAllowManualSorting: ?boolean;
+  prevExtShownIds: ?Array<string>;
+  prevExtFilterValue: ?string;
+  prevExtSortBy: ?string;
+  prevExtSortDescending: ?boolean;
+  prevExtManuallyOrderedIds: ?Array<string>;
+  prevExtSelectedIds: ?Array<string>;
+  prevExtFetchRowComponent: ?ComponentType<any>;
+  prevExtAllowManualSorting: ?boolean;
+  prevExtAccentColor: ?string;
   cols: Array<DataTableColumn>;
   maxLabelLevel: number;
-  scrollbarWidth: number;
-  fDragging: boolean;
+  scrollbarWidth = 0;
+  fDragging = false;
   filterValue: string;
   sortBy: ?string;
   sortDescending: boolean;
@@ -219,7 +232,7 @@ class DataTable extends React.PureComponent<Props> {
   prevShownIds: Array<string>;
   selectedIds: Array<string>;
   prevSelectedIds: Array<string>;
-  commonRowProps: Object;
+  commonRowProps = {};
   selectedBgColor: string;
   selectedFgColor: string;
   fPendingInitialScrollIntoView: boolean;
@@ -251,35 +264,6 @@ class DataTable extends React.PureComponent<Props> {
     height: 200,
   };
 
-  constructor(props: Props) {
-    super(props);
-    this.scrollbarWidth = 0;
-    this.fDragging = false;
-    this.recalcCols(props);
-    // State initialised by outer props, then free to change by default
-    this.filterValue = props.filterValue;
-    ['sortBy', 'sortDescending', 'selectedIds', 'manuallyOrderedIds'].forEach(
-      key => {
-        // $FlowFixMe
-        this[key] = undefined;
-        if (props[key] != null) {
-          // $FlowFixMe
-          this[key] = props[key];
-        } else if (props.collectionName) {
-          // $FlowFixMe
-          this[key] = localGet(this.localStorageKey(props.collectionName, key));
-        }
-      }
-    );
-    if (this.sortBy === undefined) this.sortBy = null;
-    if (this.sortDescending == null) this.sortDescending = false;
-    if (this.selectedIds == null) this.selectedIds = [];
-    this.recalcShownIds(props);
-    this.recalcRowComponents(props);
-    this.recalcColors(props);
-    this.commonRowProps = {};
-  }
-
   // Scroll into view upon mount; do it asynchronously to allow
   // height measurements to stabilise. This scrolling is only useful
   // if there are rows in the initial render
@@ -289,120 +273,6 @@ class DataTable extends React.PureComponent<Props> {
       this.fPendingInitialScrollIntoView = false;
       this.scrollSelectedIntoView({ topAncestor: this.refOuter.current });
     }, DEFER_SCROLL_INTO_VIEW_INITIAL);
-  }
-
-  componentWillReceiveProps(nextProps: Props) {
-    const {
-      itemsById,
-      cols,
-      shownIds,
-      filterValue,
-      sortBy,
-      sortDescending,
-      collectionName,
-      allowManualSorting,
-      manuallyOrderedIds,
-      selectedIds,
-      FetchRowComponent,
-      theme,
-    } = nextProps;
-    let fRecalcShownIds = false;
-    if (itemsById !== this.props.itemsById) fRecalcShownIds = true;
-    if (
-      cols !== this.props.cols ||
-      allowManualSorting !== this.props.allowManualSorting
-    ) {
-      this.recalcCols(nextProps);
-      fRecalcShownIds = true;
-    }
-    if (shownIds !== this.props.shownIds) fRecalcShownIds = true;
-    if (filterValue !== this.props.filterValue) {
-      this.filterValue = filterValue;
-      fRecalcShownIds = true;
-    }
-    if (
-      sortBy !== this.props.sortBy ||
-      sortDescending !== this.props.sortDescending
-    ) {
-      this.sortBy = sortBy;
-      this.sortDescending = !!sortDescending;
-      this.localStorageSave(collectionName, 'sortBy', this.sortBy);
-      this.localStorageSave(
-        collectionName,
-        'sortDescending',
-        this.sortDescending
-      );
-      fRecalcShownIds = true;
-    }
-    if (manuallyOrderedIds !== this.props.manuallyOrderedIds) {
-      this.manuallyOrderedIds = manuallyOrderedIds;
-      this.localStorageSave(
-        collectionName,
-        'manuallyOrderedIds',
-        this.manuallyOrderedIds
-      );
-      if (sortBy === SORT_MANUALLY) fRecalcShownIds = true;
-    }
-    if (fRecalcShownIds) this.recalcShownIds(nextProps);
-    if (selectedIds !== this.props.selectedIds) {
-      this.selectedIds = (selectedIds: any);
-      this.localStorageSave(collectionName, 'selectedIds', this.selectedIds);
-    }
-    if (
-      FetchRowComponent !== this.props.FetchRowComponent ||
-      allowManualSorting !== this.props.allowManualSorting
-    ) {
-      this.recalcRowComponents(nextProps);
-    }
-    if (theme.accentColor !== this.props.theme.accentColor)
-      this.recalcColors(nextProps);
-  }
-
-  recalcCols(props: Props) {
-    if (props.allowManualSorting) {
-      this.cols = [
-        createManualSortCol(props.manualSortColLabel),
-        ...props.cols,
-      ];
-    } else {
-      this.cols = props.cols;
-    }
-    this.recalcMaxLabelLevel();
-  }
-
-  recalcMaxLabelLevel() {
-    const { cols } = this;
-    let maxLabelLevel = 0;
-    for (let i = 0; i < cols.length; i++) {
-      const { labelLevel } = cols[i];
-      if (labelLevel != null && labelLevel > maxLabelLevel) {
-        maxLabelLevel = labelLevel;
-      }
-    }
-    this.maxLabelLevel = maxLabelLevel;
-  }
-
-  recalcRowComponents(props: Props) {
-    this.RowComponents = {
-      [FETCHING_MORE_ITEMS_ROW]: props.FetchRowComponent,
-      [DEFAULT_ROW]: props.allowManualSorting
-        ? SortableDataTableRow
-        : DataTableRow,
-    };
-  }
-
-  recalcColors(props: Props) {
-    const { accentColor } = props.theme;
-    this.selectedBgColor = accentColor;
-    this.selectedFgColor =
-      COLORS[isDark(accentColor) ? 'lightText' : 'darkText'];
-  }
-
-  recalcShownIds(props: Props) {
-    let { shownIds } = props;
-    shownIds = this.filter(shownIds, props);
-    shownIds = this.sort(shownIds, props);
-    this.shownIds = shownIds;
   }
 
   componentDidUpdate() {
@@ -429,15 +299,148 @@ class DataTable extends React.PureComponent<Props> {
   }
   // scrollToTop: see below
 
-  // ===============================================================
+  // ==========================================
+  prepareRender() {
+    const { fInit } = this;
+    const {
+      itemsById,
+      cols,
+      shownIds,
+      filterValue,
+      sortBy,
+      sortDescending,
+      allowManualSorting,
+      manuallyOrderedIds,
+      selectedIds,
+      FetchRowComponent,
+      theme,
+    } = this.props;
+    let fRecalcShownIds = false;
+    if (!fInit || itemsById !== this.prevExtItemsById) {
+      this.prevExtItemsById = itemsById;
+      fRecalcShownIds = true;
+    }
+    if (
+      !fInit ||
+      cols !== this.prevExtCols ||
+      allowManualSorting !== this.prevExtAllowManualSorting
+    ) {
+      this.prevExtCols = cols;
+      this.prevExtAllowManualSorting = allowManualSorting;
+      this.recalcCols();
+      fRecalcShownIds = true;
+    }
+    if (!fInit || shownIds !== this.prevExtShownIds) {
+      this.prevExtShownIds = shownIds;
+      fRecalcShownIds = true;
+    }
+    if (!fInit || filterValue !== this.prevExtFilterValue) {
+      this.prevExtFilterValue = filterValue;
+      this.filterValue = filterValue;
+      fRecalcShownIds = true;
+    }
+    if (
+      !fInit ||
+      sortBy !== this.prevExtSortBy ||
+      sortDescending !== this.prevExtSortDescending
+    ) {
+      this.prevExtSortBy = sortBy;
+      this.prevExtSortDescending = sortDescending;
+      this.sortBy = sortBy;
+      this.sortDescending = !!sortDescending;
+      if (this.sortBy === undefined) this.sortBy = null;
+      if (this.sortDescending == null) this.sortDescending = false;
+      this.mergePropWithLocalStorage('sortBy');
+      this.mergePropWithLocalStorage('sortDescending');
+      fRecalcShownIds = true;
+    }
+    if (!fInit || manuallyOrderedIds !== this.prevExtManuallyOrderedIds) {
+      this.prevExtManuallyOrderedIds = manuallyOrderedIds;
+      this.manuallyOrderedIds = manuallyOrderedIds;
+      this.mergePropWithLocalStorage('manuallyOrderedIds');
+      if (sortBy === SORT_MANUALLY) fRecalcShownIds = true;
+    }
+    if (fRecalcShownIds) this.recalcShownIds();
+    if (!fInit || selectedIds !== this.prevExtSelectedIds) {
+      this.prevExtSelectedIds = selectedIds;
+      this.selectedIds = (selectedIds: any);
+      if (this.selectedIds == null) this.selectedIds = [];
+      this.mergePropWithLocalStorage('selectedIds');
+    }
+    if (
+      !fInit ||
+      FetchRowComponent !== this.prevExtFetchRowComponent ||
+      allowManualSorting !== this.prevExtAllowManualSorting
+    ) {
+      this.prevExtFetchRowComponent = FetchRowComponent;
+      this.prevExtAllowManualSorting = allowManualSorting;
+      this.recalcRowComponents();
+    }
+    if (!fInit || theme.accentColor !== this.prevExtAccentColor) {
+      this.prevExtAccentColor = theme.accentColor;
+      this.recalcColors();
+    }
+    this.fInit = true;
+  }
+
+  recalcCols() {
+    if (this.props.allowManualSorting) {
+      this.cols = [
+        createManualSortCol(this.props.manualSortColLabel),
+        ...this.props.cols,
+      ];
+    } else {
+      this.cols = this.props.cols;
+    }
+    const { cols } = this;
+    let maxLabelLevel = 0;
+    for (let i = 0; i < cols.length; i++) {
+      const { labelLevel } = cols[i];
+      if (labelLevel != null && labelLevel > maxLabelLevel) {
+        maxLabelLevel = labelLevel;
+      }
+    }
+    this.maxLabelLevel = maxLabelLevel;
+  }
+
+  recalcRowComponents() {
+    this.RowComponents = {
+      [FETCHING_MORE_ITEMS_ROW]: this.props.FetchRowComponent,
+      [DEFAULT_ROW]: this.props.allowManualSorting
+        ? SortableDataTableRow
+        : DataTableRow,
+    };
+  }
+
+  recalcColors() {
+    const { accentColor } = this.props.theme;
+    this.selectedBgColor = accentColor;
+    this.selectedFgColor =
+      COLORS[isDark(accentColor) ? 'lightText' : 'darkText'];
+  }
+
+  recalcShownIds() {
+    let { shownIds } = this.props;
+    shownIds = this.filter(shownIds);
+    shownIds = this.sort(shownIds);
+    this.shownIds = shownIds;
+  }
+
+  // ==========================================
   // Render
-  // ===============================================================
+  // ==========================================
   render() {
+    this.prepareRender();
+    console.log(this.selectedIds);
     DEBUG && console.log('DataTable: rendering...');
+
+    // Class name
     let className = `giu-data-table ${
       this.fDragging ? 'dragging' : 'not-dragging'
     }`;
     if (this.props.animated) className += ' animated';
+
+    // Render
     return (
       <div
         ref={this.refOuter}
@@ -643,8 +646,8 @@ class DataTable extends React.PureComponent<Props> {
 
     // Update `shownIds` so that the changes are reflected. Then report on them to the user
     // and re-render
-    this.recalcShownIds(this.props);
-    this.manualOrderDidChange(this.props, { draggedId: shownIds[oldIndex] });
+    this.recalcShownIds();
+    this.manualOrderDidChange({ draggedId: shownIds[oldIndex] });
     this.forceUpdate();
     floatReposition();
 
@@ -748,11 +751,7 @@ class DataTable extends React.PureComponent<Props> {
 
   changeSelectedIds(selectedIds: Array<string>) {
     this.selectedIds = selectedIds;
-    this.localStorageSave(
-      this.props.collectionName,
-      'selectedIds',
-      this.selectedIds
-    );
+    this.mergePropWithLocalStorage('selectedIds');
     this.forceUpdate();
     if (this.props.onChangeSelection) {
       this.props.onChangeSelection(this.selectedIds);
@@ -772,7 +771,7 @@ class DataTable extends React.PureComponent<Props> {
     if (refVirtualScroller) refVirtualScroller.scrollPageUpDown(sign);
   }
 
-  scrollSelectedIntoView(options?: ScrollIntoViewOptions) {
+  scrollSelectedIntoView = (options?: ScrollIntoViewOptions) => {
     const refVirtualScroller = this.getVirtualScrollerRef();
     if (!refVirtualScroller) return;
     if (!this.selectedIds.length) return;
@@ -783,7 +782,7 @@ class DataTable extends React.PureComponent<Props> {
         )}`
       );
     refVirtualScroller.scrollIntoView(this.selectedIds[0], options);
-  }
+  };
 
   getVirtualScrollerRef() {
     let out = this.refVirtualScroller;
@@ -791,14 +790,14 @@ class DataTable extends React.PureComponent<Props> {
     return out;
   }
 
-  // ===============================================================
+  // ==========================================
   // Filtering
-  // ===============================================================
-  filter(ids: Array<string>, props: Props) {
+  // ==========================================
+  filter(ids: Array<string>) {
     let needle = this.filterValue;
     if (!needle) return ids;
     needle = simplifyString(needle);
-    const { itemsById, neverFilterIds } = props;
+    const { itemsById, neverFilterIds } = this.props;
     const cols = this.cols.filter(col => col.filterable !== false);
     const numCols = cols.length;
     const filteredIds = [];
@@ -829,21 +828,21 @@ class DataTable extends React.PureComponent<Props> {
     return filteredIds;
   }
 
-  // ===============================================================
+  // ==========================================
   // Sorting
-  // ===============================================================
-  sort(ids: Array<string>, props: Props) {
+  // ==========================================
+  sort(ids: Array<string>) {
     let out;
     if (this.sortBy === SORT_MANUALLY) {
-      out = this.sortManually(ids, props);
+      out = this.sortManually(ids);
     } else {
-      out = this.sortAutomatically(ids, props);
+      out = this.sortAutomatically(ids);
     }
-    out = this.processCustomPositions(out, props);
+    out = this.processCustomPositions(out);
     return out;
   }
 
-  sortManually(ids: Array<string>, props: Props) {
+  sortManually(ids: Array<string>) {
     const { manuallyOrderedIds } = this;
     let fChangedManualOrder = false;
     let sortedIds;
@@ -886,14 +885,14 @@ class DataTable extends React.PureComponent<Props> {
     }
 
     // Report to the user if he's interested and the manual order has changed
-    if (fChangedManualOrder) this.manualOrderDidChange(props, {});
+    if (fChangedManualOrder) this.manualOrderDidChange({});
 
     return sortedIds;
   }
 
-  sortAutomatically(ids: Array<string>, props: Props) {
+  sortAutomatically(ids: Array<string>) {
     const { sortBy, sortDescending } = this;
-    const { itemsById } = props;
+    const { itemsById } = this.props;
     if (!sortBy) return ids;
     const col = this.cols.find(o => o.attr === sortBy);
     if (!col) return ids;
@@ -923,8 +922,8 @@ class DataTable extends React.PureComponent<Props> {
     return sortedIds;
   }
 
-  processCustomPositions(ids: Array<string>, props: Props): Array<string> {
-    const { customPositions } = props;
+  processCustomPositions(ids: Array<string>): Array<string> {
+    const { customPositions } = this.props;
     if (!customPositions) return ids;
     if (!Object.keys(customPositions).length) return ids;
 
@@ -968,20 +967,14 @@ class DataTable extends React.PureComponent<Props> {
     }
     this.sortBy = sortBy;
     this.sortDescending = sortDescending;
-    this.localStorageSave(this.props.collectionName, 'sortBy', this.sortBy);
-    this.localStorageSave(
-      this.props.collectionName,
-      'sortDescending',
-      this.sortDescending
-    );
-    this.recalcShownIds(this.props);
+    this.mergePropWithLocalStorage('sortBy');
+    this.mergePropWithLocalStorage('sortDescending');
+    this.recalcShownIds();
     if (this.selectedIds.length) {
       const delay = this.props.animated
         ? DEFER_SCROLL_INTO_VIEW_AFTER_SORT_CHANGE_SLOW
         : DEFER_SCROLL_INTO_VIEW_AFTER_SORT_CHANGE_FAST;
-      setTimeout(() => {
-        this.scrollSelectedIntoView();
-      }, delay);
+      setTimeout(this.scrollSelectedIntoView, delay);
     } else {
       this.scrollToTop();
     }
@@ -992,16 +985,35 @@ class DataTable extends React.PureComponent<Props> {
     }
   }
 
-  manualOrderDidChange(props: Props, context: Object) {
-    this.localStorageSave(
-      props.collectionName,
-      'manuallyOrderedIds',
-      this.manuallyOrderedIds
-    );
-    if (props.onChangeManualOrder) {
-      props.onChangeManualOrder(this.manuallyOrderedIds, context);
+  manualOrderDidChange(context: Object) {
+    this.mergePropWithLocalStorage('manuallyOrderedIds');
+    const { onChangeManualOrder } = this.props;
+    if (onChangeManualOrder) {
+      onChangeManualOrder(this.manuallyOrderedIds, context);
     }
     // console.log(`New manual order: ${this.manuallyOrderedIds.join(', ')}`)
+  }
+
+  // ==========================================
+  // LocalStorage
+  // ==========================================
+  mergePropWithLocalStorage(key: string) {
+    const { collectionName } = this.props;
+    if (!collectionName) return;
+    if (!this.fInit) {
+      const val = this.localStorageLoad(collectionName, key);
+      // $FlowFixMe
+      if (val !== undefined) this[key] = val;
+    }
+    // $FlowFixMe
+    if (this[key] !== undefined) {
+      this.localStorageSave(collectionName, key, this[key]);
+    }
+  }
+
+  localStorageLoad(collectionName: ?string, key: string) {
+    if (!collectionName) return undefined;
+    return localGet(this.localStorageKey(collectionName, key));
   }
 
   localStorageSave(collectionName: ?string, key: string, value: any) {
