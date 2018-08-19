@@ -16,7 +16,7 @@ import LargeMessage from './largeMessage';
 const MAX_ROWS_INITIAL_RENDER = 20;
 const CHECK_SCROLLBAR_PERIOD = 400;
 
-const EXTRA_RENDER_PIXELS = 100;
+const EXTRA_RENDER_PIXELS = 150;
 
 const DEFAULT_ROW = '__DEFAULT_ROW__';
 
