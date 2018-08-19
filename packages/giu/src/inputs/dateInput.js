@@ -19,7 +19,7 @@ import {
   getUtcFlag,
   startOfDefaultDay,
 } from '../gral/dates';
-import type { KeyboardEventPars, Moment } from '../gral/types';
+import type { Moment } from '../gral/types';
 import { isDate } from '../gral/validators';
 import type { Theme } from '../gral/themeContext';
 import Input, { INPUT_HOC_INVALID_HTML_PROPS } from '../hocs/input';

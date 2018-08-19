@@ -431,7 +431,6 @@ class DataTable extends React.PureComponent<Props> {
   // ==========================================
   render() {
     this.prepareRender();
-    console.log(this.selectedIds);
     DEBUG && console.log('DataTable: rendering...');
 
     // Class name
