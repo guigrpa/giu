@@ -1,3 +1,5 @@
+## 0.16.0 (2018-8-19)
+
 * **Breaking**: `cmds` prop are no longer supported; use the imperative API instead (e.g. instead of passing down a `REVERT` command in `cmds`, call `revert()` on the corresponding input). See the docs for more details.
 * **Breaking**: We no longer set input `id`/`name` on many components by default (e.g. checkboxes, text/password/number inputs, selects, etc.). If you use input labels or radio groups, make sure you explicitly set the input's `id` prop.
 * Remove **deprecated React lifecycle methods**: componentWillReceiveProps(), componentWillUpdate(). This makes giu compatible with React 17 features such as Suspense!
