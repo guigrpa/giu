@@ -1017,11 +1017,12 @@ class DataTable extends React.PureComponent<Props> {
 // ==========================================
 // Theme
 // ===============================================================
-const ThemedDataTable = (props: UnthemedProps) => (
+// $FlowFixMe
+const ThemedDataTable = React.forwardRef((props: UnthemedProps, ref) => (
   <ThemeContext.Consumer>
-    {theme => <DataTable {...props} theme={theme} />}
+    {theme => <DataTable {...props} theme={theme} ref={ref} />}
   </ThemeContext.Consumer>
-);
+));
 
 // ===============================================================
 // Styles
