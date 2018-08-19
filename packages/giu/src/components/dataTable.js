@@ -65,9 +65,9 @@ const SortableVirtualScroller = sortableContainer(VirtualScroller, {
 
 const MANAGE_FOCUS_AUTONOMOUSLY = IS_MOBILE_OR_TABLET;
 
-// ===============================================================
+// ==========================================
 // Component
-// ===============================================================
+// ==========================================
 /* --
 A full-featured table supporting filtering, single/multiple selection,
 pagination, infinite scrolling, sorting, drag and drop, clipboard events,
@@ -546,9 +546,9 @@ class DataTable extends React.PureComponent<Props> {
     isItemSelected: this.selectedIds.indexOf(id) >= 0,
   });
 
-  // ===============================================================
+  // ==========================================
   // Event handlers
-  // ===============================================================
+  // ==========================================
   onKeyDown = (ev: SyntheticKeyboardEvent<*>) => {
     if (ev.which === KEYS.up || ev.which === KEYS.down) {
       this.selectMoveDelta(ev.which === KEYS.up ? -1 : +1);
@@ -657,9 +657,9 @@ class DataTable extends React.PureComponent<Props> {
     });
   };
 
-  // ===============================================================
+  // ==========================================
   // Clipboard
-  // ===============================================================
+  // ==========================================
   onCopyCut = (ev: SyntheticClipboardEvent<*>) => {
     const json = this.getJsonForClipboard();
     ev.clipboardData.setData('text/plain', json);
@@ -700,9 +700,9 @@ class DataTable extends React.PureComponent<Props> {
     }
   }
 
-  // ===============================================================
+  // ==========================================
   // Selection
-  // ===============================================================
+  // ==========================================
   selectSingle(id: string) {
     if (this.selectedIds.length === 1 && this.selectedIds[0] === id) return;
     this.changeSelectedIds([id]);
@@ -759,9 +759,9 @@ class DataTable extends React.PureComponent<Props> {
     }
   }
 
-  // ===============================================================
+  // ==========================================
   // Scrolling
-  // ===============================================================
+  // ==========================================
   scrollToTop() {
     const refVirtualScroller = this.getVirtualScrollerRef();
     if (refVirtualScroller) refVirtualScroller.scrollToTop();
@@ -1016,7 +1016,7 @@ class DataTable extends React.PureComponent<Props> {
 
 // ==========================================
 // Theme
-// ===============================================================
+// ==========================================
 // $FlowFixMe
 const ThemedDataTable = React.forwardRef((props: UnthemedProps, ref) => (
   <ThemeContext.Consumer>
@@ -1024,9 +1024,9 @@ const ThemedDataTable = React.forwardRef((props: UnthemedProps, ref) => (
   </ThemeContext.Consumer>
 ));
 
-// ===============================================================
+// ==========================================
 // Styles
-// ===============================================================
+// ==========================================
 const style = {
   outer: ({ style: baseStyle }) =>
     merge(
@@ -1065,8 +1065,8 @@ const STYLES = (
   `}</style>
 );
 
-// ===============================================================
+// ==========================================
 // Public
-// ===============================================================
+// ==========================================
 export default ThemedDataTable;
 export { SORT_MANUALLY };
