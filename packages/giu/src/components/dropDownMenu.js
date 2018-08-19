@@ -49,24 +49,22 @@ const FILTERED_PROPS = [
 
 type State = {
   fFocused: boolean,
-  cmds: ?Array<Command>,
 };
 
 class DropDownMenu extends React.PureComponent<Props, State> {
-  state = {
-    fFocused: false,
-    cmds: null,
-  };
+  refSelect = React.createRef();
+
+  state = { fFocused: false };
 
   // ==========================================
   render() {
     const props = omit(this.props, FILTERED_PROPS);
     return (
       <Select
+        ref={this.refSelect}
         type="dropDownPicker"
         items={this.props.items}
         lang={this.props.lang}
-        cmds={this.state.cmds}
         onClickItem={this.onClickItem}
         onCloseFloat={this.closeMenu}
         onFocus={this.onFocus}
@@ -118,15 +116,18 @@ class DropDownMenu extends React.PureComponent<Props, State> {
 
   // On blur, remove the stored value from the select
   onBlur = () => {
-    this.setState({
-      fFocused: false,
-      cmds: [{ type: 'REVERT' }],
+    this.setState({ fFocused: false }, () => {
+      const target = this.refSelect.current;
+      if (target && target.revert) target.revert();
     });
   };
 
   // ==========================================
   closeMenu = () => {
-    this.setState({ cmds: [{ type: 'BLUR' }, { type: 'REVERT' }] });
+    setImmediate(() => {
+      const target = this.refSelect.current;
+      if (target && target.blur) target.blur();
+    });
   };
 }
 

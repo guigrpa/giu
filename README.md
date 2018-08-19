@@ -253,22 +253,25 @@ Giu generally follows *The React Way™*. In some particular cases, however, you
 You have already seen how to accomplish task 1, via a direct component call. Assuming you keep a `ref` to the input component:
 
 ```js
-onClickSubmit() {
-  this.refs.age.validateAndGetValue().then(age => { ... })
+async onClickSubmit() {
+  const age = await this.refAge.validateAndGetValue();
+  // ...
 }
 ```
 
-This is the only truly *imperative* API provided by Giu, provided for convenience.
+Tasks 2 and 3 above are also managed imperatively:
 
-Tasks 2 and 3 above are managed via a *pseudo-imperative* API, the `cmds` prop, an array of commands that are executed by the so-called Input Higher-Order Component (HOC). Commands are plain objects with a `type` attribute, plus other attributes as needed. Currently supported commands are:
+```js
+// Focus/blur on an input
+this.refAge.focus();
+this.refAge.blur();
+// Set the input's value (without touching the original value in props)
+this.refAge.setValue(23);
+// Revert the input's value
+this.refAge.revert();
+```
 
-* `SET_VALUE`: change the current input state (without affecting the original `value` prop). The new value is passed in the command object as `value`.
-* `REVERT`: revert the current input state to the original `value` prop.
-* `FOCUS`, `BLUR`: move the focus to or away from the input component. [*not supported in Mobile Safari*]
 
-
-
-*Important note: Commands in the `cmds` prop are executed when a new array is passed down (strict equality is checked). Take this into account so that your commands are not executed more than once!*
 
 
 ### Common input props
@@ -279,7 +282,6 @@ Tasks 2 and 3 above are managed via a *pseudo-imperative* API, the `cmds` prop, 
     * **onFocus** *function?*
     * **onBlur** *function?*
     * **disabled** *boolean?*: prevents the input from being interacted with; also affects styles
-    * **cmds** *array(object)?*: see [Imperative API](#imperative-api)
 * Validation-related (see also [input validation](#input-validation)):
     * **required** *boolean?*: synonym for the `isRequired()` validator
     * **validators** *array(object|function)?*: objects are used for predefined validators, whereas functions are used for custom ones
@@ -303,6 +305,7 @@ Tasks 2 and 3 above are managed via a *pseudo-imperative* API, the `cmds` prop, 
 Props:
 ```js
 type PublicProps = {
+  ...$Exact<InputHocPublicProps>, // common to all inputs (check the docs!)
   disabled?: boolean,
   style?: Object, // merged with the `input`/`textarea` style
   skipTheme?: boolean,
@@ -318,8 +321,9 @@ type PublicProps = {
 Props:
 ```js
 type PublicProps = {
+  ...$Exact<InputHocPublicProps>, // common to all inputs (check the docs!)
   id?: string,
-  label?: any, // React components to be included in the checkbox's `label` element
+  label?: React.Node, // React components to be included in the checkbox's `label` element
   disabled?: boolean,
   styleLabel?: Object, // merged with the `label` style
   skipTheme?: boolean,
@@ -342,6 +346,8 @@ If you use [*moment*](https://github.com/moment/moment), your date picker and da
 Props:
 ```js
 type PublicProps = {
+  ...$Exact<InputHocPublicProps>, // common to all inputs (check the docs!)
+  id?: string,
   type?: PickerType, // see below (default: 'dropDownPicker')
   // Whether Giu should check for iOS in order to simplify certain components
   // (e.g. do not use analogue time picker) -- default: true
@@ -352,11 +358,11 @@ type PublicProps = {
   time?: boolean, // whether the time is part of the value (default: false)
   // Whether the time picker should be analogue (traditional clock)
   // or digital (list) (default: true)
-  analogTime?: boolean,
+  analogTime?: boolean, // (default: true [in iOS: false])
   seconds?: boolean, // whether seconds should be included in the time value (default: false)
   // UTC mode; by default, it is `true` *unless* `date` and `time` are both `true`.
   // In other words, local time is only used by default if both `date` and `time` are enabled
-  utc?: boolean,
+  utc?: boolean, // (default: !(date && time))
   todayName?: string, // label for the *Today* button (default: 'Today')
   // Current language (used just for force-render).
   // Use it to inform Giu that you have changed `moment`'s language.
@@ -448,6 +454,7 @@ import { Select, LIST_SEPARATOR } from 'giu';
 Props:
 ```js
 type PublicProps = {
+  ...$Exact<InputHocPublicProps>, // common to all inputs (check the docs!)
   id: string, // mandatory!
   items: Array<RadioChoice>,
   lang?: string, // current language (used just for force-render)
@@ -473,6 +480,7 @@ Shown below are some examples of ColorInput and its features: inline and drop-do
 Props:
 ```js
 type PublicProps = {
+  ...$Exact<InputHocPublicProps>, // common to all inputs (check the docs!)
   disabled?: boolean,
   // Whether the complete color picker should be inlined or appear as a dropdown when clicked
   inlinePicker?: boolean,
@@ -490,8 +498,8 @@ type PublicProps = {
 Props:
 ```js
 type PublicProps = {
+  ...$Exact<InputHocPublicProps>, // common to all inputs (check the docs!)
   children?: any, // React elements that will be shown inside the button(default: `Choose file…`)
-  cmds?: Array<Command>,
   disabled?: boolean,
   style?: Object, // will be merged with the outermost `span` element
   skipTheme?: boolean,

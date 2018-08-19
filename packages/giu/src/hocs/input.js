@@ -10,7 +10,6 @@ import { scrollIntoView } from '../gral/visibility';
 import { isDark } from '../gral/styles';
 import { isRequired } from '../gral/validators';
 import type { Validator } from '../gral/validators';
-import type { Command } from '../gral/types';
 import { ThemeContext } from '../gral/themeContext';
 import type { Theme } from '../gral/themeContext';
 import {
@@ -53,7 +52,6 @@ export type InputHocPublicProps = {
   required?: boolean, // passed through unchanged
   validators?: Array<Validator>,
   noErrors?: boolean, // don't show errors, no matter what
-  cmds?: Array<Command>, // passed through unchanged
   disabled?: boolean, // passed through unchanged
   floatZ?: number, // passed through unchanged
   floatPosition?: FloatPosition, // passed through unchanged
@@ -109,7 +107,6 @@ const HOC_PUBLIC_PROPS = [
   'required',
   'validators',
   'noErrors',
-  'cmds',
   'disabled',
   'floatZ',
   'floatPosition',
@@ -128,7 +125,6 @@ const INPUT_HOC_INVALID_HTML_PROPS = [
   'curValue',
   'registerOuterRef',
   'registerFocusableRef',
-  'cmds',
   'errors',
   'fFocused',
   'floatZ',
@@ -142,52 +138,29 @@ const INPUT_HOC_INVALID_HTML_PROPS = [
 // HOC
 // ==========================================
 class Input extends React.PureComponent<Props> {
-  fInitialised: boolean;
+  fInitialised = false;
   prevExtValue: any;
-  prevExtErrors: any;
+  prevExtErrors: Array<?string>;
   curValue: any;
   validationErrors: Array<?string>;
   errors: Array<?string>; // = this.props.errors (user-provided) + this.validationErrors
-  fDirtyErrorFloat: boolean;
+  fDirtyErrorFloat = false;
   errorFloatId: ?string;
   lastValidatedValue: any;
-  fFocused: boolean;
-  pendingFocusBlur: null | 'FOCUS' | 'BLUR';
+  fFocused = false;
   refOuter: ?Object;
   refFocusable: ?Object;
   refChild = React.createRef();
-
-  constructor(props: Props) {
-    super(props);
-    this.fDirtyErrorFloat = false;
-    this.fFocused = false;
-    this.fInitialised = false;
-  }
 
   componentDidMount() {
     warnFloats(this.props.hocOptions.componentName);
     this.renderErrorFloat();
   }
 
-  // componentWillReceiveProps(nextProps: Props) {
-  //   const { cmds } = nextProps;
-  //   if (cmds !== this.props.cmds) this.processCmds(cmds, nextProps);
-  // }
-
   componentDidUpdate() {
     if (this.fDirtyErrorFloat) {
       this.fDirtyErrorFloat = false;
       this.renderErrorFloat();
-    }
-    if (this.pendingFocusBlur) {
-      // execute `FOCUS` and `BLUR` commands asynchronously, so that the owner
-      // of the Input component doesn't find a `null` ref in a `focus`/`blur` handler
-      setTimeout(() => {
-        if (!this.pendingFocusBlur) return;
-        if (this.pendingFocusBlur === 'FOCUS') this._focus();
-        else if (this.pendingFocusBlur === 'BLUR') this._blur();
-        this.pendingFocusBlur = null;
-      });
     }
   }
 
@@ -196,47 +169,50 @@ class Input extends React.PureComponent<Props> {
   }
 
   // ==========================================
-  // Imperative API (via props or directly)
+  // Imperative API
   // ==========================================
-  processCmds(cmds: ?Array<Command>, nextProps: Props) {
-    if (cmds == null) return;
-    const { toInternalValue = fnIdentity } = nextProps.hocOptions;
-    cmds.forEach(cmd => {
-      switch (cmd.type) {
-        case 'SET_VALUE':
-          this.setCurValue(toInternalValue(cmd.value, nextProps));
-          break;
-        case 'REVERT':
-          this.resetErrors(nextProps);
-          this.setCurValue(toInternalValue(nextProps.value, nextProps));
-          break;
-        case 'VALIDATE':
-          this._validate().catch(() => {});
-          break;
-        case 'FOCUS':
-          this.pendingFocusBlur = 'FOCUS';
-          break;
-        case 'BLUR':
-          this.pendingFocusBlur = 'BLUR';
-          break;
-        default:
-          break;
-      }
-    });
-  }
-
   // Alternative to using the `onChange` prop (e.g. if we want to delegate
   // state handling to the input and only want to retrieve the value when submitting a form)
   getValue() {
     const { toExternalValue = fnIdentity } = this.props.hocOptions;
     return toExternalValue(this.curValue, this.props);
   }
+  // Modify the input's value without going through the `value` prop
+  setValue(value) {
+    const { toInternalValue = fnIdentity } = this.props.hocOptions;
+    this.setCurValue(toInternalValue(value, this.props));
+  }
+  // Reset the input to the `value` prop
+  revert() {
+    this.resetErrors();
+    const { toInternalValue = fnIdentity } = this.props.hocOptions;
+    this.setCurValue(toInternalValue(this.props.value, this.props));
+  }
   getErrors() {
     return this.errors;
+  }
+  async validate() {
+    try {
+      this._validate();
+    } catch (err) {
+      console.error(err); // eslint-disable-line
+    }
   }
   async validateAndGetValue() {
     await this._validate(); // may throw
     return this.getValue();
+  }
+  focus() {
+    const target = this.refFocusable;
+    if (target && target.focus) target.focus();
+  }
+  blur() {
+    const target = this.refFocusable;
+    if (target && target.blur) target.blur();
+  }
+  runCommand(cmd: Object) {
+    const target = this.refChild.current;
+    if (target && target.runCommand) target.runCommand(cmd);
   }
 
   // ==========================================
@@ -254,7 +230,7 @@ class Input extends React.PureComponent<Props> {
       this.fDirtyErrorFloat = true;
     }
     if (!this.fInitialised || errors !== this.prevExtErrors) {
-      this.recalcErrors(this.props);
+      this.recalcErrors();
       this.prevExtErrors = errors;
       this.fDirtyErrorFloat = true;
     }
@@ -322,7 +298,6 @@ class Input extends React.PureComponent<Props> {
       curValue: this.curValue,
       errors: this.errors,
       required: this.props.required,
-      cmds: this.props.cmds,
       disabled: this.props.disabled,
       fFocused: this.fFocused,
       floatZ: this.props.floatZ,
@@ -419,14 +394,14 @@ class Input extends React.PureComponent<Props> {
     if (onChange) onChange(ev, toExternalValue(curValue, this.props));
     if (!this.fFocused && !options.fDontFocus) {
       const { focusOnChange = true } = this.props;
-      if (focusOnChange) this._focus();
+      if (focusOnChange) this.focus();
     }
   };
 
   onFocus = (ev: SyntheticEvent<*>) => {
     const { onFocus, disabled } = this.props;
     if (disabled) {
-      this._blur();
+      this.blur();
       return;
     }
     if (this.refOuter) scrollIntoView(this.refOuter);
@@ -448,7 +423,7 @@ class Input extends React.PureComponent<Props> {
 
     // If not focused, a mouse-down should focus the component and cancel the event
     if (this.fFocused) return;
-    this._focus();
+    this.focus();
   };
 
   // Cancel bubbling of click events; they may reach Modals
@@ -482,18 +457,6 @@ class Input extends React.PureComponent<Props> {
   // ==========================================
   // Helpers
   // ==========================================
-  _focus() {
-    if (this.refFocusable && this.refFocusable.focus) {
-      this.refFocusable.focus();
-    }
-  }
-
-  _blur() {
-    if (this.refFocusable && this.refFocusable.blur) {
-      this.refFocusable.blur();
-    }
-  }
-
   changedFocus(fFocused: boolean) {
     if (fFocused === this.fFocused) return;
     this.fFocused = fFocused;
@@ -561,7 +524,7 @@ class Input extends React.PureComponent<Props> {
         validationErrors.join('') !== this.validationErrors.join('') // string compare
       ) {
         this.validationErrors = validationErrors;
-        this.recalcErrors(this.props);
+        this.recalcErrors();
         this.forceUpdate();
       }
       if (validationErrors.length) {
@@ -573,14 +536,14 @@ class Input extends React.PureComponent<Props> {
     });
   }
 
-  resetErrors(props: Props) {
+  resetErrors() {
     this.validationErrors = [];
     this.lastValidatedValue = undefined;
-    this.recalcErrors(props);
+    this.recalcErrors();
   }
 
-  recalcErrors(props: Props) {
-    this.errors = (props.errors || []).concat(this.validationErrors || []);
+  recalcErrors() {
+    this.errors = (this.props.errors || []).concat(this.validationErrors || []);
     this.fDirtyErrorFloat = true;
   }
 

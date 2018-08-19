@@ -53,19 +53,16 @@ type Props = {
   onBlur: Function,
 };
 
-type State = {
-  fFloat: boolean,
-};
-
 // ==========================================
 // Component
 // ==========================================
-class BaseColorInput extends React.Component<Props, State> {
+class BaseColorInput extends React.Component<Props> {
+  fInitialised = false;
+  prevExtFocused: boolean;
+  fFloat = false;
   floatId: ?string;
   refTitle: ?Object;
   refPicker: ?Object;
-
-  state = { fFloat: false };
 
   componentDidMount() {
     window.addEventListener('click', this.onClickWindow);
@@ -76,10 +73,8 @@ class BaseColorInput extends React.Component<Props, State> {
     window.removeEventListener('click', this.onClickWindow);
   }
 
-  componentDidUpdate(prevProps: Props) {
+  componentDidUpdate() {
     this.renderFloat();
-    const { fFocused } = this.props;
-    if (fFocused !== prevProps.fFocused) this.setState({ fFloat: fFocused });
   }
 
   // ==========================================
@@ -87,13 +82,21 @@ class BaseColorInput extends React.Component<Props, State> {
   // ==========================================
   doKeyDown(keyDown: KeyboardEventPars) {
     if (keyDown.which === KEYS.esc && !this.props.inlinePicker) {
-      const { fFloat } = this.state;
-      this.setState({ fFloat: !fFloat });
+      this.fFloat = !this.fFloat;
+      this.forceUpdate();
     }
   }
 
   // ==========================================
   render() {
+    // Process external prop changes (fFocused)
+    const { fFocused } = this.props;
+    if (!this.fInitialised || fFocused !== this.prevExtFocused) {
+      this.prevExtFocused = fFocused;
+      this.fFloat = fFocused;
+    }
+    this.fInitialised = true;
+
     return this.props.inlinePicker ? this.renderPicker() : this.renderTitle();
   }
 
@@ -117,7 +120,7 @@ class BaseColorInput extends React.Component<Props, State> {
   renderFloat() {
     if (this.props.inlinePicker) return;
     if (IS_IOS) return;
-    const { fFloat } = this.state;
+    const { fFloat } = this;
 
     // Remove float
     if (!fFloat && this.floatId != null) {
@@ -146,7 +149,7 @@ class BaseColorInput extends React.Component<Props, State> {
   }
 
   renderFloatForIos() {
-    if (!this.state.fFloat) return null;
+    if (!this.fFloat) return null;
     const { floatPosition, floatAlign, floatZ } = this.props;
     return (
       <IosFloatWrapper
@@ -196,8 +199,8 @@ class BaseColorInput extends React.Component<Props, State> {
   // ...but if it is focused, we want to toggle it
   onMouseDownTitle = () => {
     if (!this.props.fFocused) return;
-    const { fFloat } = this.state;
-    this.setState({ fFloat: !fFloat });
+    this.fFloat = !this.fFloat;
+    this.forceUpdate();
   };
 
   // Only for autonomous focus management

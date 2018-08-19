@@ -38,7 +38,7 @@ class FormExample extends React.Component<
   { lang: string },
   { fixedDate: Date }
 > {
-  cmds: Array<any>;
+  refInput = React.createRef();
 
   state = { fixedDate: new Date() };
 
@@ -592,19 +592,18 @@ class FormExample extends React.Component<
         <div>
           <ExampleLabel>Imperative example</ExampleLabel>
           <TextInput
+            ref={this.refInput}
             value="Initial value"
-            cmds={this.cmds}
             onFocus={() => console.log('focus')}
             onBlur={() => console.log('blur')}
           />{' '}
           <Button
             onMouseDown={cancelEvent}
             onClick={() => {
-              this.cmds = [
-                { type: 'SET_VALUE', value: 'Different value' },
-                { type: 'FOCUS' },
-              ];
-              this.forceUpdate();
+              const target = this.refInput.current;
+              if (!target) return;
+              target.setValue('Different value');
+              target.focus();
             }}
           >
             Change & focus
@@ -612,8 +611,10 @@ class FormExample extends React.Component<
           <Button
             onMouseDown={cancelEvent}
             onClick={() => {
-              this.cmds = [{ type: 'REVERT' }, { type: 'BLUR' }];
-              this.forceUpdate();
+              const target = this.refInput.current;
+              if (!target) return;
+              target.revert();
+              target.blur();
             }}
           >
             Revert & blur

@@ -46,12 +46,6 @@ export type Choice = {
   disabled?: boolean,
 };
 
-type CommandType = 'FOCUS' | 'BLUR' | 'REVERT';
-
-export type Command = {|
-  type: CommandType,
-|};
-
 export type Action = { type: string };
 
 export type StatelessComponent<P> = (props: P) => ?React$Element<any>;

@@ -231,22 +231,25 @@ Giu generally follows *The React Way™*. In some particular cases, however, you
 You have already seen how to accomplish task 1, via a direct component call. Assuming you keep a `ref` to the input component:
 
 ```js
-onClickSubmit() {
-  this.refs.age.validateAndGetValue().then(age => { ... })
+async onClickSubmit() {
+  const age = await this.refAge.validateAndGetValue();
+  // ...
 }
 ```
 
-This is the only truly *imperative* API provided by Giu, provided for convenience.
+Tasks 2 and 3 above are also managed imperatively:
 
-Tasks 2 and 3 above are managed via a *pseudo-imperative* API, the `cmds` prop, an array of commands that are executed by the so-called Input Higher-Order Component (HOC). Commands are plain objects with a `type` attribute, plus other attributes as needed. Currently supported commands are:
-
-* `SET_VALUE`: change the current input state (without affecting the original `value` prop). The new value is passed in the command object as `value`.
-* `REVERT`: revert the current input state to the original `value` prop.
-* `FOCUS`, `BLUR`: move the focus to or away from the input component. [*not supported in Mobile Safari*]
+```js
+// Focus/blur on an input
+this.refAge.focus();
+this.refAge.blur();
+// Set the input's value (without touching the original value in props)
+this.refAge.setValue(23);
+// Revert the input's value
+this.refAge.revert();
+```
 
 [[[demo:imperative-api]]]
-
-*Important note: Commands in the `cmds` prop are executed when a new array is passed down (strict equality is checked). Take this into account so that your commands are not executed more than once!*
 
 
 ### Common input props
@@ -257,7 +260,6 @@ Tasks 2 and 3 above are managed via a *pseudo-imperative* API, the `cmds` prop, 
     * **onFocus** *function?*
     * **onBlur** *function?*
     * **disabled** *boolean?*: prevents the input from being interacted with; also affects styles
-    * **cmds** *array(object)?*: see [Imperative API](#imperative-api)
 * Validation-related (see also [input validation](#input-validation)):
     * **required** *boolean?*: synonym for the `isRequired()` validator
     * **validators** *array(object|function)?*: objects are used for predefined validators, whereas functions are used for custom ones

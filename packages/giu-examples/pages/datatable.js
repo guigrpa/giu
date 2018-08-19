@@ -1,3 +1,5 @@
+// NO LONGER MAINTAINED
+
 /* eslint-disable no-console */
 /* eslint-disable react/no-multi-comp, react/no-did-mount-set-state */
 

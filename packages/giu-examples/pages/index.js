@@ -525,25 +525,28 @@ const ValidationCustomValidator = () => (
 // }
 
 class ImperativeApi extends React.Component {
+  refInput = React.createRef();
+
   render() {
     return (
       <Centered>
-        <TextInput value="Initial value" cmds={this.cmds} />{' '}
+        <TextInput ref={this.refInput} value="Initial value" />{' '}
         <Button
           onClick={() => {
-            this.cmds = [
-              { type: 'SET_VALUE', value: 'Different value' },
-              { type: 'FOCUS' },
-            ];
-            this.forceUpdate();
+            const target = this.refInput.current;
+            if (!target) return;
+            target.setValue('Different value');
+            target.focus();
           }}
         >
           Change & focus
         </Button>{' '}
         <Button
           onClick={() => {
-            this.cmds = [{ type: 'REVERT' }, { type: 'BLUR' }];
-            this.forceUpdate();
+            const target = this.refInput.current;
+            if (!target) return;
+            target.revert();
+            target.blur();
           }}
         >
           Revert & blur

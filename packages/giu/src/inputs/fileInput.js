@@ -6,7 +6,6 @@ import filesize from 'filesize';
 import { GLOW, HIDDEN_FOCUS_CAPTURE } from '../gral/styles';
 import Input, { INPUT_HOC_INVALID_HTML_PROPS } from '../hocs/input';
 import type { InputHocPublicProps } from '../hocs/input';
-import type { Command } from '../gral/types';
 import type { Theme } from '../gral/themeContext';
 import Button from '../components/button';
 import Icon from '../components/icon';
@@ -21,7 +20,6 @@ const isNull = val => val == null;
 type PublicProps = {
   ...$Exact<InputHocPublicProps>, // common to all inputs (check the docs!)
   children?: any, // React elements that will be shown inside the button(default: `Choose file…`)
-  cmds?: Array<Command>,
   disabled?: boolean,
   style?: Object, // will be merged with the outermost `span` element
   skipTheme?: boolean,
@@ -57,12 +55,11 @@ class BaseFileInput extends React.Component<Props> {
 
   cntCleared: number = 0;
 
-  componentDidUpdate(prevProps) {
-    const { cmds } = this.props;
-    if (!cmds || cmds === prevProps.cmds) return;
-    cmds.forEach(cmd => {
-      if (cmd.type === 'CLICK') this.onClickButton();
-    });
+  // ==========================================
+  // Imperative API
+  // ==========================================
+  runCommand(cmd: Object) {
+    if (cmd.type === 'CLICK') this.onClickButton();
   }
 
   // ==========================================
@@ -141,7 +138,7 @@ const hocOptions = {
   isNull,
   valueAttr: 'files',
 };
-const render = props => <BaseFileInput {...props} />;
+const render = (props, ref) => <BaseFileInput {...props} ref={ref} />;
 // $FlowFixMe
 const FileInput = React.forwardRef((publicProps: PublicProps, ref) => (
   <Input hocOptions={hocOptions} render={render} {...publicProps} ref={ref} />

@@ -75,20 +75,18 @@ type Props = {
   onBlur: Function,
 };
 
-type State = {
-  fFloat: boolean,
-};
-
 // ==========================================
 // Component
 // ==========================================
-class BaseSelectCustom extends React.Component<Props, State> {
+class BaseSelectCustom extends React.Component<Props> {
+  fInitialised = false;
+  prevExtFocused: boolean;
+  fFloat = false;
   floatId: ?string;
   items: Array<Choice>;
   refTitle: ?Object;
 
   refPicker = React.createRef();
-  state = { fFloat: false };
 
   componentDidMount() {
     window.addEventListener('click', this.onClickWindow);
@@ -101,10 +99,8 @@ class BaseSelectCustom extends React.Component<Props, State> {
     this.unregisterShortcuts();
   }
 
-  componentDidUpdate(prevProps: Props) {
+  componentDidUpdate() {
     this.renderFloat();
-    const { fFocused } = this.props;
-    if (fFocused !== prevProps.fFocused) this.setState({ fFloat: fFocused });
   }
 
   // ==========================================
@@ -113,8 +109,8 @@ class BaseSelectCustom extends React.Component<Props, State> {
   // Process ESC ourselves; pass down other keystrokes
   doKeyDown(keyDown: KeyboardEventPars) {
     if (keyDown.which === KEYS.esc && !this.props.inlinePicker) {
-      const { fFloat } = this.state;
-      this.setState({ fFloat: !fFloat });
+      this.fFloat = !this.fFloat;
+      this.forceUpdate();
     } else {
       const target = this.refPicker.current;
       if (target && target.doKeyDown) target.doKeyDown(keyDown);
@@ -123,6 +119,14 @@ class BaseSelectCustom extends React.Component<Props, State> {
 
   // ==========================================
   render() {
+    // Process external prop changes (fFocused)
+    const { fFocused } = this.props;
+    if (!this.fInitialised || fFocused !== this.prevExtFocused) {
+      this.prevExtFocused = fFocused;
+      this.fFloat = fFocused;
+    }
+    this.fInitialised = true;
+
     this.items = this.prepareItems(this.props.items, this.props.required);
     const { children } = this.props;
     let out;
@@ -161,7 +165,7 @@ class BaseSelectCustom extends React.Component<Props, State> {
           typeof item.label === 'function' ? item.label(lang) : item.label;
       }
     }
-    const caretIcon = this.state.fFloat ? 'caret-up' : 'caret-down';
+    const caretIcon = this.fFloat ? 'caret-up' : 'caret-down';
     return (
       <span
         ref={this.registerTitleRef}
@@ -180,7 +184,7 @@ class BaseSelectCustom extends React.Component<Props, State> {
   renderFloat() {
     if (this.props.inlinePicker) return;
     if (IS_IOS) return;
-    const { fFloat } = this.state;
+    const { fFloat } = this;
 
     // Remove float
     if (!fFloat && this.floatId != null) {
@@ -210,7 +214,7 @@ class BaseSelectCustom extends React.Component<Props, State> {
   }
 
   renderFloatForIos() {
-    if (!this.state.fFloat) return null;
+    if (!this.fFloat) return null;
     return (
       <IosFloatWrapper
         floatPosition={this.props.floatPosition}
@@ -253,13 +257,14 @@ class BaseSelectCustom extends React.Component<Props, State> {
   // ...but if it is focused, we want to toggle it
   onMouseDownTitle = () => {
     if (!this.props.fFocused) return;
-    const { fFloat } = this.state;
-    this.setState({ fFloat: !fFloat });
+    this.fFloat = !this.fFloat;
+    this.forceUpdate();
   };
 
   // Close the float (if any) but retain the focus
   onClickItem = (ev: ?SyntheticEvent<*>, nextValue: string) => {
-    this.setState({ fFloat: false });
+    this.fFloat = false;
+    this.forceUpdate();
     const { onClickItem } = this.props;
     onClickItem && onClickItem(ev, toExternalValue(nextValue));
   };

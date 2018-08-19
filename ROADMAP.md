@@ -5,9 +5,10 @@
 * Migrate to the latest React:
     * **Remove deprecated lifecycle hooks**
     * Use Portals?
-* [ ] Use imperative API for commands (**breaking**)
+* [ ] Fix Flow errors
 * [ ] Proof-of-concept with `giu-examples` with Next 6 and Babel 7
 * [ ] **Test on Android**
+* [ ] Think: how do we revert all fields in a datatable record? (try to update the example page `datatable.js`)
 
 * [ ] Update Font Awesome (later)
 * [ ] Unit tests (with Jest snapshots)
