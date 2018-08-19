@@ -79,7 +79,7 @@ type Props = {
 // Component
 // ==========================================
 class BaseSelectCustom extends React.Component<Props> {
-  fInitialised = false;
+  fInit = false;
   prevExtFocused: boolean;
   fFloat = false;
   floatId: ?string;
@@ -118,16 +118,21 @@ class BaseSelectCustom extends React.Component<Props> {
   }
 
   // ==========================================
-  render() {
-    // Process external prop changes (fFocused)
+  prepareRender() {
+    this.items = this.prepareItems(this.props.items, this.props.required);
+
+    // Only when props change
     const { fFocused } = this.props;
-    if (!this.fInitialised || fFocused !== this.prevExtFocused) {
+    if (!this.fInit || fFocused !== this.prevExtFocused) {
       this.prevExtFocused = fFocused;
       this.fFloat = fFocused;
     }
-    this.fInitialised = true;
+    this.fInit = true;
+  }
 
-    this.items = this.prepareItems(this.props.items, this.props.required);
+  // ==========================================
+  render() {
+    this.prepareRender();
     const { children } = this.props;
     let out;
     if (this.props.inlinePicker) {

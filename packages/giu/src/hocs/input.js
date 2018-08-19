@@ -138,7 +138,7 @@ const INPUT_HOC_INVALID_HTML_PROPS = [
 // HOC
 // ==========================================
 class Input extends React.PureComponent<Props> {
-  fInitialised = false;
+  fInit = false;
   prevExtValue: any;
   prevExtErrors: ?Array<string>;
   curValue: any;
@@ -216,26 +216,28 @@ class Input extends React.PureComponent<Props> {
   }
 
   // ==========================================
-  // Render
-  // ==========================================
-  render() {
-    const { hocOptions } = this.props;
-
-    // Process external prop changes (value, errors)
+  prepareRender() {
     const { value, errors } = this.props;
-    if (!this.fInitialised || value !== this.prevExtValue) {
-      const { toInternalValue = fnIdentity } = hocOptions;
+    if (!this.fInit || value !== this.prevExtValue) {
+      const { toInternalValue = fnIdentity } = this.props.hocOptions;
       this.curValue = toInternalValue(value, this.props);
       this.prevExtValue = value;
       this.fDirtyErrorFloat = true;
     }
-    if (!this.fInitialised || errors !== this.prevExtErrors) {
+    if (!this.fInit || errors !== this.prevExtErrors) {
       this.recalcErrors();
       this.prevExtErrors = errors;
       this.fDirtyErrorFloat = true;
     }
-    this.fInitialised = true;
+    this.fInit = true;
+  }
 
+  // ==========================================
+  // Render
+  // ==========================================
+  render() {
+    this.prepareRender();
+    const { hocOptions } = this.props;
     const { fIncludeFocusCapture } = hocOptions;
     return (
       <span

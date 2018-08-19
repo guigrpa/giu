@@ -57,7 +57,7 @@ type Props = {
 // Component
 // ==========================================
 class BaseColorInput extends React.Component<Props> {
-  fInitialised = false;
+  fInit = false;
   prevExtFocused: boolean;
   fFloat = false;
   floatId: ?string;
@@ -88,15 +88,18 @@ class BaseColorInput extends React.Component<Props> {
   }
 
   // ==========================================
-  render() {
-    // Process external prop changes (fFocused)
+  prepareRender() {
     const { fFocused } = this.props;
-    if (!this.fInitialised || fFocused !== this.prevExtFocused) {
+    if (!this.fInit || fFocused !== this.prevExtFocused) {
       this.prevExtFocused = fFocused;
       this.fFloat = fFocused;
     }
-    this.fInitialised = true;
+    this.fInit = true;
+  }
 
+  // ==========================================
+  render() {
+    this.prepareRender();
     return this.props.inlinePicker ? this.renderPicker() : this.renderTitle();
   }
 
