@@ -1,13 +1,4 @@
 {
   "presets": ["next/babel"],
-  "plugins": [
-    [
-      "transform-runtime",
-      {
-        "helpers": false,
-        "polyfill": false,
-        "regenerator": true
-      }
-    ]
-  ]
+  "plugins": ["transform-flow-strip-types"]
 }

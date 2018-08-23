@@ -20,7 +20,7 @@
     "marked": "^0.3.19",
     "material-design-lite": "^1.3.0",
     "moment": "^2.22.2",
-    "next": "^5.1.0",
+    "next": "^6.1.1",
     "prettier": "^1.14.2",
     "storyboard": "^3.1.4",
     "storyboard-preset-console": "^3.1.4",
@@ -34,5 +34,8 @@
   "_browser": "Prevent these from being included in the client bundle",
   "browser": {
     "extract-docs": false
+  },
+  "devDependencies": {
+    "babel-plugin-transform-flow-strip-types": "^6.22.0"
   }
 }
