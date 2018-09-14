@@ -17,10 +17,11 @@ type PublicProps = {
   registerOuterRef?: (ref: any) => void,
   id: string,
   index: number,
-  childProps?: Object,
   ChildComponent: ComponentType<*>,
-  onChangeHeight?: (id: string, height: number) => any,
+  childProps?: Object,
   top?: number,
+  onChangeHeight?: (id: string, height: number) => any,
+  staticPositioning: boolean,
 };
 
 type DefaultProps = {
@@ -49,16 +50,22 @@ class VerticalManager extends React.Component<Props> {
   }
 
   componentDidMount() {
-    this.asyncMeasureHeight();
-    window.addEventListener('resize', this.throttledMeasureHeight);
+    if (!this.props.staticPositioning) {
+      this.asyncMeasureHeight();
+      window.addEventListener('resize', this.throttledMeasureHeight);
+    }
   }
 
   componentDidUpdate() {
-    this.asyncMeasureHeight();
+    if (!this.props.staticPositioning) {
+      this.asyncMeasureHeight();
+    }
   }
 
   componentWillUnmount() {
-    window.removeEventListener('resize', this.throttledMeasureHeight);
+    if (!this.props.staticPositioning) {
+      window.removeEventListener('resize', this.throttledMeasureHeight);
+    }
   }
 
   measureHeight = () => {
@@ -81,6 +88,7 @@ class VerticalManager extends React.Component<Props> {
   // and the new height can be measured. Wait for the next tick
   // for things to stabilise before measuring.
   asyncMeasureHeight = () => {
+    if (this.props.staticPositioning) return;
     setImmediate(this.measureHeight);
   };
 
@@ -109,7 +117,7 @@ class VerticalManager extends React.Component<Props> {
           disabled={
             !childProps.fSortedManually ||
             childProps.disableDragging ||
-            this.props.top == null
+            (this.props.top == null && !this.props.staticPositioning)
           }
         />
       </div>
@@ -128,15 +136,22 @@ class VerticalManager extends React.Component<Props> {
 
 // ===============================================================
 const style = {
-  outer: ({ top }) => ({
-    position: 'absolute',
-    opacity: top != null ? 1 : 0,
-    zIndex: top != null ? undefined : -5000,
-    // transform: top != null ? `translateY(${top}px)` : undefined,
-    top: top != null ? Math.round(top) : undefined,
-    left: 0,
-    right: 0,
-  }),
+  outer: ({ staticPositioning, top }) => {
+    if (staticPositioning)
+      return {
+        position: 'relative',
+        zIndex: 0,
+      };
+    return {
+      position: 'absolute',
+      opacity: top != null ? 1 : 0,
+      zIndex: top != null ? undefined : -5000,
+      // transform: top != null ? `translateY(${top}px)` : undefined,
+      top: top != null ? Math.round(top) : undefined,
+      left: 0,
+      right: 0,
+    };
+  },
 };
 
 // ===============================================================

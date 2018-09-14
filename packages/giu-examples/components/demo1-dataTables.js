@@ -363,6 +363,27 @@ const SimpleExample = () => {
   );
 };
 
+const DATA_VARIABLE_HEIGHT_EXAMPLE = sampleDataTableItems(6, 0);
+const VariableHeightExample = () => {
+  if (DEBUG) return null;
+  const itemsById = DATA_VARIABLE_HEIGHT_EXAMPLE;
+  return (
+    <DataTable
+      itemsById={itemsById}
+      cols={[
+        { attr: 'id' },
+        { attr: 'name', minWidth: 100 },
+        { attr: 'phone', minWidth: 150 },
+        { attr: 'notes', minWidth: 100, flexGrow: 1 },
+      ]}
+      shownIds={Object.keys(itemsById)}
+      collectionName="variableHeightDataTableExample"
+      height={-1}
+      animated
+    />
+  );
+};
+
 // -----------------------------------------------
 // Example with uniform row heights
 // -----------------------------------------------
@@ -777,6 +798,11 @@ class AllExamples extends React.PureComponent<*, { fModal: boolean }> {
           <b>Simplest example</b>: leave everything to the DataTable component
         </p>
         <SimpleExample />
+
+        <p>
+          <b>Example without a fixed data-table height</b>
+        </p>
+        <VariableHeightExample />
 
         <p>
           Finally, you can also <b>embed a DataTable in a Modal</b>:{' '}

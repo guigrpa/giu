@@ -135,9 +135,11 @@ class VirtualScroller extends React.PureComponent<Props> {
   }
 
   componentDidMount() {
-    window.addEventListener('resize', this.throttledRecalcViewport);
-    this.recalcViewport(); // initial viewport measurement
-    this.checkRenderLastRow();
+    if (this.props.height >= 0) {
+      window.addEventListener('resize', this.throttledRecalcViewport);
+      this.recalcViewport(); // initial viewport measurement
+      this.checkRenderLastRow();
+    }
     this.timerCheckScrollbar = setInterval(
       this.checkScrollbar,
       CHECK_SCROLLBAR_PERIOD
@@ -145,15 +147,19 @@ class VirtualScroller extends React.PureComponent<Props> {
   }
 
   componentWillUnmount() {
-    window.removeEventListener('resize', this.throttledRecalcViewport);
+    if (this.props.height >= 0) {
+      window.removeEventListener('resize', this.throttledRecalcViewport);
+    }
     if (this.timerCheckScrollbar != null) {
       clearInterval(this.timerCheckScrollbar);
     }
   }
 
   componentDidUpdate() {
-    this.recalcViewport();
-    this.checkRenderLastRow();
+    if (this.props.height >= 0) {
+      this.recalcViewport();
+      this.checkRenderLastRow();
+    }
     if (this.pendingScrollToId != null) {
       const fSucceeded = this.doScrollToId(
         this.pendingScrollToId,
@@ -169,6 +175,7 @@ class VirtualScroller extends React.PureComponent<Props> {
   };
 
   recalcViewport = (ev: Object = {}) => {
+    if (this.props.height < 0) return;
     if (!this.refScroller.current) return;
     const { scrollTop, clientHeight } = this.refScroller.current;
     if (scrollTop !== this.scrollTop || clientHeight !== this.clientHeight) {
@@ -321,6 +328,7 @@ class VirtualScroller extends React.PureComponent<Props> {
   // scrollbar aproximates the real size. The estimation will get better and
   // better, as more rows get rendered
   renderSizer() {
+    if (this.props.height < 0) return null;
     const totalHeight =
       this.rowHeight != null
         ? this.rowHeight * this.props.shownIds.length
@@ -370,29 +378,35 @@ class VirtualScroller extends React.PureComponent<Props> {
 
   renderRow(idx: number, id: string) {
     // DEBUG && console.log(`VirtualScroller: rendering row ${id} (idx: ${idx})`);
-    const {
-      itemsById,
-      RowComponents,
-      commonRowProps,
-      getSpecificRowProps,
-    } = this.props;
+    const { itemsById, commonRowProps, getSpecificRowProps } = this.props;
     const { rowHeight } = this;
     const item = itemsById[id];
+
+    // Calculate vertical positioning props
     let top;
     let onChangeHeight;
-    if (rowHeight != null) {
-      top = idx * rowHeight;
+    let staticPositioning = false;
+    if (this.props.height >= 0) {
+      if (rowHeight != null) {
+        top = idx * rowHeight;
+      } else {
+        top = this.rowTops[id];
+        onChangeHeight = this.onChangeRowHeight;
+        if (!this.cachedHeights[id]) this.pendingHeights.push(id);
+      }
     } else {
-      top = this.rowTops[id];
-      onChangeHeight = this.onChangeRowHeight;
-      if (!this.cachedHeights[id]) this.pendingHeights.push(id);
+      staticPositioning = true;
     }
+
+    // Prepare other props
     const childProps = merge(
       { id, item },
       commonRowProps,
       getSpecificRowProps(id)
     );
+    const { RowComponents } = this.props;
     const RowComponent = RowComponents[id] || RowComponents[DEFAULT_ROW];
+
     return (
       <VerticalManager
         key={id}
@@ -405,6 +419,7 @@ class VirtualScroller extends React.PureComponent<Props> {
         childProps={childProps}
         top={top}
         onChangeHeight={onChangeHeight}
+        staticPositioning={staticPositioning}
       />
     );
   }
@@ -447,6 +462,7 @@ class VirtualScroller extends React.PureComponent<Props> {
   // Virtual list
   // ===============================================================
   recalcTops() {
+    if (this.props.height < 0) return;
     const { shownIds } = this.props;
     let top = 0;
     const numRows = shownIds.length;
@@ -478,6 +494,13 @@ class VirtualScroller extends React.PureComponent<Props> {
     // ------------------------------------------------------------
     if (!numRows) {
       this.trimAndSetRenderInterval(undefined, undefined);
+      return;
+    }
+
+    // 1.1 All rows
+    // ------------------------------------------------------------
+    if (height < 0) {
+      this.trimAndSetRenderInterval(0, numRows);
       return;
     }
 
@@ -636,10 +659,10 @@ const style = {
   scroller: ({ height, width, style: baseStyle }) =>
     merge(
       {
-        position: 'relative',
-        height,
+        position: height >= 0 ? 'relative' : undefined,
+        height: height >= 0 ? height : undefined,
         width,
-        overflowY: 'auto',
+        overflowY: height >= 0 ? 'auto' : undefined,
         overflowX: 'hidden',
       },
       baseStyle

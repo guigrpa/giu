@@ -1,3 +1,5 @@
+* DataTable: **support tables without a fixed height**.
+
 ## 0.16.0 (2018-8-19)
 
 * **Breaking**: `cmds` prop are no longer supported; use the imperative API instead (e.g. instead of passing down a `REVERT` command in `cmds`, call `revert()` on the corresponding input). See the docs for more details.
