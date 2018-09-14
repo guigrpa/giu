@@ -1,3 +1,5 @@
+## 0.16.1 (2018-9-14)
+
 * DataTable: **support tables without a fixed height**.
 
 ## 0.16.0 (2018-8-19)
