@@ -1,4 +1,6 @@
-module.exports = {
+const withCSS = require('@zeit/next-css');
+
+const config = {
   assetPrefix: process.env.BASE_URL ? `${process.env.BASE_URL}/` : '',
   exportPathMap: () => ({
     '/': { page: '/' },
@@ -9,3 +11,5 @@ module.exports = {
     '/play2': { page: '/play2' },
   }),
 };
+
+module.exports = withCSS(config);
