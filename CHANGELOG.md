@@ -1,3 +1,5 @@
+## 0.17.1 (2018-9-27)
+
 ## 0.17.0 (2018-9-27)
 
 * **Breaking**: some CSS now has to be included manually by the user (removed `styled-jsx` dependency). Include the CSS files from `giu/lib/css/*.css` that you need.
