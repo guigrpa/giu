@@ -146,24 +146,10 @@ class Modals extends React.PureComponent<Props> {
             {...props}
           />
         ))}
-        {STYLES}
       </div>
     );
   }
 }
-
-// ==========================================
-const STYLES = (
-  <style jsx global>{`
-    *,
-    *:before,
-    *:after {
-      -moz-box-sizing: border-box;
-      -webkit-box-sizing: border-box;
-      box-sizing: border-box;
-    }
-  `}</style>
-);
 
 // ==========================================
 // Public

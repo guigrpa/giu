@@ -204,7 +204,6 @@ class Floats extends React.PureComponent<Props> {
     return (
       <div className="giu-floats" style={style.outer}>
         {this.floats.map(this.renderFloat)}
-        {STYLES}
       </div>
     );
   }
@@ -363,18 +362,6 @@ const style = {
     return out;
   },
 };
-
-const STYLES = (
-  <style jsx global>{`
-    *,
-    *:before,
-    *:after {
-      -moz-box-sizing: border-box;
-      -webkit-box-sizing: border-box;
-      box-sizing: border-box;
-    }
-  `}</style>
-);
 
 // ==========================================
 // Warnings

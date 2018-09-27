@@ -450,7 +450,6 @@ class DataTable extends React.PureComponent<Props> {
         {MANAGE_FOCUS_AUTONOMOUSLY ? null : this.renderFocusCapture()}
         {this.props.showHeader && this.renderHeader()}
         {this.renderVirtualScroller()}
-        {STYLES}
       </div>
     );
   }
@@ -1056,25 +1055,6 @@ const style = {
     marginBottom: 2,
   },
 };
-
-const STYLES = (
-  <style jsx global>{`
-    /* Important transition, no only aesthetically. When a row's contents changes height
-  and it is not shown because it is above the viewport, wheneve the user scrolls up
-  to that row it will get rendered, report on its new height, and all of the subsequent
-  rows will get repositioned. This should happen slowly to avoid confusing jumps
-  while scrolling */
-    .giu-data-table.not-dragging.animated .giu-vertical-manager {
-      transition: top 300ms;
-    }
-
-    /* Just in case a DataTable lands on a Modal: make sure the dragged
-  row is drawn above the modal, not below */
-    .giu-data-table-dragged-row {
-      z-index: 50000;
-    }
-  `}</style>
-);
 
 // ==========================================
 // Public

@@ -26,9 +26,7 @@ class Backdrop extends React.PureComponent<Props> {
         {...this.props}
         className="giu-backdrop"
         style={style.backdrop(this.props)}
-      >
-        {STYLES}
-      </div>
+      />
     );
   }
 }
@@ -50,24 +48,6 @@ const style = {
       baseStyle
     ),
 };
-
-const STYLES = (
-  <style jsx global>{`
-    @keyframes appear {
-      from {
-        opacity: 0;
-      }
-      to {
-        opacity: 0.6;
-      }
-    }
-
-    .giu-backdrop {
-      animation: appear 300ms;
-      opacity: 0.6;
-    }
-  `}</style>
-);
 
 // ==========================================
 // Public
