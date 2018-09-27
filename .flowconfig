@@ -4,6 +4,7 @@
 <PROJECT_ROOT>/node_modules/fbjs
 <PROJECT_ROOT>/node_modules/jest/.*
 <PROJECT_ROOT>/node_modules/jest-html/.*
+<PROJECT_ROOT>/node_modules/jsonlint
 <PROJECT_ROOT>/packages/giu-examples/node_modules/npmconf/.*
 <PROJECT_ROOT>/packages/giu-examples/node_modules/config-chain/.*
 <PROJECT_ROOT>/packages/giu-examples/node_modules/babel-plugin-transform-react-remove-prop-types/.*
