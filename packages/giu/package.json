@@ -27,8 +27,7 @@
     "redux": "^4.0.0",
     "redux-thunk": "^2.3.0",
     "timm": "^1.6.1",
-    "tinycolor2": "1.4.1",
-    "unorm": "1.4.1"
+    "tinycolor2": "1.4.1"
   },
   "devDependencies": {
     "babel-cli": "6.26.0",
