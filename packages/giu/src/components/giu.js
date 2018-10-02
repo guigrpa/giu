@@ -11,7 +11,7 @@ import { ThemeContext, DEFAULT_THEME } from '../gral/themeContext';
 // ==========================================
 // -- A root component that can be used for custom themes.
 type Props = {
-  themeId: string | Object,
+  themeId?: string | Object,
   accentColor?: string,
   children: any,
 };
