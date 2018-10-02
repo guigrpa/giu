@@ -314,7 +314,7 @@ class VirtualScroller extends React.PureComponent<Props> {
       <div
         ref={this.refScroller}
         className="giu-virtual-scroller"
-        onWheel={cancelBodyScrolling}
+        onWheel={this.props.height >= 0 ? cancelBodyScrolling : undefined}
         onScroll={this.onScroll}
         style={style.scroller(this.props)}
       >

@@ -162,7 +162,7 @@ type PublicProps = {
 
   // Styles
   // ------
-  height?: number, // Body height (default: 200)
+  height?: number, // Body height (default: 200); set to -1 for 'whatever height is needed to show all rows'
   width?: number, // (default: default div block behaviour)
   rowHeight?: number, // Auto-calculated if unspecified
   uniformRowHeight?: boolean, // Are rows of the same height (even if unknown a priori)? (default: false)

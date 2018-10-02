@@ -1,3 +1,5 @@
+* DataTable: don't cancel wheel events when table height is not fixed (i.e. as long as required to show all rows).
+
 ## 0.17.1 (2018-9-27)
 
 ## 0.17.0 (2018-9-27)
