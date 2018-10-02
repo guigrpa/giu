@@ -1,4 +1,5 @@
 * DataTable: don't cancel wheel events when table height is not fixed (i.e. as long as required to show all rows).
+* Giu component: fix Flow definition (make `themeId` optional).
 
 ## 0.17.1 (2018-9-27)
 
