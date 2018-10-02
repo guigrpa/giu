@@ -11,7 +11,6 @@
 * **More tests on Android**
 * [ ] Think: how do we revert all fields in a datatable record? (try to update the example page `datatable.js`)
 * Use Portals?
-* [ ] Proof-of-concept with `giu-examples` with Next 6 and Babel 7
 * [ ] Update Font Awesome (later)
 * [ ] Unit tests (with Jest snapshots)
 
