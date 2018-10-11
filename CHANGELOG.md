@@ -1,3 +1,5 @@
+* DropDownMenu: add `styleListPicker` prop.
+
 ## 0.17.2 (2018-10-2)
 
 * DataTable: don't cancel wheel events when table height is not fixed (i.e. as long as required to show all rows).
