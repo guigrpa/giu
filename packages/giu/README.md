@@ -684,6 +684,7 @@ type PublicProps = {
     val: any // the item's `value` (as specified in the `items` prop)
   ) => any,
   style?: Object, // will be merged with the menu title's `div` wrapper
+  styleListPicker?: Object, // will be merged with the list picker's outer `div`
 
   // All other props are passed through to the Select input component
 };
