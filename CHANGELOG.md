@@ -1,3 +1,5 @@
+## 0.17.3 (2018-10-11)
+
 * DropDownMenu: add `styleListPicker` prop.
 
 ## 0.17.2 (2018-10-2)
