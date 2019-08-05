@@ -111,9 +111,9 @@ class ColorPicker extends React.PureComponent<Props, State> {
   fRgb: boolean;
 
   state = { mode: 'hsv', activeAttr: 'h' };
-  refAlphaSlider = React.createRef();
-  refColorSelector = React.createRef();
-  refAttrSlider = React.createRef();
+  refAlphaSlider: any = React.createRef();
+  refColorSelector: any = React.createRef();
+  refAttrSlider: any = React.createRef();
 
   componentWillUnmount() {
     window.removeEventListener('mousemove', this.onMouseMoveColorSelector);

@@ -528,7 +528,7 @@ const ValidationCustomValidator = () => (
 // }
 
 class ImperativeApi extends React.Component {
-  refInput = React.createRef();
+  refInput: any = React.createRef();
 
   render() {
     return (

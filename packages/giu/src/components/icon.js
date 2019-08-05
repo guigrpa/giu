@@ -49,7 +49,7 @@ const FILTERED_PROPS = [
 // Component
 // ==========================================
 class Icon extends React.PureComponent<Props> {
-  refIcon = React.createRef();
+  refIcon: any = React.createRef();
 
   componentDidMount() {
     if (this.props.theme.id === 'mdl' && this.refIcon.current) {

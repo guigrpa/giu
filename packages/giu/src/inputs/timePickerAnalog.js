@@ -72,7 +72,7 @@ class TimePickerAnalog extends React.PureComponent<Props, State> {
     hint: null,
     hovering: null,
   };
-  refSvg = React.createRef();
+  refSvg: any = React.createRef();
 
   componentWillUnmount() {
     window.removeEventListener('mousemove', this.onMouseMoveHand);

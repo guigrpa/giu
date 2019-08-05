@@ -150,7 +150,7 @@ class Input extends React.PureComponent<Props> {
   fFocused = false;
   refOuter: ?Object;
   refFocusable: ?Object;
-  refChild = React.createRef();
+  refChild: any = React.createRef();
 
   componentDidMount() {
     warnFloats(this.props.hocOptions.componentName);
@@ -478,7 +478,7 @@ class Input extends React.PureComponent<Props> {
     if (userValidators) {
       const extraValidators = {};
       let cnt = 0;
-      userValidators.forEach(validator => {
+      userValidators.forEach((validator: any) => {
         extraValidators[validator.id || `anon_${cnt}`] = validator;
         cnt += 1;
       });
@@ -496,7 +496,7 @@ class Input extends React.PureComponent<Props> {
 
     // If input is null (unallowed), get the corresponding message and bail out
     if (fIsNull) {
-      const validator = validators.isRequired || isRequired();
+      const validator: any = validators.isRequired || isRequired();
       if (validator.getErrorMessage) {
         pErrors.push(validator.getErrorMessage(internalValue));
       }

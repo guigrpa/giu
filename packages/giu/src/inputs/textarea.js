@@ -66,7 +66,7 @@ class BaseTextarea extends React.Component<Props> {
   refInput: ?Object;
   refOuter: ?Object;
 
-  refTaPlaceholder = React.createRef();
+  refTaPlaceholder: any = React.createRef();
 
   componentDidMount() {
     this.resize();

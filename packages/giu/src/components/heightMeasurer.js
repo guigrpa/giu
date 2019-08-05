@@ -21,7 +21,7 @@ type State = {
 // by its parents, e.g. a flex item with "overflow: hidden")
 class HeightMeasurer extends React.Component<Props, State> {
   state = { height: undefined };
-  refOuter = React.createRef();
+  refOuter: any = React.createRef();
 
   componentDidMount() {
     window.addEventListener('resize', this.throttledRecalcHeight);

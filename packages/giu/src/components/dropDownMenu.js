@@ -54,7 +54,7 @@ type State = {
 };
 
 class DropDownMenu extends React.PureComponent<Props, State> {
-  refSelect = React.createRef();
+  refSelect: any = React.createRef();
 
   state = { fFocused: false };
 

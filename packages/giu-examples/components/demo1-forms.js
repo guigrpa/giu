@@ -38,7 +38,7 @@ class FormExample extends React.Component<
   { lang: string },
   { fixedDate: Date }
 > {
-  refInput = React.createRef();
+  refInput: any = React.createRef();
 
   state = { fixedDate: new Date() };
 

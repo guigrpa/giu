@@ -59,7 +59,7 @@ const FILTERED_PROPS = [
 // Component
 // ==========================================
 class Button extends React.PureComponent<Props> {
-  refButton = React.createRef();
+  refButton: any = React.createRef();
 
   componentDidMount() {
     if (this.props.theme.id === 'mdl' && this.refButton.current) {

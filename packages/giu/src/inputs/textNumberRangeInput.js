@@ -78,7 +78,7 @@ const FILTERED_OUT_PROPS_MDL = FILTERED_OUT_PROPS.concat(['placeholder']);
 function createClass(componentName, inputType) {
   const BaseKlass = class extends React.Component<Props> {
     static displayName = componentName;
-    refMdl = React.createRef();
+    refMdl: any = React.createRef();
 
     componentDidMount() {
       if (this.props.theme.id === 'mdl' && this.refMdl.current) {

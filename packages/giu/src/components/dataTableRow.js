@@ -109,8 +109,8 @@ class DataTableHeader extends React.PureComponent<DataTableHeaderProps> {
           onClick={fAttrIsSortable ? this.onClick : undefined}
           style={style.headerCellClickable(fAttrIsSortable)}
         >
-          {finalLabel}
-          {elIcon}
+          {(finalLabel: any)}
+          {(elIcon: any)}
         </span>
       </div>
     );

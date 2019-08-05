@@ -86,7 +86,7 @@ class BaseSelectCustom extends React.Component<Props> {
   items: Array<Choice>;
   refTitle: ?Object;
 
-  refPicker = React.createRef();
+  refPicker: any = React.createRef();
 
   componentDidMount() {
     window.addEventListener('click', this.onClickWindow);

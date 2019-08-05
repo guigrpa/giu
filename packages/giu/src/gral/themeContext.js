@@ -13,7 +13,7 @@ const DEFAULT_THEME: Theme = {
   accentColor: COLORS.accent,
 };
 
-const ThemeContext = React.createContext(DEFAULT_THEME);
+const ThemeContext: any = React.createContext(DEFAULT_THEME);
 
 // ==========================================
 // Public

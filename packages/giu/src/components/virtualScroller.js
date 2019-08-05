@@ -97,7 +97,7 @@ class VirtualScroller extends React.PureComponent<Props> {
     estimatedMinRowHeight: Infinity,
     maxRowsToRenderInOneGo: 1000,
   };
-  refScroller = React.createRef();
+  refScroller: any = React.createRef();
 
   constructor(props: Props) {
     super(props);

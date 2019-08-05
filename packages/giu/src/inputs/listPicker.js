@@ -132,7 +132,7 @@ class ListPicker extends React.PureComponent<Props, State> {
     );
   }
 
-  renderContents() {
+  renderContents(): * {
     const { items } = this.props;
     if (
       !items.length ||

@@ -61,8 +61,8 @@ type Picker = 'date' | 'time';
 // ==========================================
 class DateTimePicker extends React.Component<Props, State> {
   refOuter: ?Object;
-  refDatePicker = React.createRef();
-  refTimePicker = React.createRef();
+  refDatePicker: any = React.createRef();
+  refTimePicker: any = React.createRef();
 
   constructor(props: Props) {
     super(props);

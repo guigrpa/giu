@@ -32,7 +32,7 @@ const FILTERED_PROPS = ['theme'];
 // Component
 // ==========================================
 class Progress extends React.PureComponent<Props> {
-  refMdl = React.createRef();
+  refMdl: any = React.createRef();
 
   componentDidMount() {
     const nodeMdl = this.refMdl.current;

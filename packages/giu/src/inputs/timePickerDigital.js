@@ -27,7 +27,7 @@ type Props = {
 // ==========================================
 class TimePickerDigital extends React.Component<Props> {
   timeItems: Array<Choice>;
-  refListPicker = React.createRef();
+  refListPicker: any = React.createRef();
 
   constructor(props: Props) {
     super(props);

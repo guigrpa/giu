@@ -201,8 +201,8 @@ class BaseDateInput extends React.Component<Props, State> {
   refInput: ?Object;
 
   state = { fFloat: false };
-  refPicker = React.createRef();
-  refMdl = React.createRef();
+  refPicker: any = React.createRef();
+  refMdl: any = React.createRef();
 
   constructor(props: Props) {
     super(props);
