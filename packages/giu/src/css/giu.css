@@ -332,3 +332,14 @@ row is drawn above the modal, not below */
   left: calc(-200px / 2);
   text-align: center;
 }
+
+/* ------------------------ */
+/* LargeMessage */
+/* ------------------------ */
+.giu-large-message {
+  font-size: 1.4em;
+  font-weight: 700;
+  color: var(--color-dim);
+  padding: 0.8em;
+  text-align: center;
+}
