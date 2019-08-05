@@ -24,7 +24,8 @@ body {
   --color-line-dim: #cccccc;
   --color-line-dark: black;
   --color-input-bg: white;
-  --color-accent: #6600cc;
+  --color-accent-bg: #6600cc;
+  --color-accent-fg: white;
   /* Notifs */
   --color-notif-info: white;
   --color-notif-success: #51a351;
@@ -86,14 +87,20 @@ body {
 }
 
 /* ------------------------ */
-/* DataTable */
+/* DataTable, VirtualScroller */
 /* ------------------------ */
+.giu-data-table {
+  max-width: 100%;
+  overflow-x: hidden;
+}
+
 /* Important transition, not only aesthetically. When a row's contents changes height
 and it is not shown because it is above the viewport, wheneve the user scrolls up
 to that row it will get rendered, report on its new height, and all of the subsequent
 rows will get repositioned. This should happen slowly to avoid confusing jumps
 while scrolling */
-.giu-data-table.not-dragging.animated .giu-vertical-manager {
+.giu-data-table.giu-data-table-not-dragging.giu-data-table-animated
+  .giu-vertical-manager {
   transition: top 300ms;
 }
 
@@ -101,4 +108,92 @@ while scrolling */
 row is drawn above the modal, not below */
 .giu-data-table-dragged-row {
   z-index: 50000;
+}
+
+.giu-virtual-scroller {
+  margin-top: 2px;
+  margin-bottom: 2px;
+}
+
+.giu-virtual-scroller .giu-virtual-scroller-sizer {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 1px;
+  opacity: 0;
+  z-index: -1;
+}
+
+/* ------------------------ */
+/* DataTableHeader, DataTableRow */
+/* ------------------------ */
+.giu-data-table-header {
+  display: flex;
+  flex-direction: row;
+  padding-bottom: 2px;
+  border-bottom: 1px solid var(--color-line);
+}
+
+.giu-data-table-header-cell {
+  font-weight: bold;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+  position: relative;
+  top: 0;
+  left: 0;
+  overflow-x: hidden;
+}
+.giu-data-table-header-cell-level-1,
+.giu-data-table-header-cell-level-2,
+.giu-data-table-header-cell-level-3 {
+  left: 16px;
+  overflow-x: visible;
+}
+.giu-data-table-header-cell-level-1 {
+  top: -15px;
+}
+.giu-data-table-header-cell-level-2 {
+  top: -30px;
+}
+.giu-data-table-header-cell-level-3 {
+  top: -45px;
+}
+.giu-data-table-header-cell-label-clickable {
+  cursor: pointer;
+}
+
+.giu-data-table-header-callout {
+  position: absolute;
+  right: 100%;
+  top: 7px;
+  stroke: var(--color-line);
+  stroke-width: 1px;
+  fill: none;
+}
+
+.giu-data-table-header-sort-icon {
+  margin-left: 5px;
+}
+
+.giu-data-table-row {
+  display: flex;
+  flex-direction: row;
+  padding-top: 1px;
+  padding-bottom: 1px;
+}
+
+.giu-data-table-row.giu-data-table-row-selected {
+  background-color: var(--color-accent-bg);
+  color: var(--color-accent-fg);
+}
+
+.giu-data-table-fetching-row {
+  margin-top: 1px;
+  margin-bottom: 2px;
+}
+
+.giu-data-table-cell {
+  padding-left: 2px;
+  padding-right: 2px;
 }

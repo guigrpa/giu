@@ -10,13 +10,11 @@ import {
   SortableHandle as sortableHandle,
   arrayMove,
 } from 'react-sortable-hoc';
+import classnames from 'classnames';
 import type { ScrollIntoViewOptions } from '../gral/visibility';
-import { COLORS, KEYS, IS_MOBILE_OR_TABLET } from '../gral/constants';
-import { isDark } from '../gral/styles';
+import { KEYS, IS_MOBILE_OR_TABLET } from '../gral/constants';
 import { cancelEvent, stopPropagation, simplifyString } from '../gral/helpers';
 import { localGet, localSet } from '../gral/storage';
-import { ThemeContext } from '../gral/themeContext';
-import type { Theme } from '../gral/themeContext';
 import { floatReposition } from './floats';
 import VirtualScroller, { DEFAULT_ROW } from './virtualScroller';
 import {
@@ -54,8 +52,15 @@ const DEFER_SCROLL_INTO_VIEW_AFTER_SORT_CHANGE_SLOW = 500;
 const DEFER_SCROLL_INTO_VIEW_AFTER_SORT_CHANGE_FAST = 150;
 const DEBUG = false && process.env.NODE_ENV !== 'production';
 
+// Don't move these inline styles to giu.css;
+// it causes problems with the dragged image of the row
 const DragHandle = sortableHandle(({ disabled }) => (
-  <Icon icon="bars" disabled={disabled} style={style.dragHandle} skipTheme />
+  <Icon
+    icon="bars"
+    disabled={disabled}
+    style={{ marginLeft: 4, marginRight: 3 }}
+    skipTheme
+  />
 ));
 
 const SortableDataTableRow = sortableElement(DataTableRow);
@@ -167,9 +172,6 @@ type PublicProps = {
   rowHeight?: number, // Auto-calculated if unspecified
   uniformRowHeight?: boolean, // Are rows of the same height (even if unknown a priori)? (default: false)
   showHeader?: boolean, // (default: true)
-  style?: Object,
-  styleHeader?: Object,
-  styleRow?: Object,
   animated?: boolean,
 
   // For VirtualScroller specifically
@@ -195,15 +197,9 @@ type DefaultProps = {
   height: number,
 };
 
-type UnthemedProps = {
-  ...$Exact<PublicProps>,
-};
-
 type Props = {
-  ...$Exact<UnthemedProps>,
+  ...$Exact<PublicProps>,
   ...$Exact<DefaultProps>,
-  // Context
-  theme: Theme,
 };
 
 class DataTable extends React.PureComponent<Props> {
@@ -219,7 +215,6 @@ class DataTable extends React.PureComponent<Props> {
   prevExtSelectedIds: ?Array<string>;
   prevExtFetchRowComponent: ?ComponentType<any>;
   prevExtAllowManualSorting: ?boolean;
-  prevExtAccentColor: ?string;
   cols: Array<DataTableColumn>;
   maxLabelLevel: number;
   scrollbarWidth = 0;
@@ -233,8 +228,6 @@ class DataTable extends React.PureComponent<Props> {
   selectedIds: Array<string>;
   prevSelectedIds: Array<string>;
   commonRowProps = {};
-  selectedBgColor: string;
-  selectedFgColor: string;
   fPendingInitialScrollIntoView: boolean;
   RowComponents: { [key: string]: ComponentType<any> };
   refVirtualScroller: ?Object;
@@ -313,7 +306,6 @@ class DataTable extends React.PureComponent<Props> {
       manuallyOrderedIds,
       selectedIds,
       FetchRowComponent,
-      theme,
     } = this.props;
     let fRecalcShownIds = false;
     if (!fInit || itemsById !== this.prevExtItemsById) {
@@ -376,10 +368,6 @@ class DataTable extends React.PureComponent<Props> {
       this.prevExtAllowManualSorting = allowManualSorting;
       this.recalcRowComponents();
     }
-    if (!fInit || theme.accentColor !== this.prevExtAccentColor) {
-      this.prevExtAccentColor = theme.accentColor;
-      this.recalcColors();
-    }
     this.fInit = true;
   }
 
@@ -412,13 +400,6 @@ class DataTable extends React.PureComponent<Props> {
     };
   }
 
-  recalcColors() {
-    const { accentColor } = this.props.theme;
-    this.selectedBgColor = accentColor;
-    this.selectedFgColor =
-      COLORS[isDark(accentColor) ? 'lightText' : 'darkText'];
-  }
-
   recalcShownIds() {
     let { shownIds } = this.props;
     shownIds = this.filter(shownIds);
@@ -433,19 +414,18 @@ class DataTable extends React.PureComponent<Props> {
     this.prepareRender();
     DEBUG && console.log('DataTable: rendering...');
 
-    // Class name
-    let className = `giu-data-table ${
-      this.fDragging ? 'dragging' : 'not-dragging'
-    }`;
-    if (this.props.animated) className += ' animated';
-
     // Render
     return (
       <div
         ref={this.refOuter}
-        className={className}
+        className={classnames(
+          'giu-data-table',
+          this.fDragging
+            ? 'giu-data-table-dragging'
+            : 'giu-data-table-not-dragging',
+          { 'giu-data-table-animated': this.props.animated }
+        )}
         onClick={this.onClickOuter}
-        style={style.outer(this.props)}
       >
         {MANAGE_FOCUS_AUTONOMOUSLY ? null : this.renderFocusCapture()}
         {this.props.showHeader && this.renderHeader()}
@@ -479,7 +459,6 @@ class DataTable extends React.PureComponent<Props> {
         onClick={
           this.props.headerClickForSorting ? this.onClickHeader : undefined
         }
-        style={this.props.styleHeader}
       />
     );
   }
@@ -500,9 +479,6 @@ class DataTable extends React.PureComponent<Props> {
       commonCellProps: this.props.commonCellProps,
       onClick: this.props.allowSelect ? this.onClickRow : undefined,
       onDoubleClick: this.props.onRowDoubleClick,
-      style: this.props.styleRow,
-      selectedBgColor: this.selectedBgColor,
-      selectedFgColor: this.selectedFgColor,
     });
 
     // Get the ordered list of IDs to be shown
@@ -533,7 +509,6 @@ class DataTable extends React.PureComponent<Props> {
         estimatedMinRowHeight={this.props.estimatedMinRowHeight}
         maxRowsToRenderInOneGo={this.props.maxRowsToRenderInOneGo}
         emptyIndicator={this.props.emptyIndicator}
-        style={style.scroller}
         // For the sortable variant...
         useDragHandle={allowManualSorting ? true : undefined}
         onSortStart={allowManualSorting ? this.onDragStart : undefined}
@@ -1025,39 +1000,7 @@ class DataTable extends React.PureComponent<Props> {
 }
 
 // ==========================================
-// Theme
-// ==========================================
-// $FlowFixMe
-const ThemedDataTable = React.forwardRef((props: UnthemedProps, ref) => (
-  <ThemeContext.Consumer>
-    {theme => <DataTable {...props} theme={theme} ref={ref} />}
-  </ThemeContext.Consumer>
-));
-
-// ==========================================
-// Styles
-// ==========================================
-const style = {
-  outer: ({ style: baseStyle }) =>
-    merge(
-      {
-        maxWidth: '100%',
-        overflowX: 'hidden',
-      },
-      baseStyle
-    ),
-  dragHandle: {
-    marginLeft: 4,
-    marginRight: 3,
-  },
-  scroller: {
-    marginTop: 2,
-    marginBottom: 2,
-  },
-};
-
-// ==========================================
 // Public
 // ==========================================
-export default ThemedDataTable;
+export default DataTable;
 export { SORT_MANUALLY };

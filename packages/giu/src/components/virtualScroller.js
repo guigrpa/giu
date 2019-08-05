@@ -47,8 +47,6 @@ type PublicProps = {
   maxRowsToRenderInOneGo?: number,
 
   emptyIndicator?: any,
-
-  style?: Object,
 };
 
 type DefaultProps = {
@@ -334,7 +332,12 @@ class VirtualScroller extends React.PureComponent<Props> {
         ? this.rowHeight * this.props.shownIds.length
         : this.totalHeight;
     // DEBUG && console.log(`VirtualScroller: totalHeight: ${totalHeight}`);
-    return <div style={style.sizer(totalHeight)} />;
+    return (
+      <div
+        className="giu-virtual-scroller-sizer"
+        style={style.sizer(totalHeight)}
+      />
+    );
   }
 
   renderRows() {
@@ -656,26 +659,14 @@ class VirtualScroller extends React.PureComponent<Props> {
 
 // ===============================================================
 const style = {
-  scroller: ({ height, width, style: baseStyle }) =>
-    merge(
-      {
-        position: height >= 0 ? 'relative' : undefined,
-        height: height >= 0 ? height : undefined,
-        width,
-        overflowY: height >= 0 ? 'auto' : undefined,
-        overflowX: 'hidden',
-      },
-      baseStyle
-    ),
-  sizer: totalHeight => ({
-    position: 'absolute',
-    top: 0,
-    left: 0,
-    right: 0,
-    height: totalHeight != null ? totalHeight : 1,
-    opacity: 0,
-    zIndex: -1,
+  scroller: ({ height, width }) => ({
+    position: height >= 0 ? 'relative' : undefined,
+    height: height >= 0 ? height : undefined,
+    width,
+    overflowY: height >= 0 ? 'auto' : undefined,
+    overflowX: 'hidden',
   }),
+  sizer: height => ({ height: height || undefined }),
 };
 
 // ===============================================================

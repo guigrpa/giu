@@ -7,6 +7,7 @@ import type { Element as ReactElement } from 'react';
 import { merge } from 'timm';
 import upperFirst from 'lodash/upperFirst';
 import isFunction from 'lodash/isFunction';
+import classnames from 'classnames';
 import { flexContainer } from '../gral/styles';
 import { COLORS } from '../gral/constants';
 import Spinner from './spinner';
@@ -78,7 +79,10 @@ type DataTableHeaderProps = {
 class DataTableHeader extends React.PureComponent<DataTableHeaderProps> {
   render() {
     return (
-      <div style={style.headerOuter(this.props)}>
+      <div
+        className="giu-data-table-header"
+        style={style.headerOuter(this.props)}
+      >
         {this.props.cols.map(this.renderColHeader, this)}
       </div>
     );
@@ -102,12 +106,25 @@ class DataTableHeader extends React.PureComponent<DataTableHeaderProps> {
       ? this.renderSortIcon(this.props.sortDescending)
       : undefined;
     return (
-      <div key={attr} id={attr} style={style.headerCell(idxCol, col)}>
+      <div
+        key={attr}
+        id={attr}
+        className={classnames(
+          'giu-data-table-header-cell',
+          'giu-data-table-cell',
+          `giu-data-table-header-cell-level-${col.labelLevel || 0}`
+        )}
+        style={style.rowCell(idxCol, col)}
+      >
         {labelLevel && this.renderCallOut(labelLevel)}
         <span
           id={attr}
           onClick={fAttrIsSortable ? this.onClick : undefined}
-          style={style.headerCellClickable(fAttrIsSortable)}
+          className={
+            fAttrIsSortable
+              ? 'giu-data-table-header-cell-label-clickable'
+              : undefined
+          }
         >
           {(finalLabel: any)}
           {(elIcon: any)}
@@ -117,18 +134,11 @@ class DataTableHeader extends React.PureComponent<DataTableHeaderProps> {
   }
 
   renderCallOut(level: number) {
-    const h = 8 + 15 * level;
-    const w = 5;
-    const d = `M0,${h} l0,-${h} l${w},0`;
-    const { style: baseStyle } = this.props;
+    const height = 8 + 15 * level;
+    const width = 5;
+    const d = `M0,${height} l0,-${height} l${width},0`;
     return (
-      <svg
-        style={style.headerCallOut({
-          width: w,
-          height: h,
-          stroke: baseStyle ? baseStyle.color : undefined,
-        })}
-      >
+      <svg className="giu-data-table-header-callout" style={{ width, height }}>
         <path d={d} />
       </svg>
     );
@@ -136,7 +146,9 @@ class DataTableHeader extends React.PureComponent<DataTableHeaderProps> {
 
   renderSortIcon(fDescending: boolean) {
     const icon = fDescending ? 'caret-down' : 'caret-up';
-    return <Icon icon={icon} style={style.headerSortIcon} skipTheme />;
+    return (
+      <Icon className="giu-data-table-header-sort-icon" icon={icon} skipTheme />
+    );
   }
 
   // ===============================================================
@@ -160,7 +172,6 @@ type DataTableRowProps = {
   commonCellProps?: Object,
   onClick: (ev: SyntheticEvent<*>, id: string) => any,
   onDoubleClick: (ev: SyntheticEvent<*>, id: string) => any,
-  style?: Object,
   selectedBgColor: string,
   selectedFgColor: string,
   onMayHaveChangedHeight: () => any,
@@ -178,10 +189,12 @@ class DataTableRow extends React.PureComponent<DataTableRowProps> {
     DEBUG && console.log(`Rendering row ${id}...`);
     return (
       <div
+        className={classnames('giu-data-table-row', {
+          'giu-data-table-row-selected': this.props.isItemSelected,
+        })}
         onFocus={this.onClick}
         onClick={this.onClick}
         onDoubleClick={this.onDoubleClick}
-        style={style.rowOuter(this.props)}
       >
         {this.props.cols.map(this.renderCell, this)}
       </div>
@@ -211,7 +224,11 @@ class DataTableRow extends React.PureComponent<DataTableRowProps> {
       value = item[attr];
     }
     return (
-      <div key={attr} style={style.rowCell(idxCol, col)}>
+      <div
+        key={attr}
+        className="giu-data-table-cell"
+        style={style.rowCell(idxCol, col)}
+      >
         {value}
       </div>
     );
@@ -233,7 +250,7 @@ class DataTableRow extends React.PureComponent<DataTableRowProps> {
 // Other components
 // ===============================================================
 const DataTableFetchingRow = () => (
-  <div style={style.fetchingRow}>
+  <div className="giu-data-table-fetching-row">
     <Spinner size="lg" />
   </div>
 );
@@ -242,98 +259,22 @@ const DataTableFetchingRow = () => (
 // Styles
 // ===============================================================
 const style = {
-  rowOuterBase: flexContainer('row'),
-  rowOuter: ({
-    selectedBgColor,
-    selectedFgColor,
-    style: baseStyle,
-    isItemSelected,
-  }) => {
-    const out = merge(
-      style.rowOuterBase,
-      {
-        paddingTop: 1,
-        paddingBottom: 1,
-      },
-      baseStyle
-    );
-    if (isItemSelected) {
-      out.backgroundColor = selectedBgColor;
-      out.color = selectedFgColor;
-    }
-    return out;
-  },
-  fetchingRow: {
-    marginTop: 1,
-    marginBottom: 2,
-  },
-  headerOuter: ({ maxLabelLevel, scrollbarWidth, style: baseStyle }) =>
-    merge(
-      flexContainer('row', {
-        paddingRight: scrollbarWidth,
-        paddingTop: 2 + 15 * maxLabelLevel,
-        paddingBottom: 2,
-        borderBottom: `1px solid ${COLORS.line}`,
-      }),
-      baseStyle
-    ),
+  headerOuter: ({ maxLabelLevel, scrollbarWidth }) => ({
+    paddingRight: scrollbarWidth,
+    paddingTop: 2 + 15 * maxLabelLevel,
+  }),
   rowCell: (
     idxCol: number,
-    {
-      hidden,
-      minWidth = 50,
-      flexGrow,
-      flexShrink,
-      style: baseStyle,
-    }: DataTableColumn
+    { hidden, minWidth = 50, flexGrow, flexShrink }: DataTableColumn
   ) => {
     if (hidden) return { display: 'none' };
     const flexValue = `${flexGrow || 0} ${flexShrink || 0} ${minWidth}px`;
-    return merge(
-      {
-        flex: flexValue,
-        WebkitFlex: flexValue,
-        maxWidth: flexGrow ? undefined : minWidth,
-        paddingLeft: 2,
-        paddingRight: 2,
-      },
-      baseStyle
-    );
-  },
-  headerCell: (idxCol, col) => {
-    const level = col.labelLevel || 0;
-    let out = {
-      fontWeight: 'bold',
-      whiteSpace: 'nowrap',
-      textOverflow: 'ellipsis',
+    return {
+      flex: flexValue,
+      WebkitFlex: flexValue,
+      maxWidth: flexGrow ? undefined : minWidth,
     };
-    out = merge(out, style.rowCell(idxCol, col));
-    if (level) {
-      out.position = 'relative';
-      out.top = -15 * level;
-      out.left = 16;
-      out.overflowX = 'visible';
-    } else {
-      out.overflowX = 'hidden';
-    }
-    return out;
   },
-  headerCellClickable: fEnableHeaderClicks => ({
-    cursor: fEnableHeaderClicks ? 'pointer' : undefined,
-  }),
-  headerCallOut: base =>
-    merge(
-      {
-        position: 'absolute',
-        right: '100%',
-        top: 7,
-        stroke: COLORS.line,
-        strokeWidth: 1,
-        fill: 'none',
-      },
-      base
-    ),
-  headerSortIcon: { marginLeft: 5 },
 };
 
 // ===============================================================

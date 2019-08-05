@@ -2,6 +2,7 @@
 
 import React from 'react';
 import { merge, omit } from 'timm';
+import classnames from 'classnames';
 import { COLORS } from '../gral/constants';
 import { ThemeContext } from '../gral/themeContext';
 import type { Theme } from '../gral/themeContext';
@@ -15,6 +16,7 @@ const SPINNER_ICON = 'circle-o-notch';
 // --
 // -- START_DOCS
 type PublicProps = {
+  className?: string,
   icon: string, // e.g. `ambulance`, `cogs`...
   size?: 'lg' | '2x' | '3x' | '4x' | '5x',
   fixedWidth?: boolean,
@@ -35,6 +37,7 @@ type Props = {
 };
 
 const FILTERED_PROPS = [
+  'className',
   'icon',
   'size',
   'fixedWidth',
@@ -65,10 +68,18 @@ class Icon extends React.PureComponent<Props> {
     const { icon, spin, disabled } = this.props;
     const otherProps = omit(this.props, FILTERED_PROPS);
     if (disabled) otherProps.onClick = undefined;
-    let className = `giu-icon fa fa-${icon}`;
-    if (icon === SPINNER_ICON || spin) className += ' fa-spin';
     return (
-      <i className={className} {...otherProps} style={style.icon(this.props)} />
+      <i
+        className={classnames(
+          'giu-icon',
+          'fa',
+          `fa-${icon}`,
+          { 'fa-spin': icon === SPINNER_ICON || spin },
+          this.props.className
+        )}
+        {...otherProps}
+        style={style.icon(this.props)}
+      />
     );
   }
 
