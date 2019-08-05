@@ -1,7 +1,10 @@
 # Roadmap
 
 * Use plain old CSS stylesheets (customisable!), instead of element CSS:
-    * Remove theme
+    * Example customisation of CSS variable
+    * Remove theme object (when all elements using it are migrated)
+    * DropDownMenu: remove style props (when Select is updated)
+
 
 * **Bugs**
     * Main docs: inline textareas: misaligned

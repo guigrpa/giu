@@ -693,6 +693,7 @@ class AppWrapper extends React.Component {
             padding: 10px;
             margin: 0;
             background: #f9fff2;
+            // --color-accent-bg: gray;
           }
         `}</style>
       </div>
