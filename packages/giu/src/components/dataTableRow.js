@@ -8,8 +8,6 @@ import { merge } from 'timm';
 import upperFirst from 'lodash/upperFirst';
 import isFunction from 'lodash/isFunction';
 import classnames from 'classnames';
-import { flexContainer } from '../gral/styles';
-import { COLORS } from '../gral/constants';
 import Spinner from './spinner';
 import Icon from './icon';
 
@@ -57,7 +55,6 @@ export type DataTableColumn = {
   minWidth?: number,
   flexGrow?: number,
   flexShrink?: number,
-  style?: Object, // Mixed with each row/header cell's outer div
 };
 /* -- END_DOCS -- */
 
@@ -73,7 +70,6 @@ type DataTableHeaderProps = {
   sortBy: ?string,
   sortDescending: boolean,
   onClick?: (attr: string) => any,
-  style?: Object,
 };
 
 class DataTableHeader extends React.PureComponent<DataTableHeaderProps> {
@@ -172,8 +168,6 @@ type DataTableRowProps = {
   commonCellProps?: Object,
   onClick: (ev: SyntheticEvent<*>, id: string) => any,
   onDoubleClick: (ev: SyntheticEvent<*>, id: string) => any,
-  selectedBgColor: string,
-  selectedFgColor: string,
   onMayHaveChangedHeight: () => any,
 };
 
