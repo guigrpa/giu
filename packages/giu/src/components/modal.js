@@ -1,10 +1,10 @@
 // @flow
 
 import React from 'react';
-import { merge } from 'timm';
-import { KEYS, MISC } from '../gral/constants';
+import classnames from 'classnames';
+import { KEYS } from '../gral/constants';
 import { cancelEvent, cancelBodyScrolling } from '../gral/helpers';
-import { flexContainer, flexItem, boxWithShadow } from '../gral/styles';
+import { flexItem } from '../gral/styles';
 import { ThemeContext } from '../gral/themeContext';
 import type { Theme } from '../gral/themeContext';
 import Button from './button';
@@ -54,14 +54,8 @@ class ModalExample extends React.Component {
 ```
 -- */
 
-type DefaultProps = {|
-  buttons: Array<ModalButton>,
-  zIndex: number,
-|};
-
 type Props = {
   ...ModalPars,
-  ...DefaultProps,
   // Context
   theme: Theme,
 };
@@ -71,11 +65,6 @@ type Props = {
 // ==========================================
 class Modal extends React.PureComponent<Props> {
   refFocusCapture: any;
-
-  static defaultProps: DefaultProps = {
-    buttons: ([]: Array<ModalButton>),
-    zIndex: MISC.zModalBase,
-  };
 
   // ==========================================
   // Imperative API
@@ -92,7 +81,6 @@ class Modal extends React.PureComponent<Props> {
         id={this.props.id}
         onKeyDown={this.onKeyDown}
         onClick={this.onClickOuter}
-        style={style.outer(this.props.zIndex)}
       >
         {this.renderBackdrop()}
         {this.renderModal()}
@@ -105,14 +93,14 @@ class Modal extends React.PureComponent<Props> {
   }
 
   renderModal() {
-    const { title, children, buttons, style: baseStyle } = this.props;
+    const { title, children, buttons } = this.props;
     return (
-      <div style={style.modalWrapper}>
+      <div className="giu-modal-position">
         {this.renderSpacer()}
         <div
+          className="giu-modal-box giu-box-shadow"
           onWheel={cancelBodyScrolling}
           onScroll={floatReposition}
-          style={merge(style.modal, baseStyle)}
         >
           <FocusCapture
             registerRef={c => {
@@ -130,7 +118,7 @@ class Modal extends React.PureComponent<Props> {
   }
 
   renderTitle(title: string) {
-    return <div style={style.title}>{title}</div>;
+    return <div className="giu-modal-title">{title}</div>;
   }
 
   renderSpacer() {
@@ -146,28 +134,32 @@ class Modal extends React.PureComponent<Props> {
 
   renderButtons(buttons: Array<ModalButton>) {
     return (
-      <div style={style.buttons}>
+      <div className="giu-modal-buttons">
         {buttons.filter(o => !!o.left).map(this.renderButton)}
-        <div style={flexItem(1)} />
+        <div className="giu-flex-space" />
         {buttons.filter(o => !o.left).map(this.renderButton)}
       </div>
     );
   }
 
   renderButton = (btn: ModalButton, idx: number) => {
-    const { theme } = this.context;
+    const isMdl = this.props.theme.id === 'mdl';
     return (
       <Button
         key={idx}
         onClick={btn.onClick}
-        style={style.button(btn, theme)}
+        className={classnames('giu-modal-button', {
+          'giu-modal-button-default': btn.defaultButton && !isMdl,
+          'giu-modal-button-left': btn.left,
+          'giu-modal-button-right': !btn.left,
+        })}
         colored
         disabled={btn.disabled}
-        primary={theme === 'mdl' && btn.defaultButton ? true : undefined}
+        primary={true}
         plain={
           btn.plain != null
             ? btn.plain
-            : theme === 'mdl' && !btn.defaultButton
+            : isMdl && !btn.defaultButton
               ? true
               : undefined
         }
@@ -186,7 +178,7 @@ class Modal extends React.PureComponent<Props> {
         if (this.props.onEsc) this.props.onEsc(ev);
         break;
       case KEYS.return: {
-        const { buttons } = this.props;
+        const { buttons = [] } = this.props;
         for (let i = 0; i < buttons.length; i++) {
           const button = buttons[i];
           if (button.defaultButton && button.onClick) {
@@ -224,50 +216,6 @@ const ThemedModal = React.forwardRef((props, ref) => (
     {theme => <Modal {...props} theme={theme} ref={ref} />}
   </ThemeContext.Consumer>
 ));
-
-// ==========================================
-const style = {
-  outer: zIndex => ({
-    position: 'fixed',
-    top: 0,
-    left: 0,
-    width: '100vw',
-    height: '100vh',
-    zIndex,
-  }),
-  modalWrapper: flexContainer('row', {
-    position: 'fixed',
-    top: '5vh',
-    left: 0,
-    width: '100%',
-  }),
-  modal: boxWithShadow({
-    maxHeight: '90vh',
-    overflowY: 'auto',
-    padding: 20,
-  }),
-  title: {
-    marginBottom: 10,
-    // borderBottom: `1px solid ${COLORS.line}`,
-    paddingBottom: 10,
-    fontWeight: 'bold',
-    fontSize: '1.5em',
-  },
-  buttons: flexContainer('row', {
-    marginTop: 10,
-    // borderTop: `1px solid ${COLORS.line}`,
-    paddingTop: 10,
-  }),
-  button: ({ left, defaultButton, style: baseStyle }, theme) =>
-    merge(
-      {
-        marginRight: left ? 5 : undefined,
-        marginLeft: left ? undefined : 5,
-        border: !theme && defaultButton ? '1px solid black' : undefined,
-      },
-      baseStyle
-    ),
-};
 
 // ==========================================
 // Public

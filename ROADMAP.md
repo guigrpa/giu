@@ -4,6 +4,8 @@
     * Remove accentColor from theme object (when all elements using it are migrated)
     * DropDownMenu: remove style props (when Select is updated)
     * Remove HIDDEN_FOCUS_CAPTURE, HIDDEN_FOCUS_CAPTURE_IOS once they're no longer used
+    * Make sure all elements have optional id's (for configuration)
+    * Clean up examples, using CSS
 
 * **Bugs**
     * Main docs: inline textareas: misaligned

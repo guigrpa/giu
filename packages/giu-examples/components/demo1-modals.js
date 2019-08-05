@@ -46,6 +46,10 @@ class ModalExample extends React.Component<{ theme: Theme }, { fEmbeddedModal: b
           Embed modal
         </Button>
         {this.state.fEmbeddedModal && this.renderEmbeddedModal()}
+        <style jsx global>{`
+          .giu-modal#modal-introduction { z-index: 70 }
+          .giu-modal#modal-introduction .giu-modal-box { width: 500px }
+        `}</style>
       </div>
     );
   }
@@ -65,6 +69,7 @@ class ModalExample extends React.Component<{ theme: Theme }, { fEmbeddedModal: b
     ];
     return (
       <Modal
+        id="modal-embedded"
         title="Embedded modal"
         buttons={buttons}
         onClickBackdrop={close}
@@ -146,6 +151,7 @@ class ModalExample extends React.Component<{ theme: Theme }, { fEmbeddedModal: b
     );
     modalPush({
       title,
+      id: 'modal-whats-your-name',
       children,
       buttons: [
         {
@@ -178,11 +184,11 @@ class ModalExample extends React.Component<{ theme: Theme }, { fEmbeddedModal: b
       </div>
     );
     modalPush({
+      id: 'modal-introduction',
       title,
       children,
       buttons: [{ label: 'Back', onClick: modalPop, defaultButton: true }],
       onEsc: modalPop,
-      style: { width: 500 },
     });
   }
 }

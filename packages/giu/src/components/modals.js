@@ -5,8 +5,7 @@
 import React from 'react';
 import { createStore } from 'redux';
 import type { Reducer } from 'redux';
-import { addLast, removeAt, set as timmSet } from 'timm';
-import { MISC } from '../gral/constants';
+import { addLast, removeAt, addDefaults } from 'timm';
 import type { Action } from '../gral/types';
 import Modal from './modal';
 import type { ModalPars } from './modalTypes';
@@ -34,7 +33,7 @@ class ModalExample extends React.Component {
     const deleteItem = () => { alert('deleted!'); modalPop(); }
     const buttons = [
       { label: 'Close', onClick: modalPop, defaultButton: true },
-      { label: 'Delete', onClick: deleteItem, style: { backgroundColor: 'red' } },
+      { label: 'Delete', onClick: deleteItem },
     ];
     modalPush({ children, buttons, onEsc: modalPop });
   }
@@ -79,10 +78,12 @@ const reducer: Reducer<State, Action> = (state0 = INITIAL_STATE, action) => {
 // ==========================================
 let cntId = 0;
 const actions = {
-  modalPush: (pars: ModalPars) => ({
-    type: 'MODAL_PUSH',
-    pars: timmSet(pars, 'id', `modal_${cntId++}`),
-  }),
+  modalPush: (initialPars: ModalPars) => {
+    const id = `modal_${cntId}`;
+    cntId += 1;
+    const pars = addDefaults(initialPars, { id });
+    return { type: 'MODAL_PUSH', pars };
+  },
   modalPop: () => ({ type: 'MODAL_POP' }),
 };
 
@@ -142,7 +143,6 @@ class Modals extends React.PureComponent<Props> {
             ref={c => {
               this.refModals[idx] = c;
             }}
-            zIndex={MISC.zModalBase + idx * MISC.zModalStep}
             {...props}
           />
         ))}

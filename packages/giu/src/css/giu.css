@@ -39,6 +39,10 @@ body {
   box-shadow: 0 3px 6px rgba(0, 0, 0, 0.16), 0 3px 6px rgba(0, 0, 0, 0.23);
 }
 
+.giu-flex-space {
+  flex: 1 0 0px;
+}
+
 /* ======================== */
 /* Components */
 /* ======================== */
@@ -273,6 +277,7 @@ row is drawn above the modal, not below */
   left: 0;
   width: 100vw;
   height: 100vh;
+  z-index: 50;
 }
 
 .giu-hint-screen .giu-backdrop {
@@ -407,4 +412,53 @@ row is drawn above the modal, not below */
   color: var(--color-dim);
   padding: 0.8em;
   text-align: center;
+}
+
+/* ------------------------ */
+/* Modal */
+/* ------------------------ */
+.giu-modal {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  z-index: 50;
+}
+
+.giu-modal-position {
+  display: flex;
+  position: fixed;
+  top: 5vh;
+  left: 0;
+  width: 100%;
+}
+
+.giu-modal-box {
+  max-height: 90vh;
+  overflow-y: auto;
+  padding: 20px;
+}
+
+.giu-modal-title {
+  margin-bottom: 10px;
+  padding-bottom: 10px;
+  font-weight: bold;
+  font-size: 1.5em;
+}
+
+.giu-modal-buttons {
+  display: flex;
+  margin-top: 10px;
+  padding-top: 10px;
+}
+
+.giu-modal-button.giu-modal-button-default {
+  border: 1px solid black;
+}
+.giu-modal-button.giu-modal-button-left {
+  margin-right: 5px;
+}
+.giu-modal-button.giu-modal-button-right {
+  margin-left: 5px;
 }

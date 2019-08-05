@@ -19,7 +19,6 @@ export type ModalPars = {|
   // merge with the modal's `div` style, e.g. to
   // fix a modal width or background color
   style?: Object,
-  zIndex?: number,
 |};
 
 export type ModalButton = {|
@@ -29,7 +28,6 @@ export type ModalButton = {|
   plain?: boolean,
   defaultButton?: boolean, // will be highlighted and automatically selected when RETURN is pressed
   onClick?: (ev: SyntheticEvent<*>) => any, // `click` handler for the button
-  style?: Object, // merged with the button's style
   accent?: boolean, // accent style (use it with MDL theme)
 |};
 // -- END_DOCS
