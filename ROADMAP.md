@@ -1,5 +1,8 @@
 # Roadmap
 
+* Use plain old CSS stylesheets (customisable!), instead of element CSS:
+    * Remove theme
+
 * **Bugs**
     * Main docs: inline textareas: misaligned
     * Android Select: when item is selected, it retains focus
