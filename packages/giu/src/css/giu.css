@@ -1,22 +1,42 @@
-/* ------------------------ */
-/* Allows tap/click events on `window` (or its non-anchor descendants)
+/* ======================== */
+/* General */
+/* ======================== */
+/* Allow tap/click events on `window` (or its non-anchor descendants)
  to be detected by Giu components, e.g. to close floats */
-/* ------------------------ */
 @media handheld {
   * {
     cursor: pointer;
   }
 }
-
 @media screen and (max-width: 500px) {
   * {
     cursor: pointer;
   }
 }
 
+/* ======================== */
+/* Components */
+/* ======================== */
+
 /* ------------------------ */
 /* Backdrop */
 /* ------------------------ */
+.giu-backdrop {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  background-color: white;
+  animation: giu-appear 300ms;
+  opacity: 0.6;
+}
+
+.giu-backdrop.ios {
+  width: 110vw;
+  height: 110vh;
+}
+
 @keyframes giu-appear {
   from {
     opacity: 0;
@@ -26,15 +46,10 @@
   }
 }
 
-.giu-backdrop {
-  animation: giu-appear 300ms;
-  opacity: 0.6;
-}
-
 /* ------------------------ */
 /* DataTable */
 /* ------------------------ */
-/* Important transition, no only aesthetically. When a row's contents changes height
+/* Important transition, not only aesthetically. When a row's contents changes height
 and it is not shown because it is above the viewport, wheneve the user scrolls up
 to that row it will get rendered, report on its new height, and all of the subsequent
 rows will get repositioned. This should happen slowly to avoid confusing jumps

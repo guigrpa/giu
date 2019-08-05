@@ -8,7 +8,7 @@
     "compile:clean": "rm -rf ./lib",
     "compile:copy": "../../node_modules/.bin/flow-copy-source src lib",
     "compile:css": "cp -r src/css lib/",
-    "compile:run": "babel src --out-dir lib",
+    "compile:run": "babel src --out-dir lib --copy-files",
     "compile:runWatch": "yarn compile:run --watch"
   },
   "engines": {
@@ -20,6 +20,7 @@
     "react-dom": "^16.4.2"
   },
   "dependencies": {
+    "classnames": "^2.2.6",
     "core-js": "3",
     "filesize": "^4.1.2",
     "keycode": "^2.2.0",
