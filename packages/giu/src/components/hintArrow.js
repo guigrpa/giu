@@ -25,7 +25,6 @@ export type HintArrowPars = {
   arrowSize?: number,
   arrowAngle?: number,
   counterclockwise?: boolean,
-  style?: Object,
 };
 // -- END_DOCS
 
@@ -40,7 +39,6 @@ class HintArrow extends React.Component<Props> {
       arrowSize = 10,
       arrowAngle = 30,
       counterclockwise = false,
-      style,
     } = this.props;
 
     // From, to
@@ -74,7 +72,7 @@ class HintArrow extends React.Component<Props> {
 
     // Final path
     d = d.join(' ');
-    return <path className="giu-hint-arrow" d={d} style={style} />;
+    return <path className="giu-hint-arrow" d={d} />;
   }
 }
 

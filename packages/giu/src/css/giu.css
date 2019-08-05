@@ -319,3 +319,16 @@ row is drawn above the modal, not below */
   margin-right: 8px;
   line-height: 1.45;
 }
+
+.giu-hint-label-inner-left {
+  left: 0;
+  text-align: left;
+}
+.giu-hint-label-inner-right {
+  right: 0;
+  text-align: right;
+}
+.giu-hint-label-inner-center {
+  left: calc(-200px / 2);
+  text-align: center;
+}
