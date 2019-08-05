@@ -3,7 +3,6 @@
 /* eslint-disable react/no-array-index-key */
 
 import React from 'react';
-import { MISC } from '../gral/constants';
 import Backdrop from './backdrop';
 import HintLabel from './hintLabel';
 import HintArrow from './hintArrow';
@@ -18,7 +17,6 @@ import type { HintArrowPars } from './hintArrow'; // eslint-disable-line
 export type HintScreenPars = {|
   elements?: ElementsWrapper,
   closeLabel?: string, // label of the close button (default: 'Got it!')
-  zIndex?: number,
 |};
 type ElementsWrapper = Array<Element> | (() => Array<Element>);
 type Element = HintArrowPars | HintLabelPars;
@@ -28,7 +26,6 @@ type DefaultProps = {
   // eslint-disable-line
   elements: ElementsWrapper,
   closeLabel: string,
-  zIndex: number,
 };
 
 type Props = {
@@ -45,7 +42,6 @@ class HintScreen extends React.PureComponent<Props> {
   static defaultProps: DefaultProps = {
     elements: ([]: ElementsWrapper),
     closeLabel: 'Got it!',
-    zIndex: MISC.zHintBase,
   };
 
   componentDidMount() {
@@ -62,11 +58,7 @@ class HintScreen extends React.PureComponent<Props> {
     let { elements } = this.props;
     if (typeof elements === 'function') elements = elements();
     return (
-      <div
-        className="giu-hint-screen"
-        onClick={this.props.onClose}
-        style={{ zIndex: this.props.zIndex }}
-      >
+      <div className="giu-hint-screen" onClick={this.props.onClose}>
         {this.renderBackdrop()}
         <div className="giu-hint-screen-contents">
           {this.renderArrows(elements)}
