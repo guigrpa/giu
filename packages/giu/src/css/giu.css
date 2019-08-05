@@ -14,6 +14,24 @@
   }
 }
 
+body {
+  /* Text */
+  --color-dim: #999999;
+  --color-dark-text: black;
+  --color-light-text: white;
+  /* Others */
+  --color-line: #999999;
+  --color-line-dim: #cccccc;
+  --color-line-dark: black;
+  --color-input-bg: white;
+  --color-accent: #6600cc;
+  /* Notifs */
+  --color-notif-info: white;
+  --color-notif-success: #51a351;
+  --color-notif-warn: #f89406;
+  --color-notif-error: #bd362f;
+}
+
 /* ======================== */
 /* Components */
 /* ======================== */
@@ -49,6 +67,23 @@
 /* ------------------------ */
 /* Button */
 /* ------------------------ */
+.giu-button {
+  cursor: pointer;
+  user-select: none;
+}
+
+.giu-button.giu-button-with-border {
+  display: inline-block;
+  border: 1px solid var(--color-line);
+  border-radius: 5px;
+  padding: 1px 5px;
+}
+
+.giu-button.giu-button-disabled {
+  color: var(--color-dim);
+  cursor: default;
+  pointer-events: none;
+}
 
 /* ------------------------ */
 /* DataTable */

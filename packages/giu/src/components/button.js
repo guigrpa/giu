@@ -1,6 +1,7 @@
 // @flow
 
 import React from 'react';
+import classnames from 'classnames';
 import { omit, merge } from 'timm';
 import { COLORS } from '../gral/constants';
 import { ThemeContext } from '../gral/themeContext';
@@ -76,10 +77,12 @@ class Button extends React.PureComponent<Props> {
     const otherProps = omit(this.props, FILTERED_PROPS);
     return (
       <span
-        className="giu-button"
+        className={classnames('giu-button', {
+          'giu-button-with-border': !this.props.plain,
+        })}
         onClick={disabled ? undefined : onClick}
         {...otherProps}
-        style={style.button(this.props)}
+        style={this.props.style}
       >
         {children}
       </span>
@@ -87,26 +90,26 @@ class Button extends React.PureComponent<Props> {
   }
 
   renderMdl() {
-    let classNames = [
+    const className = classnames(
       'giu-button',
       'mdl-button',
       'mdl-js-button',
       'mdl-js-ripple-effect',
-    ];
-    if (!this.props.plain) classNames.push('mdl-button--raised');
-    if (this.props.colored) classNames.push('mdl-button--colored');
-    if (this.props.primary) classNames.push('mdl-button--primary');
-    if (this.props.accent) classNames.push('mdl-button--accent');
-    if (this.props.fab) classNames.push('mdl-button--fab');
-    if (this.props.classNames) {
-      classNames = classNames.concat(this.props.classNames);
-    }
+      {
+        'mdl-button--raised': !this.props.plain,
+        'mdl-button--colored': this.props.colored,
+        'mdl-button--primary': this.props.primary,
+        'mdl-button--accent': this.props.accent,
+        'mdl-button--fab': this.props.fab,
+      },
+      ...(this.props.classNames || [])
+    );
     const otherProps = omit(this.props, FILTERED_PROPS_MDL);
     return (
       <button
         ref={this.refButton}
         type="button"
-        className={classNames.join(' ')}
+        className={className}
         {...otherProps}
       />
     );
@@ -119,36 +122,6 @@ const ThemedButton = (props: PublicProps) => (
     {theme => <Button {...props} theme={theme} />}
   </ThemeContext.Consumer>
 );
-
-// ==========================================
-const style = {
-  plainBase: {
-    cursor: 'pointer',
-    userSelect: 'none',
-    WebkitUserSelect: 'none',
-  },
-  buttonBase: {
-    display: 'inline-block',
-    cursor: 'pointer',
-    border: `1px solid ${COLORS.line}`,
-    borderRadius: 5,
-    padding: '1px 5px',
-    userSelect: 'none',
-    WebkitUserSelect: 'none',
-  },
-  button: ({ plain, disabled, style: baseStyle }) => {
-    let out = plain ? style.plainBase : style.buttonBase;
-    if (disabled) {
-      out = merge(out, {
-        color: COLORS.dim,
-        cursor: 'default',
-        pointerEvents: 'none',
-      });
-    }
-    out = merge(out, baseStyle);
-    return out;
-  },
-};
 
 // ==========================================
 // Public

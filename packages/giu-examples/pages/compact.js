@@ -479,6 +479,9 @@ const ButtonExample = () => (
     <Button onClick={() => notify('Normal button pressed')}>
       Notify me!
     </Button>{' '}
+    <Button disabled onClick={() => notify('Disabled button pressed!!!')}>
+      Disabled button
+    </Button>{' '}
     <Button onClick={() => notify('Plain button pressed')} plain>
       Notify me!
     </Button>
