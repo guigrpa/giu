@@ -241,3 +241,25 @@ row is drawn above the modal, not below */
   position: fixed;
   opacity: 0.5;
 }
+
+/* ------------------------ */
+/* FocusCapture */
+/* ------------------------ */
+.giu-hidden-field {
+  position: fixed;
+  opacity: 0;
+  width: 0;
+  height: 0;
+  padding: 0;
+  cursor: default;
+  pointer-events: none;
+  z-index: -80;
+  top: 8px;
+  left: 8px;
+}
+
+.giu-hidden-field.giu-hidden-field-ios {
+  position: absolute;
+  top: 0;
+  left: 0;
+}

@@ -1,7 +1,6 @@
 # Roadmap
 
 * Use plain old CSS stylesheets (customisable!), instead of element CSS:
-    * Example customisation of CSS variable
     * Remove theme object (when all elements using it are migrated)
     * DropDownMenu: remove style props (when Select is updated)
 

@@ -1,8 +1,8 @@
 // @flow
 
 import React from 'react';
+import classnames from 'classnames';
 import { IS_IOS } from '../gral/constants';
-import { HIDDEN_FOCUS_CAPTURE, HIDDEN_FOCUS_CAPTURE_IOS } from '../gral/styles';
 
 // ==========================================
 // Component
@@ -16,7 +16,9 @@ const FocusCapture = ({ registerRef, disabled, ...otherProps }: Props) => {
   const el = (
     <input
       ref={registerRef}
-      style={style.input}
+      className={classnames('giu-focus-capture', 'giu-hidden-field', {
+        'giu-hidden-field-ios': IS_IOS,
+      })}
       tabIndex={disabled ? -1 : undefined}
       {...otherProps}
     />
@@ -26,7 +28,6 @@ const FocusCapture = ({ registerRef, disabled, ...otherProps }: Props) => {
 
 // ==========================================
 const style = {
-  input: IS_IOS ? HIDDEN_FOCUS_CAPTURE_IOS : HIDDEN_FOCUS_CAPTURE,
   iosWrapper: { position: 'relative' },
 };
 
