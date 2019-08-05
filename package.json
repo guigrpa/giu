@@ -35,17 +35,6 @@
     "docs:readme": "extract-docs --template docsPrivate/templates/README.md --output README.md",
     "docs:copyExamples": "rm -rf docs/ && mkdir docs && cp -r packages/giu-examples/out/* docs/ && touch docs/.nojekyll",
     "xxl": "xxl --src packages --exclude node_modules,/lib/,/out/,/static/,/public/stylesheets/",
-    "jest": "jest --watch --coverage",
-    "jest-html": "jest-html --css-patterns test/snapshot.css --snapshot-patterns \"packages/**/*.snap\"",
-    "test": "yarn testCovFull",
-    "testFast": "jest",
-    "testCovFull": "yarn _testCovPrepare && yarn _testDev && yarn _testProd && yarn _testCovReport",
-    "testCovFast": "yarn _testCovPrepare && yarn _testDev && yarn _testCovReport",
-    "_testCovPrepare": "rm -rf ./coverage .nyc_output .nyc_tmp && mkdir .nyc_tmp",
-    "_testCovReport": "cp -r .nyc_tmp .nyc_output && nyc report --reporter=html --reporter=lcov --reporter=text",
-    "_testDev": "NODE_ENV=development yarn _testCov && mv .nyc_tmp/coverage-final.json .nyc_tmp/coverage-dev.json",
-    "_testProd": "NODE_ENV=production yarn _testCov && mv .nyc_tmp/coverage-final.json .nyc_tmp/coverage-prod.json",
-    "_testCov": "jest --coverage && mv .nyc_output/coverage-final.json .nyc_tmp && rm -rf .nyc_output",
     "prepareRelease": "oao prepublish",
     "release": "oao publish",
     "prettier": "prettier --single-quote --trailing-comma es5 --write \"packages/**/src/**/*.js\""
@@ -56,7 +45,6 @@
   "_devDependencies": "The following are included to avoid dep conflicts: react, react-dom, moment",
   "devDependencies": {
     "babel-eslint": "^8.2.6",
-    "babel-jest": "^23.4.2",
     "coveralls": "^3.0.2",
     "eslint": "^5.4.0",
     "eslint-config-airbnb": "^17.1.0",
@@ -68,8 +56,6 @@
     "extract-docs": "^1.6.1",
     "flow-bin": "^0.79.1",
     "flow-copy-source": "^2.0.2",
-    "jest": "^23.5.0",
-    "jest-html": "^1.5.0",
     "moment": "^2.22.2",
     "nyc": "^12.0.2",
     "oao": "^1.5.1",
@@ -77,29 +63,5 @@
     "react": "^16.4.2",
     "react-dom": "^16.4.2",
     "xxl": "1.2.0"
-  },
-  "jest": {
-    "testRegex": "packages/.*__tests__/.*\\.(test|spec)\\.(js|jsx)$",
-    "moduleNameMapper": {
-      "^.+\\.(css|less|sass)$": "<rootDir>/test/emptyObject.js",
-      "^.+\\.(gif|ttf|eot|svg)$": "<rootDir>/test/emptyString.js"
-    },
-    "coverageDirectory": ".nyc_output",
-    "coverageReporters": [
-      "json",
-      "text",
-      "html"
-    ],
-    "snapshotSerializers": [
-      "<rootDir>/node_modules/jest-html"
-    ],
-    "collectCoverageFrom": [
-      "packages/*/src/**",
-      "!packages/giu-examples/**",
-      "!**/node_modules/**",
-      "!**/__tests__/**",
-      "!**/__mocks__/**"
-    ],
-    "setupTestFrameworkScriptFile": "./test/setup.js"
   }
 }
