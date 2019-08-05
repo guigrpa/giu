@@ -3,15 +3,12 @@
 /* eslint-disable react/no-array-index-key */
 
 import React from 'react';
-import { COLORS, MISC } from '../gral/constants';
+import { MISC } from '../gral/constants';
 import Backdrop from './backdrop';
 import HintLabel from './hintLabel';
 import HintArrow from './hintArrow';
 import type { HintLabelPars } from './hintLabel'; // eslint-disable-line
 import type { HintArrowPars } from './hintArrow'; // eslint-disable-line
-
-const FONT_SIZE = 20;
-const FONT_FAMILY = '"Gloria Hallelujah", sans-serif';
 
 // ==========================================
 // Component
@@ -22,7 +19,6 @@ export type HintScreenPars = {|
   elements?: ElementsWrapper,
   closeLabel?: string, // label of the close button (default: 'Got it!')
   zIndex?: number,
-  style?: Object,
 |};
 type ElementsWrapper = Array<Element> | (() => Array<Element>);
 type Element = HintArrowPars | HintLabelPars;
@@ -69,10 +65,10 @@ class HintScreen extends React.PureComponent<Props> {
       <div
         className="giu-hint-screen"
         onClick={this.props.onClose}
-        style={style.outer(this.props.zIndex)}
+        style={{ zIndex: this.props.zIndex }}
       >
         {this.renderBackdrop()}
-        <div style={style.contents(this.props)}>
+        <div className="giu-hint-screen-contents">
           {this.renderArrows(elements)}
           {this.renderLabels(elements)}
           {this.renderCloseButton()}
@@ -82,7 +78,7 @@ class HintScreen extends React.PureComponent<Props> {
   }
 
   renderBackdrop() {
-    return <Backdrop style={style.backdrop} />;
+    return <Backdrop />;
   }
 
   renderArrows(elements: Array<Element>) {
@@ -91,7 +87,7 @@ class HintScreen extends React.PureComponent<Props> {
     ): Array<any>);
     if (!arrows || !arrows.length) return null;
     return (
-      <svg style={style.svg}>
+      <svg className="giu-hint-arrows">
         {arrows.map((arrow, idx) => (
           <HintArrow key={idx} {...arrow} />
         ))}
@@ -104,14 +100,12 @@ class HintScreen extends React.PureComponent<Props> {
       o => o.type === 'LABEL'
     ): Array<any>);
     if (!labels || !labels.length) return null;
-    return labels.map((label, idx) => (
-      <HintLabel key={idx} fontSize={FONT_SIZE} {...label} />
-    ));
+    return labels.map((label, idx) => <HintLabel key={idx} {...label} />);
   }
 
   renderCloseButton() {
     const { closeLabel } = this.props;
-    return <div style={style.closeButton}>{closeLabel}</div>;
+    return <div className="giu-hint-screen-close">{closeLabel}</div>;
   }
 
   // ==========================================
@@ -121,48 +115,6 @@ class HintScreen extends React.PureComponent<Props> {
     this.forceUpdate();
   };
 }
-
-// ==========================================
-// Styles
-// ==========================================
-const style = {
-  outer: zIndex => ({
-    position: 'fixed',
-    top: 0,
-    left: 0,
-    width: '100vw',
-    height: '100vh',
-    zIndex,
-  }),
-  contents: ({ style: baseStyle = {} }) => ({
-    color: COLORS.lightText,
-    fontSize: FONT_SIZE,
-    fontFamily: FONT_FAMILY,
-    ...baseStyle,
-  }),
-  svg: {
-    position: 'fixed',
-    width: '100vw',
-    height: '100vh',
-    stroke: COLORS.lightText,
-    strokeWidth: 2,
-    fill: 'transparent',
-    pointerEvents: 'none',
-  },
-  backdrop: {
-    cursor: 'pointer',
-    backgroundColor: 'black',
-  },
-  closeButton: {
-    position: 'fixed',
-    bottom: 20,
-    right: 20,
-    border: `1px solid ${COLORS.lightText}`,
-    padding: '5px 25px',
-    borderRadius: 8,
-    cursor: 'pointer',
-  },
-};
 
 // ==========================================
 // Public

@@ -20,7 +20,6 @@ class Backdrop extends React.PureComponent<Props> {
       <div
         onWheel={cancelEvent}
         onTouchMove={cancelEvent}
-        {...this.props}
         className={classnames('giu-backdrop', { 'giu-backdrop-ios': IS_IOS })}
       />
     );

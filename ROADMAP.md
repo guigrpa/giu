@@ -3,7 +3,7 @@
 * Use plain old CSS stylesheets (customisable!), instead of element CSS:
     * Remove theme object (when all elements using it are migrated)
     * DropDownMenu: remove style props (when Select is updated)
-
+    * Remove HIDDEN_FOCUS_CAPTURE, HIDDEN_FOCUS_CAPTURE_IOS once they're no longer used
 
 * **Bugs**
     * Main docs: inline textareas: misaligned
