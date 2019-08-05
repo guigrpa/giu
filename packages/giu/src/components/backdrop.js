@@ -8,10 +8,7 @@ import { IS_IOS } from '../gral/constants';
 // ==========================================
 // Declarations
 // ==========================================
-type Props = {
-  // All props are forwarded to the child `<div>`
-  style?: Object,
-};
+type Props = {};
 
 // ==========================================
 // Component
@@ -25,7 +22,6 @@ class Backdrop extends React.PureComponent<Props> {
         onTouchMove={cancelEvent}
         {...this.props}
         className={classnames('giu-backdrop', { 'giu-backdrop-ios': IS_IOS })}
-        style={this.props.style}
       />
     );
   }

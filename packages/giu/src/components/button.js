@@ -2,8 +2,7 @@
 
 import React from 'react';
 import classnames from 'classnames';
-import { omit, merge } from 'timm';
-import { COLORS } from '../gral/constants';
+import { omit } from 'timm';
 import { ThemeContext } from '../gral/themeContext';
 import type { Theme } from '../gral/themeContext';
 
@@ -18,7 +17,6 @@ type PublicProps = {
   children?: any, // button contents (can include `Icon` components, etc.)
   onClick?: (ev: SyntheticMouseEvent<*>) => any,
   disabled?: boolean,
-  style?: Object, // merged with the `span` style
   skipTheme?: boolean,
 
   // Additional props with `mdl` theme
@@ -53,7 +51,6 @@ const FILTERED_PROPS = [
   'children',
   'onClick',
   'disabled',
-  'style',
 ];
 
 // ==========================================
@@ -82,7 +79,6 @@ class Button extends React.PureComponent<Props> {
         })}
         onClick={disabled ? undefined : onClick}
         {...otherProps}
-        style={this.props.style}
       >
         {children}
       </span>
