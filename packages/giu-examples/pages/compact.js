@@ -469,7 +469,8 @@ const IconExample = () => (
     <ExampleLabel>Icon</ExampleLabel>
     <Icon icon="heart" id="a" /> <Spinner /> <Icon icon="spinner" spin />{' '}
     <Icon icon="arrow-left" id="a" />{' '}
-    <Icon icon="arrow-right" onClick={() => notify()} />
+    <Icon icon="arrow-right" onClick={() => notify()} />{' '}
+    <Icon icon="arrow-down" disabled />
   </div>
 );
 

@@ -1,9 +1,8 @@
 // @flow
 
 import React from 'react';
-import { merge, omit } from 'timm';
+import { omit } from 'timm';
 import classnames from 'classnames';
-import { COLORS } from '../gral/constants';
 import { ThemeContext } from '../gral/themeContext';
 import type { Theme } from '../gral/themeContext';
 
@@ -43,7 +42,6 @@ const FILTERED_PROPS = [
   'fixedWidth',
   'spin',
   'disabled',
-  'style',
   'skipTheme',
   'theme',
 ];
@@ -62,49 +60,43 @@ class Icon extends React.PureComponent<Props> {
 
   // ==========================================
   render() {
-    if (!this.props.skipTheme && this.props.theme.id === 'mdl') {
-      return this.renderMdl();
-    }
-    const { icon, spin, disabled } = this.props;
+    const isMdl = !this.props.skipTheme && this.props.theme.id === 'mdl';
+    const { icon, spin, disabled, size } = this.props;
+    if (isMdl && icon === SPINNER_ICON) return this.renderMdlSpinner();
     const otherProps = omit(this.props, FILTERED_PROPS);
     if (disabled) otherProps.onClick = undefined;
     return (
       <i
         className={classnames(
           'giu-icon',
-          'fa',
-          `fa-${icon}`,
-          { 'fa-spin': icon === SPINNER_ICON || spin },
-          this.props.className
+          size ? `giu-icon-${size}` : undefined,
+          isMdl ? 'material-icons' : `fa fa-${icon}`,
+          this.props.className,
+          {
+            'fa-spin': !isMdl && (icon === SPINNER_ICON || spin),
+            'giu-icon-disabled': disabled,
+            'giu-icon-clickable': !disabled && this.props.onClick,
+            'giu-icon-fixed-width': this.props.fixedWidth,
+          }
         )}
         {...otherProps}
-        style={style.icon(this.props)}
-      />
-    );
-  }
-
-  renderMdl() {
-    if (this.props.icon === SPINNER_ICON) return this.renderMdlSpinner();
-    const otherProps = omit(this.props, FILTERED_PROPS);
-    return (
-      <i
-        className="giu-icon material-icons"
-        {...otherProps}
-        style={style.icon(this.props)}
       >
-        {this.props.icon}
+        {isMdl ? icon : null}
       </i>
     );
   }
 
   renderMdlSpinner() {
+    const { size } = this.props;
     const otherProps = omit(this.props, FILTERED_PROPS);
     return (
       <div
         ref={this.refIcon}
-        className="mdl-spinner mdl-js-spinner is-active"
+        className={classnames(
+          'giu-mdl-spinner mdl-spinner mdl-js-spinner is-active',
+          size ? `giu-mdl-spinner-${size}` : undefined
+        )}
         {...otherProps}
-        style={style.mdlSpinner(this.props)}
       />
     );
   }
@@ -116,43 +108,6 @@ const ThemedIcon = (props: PublicProps) => (
     {theme => <Icon {...props} theme={theme} />}
   </ThemeContext.Consumer>
 );
-
-// ==========================================
-const style = {
-  icon: ({ onClick, disabled, size, fixedWidth, style: base }) =>
-    merge(
-      {
-        display: 'inline-block',
-        cursor: disabled || !onClick ? undefined : 'pointer',
-        color: disabled ? COLORS.dim : undefined,
-        fontSize: calcSize(size),
-        letterSpacing: 'normal',
-        width: fixedWidth ? '1.28571429em' : undefined,
-        textAlign: fixedWidth ? 'center' : undefined,
-      },
-      base
-    ),
-  mdlSpinner: ({ size, style: base }) => {
-    const dim = calcSize(size);
-    return merge(
-      {
-        width: dim,
-        height: dim,
-      },
-      base
-    );
-  },
-};
-
-const calcSize = size => {
-  let fontSize = '1em';
-  if (size === 'lg') fontSize = '1.33333333em';
-  else if (size === '2x') fontSize = '2em';
-  else if (size === '3x') fontSize = '3em';
-  else if (size === '4x') fontSize = '4em';
-  else if (size === '5x') fontSize = '5em';
-  return fontSize;
-};
 
 // ==========================================
 // Public

@@ -334,6 +334,71 @@ row is drawn above the modal, not below */
 }
 
 /* ------------------------ */
+/* Icon */
+/* ------------------------ */
+.giu-icon {
+  display: inline-block;
+  letter-spacing: normal;
+}
+
+.giu-icon.giu-icon-disabled {
+  color: var(--color-dim);
+}
+
+.giu-icon.giu-icon-clickable {
+  cursor: pointer;
+}
+
+.giu-icon.giu-icon-fixed-width {
+  width: 1.28571429em;
+  text-align: center;
+}
+
+.giu-icon {
+  font-size: 1em;
+}
+.giu-icon.giu-icon-lg {
+  font-size: 1.33333333em;
+}
+.giu-icon.giu-icon-2x {
+  font-size: 2em;
+}
+.giu-icon.giu-icon-3x {
+  font-size: 3em;
+}
+.giu-icon.giu-icon-4x {
+  font-size: 4em;
+}
+.giu-icon.giu-icon-5x {
+  font-size: 6em;
+}
+
+.giu-mdl-spinner {
+  width: 1em;
+  height: 1em;
+}
+.giu-mdl-spinner.giu-mdl-spinner-lg {
+  width: 1.33333333em;
+  height: 1.33333333em;
+}
+.giu-mdl-spinner.giu-mdl-spinner-2x {
+  width: 2em;
+  height: 2em;
+}
+.giu-mdl-spinner.giu-mdl-spinner-3x {
+  width: 3em;
+  height: 3em;
+}
+.giu-mdl-spinner.giu-mdl-spinner-4x {
+  width: 4em;
+  height: 4em;
+}
+.giu-mdl-spinner.giu-mdl-spinner-5x {
+  width: 6em;
+  height: 6em;
+}
+
+/* ------------------------ */
 /* LargeMessage */
 /* ------------------------ */
 .giu-large-message {
