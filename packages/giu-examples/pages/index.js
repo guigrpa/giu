@@ -1317,11 +1317,11 @@ class AppWrapper extends React.Component {
           />
           <link
             rel="stylesheet"
-            href={`${baseUrl}/static/font-awesome/css/font-awesome.min.css`}
+            href={`${baseUrl}/static/deps/font-awesome/css/font-awesome.min.css`}
           />
           <link
             rel="stylesheet"
-            href={`${baseUrl}/static/typeface-gloria-hallelujah/index.css`}
+            href={`${baseUrl}/static/deps/typeface-gloria-hallelujah/index.css`}
           />
           <link
             href="https://fonts.googleapis.com/css?family=Open+Sans:400,700"

@@ -1,3 +1,7 @@
+
+* Bump babel.
+* Remove tests + related dependencies.
+
 ## 0.17.3 (2018-10-11)
 
 * DropDownMenu: add `styleListPicker` prop.
