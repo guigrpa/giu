@@ -27,10 +27,16 @@ body {
   --color-accent-bg: #6600cc;
   --color-accent-fg: white;
   /* Notifs */
-  --color-notif-info: white;
-  --color-notif-success: #51a351;
-  --color-notif-warn: #f89406;
-  --color-notif-error: #bd362f;
+  --color-notif-info-bg: white;
+  --color-notif-info-fg: black;
+  --color-notif-success-bg: #51a351;
+  --color-notif-success-fg: white;
+  --color-notif-warn-bg: #f89406;
+  --color-notif-warn-fg: white;
+  --color-notif-error-bg: #bd362f;
+  --color-notif-error-fg: white;
+  /* Fonts */
+  --font-mdl: 'Roboto', 'Helvetica', 'Arial', sans-serif;
 }
 
 .giu-box-shadow {
@@ -461,4 +467,75 @@ row is drawn above the modal, not below */
 }
 .giu-modal-button.giu-modal-button-right {
   margin-left: 5px;
+}
+
+/* ------------------------ */
+/* Notifications */
+/* ------------------------ */
+.giu-notifications {
+  position: fixed;
+  bottom: 20px;
+  right: 20px;
+  max-width: 350px;
+  z-index: 9000;
+}
+
+.giu-notification {
+  display: flex;
+  align-items: center;
+  overflow: hidden;
+  padding: 7px 13px;
+}
+.giu-notification.giu-notification-clickable {
+  cursor: pointer;
+}
+.giu-notification.giu-notification-mdl {
+  font-family: var(--font-mdl);
+}
+.giu-notification.giu-notification-default-position {
+  position: fixed;
+  bottom: 20px;
+  right: 20px;
+  max-width: 350px;
+}
+.giu-notification.giu-notification-clickable:hover {
+  filter: brightness(80%);
+}
+.giu-notification.giu-notification-info {
+  background-color: var(--color-notif-info-bg);
+  color: var(--color-notif-info-fg);
+}
+.giu-notification.giu-notification-success {
+  background-color: var(--color-notif-success-bg);
+  color: var(--color-notif-success-fg);
+}
+.giu-notification.giu-notification-warn {
+  background-color: var(--color-notif-warn-bg);
+  color: var(--color-notif-warn-fg);
+}
+.giu-notification.giu-notification-error {
+  background-color: var(--color-notif-error-bg);
+  color: var(--color-notif-error-fg);
+}
+
+.giu-notification-icon {
+  flex: 0 1 auto;
+  padding-right: 20px;
+}
+.giu-notification-body {
+  flex: 1 1 50px;
+}
+.giu-notification-title {
+  font-weight: bold;
+}
+.giu-notification-message {
+  word-wrap: break-word;
+  font-weight: normal;
+}
+
+/* ------------------------ */
+/* Progress */
+/* ------------------------ */
+.giu-progress {
+  width: 100%;
 }

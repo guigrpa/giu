@@ -7,7 +7,6 @@ import { createStore, applyMiddleware } from 'redux';
 import type { Reducer } from 'redux';
 import thunk from 'redux-thunk';
 import { updateIn, addLast, removeAt, addDefaults } from 'timm';
-import { MISC } from '../gral/constants';
 import type { Action } from '../gral/types';
 import Notification from './notification';
 import type { NotificationPars } from './notificationTypes';
@@ -162,7 +161,7 @@ class Notifications extends React.PureComponent<Props> {
   render() {
     const notifs = this.props.notifs || store.getState();
     return (
-      <div className="giu-notifications" style={style.outer}>
+      <div className="giu-notifications">
         {notifs.map((props: NotificationStatePars) => (
           <Notification
             key={props.id}
@@ -191,17 +190,6 @@ class Notifications extends React.PureComponent<Props> {
     store.dispatch(actions.notifDelete(id));
   };
 }
-
-// ==========================================
-const style = {
-  outer: {
-    position: 'fixed',
-    bottom: 20,
-    right: 20,
-    maxWidth: 350,
-    zIndex: MISC.zNotif,
-  },
-};
 
 // ==========================================
 // Public

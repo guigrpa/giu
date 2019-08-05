@@ -2,6 +2,7 @@
 
 import React from 'react';
 import { omit } from 'timm';
+import classnames from 'classnames';
 import { ThemeContext } from '../gral/themeContext';
 import type { Theme } from '../gral/themeContext';
 
@@ -50,14 +51,17 @@ class Progress extends React.PureComponent<Props> {
   render() {
     if (this.props.theme.id === 'mdl') return this.renderMdl();
     const otherProps = omit(this.props, FILTERED_PROPS);
-    return <progress {...otherProps} style={style.progress} />;
+    return <progress className="giu-progress" {...otherProps} />;
   }
 
   renderMdl() {
-    let className = 'mdl-progress mdl-js-progress';
-    if (this.props.value == null) className += ' mdl-progress--indeterminate';
     return (
-      <div ref={this.refMdl} className={className} style={style.progress} />
+      <div
+        ref={this.refMdl}
+        className={classnames('giu-progress mdl-progress mdl-js-progress', {
+          'mdl-progress--indeterminate': this.props.value == null,
+        })}
+      />
     );
   }
 
@@ -76,11 +80,6 @@ const ThemedProgress = (props: PublicProps) => (
     {theme => <Progress {...props} theme={theme} />}
   </ThemeContext.Consumer>
 );
-
-// ==========================================
-const style = {
-  progress: { width: '100%' },
-};
 
 // ==========================================
 // Public
