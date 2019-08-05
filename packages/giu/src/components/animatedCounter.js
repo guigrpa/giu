@@ -50,7 +50,7 @@ class AnimatedCounter extends React.PureComponent<Props> {
     } else {
       shownValue = this.shownValue.toFixed(this.props.decimals || 0);
     }
-    return <span>{shownValue}</span>;
+    return <span className="giu-animated-counter">{shownValue}</span>;
   }
 
   // ==========================================
