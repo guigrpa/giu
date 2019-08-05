@@ -13,6 +13,7 @@ import type { Theme } from '../gral/themeContext';
 // --
 // -- START_DOCS
 type PublicProps = {
+  className?: string,
   plain?: boolean, // removes most button styles
   children?: any, // button contents (can include `Icon` components, etc.)
   onClick?: (ev: SyntheticMouseEvent<*>) => any,
@@ -24,7 +25,6 @@ type PublicProps = {
   primary?: boolean,
   accent?: boolean,
   fab?: boolean,
-  classNames?: Array<string>,
 
   // All other props are passed through to the `span` element
 };
@@ -37,13 +37,13 @@ type Props = {
 };
 
 const FILTERED_PROPS_MDL = [
-  'skipTheme',
+  'className',
   'plain',
+  'skipTheme',
   'colored',
   'primary',
   'accent',
   'fab',
-  'classNames',
   'theme',
 ];
 const FILTERED_PROPS = [
@@ -74,7 +74,7 @@ class Button extends React.PureComponent<Props> {
     const otherProps = omit(this.props, FILTERED_PROPS);
     return (
       <span
-        className={classnames('giu-button', {
+        className={classnames('giu-button', this.props.className, {
           'giu-button-with-border': !this.props.plain,
         })}
         onClick={disabled ? undefined : onClick}
@@ -91,14 +91,14 @@ class Button extends React.PureComponent<Props> {
       'mdl-button',
       'mdl-js-button',
       'mdl-js-ripple-effect',
+      this.props.className,
       {
         'mdl-button--raised': !this.props.plain,
         'mdl-button--colored': this.props.colored,
         'mdl-button--primary': this.props.primary,
         'mdl-button--accent': this.props.accent,
         'mdl-button--fab': this.props.fab,
-      },
-      ...(this.props.classNames || [])
+      }
     );
     const otherProps = omit(this.props, FILTERED_PROPS_MDL);
     return (
