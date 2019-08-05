@@ -7,11 +7,11 @@ import {
   addLast,
   removeAt,
   set as timmSet,
-  merge,
   mergeIn,
   addDefaults,
   omit,
 } from 'timm';
+import classnames from 'classnames';
 import {
   cancelEvent,
   windowHeightWithoutScrollbar,
@@ -19,7 +19,6 @@ import {
 } from '../gral/helpers';
 import { isVisible } from '../gral/visibility';
 import { MISC } from '../gral/constants';
-import { boxWithShadow } from '../gral/styles';
 import type { Action } from '../gral/types';
 
 const PROP_KEYS_TO_REMOVE_FROM_FLOAT_DIV = [
@@ -202,9 +201,7 @@ class Floats extends React.PureComponent<Props> {
     this.curState = store.getState();
     this.floats = this.curState.floats;
     return (
-      <div className="giu-floats" style={style.outer}>
-        {this.floats.map(this.renderFloat)}
-      </div>
+      <div className="giu-floats">{this.floats.map(this.renderFloat)}</div>
     );
   }
 
@@ -216,14 +213,17 @@ class Floats extends React.PureComponent<Props> {
         key={id}
         className="giu-float"
         onMouseDown={cancelEvent}
-        style={style.wrapper(zIndex)}
+        style={{ zIndex }}
       >
         <div
           ref={c => {
             this.refFloats[idx] = c;
           }}
+          className={classnames('giu-float-inner', {
+            'giu-box-shadow': !this.props.noStyleShadow,
+          })}
           {...omit(props, PROP_KEYS_TO_REMOVE_FROM_FLOAT_DIV)}
-          style={style.floatInitial(props)}
+          style={this.props.style}
         />
       </div>
     );
@@ -332,36 +332,6 @@ class Floats extends React.PureComponent<Props> {
     ref.style.opacity = 1;
   }
 }
-
-// ==========================================
-const style = {
-  outer: {
-    position: 'absolute',
-    top: 0,
-    left: 0,
-    width: 0,
-    height: 0,
-  },
-  wrapper: zIndex => ({
-    position: 'fixed',
-    top: 0,
-    left: 0,
-    width: 0,
-    height: 0,
-    zIndex,
-  }),
-  floatInitial: ({ style: baseStyle, noStyleShadow }: FloatStatePars) => {
-    let out = {
-      position: 'fixed',
-      top: 0,
-      left: 0,
-      opacity: 0.5,
-    };
-    if (!noStyleShadow) out = boxWithShadow(out);
-    if (baseStyle) out = merge(out, baseStyle);
-    return out;
-  },
-};
 
 // ==========================================
 // Warnings

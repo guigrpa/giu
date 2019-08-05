@@ -33,6 +33,12 @@ body {
   --color-notif-error: #bd362f;
 }
 
+.giu-box-shadow {
+  background-color: white;
+  border-radius: 2px;
+  box-shadow: 0 3px 6px rgba(0, 0, 0, 0.16), 0 3px 6px rgba(0, 0, 0, 0.23);
+}
+
 /* ======================== */
 /* Components */
 /* ======================== */
@@ -210,4 +216,28 @@ row is drawn above the modal, not below */
 .giu-drop-down-menu-title.giu-drop-down-menu-title-selected {
   background-color: var(--color-accent-bg);
   color: var(--color-accent-fg);
+}
+
+/* ------------------------ */
+/* Floats */
+/* ------------------------ */
+.giu-floats {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 0;
+  height: 0;
+}
+
+.giu-float {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 0;
+  height: 0;
+}
+
+.giu-float-inner {
+  position: fixed;
+  opacity: 0.5;
 }
