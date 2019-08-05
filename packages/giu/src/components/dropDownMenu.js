@@ -1,12 +1,9 @@
 // @flow
 
 import React from 'react';
-import { omit, merge } from 'timm';
+import { omit } from 'timm';
+import classnames from 'classnames';
 import type { Choice } from '../gral/types';
-import { COLORS } from '../gral/constants';
-import { isDark } from '../gral/styles';
-import { ThemeContext } from '../gral/themeContext';
-import type { Theme } from '../gral/themeContext';
 import Select from '../inputs/select';
 
 // ==========================================
@@ -15,7 +12,7 @@ import Select from '../inputs/select';
 // -- Props:
 // --
 /* -- START_DOCS -- */
-type PublicProps = {
+type Props = {
   // Items: similar to the Select component but including an `onClick` callback
   items: Array<Choice>,
 
@@ -26,25 +23,17 @@ type PublicProps = {
     ev: SyntheticMouseEvent<*>, // `click` event
     val: any // the item's `value` (as specified in the `items` prop)
   ) => any,
-  style?: Object, // will be merged with the menu title's `div` wrapper
   styleListPicker?: Object, // will be merged with the list picker's outer `div`
 
   // All other props are passed through to the Select input component
 };
 /* -- END_DOCS -- */
 
-type Props = {
-  ...$Exact<PublicProps>,
-  // Context
-  theme: Theme,
-};
-
 const FILTERED_PROPS = [
   'items',
   'lang',
   'children',
   'onClickItem',
-  'style',
   'styleListPicker',
   'accentColor',
 ];
@@ -85,9 +74,10 @@ class DropDownMenu extends React.PureComponent<Props, State> {
   renderTitle() {
     return (
       <div
-        className="giu-drop-down-menu-title"
+        className={classnames('giu-drop-down-menu-title', {
+          'giu-drop-down-menu-title-selected': this.state.fFocused,
+        })}
         onMouseDown={this.onMouseDownTitle}
-        style={style.title(this.props, this.state)}
       >
         {this.props.children}
       </div>
@@ -135,34 +125,11 @@ class DropDownMenu extends React.PureComponent<Props, State> {
 }
 
 // ==========================================
-const ThemedDropDownMenu = (props: PublicProps) => (
-  <ThemeContext.Consumer>
-    {theme => <DropDownMenu {...props} theme={theme} />}
-  </ThemeContext.Consumer>
-);
-
-// ==========================================
 const style = {
-  selectOuter: {
-    display: 'inline-block',
-  },
-  title: ({ theme, style: baseStyle }, { fFocused }) => {
-    const backgroundColor = fFocused ? theme.accentColor : undefined;
-    let color;
-    if (backgroundColor != null) {
-      color = COLORS[isDark(backgroundColor) ? 'lightText' : 'darkText'];
-    }
-    const out = {
-      display: 'inline-block',
-      cursor: 'pointer',
-      backgroundColor,
-      color,
-    };
-    return merge(out, baseStyle);
-  },
+  selectOuter: { display: 'inline-block' },
 };
 
 // ==========================================
 // Public
 // ==========================================
-export default ThemedDropDownMenu;
+export default DropDownMenu;

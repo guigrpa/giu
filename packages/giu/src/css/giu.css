@@ -197,3 +197,17 @@ row is drawn above the modal, not below */
   padding-left: 2px;
   padding-right: 2px;
 }
+
+/* ------------------------ */
+/* DropDownMenu */
+/* ------------------------ */
+.giu-drop-down-menu-title {
+  display: inline-block;
+  cursor: pointer;
+  padding: 3px 6px;
+}
+
+.giu-drop-down-menu-title.giu-drop-down-menu-title-selected {
+  background-color: var(--color-accent-bg);
+  color: var(--color-accent-fg);
+}
