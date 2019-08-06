@@ -343,7 +343,12 @@ class ColorPicker extends React.PureComponent<Props, State> {
   // ------------------------------------------
   // Other components
   // ------------------------------------------
-  renderThumb(x, y, width = SIZE, height = SIZE) {
+  renderThumb(
+    x: number,
+    y: number,
+    width: number = SIZE,
+    height: number = SIZE
+  ) {
     const top = (1 - y) * height;
     const left = x * width;
     return (
