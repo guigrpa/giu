@@ -1,11 +1,11 @@
 // @flow
 
 import React from 'react';
-import { merge, set as timmSet } from 'timm';
+import { set as timmSet } from 'timm';
+import classnames from 'classnames';
 import { preventDefault, memoize } from '../gral/helpers';
 import { NULL_STRING, IS_IOS } from '../gral/constants';
 import { LIST_SEPARATOR_KEY } from './listPicker';
-import { GLOW } from '../gral/styles';
 import Input from '../hocs/input';
 import type { InputHocPublicProps } from '../hocs/input';
 
@@ -64,7 +64,13 @@ class BaseRadioGroup extends React.Component<Props> {
     this.items = this.prepareItems(this.props.items);
     const { registerOuterRef } = this.props;
     return (
-      <div ref={registerOuterRef} style={style.outer(this.props)}>
+      <div
+        ref={registerOuterRef}
+        className={classnames('giu-radio-group', {
+          'giu-glow': this.props.fFocused,
+          'giu-radio-group-disabled': this.props.disabled,
+        })}
+      >
         {this.items.map(this.renderItem)}
       </div>
     );
@@ -89,7 +95,9 @@ class BaseRadioGroup extends React.Component<Props> {
           tabIndex={-1}
         />
         <label htmlFor={id}>{finalLabel}</label>
-        {labelExtra && <div style={style.labelExtra}>{labelExtra}</div>}
+        {labelExtra && (
+          <div className="giu-radio-group-label-extra">{labelExtra}</div>
+        )}
       </div>
     );
   };
@@ -128,28 +136,6 @@ const render = props => <BaseRadioGroup {...props} />;
 const RadioGroup = React.forwardRef((publicProps: PublicProps, ref) => (
   <Input hocOptions={hocOptions} render={render} {...publicProps} ref={ref} />
 ));
-
-// ==========================================
-const style = {
-  outerBase: {
-    border: '1px solid transparent',
-  },
-  outer: ({ disabled, fFocused }) => {
-    let out = style.outerBase;
-    if (disabled) {
-      out = merge(out, {
-        cursor: 'default',
-        pointerEvents: 'none',
-      });
-    }
-    if (fFocused) out = merge(out, GLOW);
-    return out;
-  },
-  labelExtra: {
-    marginLeft: 20,
-    cursor: 'default',
-  },
-};
 
 // ==========================================
 // Public
