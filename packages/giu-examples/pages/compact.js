@@ -360,11 +360,14 @@ class App extends React.Component {
               </a>{' '}
               2016
             </div>
+            <style jsx global>{`body {
+              --color-accent-bg: ${this.state.accentColor}
+            }`}</style>
           </div>
         );
         break;
     }
-    return <Giu accentColor={this.state.accentColor}>{out}</Giu>;
+    return <Giu>{out}</Giu>;
   }
 }
 
@@ -691,7 +694,7 @@ class AppWrapper extends React.Component {
             font-size: 12px;
             padding: 10px;
             margin: 0;
-            background: #f9fff2;
+            background: #e8f3ef;
             // --color-accent-bg: gray;
           }
         `}</style>

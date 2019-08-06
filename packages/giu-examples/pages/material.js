@@ -134,11 +134,14 @@ class App extends React.Component {
               </a>{' '}
               2016
             </div>
+            <style jsx global>{`body {
+              --color-accent-bg: ${this.state.accentColor}
+            }`}</style>
           </div>
         );
         break;
     }
-    return <Giu themeId="mdl" accentColor={this.state.accentColor}>{out}</Giu>;
+    return <Giu themeId="mdl">{out}</Giu>;
   }
 }
 

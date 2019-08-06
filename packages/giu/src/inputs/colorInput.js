@@ -1,10 +1,9 @@
 // @flow
 
 import React from 'react';
-import { merge } from 'timm';
 import tinycolor from 'tinycolor2';
-import { COLORS, KEYS, IS_IOS, IS_MOBILE_OR_TABLET } from '../gral/constants';
-import { GLOW, inputReset, INPUT_DISABLED } from '../gral/styles';
+import classnames from 'classnames';
+import { KEYS, IS_IOS, IS_MOBILE_OR_TABLET } from '../gral/constants';
 import type { KeyboardEventPars } from '../gral/types';
 import { isAncestorNode } from '../gral/helpers';
 import type { Theme } from '../gral/themeContext';
@@ -18,9 +17,6 @@ import IosFloatWrapper from './iosFloatWrapper';
 const toInternalValue = val => val;
 const toExternalValue = val => val;
 const isNull = val => val == null;
-
-const SWATCH_WIDTH = 25;
-const SWATCH_HEIGHT = 10;
 
 const MANAGE_FOCUS_AUTONOMOUSLY = IS_MOBILE_OR_TABLET;
 
@@ -104,17 +100,23 @@ class BaseColorInput extends React.Component<Props> {
   }
 
   renderTitle() {
+    const { curValue } = this.props;
+    const background =
+      curValue != null ? tinycolor(curValue).toRgbString() : 'transparent';
     return (
       // The `x` text keeps baselines aligned
       <div
         ref={this.registerTitleRef}
+        className={classnames('giu-color-input-title giu-input-reset', {
+          'giu-input-disabled': this.props.disabled,
+          'giu-glow': this.props.fFocused,
+        })}
         onMouseDown={this.onMouseDownTitle}
         onClick={this.onClickTitle}
-        style={style.title(this.props)}
       >
-        <span style={style.placeholder}>x</span>
-        <div className="giu-transparency-tiles" style={style.swatchTiles} />
-        <div style={style.swatch(this.props)} />
+        <span style={{ color: 'transparent' }}>x</span>
+        <div className="giu-color-input-swatch giu-transparency-tiles" />
+        <div className="giu-color-input-swatch" style={{ background }} />
         {IS_IOS && this.renderFloatForIos()}
       </div>
     );
@@ -241,49 +243,6 @@ const render = (props, ref) => <BaseColorInput {...props} ref={ref} />;
 const ColorInput = React.forwardRef((publicProps: PublicProps, ref) => (
   <Input hocOptions={hocOptions} render={render} {...publicProps} ref={ref} />
 ));
-
-// ==========================================
-const style = {
-  title: ({ disabled, fFocused }) => {
-    let out = inputReset({
-      display: 'inline-block',
-      position: 'relative',
-      cursor: 'pointer',
-      border: `1px solid ${COLORS.line}`,
-      padding: '2px 4px 6px 4px',
-      height: SWATCH_HEIGHT + 2 * 4 + 2,
-      width: SWATCH_WIDTH + 2 * 4 + 2,
-      lineHeight: '1em',
-    });
-    if (disabled) out = merge(out, INPUT_DISABLED);
-    if (fFocused) out = merge(out, GLOW);
-    return out;
-  },
-  placeholder: {
-    color: 'transparent', // hide the placeholder text that keeps baselines aligned
-  },
-  swatchTiles: {
-    position: 'absolute',
-    top: 4,
-    right: 4,
-    bottom: 4,
-    left: 4,
-    borderRadius: 2,
-  },
-  swatch: ({ curValue }) => {
-    const col = tinycolor(curValue).toRgbString();
-    const background = curValue != null ? `${col}` : 'transparent';
-    return {
-      position: 'absolute',
-      top: 4,
-      right: 4,
-      bottom: 4,
-      left: 4,
-      borderRadius: 2,
-      background,
-    };
-  },
-};
 
 // ==========================================
 // Public
