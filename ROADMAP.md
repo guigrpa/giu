@@ -3,7 +3,6 @@
 * Use plain old CSS stylesheets (customisable!), instead of element CSS:
     * dateXXXX
     * textarea
-    * textNumberXXX
     * timePickerXXX
     * input (incl. errors)
     * z-index

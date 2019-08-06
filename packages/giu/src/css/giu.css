@@ -892,3 +892,21 @@ row is drawn above the modal, not below */
 .giu-select-custom-title-wrapper-for-ios {
   position: relative;
 }
+
+/* ------------------------ */
+/* TextInput, PasswordInput, NumberInput, RangeInput */
+/* ------------------------ */
+.giu-text-input-mdl,
+.giu-password-input-mdl,
+.giu-number-input-mdl,
+.giu-range-input-mdl {
+  width: 150px;
+}
+
+.giu-text-input-mdl.disabled,
+.giu-password-input-mdl.disabled,
+.giu-number-input-mdl.disabled,
+.giu-range-input-mdl.disabled {
+  cursor: default;
+  pointer-events: none;
+}

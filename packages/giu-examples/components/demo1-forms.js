@@ -46,16 +46,15 @@ class FormExample extends React.Component<
     const { lang } = this.props;
     return (
       <div style={exampleStyle}>
-        <div>
+        <div className="input-row">
           <ExampleLabel>Inputs</ExampleLabel>
           <NumberInput
             step="0.1"
             value={null}
             onChange={onChange}
             placeholder="number"
-            style={{ width: 80 }}
           />
-          <NumberInput disabled value={6.5} style={{ width: 80 }} />
+          <NumberInput disabled value={6.5} />
           &nbsp;&nbsp;
           <TextInput
             value="a"
@@ -64,15 +63,13 @@ class FormExample extends React.Component<
             errors={['Example error above']}
             errorPosition="above"
             errorAlign="right"
-            style={{ width: 80 }}
           />
-          <TextInput disabled value="Disabled" style={{ width: 80 }} />
+          <TextInput disabled value="Disabled" />
           &nbsp;&nbsp;
           <PasswordInput
             required
             onChange={onChange}
             placeholder="password"
-            style={{ width: 80 }}
           />
           &nbsp;&nbsp;
           <Checkbox
@@ -145,35 +142,24 @@ class FormExample extends React.Component<
                 </div>
               </td>
               <td style={{ verticalAlign: 'top', paddingLeft: 10 }}>
-                <ExampleLabel>RangeInput (horizontal/vertical)</ExampleLabel>
-                <div style={flexContainer('row')}>
-                  <div style={{ marginLeft: 5 }}>
-                    <RangeInput
-                      value={25}
-                      onChange={onChange}
-                      min={0}
-                      max={100}
-                      step={5}
-                      style={{ display: 'block', width: 100 }}
-                    />
-                    <RangeInput
-                      disabled
-                      value={55}
-                      onChange={onChange}
-                      min={0}
-                      max={100}
-                      step={5}
-                      style={{ display: 'block', width: 100 }}
-                    />
-                  </div>
+                <ExampleLabel>RangeInput</ExampleLabel>
+                <div style={{ marginLeft: 5 }}>
                   <RangeInput
+                    value={25}
+                    onChange={onChange}
+                    min={0}
+                    max={100}
+                    step={5}
+                    style={{ display: 'block', width: 100 }}
+                  />
+                  <RangeInput
+                    disabled
                     value={55}
                     onChange={onChange}
                     min={0}
                     max={100}
                     step={5}
-                    vertical
-                    style={{ marginLeft: 20, height: 100, width: 25 }}
+                    style={{ display: 'block', width: 100 }}
                   />
                 </div>
               </td>
@@ -616,6 +602,14 @@ class FormExample extends React.Component<
           </Button>
         </div>
         <style jsx global>{`
+          .input-row .giu-text-input,
+          .input-row .giu-number-input,
+          .input-row .giu-password-input,
+          .input-row .giu-text-input-mdl,
+          .input-row .giu-number-input-mdl,
+          .input-row .giu-password-input-mdl {
+            width: 80px;
+          }
           .inline-pickers .giu-list-picker {
             height: 150px;
           }

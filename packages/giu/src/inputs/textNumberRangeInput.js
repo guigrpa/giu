@@ -1,8 +1,8 @@
 // @flow
 
 import React from 'react';
-import { omit, merge, set as timmSet } from 'timm';
-import { inputReset, INPUT_DISABLED } from '../gral/styles';
+import { omit } from 'timm';
+import classnames from 'classnames';
 import { isNumber } from '../gral/validators';
 import type { Theme } from '../gral/themeContext';
 import Input, { INPUT_HOC_INVALID_HTML_PROPS } from '../hocs/input';
@@ -41,7 +41,6 @@ const CLASS_OPTIONS = {
 type PublicProps = {
   ...$Exact<InputHocPublicProps>, // common to all inputs (check the docs!)
   disabled?: boolean,
-  style?: Object, // merged with the `input`/`textarea` style
   skipTheme?: boolean,
   vertical?: boolean, // only for RangeInput
   // all others are passed through to the `input` unchanged
@@ -106,13 +105,14 @@ function createClass(componentName, inputType) {
       return (
         <input
           ref={registerFocusableRef}
-          className={`giu-${inputType}-input`}
+          className={classnames(`giu-input-reset giu-${inputType}-input`, {
+            'giu-input-disabled': disabled,
+          })}
           type={inputType}
           value={curValue}
           {...otherProps}
           orient={vertical ? 'vertical' : undefined}
           tabIndex={disabled ? -1 : undefined}
-          style={style.field(this.props)}
         />
       );
     }
@@ -127,13 +127,18 @@ function createClass(componentName, inputType) {
         fFocused,
       } = this.props;
       const otherProps = omit(this.props, FILTERED_OUT_PROPS_MDL);
-      let className = `giu-${inputType}-input mdl-textfield mdl-js-textfield mdl-textfield--floating-label`;
-      if (curValue !== '' || fFocused) className += ' is-dirty';
       return (
         <div
           ref={this.refMdl}
-          className={className}
-          style={style.mdlField(this.props)}
+          className={classnames(
+            `giu-${inputType}-input`,
+            `giu-${inputType}-input-mdl`,
+            'mdl-textfield mdl-js-textfield mdl-textfield--floating-label',
+            {
+              'is-dirty': curValue !== '' || fFocused,
+              disabled,
+            }
+          )}
         >
           <input
             ref={registerFocusableRef}
@@ -157,12 +162,11 @@ function createClass(componentName, inputType) {
       return (
         <input
           ref={registerFocusableRef}
-          className={`giu-${inputType}-input mdl-slider mdl-js-slider`}
+          className={`giu-${inputType}-input giu-${inputType}-input-mdl mdl-slider mdl-js-slider`}
           type={inputType}
           value={curValue}
           {...otherProps}
           tabIndex={disabled ? -1 : undefined}
-          style={style.mdlField(this.props)}
         />
       );
     }
@@ -181,26 +185,6 @@ function createClass(componentName, inputType) {
 
   return Klass;
 }
-
-// ==========================================
-const style = {
-  fieldBase: inputReset(),
-  field: ({ style: styleField, disabled, vertical }) => {
-    let out = style.fieldBase;
-    if (disabled) out = merge(out, INPUT_DISABLED);
-    out = merge(out, styleField);
-    if (vertical) out = timmSet(out, 'WebkitAppearance', 'slider-vertical');
-    return out;
-  },
-  mdlField: ({ style: styleField, disabled }) => {
-    let out = { width: 150 };
-    if (disabled) {
-      out = merge(out, { cursor: 'default', pointerEvents: 'none' });
-    }
-    out = merge(out, styleField);
-    return out;
-  },
-};
 
 // ==========================================
 // Public
