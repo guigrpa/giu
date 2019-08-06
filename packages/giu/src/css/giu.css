@@ -25,12 +25,10 @@
 body {
   /* Text */
   --color-dim: #999999;
-  --color-dark-text: black;
-  --color-light-text: white;
   /* Others */
+  --color-hint: white;
   --color-line: #999999;
   --color-line-dim: #cccccc;
-  --color-line-dark: black;
   --color-input-bg: white;
   --color-accent-bg: #6600cc;
   --color-accent-fg: white;
@@ -302,14 +300,14 @@ row is drawn above the modal, not below */
 .giu-hint-screen-contents {
   font-family: 'Gloria Hallelujah', sans-serif;
   font-size: 20px;
-  color: var(--color-light-text);
+  color: var(--color-hint);
 }
 
 .giu-hint-screen-close {
   position: fixed;
   bottom: 20px;
   right: 20px;
-  border: 1px solid var(--color-light-text);
+  border: 1px solid var(--color-hint);
   padding: 5px 25px;
   border-radius: 8px;
   cursor: pointer;
@@ -319,7 +317,7 @@ row is drawn above the modal, not below */
   position: fixed;
   width: 100vw;
   height: 100vh;
-  stroke: var(--color-light-text);
+  stroke: var(--color-hint);
   stroke-width: 2px;
   fill: transparent;
   pointer-events: none;
@@ -891,6 +889,42 @@ row is drawn above the modal, not below */
 
 .giu-select-custom-title-wrapper-for-ios {
   position: relative;
+}
+
+/* ------------------------ */
+/* Textarea
+/* ------------------------ */
+.giu-textarea {
+  position: relative;
+}
+
+.giu-textarea-field {
+  display: block;
+  width: 100%;
+  line-height: inherit;
+  height: 1px; /* initial value; for sure < placeholder */
+  overflow: hidden;
+  cursor: text;
+  resize: none;
+  padding: 2px;
+}
+
+.giu-textarea-placeholder {
+  display: block;
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  opacity: 0;
+  padding: 2px;
+  border: 1px solid red;
+  color: red;
+  cursor: text;
+  white-space: pre-wrap;
+  z-index: -50;
+  /* If the user specifies a `maxHeight`, we don't want
+     the (hidden) text to overflow vertically */
+  overflow-y: hidden;
 }
 
 /* ------------------------ */

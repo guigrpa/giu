@@ -237,19 +237,17 @@ class FormExample extends React.Component<
           />
         </div>
         <br />
-        <div>
+        <div className="textarea-examples">
           <ExampleLabel>Textarea (with auto-resize)</ExampleLabel>
           <Textarea
             value="En un lugar de la Mancha..."
             styleOuter={{ display: 'block' }}
-            style={{ display: 'block', minHeight: '1.5em' }}
             required
           />
           <Textarea
             disabled
             value="En un lugar de la Mancha..."
             styleOuter={{ display: 'block' }}
-            style={{ display: 'block', minHeight: '1.5em' }}
           />
         </div>
         <br />
@@ -615,6 +613,10 @@ class FormExample extends React.Component<
           }
           .giu-select-custom {
             max-width: 100px;
+          }
+          .textarea-examples .giu-textarea-field,
+          .textarea-examples .giu-textarea-placeholder {
+            min-height: 2rem;
           }
           `}</style>
       </div>

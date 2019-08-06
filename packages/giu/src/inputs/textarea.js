@@ -1,16 +1,14 @@
 // @flow
 
 import React from 'react';
-import { omit, merge } from 'timm';
+import { omit } from 'timm';
+import classnames from 'classnames';
 import { preventDefault, stopPropagation } from '../gral/helpers';
 import { KEYS } from '../gral/constants';
-import { inputReset, INPUT_DISABLED } from '../gral/styles';
 import { isAnyModifierPressed } from '../gral/keys';
 import type { Theme } from '../gral/themeContext';
 import Input, { INPUT_HOC_INVALID_HTML_PROPS } from '../hocs/input';
 import type { InputHocPublicProps } from '../hocs/input';
-
-const DEBUG = false && process.env.NODE_ENV !== 'production';
 
 const NULL_VALUE = '';
 const toInternalValue = val => (val != null ? val : NULL_VALUE);
@@ -30,7 +28,6 @@ const getPlaceholderText = val => {
 // -- START_DOCS
 type PublicProps = {
   ...$Exact<InputHocPublicProps>, // common to all inputs (check the docs!)
-  style?: Object,
   skipTheme?: boolean,
   // all others are passed through unchanged
 };
@@ -51,7 +48,6 @@ type Props = {
 };
 
 const FILTERED_OUT_PROPS = [
-  'style',
   'skipTheme',
   'required',
   'theme',
@@ -87,25 +83,20 @@ class BaseTextarea extends React.Component<Props> {
     if (!this.props.skipTheme && this.props.theme.id === 'mdl') {
       return this.renderMdl();
     }
-    const { curValue, disabled, style: styleField } = this.props;
+    const { curValue, disabled } = this.props;
     const otherProps = omit(this.props, FILTERED_OUT_PROPS);
     return (
-      <div
-        ref={this.registerOuterRef}
-        className="giu-textarea"
-        style={style.taWrapper}
-      >
-        <div
-          ref={this.refTaPlaceholder}
-          style={merge(style.hiddenPlaceholder, styleField)}
-        >
+      <div ref={this.registerOuterRef} className="giu-textarea">
+        <div ref={this.refTaPlaceholder} className="giu-textarea-placeholder">
           {getPlaceholderText(curValue)}
         </div>
         <textarea
           ref={this.registerInputRef}
+          className={classnames('giu-input-reset giu-textarea-field', {
+            'giu-input-disabled': disabled,
+          })}
           value={curValue}
           onKeyDown={this.onKeyDown}
-          style={style.field(this.props)}
           tabIndex={disabled ? -1 : undefined}
           {...otherProps}
         />
@@ -187,61 +178,6 @@ const render = props => <BaseTextarea {...props} />;
 const Textarea = React.forwardRef((publicProps: PublicProps, ref) => (
   <Input hocOptions={hocOptions} render={render} {...publicProps} ref={ref} />
 ));
-
-// ==========================================
-const style = {
-  taWrapper: {
-    position: 'relative',
-  },
-  fieldBase: inputReset({
-    display: 'block',
-    width: '100%',
-    lineHeight: 'inherit',
-    height: 1, // initial value; for sure < than the placeholder
-    overflow: 'hidden',
-    cursor: 'beam',
-    resize: 'none',
-    padding: 2,
-  }),
-  field: ({ disabled, style: styleField }) => {
-    let out = style.fieldBase;
-    if (disabled) out = merge(out, INPUT_DISABLED);
-    out = merge(out, styleField);
-    return out;
-  },
-  mdlField: ({ disabled, style: styleField }) => {
-    let out = {
-      width: '100%',
-      lineHeight: 'inherit',
-      cursor: 'beam',
-      padding: 2,
-    };
-    if (disabled) {
-      out = merge(out, { cursor: 'default', pointerEvents: 'none' });
-    }
-    out = merge(out, styleField);
-    return out;
-  },
-
-  // hidden placeholder
-  hiddenPlaceholder: {
-    position: 'absolute',
-    top: 0,
-    left: 0,
-    width: '100%',
-    opacity: DEBUG ? 1 : 0,
-    padding: 2,
-    border: '1px solid red',
-    color: 'red',
-    cursor: 'beam',
-    whiteSpace: 'pre-wrap',
-    zIndex: DEBUG ? +50 : -50,
-
-    // If the user specifies a `maxHeight`, we don't want
-    // the (hidden) text to overflow vertically
-    overflowY: 'hidden',
-  },
-};
 
 // ==========================================
 // Public
