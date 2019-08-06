@@ -53,7 +53,6 @@ import HintExample from '../components/demo1-hints';
 import FormExample from '../components/demo1-forms';
 import FormExample2 from '../components/demo1-forms2';
 import 'giu/lib/css/giu.css';
-import 'giu/lib/css/colorInput.css';
 
 const { floor, random } = Math;
 const randomInt = (min, max) => min + floor(random() * (max - min + 1));

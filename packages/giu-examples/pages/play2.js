@@ -1,7 +1,6 @@
 import React from 'react';
 import Link from 'next/link';
 import 'giu/lib/css/giu.css';
-import 'giu/lib/css/colorInput.css';
 
 // ================================================
 // Public

@@ -46,7 +46,6 @@ import {
   IS_IOS,
 } from 'giu';
 import 'giu/lib/css/giu.css';
-import 'giu/lib/css/colorInput.css';
 
 let FontFaceObserver;
 try {

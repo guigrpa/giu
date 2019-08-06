@@ -6,6 +6,7 @@
     * Remove HIDDEN_FOCUS_CAPTURE, HIDDEN_FOCUS_CAPTURE_IOS once they're no longer used
     * Make sure all elements have optional id's (for configuration)
     * Clean up examples, using CSS
+* Make `id` prop mandatory in some components.
 
 * **Bugs**
     * Main docs: inline textareas: misaligned
@@ -19,7 +20,6 @@
 * [ ] Think: how do we revert all fields in a datatable record? (try to update the example page `datatable.js`)
 * Use Portals?
 * [ ] Update Font Awesome (later)
-* [ ] Unit tests (with Jest snapshots)
 
 * [ ] Add copy&paste to RangePicker
 * [ ] _Bug_ ListPicker on Windows incorrectly aligns (vertically) items and shortcuts (it _is_ correct in the main doc page)

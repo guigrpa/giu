@@ -2,7 +2,7 @@
     * Move 99.99% of styles to **giu.css**, so that they can be fully configured by the user.
     * Remove `style` props.
     * Remove `zIndex` props.
-    * Remove **reset.css**.
+    * Remove **reset.css**, **colorInput.css**.
 * Bump babel.
 * Remove tests + related dependencies.
 
