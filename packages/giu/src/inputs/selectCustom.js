@@ -1,7 +1,8 @@
 // @flow
 
 import React from 'react';
-import { merge, set as timmSet } from 'timm';
+import { merge } from 'timm';
+import classnames from 'classnames';
 import {
   KEYS,
   UNICODE,
@@ -9,13 +10,6 @@ import {
   IS_IOS,
   IS_MOBILE_OR_TABLET,
 } from '../gral/constants';
-import {
-  flexContainer,
-  flexItem,
-  GLOW,
-  inputReset,
-  INPUT_DISABLED,
-} from '../gral/styles';
 import {
   createShortcut,
   registerShortcut,
@@ -151,7 +145,7 @@ class BaseSelectCustom extends React.Component<Props> {
       onClick: this.onClickTitle,
     });
     return IS_IOS ? (
-      <span style={style.providedTitleWrapperForIos}>
+      <span className="giu-select-custom-title-wrapper-for-ios">
         {elTitle}
         {this.renderFloatForIos()}
       </span>
@@ -161,7 +155,7 @@ class BaseSelectCustom extends React.Component<Props> {
   }
 
   renderDefaultTitle() {
-    const { curValue, lang } = this.props;
+    const { curValue, lang, disabled } = this.props;
     let label = UNICODE.nbsp;
     if (curValue !== NULL_STRING) {
       const item = this.items.find(o => o.value === curValue);
@@ -174,13 +168,21 @@ class BaseSelectCustom extends React.Component<Props> {
     return (
       <span
         ref={this.registerTitleRef}
-        className="giu-select-custom"
+        className={classnames('giu-input-reset giu-select-custom', {
+          'giu-glow': this.props.fFocused,
+          'giu-input-disabled': disabled,
+        })}
         onMouseDown={this.onMouseDownTitle}
         onClick={this.onClickTitle}
-        style={style.title(this.props)}
       >
-        <span style={style.titleText}>{label}</span>
-        <Icon icon={caretIcon} skipTheme style={style.caret(this.props)} />
+        <span className="giu-select-custom-title-text">{label}</span>
+        <Icon
+          className={classnames('giu-select-custom-caret', {
+            'giu-select-custom-caret-disabled': disabled,
+          })}
+          icon={caretIcon}
+          skipTheme
+        />
         {IS_IOS && this.renderFloatForIos()}
       </span>
     );
@@ -243,7 +245,6 @@ class BaseSelectCustom extends React.Component<Props> {
         disabled={this.props.disabled}
         fFocused={inlinePicker && this.props.fFocused}
         fFloating={!inlinePicker}
-        style={this.props.style}
         twoStageStyle={this.props.twoStageStyle}
         accentColor={this.props.theme.accentColor}
       />
@@ -359,52 +360,13 @@ const hocOptions = {
     KEYS.del,
     KEYS.backspace,
   ],
-  className: 'giu-select-custom',
+  className: 'giu-select-custom-wrapper',
 };
 const render = (props, ref) => <BaseSelectCustom {...props} ref={ref} />;
 // $FlowFixMe
 const SelectCustom = React.forwardRef((publicProps: PublicProps, ref) => (
   <Input hocOptions={hocOptions} render={render} {...publicProps} ref={ref} />
 ));
-
-// ==========================================
-const style = {
-  titleBase: flexContainer(
-    'row',
-    inputReset({
-      display: 'inline-flex',
-      padding: '1px 2px',
-      minWidth: 40,
-      cursor: 'pointer',
-      position: 'relative',
-    })
-  ),
-  title: ({ disabled, fFocused, styleTitle }) => {
-    let out = style.titleBase;
-    if (disabled) out = merge(out, INPUT_DISABLED);
-    if (fFocused) out = merge(out, GLOW);
-    if (styleTitle) out = merge(out, styleTitle);
-    return out;
-  },
-  titleText: flexItem(1, {
-    overflow: 'hidden',
-    whiteSpace: 'nowrap',
-    textOverflow: 'ellipsis',
-  }),
-  caret: ({ disabled }) => {
-    let out = style.caretBase;
-    if (disabled) {
-      out = timmSet(out, 'opacity', 0);
-    }
-    return out;
-  },
-  caretBase: {
-    marginLeft: 15,
-    marginRight: 3,
-    marginTop: 1,
-  },
-  providedTitleWrapperForIos: { position: 'relative' },
-};
 
 // ==========================================
 // Public

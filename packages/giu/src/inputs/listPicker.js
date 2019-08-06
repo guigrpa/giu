@@ -108,7 +108,7 @@ class ListPicker extends React.PureComponent<Props, State> {
     return (
       <div
         ref={this.registerOuterRef}
-        className={classnames('giu-list-picker giu-input-reset', {
+        className={classnames('giu-input-reset giu-list-picker', {
           'giu-input-disabled': this.props.disabled,
           'giu-glow': this.props.fFocused,
           'giu-list-picker-two-stage': this.props.twoStageStyle,

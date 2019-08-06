@@ -129,7 +129,7 @@ const hocOptions = {
   toExternalValue,
   isNull,
   fIncludeFocusCapture: !IS_IOS,
-  className: 'giu-radio-buttons',
+  className: 'giu-radio-group-wrapper',
 };
 const render = props => <BaseRadioGroup {...props} />;
 // $FlowFixMe

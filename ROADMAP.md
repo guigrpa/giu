@@ -1,14 +1,20 @@
 # Roadmap
 
 * Use plain old CSS stylesheets (customisable!), instead of element CSS:
+    * dateXXXX
+    * textarea
+    * textNumberXXX
+    * timePickerXXX
+    * input (incl. errors)
+    * z-index
+    * id prop (especially floats: inherit from owner)
     * Remove accentColor from theme object (when all elements using it are migrated)
     * DropDownMenu: remove style props (when Select is updated)
     * Remove HIDDEN_FOCUS_CAPTURE, HIDDEN_FOCUS_CAPTURE_IOS once they're no longer used
-    * Make sure all elements have optional id's (for configuration)
     * Clean up examples, using CSS
-* Make `id` prop mandatory in some components.
-* Continue removing `zIndex` (configurable via CSS)
-* Fix zIndex in examples!!
+    * Make `id` prop mandatory in some components.
+    * Fix zIndex in examples!!
+    * Remove contents from gral/styles that is no longer needed and not public
 
 * **Bugs**
     * Main docs: inline textareas: misaligned

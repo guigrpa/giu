@@ -555,6 +555,7 @@ row is drawn above the modal, not below */
   background-color: var(--color-input-bg);
   border: 1px solid var(--color-line);
   font-family: inherit;
+  font-size: inherit;
   font-weight: inherit;
   color: inherit;
 }
@@ -597,7 +598,7 @@ row is drawn above the modal, not below */
 }
 
 /* ColorInput */
-.giu-color-input-title {
+.giu-color-input {
   display: inline-block;
   position: relative;
   cursor: pointer;
@@ -853,4 +854,41 @@ row is drawn above the modal, not below */
 .giu-radio-group-label-extra {
   margin-left: 20px;
   cursor: default;
+}
+
+/* ------------------------ */
+/* SelectNative, SelectCustom */
+/* ------------------------ */
+.giu-select-native {
+  font-family: inherit;
+  font-weight: inherit;
+  color: inherit;
+}
+
+.giu-select-custom {
+  display: inline-flex;
+  padding: 1px 2px;
+  min-width: 40px;
+  cursor: pointer;
+  position: relative;
+}
+
+.giu-select-custom-title-text {
+  flex: 1 0 0px;
+  overflow: hidden;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+}
+
+.giu-select-custom-caret {
+  margin-left: 15px;
+  margin-right: 3px;
+  margin-top: 1px;
+}
+.giu-select-custom-caret-disabled {
+  opacity: 0;
+}
+
+.giu-select-custom-title-wrapper-for-ios {
+  position: relative;
 }

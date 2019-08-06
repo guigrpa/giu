@@ -1,9 +1,9 @@
 // @flow
 
 import React from 'react';
-import { omit, merge } from 'timm';
+import { omit } from 'timm';
+import classnames from 'classnames';
 import { NULL_STRING } from '../gral/constants';
-import { inputReset, INPUT_DISABLED } from '../gral/styles';
 import Input, { INPUT_HOC_INVALID_HTML_PROPS } from '../hocs/input';
 import type { InputHocPublicProps } from '../hocs/input';
 import { LIST_SEPARATOR_KEY } from './listPicker';
@@ -70,11 +70,12 @@ class BaseSelectNative extends React.Component<Props> {
     return (
       <select
         ref={registerFocusableRef}
-        className="giu-select-native"
+        className={classnames('giu-select-native', {
+          'giu-input-disabled': disabled,
+        })}
         value={curValue}
         {...otherProps}
         tabIndex={disabled ? -1 : undefined}
-        style={style.field(this.props)}
       >
         {finalItems.map(o => {
           const value =
@@ -103,20 +104,6 @@ const render = props => <BaseSelectNative {...props} />;
 const SelectNative = React.forwardRef((publicProps: PublicProps, ref) => (
   <Input hocOptions={hocOptions} render={render} {...publicProps} ref={ref} />
 ));
-
-// ==========================================
-const style = {
-  fieldBase: inputReset({
-    backgroundColor: 'default',
-    border: 'default',
-  }),
-  field: ({ disabled, style: base }) => {
-    let out = style.fieldBase;
-    if (disabled) out = merge(out, INPUT_DISABLED);
-    out = merge(out, base);
-    return out;
-  },
-};
 
 // ==========================================
 // Public

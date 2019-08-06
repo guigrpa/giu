@@ -137,7 +137,7 @@ class ColorPicker extends React.PureComponent<Props, State> {
     return (
       <div
         ref={registerOuterRef}
-        className={classnames('giu-color-picker giu-input-reset', {
+        className={classnames('giu-input-reset giu-color-picker', {
           'giu-input-disabled': this.props.disabled,
           'giu-glow': this.props.fFocused,
         })}

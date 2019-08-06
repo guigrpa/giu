@@ -290,7 +290,6 @@ class FormExample extends React.Component<
               onChange={onChangeJson}
               items={WIDE_OPTIONS}
               lang={lang}
-              styleTitle={{ maxWidth: 100 }}
             />
             <Select
               type="dropDownPicker"
@@ -619,6 +618,9 @@ class FormExample extends React.Component<
         <style jsx global>{`
           .inline-pickers .giu-list-picker {
             height: 150px;
+          }
+          .giu-select-custom {
+            max-width: 100px;
           }
           `}</style>
       </div>

@@ -21,9 +21,6 @@ export type SelectProps = {
   // enabling this flag disables the addition of a `null` option to the `items` list
   required?: boolean,
   disabled?: boolean,
-  // Style is merged with the outermost `div` style (if `type` is `inlinePicker`),
-  // or with the `input` style (if `type` is `native`)
-  style?: Object,
 
   // SelectCustom only
   // -----------------
@@ -33,7 +30,6 @@ export type SelectProps = {
   floatPosition?: FloatPosition,
   floatAlign?: FloatAlign,
   floatZ?: number,
-  styleTitle?: Object, // merged with the title span
   // When enabled, two different visual styles are applied
   // to an item depending on whether it is just *hovered* or also *selected*. If disabled,
   // a single style is used to highlight the selected or the hovered item

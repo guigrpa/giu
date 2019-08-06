@@ -106,7 +106,7 @@ class BaseColorInput extends React.Component<Props> {
       // The `x` text keeps baselines aligned
       <div
         ref={this.registerTitleRef}
-        className={classnames('giu-color-input-title giu-input-reset', {
+        className={classnames('giu-input-reset giu-color-input', {
           'giu-input-disabled': this.props.disabled,
           'giu-glow': this.props.fFocused,
         })}
@@ -230,7 +230,7 @@ const hocOptions = {
   isNull,
   fIncludeFocusCapture: !MANAGE_FOCUS_AUTONOMOUSLY,
   trappedKeys: [KEYS.esc],
-  className: 'giu-color-input',
+  className: 'giu-color-input-wrapper',
 };
 const render = (props, ref) => <BaseColorInput {...props} ref={ref} />;
 // $FlowFixMe
