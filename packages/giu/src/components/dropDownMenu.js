@@ -23,7 +23,6 @@ type Props = {
     ev: SyntheticMouseEvent<*>, // `click` event
     val: any // the item's `value` (as specified in the `items` prop)
   ) => any,
-  styleListPicker?: Object, // will be merged with the list picker's outer `div`
 
   // All other props are passed through to the Select input component
 };
@@ -34,7 +33,6 @@ const FILTERED_PROPS = [
   'lang',
   'children',
   'onClickItem',
-  'styleListPicker',
   'accentColor',
 ];
 
@@ -60,7 +58,6 @@ class DropDownMenu extends React.PureComponent<Props, State> {
         onCloseFloat={this.closeMenu}
         onFocus={this.onFocus}
         onBlur={this.onBlur}
-        style={this.props.styleListPicker}
         styleOuter={style.selectOuter}
         {...props}
         required

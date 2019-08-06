@@ -7,7 +7,6 @@ import type { Moment, Choice, KeyboardEventPars } from '../gral/types';
 import { getScrollbarWidth, NULL_STRING } from '../gral/constants';
 import { ListPicker } from './listPicker';
 
-const ROW_HEIGHT = '1.3em';
 const DEFAULT_STEP_MINUTES = 30;
 
 // ==========================================
@@ -52,9 +51,7 @@ class TimePickerDigital extends React.Component<Props> {
         curValue={this.getSeconds()}
         onChange={this.onChange}
         disabled={disabled}
-        style={style.outer}
         twoStageStyle
-        styleItem={style.item}
         accentColor={accentColor}
       />
     );
@@ -101,22 +98,6 @@ class TimePickerDigital extends React.Component<Props> {
     return String(secs);
   }
 }
-
-// ==========================================
-const style = {
-  outer: {
-    marginTop: 3,
-    marginBottom: 3,
-    padding: 0,
-    border: 'none',
-    maxHeight: '12.5em',
-  },
-  item: {
-    padding: `0px ${6 + getScrollbarWidth()}px 0px 6px`,
-    height: ROW_HEIGHT,
-    cursor: 'pointer',
-  },
-};
 
 // ==========================================
 // Public

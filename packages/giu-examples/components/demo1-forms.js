@@ -320,7 +320,7 @@ class FormExample extends React.Component<
               items={TALL_OPTIONS}
             />
           </div>
-          <div style={flexContainer('row')}>
+          <div className="inline-pickers" style={flexContainer('row')}>
             <Select
               type="inlinePicker"
               required
@@ -328,7 +328,6 @@ class FormExample extends React.Component<
               lang={lang}
               onChange={onChangeJson}
               styleOuter={flexItem(1, { marginRight: 4 })}
-              style={{ height: 150 }}
             />
             <Select
               type="inlinePicker"
@@ -337,14 +336,12 @@ class FormExample extends React.Component<
               onChange={onChangeJson}
               twoStageStyle
               styleOuter={flexItem(1, { marginRight: 4 })}
-              style={{ height: 150 }}
             />
             <Select
               type="inlinePicker"
               items={[]}
               onChange={onChangeJson}
               styleOuter={flexItem(1, { marginRight: 4 })}
-              style={{ height: 150 }}
             />
             <Select
               type="inlinePicker"
@@ -353,7 +350,6 @@ class FormExample extends React.Component<
               value={33}
               onChange={onChangeJson}
               styleOuter={flexItem(1)}
-              style={{ height: 150 }}
             />
           </div>
         </div>
@@ -620,6 +616,11 @@ class FormExample extends React.Component<
             Revert & blur
           </Button>
         </div>
+        <style jsx global>{`
+          .inline-pickers .giu-list-picker {
+            height: 150px;
+          }
+          `}</style>
       </div>
     );
   }

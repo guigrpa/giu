@@ -75,7 +75,7 @@ const TEST = 0;
 const EVERYTHING = true;
 class App extends React.Component {
   state = {
-    accentColor: COLORS.accent,
+    accentColor: 'rgb(76, 144, 87)',
   };
 
   // -----------------------------------------------

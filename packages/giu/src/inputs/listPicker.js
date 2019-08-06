@@ -1,7 +1,7 @@
 // @flow
 
 import React from 'react';
-import { merge } from 'timm';
+import classnames from 'classnames';
 import {
   COLORS,
   UNICODE,
@@ -13,14 +13,7 @@ import {
 import { cancelEvent, cancelBodyScrolling } from '../gral/helpers';
 import { scrollIntoView } from '../gral/visibility';
 import type { ScrollIntoViewOptions } from '../gral/visibility';
-import {
-  isDark,
-  flexContainer,
-  flexItem,
-  inputReset,
-  INPUT_DISABLED,
-  GLOW,
-} from '../gral/styles';
+import { isDark } from '../gral/styles';
 import type {
   Choice,
   KeyboardEventPars,
@@ -44,15 +37,10 @@ type Props = {|
   disabled?: boolean,
   fFocused?: boolean,
   fFloating?: boolean,
-  style?: Object,
-  styleItem?: Object,
   twoStageStyle?: boolean,
-  accentColor: string,
 |};
 
-type State = {
-  hovering: ?string,
-};
+type State = {};
 
 // ==========================================
 // Component
@@ -60,8 +48,6 @@ type State = {
 class ListPicker extends React.PureComponent<Props, State> {
   refOuter: ?Object;
   refItems: Array<?Object>;
-
-  state = { hovering: null };
 
   // For floating pickers, we need to wait until the float update cycle has finished.
   componentDidMount() {
@@ -119,13 +105,15 @@ class ListPicker extends React.PureComponent<Props, State> {
 
   // ==========================================
   render() {
-    const { style: baseStyle } = this.props;
     return (
       <div
         ref={this.registerOuterRef}
-        className="giu-list-picker"
+        className={classnames('giu-list-picker giu-input-reset', {
+          'giu-input-disabled': this.props.disabled,
+          'giu-glow': this.props.fFocused,
+          'giu-list-picker-two-stage': this.props.twoStageStyle,
+        })}
         onWheel={cancelBodyScrolling}
-        style={merge(style.outer(this.props), baseStyle)}
       >
         {this.renderContents()}
       </div>
@@ -139,7 +127,7 @@ class ListPicker extends React.PureComponent<Props, State> {
       (items.length === 1 && items[0].value === '' && items[0].label === '')
     ) {
       const { emptyText = DEFAULT_EMPTY_TEXT } = this.props;
-      return <div style={style.empty}>{emptyText}</div>;
+      return <div className="giu-list-picker-empty">{emptyText}</div>;
     }
     this.refItems = [];
     return items.map(this.renderItem);
@@ -147,41 +135,13 @@ class ListPicker extends React.PureComponent<Props, State> {
 
   renderItem = (item: Choice, idx: number) => {
     const { value: itemValue, label, disabled: itemDisabled, shortcuts } = item;
-    const {
-      curValue,
-      disabled,
-      styleItem,
-      twoStageStyle,
-      accentColor,
-    } = this.props;
-    const { hovering } = this.state;
-    if (label === LIST_SEPARATOR_KEY) {
-      return (
-        <div
-          key={`separator_${idx}`}
-          ref={c => {
-            this.refItems[idx] = c;
-          }}
-          style={style.separatorWrapper}
-        >
-          <div style={style.separator} />
-        </div>
-      );
-    }
-    const styleProps = {
-      hovering,
-      fHovered: hovering === itemValue,
-      fSelected: curValue === itemValue,
-      disabled: itemDisabled,
-      twoStageStyle,
-      accentColor,
-    };
+    if (label === LIST_SEPARATOR_KEY) return this.renderSeparator(idx);
+    const { curValue, disabled } = this.props;
     const keyEl = IS_IOS ? undefined : this.renderKeys(shortcuts);
     const finalLabel =
       (typeof label === 'function' ? label(this.props.lang) : label) ||
       UNICODE.nbsp;
     const finalDisabled = disabled || itemDisabled;
-    const finalStyle = merge(style.item(styleProps), styleItem);
     return (
       <div
         key={itemValue}
@@ -189,25 +149,42 @@ class ListPicker extends React.PureComponent<Props, State> {
           this.refItems[idx] = c;
         }}
         id={itemValue}
+        className={classnames('giu-list-item', {
+          'giu-list-item-selected': curValue === itemValue,
+          'giu-list-item-disabled': itemDisabled,
+        })}
         onMouseEnter={finalDisabled ? undefined : this.onHoverStart}
         onMouseLeave={finalDisabled ? undefined : this.onHoverStop}
         onMouseDown={cancelEvent}
         onMouseUp={IS_IOS || finalDisabled ? undefined : this.onClickItem}
         onClick={IS_IOS && !finalDisabled ? this.onClickItem : undefined}
-        style={finalStyle}
       >
         {finalLabel}
-        {keyEl ? <div style={flexItem(1)} /> : undefined}
+        {keyEl ? <div className="giu-flex-space" /> : undefined}
         {keyEl}
       </div>
     );
   };
 
+  renderSeparator(idx: number) {
+    return (
+      <div
+        key={`separator_${idx}`}
+        ref={c => {
+          this.refItems[idx] = c;
+        }}
+        className="giu-list-separator-wrapper"
+      >
+        <div className="giu-list-separator" />
+      </div>
+    );
+  }
+
   renderKeys(shortcuts: ?Array<KeyboardShortcut>) {
     if (!shortcuts) return null;
     const desc = shortcuts.map(o => o.description).join(', ');
     if (!desc) return null;
-    return <span style={style.shortcut}>{desc}</span>;
+    return <span className="giu-list-item-shortcut">{desc}</span>;
   }
 
   // ==========================================
@@ -222,14 +199,6 @@ class ListPicker extends React.PureComponent<Props, State> {
     const { id } = currentTarget;
     onChange(ev, id);
     if (onClickItem) onClickItem(ev, id);
-  };
-
-  onHoverStart = (ev: SyntheticMouseEvent<*>) => {
-    this.setState({ hovering: ev.currentTarget.id });
-  };
-
-  onHoverStop = () => {
-    this.setState({ hovering: null });
   };
 
   // ==========================================
@@ -266,81 +235,6 @@ class ListPicker extends React.PureComponent<Props, State> {
     scrollIntoView(this.refItems[idx], options);
   }
 }
-
-// ==========================================
-const style = {
-  outerBase: inputReset({
-    paddingTop: 3,
-    paddingBottom: 3,
-    maxHeight: 'inherit',
-    overflowY: 'auto',
-  }),
-  outerDisabled: undefined, // yet (prevents Flow error)
-  outer: ({ disabled, fFocused }) => {
-    let out = style.outerBase;
-    if (disabled) out = merge(out, style.outerDisabled);
-    if (fFocused) out = merge(out, GLOW);
-    return out;
-  },
-  empty: {
-    paddingTop: 3,
-    paddingBottom: 3,
-    color: COLORS.dim,
-    paddingRight: 10 + getScrollbarWidth(),
-    paddingLeft: 10,
-    cursor: 'not-allowed',
-  },
-  item: ({
-    hovering,
-    fHovered,
-    fSelected,
-    twoStageStyle,
-    accentColor,
-    disabled,
-  }) => {
-    let border;
-    let backgroundColor;
-    if (twoStageStyle) {
-      border = `1px solid ${
-        fHovered || fSelected ? accentColor : 'transparent'
-      }`;
-      backgroundColor = fSelected ? accentColor : undefined;
-    } else {
-      const fHighlighted = fHovered || (fSelected && hovering == null);
-      border = '1px solid transparent';
-      backgroundColor = fHighlighted ? accentColor : undefined;
-    }
-    let color;
-    if (disabled) {
-      color = COLORS.dim;
-    } else if (backgroundColor) {
-      color = COLORS[isDark(backgroundColor) ? 'lightText' : 'darkText'];
-    }
-    return flexContainer('row', {
-      alignItems: 'center',
-      backgroundColor,
-      color,
-      border,
-      cursor: 'default',
-      whiteSpace: 'nowrap',
-      padding: `3px ${10 + getScrollbarWidth()}px 3px 10px`,
-    });
-  },
-  separatorWrapper: {
-    paddingTop: 3,
-    paddingBottom: 3,
-    height: 7,
-    cursor: 'default',
-  },
-  separator: {
-    borderTop: `1px solid ${COLORS.line}`,
-    height: 1,
-  },
-  shortcut: { marginLeft: 20 },
-};
-style.outerDisabled = merge(INPUT_DISABLED, {
-  pointerEvents: null,
-});
 
 // ==========================================
 // Public
