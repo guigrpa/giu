@@ -4,7 +4,7 @@ import React from 'react';
 import moment from '../vendor/moment';
 import { startOfToday, getTimeInSecs } from '../gral/dates';
 import type { Moment, Choice, KeyboardEventPars } from '../gral/types';
-import { getScrollbarWidth, NULL_STRING } from '../gral/constants';
+import { NULL_STRING } from '../gral/constants';
 import { ListPicker } from './listPicker';
 
 const DEFAULT_STEP_MINUTES = 30;
@@ -18,7 +18,6 @@ type Props = {
   onChange: (ev: ?SyntheticEvent<*>, value: ?Moment) => any,
   utc: boolean,
   stepMinutes?: number,
-  accentColor: string,
 };
 
 // ==========================================
@@ -43,7 +42,7 @@ class TimePickerDigital extends React.Component<Props> {
 
   // ==========================================
   render() {
-    const { disabled, accentColor } = this.props;
+    const { disabled } = this.props;
     return (
       <ListPicker
         ref={this.refListPicker}
@@ -52,7 +51,6 @@ class TimePickerDigital extends React.Component<Props> {
         onChange={this.onChange}
         disabled={disabled}
         twoStageStyle
-        accentColor={accentColor}
       />
     );
   }
