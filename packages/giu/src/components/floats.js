@@ -36,7 +36,6 @@ type FloatUserPars = {|
   id?: string,
   position?: FloatPosition,
   align?: FloatAlign,
-  zIndex?: number,
   limitSize?: boolean,
   getAnchorNode: () => ?Node,
   style?: Object,
@@ -46,7 +45,6 @@ type FloatUserPars = {|
 type FloatStatePars = {
   ...FloatUserPars,
   id: string,
-  zIndex: number,
   limitSize: boolean,
 };
 type State = {
@@ -97,7 +95,6 @@ const reducer: Reducer<State, Action> = (state0 = INITIAL_STATE, action) => {
 // ==========================================
 let cntId = 0;
 const DEFAULT_FLOAT_PARS = {
-  zIndex: MISC.zMainFloatDelta,
   limitSize: false,
 };
 const actions = {
@@ -207,23 +204,17 @@ class Floats extends React.PureComponent<Props> {
 
   renderFloat = (props: FloatStatePars, idx: number) => {
     if (!isAnchorVisible(props)) return null;
-    const { id, zIndex } = props;
+    const { id } = props;
     return (
-      <div
-        key={id}
-        className="giu-float"
-        onMouseDown={cancelEvent}
-        style={{ zIndex }}
-      >
+      <div key={id} className="giu-float" onMouseDown={cancelEvent}>
         <div
           ref={c => {
             this.refFloats[idx] = c;
           }}
           className={classnames('giu-float-inner', {
-            'giu-box-shadow': !this.props.noStyleShadow,
+            'giu-box-shadow': !props.noStyleShadow,
           })}
           {...omit(props, PROP_KEYS_TO_REMOVE_FROM_FLOAT_DIV)}
-          style={this.props.style}
         />
       </div>
     );

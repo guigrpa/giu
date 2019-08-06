@@ -201,11 +201,10 @@ class BaseSelectCustom extends React.Component<Props> {
 
     // Create or update float
     if (fFloat) {
-      const { floatZ, floatPosition, floatAlign } = this.props;
+      const { floatPosition, floatAlign } = this.props;
       const floatOptions = {
         position: floatPosition,
         align: floatAlign,
-        zIndex: floatZ,
         limitSize: true,
         getAnchorNode: () => this.refTitle,
         children: this.renderPicker(),
@@ -224,7 +223,6 @@ class BaseSelectCustom extends React.Component<Props> {
       <IosFloatWrapper
         floatPosition={this.props.floatPosition}
         floatAlign={this.props.floatAlign}
-        floatZ={this.props.floatZ}
       >
         {this.renderPicker()}
       </IosFloatWrapper>

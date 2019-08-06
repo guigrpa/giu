@@ -252,6 +252,7 @@ row is drawn above the modal, not below */
   left: 0;
   width: 0;
   height: 0;
+  z-index: 5;
 }
 
 .giu-float-inner {

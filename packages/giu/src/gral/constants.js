@@ -63,7 +63,6 @@ const UNICODE = {
 
 const MISC = {
   windowBorderBreathe: 5,
-  zMainFloatDelta: 5,
   zErrorFloatDelta: 2,
 };
 

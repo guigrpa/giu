@@ -33,7 +33,6 @@ type PublicProps = {
   onCloseFloat?: () => any,
   floatPosition?: FloatPosition,
   floatAlign?: FloatAlign,
-  floatZ?: number,
 };
 // -- END_DOCS
 
@@ -137,11 +136,10 @@ class BaseColorInput extends React.Component<Props> {
 
     // Create or update float
     if (fFloat) {
-      const { floatZ, floatPosition, floatAlign } = this.props;
+      const { floatPosition, floatAlign } = this.props;
       const floatOptions = {
         position: floatPosition,
         align: floatAlign,
-        zIndex: floatZ,
         getAnchorNode: () => this.refTitle,
         children: this.renderPicker(),
       };
@@ -155,13 +153,9 @@ class BaseColorInput extends React.Component<Props> {
 
   renderFloatForIos() {
     if (!this.fFloat) return null;
-    const { floatPosition, floatAlign, floatZ } = this.props;
+    const { floatPosition, floatAlign } = this.props;
     return (
-      <IosFloatWrapper
-        floatPosition={floatPosition}
-        floatAlign={floatAlign}
-        floatZ={floatZ}
-      >
+      <IosFloatWrapper floatPosition={floatPosition} floatAlign={floatAlign}>
         {this.renderPicker()}
       </IosFloatWrapper>
     );

@@ -116,7 +116,6 @@ type PublicProps = {
   lang?: string,
   floatPosition?: FloatPosition,
   floatAlign?: FloatAlign,
-  floatZ?: number,
   style?: Object, // merged with the `input` style
   styleOuter?: Object, // when `type === 'inlinePicker'`, merged with the outermost `span` style
   skipTheme?: boolean,
@@ -180,7 +179,6 @@ const FILTERED_OUT_PROPS = [
   'lang',
   'floatPosition',
   'floatAlign',
-  'floatZ',
   'style',
   'styleOuter',
   'skipTheme',
@@ -376,11 +374,10 @@ class BaseDateInput extends React.Component<Props, State> {
 
     // Create or update float
     if (fFloat) {
-      const { floatZ, floatPosition, floatAlign } = this.props;
+      const { floatPosition, floatAlign } = this.props;
       const floatOptions = {
         position: floatPosition,
         align: floatAlign,
-        zIndex: floatZ,
         getAnchorNode: () => this.refInput,
         children: this.renderPicker(),
       };
@@ -398,7 +395,6 @@ class BaseDateInput extends React.Component<Props, State> {
       <IosFloatWrapper
         floatPosition={this.props.floatPosition}
         floatAlign={this.props.floatAlign}
-        floatZ={this.props.floatZ}
       >
         {this.renderPicker(false)}
       </IosFloatWrapper>
