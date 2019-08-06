@@ -797,10 +797,7 @@ row is drawn above the modal, not below */
   padding: 3px 10px;
   display: flex;
   align-items: center;
-  border: 0px solid transparent;
-}
-.giu-list-picker-two-stage .giu-list-item {
-  border-width: 1px;
+  border: 1px solid transparent;
 }
 .giu-list-picker-two-stage .giu-list-item:hover {
   border-color: var(--color-accent-bg);
@@ -840,4 +837,20 @@ row is drawn above the modal, not below */
   padding: 0px 6px;
   height: 1.3em;
   cursor: pointer;
+}
+
+/* ------------------------ */
+/* RadioGroup */
+/* ------------------------ */
+.giu-radio-group {
+  border: 1px solid transparent;
+}
+.giu-radio-group-disabled {
+  cursor: default;
+  pointer-events: none;
+}
+
+.giu-radio-group-label-extra {
+  margin-left: 20px;
+  cursor: default;
 }
