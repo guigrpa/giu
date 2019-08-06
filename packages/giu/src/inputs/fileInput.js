@@ -1,9 +1,9 @@
 // @flow
 
 import React from 'react';
-import { omit, merge } from 'timm';
+import { omit } from 'timm';
 import filesize from 'filesize';
-import { GLOW, HIDDEN_FOCUS_CAPTURE } from '../gral/styles';
+import classnames from 'classnames';
 import Input, { INPUT_HOC_INVALID_HTML_PROPS } from '../hocs/input';
 import type { InputHocPublicProps } from '../hocs/input';
 import type { Theme } from '../gral/themeContext';
@@ -21,7 +21,6 @@ type PublicProps = {
   ...$Exact<InputHocPublicProps>, // common to all inputs (check the docs!)
   children?: any, // React elements that will be shown inside the button(default: `Choose file…`)
   disabled?: boolean,
-  style?: Object, // will be merged with the outermost `span` element
   skipTheme?: boolean,
   // all others are passed through unchanged
 };
@@ -40,7 +39,6 @@ type Props = {
 };
 
 const FILTERED_OUT_PROPS = [
-  'style',
   'skipTheme',
   'children',
   'theme',
@@ -69,14 +67,15 @@ class BaseFileInput extends React.Component<Props> {
     return (
       <span
         ref={registerOuterRef}
-        className="giu-file-input"
-        style={style.outer(this.props)}
+        className={classnames('giu-file-input', {
+          'giu-glow': this.props.fFocused,
+        })}
       >
         <input
           ref={this.registerInputRef}
           key={this.cntCleared}
+          className="giu-hidden-field"
           type="file"
-          style={style.input}
           onChange={this.onChange}
           tabIndex={disabled ? -1 : undefined}
           {...otherProps}
@@ -143,17 +142,6 @@ const render = (props, ref) => <BaseFileInput {...props} ref={ref} />;
 const FileInput = React.forwardRef((publicProps: PublicProps, ref) => (
   <Input hocOptions={hocOptions} render={render} {...publicProps} ref={ref} />
 ));
-
-// ==========================================
-const style = {
-  outer: ({ fFocused, style: baseStyle }) => {
-    let out = { border: '1px solid transparent' };
-    if (fFocused) out = merge(out, GLOW);
-    out = merge(out, baseStyle);
-    return out;
-  },
-  input: HIDDEN_FOCUS_CAPTURE,
-};
 
 // ==========================================
 // Public

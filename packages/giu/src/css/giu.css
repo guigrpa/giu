@@ -728,3 +728,10 @@ row is drawn above the modal, not below */
   margin-top: 5px;
   position: relative;
 }
+
+/* ------------------------ */
+/* FileInput */
+/* ------------------------ */
+.giu-file-input {
+  border: 1px solid transparent;
+}
