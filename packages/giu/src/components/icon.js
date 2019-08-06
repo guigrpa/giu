@@ -71,13 +71,13 @@ class Icon extends React.PureComponent<Props> {
           'giu-icon',
           size ? `giu-icon-${size}` : undefined,
           isMdl ? 'material-icons' : `fa fa-${icon}`,
-          this.props.className,
           {
             'fa-spin': !isMdl && (icon === SPINNER_ICON || spin),
             'giu-icon-disabled': disabled,
             'giu-icon-clickable': !disabled && this.props.onClick,
             'giu-icon-fixed-width': this.props.fixedWidth,
-          }
+          },
+          this.props.className
         )}
         {...otherProps}
       >

@@ -1,16 +1,13 @@
 // @flow
 
 import React from 'react';
+import classnames from 'classnames';
 import moment from '../vendor/moment';
 import { startOfToday, getTimeInSecs } from '../gral/dates';
-import { flexContainer, isDark } from '../gral/styles';
 import type { Moment, KeyboardEventPars } from '../gral/types';
-import { COLORS, KEYS } from '../gral/constants';
+import { KEYS } from '../gral/constants';
 import Button from '../components/button';
 import Icon from '../components/icon';
-
-const ROW_HEIGHT = '1.3em';
-const DAY_WIDTH = '2em';
 
 // ==========================================
 // Declarations
@@ -21,11 +18,9 @@ type Props = {|
   onChange: (ev: ?SyntheticEvent<*>, nextValue: ?Moment) => any,
   utc: boolean,
   todayName: string,
-  accentColor: string,
 |};
 
 type State = {
-  hovering: ?string,
   shownMonthStart: Moment,
   // Copy of props for getDerivedState...
   curValue: ?Moment,
@@ -38,7 +33,7 @@ class DatePicker extends React.Component<Props, State> {
   startOfCurValue: ?Moment;
   shownMonthNumber: number;
 
-  state: any = { hovering: null };
+  state: any = {};
 
   // If curValue changes, reset the shownMonthStart (otherwise, the user
   // can modify shownMonthStart to see another month without selecting a
@@ -111,7 +106,7 @@ class DatePicker extends React.Component<Props, State> {
     const shownMonthStart = moment(this.state.shownMonthStart.valueOf());
     if (utc) shownMonthStart.utc();
     return (
-      <div className="giu-date-picker" style={style.outer}>
+      <div className="giu-date-picker">
         {this.renderMonth(shownMonthStart)}
         {this.renderDayNames()}
         {this.renderWeeks(shownMonthStart)}
@@ -123,21 +118,21 @@ class DatePicker extends React.Component<Props, State> {
   renderMonth(shownMonthStart: Moment) {
     const { disabled } = this.props;
     return (
-      <div style={style.monthRow}>
-        <div style={style.monthChange}>
+      <div className="giu-date-picker-row">
+        <div className="giu-date-picker-month-change">
           {!disabled && (
             <Icon icon="arrow-left" onClick={this.onClickPrevMonth} skipTheme />
           )}
         </div>
         <Button
+          className="giu-date-picker-month-name"
           onClick={this.onClickMonthName}
           skipTheme
           plain
-          style={style.monthName}
         >
           {shownMonthStart.format('MMMM YYYY')}
         </Button>
-        <div style={style.monthChange}>
+        <div className="giu-date-picker-month-change">
           {!disabled && (
             <Icon
               icon="arrow-right"
@@ -157,12 +152,12 @@ class DatePicker extends React.Component<Props, State> {
     for (let i = 0; i < 7; i++) {
       const idx = (i + firstDayOfWeek) % 7;
       els[i] = (
-        <div key={i} style={style.dayName}>
+        <div key={i} className="giu-date-picker-day-name">
           {dayNames[idx]}
         </div>
       );
     }
-    return <div style={style.dayNamesRow}>{els}</div>;
+    return <div className="giu-date-picker-row">{els}</div>;
   }
 
   renderWeeks(shownMonthStart: Moment) {
@@ -176,7 +171,7 @@ class DatePicker extends React.Component<Props, State> {
       curDate.add(1, 'week');
       i += 1;
     }
-    return <div>{weeks}</div>;
+    return weeks;
   }
 
   renderWeek(weekStartDate: Moment, idx: number) {
@@ -187,27 +182,27 @@ class DatePicker extends React.Component<Props, State> {
       curDate.add(1, 'day');
     }
     return (
-      <div key={idx} style={style.week}>
+      <div key={idx} className="giu-date-picker-row">
         {els}
       </div>
     );
   }
 
   renderDay(mom: Moment, idx: number) {
-    const { hovering } = this.state;
+    const { disabled } = this.props;
     const id = mom.toISOString();
-    const fHovered = hovering === id;
-    const fSelected =
-      !!this.startOfCurValue && this.startOfCurValue.isSame(mom);
-    const fInShownMonth = mom.month() === this.shownMonthNumber;
+    const selected = !!this.startOfCurValue && this.startOfCurValue.isSame(mom);
+    const inAnotherMonth = mom.month() !== this.shownMonthNumber;
     return (
       <div
         key={idx}
         id={id}
+        className={classnames('giu-date-picker-day', {
+          selected,
+          disabled,
+          'in-another-month': inAnotherMonth,
+        })}
         onClick={this.onClickDay}
-        onMouseEnter={this.onHoverStart}
-        onMouseLeave={this.onHoverStop}
-        style={style.day(fSelected, fHovered, fInShownMonth, this.props)}
       >
         {mom.date()}
       </div>
@@ -217,7 +212,7 @@ class DatePicker extends React.Component<Props, State> {
   renderToday() {
     const { todayName } = this.props;
     return (
-      <div onClick={this.onClickToday} style={style.today}>
+      <div className="giu-date-picker-today" onClick={this.onClickToday}>
         {todayName}
       </div>
     );
@@ -261,14 +256,6 @@ class DatePicker extends React.Component<Props, State> {
     this.onClickMonthName();
   };
 
-  onHoverStart = (ev: SyntheticMouseEvent<*>) => {
-    this.setState({ hovering: ev.currentTarget.id });
-  };
-
-  onHoverStop = () => {
-    this.setState({ hovering: null });
-  };
-
   // ==========================================
   goToStartEndOfMonth(op: 'start' | 'end') {
     const startOfDay = this.state.shownMonthStart.clone();
@@ -301,70 +288,6 @@ class DatePicker extends React.Component<Props, State> {
     this.props.onChange(ev, nextValue);
   }
 }
-
-// ==========================================
-const style = {
-  outer: {
-    maxWidth: '16em',
-    padding: 3,
-  },
-  monthRow: flexContainer('row', {
-    justifyContent: 'space-between',
-    alignItems: 'baseline',
-    height: ROW_HEIGHT,
-  }),
-  monthChange: {
-    width: DAY_WIDTH,
-    textAlign: 'center',
-  },
-  monthName: { fontWeight: 'bold' },
-  dayNamesRow: flexContainer('row', {
-    justifyContent: 'space-between',
-    alignItems: 'baseline',
-    height: ROW_HEIGHT,
-  }),
-  dayName: {
-    width: DAY_WIDTH,
-    textAlign: 'center',
-  },
-  week: flexContainer('row', {
-    justifyContent: 'space-between',
-    alignItems: 'baseline',
-    height: ROW_HEIGHT,
-  }),
-  day: (
-    fSelected: boolean,
-    fHovered: boolean,
-    fInShownMonth: boolean,
-    { disabled, accentColor }: { disabled: boolean, accentColor: string }
-  ) => {
-    const fHighlightBorder = fSelected || (!disabled && fHovered);
-    const border = `1px solid ${
-      fHighlightBorder ? accentColor : 'transparent'
-    }`;
-    const backgroundColor = fSelected ? accentColor : undefined;
-    let color;
-    if (!fInShownMonth) {
-      color = COLORS.dim;
-    } else if (backgroundColor) {
-      color = COLORS[isDark(backgroundColor) ? 'lightText' : 'darkText'];
-    }
-    return {
-      border,
-      backgroundColor,
-      color,
-      textAlign: 'center',
-      cursor: !disabled ? 'pointer' : undefined,
-      width: DAY_WIDTH,
-    };
-  },
-  today: {
-    textAlign: 'center',
-    cursor: 'pointer',
-    height: ROW_HEIGHT,
-    fontWeight: 'bold',
-  },
-};
 
 // ==========================================
 // Public

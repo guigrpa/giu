@@ -1,10 +1,10 @@
 // @flow
 
 import React from 'react';
-import { merge, set as timmSet } from 'timm';
+import classnames from 'classnames';
 import { cancelEvent } from '../gral/helpers';
 import { startOfToday } from '../gral/dates';
-import { COLORS, KEYS } from '../gral/constants';
+import { KEYS } from '../gral/constants';
 import type { Moment, KeyboardEventPars } from '../gral/types';
 
 const PI = Math.PI;
@@ -42,7 +42,6 @@ type Props = {
   seconds?: boolean,
   utc: boolean,
   stepMinutes?: number,
-  accentColor: string,
   size?: number,
 };
 
@@ -123,13 +122,13 @@ class TimePickerAnalog extends React.PureComponent<Props, State> {
     this.radius = size / 2 - 2;
     this.translate = size / 2;
     return (
-      <div className="giu-time-picker-analog" style={style.outer}>
+      <div className="giu-time-picker-analog">
         <svg
           ref={this.refSvg}
           onClick={this.onClickBackground}
           onMouseMove={this.onMouseMoveBackground}
           onMouseLeave={this.onMouseLeaveBackground}
-          style={style.svg(size)}
+          style={{ width: size, height: size }}
         >
           <g transform={`translate(${this.translate},${this.translate})`}>
             <WatchFace radius={this.radius} />
@@ -140,32 +139,6 @@ class TimePickerAnalog extends React.PureComponent<Props, State> {
         {this.renderAmPm()}
       </div>
     );
-  }
-
-  renderWatch() {
-    const r = this.radius;
-    const ticks = [];
-    let idx = 0;
-    let phi = 0;
-    while (phi < PI2) {
-      const props = {};
-      props.x1 = r * cos(phi);
-      props.y1 = r * sin(phi);
-      let factor;
-      if (idx % 5) {
-        props.style = style.tickMinor;
-        factor = 0.97;
-      } else {
-        props.style = style.tickMajor;
-        factor = 0.93;
-      }
-      props.x2 = props.x1 * factor;
-      props.y2 = props.y1 * factor;
-      ticks.push(<line key={`tick-${phi}`} {...props} />);
-      idx += 1;
-      phi += PI2 / 60;
-    }
-    return <g>{ticks}</g>;
   }
 
   renderHands() {
@@ -210,18 +183,21 @@ class TimePickerAnalog extends React.PureComponent<Props, State> {
       out = (
         <line
           key={`hand-${name}`}
+          className={classnames('giu-hand', `giu-hand-${name}`, {
+            'giu-hand-hovered': fHovered || fDragged,
+            'giu-hint': fHint,
+          })}
           {...props}
-          style={style.hand(name, fHovered, fDragged, fHint, this.props)}
         />
       );
     } else {
       // Wider targets for dragging
       out = (
         <line
-          key={`hand-transparent-${name}`}
+          key={`hand-drag-area-${name}`}
+          className="giu-hand-drag-area"
           id={name}
           {...props}
-          style={style.transparentHand(this.props)}
           onMouseEnter={this.onHoverStart}
           onMouseLeave={this.onHoverStop}
           onMouseDown={this.onMouseDownHand}
@@ -233,14 +209,25 @@ class TimePickerAnalog extends React.PureComponent<Props, State> {
 
   renderCenter() {
     return (
-      <circle cx={0} cy={0} r={this.radius * 0.06} style={style.centerCircle} />
+      <circle
+        className="giu-center-circle"
+        cx={0}
+        cy={0}
+        r={this.radius * 0.06}
+      />
     );
   }
 
   renderAmPm() {
     if (this.hours == null) return null;
+    const { disabled } = this.props;
     return (
-      <div onClick={this.onClickAmPm} style={style.amPm(this.props)}>
+      <div
+        className={classnames('giu-am-pm', {
+          'giu-am-pm-disabled': disabled,
+        })}
+        onClick={this.onClickAmPm}
+      >
         {this.hours >= 12 ? 'PM' : 'AM'}
       </div>
     );
@@ -390,101 +377,31 @@ type WatchFaceProps = {
 class WatchFace extends React.PureComponent<WatchFaceProps> {
   render() {
     const { radius: r } = this.props;
-    const ticks = [];
     let idx = 0;
     let phi = 0;
+    let dMinor = '';
+    let dMajor = '';
     while (phi < PI2) {
-      const props = {};
-      props.x1 = r * cos(phi);
-      props.y1 = r * sin(phi);
-      let factor;
-      if (idx % 5) {
-        props.style = style.tickMinor;
-        factor = 0.97;
-      } else {
-        props.style = style.tickMajor;
-        factor = 0.93;
-      }
-      props.x2 = props.x1 * factor;
-      props.y2 = props.y1 * factor;
-      ticks.push(<line key={`tick-${phi}`} {...props} />);
+      const x1 = r * cos(phi);
+      const y1 = r * sin(phi);
+      const isMajor = idx % 5 === 0;
+      const factor = isMajor ? 0.93 : 0.97;
+      const x2 = x1 * factor;
+      const y2 = y1 * factor;
+      const segment = `M${x1},${y1}L${x2},${y2}`;
+      if (isMajor) dMajor += segment;
+      else dMinor += segment;
       idx += 1;
       phi += PI2 / 60;
     }
-    return <g>{ticks}</g>;
+    return (
+      <g>
+        <path className="giu-tick-minor" d={dMinor} />
+        <path className="giu-tick-major" d={dMajor} />
+      </g>
+    );
   }
 }
-
-// ==========================================
-// Styles
-// ==========================================
-const lineStyle = {
-  stroke: COLORS.darkLine,
-  fill: 'none',
-};
-const style = {
-  outer: {
-    position: 'relative',
-    padding: '0px 3px',
-    marginBottom: -3,
-    border: 'none',
-  },
-  svg: size => ({
-    width: size,
-    height: size,
-  }),
-  line: lineStyle,
-  tickMinor: lineStyle,
-  tickMajor: merge(lineStyle, {
-    strokeWidth: 2,
-  }),
-  centerCircle: merge(lineStyle, {
-    fill: 'white',
-    strokeWidth: 2,
-  }),
-  handBase: {
-    hours: merge(lineStyle, {
-      strokeWidth: 2,
-      strokeLinecap: 'round',
-    }),
-    minutes: merge(lineStyle, {
-      strokeWidth: 2,
-      strokeLinecap: 'round',
-    }),
-    seconds: lineStyle,
-  },
-  hand: (name, fHovered, fDragged, fHint, { accentColor, disabled }) => {
-    let out = style.handBase[name];
-    if (!disabled && (fHovered || fDragged)) {
-      out = merge(out, {
-        stroke: accentColor,
-        strokeWidth: 4,
-      });
-    }
-    if (fHint) out = timmSet(out, 'stroke', COLORS.dim);
-    return out;
-  },
-  transparentHandBase: {
-    stroke: 'red',
-    strokeWidth: 15,
-    opacity: 0,
-  },
-  transparentHand: ({ disabled }) => {
-    let out = style.transparentHandBase;
-    if (!disabled) {
-      out = merge(out, {
-        cursor: 'pointer',
-      });
-    }
-    return out;
-  },
-  amPm: ({ disabled }) => ({
-    position: 'absolute',
-    top: 0,
-    left: 3,
-    cursor: disabled ? undefined : 'pointer',
-  }),
-};
 
 // ==========================================
 // Public

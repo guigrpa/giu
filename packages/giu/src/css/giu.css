@@ -28,6 +28,7 @@ body {
   /* Others */
   --color-hint: white;
   --color-line: #999999;
+  --color-line-dark: black;
   --color-line-dim: #cccccc;
   --color-input-bg: white;
   --color-accent-bg: #6600cc;
@@ -620,8 +621,8 @@ row is drawn above the modal, not below */
 .giu-color-picker {
   display: flex;
   padding: 6px;
-  --width-slider: 10px;
-  --radius-swatch: 6px;
+  --color-picker-width-slider: 10px;
+  --color-picker-radius-swatch: 6px;
 }
 
 .giu-color-picker-fill {
@@ -641,20 +642,20 @@ row is drawn above the modal, not below */
 }
 .giu-color-picker-thumb-1 {
   position: absolute;
-  top: calc(0px - var(--radius-swatch));
-  left: calc(0px - var(--radius-swatch));
-  height: calc(2 * var(--radius-swatch));
-  width: calc(2 * var(--radius-swatch));
-  border-radius: var(--radius-swatch);
+  top: calc(0px - var(--color-picker-radius-swatch));
+  left: calc(0px - var(--color-picker-radius-swatch));
+  height: calc(2 * var(--color-picker-radius-swatch));
+  width: calc(2 * var(--color-picker-radius-swatch));
+  border-radius: var(--color-picker-radius-swatch);
   border: 3px solid white;
 }
 .giu-color-picker-thumb-2 {
   position: absolute;
-  top: calc(1px - var(--radius-swatch));
-  left: calc(1px - var(--radius-swatch));
-  height: calc(2 * (var(--radius-swatch) - 1px));
-  width: calc(2 * (var(--radius-swatch) - 1px));
-  border-radius: calc(var(--radius-swatch) - 1px);
+  top: calc(1px - var(--color-picker-radius-swatch));
+  left: calc(1px - var(--color-picker-radius-swatch));
+  height: calc(2 * (var(--color-picker-radius-swatch) - 1px));
+  width: calc(2 * (var(--color-picker-radius-swatch) - 1px));
+  border-radius: calc(var(--color-picker-radius-swatch) - 1px);
   border: 1px solid black;
 }
 
@@ -713,7 +714,7 @@ row is drawn above the modal, not below */
 .giu-color-picker-alpha-slider {
   margin-top: 5px;
   position: relative;
-  height: var(--width-slider);
+  height: var(--color-picker-width-slider);
   cursor: pointer;
 }
 
@@ -822,8 +823,22 @@ row is drawn above the modal, not below */
 }
 
 /* ------------------------ */
-/* DateTimePicker */
+/* DateInput, DateTimePicker, DatePicker, TimePicker */
 /* ------------------------ */
+/* Date input */
+.giu-date-input {
+  position: relative;
+}
+
+.giu-date-input-mdl {
+  width: 150px;
+}
+
+.giu-date-input-mdl.disabled {
+  cursor: default;
+  pointer-events: none;
+}
+
 .giu-date-time-picker .giu-list-picker {
   margin-top: 3px;
   margin-bottom: 3px;
@@ -836,6 +851,133 @@ row is drawn above the modal, not below */
   padding: 0px 6px;
   height: 1.3em;
   cursor: pointer;
+}
+
+/* Date-time picker */
+.giu-date-time-picker {
+  display: flex;
+  padding-top: 3px;
+  padding-bottom: 3px;
+  overflow-y: auto;
+}
+
+.giu-date-time-picker-separator {
+  margin-left: 4px;
+  margin-right: 2px;
+  width: 1px;
+  border-right: 1px solid var(--color-line);
+}
+
+/* Date picker */
+.giu-date-picker {
+  max-width: 16em;
+  padding: 3px;
+  --date-picker-row-height: 1.3em;
+  --date-picker-col-width: 2em;
+}
+
+.giu-date-picker-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+  height: var(--date-picker-row-height);
+}
+
+.giu-date-picker-month-change {
+  width: var(--date-picker-col-width);
+  text-align: center;
+}
+
+.giu-date-picker-month-name {
+  font-weight: bold;
+}
+
+.giu-date-picker-day-name {
+  width: var(--date-picker-col-width);
+  text-align: center;
+}
+
+.giu-date-picker-day {
+  width: var(--date-picker-col-width);
+  text-align: center;
+  border: 1px solid transparent;
+  cursor: pointer;
+}
+.giu-date-picker-day:hover {
+  border-color: var(--color-accent-bg);
+}
+.giu-date-picker-day.selected {
+  background-color: var(--color-accent-bg);
+  color: var(--color-accent-fg);
+  border-color: var(--color-accent-bg);
+}
+.giu-date-picker-day.disabled {
+  cursor: default;
+}
+.giu-date-picker-day.in-another-month {
+  color: var(--color-dim);
+}
+
+.giu-date-picker-today {
+  text-align: center;
+  cursor: pointer;
+  font-weight: bold;
+  height: var(--date-picker-row-height);
+}
+
+/* Time picker - analogue */
+.giu-time-picker-analog {
+  position: relative;
+  padding: 0px 3px;
+  margin-bottom: -3px;
+  border: none;
+}
+
+.giu-time-picker-analog svg {
+  stroke: var(--color-line-dark);
+  stroke-width: 1px;
+  fill: none;
+}
+
+.giu-time-picker-analog .giu-tick-major {
+  stroke-width: 2px;
+}
+
+.giu-time-picker-analog .giu-center-circle {
+  stroke-width: 2px;
+  fill: white;
+}
+
+.giu-time-picker-analog .giu-hand {
+  stroke-linecap: round;
+}
+.giu-time-picker-analog .giu-hand.giu-hand-hovered {
+  stroke-width: 4px;
+  stroke: var(--color-accent-bg);
+}
+.giu-time-picker-analog .giu-hand-hours,
+.giu-time-picker-analog .giu-hand-minutes {
+  stroke-width: 2px;
+}
+.giu-time-picker-analog .giu-hand.giu-hint {
+  stroke: var(--color-dim);
+}
+
+.giu-time-picker-analog .giu-hand-drag-area {
+  stroke: red;
+  stroke-width: 15px;
+  opacity: 0;
+  cursor: pointer;
+}
+
+.giu-time-picker-analog .giu-am-pm {
+  position: absolute;
+  top: 0;
+  left: 3px;
+  cursor: pointer;
+}
+.giu-time-picker-analog .giu-am-pm-disabled {
+  cursor: default;
 }
 
 /* ------------------------ */

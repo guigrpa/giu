@@ -1,16 +1,10 @@
 // @flow
 
 import React from 'react';
-import { merge } from 'timm';
+import classnames from 'classnames';
 import moment from '../vendor/moment';
 import { getTimeInSecs, startOfDefaultDay } from '../gral/dates';
-import {
-  flexContainer,
-  inputReset,
-  INPUT_DISABLED,
-  GLOW,
-} from '../gral/styles';
-import { COLORS, KEYS } from '../gral/constants';
+import { KEYS } from '../gral/constants';
 import type { Moment, KeyboardEventPars } from '../gral/types';
 import DatePicker from './datePicker';
 import TimePickerDigital from './timePickerDigital';
@@ -46,8 +40,6 @@ type Props = {|
   onClick?: Function,
   onChange: (ev: ?SyntheticEvent<*>, nextValue: ?Moment) => any,
   fFocused?: boolean,
-  style?: Object,
-  accentColor: string,
 |};
 
 type State = {
@@ -90,10 +82,12 @@ class DateTimePicker extends React.Component<Props, State> {
     return (
       <div
         ref={this.registerOuterRef}
-        className="giu-date-time-picker"
+        className={classnames('giu-input-reset giu-date-time-picker', {
+          'giu-input-disabled': this.props.disabled,
+          'giu-glow': this.props.fFocused,
+        })}
         onMouseDown={this.props.onMouseDown}
         onClick={this.props.onClick}
-        style={merge(style.outer(this.props), this.props.style)}
       >
         {this.renderDate()}
         {this.renderSeparator()}
@@ -113,7 +107,6 @@ class DateTimePicker extends React.Component<Props, State> {
         onChange={this.onChange('date')}
         utc={this.props.utc}
         todayName={this.props.todayName}
-        accentColor={this.props.accentColor}
       />
     );
   }
@@ -121,7 +114,7 @@ class DateTimePicker extends React.Component<Props, State> {
   renderSeparator() {
     const { date, time } = this.props;
     if (!date || !time) return null;
-    return <div style={style.separator} />;
+    return <div className="giu-date-time-picker-separator" />;
   }
 
   renderTime() {
@@ -137,7 +130,6 @@ class DateTimePicker extends React.Component<Props, State> {
         onChange={this.onChange('time')}
         utc={this.props.utc}
         seconds={this.props.seconds}
-        accentColor={this.props.accentColor}
       />
     );
   }
@@ -164,30 +156,6 @@ class DateTimePicker extends React.Component<Props, State> {
     this.setState({ focusedSubpicker });
   };
 }
-
-// ==========================================
-const style = {
-  outerBase: inputReset(
-    flexContainer('row', {
-      paddingTop: 3,
-      paddingBottom: 3,
-      overflowY: 'auto',
-    })
-  ),
-  outerDisabled: INPUT_DISABLED,
-  outer: ({ disabled, fFocused }) => {
-    let out = style.outerBase;
-    if (disabled) out = merge(out, style.outerDisabled);
-    if (fFocused) out = merge(out, GLOW);
-    return out;
-  },
-  separator: {
-    marginLeft: 4,
-    marginRight: 2,
-    width: 1,
-    borderRight: `1px solid ${COLORS.line}`,
-  },
-};
 
 // ==========================================
 // Public

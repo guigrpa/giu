@@ -1,16 +1,11 @@
 // @flow
 
 import React from 'react';
-import { omit, merge, set as timmSet, addDefaults } from 'timm';
+import { omit, set as timmSet, addDefaults } from 'timm';
+import classnames from 'classnames';
 import moment from '../vendor/moment';
 import { cancelEvent, stopPropagation } from '../gral/helpers';
 import { KEYS, IS_IOS, IS_MOBILE_OR_TABLET } from '../gral/constants';
-import {
-  HIDDEN_FOCUS_CAPTURE,
-  HIDDEN_FOCUS_CAPTURE_IOS,
-  inputReset,
-  INPUT_DISABLED,
-} from '../gral/styles';
 import {
   dateTimeFormat,
   dateTimeFormatNative,
@@ -116,8 +111,6 @@ type PublicProps = {
   lang?: string,
   floatPosition?: FloatPosition,
   floatAlign?: FloatAlign,
-  style?: Object, // merged with the `input` style
-  styleOuter?: Object, // when `type === 'inlinePicker'`, merged with the outermost `span` style
   skipTheme?: boolean,
   // all others are passed through to the `input` unchanged
 };
@@ -179,10 +172,7 @@ const FILTERED_OUT_PROPS = [
   'lang',
   'floatPosition',
   'floatAlign',
-  'style',
-  'styleOuter',
   'skipTheme',
-  'accentColor',
   ...INPUT_HOC_INVALID_HTML_PROPS,
   'required',
   'theme',
@@ -235,38 +225,30 @@ class BaseDateInput extends React.Component<Props, State> {
   // ==========================================
   render() {
     const { type } = this.props;
-    let out;
-    if (type === 'native') {
-      out = this.renderNativeField();
-    } else if (type === 'inlinePicker') {
-      out = (
-        <span
-          className="giu-date-input giu-date-input-inline-picker"
-          style={style.outerInline(this.props)}
-        >
-          {MANAGE_FOCUS_AUTONOMOUSLY ? null : this.renderField(true)}
-          {this.renderPicker(true)}
+    if (type === 'native') return this.renderNativeField();
+    if (type === 'inlinePicker') {
+      return (
+        <span className="giu-date-input giu-date-input-inline-picker">
+          {MANAGE_FOCUS_AUTONOMOUSLY
+            ? null
+            : this.renderField({ hidden: true })}
+          {this.renderPicker({ inline: true })}
         </span>
       );
-    } else {
-      // 'only-field' || 'dropDownPicker'
-      const elField = this.renderField();
-      if (IS_IOS && type === 'dropDownPicker') {
-        out = (
-          <span style={style.wrapperForIos}>
-            {elField}
-            {this.renderFloatForIos()}
-          </span>
-        );
-      } else {
-        out = elField;
-      }
     }
-    return out;
+    if (IS_IOS && type === 'dropDownPicker') {
+      return (
+        <span className="giu-date-input">
+          {this.renderField({ root: false })}
+          {this.renderFloatForIos()}
+        </span>
+      );
+    }
+    return this.renderField({ root: true });
   }
 
   renderNativeField() {
-    const { placeholder, date, time } = this.props;
+    const { placeholder, date, time, disabled } = this.props;
     const otherProps = omit(this.props, FILTERED_OUT_PROPS);
     let htmlInputType;
     if (date && time) {
@@ -279,7 +261,9 @@ class BaseDateInput extends React.Component<Props, State> {
     return (
       <input
         ref={this.registerInputRef}
-        className="giu-date-input"
+        className={classnames('giu-input-reset giu-date-input', {
+          'giu-input-disabled': disabled,
+        })}
         type={htmlInputType}
         value={this.props.curValue}
         {...otherProps}
@@ -287,40 +271,43 @@ class BaseDateInput extends React.Component<Props, State> {
         onFocus={this.onFocus}
         onBlur={this.onBlur}
         onChange={this.props.onChange}
-        tabIndex={this.props.disabled ? -1 : undefined}
-        style={style.field(this.props)}
+        tabIndex={disabled ? -1 : undefined}
       />
     );
   }
 
-  renderField(fHidden) {
-    if (!fHidden && !this.props.skipTheme && this.props.theme.id === 'mdl') {
-      return this.renderFieldMdl();
+  renderField({ hidden, root }) {
+    if (!hidden && !this.props.skipTheme && this.props.theme.id === 'mdl') {
+      return this.renderFieldMdl({ root });
     }
     const { placeholder, date, time, seconds } = this.props;
     const otherProps = omit(this.props, FILTERED_OUT_PROPS);
     return (
       <input
         ref={this.registerInputRef}
-        className={fHidden ? undefined : 'giu-date-input'}
+        className={classnames('giu-input-reset', {
+          'giu-date-input': root,
+          'giu-input-disabled': this.props.disabled,
+          'giu-hidden-field': hidden,
+          'giu-hidden-field-ios': hidden && IS_IOS,
+        })}
         type="text"
         value={this.props.curValue}
         {...otherProps}
         placeholder={placeholder || dateTimeFormat(date, time, seconds)}
         onFocus={this.onFocus}
         onBlur={this.onBlur}
-        onCopy={fHidden ? this.props.onCopy : undefined}
-        onCut={fHidden ? this.props.onCut : undefined}
-        onPaste={fHidden ? this.props.onPaste : undefined}
+        onCopy={hidden ? this.props.onCopy : undefined}
+        onCut={hidden ? this.props.onCut : undefined}
+        onPaste={hidden ? this.props.onPaste : undefined}
         onChange={this.props.onChange}
         onKeyDown={this.onKeyDown}
         tabIndex={this.props.disabled ? -1 : undefined}
-        style={fHidden ? style.fieldHidden : style.field(this.props)}
       />
     );
   }
 
-  renderFieldMdl() {
+  renderFieldMdl({ root }) {
     const {
       id,
       curValue,
@@ -331,14 +318,18 @@ class BaseDateInput extends React.Component<Props, State> {
       fFocused,
     } = this.props;
     const otherProps = omit(this.props, FILTERED_OUT_PROPS_MDL);
-    let className =
-      'giu-date-input mdl-textfield mdl-js-textfield mdl-textfield--floating-label';
-    if (curValue !== '' || fFocused) className += ' is-dirty';
     return (
       <div
         ref={this.refMdl}
-        className={className}
-        style={style.mdlField(this.props)}
+        className={classnames(
+          { 'giu-date-input': !root },
+          'giu-date-input-mdl',
+          'mdl-textfield mdl-js-textfield mdl-textfield--floating-label',
+          {
+            'is-dirty': curValue !== '' || fFocused,
+            disabled: this.props.disabled,
+          }
+        )}
       >
         <input
           ref={this.registerInputRef}
@@ -379,7 +370,7 @@ class BaseDateInput extends React.Component<Props, State> {
         position: floatPosition,
         align: floatAlign,
         getAnchorNode: () => this.refInput,
-        children: this.renderPicker(),
+        children: this.renderPicker({ inline: false }),
       };
       if (this.floatId == null) {
         this.floatId = floatAdd(floatOptions);
@@ -396,12 +387,12 @@ class BaseDateInput extends React.Component<Props, State> {
         floatPosition={this.props.floatPosition}
         floatAlign={this.props.floatAlign}
       >
-        {this.renderPicker(false)}
+        {this.renderPicker({ inline: false })}
       </IosFloatWrapper>
     );
   }
 
-  renderPicker(fInline) {
+  renderPicker({ inline }) {
     const mom = displayToMoment(this.props.curValue, this.props);
     const { type } = this.props;
     const registerOuterRef =
@@ -411,7 +402,7 @@ class BaseDateInput extends React.Component<Props, State> {
         ref={this.refPicker}
         registerOuterRef={registerOuterRef}
         disabled={!!this.props.disabled}
-        fFocused={fInline && this.props.fFocused}
+        fFocused={inline && this.props.fFocused}
         curValue={mom}
         onMouseDown={this.onMouseDown}
         onClick={this.onClick}
@@ -422,7 +413,6 @@ class BaseDateInput extends React.Component<Props, State> {
         seconds={this.props.seconds}
         utc={getUtcFlag(this.props.date, this.props.time, this.props.utc)}
         todayName={this.props.todayName}
-        accentColor={this.props.theme.accentColor}
       />
     );
   }
@@ -501,31 +491,6 @@ const DateInput = React.forwardRef((publicProps: PublicProps, ref) => {
   props = omit(props, ['checkIos']);
   return <Input hocOptions={hocOptions} render={render} {...props} ref={ref} />;
 });
-
-// ==========================================
-const style = {
-  outerInline: ({ styleOuter }) => {
-    let out = styleOuter;
-    if (IS_IOS) out = timmSet(out, 'position', 'relative');
-    return out;
-  },
-  fieldBase: inputReset(),
-  field: ({ style: styleField, disabled }) => {
-    let out = style.fieldBase;
-    if (disabled) out = merge(out, INPUT_DISABLED);
-    out = merge(out, styleField);
-    return out;
-  },
-  mdlField: ({ style: styleField, disabled }) => {
-    let out = { width: 150 };
-    if (disabled)
-      out = merge(out, { cursor: 'default', pointerEvents: 'none' });
-    out = merge(out, styleField);
-    return out;
-  },
-  fieldHidden: IS_IOS ? HIDDEN_FOCUS_CAPTURE_IOS : HIDDEN_FOCUS_CAPTURE,
-  wrapperForIos: { position: 'relative' },
-};
 
 // ==========================================
 // Public

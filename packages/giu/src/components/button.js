@@ -74,10 +74,14 @@ class Button extends React.PureComponent<Props> {
     const otherProps = omit(this.props, FILTERED_PROPS);
     return (
       <span
-        className={classnames('giu-button', this.props.className, {
-          'giu-button-with-border': !this.props.plain,
-          'giu-button-disabled': disabled,
-        })}
+        className={classnames(
+          'giu-button',
+          {
+            'giu-button-with-border': !this.props.plain,
+            'giu-button-disabled': disabled,
+          },
+          this.props.className
+        )}
         onClick={disabled ? undefined : onClick}
         {...otherProps}
       >

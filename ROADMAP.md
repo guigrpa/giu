@@ -1,9 +1,8 @@
 # Roadmap
 
 * Use plain old CSS stylesheets (customisable!), instead of element CSS:
-    * dateXXXX
-    * timePickerXXX
     * input (incl. errors)
+    ------
     * z-index
     * id prop (especially floats: inherit from owner)
     * Remove accentColor from theme object (when all elements using it are migrated)
