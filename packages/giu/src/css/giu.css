@@ -735,3 +735,24 @@ row is drawn above the modal, not below */
 .giu-file-input {
   border: 1px solid transparent;
 }
+
+/* ------------------------ */
+/* IosFloatWrapper */
+/* ------------------------ */
+.giu-ios-float-wrapper {
+  position: absolute;
+  z-index: 5;
+  max-height: 400px;
+}
+.giu-ios-float-wrapper-above {
+  bottom: 100%;
+}
+.giu-ios-float-wrapper-below {
+  top: 100%;
+}
+.giu-ios-float-wrapper-left {
+  left: 0;
+}
+.giu-ios-float-wrapper-right {
+  right: 0;
+}

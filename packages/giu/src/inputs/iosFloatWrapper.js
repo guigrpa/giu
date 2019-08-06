@@ -1,7 +1,7 @@
 // @flow
 
 import React from 'react';
-import { MISC } from '../gral/constants';
+import classnames from 'classnames';
 import { stopPropagation } from '../gral/helpers';
 import type { FloatPosition, FloatAlign } from '../components/floats';
 
@@ -9,23 +9,23 @@ type Props = {
   children?: any,
   floatPosition?: FloatPosition,
   floatAlign?: FloatAlign,
-  floatZ?: number,
 };
 
-const IosFloatWrapper = (props: Props) => (
-  <div style={style.outer(props)} onScroll={stopPropagation}>
-    {props.children}
+const IosFloatWrapper = ({ children, floatPosition, floatAlign }: Props) => (
+  <div
+    className={classnames(
+      'giu-ios-float-wrapper',
+      floatPosition === 'above'
+        ? 'giu-ios-float-wrapper-above'
+        : 'giu-ios-float-wrapper-below',
+      floatAlign === 'right'
+        ? 'giu-ios-float-wrapper-right'
+        : 'giu-ios-float-wrapper-left'
+    )}
+    onScroll={stopPropagation}
+  >
+    {children}
   </div>
 );
-
-const style = {
-  outer: ({ floatPosition, floatAlign, floatZ }) => ({
-    position: 'absolute',
-    [floatPosition === 'above' ? 'bottom' : 'top']: '100%',
-    [floatAlign === 'right' ? 'right' : 'left']: 0,
-    zIndex: floatZ != null ? floatZ : MISC.zMainFloatDelta,
-    maxHeight: 400,
-  }),
-};
 
 export default IosFloatWrapper;
