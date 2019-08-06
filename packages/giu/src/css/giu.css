@@ -910,13 +910,11 @@ row is drawn above the modal, not below */
 }
 
 .giu-textarea-placeholder {
-  display: block;
   position: absolute;
   top: 0;
   left: 0;
-  width: 100%;
+  height: auto;
   opacity: 0;
-  padding: 2px;
   border: 1px solid red;
   color: red;
   cursor: text;

@@ -614,8 +614,7 @@ class FormExample extends React.Component<
           .giu-select-custom {
             max-width: 100px;
           }
-          .textarea-examples .giu-textarea-field,
-          .textarea-examples .giu-textarea-placeholder {
+          .textarea-examples .giu-textarea-field {
             min-height: 2rem;
           }
           `}</style>

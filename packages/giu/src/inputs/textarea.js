@@ -87,7 +87,10 @@ class BaseTextarea extends React.Component<Props> {
     const otherProps = omit(this.props, FILTERED_OUT_PROPS);
     return (
       <div ref={this.registerOuterRef} className="giu-textarea">
-        <div ref={this.refTaPlaceholder} className="giu-textarea-placeholder">
+        <div
+          ref={this.refTaPlaceholder}
+          className="giu-textarea-field giu-textarea-placeholder"
+        >
           {getPlaceholderText(curValue)}
         </div>
         <textarea
