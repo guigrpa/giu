@@ -522,7 +522,6 @@ const DropDownExample = ({ lang }) => (
       items={NORMAL_OPTIONS}
       lang={lang}
       onClickItem={onChangeJson}
-      style={{ padding: '3px 8px' }}
     >
       <Icon icon="bars" /> Menu
     </DropDownMenu>
@@ -530,7 +529,6 @@ const DropDownExample = ({ lang }) => (
       items={TALL_OPTIONS}
       onClickItem={onChangeJson}
       accentColor="darkgreen"
-      style={{ padding: '3px 8px' }}
     >
       <Icon icon="bullseye" /> Long menu
     </DropDownMenu>
@@ -539,7 +537,6 @@ const DropDownExample = ({ lang }) => (
       onClickItem={onChangeJson}
       floatAlign="right"
       accentColor="darkblue"
-      style={{ padding: '3px 8px' }}
     >
       <Icon icon="cube" /> Menu to the left
     </DropDownMenu>

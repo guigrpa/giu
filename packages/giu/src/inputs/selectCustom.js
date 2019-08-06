@@ -192,12 +192,12 @@ class BaseSelectCustom extends React.Component<Props> {
     const { fFloat } = this;
 
     // Remove float
-    if (!fFloat && this.floatId != null) {
-      floatDelete(this.floatId);
-      this.floatId = null;
-      this.props.onCloseFloat && this.props.onCloseFloat();
-      return;
-    }
+    // if (!fFloat && this.floatId != null) {
+    //   floatDelete(this.floatId);
+    //   this.floatId = null;
+    //   this.props.onCloseFloat && this.props.onCloseFloat();
+    //   return;
+    // }
 
     // Create or update float
     if (fFloat) {

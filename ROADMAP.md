@@ -7,6 +7,8 @@
     * Make sure all elements have optional id's (for configuration)
     * Clean up examples, using CSS
 * Make `id` prop mandatory in some components.
+* Continue removing `zIndex` (configurable via CSS)
+* Fix zIndex in examples!!
 
 * **Bugs**
     * Main docs: inline textareas: misaligned

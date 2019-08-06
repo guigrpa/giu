@@ -989,7 +989,6 @@ class DropDownMenus extends React.Component {
               type: 'success',
             })
           }
-          style={{ padding: '3px 8px' }}
         >
           <Icon icon="shopping-basket" />&nbsp; Which fruit?
         </DropDownMenu>
