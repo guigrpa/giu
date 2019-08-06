@@ -551,6 +551,23 @@ row is drawn above the modal, not below */
 /* Inputs */
 /* ======================== */
 /* ------------------------ */
+/* Checkbox */
+/* ------------------------ */
+.giu-checkbox {
+  white-space: nowrap;
+}
+
+.giu-checkbox-mdl {
+  white-space: nowrap;
+  width: initial;
+  margin-right: 10px;
+}
+
+.giu-checkbox-mdl-label {
+  left: 16px;
+}
+
+/* ------------------------ */
 /* ColorInput */
 /* ------------------------ */
 .giu-rgb-selector {
