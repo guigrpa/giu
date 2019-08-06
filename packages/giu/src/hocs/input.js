@@ -3,11 +3,11 @@
 /* eslint-disable no-underscore-dangle, max-len, react/default-props-match-prop-types */
 
 import * as React from 'react';
-import { omit, merge, addDefaults } from 'timm';
+import { omit, merge } from 'timm';
+import classnames from 'classnames';
 import { cancelEvent, stopPropagation } from '../gral/helpers';
-import { COLORS, MISC, IS_IOS, FONTS } from '../gral/constants';
+import { MISC, IS_IOS } from '../gral/constants';
 import { scrollIntoView } from '../gral/visibility';
-import { isDark } from '../gral/styles';
 import { isRequired } from '../gral/validators';
 import type { Validator } from '../gral/validators';
 import { ThemeContext } from '../gral/themeContext';
@@ -62,7 +62,6 @@ export type InputHocPublicProps = {
   onChange?: (ev: SyntheticEvent<*>, extValue: any) => any,
   onFocus?: (ev: SyntheticEvent<*>) => any,
   onBlur?: (ev: SyntheticEvent<*>) => any,
-  styleOuter?: Object,
 };
 
 type Props = {
@@ -95,7 +94,6 @@ type ChildProps = {
   onCut: Function,
   onPaste: Function,
   onResizeOuter: Function,
-  styleOuter: Object,
 };
 
 const HOC_PUBLIC_PROPS = [
@@ -117,7 +115,6 @@ const HOC_PUBLIC_PROPS = [
   'onChange',
   'onFocus',
   'onBlur',
-  'styleOuter',
 ];
 
 // Don't pass these HOC props to an <input>
@@ -130,7 +127,6 @@ const INPUT_HOC_INVALID_HTML_PROPS = [
   'floatZ',
   'floatPosition',
   'onResizeOuter',
-  'styleOuter',
   'theme',
 ];
 
@@ -241,10 +237,9 @@ class Input extends React.PureComponent<Props> {
     const { fIncludeFocusCapture } = hocOptions;
     return (
       <span
-        className={hocOptions.className}
+        className={classnames('giu-input', hocOptions.className)}
         onMouseDown={fIncludeFocusCapture ? this.onMouseDownWrapper : undefined}
         onClick={fIncludeFocusCapture ? this.onClickWrapper : undefined}
-        style={style.wrapper(this.props)}
       >
         {fIncludeFocusCapture ? this.renderFocusCapture() : null}
         {this.renderIosErrors()}
@@ -311,7 +306,6 @@ class Input extends React.PureComponent<Props> {
       onCut: fIncludeClipboardProps ? this.onCopyCut : undefined,
       onPaste: fIncludeClipboardProps ? this.onPaste : undefined,
       onResizeOuter: floatReposition,
-      styleOuter: fIncludeFocusCapture ? undefined : this.props.styleOuter,
     };
     return render(childProps, this.refChild);
   }
@@ -356,7 +350,12 @@ class Input extends React.PureComponent<Props> {
         ? curValue !== lastValidatedValue
         : curValue !== toInternalValue(this.props.value, this.props);
     return (
-      <div style={style.errors(fModified, this.props.theme.id)}>
+      <div
+        className={classnames('giu-error', {
+          'giu-error-modified': fModified,
+          'giu-error-mdl': this.props.theme.id === 'mdl',
+        })}
+      >
         {errors.join(' | ')}
       </div>
     );
@@ -571,32 +570,6 @@ const ThemedInput = React.forwardRef((props, ref) => (
     {theme => <Input {...props} theme={theme} ref={ref} />}
   </ThemeContext.Consumer>
 ));
-
-// ==========================================
-// Styles
-// ==========================================
-const errorBgColorBase = COLORS.notifs.error;
-const errorFgColorBase =
-  COLORS[isDark(errorBgColorBase) ? 'lightText' : 'darkText'];
-const errorBgColorModified = COLORS.notifs.warn;
-const errorFgColorModified =
-  COLORS[isDark(errorBgColorModified) ? 'lightText' : 'darkText'];
-const style = {
-  wrapper: ({ styleOuter }) => {
-    let out = styleOuter || {};
-    out = addDefaults(out, {
-      position: 'relative',
-      display: 'inline-block',
-    });
-    return out;
-  },
-  errors: (fModified, theme) => ({
-    padding: '1px 3px',
-    backgroundColor: fModified ? errorBgColorModified : errorBgColorBase,
-    color: fModified ? errorFgColorModified : errorFgColorBase,
-    fontFamily: theme === 'mdl' ? FONTS.mdl : undefined,
-  }),
-};
 
 // ==========================================
 // Public

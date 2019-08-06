@@ -1,8 +1,9 @@
 # Roadmap
 
 * Use plain old CSS stylesheets (customisable!), instead of element CSS:
-    * input (incl. errors)
-    ------
+    * Input HOC:
+      - all components should have a class, e.g. giu-xxx-xxx-wrapper
+      - review all input trees
     * z-index
     * id prop (especially floats: inherit from owner)
     * Remove accentColor from theme object (when all elements using it are migrated)
@@ -11,6 +12,7 @@
     * Clean up examples, using CSS
     * Make `id` prop mandatory in some components.
     * Fix zIndex in examples!!
+    * Fix styleOuter in examples
     * Remove contents from gral/styles that is no longer needed and not public
 
 * **Bugs**

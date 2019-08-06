@@ -58,7 +58,6 @@ class DropDownMenu extends React.PureComponent<Props, State> {
         onCloseFloat={this.closeMenu}
         onFocus={this.onFocus}
         onBlur={this.onBlur}
-        styleOuter={style.selectOuter}
         {...props}
         required
         noErrors
@@ -120,11 +119,6 @@ class DropDownMenu extends React.PureComponent<Props, State> {
     });
   };
 }
-
-// ==========================================
-const style = {
-  selectOuter: { display: 'inline-block' },
-};
 
 // ==========================================
 // Public

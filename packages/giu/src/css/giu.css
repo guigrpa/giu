@@ -223,6 +223,10 @@ row is drawn above the modal, not below */
 /* ------------------------ */
 /* DropDownMenu */
 /* ------------------------ */
+.giu-drop-down-menu {
+  display: inline-block;
+}
+
 .giu-drop-down-menu-title {
   display: inline-block;
   cursor: pointer;
@@ -545,6 +549,29 @@ row is drawn above the modal, not below */
 /* ------------------------ */
 .giu-progress {
   width: 100%;
+}
+
+/* ======================== */
+/* Input HOC */
+/* ======================== */
+.giu-input {
+  position: relative;
+  display: inline-block;
+}
+
+.giu-error {
+  padding: 1px 3px;
+  background-color: var(--color-notif-error-bg);
+  color: var(--color-notif-error-fg);
+}
+
+.giu-error-modified {
+  background-color: var(--color-notif-warn-bg);
+  color: var(--color-notif-warn-fg);
+}
+
+.giu-error.giu-error-mdl {
+  font-family: var(--font-mdl);
 }
 
 /* ======================== */
