@@ -3,21 +3,14 @@
 import React from 'react';
 import tinycolor from 'tinycolor2';
 import { merge } from 'timm';
+import classnames from 'classnames';
 import { COLORS } from '../gral/constants';
 import { cancelEvent } from '../gral/helpers';
-import {
-  isDark,
-  flexContainer,
-  flexItem,
-  inputReset,
-  INPUT_DISABLED,
-  GLOW,
-} from '../gral/styles';
+import { isDark } from '../gral/styles';
 
 const SIZE = 190;
 const ALPHA_SLIDER_SIZE = 100;
 const SLIDER_WIDTH = 10;
-const SWATCH_RADIUS = 6;
 
 const hueBg = h => tinycolor({ h, s: 1, v: 1 }).toHexString();
 const clamp = (x, min, max) => Math.min(Math.max(x, min), max);
@@ -144,12 +137,14 @@ class ColorPicker extends React.PureComponent<Props, State> {
     return (
       <div
         ref={registerOuterRef}
-        className="giu-color-picker"
+        className={classnames('giu-color-picker giu-input-reset', {
+          'giu-input-disabled': this.props.disabled,
+          'giu-glow': this.props.fFocused,
+        })}
         onMouseDown={cancelEvent}
         onClick={cancelEvent}
-        style={style.outer(this.props)}
       >
-        {this.renderColorSelector()}
+        {this.renderMain()}
         {this.renderActiveAttrSlider()}
         {this.renderControls()}
       </div>
@@ -157,23 +152,20 @@ class ColorPicker extends React.PureComponent<Props, State> {
   }
 
   // ------------------------------------------
-  // Column 1: color selector
+  // Column 1: main
   // ------------------------------------------
-  renderColorSelector() {
+  renderMain() {
     const { activeAttr } = this.state;
     let gradients;
-    if (this.fRgb) {
-      gradients = this.renderRGBSelector(activeAttr);
-    } else if (activeAttr === 'h') {
-      gradients = this.renderHSelector();
-    } else {
-      gradients = this.renderSVSelector(activeAttr);
-    }
+    if (this.fRgb) gradients = this.renderMainRGB(activeAttr);
+    else if (activeAttr === 'h') gradients = this.renderMainH();
+    else gradients = this.renderMainSV(activeAttr);
     return (
       <div
         ref={this.refColorSelector}
+        className="giu-color-picker-main"
         onMouseDown={this.onMouseDownColorSelector}
-        style={style.colorSelector}
+        style={{ width: SIZE, height: SIZE }}
       >
         {gradients}
         {this.renderSelectorValue()}
@@ -181,73 +173,70 @@ class ColorPicker extends React.PureComponent<Props, State> {
     );
   }
 
-  renderRGBSelector(attr: string) {
+  renderMainRGB(attr: string) {
     const val = normalize(this.rgba[attr], attr);
-    return [
-      <div
-        key="rgb1"
-        className="giu-rgb-selector"
-        style={style.rgbSelector(attr, val, true)}
-      />,
-      <div
-        key="rgb2"
-        className="giu-rgb-selector"
-        style={style.rgbSelector(attr, val, false)}
-      />,
-    ];
+    return (
+      <React.Fragment>
+        <div
+          className="giu-color-picker-fill giu-color-picker-main-rgb"
+          style={style.mainRGB(attr, val, true)}
+        />
+        <div
+          className="giu-color-picker-fill giu-color-picker-main-rgb"
+          style={style.mainRGB(attr, val, false)}
+        />
+      </React.Fragment>
+    );
   }
 
-  renderHSelector() {
-    return [
-      <div
-        key="h1"
-        style={merge(
-          style.selectorBase,
-          style.hSelectorBackground(this.hsva.h)
-        )}
-      />,
-      <div
-        key="h2"
-        style={merge(style.selectorBase, style.hSelectorLightLeft)}
-      />,
-      <div
-        key="h3"
-        style={merge(style.selectorBase, style.hSelectorDarkBottom)}
-      />,
-    ];
+  renderMainH() {
+    return (
+      <React.Fragment>
+        <div
+          className="giu-color-picker-fill"
+          style={style.mainHBackground(this.hsva.h)}
+        />
+        <div className="giu-color-picker-fill" style={style.mainHLightLeft} />
+        <div className="giu-color-picker-fill" style={style.mainHDarkBottom} />
+      </React.Fragment>
+    );
   }
 
-  renderSVSelector(attr: string) {
+  renderMainSV(attr: string) {
     const val = normalize(this.hsva[attr], attr);
-    return [
-      <div key="sv1" style={style.svSelector(attr, val, true)} />,
-      <div key="sv2" style={style.svSelector(attr, val, false)} />,
-      <div
-        key="sv3"
-        style={merge(style.selectorBase, style.hSelectorDarkBottom)}
-      />,
-    ];
+    return (
+      <React.Fragment>
+        <div
+          className="giu-color-picker-fill"
+          style={style.mainSV(attr, val, true)}
+        />
+        <div
+          className="giu-color-picker-fill"
+          style={style.mainSV(attr, val, false)}
+        />
+        <div className="giu-color-picker-fill" style={style.mainHDarkBottom} />
+      </React.Fragment>
+    );
   }
 
   renderSelectorValue() {
     if (!this.props.curValue) return null;
     const { xNorm, yNorm } = colToXy(this.state.activeAttr, this.rgbhsva);
-    return (
-      <div style={style.circleControl(xNorm, yNorm)}>
-        <div style={style.circleControl2} />
-      </div>
-    );
+    return this.renderThumb(xNorm, yNorm);
   }
 
   // ------------------------------------------
   // Column 2: active attribute slider
   // ------------------------------------------
   renderActiveAttrSlider() {
+    let background = GRADIENTS[this.state.activeAttr];
+    if (typeof background === 'function') background = background(this.hsva.h);
     return (
       <div
         ref={this.refAttrSlider}
+        className="giu-color-picker-active-attr-slider"
         onMouseDown={this.onMouseDownAttrSlider}
-        style={style.activeAttrSlider(this.state, this.hsva)}
+        style={{ background, width: SLIDER_WIDTH, height: SIZE }}
       >
         {this.renderActiveAttrSliderValue()}
       </div>
@@ -258,11 +247,7 @@ class ColorPicker extends React.PureComponent<Props, State> {
     if (!this.props.curValue) return null;
     const attr = this.state.activeAttr;
     const attrNorm = normalize(this.rgbhsva[attr], attr);
-    return (
-      <div style={style.circleControl(0.5, attrNorm, SLIDER_WIDTH, SIZE)}>
-        <div style={style.circleControl2} />
-      </div>
-    );
+    return this.renderThumb(0.5, attrNorm, SLIDER_WIDTH, SIZE);
   }
 
   // ------------------------------------------
@@ -271,25 +256,28 @@ class ColorPicker extends React.PureComponent<Props, State> {
   renderControls() {
     const { mode, activeAttr } = this.state;
     const colorAttrs = mode.split('').map(colorAttr => {
-      const fSelected = activeAttr === colorAttr;
       return (
         <div
           key={colorAttr}
           id={colorAttr}
+          className={classnames('giu-color-picker-button', {
+            'giu-color-picker-button-selected': activeAttr === colorAttr,
+          })}
           onMouseDown={this.onMouseDownAttrSelector}
-          style={style.colorAttr(fSelected, this.props)}
         >
-          <span style={style.colorAttrName}>{colorAttr.toUpperCase()}</span>
+          <span className="giu-color-picker-color-attr-name">
+            {colorAttr.toUpperCase()}
+          </span>
         </div>
       );
     });
     return (
-      <div style={style.controlColumn}>
-        <div style={style.modeButtons(this.props)}>
+      <div className="giu-color-picker-control-column">
+        <div className="giu-color-picker-mode-buttons">
           {this.renderModeButton('rgb')}
           {this.renderModeButton('hsv')}
         </div>
-        <div style={style.colorAttrs(this.props)}>{colorAttrs}</div>
+        <div className="giu-color-picker-color-attrs">{colorAttrs}</div>
         {this.renderAlphaSlider()}
         {this.renderSamples()}
       </div>
@@ -297,12 +285,13 @@ class ColorPicker extends React.PureComponent<Props, State> {
   }
 
   renderModeButton(mode: string) {
-    const fSelected = this.state.mode === mode;
     return (
       <div
         id={mode}
+        className={classnames('giu-color-picker-button', {
+          'giu-color-picker-button-selected': this.state.mode === mode,
+        })}
         onMouseDown={this.onMouseDownMode}
-        style={style.modeButton(fSelected, this.props)}
       >
         {mode.toUpperCase()}
       </div>
@@ -310,14 +299,16 @@ class ColorPicker extends React.PureComponent<Props, State> {
   }
 
   renderAlphaSlider() {
+    const background = GRADIENTS.alpha(this.rgba);
     return (
       <div
         ref={this.refAlphaSlider}
+        className="giu-color-picker-alpha-slider"
         onMouseDown={this.onMouseDownAlphaSlider}
-        style={style.alphaSlider}
+        style={{ width: ALPHA_SLIDER_SIZE }}
       >
-        <div className="giu-transparency-tiles" style={style.fillWithTiles} />
-        <div style={style.alphaSliderGradient(this.rgba)} />
+        <div className="giu-color-picker-fill giu-transparency-tiles" />
+        <div className="giu-color-picker-fill" style={{ background }} />
         {this.renderAlphaSliderValue()}
       </div>
     );
@@ -325,38 +316,42 @@ class ColorPicker extends React.PureComponent<Props, State> {
 
   renderAlphaSliderValue() {
     if (!this.props.curValue) return null;
-    return (
-      <div
-        style={style.circleControl(
-          this.rgba.a,
-          0.5,
-          ALPHA_SLIDER_SIZE,
-          SLIDER_WIDTH
-        )}
-      >
-        <div style={style.circleControl2} />
-      </div>
-    );
+    return this.renderThumb(this.rgba.a, 0.5, ALPHA_SLIDER_SIZE, SLIDER_WIDTH);
   }
 
-  // ------------------------------------------
-  // Samples
-  // ------------------------------------------
   renderSamples() {
     const { curValue } = this.props;
     if (curValue == null) return null;
     const hex6 = tinycolor(curValue).toHexString();
-    const rgbaStr = tinycolor(curValue).toRgbString();
-    return [
-      <div key="sample1" style={style.sample1(hex6)}>
-        #{tinycolor(curValue).toHex8()}
-      </div>,
-      <div key="sample2" style={style.sample2}>
-        &nbsp;
-        <div className="giu-transparency-tiles" style={style.fillWithTiles} />
-        <div style={style.sample2Swatch(rgbaStr)} />
-      </div>,
-    ];
+    const color = COLORS[isDark(hex6) ? 'lightText' : 'darkText'];
+    const style1 = { backgroundColor: hex6, color };
+    const style2 = { backgroundColor: tinycolor(curValue).toRgbString() };
+    return (
+      <React.Fragment>
+        <div className="giu-color-picker-labeled-swatch" style={style1}>
+          #{tinycolor(curValue).toHex8()}
+        </div>
+        <div className="giu-color-picker-big-swatch">
+          &nbsp;
+          <div className="giu-color-picker-fill giu-transparency-tiles" />
+          <div className="giu-color-picker-fill" style={style2} />
+        </div>
+      </React.Fragment>
+    );
+  }
+
+  // ------------------------------------------
+  // Other components
+  // ------------------------------------------
+  renderThumb(x, y, width = SIZE, height = SIZE) {
+    const top = (1 - y) * height;
+    const left = x * width;
+    return (
+      <div className="giu-color-picker-thumb-wrapper" style={{ top, left }}>
+        <div className="giu-color-picker-thumb-1" />
+        <div className="giu-color-picker-thumb-2" />
+      </div>
+    );
   }
 
   // ==========================================
@@ -445,177 +440,23 @@ class ColorPicker extends React.PureComponent<Props, State> {
 
 // ==========================================
 const style = {
-  outerBase: inputReset(flexContainer('row', { padding: 6 })),
-  outer: ({ disabled, fFocused }) => {
-    let out = style.outerBase;
-    if (disabled) out = merge(out, INPUT_DISABLED);
-    if (fFocused) out = merge(out, GLOW);
-    return out;
-  },
-
-  // Color selector
-  colorSelector: {
-    width: SIZE,
-    height: SIZE,
-    position: 'relative',
-    cursor: 'pointer',
-  },
-  selectorBase: {
-    position: 'absolute',
-    top: 0,
-    right: 0,
-    bottom: 0,
-    left: 0,
-  },
-  rgbSelector: (attr, normAttr, fHigh) => {
+  mainRGB: (attr, normAttr, fHigh) => {
     let pos = 'rgb'.indexOf(attr) * -SIZE * 2;
     if (!fHigh) pos -= SIZE;
-    return merge(style.selectorBase, {
+    return {
       backgroundRepeat: 'no-repeat',
       backgroundPosition: `${pos}px 0`,
       opacity: fHigh ? normAttr : 1 - normAttr,
-    });
+    };
   },
-  hSelectorBackground: h => ({ background: hueBg(h) }),
-  hSelectorLightLeft: { background: GRADIENTS.lightLeft },
-  hSelectorDarkBottom: { background: GRADIENTS.darkBottom },
-  svSelector: (attr, normAttr, fHigh) => {
+  mainHBackground: h => ({ background: hueBg(h) }),
+  mainHLightLeft: { background: GRADIENTS.lightLeft },
+  mainHDarkBottom: { background: GRADIENTS.darkBottom },
+  mainSV: (attr, normAttr, fHigh) => {
     let background;
-    if (fHigh) {
-      background = GRADIENTS.hues;
-    } else {
-      background = attr === 'v' ? '' : GRADIENTS.sLow;
-    }
-    return merge(style.selectorBase, {
-      background,
-      opacity: fHigh ? normAttr : 1 - normAttr,
-    });
-  },
-
-  // Active attr slider
-  activeAttrSlider: ({ activeAttr }, hsv) => {
-    let background = GRADIENTS[activeAttr];
-    if (typeof background === 'function') background = background(hsv.h);
-    return {
-      background,
-      position: 'relative',
-      width: SLIDER_WIDTH,
-      height: SIZE,
-      marginLeft: 5,
-      marginRight: 5,
-      cursor: 'pointer',
-    };
-  },
-
-  // Control column
-  controlColumn: flexContainer('column'),
-  modeButtons: ({ accentColor }) =>
-    flexContainer('row', {
-      border: `1px solid ${accentColor}`,
-    }),
-  modeButton: (fSelected, { accentColor }) => {
-    const out = flexItem(1, {
-      padding: 3,
-      textAlign: 'center',
-      cursor: 'pointer',
-    });
-    if (fSelected) {
-      out.backgroundColor = accentColor;
-      out.color = COLORS[isDark(accentColor) ? 'lightText' : 'darkText'];
-    }
-    return out;
-  },
-  colorAttrs: ({ accentColor }) =>
-    flexContainer('row', {
-      marginTop: 5,
-      border: `1px solid ${accentColor}`,
-    }),
-  colorAttr: (fSelected, { accentColor }) => {
-    const out = flexItem(1, {
-      padding: 3,
-      textAlign: 'center',
-      cursor: 'pointer',
-    });
-    if (fSelected) {
-      out.backgroundColor = accentColor;
-      out.color = COLORS[isDark(accentColor) ? 'lightText' : 'darkText'];
-    }
-    return out;
-  },
-  colorAttrName: {
-    width: 40,
-    pointerEvents: 'none',
-  },
-  alphaSlider: {
-    marginTop: 5,
-    position: 'relative',
-    height: SLIDER_WIDTH,
-    width: ALPHA_SLIDER_SIZE,
-    cursor: 'pointer',
-  },
-  alphaSliderGradient: rgba => ({
-    position: 'absolute',
-    top: 0,
-    right: 0,
-    bottom: 0,
-    left: 0,
-    background: GRADIENTS.alpha(rgba),
-  }),
-  sample1: hex6 => {
-    const backgroundColor = hex6;
-    const color = COLORS[isDark(backgroundColor) ? 'lightText' : 'darkText'];
-    return {
-      marginTop: 5,
-      padding: '3px 0px',
-      textAlign: 'center',
-      backgroundColor,
-      color,
-    };
-  },
-  sample2: flexItem(1, {
-    marginTop: 5,
-    position: 'relative',
-    padding: '3px 0px',
-    textAlign: 'center',
-    fontWeight: 'bold',
-  }),
-  sample2Swatch: rgbaStr => ({
-    position: 'absolute',
-    top: 0,
-    right: 0,
-    bottom: 0,
-    left: 0,
-    backgroundColor: rgbaStr,
-    borderRadius: 2,
-  }),
-
-  // General
-  fillWithTiles: {
-    position: 'absolute',
-    top: 0,
-    right: 0,
-    bottom: 0,
-    left: 0,
-    borderRadius: 2,
-  },
-  circleControl: (x, y, width = SIZE, height = SIZE) => ({
-    pointerEvents: 'none',
-    position: 'absolute',
-    top: (1 - y) * height - SWATCH_RADIUS,
-    left: x * width - SWATCH_RADIUS,
-    height: 2 * SWATCH_RADIUS,
-    width: 2 * SWATCH_RADIUS,
-    borderRadius: SWATCH_RADIUS,
-    border: '3px solid white',
-  }),
-  circleControl2: {
-    position: 'absolute',
-    top: -2,
-    left: -2,
-    height: (SWATCH_RADIUS - 1) * 2,
-    width: (SWATCH_RADIUS - 1) * 2,
-    borderRadius: SWATCH_RADIUS - 1,
-    border: '1px solid black',
+    if (fHigh) background = GRADIENTS.hues;
+    else background = attr === 'v' ? '' : GRADIENTS.sLow;
+    return { background, opacity: fHigh ? normAttr : 1 - normAttr };
   },
 };
 
