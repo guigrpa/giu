@@ -30,7 +30,6 @@ import {
   Hints,
   flexContainer,
   flexItem,
-  boxWithShadow,
   AnimatedCounter,
   HeightMeasurer,
   COLORS,
@@ -506,7 +505,7 @@ const StyleUtilsExample = () => (
       <FlexSpacer />
       <span>Right</span>
     </div>
-    <div style={boxWithShadow({ padding: 3 })}>A box with a shadow</div>
+    <div className="giu-box-shadow" style={{ padding: 3 }}>A box with a shadow</div>
   </div>
 );
 

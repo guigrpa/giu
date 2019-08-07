@@ -4,7 +4,6 @@ import React from 'react';
 import classnames from 'classnames';
 import { KEYS } from '../gral/constants';
 import { cancelEvent, cancelBodyScrolling } from '../gral/helpers';
-import { flexItem } from '../gral/styles';
 import { ThemeContext } from '../gral/themeContext';
 import type { Theme } from '../gral/themeContext';
 import Button from './button';

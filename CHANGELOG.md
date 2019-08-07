@@ -3,6 +3,7 @@
     * Remove `style` props.
     * Remove `zIndex` props.
     * Remove **reset.css**, **colorInput.css**.
+* Add `className`, `id` to all components (for CSS customisation).
 * Bump babel.
 * Remove tests + related dependencies.
 

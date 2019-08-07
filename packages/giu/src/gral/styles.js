@@ -2,7 +2,6 @@
 
 import tinycolor from 'tinycolor2';
 import { merge } from 'timm';
-import { COLORS } from './constants';
 
 /* --
 **flexContainer()**
@@ -29,24 +28,6 @@ Provides an inline style object for a Flex item.
 -- */
 const flexItem = (flex: string | number, style?: Object): Object =>
   merge({ flex, WebkitFlex: flex }, style);
-
-/* --
-**boxWithShadow()**
-
-Provides an inline style object for a slightly rounded shadowed box.
-
-* **style?** *Object*: custom style (merged with the base style)
-* **Returns** *Object*: inline style
--- */
-const boxWithShadow = (style?: Object): Object =>
-  merge(
-    {
-      backgroundColor: 'white',
-      borderRadius: 2,
-      boxShadow: '0 3px 6px rgba(0,0,0,0.16), 0 3px 6px rgba(0,0,0,0.23)',
-    },
-    style
-  );
 
 /* --
 **isDark() / isLight()**
@@ -82,26 +63,6 @@ const lighten = (color: string | Object, percentage?: number = 10): string =>
     .lighten(percentage)
     .toHexString();
 
-const inputReset = (style?: Object): Object =>
-  merge(
-    {
-      backgroundColor: COLORS.bgInput,
-      border: `1px solid ${COLORS.line}`,
-      fontFamily: 'inherit',
-      fontSize: 'inherit',
-      fontWeight: 'inherit',
-      color: 'inherit',
-    },
-    style
-  );
-
-const INPUT_DISABLED = {
-  border: `1px solid ${COLORS.lineDim}`,
-  backgroundColor: 'transparent',
-  cursor: 'default',
-  pointerEvents: 'none',
-};
-
 /* --
 **addStylesToPage()**
 
@@ -128,12 +89,9 @@ function addStylesToPage(styles: string) {
 export {
   flexContainer,
   flexItem,
-  boxWithShadow,
   isLight,
   isDark,
   lighten,
   darken,
-  inputReset,
-  INPUT_DISABLED,
   addStylesToPage,
 };

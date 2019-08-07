@@ -5,7 +5,7 @@
         * Fix zIndex, esp. in modals
         * Fix field widths in datatable headers
         * Review MDL
-    * Remove contents from gral/styles that is no longer needed and not public
+    * Remove flexContainer, flexItem if possible
 
 * **Bugs**
     * `[Intervention] Unable to preventDefault inside passive event listener due to target being treated as passive. See <URL>` while mouse-wheeling in a Custom Select

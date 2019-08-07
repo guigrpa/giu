@@ -120,7 +120,6 @@ export { Input };
 export {
   flexContainer,
   flexItem,
-  boxWithShadow,
   isDark,
   isLight,
   darken,
