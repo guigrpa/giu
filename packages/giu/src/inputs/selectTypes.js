@@ -8,6 +8,8 @@ import type { Choice } from '../gral/types';
 export type SelectProps = {
   // Both SelectCustom and SelectNative
   // ----------------------------------
+  className?: string,
+  id?: string,
   type: SelectPickerType, // see below (default: 'native')
   // Items with the following attributes:
   // - **value** *any*: any value that can be converted to JSON. Values should be unique
@@ -34,10 +36,6 @@ export type SelectProps = {
   // to an item depending on whether it is just *hovered* or also *selected*. If disabled,
   // a single style is used to highlight the selected or the hovered item
   twoStageStyle?: boolean,
-
-  // SelectNative only
-  // -----------------
-  // All other props are passed through to the `select` unchanged
 };
 
 export type SelectPickerType = 'native' | 'inlinePicker' | 'dropDownPicker';

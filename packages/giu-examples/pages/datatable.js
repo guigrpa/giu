@@ -502,7 +502,7 @@ class Contents extends React.Component {
   }
 
   focusOnFirstEditableField = id => {
-    const rowNode = document.querySelector(`#giu-vertical-manager-${id}`);
+    const rowNode = document.querySelector(`.giu-vertical-manager-${id}`);
     if (!rowNode) return;
     const fieldNode = rowNode.querySelector('input, select, textarea');
     if (fieldNode) fieldNode.focus();

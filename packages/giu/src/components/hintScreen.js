@@ -12,6 +12,7 @@ import type { HintArrowPars } from './hintArrow'; // eslint-disable-line
 // ==========================================
 // Component
 // ==========================================
+const DEFAULT_CLOSE_LABEL = 'Got it!';
 
 // -- START_DOCS
 export type HintScreenPars = {|
@@ -22,15 +23,8 @@ type ElementsWrapper = Array<Element> | (() => Array<Element>);
 type Element = HintArrowPars | HintLabelPars;
 // -- END_DOCS
 
-type DefaultProps = {
-  // eslint-disable-line
-  elements: ElementsWrapper,
-  closeLabel: string,
-};
-
 type Props = {
   ...HintScreenPars,
-  ...$Exact<DefaultProps>,
   onClose: (ev: SyntheticMouseEvent<*>) => any,
 };
 
@@ -39,11 +33,6 @@ type Props = {
 // a containing block) will not be properly positioned and may even be cropped.
 // In such a case, use `Hints` instead.
 class HintScreen extends React.PureComponent<Props> {
-  static defaultProps: DefaultProps = {
-    elements: ([]: ElementsWrapper),
-    closeLabel: 'Got it!',
-  };
-
   componentDidMount() {
     window.addEventListener('resize', this.onResize);
   }
@@ -57,20 +46,19 @@ class HintScreen extends React.PureComponent<Props> {
   render() {
     let { elements } = this.props;
     if (typeof elements === 'function') elements = elements();
+    if (!elements) elements = [];
     return (
       <div className="giu-hint-screen" onClick={this.props.onClose}>
-        {this.renderBackdrop()}
+        <Backdrop />
         <div className="giu-hint-screen-contents">
           {this.renderArrows(elements)}
           {this.renderLabels(elements)}
-          {this.renderCloseButton()}
+          <div className="giu-hint-screen-close">
+            {this.props.closeLabel || DEFAULT_CLOSE_LABEL}
+          </div>
         </div>
       </div>
     );
-  }
-
-  renderBackdrop() {
-    return <Backdrop />;
   }
 
   renderArrows(elements: Array<Element>) {
@@ -93,11 +81,6 @@ class HintScreen extends React.PureComponent<Props> {
     ): Array<any>);
     if (!labels || !labels.length) return null;
     return labels.map((label, idx) => <HintLabel key={idx} {...label} />);
-  }
-
-  renderCloseButton() {
-    const { closeLabel } = this.props;
-    return <div className="giu-hint-screen-close">{closeLabel}</div>;
   }
 
   // ==========================================

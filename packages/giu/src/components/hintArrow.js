@@ -1,6 +1,7 @@
 // @flow
 
 import React from 'react';
+import classnames from 'classnames';
 import {
   vectorAdd as add,
   vectorSub as sub,
@@ -19,6 +20,8 @@ const vec = (V: Point2) => `${V.x},${V.y}`;
 // -- START_DOCS
 export type HintArrowPars = {
   type: 'ARROW',
+  className?: string,
+  id?: string,
   from: Point2, // coordinates, e.g. `{ x: 5, y: 10 }`
   to: Point2, // coordinates
   curveFactor?: number,
@@ -72,7 +75,13 @@ class HintArrow extends React.Component<Props> {
 
     // Final path
     d = d.join(' ');
-    return <path className="giu-hint-arrow" d={d} />;
+    return (
+      <path
+        className={classnames('giu-hint-arrow', this.props.className)}
+        id={this.props.id}
+        d={d}
+      />
+    );
   }
 }
 

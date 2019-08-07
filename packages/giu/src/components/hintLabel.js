@@ -1,6 +1,7 @@
 // @flow
 
 import React from 'react';
+import classnames from 'classnames';
 
 // ==========================================
 // Component
@@ -8,6 +9,7 @@ import React from 'react';
 // -- START_DOCS
 export type HintLabelPars = {|
   type: 'LABEL',
+  className?: string,
   id?: string,
   x: number,
   y: number,
@@ -23,13 +25,14 @@ type Props = {
 
 class HintLabel extends React.Component<Props> {
   render() {
-    const { id, x, y, align } = this.props;
+    const { id, x, y, align = 'left' } = this.props;
     return (
-      <div id={id} className="giu-hint-label" style={{ top: y, left: x }}>
-        <div
-          className={`giu-hint-label-inner giu-hint-label-inner-${align ||
-            'left'}`}
-        >
+      <div
+        className={classnames('giu-hint-label', this.props.className)}
+        id={id}
+        style={{ top: y, left: x }}
+      >
+        <div className={`giu-hint-label-inner giu-hint-label-inner-${align}`}>
           {this.props.children}
         </div>
       </div>

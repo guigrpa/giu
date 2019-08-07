@@ -1,10 +1,9 @@
 // @flow
 
 import React from 'react';
-import { omit } from 'timm';
 import classnames from 'classnames';
 import { NULL_STRING } from '../gral/constants';
-import Input, { INPUT_HOC_INVALID_HTML_PROPS } from '../hocs/input';
+import Input from '../hocs/input';
 import type { InputHocPublicProps } from '../hocs/input';
 import { LIST_SEPARATOR_KEY } from './listPicker';
 import type { SelectProps } from './selectTypes';
@@ -38,16 +37,6 @@ type Props = {
   registerFocusableRef: Function,
 };
 
-const FILTERED_OUT_PROPS = [
-  'inlinePicker',
-  'items',
-  'lang',
-  'required',
-  'disabled',
-  'style',
-  ...INPUT_HOC_INVALID_HTML_PROPS,
-];
-
 // ==========================================
 // Component
 // ==========================================
@@ -66,15 +55,16 @@ class BaseSelectNative extends React.Component<Props> {
     items.forEach(option => {
       if (option.label !== LIST_SEPARATOR_KEY) finalItems.push(option);
     });
-    const otherProps = omit(this.props, FILTERED_OUT_PROPS);
     return (
       <select
         ref={registerFocusableRef}
-        className={classnames('giu-select-native', {
-          'giu-input-disabled': disabled,
-        })}
+        className={classnames(
+          'giu-select-native',
+          { 'giu-input-disabled': disabled },
+          this.props.className
+        )}
+        id={this.props.id}
         value={curValue}
-        {...otherProps}
         tabIndex={disabled ? -1 : undefined}
       >
         {finalItems.map(o => {
@@ -98,6 +88,7 @@ const hocOptions = {
   toInternalValue,
   toExternalValue,
   isNull,
+  className: 'giu-select-native-wrapper',
 };
 const render = props => <BaseSelectNative {...props} />;
 // $FlowFixMe

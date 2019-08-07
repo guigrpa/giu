@@ -12,12 +12,12 @@ import { ThemeContext, DEFAULT_THEME } from '../gral/themeContext';
 // -- A root component that can be used for custom themes.
 type Props = {
   themeId?: string | Object,
-  accentColor?: string,
   children: any,
 };
 
-const Giu = ({ themeId: id, accentColor, children }: Props) => {
-  const theme = addDefaults({ id, accentColor }, DEFAULT_THEME);
+const Giu = ({ themeId: id, children }: Props) => {
+  let theme = { id };
+  theme = addDefaults(theme, DEFAULT_THEME);
   return (
     <ThemeContext.Provider value={theme}>{children}</ThemeContext.Provider>
   );

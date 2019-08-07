@@ -1,7 +1,6 @@
 // @flow
 
 import React from 'react';
-import { omit } from 'timm';
 import classnames from 'classnames';
 import type { Choice } from '../gral/types';
 import Select from '../inputs/select';
@@ -13,6 +12,9 @@ import Select from '../inputs/select';
 // --
 /* -- START_DOCS -- */
 type Props = {
+  className?: string,
+  id?: string,
+
   // Items: similar to the Select component but including an `onClick` callback
   items: Array<Choice>,
 
@@ -23,18 +25,8 @@ type Props = {
     ev: SyntheticMouseEvent<*>, // `click` event
     val: any // the item's `value` (as specified in the `items` prop)
   ) => any,
-
-  // All other props are passed through to the Select input component
 };
 /* -- END_DOCS -- */
-
-const FILTERED_PROPS = [
-  'items',
-  'lang',
-  'children',
-  'onClickItem',
-  'accentColor',
-];
 
 type State = {
   fFocused: boolean,
@@ -47,23 +39,26 @@ class DropDownMenu extends React.PureComponent<Props, State> {
 
   // ==========================================
   render() {
-    const props = omit(this.props, FILTERED_PROPS);
     return (
-      <Select
-        ref={this.refSelect}
-        type="dropDownPicker"
-        items={this.props.items}
-        lang={this.props.lang}
-        onClickItem={this.onClickItem}
-        onCloseFloat={this.closeMenu}
-        onFocus={this.onFocus}
-        onBlur={this.onBlur}
-        {...props}
-        required
-        noErrors
+      <span
+        className={classnames('giu-drop-down-menu', this.props.className)}
+        id={this.props.id}
       >
-        {this.renderTitle()}
-      </Select>
+        <Select
+          ref={this.refSelect}
+          type="dropDownPicker"
+          items={this.props.items}
+          lang={this.props.lang}
+          onClickItem={this.onClickItem}
+          onCloseFloat={this.closeMenu}
+          onFocus={this.onFocus}
+          onBlur={this.onBlur}
+          required
+          noErrors
+        >
+          {this.renderTitle()}
+        </Select>
+      </span>
     );
   }
 

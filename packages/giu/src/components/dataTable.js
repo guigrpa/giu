@@ -40,9 +40,6 @@ const createManualSortCol = label => ({
     <DragHandle disabled={!fSortedManually || disableDragging} />
   ),
   /* eslint-enable react/prop-types */
-  minWidth: 30,
-  flexGrow: 0,
-  flexShrink: 0,
 });
 
 const FOCUSABLE = ['input', 'textarea', 'select'];
@@ -99,6 +96,8 @@ in time (as a result of passed-down props or their own intrinsic state).
 type PublicProps = {
   // Basic
   // -----
+  className?: string,
+  id?: string,
   itemsById?: Object, // Rows, keyed by id (default: {})
   cols: Array<DataTableColumn>, // Column configuration objects
   lang?: string, // Used to force-refresh when language changes
@@ -420,11 +419,14 @@ class DataTable extends React.PureComponent<Props> {
         ref={this.refOuter}
         className={classnames(
           'giu-data-table',
-          this.fDragging
-            ? 'giu-data-table-dragging'
-            : 'giu-data-table-not-dragging',
-          { 'giu-data-table-animated': this.props.animated }
+          {
+            'giu-data-table-dragging': this.fDragging,
+            'giu-data-table-not-dragging': !this.fDragging,
+            'giu-data-table-animated': this.props.animated,
+          },
+          this.props.className
         )}
+        id={this.props.id}
         onClick={this.onClickOuter}
       >
         {MANAGE_FOCUS_AUTONOMOUSLY ? null : this.renderFocusCapture()}

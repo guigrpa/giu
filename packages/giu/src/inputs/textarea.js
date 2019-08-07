@@ -7,7 +7,7 @@ import { preventDefault, stopPropagation } from '../gral/helpers';
 import { KEYS } from '../gral/constants';
 import { isAnyModifierPressed } from '../gral/keys';
 import type { Theme } from '../gral/themeContext';
-import Input, { INPUT_HOC_INVALID_HTML_PROPS } from '../hocs/input';
+import Input from '../hocs/input';
 import type { InputHocPublicProps } from '../hocs/input';
 
 const NULL_VALUE = '';
@@ -28,14 +28,14 @@ const getPlaceholderText = val => {
 // -- START_DOCS
 type PublicProps = {
   ...$Exact<InputHocPublicProps>, // common to all inputs (check the docs!)
+  className?: string,
+  id?: string,
   skipTheme?: boolean,
-  // all others are passed through unchanged
 };
 // -- END_DOCS
 
 type Props = {
   ...$Exact<PublicProps>,
-  id?: string,
   placeholder?: string,
   // Input HOC
   theme: Theme,
@@ -46,14 +46,6 @@ type Props = {
   fFocused: boolean,
   onResizeOuter: Function,
 };
-
-const FILTERED_OUT_PROPS = [
-  'skipTheme',
-  'required',
-  'theme',
-  ...INPUT_HOC_INVALID_HTML_PROPS,
-];
-const FILTERED_OUT_PROPS_MDL = [...FILTERED_OUT_PROPS, 'placeholder'];
 
 // ==========================================
 // Component
@@ -84,9 +76,12 @@ class BaseTextarea extends React.Component<Props> {
       return this.renderMdl();
     }
     const { curValue, disabled } = this.props;
-    const otherProps = omit(this.props, FILTERED_OUT_PROPS);
     return (
-      <div ref={this.registerOuterRef} className="giu-textarea">
+      <div
+        ref={this.registerOuterRef}
+        className={classnames('giu-textarea', this.props.classname)}
+        id={this.props.id}
+      >
         <div
           ref={this.refTaPlaceholder}
           className="giu-textarea-field giu-textarea-placeholder"
@@ -101,7 +96,6 @@ class BaseTextarea extends React.Component<Props> {
           value={curValue}
           onKeyDown={this.onKeyDown}
           tabIndex={disabled ? -1 : undefined}
-          {...otherProps}
         />
       </div>
     );
@@ -109,23 +103,28 @@ class BaseTextarea extends React.Component<Props> {
 
   renderMdl() {
     const { id, curValue, disabled, fFocused } = this.props;
-    const otherProps = omit(this.props, FILTERED_OUT_PROPS_MDL);
-    let className =
-      'giu-textarea mdl-textfield mdl-js-textfield mdl-textfield--floating-label';
-    if (curValue !== '' || fFocused) className += ' is-dirty';
+    const internalId = `giu-date-input-${id}`;
     return (
-      <div ref={this.registerOuterRef} className={className}>
+      <div
+        ref={this.registerOuterRef}
+        className={classnames(
+          'giu-textarea giu-textarea-mdl',
+          'mdl-textfield mdl-js-textfield mdl-textfield--floating-label',
+          { 'is-dirty': curValue !== '' || fFocused },
+          this.props.className
+        )}
+        id={id}
+      >
         <textarea
           ref={this.registerInputRef}
           className="mdl-textfield__input"
           value={curValue}
-          id={id}
+          id={internalId}
           onKeyDown={this.onKeyDown}
           rows={3}
-          {...otherProps}
           tabIndex={disabled ? -1 : undefined}
         />
-        <label className="mdl-textfield__label" htmlFor={id}>
+        <label className="mdl-textfield__label" htmlFor={internalId}>
           {this.props.placeholder || ''}
         </label>
       </div>
@@ -175,6 +174,7 @@ const hocOptions = {
   toInternalValue,
   toExternalValue,
   isNull,
+  className: 'giu-textarea-wrapper',
 };
 const render = props => <BaseTextarea {...props} />;
 // $FlowFixMe

@@ -10,6 +10,7 @@ import { IS_IOS } from '../gral/constants';
 type Props = {
   disabled?: boolean,
   registerRef?: (ref: ?Object) => void,
+  // All other props are passed through to the input component
 };
 
 const FocusCapture = ({ registerRef, disabled, ...otherProps }: Props) => {
@@ -23,12 +24,11 @@ const FocusCapture = ({ registerRef, disabled, ...otherProps }: Props) => {
       {...otherProps}
     />
   );
-  return IS_IOS ? <span style={style.iosWrapper}>{el}</span> : el;
-};
-
-// ==========================================
-const style = {
-  iosWrapper: { position: 'relative' },
+  return IS_IOS ? (
+    <span className="giu-focus-capture-wrapper-for-ios">{el}</span>
+  ) : (
+    el
+  );
 };
 
 // ==========================================

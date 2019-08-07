@@ -1,7 +1,6 @@
 // @flow
 
 import React from 'react';
-import { omit } from 'timm';
 import classnames from 'classnames';
 import { ThemeContext } from '../gral/themeContext';
 import type { Theme } from '../gral/themeContext';
@@ -16,16 +15,15 @@ const SPINNER_ICON = 'circle-o-notch';
 // -- START_DOCS
 type PublicProps = {
   className?: string,
+  id?: string,
   icon: string, // e.g. `ambulance`, `cogs`...
   size?: 'lg' | '2x' | '3x' | '4x' | '5x',
   fixedWidth?: boolean,
   spin?: boolean,
   onClick?: (ev: SyntheticMouseEvent<*>) => any,
   disabled?: boolean,
-  style?: Object, // merged with the `i` element style
   skipTheme?: boolean,
-
-  // All other props are passed through to the `i` element
+  style?: Object, // use sparsely (CSS should cover you in most cases!)
 };
 // -- END_DOCS
 
@@ -34,17 +32,6 @@ type Props = {
   // Context
   theme: Theme,
 };
-
-const FILTERED_PROPS = [
-  'className',
-  'icon',
-  'size',
-  'fixedWidth',
-  'spin',
-  'disabled',
-  'skipTheme',
-  'theme',
-];
 
 // ==========================================
 // Component
@@ -63,8 +50,6 @@ class Icon extends React.PureComponent<Props> {
     const isMdl = !this.props.skipTheme && this.props.theme.id === 'mdl';
     const { icon, spin, disabled, size } = this.props;
     if (isMdl && icon === SPINNER_ICON) return this.renderMdlSpinner();
-    const otherProps = omit(this.props, FILTERED_PROPS);
-    if (disabled) otherProps.onClick = undefined;
     return (
       <i
         className={classnames(
@@ -79,7 +64,9 @@ class Icon extends React.PureComponent<Props> {
           },
           this.props.className
         )}
-        {...otherProps}
+        id={this.props.id}
+        onClick={disabled ? undefined : this.props.onClick}
+        style={this.props.style}
       >
         {isMdl ? icon : null}
       </i>
@@ -88,15 +75,16 @@ class Icon extends React.PureComponent<Props> {
 
   renderMdlSpinner() {
     const { size } = this.props;
-    const otherProps = omit(this.props, FILTERED_PROPS);
     return (
       <div
         ref={this.refIcon}
         className={classnames(
           'giu-mdl-spinner mdl-spinner mdl-js-spinner is-active',
-          size ? `giu-mdl-spinner-${size}` : undefined
+          size ? `giu-mdl-spinner-${size}` : undefined,
+          this.props.className
         )}
-        {...otherProps}
+        id={this.props.id}
+        style={this.props.style}
       />
     );
   }

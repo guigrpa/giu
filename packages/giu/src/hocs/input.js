@@ -38,7 +38,7 @@ type HocOptions = {|
   defaultValidators?: { [key: string]: Validator },
   validatorContext?: any,
   trappedKeys?: Array<number>,
-  className?: string, // wrapper class name
+  className: string, // wrapper class name
   fIncludeClipboardProps?: boolean,
 |};
 
@@ -328,6 +328,7 @@ class Input extends React.PureComponent<Props> {
     // to be below another float's level, so that it doesn't obscure the main float).
     if (errors.length) {
       const floatOptions = {
+        className: 'giu-float-error',
         ...this.calcFloatPosition(),
         getAnchorNode: () => this.refOuter || this.refFocusable,
         children: this.renderErrors(),

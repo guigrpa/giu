@@ -17,8 +17,8 @@ type State = {
 // Component
 // ================================================
 // HeightMeasurer MUST BE the direct child of an element with an "extrinsic"
-// height (ie. a height that is not determined by its children, but rather
-// by its parents, e.g. a flex item with "overflow: hidden")
+// height (ie. a height that is not determined by its children,
+// but rather by its parents, e.g. a flex item with "overflow: hidden")
 class HeightMeasurer extends React.Component<Props, State> {
   state = { height: undefined };
   refOuter: any = React.createRef();

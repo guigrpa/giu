@@ -2,18 +2,10 @@
 
 import React from 'react';
 import classnames from 'classnames';
-import {
-  COLORS,
-  UNICODE,
-  KEYS,
-  NULL_STRING,
-  IS_IOS,
-  getScrollbarWidth,
-} from '../gral/constants';
+import { UNICODE, KEYS, NULL_STRING, IS_IOS } from '../gral/constants';
 import { cancelEvent, cancelBodyScrolling } from '../gral/helpers';
 import { scrollIntoView } from '../gral/visibility';
 import type { ScrollIntoViewOptions } from '../gral/visibility';
-import { isDark } from '../gral/styles';
 import type {
   Choice,
   KeyboardEventPars,
@@ -27,6 +19,8 @@ const DEFAULT_EMPTY_TEXT = 'Ø';
 // Declarations
 // ==========================================
 type Props = {|
+  className?: string,
+  id?: string,
   registerOuterRef?: Function,
   items: Array<Choice>,
   lang?: string,
@@ -108,11 +102,16 @@ class ListPicker extends React.PureComponent<Props, State> {
     return (
       <div
         ref={this.registerOuterRef}
-        className={classnames('giu-input-reset giu-list-picker', {
-          'giu-input-disabled': this.props.disabled,
-          'giu-glow': this.props.fFocused,
-          'giu-list-picker-two-stage': this.props.twoStageStyle,
-        })}
+        className={classnames(
+          'giu-input-reset giu-list-picker',
+          {
+            'giu-input-disabled': this.props.disabled,
+            'giu-glow': this.props.fFocused,
+            'giu-list-picker-two-stage': this.props.twoStageStyle,
+          },
+          this.props.className
+        )}
+        id={this.props.id}
         onWheel={cancelBodyScrolling}
       >
         {this.renderContents()}

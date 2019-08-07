@@ -40,6 +40,8 @@ const CLASS_OPTIONS = {
 // -- START_DOCS
 type PublicProps = {
   ...$Exact<InputHocPublicProps>, // common to all inputs (check the docs!)
+  className?: string,
+  id?: string,
   disabled?: boolean,
   skipTheme?: boolean,
   vertical?: boolean, // only for RangeInput
@@ -105,9 +107,12 @@ function createClass(componentName, inputType) {
       return (
         <input
           ref={registerFocusableRef}
-          className={classnames(`giu-input-reset giu-${inputType}-input`, {
-            'giu-input-disabled': disabled,
-          })}
+          className={classnames(
+            `giu-input-reset giu-${inputType}-input`,
+            { 'giu-input-disabled': disabled },
+            this.props.className
+          )}
+          id={this.props.id}
           type={inputType}
           value={curValue}
           {...otherProps}
@@ -127,6 +132,7 @@ function createClass(componentName, inputType) {
         fFocused,
       } = this.props;
       const otherProps = omit(this.props, FILTERED_OUT_PROPS_MDL);
+      const internalId = `giu-${inputType}-input-${id}`;
       return (
         <div
           ref={this.refMdl}
@@ -137,19 +143,21 @@ function createClass(componentName, inputType) {
             {
               'is-dirty': curValue !== '' || fFocused,
               disabled,
-            }
+            },
+            this.props.className
           )}
+          id={id}
         >
           <input
             ref={registerFocusableRef}
             className="mdl-textfield__input"
             type={inputType === 'password' ? 'password' : 'text'}
             value={curValue}
-            id={id}
+            id={internalId}
             {...otherProps}
             tabIndex={disabled ? -1 : undefined}
           />
-          <label className="mdl-textfield__label" htmlFor={id}>
+          <label className="mdl-textfield__label" htmlFor={internalId}>
             {this.props.placeholder || ''}
           </label>
         </div>
@@ -162,7 +170,12 @@ function createClass(componentName, inputType) {
       return (
         <input
           ref={registerFocusableRef}
-          className={`giu-${inputType}-input giu-${inputType}-input-mdl mdl-slider mdl-js-slider`}
+          className={classnames(
+            `giu-${inputType}-input giu-${inputType}-input-mdl`,
+            'mdl-slider mdl-js-slider',
+            this.props.className
+          )}
+          id={this.props.id}
           type={inputType}
           value={curValue}
           {...otherProps}
@@ -176,6 +189,7 @@ function createClass(componentName, inputType) {
   const hocOptions = {
     componentName,
     ...CLASS_OPTIONS[inputType],
+    className: `giu-${inputType}-input-wrapper`,
   };
   const render = props => <BaseKlass {...props} />;
   // $FlowFixMe

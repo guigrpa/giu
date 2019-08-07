@@ -6,7 +6,6 @@ import classnames from 'classnames';
 import { KEYS, IS_IOS, IS_MOBILE_OR_TABLET } from '../gral/constants';
 import type { KeyboardEventPars } from '../gral/types';
 import { isAncestorNode } from '../gral/helpers';
-import type { Theme } from '../gral/themeContext';
 import Input from '../hocs/input';
 import type { InputHocPublicProps } from '../hocs/input';
 import { floatAdd, floatDelete, floatUpdate } from '../components/floats';
@@ -27,6 +26,8 @@ const MANAGE_FOCUS_AUTONOMOUSLY = IS_MOBILE_OR_TABLET;
 // -- START_DOCS
 type PublicProps = {
   ...$Exact<InputHocPublicProps>, // common to all inputs (check the docs!)
+  className?: string,
+  id?: string,
   disabled?: boolean,
   // Whether the complete color picker should be inlined or appear as a dropdown when clicked
   inlinePicker?: boolean,
@@ -39,7 +40,6 @@ type PublicProps = {
 type Props = {
   ...$Exact<PublicProps>,
   // Input HOC
-  theme: Theme,
   curValue: ?string,
   onChange: Function,
   registerOuterRef: Function,
@@ -95,7 +95,8 @@ class BaseColorInput extends React.Component<Props> {
   // ==========================================
   render() {
     this.prepareRender();
-    return this.props.inlinePicker ? this.renderPicker() : this.renderTitle();
+    if (this.props.inlinePicker) return this.renderPicker();
+    return this.renderTitle();
   }
 
   renderTitle() {
@@ -106,10 +107,15 @@ class BaseColorInput extends React.Component<Props> {
       // The `x` text keeps baselines aligned
       <div
         ref={this.registerTitleRef}
-        className={classnames('giu-input-reset giu-color-input', {
-          'giu-input-disabled': this.props.disabled,
-          'giu-glow': this.props.fFocused,
-        })}
+        className={classnames(
+          'giu-input-reset giu-color-input',
+          {
+            'giu-input-disabled': this.props.disabled,
+            'giu-glow': this.props.fFocused,
+          },
+          this.props.className
+        )}
+        id={this.props.id}
         onMouseDown={this.onMouseDownTitle}
         onClick={this.onClickTitle}
       >
@@ -136,8 +142,10 @@ class BaseColorInput extends React.Component<Props> {
 
     // Create or update float
     if (fFloat) {
-      const { floatPosition, floatAlign } = this.props;
+      const { id, floatPosition, floatAlign } = this.props;
       const floatOptions = {
+        className: 'giu-float-color-input',
+        id: id ? `giu-float-${id}` : undefined,
         position: floatPosition,
         align: floatAlign,
         getAnchorNode: () => this.refTitle,
@@ -172,6 +180,8 @@ class BaseColorInput extends React.Component<Props> {
     } = this.props;
     return (
       <ColorPicker
+        className={inlinePicker ? this.props.className : undefined}
+        id={inlinePicker ? this.props.id : undefined}
         registerOuterRef={
           inlinePicker ? registerOuterRef : this.registerPickerRef
         }
@@ -179,7 +189,6 @@ class BaseColorInput extends React.Component<Props> {
         onChange={onChange}
         disabled={disabled}
         fFocused={!!inlinePicker && fFocused}
-        accentColor={this.props.theme.accentColor}
       />
     );
   }

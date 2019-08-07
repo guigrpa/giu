@@ -102,30 +102,6 @@ const INPUT_DISABLED = {
   pointerEvents: 'none',
 };
 
-const HIDDEN_FOCUS_CAPTURE = {
-  position: 'fixed',
-  opacity: 0,
-  width: 0,
-  height: 0,
-  padding: 0,
-  cursor: 'default',
-  pointerEvents: 'none',
-  zIndex: -80,
-  top: 8,
-  left: 8,
-};
-
-const HIDDEN_FOCUS_CAPTURE_IOS = merge(HIDDEN_FOCUS_CAPTURE, {
-  position: 'absolute',
-  top: 0,
-  left: 0,
-});
-
-const GLOW = {
-  boxShadow: '0 0 5px rgba(81, 203, 238, 1)',
-  border: '1px solid rgba(81, 203, 238, 1)',
-};
-
 /* --
 **addStylesToPage()**
 
@@ -157,9 +133,6 @@ export {
   isDark,
   lighten,
   darken,
-  HIDDEN_FOCUS_CAPTURE,
-  HIDDEN_FOCUS_CAPTURE_IOS,
-  GLOW,
   inputReset,
   INPUT_DISABLED,
   addStylesToPage,

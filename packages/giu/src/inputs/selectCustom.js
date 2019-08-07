@@ -17,7 +17,6 @@ import {
 } from '../gral/keys';
 import type { Choice, KeyboardEventPars } from '../gral/types';
 import { isAncestorNode, memoize } from '../gral/helpers';
-import type { Theme } from '../gral/themeContext';
 import Input from '../hocs/input';
 import type { InputHocPublicProps } from '../hocs/input';
 import { ListPicker, LIST_SEPARATOR_KEY } from './listPicker';
@@ -60,7 +59,6 @@ type PublicProps = {
 type Props = {
   ...$Exact<PublicProps>,
   // Input HOC
-  theme: Theme,
   curValue: string,
   onChange: Function,
   registerOuterRef: Function,
@@ -127,20 +125,13 @@ class BaseSelectCustom extends React.Component<Props> {
   // ==========================================
   render() {
     this.prepareRender();
-    const { children } = this.props;
-    let out;
-    if (this.props.inlinePicker) {
-      out = this.renderPicker();
-    } else if (children) {
-      out = this.renderProvidedTitle(children);
-    } else {
-      out = this.renderDefaultTitle();
-    }
-    return out;
+    if (this.props.inlinePicker) return this.renderPicker();
+    if (this.props.children) return this.renderProvidedTitle();
+    return this.renderDefaultTitle();
   }
 
-  renderProvidedTitle(children) {
-    const elTitle = React.cloneElement(children, {
+  renderProvidedTitle() {
+    const elTitle = React.cloneElement(this.props.children, {
       ref: this.registerTitleRef,
       onClick: this.onClickTitle,
     });
@@ -168,10 +159,15 @@ class BaseSelectCustom extends React.Component<Props> {
     return (
       <span
         ref={this.registerTitleRef}
-        className={classnames('giu-input-reset giu-select-custom', {
-          'giu-glow': this.props.fFocused,
-          'giu-input-disabled': disabled,
-        })}
+        className={classnames(
+          'giu-input-reset giu-select-custom',
+          {
+            'giu-glow': this.props.fFocused,
+            'giu-input-disabled': disabled,
+          },
+          this.props.className
+        )}
+        id={this.props.id}
         onMouseDown={this.onMouseDownTitle}
         onClick={this.onClickTitle}
       >
@@ -203,8 +199,10 @@ class BaseSelectCustom extends React.Component<Props> {
 
     // Create or update float
     if (fFloat) {
-      const { floatPosition, floatAlign } = this.props;
+      const { id, floatPosition, floatAlign } = this.props;
       const floatOptions = {
+        className: 'giu-float-select-custom',
+        id: id ? `giu-float-${id}` : undefined,
         position: floatPosition,
         align: floatAlign,
         limitSize: true,
@@ -236,6 +234,8 @@ class BaseSelectCustom extends React.Component<Props> {
     return (
       <ListPicker
         ref={this.refPicker}
+        className={inlinePicker ? this.props.className : undefined}
+        id={inlinePicker ? this.props.id : undefined}
         registerOuterRef={inlinePicker ? registerOuterRef : undefined}
         items={this.items}
         lang={this.props.lang}
@@ -246,7 +246,6 @@ class BaseSelectCustom extends React.Component<Props> {
         fFocused={inlinePicker && this.props.fFocused}
         fFloating={!inlinePicker}
         twoStageStyle={this.props.twoStageStyle}
-        accentColor={this.props.theme.accentColor}
       />
     );
   }

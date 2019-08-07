@@ -4,10 +4,13 @@ import React from 'react';
 import Icon, { SPINNER_ICON } from './icon';
 
 // ==========================================
-// Component
+// Declarations
 // ==========================================
 type Props = Object;
 
+// ==========================================
+// Component
+// ==========================================
 class Spinner extends React.PureComponent<Props> {
   render() {
     return <Icon icon={SPINNER_ICON} {...this.props} />;

@@ -17,7 +17,7 @@ import {
 import type { Moment } from '../gral/types';
 import { isDate } from '../gral/validators';
 import type { Theme } from '../gral/themeContext';
-import Input, { INPUT_HOC_INVALID_HTML_PROPS } from '../hocs/input';
+import Input from '../hocs/input';
 import type { InputHocPublicProps } from '../hocs/input';
 import { floatAdd, floatDelete, floatUpdate } from '../components/floats';
 import type { FloatPosition, FloatAlign } from '../components/floats';
@@ -89,6 +89,7 @@ const MANAGE_FOCUS_AUTONOMOUSLY = IS_MOBILE_OR_TABLET;
 // -- START_DOCS
 type PublicProps = {
   ...$Exact<InputHocPublicProps>, // common to all inputs (check the docs!)
+  className?: string,
   id?: string,
   type?: PickerType, // see below (default: 'dropDownPicker')
   // Whether Giu should check for iOS in order to simplify certain components
@@ -112,7 +113,6 @@ type PublicProps = {
   floatPosition?: FloatPosition,
   floatAlign?: FloatAlign,
   skipTheme?: boolean,
-  // all others are passed through to the `input` unchanged
 };
 
 type PickerType = 'native' | 'onlyField' | 'inlinePicker' | 'dropDownPicker';
@@ -158,27 +158,6 @@ type Props = {
 type State = {
   fFloat: boolean,
 };
-
-const FILTERED_OUT_PROPS = [
-  'type',
-  'disabled',
-  'placeholder',
-  'date',
-  'time',
-  'analogTime',
-  'seconds',
-  'utc',
-  'todayName',
-  'lang',
-  'floatPosition',
-  'floatAlign',
-  'skipTheme',
-  ...INPUT_HOC_INVALID_HTML_PROPS,
-  'required',
-  'theme',
-];
-
-const FILTERED_OUT_PROPS_MDL = FILTERED_OUT_PROPS.concat(['placeholder']);
 
 //------------------------------------------
 // Component
@@ -226,30 +205,13 @@ class BaseDateInput extends React.Component<Props, State> {
   render() {
     const { type } = this.props;
     if (type === 'native') return this.renderNativeField();
-    if (type === 'inlinePicker') {
-      return (
-        <span className="giu-date-input giu-date-input-inline-picker">
-          {MANAGE_FOCUS_AUTONOMOUSLY
-            ? null
-            : this.renderField({ hidden: true })}
-          {this.renderPicker({ inline: true })}
-        </span>
-      );
-    }
-    if (IS_IOS && type === 'dropDownPicker') {
-      return (
-        <span className="giu-date-input">
-          {this.renderField({ root: false })}
-          {this.renderFloatForIos()}
-        </span>
-      );
-    }
+    if (type === 'inlinePicker') return this.renderInlinePicker();
+    if (IS_IOS && type === 'dropDownPicker') this.renderIosDropDownPicker();
     return this.renderField({ root: true });
   }
 
   renderNativeField() {
     const { placeholder, date, time, disabled } = this.props;
-    const otherProps = omit(this.props, FILTERED_OUT_PROPS);
     let htmlInputType;
     if (date && time) {
       htmlInputType = 'datetime-local';
@@ -261,12 +223,14 @@ class BaseDateInput extends React.Component<Props, State> {
     return (
       <input
         ref={this.registerInputRef}
-        className={classnames('giu-input-reset giu-date-input', {
-          'giu-input-disabled': disabled,
-        })}
+        className={classnames(
+          'giu-input-reset giu-date-input',
+          { 'giu-input-disabled': disabled },
+          this.props.className
+        )}
+        id={this.props.id}
         type={htmlInputType}
         value={this.props.curValue}
-        {...otherProps}
         placeholder={placeholder || dateTimeFormatNative(date, time)}
         onFocus={this.onFocus}
         onBlur={this.onBlur}
@@ -276,24 +240,55 @@ class BaseDateInput extends React.Component<Props, State> {
     );
   }
 
+  renderInlinePicker() {
+    return (
+      <span
+        className={classnames(
+          'giu-date-input giu-date-input-inline-picker',
+          this.props.className
+        )}
+        id={this.props.id}
+      >
+        {MANAGE_FOCUS_AUTONOMOUSLY ? null : this.renderField({ hidden: true })}
+        {this.renderPicker({ inline: true })}
+      </span>
+    );
+  }
+
+  renderIosDropDownPicker() {
+    return (
+      <span
+        className={classnames('giu-date-input', this.props.className)}
+        id={this.props.id}
+      >
+        {this.renderField({ root: false })}
+        {this.renderFloatForIos()}
+      </span>
+    );
+  }
+
+  // ==========================================
   renderField({ hidden, root }) {
     if (!hidden && !this.props.skipTheme && this.props.theme.id === 'mdl') {
       return this.renderFieldMdl({ root });
     }
     const { placeholder, date, time, seconds } = this.props;
-    const otherProps = omit(this.props, FILTERED_OUT_PROPS);
     return (
       <input
         ref={this.registerInputRef}
-        className={classnames('giu-input-reset', {
-          'giu-date-input': root,
-          'giu-input-disabled': this.props.disabled,
-          'giu-hidden-field': hidden,
-          'giu-hidden-field-ios': hidden && IS_IOS,
-        })}
+        className={classnames(
+          'giu-input-reset',
+          {
+            'giu-date-input': root,
+            'giu-input-disabled': this.props.disabled,
+            'giu-hidden-field': hidden,
+            'giu-hidden-field-ios': hidden && IS_IOS,
+          },
+          root ? this.props.className : undefined
+        )}
+        id={root ? this.props.id : undefined}
         type="text"
         value={this.props.curValue}
-        {...otherProps}
         placeholder={placeholder || dateTimeFormat(date, time, seconds)}
         onFocus={this.onFocus}
         onBlur={this.onBlur}
@@ -317,34 +312,35 @@ class BaseDateInput extends React.Component<Props, State> {
       seconds,
       fFocused,
     } = this.props;
-    const otherProps = omit(this.props, FILTERED_OUT_PROPS_MDL);
+    const internalId = `giu-date-input-${id}`;
     return (
       <div
         ref={this.refMdl}
         className={classnames(
-          { 'giu-date-input': !root },
+          { 'giu-date-input': root },
           'giu-date-input-mdl',
           'mdl-textfield mdl-js-textfield mdl-textfield--floating-label',
           {
             'is-dirty': curValue !== '' || fFocused,
             disabled: this.props.disabled,
-          }
+          },
+          root ? this.props.className : undefined
         )}
+        id={id}
       >
         <input
           ref={this.registerInputRef}
           className="mdl-textfield__input"
           type="text"
           value={curValue}
-          id={id}
-          {...otherProps}
+          id={internalId}
           onFocus={this.onFocus}
           onBlur={this.onBlur}
           onChange={this.props.onChange}
           onKeyDown={this.onKeyDown}
           tabIndex={this.props.disabled ? -1 : undefined}
         />
-        <label className="mdl-textfield__label" htmlFor={id}>
+        <label className="mdl-textfield__label" htmlFor={internalId}>
           {placeholder || dateTimeFormat(date, time, seconds)}
         </label>
       </div>
@@ -365,8 +361,10 @@ class BaseDateInput extends React.Component<Props, State> {
 
     // Create or update float
     if (fFloat) {
-      const { floatPosition, floatAlign } = this.props;
+      const { id, floatPosition, floatAlign } = this.props;
       const floatOptions = {
+        className: 'giu-float-date-input',
+        id: id ? `giu-float-${id}` : undefined,
         position: floatPosition,
         align: floatAlign,
         getAnchorNode: () => this.refInput,
@@ -482,6 +480,7 @@ const hocOptions = {
   defaultValidators: { isDate: isDate() },
   validatorContext: { moment },
   fIncludeClipboardProps: true,
+  className: 'giu-date-input-wrapper',
 };
 const render = (props, ref) => <BaseDateInput {...props} ref={ref} />;
 // $FlowFixMe

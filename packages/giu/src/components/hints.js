@@ -216,7 +216,6 @@ class Hints extends React.PureComponent<Props> {
 // Public
 // ==========================================
 const isHintShown = () => store.getState().shown != null;
-
 export {
   Hints,
   reducer,

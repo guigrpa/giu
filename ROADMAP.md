@@ -2,12 +2,12 @@
 
 * Use plain old CSS stylesheets (customisable!), instead of element CSS:
     * Input HOC:
-      - all components should have a class, e.g. giu-xxx-xxx-wrapper
       - review all input trees
-    * z-index
+    * Remove FILTERED_PROPS, use explicit prop passing
     * id prop (especially floats: inherit from owner)
-    * Remove accentColor from theme object (when all elements using it are migrated)
-    * DropDownMenu: remove style props (when Select is updated)
+    * z-index
+    * Remove boxWithShadow and other items from gral/styles
+    * Review MDL
     * Remove HIDDEN_FOCUS_CAPTURE, HIDDEN_FOCUS_CAPTURE_IOS once they're no longer used
     * Clean up examples, using CSS
     * Make `id` prop mandatory in some components.

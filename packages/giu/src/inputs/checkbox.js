@@ -1,8 +1,8 @@
 // @flow
 
 import * as React from 'react';
-import { omit } from 'timm';
-import Input, { INPUT_HOC_INVALID_HTML_PROPS } from '../hocs/input';
+import classnames from 'classnames';
+import Input from '../hocs/input';
 import type { InputHocPublicProps } from '../hocs/input';
 import type { Theme } from '../gral/themeContext';
 
@@ -17,11 +17,11 @@ const isNull = val => val == null;
 // -- START_DOCS
 type PublicProps = {
   ...$Exact<InputHocPublicProps>, // common to all inputs (check the docs!)
-  id?: string,
+  className?: string,
+  id: string,
   label?: React.Node, // React components to be included in the checkbox's `label` element
   disabled?: boolean,
   skipTheme?: boolean,
-  // all others are passed through to the `input` unchanged
 };
 // -- END_DOCS
 
@@ -33,15 +33,6 @@ type Props = {
   registerOuterRef: Function,
   registerFocusableRef: Function,
 };
-
-const FILTERED_OUT_PROPS = [
-  'id',
-  'label',
-  'disabled',
-  'skipTheme',
-  'theme',
-  ...INPUT_HOC_INVALID_HTML_PROPS,
-];
 
 // ==========================================
 // Component
@@ -61,20 +52,23 @@ class BaseCheckbox extends React.Component<Props> {
       return this.renderMdl();
     }
     const { disabled } = this.props;
-    const inputProps = omit(this.props, FILTERED_OUT_PROPS);
+    const internalId = `giu-checkbox-${this.props.id}`;
     return (
-      <span ref={this.props.registerOuterRef} className="giu-checkbox">
+      <span
+        ref={this.props.registerOuterRef}
+        className={classnames('giu-checkbox', this.props.className)}
+        id={this.props.id}
+      >
         <input
           ref={this.props.registerFocusableRef}
-          id={this.props.id}
           className="giu-checkbox-input"
+          id={internalId}
           type="checkbox"
           checked={this.props.curValue}
           tabIndex={disabled ? -1 : undefined}
-          {...inputProps}
           disabled={disabled}
         />
-        <label className="giu-checkbox-label" htmlFor={this.props.id}>
+        <label className="giu-checkbox-label" htmlFor={internalId}>
           {this.props.label}
         </label>
       </span>
@@ -82,12 +76,15 @@ class BaseCheckbox extends React.Component<Props> {
   }
 
   renderMdl() {
-    const inputProps = omit(this.props, FILTERED_OUT_PROPS);
     const { id } = this.props;
     return (
       <label
         ref={this.registerOuterRefMdl}
-        className="giu-checkbox-mdl mdl-switch mdl-js-switch mdl-js-ripple-effect"
+        className={classnames(
+          'giu-checkbox-mdl',
+          'mdl-switch mdl-js-switch mdl-js-ripple-effect',
+          this.props.className
+        )}
         htmlFor={id}
       >
         <input
@@ -96,7 +93,6 @@ class BaseCheckbox extends React.Component<Props> {
           className="mdl-switch__input"
           type="checkbox"
           checked={this.props.curValue}
-          {...inputProps}
           disabled={this.props.disabled}
         />
         <span className="giu-checkbox-mdl-label mdl-switch__label">
@@ -121,6 +117,7 @@ const hocOptions = {
   toExternalValue,
   isNull,
   valueAttr: 'checked',
+  className: 'giu-checkbox-wrapper',
 };
 const render = props => <BaseCheckbox {...props} />;
 // $FlowFixMe

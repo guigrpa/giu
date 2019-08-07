@@ -392,6 +392,7 @@ const Configs = ({ lang, onChangeLang, accentColor, onChangeColor }) => (
     />
     &nbsp;&nbsp; Theme color:{' '}
     <ColorInput
+      id="theme-color"
       value={accentColor}
       onChange={onChangeColor}
     />

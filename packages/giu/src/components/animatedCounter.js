@@ -1,6 +1,7 @@
 // @flow
 
 import React from 'react';
+import classnames from 'classnames';
 
 const REFRESH_PERIOD = 25; // [ms]
 const TRANSITION_DURATION = 500; // [ms]
@@ -8,7 +9,10 @@ const TRANSITION_DURATION = 500; // [ms]
 // ==========================================
 // Declarations
 // ==========================================
+// Undocumented component!
 type Props = {
+  className?: string,
+  id?: string,
   value: ?number,
   nullLabel?: string,
   decimals?: number,
@@ -50,7 +54,14 @@ class AnimatedCounter extends React.PureComponent<Props> {
     } else {
       shownValue = this.shownValue.toFixed(this.props.decimals || 0);
     }
-    return <span className="giu-animated-counter">{shownValue}</span>;
+    return (
+      <span
+        className={classnames('giu-animated-counter', this.props.className)}
+        id={this.props.id}
+      >
+        {shownValue}
+      </span>
+    );
   }
 
   // ==========================================

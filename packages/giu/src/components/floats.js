@@ -3,14 +3,7 @@
 import React from 'react';
 import { createStore } from 'redux';
 import type { Reducer } from 'redux';
-import {
-  addLast,
-  removeAt,
-  set as timmSet,
-  mergeIn,
-  addDefaults,
-  omit,
-} from 'timm';
+import { addLast, removeAt, set as timmSet, mergeIn, addDefaults } from 'timm';
 import classnames from 'classnames';
 import {
   cancelEvent,
@@ -21,24 +14,15 @@ import { isVisible } from '../gral/visibility';
 import { MISC } from '../gral/constants';
 import type { Action } from '../gral/types';
 
-const PROP_KEYS_TO_REMOVE_FROM_FLOAT_DIV = [
-  'position',
-  'align',
-  'zIndex',
-  'limitSize',
-  'getAnchorNode',
-  'noStyleShadow',
-];
-
 export type FloatPosition = 'above' | 'below';
 export type FloatAlign = 'left' | 'right';
 type FloatUserPars = {|
+  className?: string,
   id?: string,
   position?: FloatPosition,
   align?: FloatAlign,
   limitSize?: boolean,
   getAnchorNode: () => ?Node,
-  style?: Object,
   noStyleShadow?: boolean,
   children?: any,
 |};
@@ -99,7 +83,7 @@ const DEFAULT_FLOAT_PARS = {
 };
 const actions = {
   floatAdd: (initialPars: FloatUserPars) => {
-    const id = `float_${cntId}`;
+    const id = `giu-float-auto-${cntId}`;
     cntId += 1;
     const pars = addDefaults(initialPars, DEFAULT_FLOAT_PARS, { id });
     return { type: 'FLOAT_ADD', pars };
@@ -204,9 +188,14 @@ class Floats extends React.PureComponent<Props> {
 
   renderFloat = (props: FloatStatePars, idx: number) => {
     if (!isAnchorVisible(props)) return null;
-    const { id } = props;
+    const { id, className } = props;
     return (
-      <div key={id} className="giu-float" onMouseDown={cancelEvent}>
+      <div
+        key={id}
+        className={classnames('giu-float', className)}
+        id={id}
+        onMouseDown={cancelEvent}
+      >
         <div
           ref={c => {
             this.refFloats[idx] = c;
@@ -214,8 +203,9 @@ class Floats extends React.PureComponent<Props> {
           className={classnames('giu-float-inner', {
             'giu-box-shadow': !props.noStyleShadow,
           })}
-          {...omit(props, PROP_KEYS_TO_REMOVE_FROM_FLOAT_DIV)}
-        />
+        >
+          {props.children}
+        </div>
       </div>
     );
   };

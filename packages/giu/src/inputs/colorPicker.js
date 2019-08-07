@@ -81,12 +81,13 @@ const GRADIENTS = {
 // Declarations
 // ==========================================
 type Props = {|
+  className?: string,
+  id?: string,
   registerOuterRef: ?Function,
   curValue: ?string,
   onChange: Function,
   disabled?: boolean,
   fFocused: boolean,
-  accentColor: string,
 |};
 
 type State = {
@@ -137,10 +138,15 @@ class ColorPicker extends React.PureComponent<Props, State> {
     return (
       <div
         ref={registerOuterRef}
-        className={classnames('giu-input-reset giu-color-picker', {
-          'giu-input-disabled': this.props.disabled,
-          'giu-glow': this.props.fFocused,
-        })}
+        className={classnames(
+          'giu-input-reset giu-color-picker',
+          {
+            'giu-input-disabled': this.props.disabled,
+            'giu-glow': this.props.fFocused,
+          },
+          this.props.className
+        )}
+        id={this.props.id}
         onMouseDown={cancelEvent}
         onClick={cancelEvent}
       >
@@ -168,7 +174,7 @@ class ColorPicker extends React.PureComponent<Props, State> {
         style={{ width: SIZE, height: SIZE }}
       >
         {gradients}
-        {this.renderSelectorValue()}
+        {this.renderMainValue()}
       </div>
     );
   }
@@ -219,7 +225,7 @@ class ColorPicker extends React.PureComponent<Props, State> {
     );
   }
 
-  renderSelectorValue() {
+  renderMainValue() {
     if (!this.props.curValue) return null;
     const { xNorm, yNorm } = colToXy(this.state.activeAttr, this.rgbhsva);
     return this.renderThumb(xNorm, yNorm);

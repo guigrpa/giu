@@ -77,7 +77,7 @@ class Modal extends React.PureComponent<Props> {
   render() {
     return (
       <div
-        className="giu-modal"
+        className={classnames('giu-modal', this.props.className)}
         id={this.props.id}
         onKeyDown={this.onKeyDown}
         onClick={this.onClickOuter}
@@ -124,10 +124,10 @@ class Modal extends React.PureComponent<Props> {
   renderSpacer() {
     return (
       <div
+        className="giu-flex-space"
         onClick={this.props.onClickBackdrop}
         onWheel={cancelEvent}
         onTouchMove={cancelEvent}
-        style={flexItem(1)}
       />
     );
   }

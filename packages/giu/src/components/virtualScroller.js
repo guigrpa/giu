@@ -104,8 +104,8 @@ class VirtualScroller extends React.PureComponent<Props> {
     // If it is uniform but unknown, the following value will become defined upon measurement.
     this.rowHeight = props.rowHeight;
 
-    // The range of visible rows is initially unknown, as are the vertical positions
-    // of each row
+    // The range of visible rows is initially unknown,
+    // as are the vertical positions of each row
     this.idxFirst = undefined;
     this.idxLast = undefined;
     this.rowTops = {};

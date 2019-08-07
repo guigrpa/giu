@@ -1,10 +1,9 @@
 // @flow
 
 import React from 'react';
-import { omit } from 'timm';
 import filesize from 'filesize';
 import classnames from 'classnames';
-import Input, { INPUT_HOC_INVALID_HTML_PROPS } from '../hocs/input';
+import Input from '../hocs/input';
 import type { InputHocPublicProps } from '../hocs/input';
 import type { Theme } from '../gral/themeContext';
 import Button from '../components/button';
@@ -19,10 +18,11 @@ const isNull = val => val == null;
 // -- START_DOCS
 type PublicProps = {
   ...$Exact<InputHocPublicProps>, // common to all inputs (check the docs!)
+  className?: string,
+  id?: string,
   children?: any, // React elements that will be shown inside the button(default: `Choose file…`)
   disabled?: boolean,
   skipTheme?: boolean,
-  // all others are passed through unchanged
 };
 // -- END_DOCS
 
@@ -37,13 +37,6 @@ type Props = {
   errors: Array<string>,
   fFocused: boolean,
 };
-
-const FILTERED_OUT_PROPS = [
-  'skipTheme',
-  'children',
-  'theme',
-  ...INPUT_HOC_INVALID_HTML_PROPS,
-];
 
 // ==========================================
 // Component
@@ -63,13 +56,15 @@ class BaseFileInput extends React.Component<Props> {
   // ==========================================
   render() {
     const { children, registerOuterRef, disabled } = this.props;
-    const otherProps = omit(this.props, FILTERED_OUT_PROPS);
     return (
       <span
         ref={registerOuterRef}
-        className={classnames('giu-file-input', {
-          'giu-glow': this.props.fFocused,
-        })}
+        className={classnames(
+          'giu-file-input',
+          { 'giu-glow': this.props.fFocused },
+          this.props.className
+        )}
+        id={this.props.id}
       >
         <input
           ref={this.registerInputRef}
@@ -78,7 +73,6 @@ class BaseFileInput extends React.Component<Props> {
           type="file"
           onChange={this.onChange}
           tabIndex={disabled ? -1 : undefined}
-          {...otherProps}
         />
         <Button
           disabled={disabled}
@@ -136,6 +130,7 @@ const hocOptions = {
   componentName: 'FileInput',
   isNull,
   valueAttr: 'files',
+  className: 'giu-file-input-wrapper',
 };
 const render = (props, ref) => <BaseFileInput {...props} ref={ref} />;
 // $FlowFixMe

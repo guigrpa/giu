@@ -1,16 +1,13 @@
 // @flow
 
 import React from 'react';
-import { COLORS } from './constants';
 
 export type Theme = {
   id: string,
-  accentColor: string,
 };
 
 const DEFAULT_THEME: Theme = {
   id: 'default',
-  accentColor: COLORS.accent,
 };
 
 const ThemeContext: any = React.createContext(DEFAULT_THEME);

@@ -4,6 +4,7 @@
 // --
 // -- START_DOCS
 export type ModalPars = {|
+  className?: string,
   id?: string,
   title?: string, // modal title displayed to the user
   children?: any, // body of the modal

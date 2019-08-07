@@ -34,8 +34,6 @@ API reference:
   - **id** *string*: ID of the notification to be marked as retained
 * **notifDelete()**: deletes a notification:
   - **id** *string*: ID of the notification to be deleted
-* **notifDeleteByName()**: deletes a notification:
-  - **name** *string*: name of the notification to be deleted
 -- */
 type NotificationStatePars = {
   ...$Exact<NotificationPars>,
@@ -73,12 +71,6 @@ const reducer: Reducer<State, Action> = (state0 = INITIAL_STATE, action) => {
     }
     return state;
   }
-  if (action.type === 'NOTIF_DELETE_BY_NAME') {
-    const { name } = action;
-    const idx = state.findIndex(o => o.name === name);
-    if (idx >= 0) state = removeAt(state, idx);
-    return state;
-  }
   return state;
 };
 
@@ -87,7 +79,6 @@ const reducer: Reducer<State, Action> = (state0 = INITIAL_STATE, action) => {
 // ==========================================
 let cntId = 0;
 const DEFAULT_NOTIF_PARS = {
-  name: '',
   retained: false,
   sticky: false,
   timeOut: 4000,
@@ -99,7 +90,8 @@ const DEFAULT_NOTIF_PARS = {
 };
 const actions = {
   notify: (initialPars: NotificationPars) => (dispatch: Function) => {
-    const id = `notif_${cntId++}`;
+    const id = `giu-notif-auto-${cntId}`;
+    cntId += 1;
     const pars = addDefaults(initialPars, DEFAULT_NOTIF_PARS, { id });
     dispatch({ type: 'NOTIFY', pars });
     if (!pars.sticky) {
@@ -111,7 +103,6 @@ const actions = {
   },
   notifRetain: (id: string) => ({ type: 'NOTIF_RETAIN', id }),
   notifDelete: (id: string) => ({ type: 'NOTIF_DELETE', id }),
-  notifDeleteByName: (name: string) => ({ type: 'NOTIF_DELETE_BY_NAME', name }),
 };
 
 // Imperative dispatching
@@ -127,10 +118,6 @@ const notifRetain = (id: string) => {
 const notifDelete = (id: string) => {
   if (!store) initStore();
   store.dispatch(actions.notifDelete(id));
-};
-const notifDeleteByName = (name: string) => {
-  if (!store) initStore();
-  store.dispatch(actions.notifDeleteByName(name));
 };
 
 // ==========================================
@@ -194,12 +181,4 @@ class Notifications extends React.PureComponent<Props> {
 // ==========================================
 // Public
 // ==========================================
-export {
-  Notifications,
-  reducer,
-  actions,
-  notify,
-  notifRetain,
-  notifDelete,
-  notifDeleteByName,
-};
+export { Notifications, reducer, actions, notify, notifRetain, notifDelete };

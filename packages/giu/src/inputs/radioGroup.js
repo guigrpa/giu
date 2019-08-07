@@ -30,6 +30,7 @@ const isNull = val => val === NULL_STRING;
 // -- START_DOCS
 type PublicProps = {
   ...$Exact<InputHocPublicProps>, // common to all inputs (check the docs!)
+  className?: string,
   id: string, // mandatory!
   items: Array<RadioChoice>,
   lang?: string, // current language (used just for force-render)
@@ -66,10 +67,15 @@ class BaseRadioGroup extends React.Component<Props> {
     return (
       <div
         ref={registerOuterRef}
-        className={classnames('giu-radio-group', {
-          'giu-glow': this.props.fFocused,
-          'giu-radio-group-disabled': this.props.disabled,
-        })}
+        className={classnames(
+          'giu-radio-group',
+          {
+            'giu-glow': this.props.fFocused,
+            'giu-radio-group-disabled': this.props.disabled,
+          },
+          this.props.className
+        )}
+        id={this.props.id}
       >
         {this.items.map(this.renderItem)}
       </div>
@@ -79,14 +85,15 @@ class BaseRadioGroup extends React.Component<Props> {
   renderItem = (item, idx) => {
     const { id, curValue } = this.props;
     const { value, label, labelExtra } = item;
+    const radioGroupName = `giu-radio-group-${id}`;
     const itemId = `${id}_${idx}`;
     const finalLabel =
       label && typeof label === 'function' ? label(this.props.lang) : label;
     return (
-      <div key={value} id={idx} onClick={this.onClickItem}>
+      <div key={value} onClick={this.onClickItem(idx)}>
         <input
           type="radio"
-          name={id}
+          name={radioGroupName}
           id={itemId}
           value={value}
           checked={curValue === value}
@@ -94,7 +101,7 @@ class BaseRadioGroup extends React.Component<Props> {
           readOnly /* will change via parents onClick */
           tabIndex={-1}
         />
-        <label htmlFor={id}>{finalLabel}</label>
+        <label htmlFor={radioGroupName}>{finalLabel}</label>
         {labelExtra && (
           <div className="giu-radio-group-label-extra">{labelExtra}</div>
         )}
@@ -103,8 +110,7 @@ class BaseRadioGroup extends React.Component<Props> {
   };
 
   // ==========================================
-  onClickItem = ev => {
-    const idx = Number(ev.currentTarget.id);
+  onClickItem = idx => ev => {
     const item = this.items[idx];
     if (!item) return;
     this.props.onChange(ev, item.value);

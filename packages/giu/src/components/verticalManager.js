@@ -3,6 +3,7 @@
 import React from 'react';
 import type { ComponentType } from 'react';
 import throttle from 'lodash/throttle';
+import classnames from 'classnames';
 
 // ===============================================================
 // Declarations
@@ -99,8 +100,10 @@ class VerticalManager extends React.Component<Props> {
     return (
       <div
         ref={this.registerOuterRef}
-        className="giu-vertical-manager"
-        id={`giu-vertical-manager-${saneId}`}
+        className={classnames(
+          'giu-vertical-manager',
+          `giu-vertical-manager-${saneId}`
+        )}
         style={style.outer(this.props)}
       >
         <ChildComponent

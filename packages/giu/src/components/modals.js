@@ -59,17 +59,9 @@ function initStore() {
 
 const INITIAL_STATE: State = [];
 const reducer: Reducer<State, Action> = (state0 = INITIAL_STATE, action) => {
-  let state = state0;
-  switch (action.type) {
-    case 'MODAL_PUSH':
-      state = addLast(state, action.pars);
-      break;
-    case 'MODAL_POP':
-      state = removeAt(state, state.length - 1);
-      break;
-    default:
-      break;
-  }
+  const state = state0;
+  if (action.type === 'MODAL_PUSH') return addLast(state, action.pars);
+  if (action.type === 'MODAL_POP') return removeAt(state, state.length - 1);
   return state;
 };
 
@@ -79,7 +71,7 @@ const reducer: Reducer<State, Action> = (state0 = INITIAL_STATE, action) => {
 let cntId = 0;
 const actions = {
   modalPush: (initialPars: ModalPars) => {
-    const id = `modal_${cntId}`;
+    const id = `giu-modal-auto-${cntId}`;
     cntId += 1;
     const pars = addDefaults(initialPars, { id });
     return { type: 'MODAL_PUSH', pars };

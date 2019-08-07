@@ -69,7 +69,7 @@ body {
   width: 100vw;
   height: 100vh;
   background-color: white;
-  animation: giu-appear 300ms;
+  animation: giu-appear 300ms ease-in-out;
   opacity: 0.6;
 }
 
@@ -198,6 +198,7 @@ row is drawn above the modal, not below */
   margin-left: 5px;
 }
 
+/* Row */
 .giu-data-table-row {
   display: flex;
   flex-direction: row;
@@ -218,6 +219,17 @@ row is drawn above the modal, not below */
 .giu-data-table-cell {
   padding-left: 2px;
   padding-right: 2px;
+  flex: 1 1 0px;
+}
+.giu-data-table-cell.giu-data-table-cell-hidden {
+  display: none;
+}
+.giu-data-table-col-__SORT_MANUALLY__ {
+  flex: 0 0 30px;
+  max-width: 30px;
+}
+.giu-data-table-row.giu-data-table-row-selected .giu-select-native {
+  background-color: inherit;
 }
 
 /* ------------------------ */
@@ -283,6 +295,10 @@ row is drawn above the modal, not below */
   position: absolute;
   top: 0;
   left: 0;
+}
+
+.giu-focus-capture-wrapper-for-ios {
+  position: relative;
 }
 
 /* ------------------------ */

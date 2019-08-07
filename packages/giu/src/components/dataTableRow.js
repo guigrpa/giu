@@ -52,9 +52,6 @@ export type DataTableColumn = {
   // Appearance
   // ----------
   hidden?: boolean,
-  minWidth?: number,
-  flexGrow?: number,
-  flexShrink?: number,
 };
 /* -- END_DOCS -- */
 
@@ -84,7 +81,7 @@ class DataTableHeader extends React.PureComponent<DataTableHeaderProps> {
     );
   }
 
-  renderColHeader(col: DataTableColumn, idxCol: number) {
+  renderColHeader(col: DataTableColumn) {
     const { attr, label, labelLevel, sortable } = col;
     const { commonCellProps } = this.props;
     let finalLabel;
@@ -108,9 +105,10 @@ class DataTableHeader extends React.PureComponent<DataTableHeaderProps> {
         className={classnames(
           'giu-data-table-header-cell',
           'giu-data-table-cell',
-          `giu-data-table-header-cell-level-${col.labelLevel || 0}`
+          `giu-data-table-col-${attr}`,
+          `giu-data-table-header-cell-level-${col.labelLevel || 0}`,
+          { 'giu-data-table-cell-hidden': col.hidden }
         )}
-        style={style.rowCell(idxCol, col)}
       >
         {labelLevel && this.renderCallOut(labelLevel)}
         <span
@@ -180,12 +178,15 @@ class DataTableRow extends React.PureComponent<DataTableRowProps> {
   // ===============================================================
   render() {
     const { id } = this.props;
+    const saneId = id.replace(/[:,]/g, '');
     DEBUG && console.log(`Rendering row ${id}...`);
     return (
       <div
-        className={classnames('giu-data-table-row', {
-          'giu-data-table-row-selected': this.props.isItemSelected,
-        })}
+        className={classnames(
+          'giu-data-table-row',
+          { 'giu-data-table-row-selected': this.props.isItemSelected },
+          `giu-data-table-row-${saneId}`
+        )}
         onFocus={this.onClick}
         onClick={this.onClick}
         onDoubleClick={this.onDoubleClick}
@@ -195,7 +196,7 @@ class DataTableRow extends React.PureComponent<DataTableRowProps> {
     );
   }
 
-  renderCell(col: DataTableColumn, idxCol: number) {
+  renderCell(col: DataTableColumn) {
     const { attr, render } = col;
     const { id, item } = this.props;
     let value;
@@ -220,8 +221,10 @@ class DataTableRow extends React.PureComponent<DataTableRowProps> {
     return (
       <div
         key={attr}
-        className="giu-data-table-cell"
-        style={style.rowCell(idxCol, col)}
+        className={classnames(
+          'giu-data-table-cell',
+          `giu-data-table-col-${attr}`
+        )}
       >
         {value}
       </div>
@@ -257,18 +260,6 @@ const style = {
     paddingRight: scrollbarWidth,
     paddingTop: 2 + 15 * maxLabelLevel,
   }),
-  rowCell: (
-    idxCol: number,
-    { hidden, minWidth = 50, flexGrow, flexShrink }: DataTableColumn
-  ) => {
-    if (hidden) return { display: 'none' };
-    const flexValue = `${flexGrow || 0} ${flexShrink || 0} ${minWidth}px`;
-    return {
-      flex: flexValue,
-      WebkitFlex: flexValue,
-      maxWidth: flexGrow ? undefined : minWidth,
-    };
-  },
 };
 
 // ===============================================================

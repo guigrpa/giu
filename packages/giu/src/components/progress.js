@@ -1,7 +1,6 @@
 // @flow
 
 import React from 'react';
-import { omit } from 'timm';
 import classnames from 'classnames';
 import { ThemeContext } from '../gral/themeContext';
 import type { Theme } from '../gral/themeContext';
@@ -11,15 +10,12 @@ import type { Theme } from '../gral/themeContext';
 // ==========================================
 /* --
 A wrapper for the native HTML `progress` element (with 100% width).
-*All props are passed through to the `progress` element.
-Remember that an indeterminate progress bar will be shown if you
-don't specify the `value` prop (native HTML behaviour).*
 -- */
 // -- START_DOCS
 type PublicProps = {
+  className?: string,
+  id?: string,
   value: any,
-  // All other props are passed through to the `progress` element
-  // (except in the `mdl` theme, in which no props are passed)
 };
 // -- END_DOCS
 type Props = {
@@ -27,7 +23,6 @@ type Props = {
   // Context
   theme: Theme,
 };
-const FILTERED_PROPS = ['theme'];
 
 // ==========================================
 // Component
@@ -50,17 +45,24 @@ class Progress extends React.PureComponent<Props> {
   // ==========================================
   render() {
     if (this.props.theme.id === 'mdl') return this.renderMdl();
-    const otherProps = omit(this.props, FILTERED_PROPS);
-    return <progress className="giu-progress" {...otherProps} />;
+    return (
+      <progress
+        className={classnames('giu-progress', this.props.className)}
+        id={this.props.id}
+      />
+    );
   }
 
   renderMdl() {
     return (
       <div
         ref={this.refMdl}
-        className={classnames('giu-progress mdl-progress mdl-js-progress', {
-          'mdl-progress--indeterminate': this.props.value == null,
-        })}
+        className={classnames(
+          'giu-progress mdl-progress mdl-js-progress',
+          { 'mdl-progress--indeterminate': this.props.value == null },
+          this.props.className
+        )}
+        id={this.props.id}
       />
     );
   }
