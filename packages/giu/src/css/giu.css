@@ -275,6 +275,10 @@ row is drawn above the modal, not below */
   opacity: 0.5;
 }
 
+.giu-float-error {
+  z-index: 3;
+}
+
 /* ------------------------ */
 /* FocusCapture */
 /* ------------------------ */
