@@ -65,7 +65,6 @@ export {
   notify,
   notifRetain,
   notifDelete,
-  notifDeleteByName,
 } from './components/notifications';
 import Notification from './components/notification';
 export { Notification };

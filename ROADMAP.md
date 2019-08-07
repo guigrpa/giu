@@ -5,6 +5,8 @@
         * Fix zIndex, esp. in modals
         * Fix field widths in datatable headers
         * Review MDL
+    * Check Flow errors
+    * Check lint errors
     * Remove flexContainer, flexItem if possible
 
 * **Bugs**
