@@ -6,7 +6,6 @@
         * Fix field widths in datatable headers
         * Review MDL
     * Check Flow errors
-    * Check lint errors
     * Remove flexContainer, flexItem if possible
 
 * **Bugs**
@@ -21,6 +20,7 @@
 * **More tests on Android**
 * [ ] Think: how do we revert all fields in a datatable record? (try to update the example page `datatable.js`)
 * Use Portals?
+* Use Hooks?
 * [ ] Update Font Awesome (later)
 
 * [ ] Add copy&paste to RangePicker

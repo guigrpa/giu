@@ -31,7 +31,6 @@ export type SelectProps = {
   onCloseFloat?: Function,
   floatPosition?: FloatPosition,
   floatAlign?: FloatAlign,
-  floatZ?: number,
   // When enabled, two different visual styles are applied
   // to an item depending on whether it is just *hovered* or also *selected*. If disabled,
   // a single style is used to highlight the selected or the hovered item

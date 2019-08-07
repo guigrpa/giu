@@ -6,7 +6,7 @@ import * as React from 'react';
 import { omit, merge } from 'timm';
 import classnames from 'classnames';
 import { cancelEvent, stopPropagation } from '../gral/helpers';
-import { MISC, IS_IOS } from '../gral/constants';
+import { IS_IOS } from '../gral/constants';
 import { scrollIntoView } from '../gral/visibility';
 import { isRequired } from '../gral/validators';
 import type { Validator } from '../gral/validators';
@@ -53,10 +53,8 @@ export type InputHocPublicProps = {
   validators?: Array<Validator>,
   noErrors?: boolean, // don't show errors, no matter what
   disabled?: boolean, // passed through unchanged
-  floatZ?: number, // passed through unchanged
   floatPosition?: FloatPosition, // passed through unchanged
   focusOnChange?: boolean,
-  errorZ?: number,
   errorPosition?: FloatPosition,
   errorAlign?: FloatAlign,
   onChange?: (ev: SyntheticEvent<*>, extValue: any) => any,
@@ -106,10 +104,8 @@ const HOC_PUBLIC_PROPS = [
   'validators',
   'noErrors',
   'disabled',
-  'floatZ',
   'floatPosition',
   'focusOnChange',
-  'errorZ',
   'errorPosition',
   'errorAlign',
   'onChange',
@@ -124,7 +120,6 @@ const INPUT_HOC_INVALID_HTML_PROPS = [
   'registerFocusableRef',
   'errors',
   'fFocused',
-  'floatZ',
   'floatPosition',
   'onResizeOuter',
   'theme',
@@ -267,13 +262,9 @@ class Input extends React.PureComponent<Props> {
     if (!IS_IOS) return null;
     const { errors } = this;
     if (!errors.length) return null;
-    const { position, align, zIndex } = this.calcFloatPosition();
+    const { position, align } = this.calcFloatPosition();
     return (
-      <IosFloatWrapper
-        floatPosition={position}
-        floatAlign={align}
-        floatZ={zIndex}
-      >
+      <IosFloatWrapper floatPosition={position} floatAlign={align}>
         {this.renderErrors()}
       </IosFloatWrapper>
     );
@@ -297,7 +288,6 @@ class Input extends React.PureComponent<Props> {
       required: this.props.required,
       disabled: this.props.disabled,
       fFocused: this.fFocused,
-      floatZ: this.props.floatZ,
       floatPosition: this.props.floatPosition,
       onChange: this.onChange,
       onFocus: fIncludeFocusCapture ? undefined : this.onFocus,
@@ -324,8 +314,7 @@ class Input extends React.PureComponent<Props> {
     // Create or update float
     // (if the `errorX` props are not set, spy on the pass-through `floatX` props for
     // hints on how to properly position the error float; e.g. if another float
-    // will open `below`, position the error float `above`; also adjust `z-index`
-    // to be below another float's level, so that it doesn't obscure the main float).
+    // will open `below`, position the error float `above`.
     if (errors.length) {
       const floatOptions = {
         className: 'giu-float-error',
@@ -550,17 +539,11 @@ class Input extends React.PureComponent<Props> {
   }
 
   calcFloatPosition() {
-    const { floatZ } = this.props;
-    let zIndex = this.props.errorZ;
-    if (zIndex == null) {
-      zIndex =
-        floatZ != null ? floatZ - MISC.zErrorFloatDelta : MISC.zErrorFloatDelta;
-    }
     let position = this.props.errorPosition;
     if (position == null) {
       position = this.props.floatPosition === 'below' ? 'above' : 'below';
     }
-    return { position, align: this.props.errorAlign, zIndex };
+    return { position, align: this.props.errorAlign };
   }
 }
 

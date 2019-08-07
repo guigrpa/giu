@@ -63,7 +63,6 @@ const UNICODE = {
 
 const MISC = {
   windowBorderBreathe: 5,
-  zErrorFloatDelta: 2,
 };
 
 const NULL_STRING = '__NULL__';
