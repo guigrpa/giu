@@ -93,11 +93,11 @@ const DATA_TABLE_COLS = [
           color: 'inherit',
           backgroundColor: 'inherit',
         }}
-        styleOuter={{
-          display: 'block',
-          color: 'inherit',
-          backgroundColor: 'inherit',
-        }}
+        // styleOuter={{
+        //   display: 'block',
+        //   color: 'inherit',
+        //   backgroundColor: 'inherit',
+        // }}
         skipTheme
       />
     ),
@@ -152,9 +152,9 @@ const DATA_TABLE_ALT_LAYOUT_COLS = [
               color: 'inherit',
               backgroundColor: 'inherit',
             }}
-            styleOuter={{
-              display: 'block',
-            }}
+            // styleOuter={{
+            //   display: 'block',
+            // }}
             skipTheme
           />
         </div>
@@ -624,7 +624,7 @@ class EditAndValidateExample extends React.Component<*, *> {
             onChange={() => onChange(id)}
             required
             skipTheme
-            styleOuter={{ backgroundColor: 'inherit', width: '100%' }}
+            // styleOuter={{ backgroundColor: 'inherit', width: '100%' }}
             style={{ backgroundColor: 'inherit', width: '100%' }}
           />
         ),
@@ -639,7 +639,7 @@ class EditAndValidateExample extends React.Component<*, *> {
             value={item[attr]}
             onChange={() => onChange(id)}
             required
-            styleOuter={{ backgroundColor: 'inherit', width: '100%' }}
+            // styleOuter={{ backgroundColor: 'inherit', width: '100%' }}
             style={{ backgroundColor: 'inherit', width: '100%' }}
           />
         ),
@@ -656,7 +656,7 @@ class EditAndValidateExample extends React.Component<*, *> {
             onChange={() => onChange(id)}
             required
             skipTheme
-            styleOuter={{ backgroundColor: 'inherit', width: '100%' }}
+            // styleOuter={{ backgroundColor: 'inherit', width: '100%' }}
             style={{ backgroundColor: 'inherit', width: '100%' }}
           />
         ),
@@ -684,7 +684,7 @@ class EditAndValidateExample extends React.Component<*, *> {
             onChange={() => onChange(id)}
             required
             skipTheme
-            styleOuter={{ backgroundColor: 'inherit', width: '100%' }}
+            // styleOuter={{ backgroundColor: 'inherit', width: '100%' }}
             style={{ backgroundColor: 'inherit', width: '100%' }}
           />
         ),

@@ -17,7 +17,7 @@ import {
 import type { Moment } from '../gral/types';
 import { isDate } from '../gral/validators';
 import type { Theme } from '../gral/themeContext';
-import Input from '../hocs/input';
+import Input, { INPUT_HOC_INVALID_HTML_PROPS } from '../hocs/input';
 import type { InputHocPublicProps } from '../hocs/input';
 import { floatAdd, floatDelete, floatUpdate } from '../components/floats';
 import type { FloatPosition, FloatAlign } from '../components/floats';
@@ -159,6 +159,31 @@ type State = {
   fFloat: boolean,
 };
 
+// Should include all public props, + 'required', 'style':
+const FILTERED_OUT_PROPS = [
+  ...INPUT_HOC_INVALID_HTML_PROPS,
+  'className',
+  'id',
+  'type',
+  'checkIos',
+  'disabled',
+  'placeholder',
+  'date',
+  'time',
+  'analogTime',
+  'seconds',
+  'utc',
+  'todayName',
+  'lang',
+  'floatPosition',
+  'floatAlign',
+  'skipTheme',
+  'required',
+  'style',
+];
+
+const FILTERED_OUT_PROPS_MDL = FILTERED_OUT_PROPS.concat(['placeholder']);
+
 //------------------------------------------
 // Component
 //------------------------------------------
@@ -212,6 +237,7 @@ class BaseDateInput extends React.Component<Props, State> {
 
   renderNativeField() {
     const { placeholder, date, time, disabled } = this.props;
+    const otherProps = omit(this.props, FILTERED_OUT_PROPS);
     let htmlInputType;
     if (date && time) {
       htmlInputType = 'datetime-local';
@@ -231,6 +257,7 @@ class BaseDateInput extends React.Component<Props, State> {
         id={this.props.id}
         type={htmlInputType}
         value={this.props.curValue}
+        {...otherProps}
         placeholder={placeholder || dateTimeFormatNative(date, time)}
         onFocus={this.onFocus}
         onBlur={this.onBlur}
@@ -273,6 +300,7 @@ class BaseDateInput extends React.Component<Props, State> {
       return this.renderFieldMdl({ root });
     }
     const { placeholder, date, time, seconds } = this.props;
+    const otherProps = omit(this.props, FILTERED_OUT_PROPS);
     return (
       <input
         ref={this.registerInputRef}
@@ -289,6 +317,7 @@ class BaseDateInput extends React.Component<Props, State> {
         id={root ? this.props.id : undefined}
         type="text"
         value={this.props.curValue}
+        {...otherProps}
         placeholder={placeholder || dateTimeFormat(date, time, seconds)}
         onFocus={this.onFocus}
         onBlur={this.onBlur}
@@ -312,6 +341,7 @@ class BaseDateInput extends React.Component<Props, State> {
       seconds,
       fFocused,
     } = this.props;
+    const otherProps = omit(this.props, FILTERED_OUT_PROPS_MDL);
     const internalId = `giu-date-input-${id}`;
     return (
       <div
@@ -334,6 +364,7 @@ class BaseDateInput extends React.Component<Props, State> {
           type="text"
           value={curValue}
           id={internalId}
+          {...otherProps}
           onFocus={this.onFocus}
           onBlur={this.onBlur}
           onChange={this.props.onChange}

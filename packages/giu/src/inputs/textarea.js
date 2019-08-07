@@ -7,7 +7,7 @@ import { preventDefault, stopPropagation } from '../gral/helpers';
 import { KEYS } from '../gral/constants';
 import { isAnyModifierPressed } from '../gral/keys';
 import type { Theme } from '../gral/themeContext';
-import Input from '../hocs/input';
+import Input, { INPUT_HOC_INVALID_HTML_PROPS } from '../hocs/input';
 import type { InputHocPublicProps } from '../hocs/input';
 
 const NULL_VALUE = '';
@@ -47,6 +47,17 @@ type Props = {
   onResizeOuter: Function,
 };
 
+// Should include all public props, + 'required', 'style':
+const FILTERED_OUT_PROPS = [
+  ...INPUT_HOC_INVALID_HTML_PROPS,
+  'className',
+  'id',
+  'skipTheme',
+  'required',
+  'style',
+];
+const FILTERED_OUT_PROPS_MDL = [...FILTERED_OUT_PROPS, 'placeholder'];
+
 // ==========================================
 // Component
 // ==========================================
@@ -76,6 +87,7 @@ class BaseTextarea extends React.Component<Props> {
       return this.renderMdl();
     }
     const { curValue, disabled } = this.props;
+    const otherProps = omit(this.props, FILTERED_OUT_PROPS);
     return (
       <div
         ref={this.registerOuterRef}
@@ -94,6 +106,7 @@ class BaseTextarea extends React.Component<Props> {
             'giu-input-disabled': disabled,
           })}
           value={curValue}
+          {...otherProps}
           onKeyDown={this.onKeyDown}
           tabIndex={disabled ? -1 : undefined}
         />
@@ -103,6 +116,7 @@ class BaseTextarea extends React.Component<Props> {
 
   renderMdl() {
     const { id, curValue, disabled, fFocused } = this.props;
+    const otherProps = omit(this.props, FILTERED_OUT_PROPS_MDL);
     const internalId = `giu-date-input-${id}`;
     return (
       <div
@@ -122,6 +136,7 @@ class BaseTextarea extends React.Component<Props> {
           id={internalId}
           onKeyDown={this.onKeyDown}
           rows={3}
+          {...otherProps}
           tabIndex={disabled ? -1 : undefined}
         />
         <label className="mdl-textfield__label" htmlFor={internalId}>

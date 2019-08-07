@@ -1,9 +1,10 @@
 // @flow
 
 import React from 'react';
+import { omit } from 'timm';
 import filesize from 'filesize';
 import classnames from 'classnames';
-import Input from '../hocs/input';
+import Input, { INPUT_HOC_INVALID_HTML_PROPS } from '../hocs/input';
 import type { InputHocPublicProps } from '../hocs/input';
 import type { Theme } from '../gral/themeContext';
 import Button from '../components/button';
@@ -38,6 +39,18 @@ type Props = {
   fFocused: boolean,
 };
 
+// Should include all public props, + 'required', 'style':
+const FILTERED_OUT_PROPS = [
+  ...INPUT_HOC_INVALID_HTML_PROPS,
+  'className',
+  'id',
+  'children',
+  'disabled',
+  'skipTheme',
+  'required',
+  'style',
+];
+
 // ==========================================
 // Component
 // ==========================================
@@ -56,6 +69,7 @@ class BaseFileInput extends React.Component<Props> {
   // ==========================================
   render() {
     const { children, registerOuterRef, disabled } = this.props;
+    const otherProps = omit(this.props, FILTERED_OUT_PROPS);
     return (
       <span
         ref={registerOuterRef}
@@ -73,6 +87,7 @@ class BaseFileInput extends React.Component<Props> {
           type="file"
           onChange={this.onChange}
           tabIndex={disabled ? -1 : undefined}
+          {...otherProps}
         />
         <Button
           disabled={disabled}

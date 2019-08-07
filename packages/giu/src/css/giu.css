@@ -228,7 +228,9 @@ row is drawn above the modal, not below */
   flex: 0 0 30px;
   max-width: 30px;
 }
-.giu-data-table-row.giu-data-table-row-selected .giu-select-native {
+.giu-data-table-row.giu-data-table-row-selected input,
+.giu-data-table-row.giu-data-table-row-selected select,
+.giu-data-table-row.giu-data-table-row-selected textarea {
   background-color: inherit;
 }
 

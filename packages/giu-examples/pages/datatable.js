@@ -114,8 +114,8 @@ const COLS = [
         onChange={ctx.onChange}
         cmds={ctx.cmds}
         required
-        styleOuter={style.input(ctx.isEditing && ctx.isItemSelected)}
-        styleTitle={style.input(ctx.isEditing && ctx.isItemSelected)}
+        // styleOuter={style.input(ctx.isEditing && ctx.isItemSelected)}
+        // styleTitle={style.input(ctx.isEditing && ctx.isItemSelected)}
       />
     ),
   },

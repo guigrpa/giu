@@ -1,9 +1,10 @@
 // @flow
 
 import React from 'react';
+import { omit } from 'timm';
 import classnames from 'classnames';
 import { NULL_STRING } from '../gral/constants';
-import Input from '../hocs/input';
+import Input, { INPUT_HOC_INVALID_HTML_PROPS } from '../hocs/input';
 import type { InputHocPublicProps } from '../hocs/input';
 import { LIST_SEPARATOR_KEY } from './listPicker';
 import type { SelectProps } from './selectTypes';
@@ -37,6 +38,21 @@ type Props = {
   registerFocusableRef: Function,
 };
 
+// Should include all public props, + 'required', 'style':
+const FILTERED_OUT_PROPS = [
+  'inlinePicker',
+  ...INPUT_HOC_INVALID_HTML_PROPS,
+  'className',
+  'id',
+  'type',
+  'items',
+  'lang',
+  'required',
+  'disabled',
+  'required',
+  'style',
+];
+
 // ==========================================
 // Component
 // ==========================================
@@ -55,6 +71,7 @@ class BaseSelectNative extends React.Component<Props> {
     items.forEach(option => {
       if (option.label !== LIST_SEPARATOR_KEY) finalItems.push(option);
     });
+    const otherProps = omit(this.props, FILTERED_OUT_PROPS);
     return (
       <select
         ref={registerFocusableRef}
@@ -65,6 +82,7 @@ class BaseSelectNative extends React.Component<Props> {
         )}
         id={this.props.id}
         value={curValue}
+        {...otherProps}
         tabIndex={disabled ? -1 : undefined}
       >
         {finalItems.map(o => {

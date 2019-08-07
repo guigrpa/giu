@@ -2,7 +2,8 @@
 
 import * as React from 'react';
 import classnames from 'classnames';
-import Input from '../hocs/input';
+import { omit } from 'timm';
+import Input, { INPUT_HOC_INVALID_HTML_PROPS } from '../hocs/input';
 import type { InputHocPublicProps } from '../hocs/input';
 import type { Theme } from '../gral/themeContext';
 
@@ -34,6 +35,18 @@ type Props = {
   registerFocusableRef: Function,
 };
 
+// Should include all public props, + 'required', 'style':
+const FILTERED_OUT_PROPS = [
+  ...INPUT_HOC_INVALID_HTML_PROPS,
+  'className',
+  'id',
+  'label',
+  'disabled',
+  'skipTheme',
+  'required',
+  'style',
+];
+
 // ==========================================
 // Component
 // ==========================================
@@ -52,6 +65,7 @@ class BaseCheckbox extends React.Component<Props> {
       return this.renderMdl();
     }
     const { disabled } = this.props;
+    const inputProps = omit(this.props, FILTERED_OUT_PROPS);
     const internalId = `giu-checkbox-${this.props.id}`;
     return (
       <span
@@ -66,6 +80,7 @@ class BaseCheckbox extends React.Component<Props> {
           type="checkbox"
           checked={this.props.curValue}
           tabIndex={disabled ? -1 : undefined}
+          {...inputProps}
           disabled={disabled}
         />
         <label className="giu-checkbox-label" htmlFor={internalId}>
@@ -77,6 +92,7 @@ class BaseCheckbox extends React.Component<Props> {
 
   renderMdl() {
     const { id } = this.props;
+    const inputProps = omit(this.props, FILTERED_OUT_PROPS);
     return (
       <label
         ref={this.registerOuterRefMdl}
@@ -93,6 +109,7 @@ class BaseCheckbox extends React.Component<Props> {
           className="mdl-switch__input"
           type="checkbox"
           checked={this.props.curValue}
+          {...inputProps}
           disabled={this.props.disabled}
         />
         <span className="giu-checkbox-mdl-label mdl-switch__label">

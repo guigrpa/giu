@@ -1,21 +1,14 @@
 # Roadmap
 
 * Use plain old CSS stylesheets (customisable!), instead of element CSS:
-    * Input HOC:
-      - review all input trees
-    * Remove FILTERED_PROPS, use explicit prop passing
-    * id prop (especially floats: inherit from owner)
-    * z-index
-    * Remove boxWithShadow and other items from gral/styles
-    * Review MDL
-    * Remove HIDDEN_FOCUS_CAPTURE, HIDDEN_FOCUS_CAPTURE_IOS once they're no longer used
     * Clean up examples, using CSS
-    * Make `id` prop mandatory in some components.
-    * Fix zIndex in examples!!
-    * Fix styleOuter in examples
+        * Fix zIndex, esp. in modals
+        * Fix field widths in datatable headers
+        * Review MDL
     * Remove contents from gral/styles that is no longer needed and not public
 
 * **Bugs**
+    * `[Intervention] Unable to preventDefault inside passive event listener due to target being treated as passive. See <URL>` while mouse-wheeling in a Custom Select
     * Main docs: inline textareas: misaligned
     * Android Select: when item is selected, it retains focus
 * Main docs:

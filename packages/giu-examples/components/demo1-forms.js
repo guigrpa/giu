@@ -241,13 +241,13 @@ class FormExample extends React.Component<
           <ExampleLabel>Textarea (with auto-resize)</ExampleLabel>
           <Textarea
             value="En un lugar de la Mancha..."
-            styleOuter={{ display: 'block' }}
+            // styleOuter={{ display: 'block' }}
             required
           />
           <Textarea
             disabled
             value="En un lugar de la Mancha..."
-            styleOuter={{ display: 'block' }}
+            // styleOuter={{ display: 'block' }}
           />
         </div>
         <br />
@@ -310,7 +310,7 @@ class FormExample extends React.Component<
               items={NORMAL_OPTIONS}
               lang={lang}
               onChange={onChangeJson}
-              styleOuter={flexItem(1, { marginRight: 4 })}
+              // styleOuter={flexItem(1, { marginRight: 4 })}
             />
             <Select
               type="inlinePicker"
@@ -318,13 +318,13 @@ class FormExample extends React.Component<
               value={33}
               onChange={onChangeJson}
               twoStageStyle
-              styleOuter={flexItem(1, { marginRight: 4 })}
+              // styleOuter={flexItem(1, { marginRight: 4 })}
             />
             <Select
               type="inlinePicker"
               items={[]}
               onChange={onChangeJson}
-              styleOuter={flexItem(1, { marginRight: 4 })}
+              // styleOuter={flexItem(1, { marginRight: 4 })}
             />
             <Select
               type="inlinePicker"
@@ -332,7 +332,7 @@ class FormExample extends React.Component<
               items={TALL_OPTIONS}
               value={33}
               onChange={onChangeJson}
-              styleOuter={flexItem(1)}
+              // styleOuter={flexItem(1)}
             />
           </div>
         </div>
@@ -486,7 +486,7 @@ class FormExample extends React.Component<
               time
               analogTime={false}
               lang={lang}
-              styleOuter={{ flexShrink: 0 }}
+              // styleOuter={{ flexShrink: 0 }}
             />
             &nbsp;&nbsp;
             <DateInput
@@ -494,7 +494,7 @@ class FormExample extends React.Component<
               value={this.state.fixedDate}
               onChange={onChange}
               lang={lang}
-              styleOuter={{ flexShrink: 0 }}
+              // styleOuter={{ flexShrink: 0 }}
             />
           </div>
           <div>Analogue and digital time pickers:</div>
@@ -507,7 +507,7 @@ class FormExample extends React.Component<
               value={this.state.fixedDate}
               onChange={onChange}
               lang={lang}
-              styleOuter={{ flexShrink: 0 }}
+              // styleOuter={{ flexShrink: 0 }}
             />
             &nbsp;&nbsp;
             <DateInput
@@ -517,7 +517,7 @@ class FormExample extends React.Component<
               time
               analogTime={false}
               lang={lang}
-              styleOuter={{ flexShrink: 0 }}
+              // styleOuter={{ flexShrink: 0 }}
             />
           </div>
           <div style={flexContainer('row', { marginTop: 5 })}>
@@ -528,7 +528,7 @@ class FormExample extends React.Component<
               date
               time
               lang={lang}
-              styleOuter={{ flexShrink: 0 }}
+              // styleOuter={{ flexShrink: 0 }}
             />
           </div>
         </div>
@@ -542,19 +542,19 @@ class FormExample extends React.Component<
             <ColorInput
               value="dc5400aa"
               onChange={onChange}
-              styleOuter={{ flexShrink: 0 }}
+              // styleOuter={{ flexShrink: 0 }}
             />
             <ColorInput
               value="dc5400ff"
               disabled
-              styleOuter={{ flexShrink: 0 }}
+              // styleOuter={{ flexShrink: 0 }}
             />
             &nbsp;&nbsp;
             <ColorInput
               inlinePicker
               value="cca500ff"
               onChange={onChange}
-              styleOuter={{ flexShrink: 0 }}
+              // styleOuter={{ flexShrink: 0 }}
             />
           </div>
           <div style={flexContainer('row')}>
@@ -563,7 +563,7 @@ class FormExample extends React.Component<
               value="cca500ff"
               onChange={onChange}
               disabled
-              styleOuter={{ flexShrink: 0 }}
+              // styleOuter={{ flexShrink: 0 }}
             />
           </div>
         </div>
@@ -646,7 +646,7 @@ class TimePickerNow extends React.Component<
         checkIos={false}
         disabled
         lang={this.props.lang}
-        styleOuter={{ flexShrink: 0 }}
+        // styleOuter={{ flexShrink: 0 }}
       />
     );
   }
