@@ -153,6 +153,11 @@ row is drawn above the modal, not below */
   z-index: -1;
 }
 
+.giu-data-table-drag-handle {
+  margin-left: 4px;
+  margin-right: 3px;
+}
+
 /* ------------------------ */
 /* DataTableHeader, DataTableRow */
 /* ------------------------ */

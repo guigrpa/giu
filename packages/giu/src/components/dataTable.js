@@ -49,13 +49,11 @@ const DEFER_SCROLL_INTO_VIEW_AFTER_SORT_CHANGE_SLOW = 500;
 const DEFER_SCROLL_INTO_VIEW_AFTER_SORT_CHANGE_FAST = 150;
 const DEBUG = false && process.env.NODE_ENV !== 'production';
 
-// Don't move these inline styles to giu.css;
-// it causes problems with the dragged image of the row
 const DragHandle = sortableHandle(({ disabled }) => (
   <Icon
+    className="giu-data-table-drag-handle"
     icon="bars"
     disabled={disabled}
-    style={{ marginLeft: 4, marginRight: 3 }}
     skipTheme
   />
 ));
@@ -789,8 +787,8 @@ class DataTable extends React.PureComponent<Props> {
         let haystack = col.filterValue
           ? col.filterValue(item)
           : col.rawValue
-            ? col.rawValue(item)
-            : item[col.attr];
+          ? col.rawValue(item)
+          : item[col.attr];
         if (haystack == null || !haystack.toLowerCase) continue;
         haystack = simplifyString(haystack);
         if (haystack.indexOf && haystack.indexOf(needle) >= 0) {
