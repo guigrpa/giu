@@ -113,16 +113,16 @@ class AllExamples extends React.PureComponent<*, { fModal: boolean }> {
           .giu-modal#modal-datatable .giu-modal-box {
             width: 600px;
           }
-          #datatable-modal .giu-data-table-col-id {
+          .giu-data-table-row-datatable-modal .giu-data-table-col-id {
             flex: 0 0 50px;
           }
-          #datatable-modal .giu-data-table-col-name {
+          .giu-data-table-row-datatable-modal .giu-data-table-col-name {
             flex: 0 0 100px;
           }
-          #datatable-modal .giu-data-table-col-phone {
+          .giu-data-table-row-datatable-modal .giu-data-table-col-phone {
             flex: 0 0 150px;
           }
-          #datatable-modal .giu-data-table-col-notes {
+          .giu-data-table-row-datatable-modal .giu-data-table-col-notes {
             flex: 1 0 100px;
           }
         `}</style>
@@ -364,23 +364,23 @@ class DevelopmentExample extends React.Component<*, *> {
             border-bottom: 1px solid #ccc;
           }
           /* Columns */
-          #datatable-dev .giu-data-table-col-id {
+          .giu-data-table-row-datatable-dev .giu-data-table-col-id {
             flex: 0 0 40px;
           }
-          #datatable-dev .giu-data-table-col-name {
+          .giu-data-table-row-datatable-dev .giu-data-table-col-name {
             flex: 0 0 100px;
           }
-          #datatable-dev .giu-data-table-col-notes {
+          .giu-data-table-row-datatable-dev .giu-data-table-col-notes {
             flex: 1 0 100px;
           }
-          #datatable-dev .giu-data-table-col-confirmed {
+          .giu-data-table-row-datatable-dev .giu-data-table-col-confirmed {
             flex: 0 0 30px;
             max-width: 30px;
           }
-          #datatable-dev .giu-data-table-col-phone {
+          .giu-data-table-row-datatable-dev .giu-data-table-col-phone {
             flex: 0 0 150px;
           }
-          #datatable-dev-alt .giu-data-table-col-allDetails {
+          .giu-data-table-row-datatable-dev-alt .giu-data-table-col-allDetails {
             flex: 1 0 100px;
           }
         `}</style>
@@ -515,16 +515,16 @@ class CustomSortPaginateExample extends React.Component<
           uniformRowHeight
         />
         <style jsx global>{`
-          #datatable-custom-sort .giu-data-table-col-id {
+          .giu-data-table-row-datatable-custom-sort .giu-data-table-col-id {
             flex: 0 0 50px;
           }
-          #datatable-custom-sort .giu-data-table-col-name {
+          .giu-data-table-row-datatable-custom-sort .giu-data-table-col-name {
             flex: 1 0 100px;
           }
-          #datatable-custom-sort .giu-data-table-col-age {
+          .giu-data-table-row-datatable-custom-sort .giu-data-table-col-age {
             flex: 0 0 50px;
           }
-          #datatable-custom-sort .giu-data-table-col-phone {
+          .giu-data-table-row-datatable-custom-sort .giu-data-table-col-phone {
             flex: 1 0 150px;
           }
           #datatable-custom-sort {
@@ -674,23 +674,27 @@ class EditAndValidateExample extends React.Component<*, *> {
           uniformRowHeight
         />
         <style jsx global>{`
-          #datatable-edit-validate .giu-data-table-col-name {
+          .giu-data-table-row-datatable-edit-validate .giu-data-table-col-name {
             flex: 1 0 150px;
           }
-          #datatable-edit-validate .giu-data-table-col-type {
+          .giu-data-table-row-datatable-edit-validate .giu-data-table-col-type {
             flex: 0 0 80px;
           }
-          #datatable-edit-validate .giu-data-table-col-lastModified {
+          .giu-data-table-row-datatable-edit-validate
+            .giu-data-table-col-lastModified {
             flex: 0 1 150px;
           }
-          #datatable-edit-validate .giu-data-table-col-confirmed {
+          .giu-data-table-row-datatable-edit-validate
+            .giu-data-table-col-confirmed {
             flex: 0 0 30px;
             max-width: 30px;
           }
-          #datatable-edit-validate .giu-data-table-col-phone {
+          .giu-data-table-row-datatable-edit-validate
+            .giu-data-table-col-phone {
             flex: 0 0 150px;
           }
-          #datatable-edit-validate .giu-data-table-col-submit {
+          .giu-data-table-row-datatable-edit-validate
+            .giu-data-table-col-submit {
             flex: 0 0 50px;
           }
         `}</style>
@@ -833,16 +837,16 @@ const SimpleExample = () => {
         animated
       />
       <style jsx global>{`
-        #datatable-simple .giu-data-table-col-id {
+        .giu-data-table-row-datatable-simple .giu-data-table-col-id {
           flex: 0 0 50px;
         }
-        #datatable-simple .giu-data-table-col-name {
+        .giu-data-table-row-datatable-simple .giu-data-table-col-name {
           flex: 0 0 100px;
         }
-        #datatable-simple .giu-data-table-col-phone {
+        .giu-data-table-row-datatable-simple .giu-data-table-col-phone {
           flex: 0 0 150px;
         }
-        #datatable-simple .giu-data-table-col-notes {
+        .giu-data-table-row-datatable-simple .giu-data-table-col-notes {
           flex: 1 0 100px;
         }
       `}</style>
@@ -871,16 +875,18 @@ const VariableHeightExample = () => {
         animated
       />
       <style jsx global>{`
-        #datatable-variable-height .giu-data-table-col-id {
+        .giu-data-table-row-datatable-variable-height .giu-data-table-col-id {
           flex: 0 0 50px;
         }
-        #datatable-variable-height .giu-data-table-col-name {
+        .giu-data-table-row-datatable-variable-height .giu-data-table-col-name {
           flex: 0 0 100px;
         }
-        #datatable-variable-height .giu-data-table-col-phone {
+        .giu-data-table-row-datatable-variable-height
+          .giu-data-table-col-phone {
           flex: 0 0 150px;
         }
-        #datatable-variable-height .giu-data-table-col-notes {
+        .giu-data-table-row-datatable-variable-height
+          .giu-data-table-col-notes {
           flex: 1 0 100px;
         }
       `}</style>

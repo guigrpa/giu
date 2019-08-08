@@ -8,6 +8,7 @@ import { merge } from 'timm';
 import upperFirst from 'lodash/upperFirst';
 import isFunction from 'lodash/isFunction';
 import classnames from 'classnames';
+import { prefixClasses } from '../gral/helpers';
 import Spinner from './spinner';
 import Icon from './icon';
 
@@ -161,6 +162,8 @@ type DataTableRowProps = {
   id: string,
   item: Object,
   cols: Array<DataTableColumn>,
+  dataTableClassName?: string,
+  dataTableId?: string,
   isItemSelected: boolean,
   fSortedManually: boolean,
   disableDragging: boolean,
@@ -178,7 +181,7 @@ class DataTableRow extends React.PureComponent<DataTableRowProps> {
 
   // ===============================================================
   render() {
-    const { id } = this.props;
+    const { id, dataTableId } = this.props;
     const saneId = id.replace(/[:,]/g, '');
     DEBUG && console.log(`Rendering row ${id}...`);
     return (
@@ -186,8 +189,14 @@ class DataTableRow extends React.PureComponent<DataTableRowProps> {
         className={classnames(
           'giu-data-table-row',
           { 'giu-data-table-row-selected': this.props.isItemSelected },
-          `giu-data-table-row-${saneId}`
+          `giu-data-table-row-${saneId}`,
+          prefixClasses(dataTableId, 'giu-data-table-row')
         )}
+        id={
+          dataTableId
+            ? `giu-data-table-row-${dataTableId}-${saneId}`
+            : undefined
+        }
         onFocus={this.onClick}
         onClick={this.onClick}
         onDoubleClick={this.onDoubleClick}

@@ -474,6 +474,8 @@ class DataTable extends React.PureComponent<Props> {
     this.commonRowProps = merge(this.commonRowProps, {
       cols,
       lang,
+      dataTableClassName: this.props.className,
+      dataTableId: this.props.id,
       fSortedManually: allowManualSorting ? fSortedManually : undefined,
       disableDragging: this.props.disableDragging,
       commonCellProps: this.props.commonCellProps,
