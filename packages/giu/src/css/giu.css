@@ -56,6 +56,12 @@ body {
   flex: 1 0 0px;
 }
 
+.giu-ellipsis {
+  white-space: nowrap;
+  text-overflow: ellipsis;
+  overflow-x: hidden;
+}
+
 /* ======================== */
 /* Components */
 /* ======================== */
@@ -232,6 +238,15 @@ row is drawn above the modal, not below */
 .giu-data-table-row.giu-data-table-row-selected select,
 .giu-data-table-row.giu-data-table-row-selected textarea {
   background-color: inherit;
+}
+
+/* Fix inputs in cells */
+.giu-data-table-cell .giu-input {
+  display: block;
+}
+.giu-data-table-cell .giu-input-reset,
+.giu-data-table-cell select {
+  width: 100%;
 }
 
 /* ------------------------ */

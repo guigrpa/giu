@@ -42,18 +42,3 @@ body {
   padding: 10px;
   font-size: 1.2em;
 }
-
-/* ---------------- */
-/* Modals */
-/* ---------------- */
-.giu-modal#modal-embedded .giu-modal-box {
-  width: 500px;
-}
-
-.giu-modal#modal-introduction {
-  z-index: 70;
-}
-
-.giu-modal#modal-introduction .giu-modal-box {
-  width: 500px;
-}

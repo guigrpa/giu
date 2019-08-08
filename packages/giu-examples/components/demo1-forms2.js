@@ -5,16 +5,21 @@
 import React from 'react';
 import { NumberInput, isLte, Button, Select, notify, ThemeContext } from 'giu';
 import type { Theme } from 'giu/lib/gral/themeContext';
-import { ExampleLabel, exampleStyle, NORMAL_OPTIONS } from './demo1-common';
+import { NORMAL_OPTIONS } from './demo1-common';
 
-class FormExample extends React.Component<{ theme: Theme }, { a: any, b: any, c: any }> {
+class FormExample extends React.Component<
+  { theme: Theme },
+  { a: any, b: any, c: any }
+> {
   refs: any;
   state: Object = { a: null, b: 4, c: null };
 
   render() {
     return (
       <div className="example">
-        <div className="example-label">Uncontrolled vs. controlled form example</div>
+        <div className="example-label">
+          Uncontrolled vs. controlled form example
+        </div>
         {this.renderUncontrolled()}
         {this.renderControlled()}
       </div>
@@ -35,10 +40,7 @@ class FormExample extends React.Component<{ theme: Theme }, { a: any, b: any, c:
   }
 
   renderControlled() {
-    const props = {
-      required: true,
-      validators: [isLte(10)],
-    };
+    const props = { required: true, validators: [isLte(10)] };
     return (
       <div>
         <b>Controlled: </b>

@@ -2,9 +2,11 @@
 
 * Use plain old CSS stylesheets (customisable!), instead of element CSS:
     * Clean up examples, using CSS
-        * Fix field widths in datatables (& headers!)
         * Review MDL
         * Also fix index.js
+
+        * Fix manual sorting in "CustomSortPaginateExample"
+        * Fix ghost image while dragging, with custom CSS
     * Check Flow errors
     * Remove flexContainer, flexItem if possible
 

@@ -22,26 +22,140 @@ import {
   Modal,
   flexContainer,
   flexItem,
-  COLORS,
   notify,
 } from 'giu';
 import type { DataTableColumn } from 'giu/lib/components/dataTableRow';
-import { ExampleLabel, exampleStyle } from './demo1-common';
 
 faker.seed(0);
 
 const DEBUG = false && process.env.NODE_ENV !== 'production';
 
-const CELL_WITH_ELLIPSIS = {
-  whiteSpace: 'nowrap',
-  textOverflow: 'ellipsis',
-  overflowX: 'hidden',
-};
-
 const USER_TYPES = [
   { value: 'Guest', label: 'Guest' },
   { value: 'User', label: 'User' },
 ];
+
+// -----------------------------------------------
+// Index
+// -----------------------------------------------
+class AllExamples extends React.PureComponent<*, { fModal: boolean }> {
+  itemsById: Object;
+  shownIds: Array<string>;
+  cols: Array<DataTableColumn>;
+
+  constructor() {
+    super();
+    this.state = { fModal: false };
+    this.itemsById = sampleDataTableItems(1000, 0);
+    this.shownIds = Object.keys(this.itemsById);
+    this.cols = [
+      { attr: 'id' },
+      { attr: 'name', minWidth: 80 },
+      { attr: 'phone', minWidth: 100 },
+      { attr: 'notes', minWidth: 70, flexGrow: 1 },
+    ];
+  }
+
+  render() {
+    return (
+      <div className="example">
+        <div className="example-label">
+          DataTable (sort, filter, select/multi-select, fetch more,
+          keyboard-controlled, clipboard, manual sort with drag-and-drop,
+          LocalStorage persistence...)
+        </div>
+        <p>
+          DataTable is based on the <b>VirtualScroller</b> component, whose
+          primary function is to render only visible rows. These rows can have
+          uniform and well-known heights (at the simplest end of the spectrum),
+          uniform but unknown, and also dynamic: different for every row, and
+          even changing in time (as a result of passed-down props or their own
+          intrinsic state).
+        </p>
+
+        <p>
+          <b>Complete example</b>: editable, filtered, internationalised,{' '}
+          <i>inifinite</i>
+          (fetch more items by scrolling down to the bottom of the list), custom
+          styles, etc.
+        </p>
+        <DevelopmentExample lang={this.props.lang} />
+
+        <p>
+          <b>Example with custom sort and pagination</b>: this one is also
+          ultra-fast, thanks to having uniform heights:
+        </p>
+        <CustomSortPaginateExample />
+
+        <p>
+          <b>Example with inline edit and validation</b>
+        </p>
+        <EditAndValidateExample />
+
+        <p>
+          <b>Simplest example</b>: leave everything to the DataTable component
+        </p>
+        <SimpleExample />
+
+        <p>
+          <b>Example without a fixed data-table height</b>
+        </p>
+        <VariableHeightExample />
+
+        <p>
+          Finally, you can also <b>embed a DataTable in a Modal</b>:{' '}
+          <Button onClick={() => this.setState({ fModal: true })}>
+            Show me!
+          </Button>
+        </p>
+        {this.renderModal()}
+        <style jsx global>{`
+          .giu-modal#modal-datatable .giu-modal-box {
+            width: 600px;
+          }
+          #datatable-modal .giu-data-table-col-id {
+            flex: 0 0 50px;
+          }
+          #datatable-modal .giu-data-table-col-name {
+            flex: 0 0 100px;
+          }
+          #datatable-modal .giu-data-table-col-phone {
+            flex: 0 0 150px;
+          }
+          #datatable-modal .giu-data-table-col-notes {
+            flex: 1 0 100px;
+          }
+        `}</style>
+      </div>
+    );
+  }
+
+  renderModal() {
+    if (!this.state.fModal) return null;
+    const close = () => this.setState({ fModal: false });
+    return (
+      <Modal
+        id="modal-datatable"
+        title="DataTable in a Modal"
+        buttons={[{ label: 'Close', onClick: close }]}
+        onClickBackdrop={close}
+        onEsc={close}
+      >
+        {/* Add some margin for debugging with visible FocusCaptures */}
+        <div style={{ marginLeft: 10, marginRight: 10 }}>
+          <DataTable
+            id="datatable-modal"
+            itemsById={this.itemsById}
+            cols={this.cols}
+            shownIds={this.shownIds}
+            collectionName="simpleDataTableExample2"
+            style={{ zIndex: 60 }}
+          />
+        </div>
+      </Modal>
+    );
+  }
+}
 
 // -----------------------------------------------
 // Development example
@@ -70,34 +184,19 @@ const sampleDataTableItems = (num, idStart = 0) => {
 
 let curLang;
 const DATA_TABLE_COLS = [
-  {
-    attr: 'id',
-    minWidth: 40,
-  },
+  { attr: 'id' },
   {
     attr: 'name',
     label: () => (curLang === 'es' ? 'Nombre' : 'Name'),
-    minWidth: 100,
   },
   {
     attr: 'notes',
     label: () => (curLang === 'es' ? 'Notas' : 'Notes'),
-    flexGrow: 1,
-    minWidth: 100,
     // render: ({ item, id, attr, onChange, onMayHaveChangedHeight }) =>
     render: ({ item, id, attr, onChange }) => (
       <Textarea
         value={item.notes}
         onChange={(ev, value) => onChange(id, attr, value)}
-        style={{
-          color: 'inherit',
-          backgroundColor: 'inherit',
-        }}
-        // styleOuter={{
-        //   display: 'block',
-        //   color: 'inherit',
-        //   backgroundColor: 'inherit',
-        // }}
         skipTheme
       />
     ),
@@ -108,7 +207,6 @@ const DATA_TABLE_COLS = [
     attr: 'confirmed',
     labelLevel: 1,
     label: () => (curLang === 'es' ? 'Confirmado' : 'Confirmed'),
-    minWidth: 30,
     render: ({ item, id, attr, onChange }) => (
       <Checkbox
         value={item.confirmed}
@@ -120,7 +218,6 @@ const DATA_TABLE_COLS = [
   {
     attr: 'phone',
     label: () => (curLang === 'es' ? 'Teléfono' : 'Phone'),
-    minWidth: 150,
   },
 ];
 
@@ -128,8 +225,6 @@ const DATA_TABLE_ALT_LAYOUT_COLS = [
   {
     attr: 'allDetails',
     label: () => (curLang === 'es' ? 'Detalles' : 'Details'),
-    flexGrow: 1,
-    minWidth: 100,
     render: ({ item, id, onChange }) => (
       <div>
         <div>
@@ -139,8 +234,12 @@ const DATA_TABLE_ALT_LAYOUT_COLS = [
           <div>
             <b>{curLang === 'es' ? 'Teléfono' : 'Phone'}</b> {item.phone} (
             {item.confirmed
-              ? curLang === 'es' ? 'Confirmado' : 'Confirmed'
-              : curLang === 'es' ? 'No confirmado' : 'Unconfirmed'}
+              ? curLang === 'es'
+                ? 'Confirmado'
+                : 'Confirmed'
+              : curLang === 'es'
+              ? 'No confirmado'
+              : 'Unconfirmed'}
             )
           </div>
         </div>
@@ -231,6 +330,7 @@ class DevelopmentExample extends React.Component<*, *> {
         {this.renderControls()}
         <DataTable
           key={this.state.dataTableKey}
+          id={fAltLayout ? 'datatable-dev-alt' : 'datatable-dev'}
           itemsById={this.state.itemsById}
           cols={fAltLayout ? DATA_TABLE_ALT_LAYOUT_COLS : DATA_TABLE_COLS}
           lang={lang}
@@ -255,6 +355,27 @@ class DevelopmentExample extends React.Component<*, *> {
           animated
           {...otherProps}
         />
+        <style jsx global>{`
+          #datatable-dev .giu-data-table-col-id {
+            flex: 0 0 40px;
+          }
+          #datatable-dev .giu-data-table-col-name {
+            flex: 0 0 100px;
+          }
+          #datatable-dev .giu-data-table-col-notes {
+            flex: 1 0 100px;
+          }
+          #datatable-dev .giu-data-table-col-confirmed {
+            flex: 0 0 30px;
+            max-width: 30px;
+          }
+          #datatable-dev .giu-data-table-col-phone {
+            flex: 0 0 150px;
+          }
+          #datatable-dev-alt .giu-data-table-col-allDetails {
+            flex: 1 0 100px;
+          }
+        `}</style>
       </div>
     );
   }
@@ -341,70 +462,6 @@ const style = {
 };
 
 // -----------------------------------------------
-// Simple example: minimum attributes
-// -----------------------------------------------
-const DATA_SIMPLE_EXAMPLE = sampleDataTableItems(1000, 0);
-const SimpleExample = () => {
-  if (DEBUG) return null;
-  const itemsById = DATA_SIMPLE_EXAMPLE;
-  return (
-    <DataTable
-      itemsById={itemsById}
-      cols={[
-        { attr: 'id' },
-        { attr: 'name', minWidth: 100 },
-        { attr: 'phone', minWidth: 150 },
-        { attr: 'notes', minWidth: 100, flexGrow: 1 },
-      ]}
-      shownIds={Object.keys(itemsById)}
-      collectionName="simpleDataTableExample"
-      animated
-    />
-  );
-};
-
-const DATA_VARIABLE_HEIGHT_EXAMPLE = sampleDataTableItems(6, 0);
-const VariableHeightExample = () => {
-  if (DEBUG) return null;
-  const itemsById = DATA_VARIABLE_HEIGHT_EXAMPLE;
-  return (
-    <DataTable
-      itemsById={itemsById}
-      cols={[
-        { attr: 'id' },
-        { attr: 'name', minWidth: 100 },
-        { attr: 'phone', minWidth: 150 },
-        { attr: 'notes', minWidth: 100, flexGrow: 1 },
-      ]}
-      shownIds={Object.keys(itemsById)}
-      collectionName="variableHeightDataTableExample"
-      height={-1}
-      animated
-    />
-  );
-};
-
-// -----------------------------------------------
-// Example with uniform row heights
-// -----------------------------------------------
-// const UniformHeightsExample = () => {
-//   const itemsById = sampleDataTableItems(1000, 0);
-//   return (
-//     <DataTable
-//       itemsById={itemsById}
-//       cols={[
-//         { attr: 'id' },
-//         { attr: 'name', minWidth: 100, flexGrow: 1, style: style.cellWithEllipsis },
-//         { attr: 'phone', minWidth: 150, flexGrow: 1, style: style.cellWithEllipsis },
-//       ]}
-//       shownIds={Object.keys(itemsById)}
-//       height={100}
-//       uniformRowHeight
-//     />
-//   );
-// };
-
-// -----------------------------------------------
 // Example with custom sorting and pagination
 // -----------------------------------------------
 const NUM_ITEMS = 1000;
@@ -416,9 +473,9 @@ const CUSTOM_SORT_OPTIONS = [
 ];
 const COLS = [
   { attr: 'id' },
-  { attr: 'name', minWidth: 100, flexGrow: 1, style: CELL_WITH_ELLIPSIS },
-  { attr: 'age', minWidth: 50 },
-  { attr: 'phone', minWidth: 150, flexGrow: 1, style: CELL_WITH_ELLIPSIS },
+  { attr: 'name', className: 'giu-ellipsis' },
+  { attr: 'age' },
+  { attr: 'phone', className: 'giu-ellipsis' },
 ];
 
 class CustomSortPaginateExample extends React.Component<
@@ -449,6 +506,7 @@ class CustomSortPaginateExample extends React.Component<
         {this.renderControls(sortBy, page)}
         <DataTable
           ref="dataTable"
+          id="datatable-custom-sort"
           itemsById={this.itemsById}
           cols={COLS}
           shownIds={this.shownIds}
@@ -458,9 +516,29 @@ class CustomSortPaginateExample extends React.Component<
           sortDescending={false}
           height={100}
           uniformRowHeight
-          style={style2.outer}
-          styleHeader={style2.header}
         />
+        <style jsx global>{`
+          #datatable-custom-sort .giu-data-table-col-id {
+            flex: 0 0 50px;
+          }
+          #datatable-custom-sort .giu-data-table-col-name {
+            flex: 1 0 100px;
+          }
+          #datatable-custom-sort .giu-data-table-col-age {
+            flex: 0 0 50px;
+          }
+          #datatable-custom-sort .giu-data-table-col-phone {
+            flex: 1 0 150px;
+          }
+          #datatable-custom-sort {
+            margin-top: 3px;
+            border-top: 1px solid var(--color-accent-bg);
+            border-bottom: 1px solid var(--color-accent-bg);
+          }
+          #datatable-custom-sort .giu-data-table-header {
+            border-bottom: 1px solid var(--color-accent-bg);
+          }
+        `}</style>
       </div>
     );
   }
@@ -554,18 +632,6 @@ class CustomSortPaginateExample extends React.Component<
   }
 }
 
-const style2 = {
-  cellWithEllipsis: CELL_WITH_ELLIPSIS, // quick'n'dirty
-  outer: {
-    marginTop: 3,
-    borderTop: `1px solid ${COLORS.accent}`,
-    borderBottom: `1px solid ${COLORS.accent}`,
-  },
-  header: {
-    borderBottom: `1px solid ${COLORS.accent}`,
-  },
-};
-
 // -----------------------------------------------
 // Example with inputs and validation
 // -----------------------------------------------
@@ -599,15 +665,39 @@ class EditAndValidateExample extends React.Component<*, *> {
   render() {
     const itemsById = DATA_EDIT_AND_VALIDATE_EXAMPLE;
     return (
-      <DataTable
-        itemsById={itemsById}
-        shownIds={Object.keys(itemsById)}
-        alwaysRenderIds={Object.keys(this.state.changedRows)}
-        cols={this.getCols()}
-        commonCellProps={this.commonCellProps}
-        collectionName="editAndValidateExample"
-        uniformRowHeight
-      />
+      <React.Fragment>
+        <DataTable
+          id="datatable-edit-validate"
+          itemsById={itemsById}
+          shownIds={Object.keys(itemsById)}
+          alwaysRenderIds={Object.keys(this.state.changedRows)}
+          cols={this.getCols()}
+          commonCellProps={this.commonCellProps}
+          collectionName="editAndValidateExample"
+          uniformRowHeight
+        />
+        <style jsx global>{`
+          #datatable-edit-validate .giu-data-table-col-name {
+            flex: 1 0 150px;
+          }
+          #datatable-edit-validate .giu-data-table-col-type {
+            flex: 0 0 80px;
+          }
+          #datatable-edit-validate .giu-data-table-col-lastModified {
+            flex: 0 1 150px;
+          }
+          #datatable-edit-validate .giu-data-table-col-confirmed {
+            flex: 0 0 30px;
+            max-width: 30px;
+          }
+          #datatable-edit-validate .giu-data-table-col-phone {
+            flex: 0 0 150px;
+          }
+          #datatable-edit-validate .giu-data-table-col-submit {
+            flex: 0 0 50px;
+          }
+        `}</style>
+      </React.Fragment>
     );
   }
 
@@ -615,8 +705,6 @@ class EditAndValidateExample extends React.Component<*, *> {
     return [
       {
         attr: 'name',
-        minWidth: 150,
-        flexGrow: 1,
         render: ({ item, id, attr, onChange, registerInputRef }) => (
           <TextInput
             ref={c => registerInputRef(id, attr, c)}
@@ -624,14 +712,11 @@ class EditAndValidateExample extends React.Component<*, *> {
             onChange={() => onChange(id)}
             required
             skipTheme
-            // styleOuter={{ backgroundColor: 'inherit', width: '100%' }}
-            style={{ backgroundColor: 'inherit', width: '100%' }}
           />
         ),
       },
       {
         attr: 'type',
-        minWidth: 80,
         render: ({ item, id, attr, onChange, registerInputRef }) => (
           <Select
             ref={c => registerInputRef(id, attr, c)}
@@ -639,14 +724,12 @@ class EditAndValidateExample extends React.Component<*, *> {
             value={item[attr]}
             onChange={() => onChange(id)}
             required
-            // styleOuter={{ backgroundColor: 'inherit', width: '100%' }}
-            style={{ backgroundColor: 'inherit', width: '100%' }}
           />
         ),
       },
       {
         attr: 'lastModified',
-        minWidth: 150,
+        label: 'Last change',
         render: ({ item, id, attr, onChange, registerInputRef }) => (
           <DateInput
             ref={c => {
@@ -656,15 +739,12 @@ class EditAndValidateExample extends React.Component<*, *> {
             onChange={() => onChange(id)}
             required
             skipTheme
-            // styleOuter={{ backgroundColor: 'inherit', width: '100%' }}
-            style={{ backgroundColor: 'inherit', width: '100%' }}
           />
         ),
       },
       {
         attr: 'confirmed',
         labelLevel: 1,
-        minWidth: 30,
         render: ({ item, id, attr, onChange, registerInputRef }) => (
           <Checkbox
             ref={c => registerInputRef(id, attr, c)}
@@ -676,7 +756,6 @@ class EditAndValidateExample extends React.Component<*, *> {
       },
       {
         attr: 'phone',
-        minWidth: 150,
         render: ({ item, id, attr, onChange, registerInputRef }) => (
           <TextInput
             ref={c => registerInputRef(id, attr, c)}
@@ -684,14 +763,11 @@ class EditAndValidateExample extends React.Component<*, *> {
             onChange={() => onChange(id)}
             required
             skipTheme
-            // styleOuter={{ backgroundColor: 'inherit', width: '100%' }}
-            style={{ backgroundColor: 'inherit', width: '100%' }}
           />
         ),
       },
       {
         attr: 'submit',
-        minWidth: 50,
         render: ({ id, onSubmit }) => (
           <Icon icon="check" onClick={() => onSubmit(id)} />
         ),
@@ -738,107 +814,104 @@ class EditAndValidateExample extends React.Component<*, *> {
 }
 
 // -----------------------------------------------
-// Index
+// Simple example: minimum attributes
 // -----------------------------------------------
-class AllExamples extends React.PureComponent<*, { fModal: boolean }> {
-  itemsById: Object;
-  shownIds: Array<string>;
-  cols: Array<DataTableColumn>;
+const DATA_SIMPLE_EXAMPLE = sampleDataTableItems(1000, 0);
+const SimpleExample = () => {
+  if (DEBUG) return null;
+  const itemsById = DATA_SIMPLE_EXAMPLE;
+  return (
+    <React.Fragment>
+      <DataTable
+        id="datatable-simple"
+        itemsById={itemsById}
+        cols={[
+          { attr: 'id' },
+          { attr: 'name' },
+          { attr: 'phone' },
+          { attr: 'notes' },
+        ]}
+        shownIds={Object.keys(itemsById)}
+        collectionName="simpleDataTableExample"
+        animated
+      />
+      <style jsx global>{`
+        #datatable-simple .giu-data-table-col-id {
+          flex: 0 0 50px;
+        }
+        #datatable-simple .giu-data-table-col-name {
+          flex: 0 0 100px;
+        }
+        #datatable-simple .giu-data-table-col-phone {
+          flex: 0 0 150px;
+        }
+        #datatable-simple .giu-data-table-col-notes {
+          flex: 1 0 100px;
+        }
+      `}</style>
+    </React.Fragment>
+  );
+};
 
-  constructor() {
-    super();
-    this.state = { fModal: false };
-    this.itemsById = sampleDataTableItems(1000, 0);
-    this.shownIds = Object.keys(this.itemsById);
-    this.cols = [
-      { attr: 'id' },
-      { attr: 'name', minWidth: 80 },
-      { attr: 'phone', minWidth: 100 },
-      { attr: 'notes', minWidth: 70, flexGrow: 1 },
-    ];
-  }
+const DATA_VARIABLE_HEIGHT_EXAMPLE = sampleDataTableItems(6, 0);
+const VariableHeightExample = () => {
+  if (DEBUG) return null;
+  const itemsById = DATA_VARIABLE_HEIGHT_EXAMPLE;
+  return (
+    <React.Fragment>
+      <DataTable
+        id="datatable-variable-height"
+        itemsById={itemsById}
+        cols={[
+          { attr: 'id' },
+          { attr: 'name' },
+          { attr: 'phone' },
+          { attr: 'notes' },
+        ]}
+        shownIds={Object.keys(itemsById)}
+        collectionName="variableHeightDataTableExample"
+        height={-1}
+        animated
+      />
+      <style jsx global>{`
+        #datatable-variable-height .giu-data-table-col-id {
+          flex: 0 0 50px;
+        }
+        #datatable-variable-height .giu-data-table-col-name {
+          flex: 0 0 100px;
+        }
+        #datatable-variable-height .giu-data-table-col-phone {
+          flex: 0 0 150px;
+        }
+        #datatable-variable-height .giu-data-table-col-notes {
+          flex: 1 0 100px;
+        }
+      `}</style>
+    </React.Fragment>
+  );
+};
 
-  render() {
-    return (
-      <div className="example">
-        <div className="example-label">
-          DataTable (sort, filter, select/multi-select, fetch more,
-          keyboard-controlled, clipboard, manual sort with drag-and-drop,
-          LocalStorage persistence...)
-        </div>
-        <p>
-          DataTable is based on the <b>VirtualScroller</b> component, whose
-          primary function is to render only visible rows. These rows can have
-          uniform and well-known heights (at the simplest end of the spectrum),
-          uniform but unknown, and also dynamic: different for every row, and
-          even changing in time (as a result of passed-down props or their own
-          intrinsic state).
-        </p>
+// -----------------------------------------------
+// Example with uniform row heights
+// -----------------------------------------------
+// const UniformHeightsExample = () => {
+//   const itemsById = sampleDataTableItems(1000, 0);
+//   return (
+//     <DataTable
+//       itemsById={itemsById}
+//       cols={[
+//         { attr: 'id' },
+//         { attr: 'name', minWidth: 100, flexGrow: 1, style: style.cellWithEllipsis },
+//         { attr: 'phone', minWidth: 150, flexGrow: 1, style: style.cellWithEllipsis },
+//       ]}
+//       shownIds={Object.keys(itemsById)}
+//       height={100}
+//       uniformRowHeight
+//     />
+//   );
+// };
 
-        <p>
-          <b>Complete example</b>
-          : editable, filtered, internationalised, <i>inifinite</i>
-          (fetch more items by scrolling down to the bottom of the list), custom
-          styles, etc.
-        </p>
-        <DevelopmentExample lang={this.props.lang} />
-
-        <p>
-          <b>Example with custom sort and pagination</b>
-          : this one is also ultra-fast, thanks to having uniform heights:
-        </p>
-        <CustomSortPaginateExample />
-
-        <p>
-          <b>Example with inline edit and validation</b>
-        </p>
-        <EditAndValidateExample />
-
-        <p>
-          <b>Simplest example</b>: leave everything to the DataTable component
-        </p>
-        <SimpleExample />
-
-        <p>
-          <b>Example without a fixed data-table height</b>
-        </p>
-        <VariableHeightExample />
-
-        <p>
-          Finally, you can also <b>embed a DataTable in a Modal</b>:{' '}
-          <Button onClick={() => this.setState({ fModal: true })}>
-            Show me!
-          </Button>
-        </p>
-        {this.renderModal()}
-      </div>
-    );
-  }
-
-  renderModal() {
-    if (!this.state.fModal) return null;
-    const close = () => this.setState({ fModal: false });
-    return (
-      <Modal
-        title="DataTable in a Modal"
-        buttons={[{ label: 'Close', onClick: close }]}
-        onClickBackdrop={close}
-        onEsc={close}
-        style={{ width: 500 }}
-      >
-        {/* Add some margin for debugging with visible FocusCaptures */}
-        <div style={{ marginLeft: 10, marginRight: 10 }}>
-          <DataTable
-            itemsById={this.itemsById}
-            cols={this.cols}
-            shownIds={this.shownIds}
-            collectionName="simpleDataTableExample2"
-            style={{ zIndex: 60 }}
-          />
-        </div>
-      </Modal>
-    );
-  }
-}
-
+// -----------------------------------------------
+// Public
+// -----------------------------------------------
 export default AllExamples;

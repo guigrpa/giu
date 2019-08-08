@@ -19,6 +19,7 @@ const DEBUG = false && process.env.NODE_ENV !== 'production';
 /* -- START_DOCS -- */
 export type DataTableColumn = {
   attr: string, // column identifier, also used to get rawValues by default
+  className?: string, // custom classes to be added to the giu-data-table-cells
 
   // Label
   // -----
@@ -223,7 +224,8 @@ class DataTableRow extends React.PureComponent<DataTableRowProps> {
         key={attr}
         className={classnames(
           'giu-data-table-cell',
-          `giu-data-table-col-${attr}`
+          `giu-data-table-col-${attr}`,
+          col.className
         )}
       >
         {value}

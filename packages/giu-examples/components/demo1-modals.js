@@ -43,6 +43,15 @@ class ModalExample extends React.Component<
           Embed modal
         </Button>
         {this.state.fEmbeddedModal && this.renderEmbeddedModal()}
+        <style jsx global>{`
+          .giu-modal#modal-embedded .giu-modal-box,
+          .giu-modal#modal-introduction .giu-modal-box {
+            width: 500px;
+          }
+          .giu-modal#modal-introduction {
+            z-index: 70;
+          }
+        `}</style>
       </div>
     );
   }
