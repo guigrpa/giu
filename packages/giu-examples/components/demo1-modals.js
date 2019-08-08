@@ -83,6 +83,8 @@ class ModalExample extends React.Component<
           placeholder="date of birth"
           required
         />
+        <br />
+        <br />
         <Textarea
           className="modal-input"
           placeholder="Write something..."
