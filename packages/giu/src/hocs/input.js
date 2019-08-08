@@ -316,8 +316,13 @@ class Input extends React.PureComponent<Props> {
     // hints on how to properly position the error float; e.g. if another float
     // will open `below`, position the error float `above`.
     if (errors.length) {
+      const { id, className } = this.props;
       const floatOptions = {
-        className: 'giu-float-error',
+        className: classnames(
+          'giu-float-error',
+          className ? `giu-float-error-${className}` : undefined
+        ),
+        id: id ? `giu-float-error-${id}` : undefined,
         ...this.calcFloatPosition(),
         getAnchorNode: () => this.refOuter || this.refFocusable,
         children: this.renderErrors(),

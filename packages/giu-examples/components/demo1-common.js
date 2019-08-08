@@ -12,18 +12,18 @@ const ExampleLabel = ({ children }: Object) => (
 
 const style = {
   label: {
-    fontWeight: 'bold',
-    color: 'darkblue',
+    // fontWeight: 'bold',
+    // color: 'darkblue',
   },
 };
 
 const exampleStyle = {
-  marginLeft: 5,
-  marginTop: 5,
-  marginBottom: 5,
-  border: '1px solid #ccc',
-  padding: 10,
-  minWidth: 400,
+  // marginLeft: 5,
+  // marginTop: 5,
+  // marginBottom: 5,
+  // border: '1px solid #ccc',
+  // padding: 10,
+  // minWidth: 400,
 };
 
 let lang = 'en';

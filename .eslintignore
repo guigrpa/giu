@@ -2,4 +2,3 @@ node_modules
 .next
 packages/*/lib
 packages/giu/src/vendor/material.js
-packages/giu-examples

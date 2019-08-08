@@ -13,8 +13,8 @@ class FormExample extends React.Component<{ theme: Theme }, { a: any, b: any, c:
 
   render() {
     return (
-      <div style={exampleStyle}>
-        <ExampleLabel>Uncontrolled vs. controlled form example</ExampleLabel>
+      <div className="example">
+        <div className="example-label">Uncontrolled vs. controlled form example</div>
         {this.renderUncontrolled()}
         {this.renderControlled()}
       </div>

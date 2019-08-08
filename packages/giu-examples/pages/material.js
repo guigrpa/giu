@@ -27,10 +27,9 @@ import {
   TextInput,
   ColorInput,
   COLORS,
+  isDark,
 } from 'giu';
 import {
-  ExampleLabel,
-  exampleStyle,
   NORMAL_OPTIONS,
   TALL_OPTIONS,
   WIDE_OPTIONS,
@@ -74,6 +73,7 @@ const EVERYTHING = true;
 class App extends React.Component {
   state = {
     accentColor: COLORS.accent,
+    accentColorFg: 'white',
   };
 
   // -----------------------------------------------
@@ -83,12 +83,12 @@ class App extends React.Component {
     switch (TEST) {
       default:
         out = (
-          <div style={style.outer}>
+          <div>
             <Modals />
             <Floats />
             <Notifications />
             <Hints />
-            <div style={{ padding: 10, fontSize: '1.8em', fontWeight: 'bold' }}>
+            <div className="title">
               <a target="_blank" href="http://github.com/guigrpa/giu">
                 Giu
               </a>{' '}
@@ -102,12 +102,13 @@ class App extends React.Component {
                 }}
                 accentColor={this.state.accentColor}
                 onChangeColor={(ev, accentColor) => {
-                  this.setState({ accentColor });
+                  const accentColorFg = isDark(accentColor) ? 'white' : 'black';
+                  this.setState({ accentColor, accentColorFg });
                 }}
               />
             </div>
-            <div style={flexContainer('row')}>
-              <div style={flexItem('1 0 500px')}>
+            <div className="main">
+              <div className="left">
                 {EVERYTHING && <NotificationExample />}
                 {EVERYTHING && <MessageExample />}
                 {EVERYTHING && <IconExample />}
@@ -121,21 +122,24 @@ class App extends React.Component {
                 {EVERYTHING && <DataTableExample lang={lang} />}
                 {EVERYTHING && <DeferredExample />}
               </div>
-              <div style={flexItem('1 0 500px')}>
+              <div className="right">
                 {EVERYTHING && <FormExample lang={lang} />}
                 {EVERYTHING && <FormExample2 />}
               </div>
             </div>
-            <div style={{ textAlign: 'right', padding: 10, fontSize: '1.2em' }}>
+            <div className="author">
               by{' '}
               <a target="_blank" href="http://github.com/guigrpa">
                 Guillermo Grau Panea
               </a>{' '}
               2016
             </div>
-            <style jsx global>{`body {
-              --color-accent-bg: ${this.state.accentColor}
-            }`}</style>
+            <style jsx global>{`
+              body {
+                --color-accent-bg: ${this.state.accentColor};
+                --color-accent-fg: ${this.state.accentColorFg};
+              }
+            `}</style>
           </div>
         );
         break;
@@ -164,16 +168,13 @@ const Configs = ({ lang, onChangeLang, accentColor, onChangeColor }) => (
       required
     />
     &nbsp;&nbsp; Theme color:{' '}
-    <ColorInput
-      value={accentColor}
-      onChange={onChangeColor}
-    />
+    <ColorInput value={accentColor} onChange={onChangeColor} />
   </span>
 );
 
 const NotificationExample = () => (
-  <div style={style.example}>
-    <ExampleLabel>Notification (embedded)</ExampleLabel>
+  <div className="example">
+    <div className="example-label">Notification (embedded)</div>
     <Notification
       icon="favorite"
       title="Title"
@@ -184,15 +185,15 @@ const NotificationExample = () => (
 );
 
 const MessageExample = () => (
-  <div style={style.example}>
-    <ExampleLabel>LargeMessage</ExampleLabel>
+  <div className="example">
+    <div className="example-label">LargeMessage</div>
     <LargeMessage>No items found.</LargeMessage>
   </div>
 );
 
 const IconExample = () => (
-  <div style={style.example}>
-    <ExampleLabel>Icon</ExampleLabel>
+  <div className="example">
+    <div className="example-label">Icon</div>
     <Icon icon="cached" id="a" size="lg" /> <Spinner size="lg" />{' '}
     <Icon icon="favorite" id="a" size="lg" />{' '}
     <Icon icon="lock" size="lg" onClick={() => notify()} />
@@ -200,8 +201,8 @@ const IconExample = () => (
 );
 
 const ButtonExample = () => (
-  <div style={style.example}>
-    <ExampleLabel>Button</ExampleLabel>
+  <div className="example">
+    <div className="example-label">Button</div>
     <Button onClick={() => notify('Normal button pressed')} colored>
       Colored
     </Button>{' '}
@@ -225,38 +226,20 @@ const ButtonExample = () => (
 );
 
 const StyleUtilsExample = () => (
-  <div style={style.example}>
-    <ExampleLabel>Style utilities</ExampleLabel>
-    <div style={flexContainer('row')}>
-      <span>Flex left</span>
-      <FlexSpacer />
-      <span>Flex right</span>
+  <div className="example">
+    <div className="example-label">Style utilities</div>
+    <div className="giu-box-shadow" style={{ padding: 3 }}>
+      A box with a shadow
     </div>
-    <div style={flexContainer('row')}>
-      <span>Left</span>
-      <FlexSpacer />
-      <span>Center</span>
-      <FlexSpacer />
-      <span>Right</span>
-    </div>
-    <div className="giu-box-shadow" style={{ padding: 3 }}>A box with a shadow</div>
   </div>
 );
 
-const FlexSpacer = ({ children }) => (
-  <div style={flexItem('1')}>{children}</div>
-);
-
 const DropDownExample = ({ lang }) => (
-  <div style={style.example}>
-    <ExampleLabel>
+  <div className="example">
+    <div className="example-label">
       DropDownMenu (focusable, keyboard-controlled, embedded ListPicker)
-    </ExampleLabel>
-    <DropDownMenu
-      items={NORMAL_OPTIONS}
-      lang={lang}
-      onClickItem={onChangeJson}
-    >
+    </div>
+    <DropDownMenu items={NORMAL_OPTIONS} lang={lang} onClickItem={onChangeJson}>
       <Icon icon="build" /> Menu
     </DropDownMenu>
     <DropDownMenu
@@ -278,9 +261,11 @@ const DropDownExample = ({ lang }) => (
 );
 
 const ScrollingExample = () => (
-  <div style={style.example}>
-    <ExampleLabel>Scrollable (with translateZ(0)) with floats</ExampleLabel>
-    <div onScroll={floatReposition} style={style.scrolling}>
+  <div className="example">
+    <div className="example-label">
+      Scrollable (with translateZ(0)) with floats
+    </div>
+    <div className="inner" onScroll={floatReposition}>
       <DateInput placeholder="date" date time required />
       <br />
       {LONG_TEXT}
@@ -301,6 +286,15 @@ const ScrollingExample = () => (
       <br />
       <DateInput placeholder="date" required />
     </div>
+    <style jsx>
+      {`
+        .inner {
+          max-height: 120px;
+          overflow: auto;
+          transform: translateZ(0);
+        }
+      `}
+    </style>
   </div>
 );
 
@@ -316,8 +310,8 @@ class ProgressExample extends React.Component {
   }
   render() {
     return (
-      <div style={style.example}>
-        <ExampleLabel>Progress</ExampleLabel>
+      <div className="example">
+        <div className="example-label">Progress</div>
         <Progress value={this.state.value} />
         <Progress />
       </div>
@@ -338,29 +332,18 @@ class DeferredExample extends React.Component {
   render() {
     if (!this.state.shown) return null;
     return (
-      <div style={style.example}>
-        <ExampleLabel>Deferred example</ExampleLabel>
+      <div className="example">
+        <div className="example-label">Deferred example</div>
+        <div>
+          This demonstrates that MDL styles are applied correctly even if the
+          component is instantiated later.
+        </div>
         <TextInput placeholder="Write something" />
         <Button>Example button</Button>
       </div>
     );
   }
 }
-
-// -----------------------------------------------
-// Styles
-// -----------------------------------------------
-const style = {
-  outer: {
-    fontSize: 12,
-  },
-  example: exampleStyle,
-  scrolling: {
-    maxHeight: 120,
-    overflow: 'auto',
-    transform: 'translateZ(0)',
-  },
-};
 
 // -----------------------------------------------
 // Public
@@ -403,21 +386,16 @@ class AppWrapper extends React.Component {
             href="https://fonts.googleapis.com/icon?family=Material+Icons"
           />
           <link
+            rel="stylesheet"
+            href={`${baseUrl}/static/stylesheets/common.css`}
+          />
+          <link
             rel="icon"
             type="image/ico"
             href={`${baseUrl}/static/favicon.ico`}
           />
         </Head>
         <App />
-        <style jsx global>{`
-          body {
-            font-family: 'Futura Std', Tahoma, sans-serif;
-            font-size: 12px;
-            padding: 10px;
-            margin: 0;
-            background: #f9fff2;
-          }
-        `}</style>
       </div>
     );
   }

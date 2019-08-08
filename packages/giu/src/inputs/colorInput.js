@@ -142,9 +142,12 @@ class BaseColorInput extends React.Component<Props> {
 
     // Create or update float
     if (fFloat) {
-      const { id, floatPosition, floatAlign } = this.props;
+      const { className, id, floatPosition, floatAlign } = this.props;
       const floatOptions = {
-        className: 'giu-float-color-input',
+        className: classnames(
+          'giu-float-color-input',
+          className ? `giu-float-${className}` : undefined
+        ),
         id: id ? `giu-float-${id}` : undefined,
         position: floatPosition,
         align: floatAlign,

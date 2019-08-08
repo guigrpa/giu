@@ -342,7 +342,7 @@ class BaseDateInput extends React.Component<Props, State> {
       fFocused,
     } = this.props;
     const otherProps = omit(this.props, FILTERED_OUT_PROPS_MDL);
-    const internalId = `giu-date-input-${id}`;
+    const internalId = id ? `giu-date-input-${id}` : undefined;
     return (
       <div
         ref={this.refMdl}
@@ -392,9 +392,12 @@ class BaseDateInput extends React.Component<Props, State> {
 
     // Create or update float
     if (fFloat) {
-      const { id, floatPosition, floatAlign } = this.props;
+      const { className, id, floatPosition, floatAlign } = this.props;
       const floatOptions = {
-        className: 'giu-float-date-input',
+        className: classnames(
+          'giu-float-date-input',
+          className ? `giu-float-${className}` : undefined
+        ),
         id: id ? `giu-float-${id}` : undefined,
         position: floatPosition,
         align: floatAlign,

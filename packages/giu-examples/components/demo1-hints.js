@@ -47,11 +47,11 @@ class HintExample extends React.Component<{}, { fEmbeddedHint: boolean }> {
 
   render() {
     return (
-      <div style={exampleStyle}>
-        <ExampleLabel>
+      <div className="example">
+        <div className="example-label">
           Hints (show once, disable-all, reset) and Hint (embedded): simple
           label positioning, even taking into account DOM element positions
-        </ExampleLabel>
+        </div>
         <span ref="buttonShowHint">
           <Button onClick={() => hintShow('hintExample')}>
             Show hint (if not already shown)

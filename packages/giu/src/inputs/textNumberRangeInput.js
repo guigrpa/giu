@@ -62,13 +62,16 @@ type Props = {
   fFocused: boolean,
 };
 
+// Should include all public props, + 'required', 'style':
 const FILTERED_OUT_PROPS = [
+  ...INPUT_HOC_INVALID_HTML_PROPS,
+  'className',
+  'id',
   'disabled',
   'skipTheme',
   'vertical',
   'required',
-  'theme',
-  ...INPUT_HOC_INVALID_HTML_PROPS,
+  'style',
 ];
 
 const FILTERED_OUT_PROPS_MDL = FILTERED_OUT_PROPS.concat(['placeholder']);
@@ -132,7 +135,7 @@ function createClass(componentName, inputType) {
         fFocused,
       } = this.props;
       const otherProps = omit(this.props, FILTERED_OUT_PROPS_MDL);
-      const internalId = `giu-${inputType}-input-${id}`;
+      const internalId = id ? `giu-${inputType}-input-${id}` : undefined;
       return (
         <div
           ref={this.refMdl}

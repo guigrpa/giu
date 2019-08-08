@@ -199,9 +199,12 @@ class BaseSelectCustom extends React.Component<Props> {
 
     // Create or update float
     if (fFloat) {
-      const { id, floatPosition, floatAlign } = this.props;
+      const { id, className, floatPosition, floatAlign } = this.props;
       const floatOptions = {
-        className: 'giu-float-select-custom',
+        className: classnames(
+          'giu-float-select-custom',
+          className ? `giu-float-${className}` : undefined
+        ),
         id: id ? `giu-float-${id}` : undefined,
         position: floatPosition,
         align: floatAlign,

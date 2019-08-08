@@ -1331,7 +1331,7 @@ class AppWrapper extends React.Component {
           />
           <link
             rel="stylesheet"
-            href={`${baseUrl}/static/stylesheets/stylesheet.css`}
+            href={`${baseUrl}/static/stylesheets/index.css`}
           />
           <link
             rel="icon"

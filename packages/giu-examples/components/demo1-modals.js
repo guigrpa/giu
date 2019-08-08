@@ -20,15 +20,12 @@ import {
   ThemeContext,
 } from 'giu';
 import type { Theme } from 'giu/lib/gral/themeContext';
-import {
-  ExampleLabel,
-  exampleStyle,
-  NORMAL_OPTIONS,
-  LONG_TEXT,
-  onChange,
-} from './demo1-common';
+import { NORMAL_OPTIONS, LONG_TEXT, onChange } from './demo1-common';
 
-class ModalExample extends React.Component<{ theme: Theme }, { fEmbeddedModal: boolean }> {
+class ModalExample extends React.Component<
+  { theme: Theme },
+  { fEmbeddedModal: boolean }
+> {
   refInput: ?Object;
   refName: ?Object;
 
@@ -36,20 +33,16 @@ class ModalExample extends React.Component<{ theme: Theme }, { fEmbeddedModal: b
 
   render() {
     return (
-      <div style={exampleStyle}>
-        <ExampleLabel>
+      <div className="example">
+        <div className="example-label">
           Modals (stackable) and Modal (embedded): focusable,
           keyboard-controlled
-        </ExampleLabel>
+        </div>
         <Button onClick={this.addModal.bind(this)}>Add modal</Button>{' '}
         <Button onClick={() => this.setState({ fEmbeddedModal: true })}>
           Embed modal
         </Button>
         {this.state.fEmbeddedModal && this.renderEmbeddedModal()}
-        <style jsx global>{`
-          .giu-modal#modal-introduction { z-index: 70 }
-          .giu-modal#modal-introduction .giu-modal-box { width: 500px }
-        `}</style>
       </div>
     );
   }
@@ -81,19 +74,27 @@ class ModalExample extends React.Component<{ theme: Theme }, { fEmbeddedModal: b
           ref={o => {
             this.refInput = o;
           }}
+          className="modal-input"
           autoFocus
           required
-          errorZ={52}
         />
-        <DateInput placeholder="date of birth" floatZ={55} required />
+        <DateInput
+          className="modal-input"
+          placeholder="date of birth"
+          required
+        />
         <Textarea
+          className="modal-input"
           placeholder="Write something..."
           required
-          errorZ={52}
           style={{ maxHeight: 100 }}
         />
         <br />
-        <TextInput required errorZ={52} placeholder="Another text input" />
+        <TextInput
+          className="modal-input"
+          required
+          placeholder="Another text input"
+        />
         <br />
         <br />
         <br />
@@ -102,26 +103,26 @@ class ModalExample extends React.Component<{ theme: Theme }, { fEmbeddedModal: b
             marginLeft: 20,
           }} /* useful margin for debugging with visible FocusCaptures */
         >
-          <ExampleLabel>
+          <div className="example-label">
             Some examples to see that everything works correctly in a modal
-          </ExampleLabel>
-          <ColorInput floatZ={55} />
-          <ColorInput floatZ={55} disabled />
+          </div>
+          <ColorInput className="modal-input" />
+          <ColorInput className="modal-input" disabled />
           <Select
-            floatZ={55}
+            className="modal-input"
             type="dropDownPicker"
             value="a"
             items={NORMAL_OPTIONS}
           />
           <Select
-            floatZ={55}
+            className="modal-input"
             type="dropDownPicker"
             value="a"
             items={NORMAL_OPTIONS}
             disabled
           />
           <DropDownMenu
-            floatZ={55}
+            className="modal-input"
             items={NORMAL_OPTIONS}
             onClickItem={onChange}
           >
@@ -142,11 +143,15 @@ class ModalExample extends React.Component<{ theme: Theme }, { fEmbeddedModal: b
           ref={o => {
             this.refName = o;
           }}
+          className="modal-input"
           autoFocus
           required
-          errorZ={52}
         />{' '}
-        <DateInput placeholder="date of birth" floatZ={55} required />
+        <DateInput
+          className="modal-input"
+          placeholder="date of birth"
+          required
+        />
       </div>
     );
     modalPush({
@@ -170,7 +175,8 @@ class ModalExample extends React.Component<{ theme: Theme }, { fEmbeddedModal: b
     const children = (
       <div>
         Nice to meet you, {this.refName ? this.refName.getValue() : '?'}!<br />
-        This is some really long text:<br />
+        This is some really long text:
+        <br />
         {LONG_TEXT}
         <br />
         {LONG_TEXT}

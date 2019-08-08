@@ -45,9 +45,9 @@ class FormExample extends React.Component<
   render() {
     const { lang } = this.props;
     return (
-      <div style={exampleStyle}>
+      <div className="example">
         <div className="input-row">
-          <ExampleLabel>Inputs</ExampleLabel>
+          <div className="example-label">Inputs</div>
           <NumberInput
             step="0.1"
             value={null}
@@ -90,9 +90,9 @@ class FormExample extends React.Component<
           <tbody>
             <tr>
               <td style={{ verticalAlign: 'top' }}>
-                <ExampleLabel>
+                <div className="example-label">
                   RadioGroup (flexible labels, clipboard)
-                </ExampleLabel>
+                </div>
                 <div style={flexContainer('row')}>
                   <RadioGroup
                     id="group-a"
@@ -142,7 +142,7 @@ class FormExample extends React.Component<
                 </div>
               </td>
               <td style={{ verticalAlign: 'top', paddingLeft: 10 }}>
-                <ExampleLabel>RangeInput</ExampleLabel>
+                <div className="example-label">RangeInput</div>
                 <div style={{ marginLeft: 5 }}>
                   <RangeInput
                     value={25}
@@ -168,7 +168,7 @@ class FormExample extends React.Component<
         </table>
         <br />
         <div>
-          <ExampleLabel>Input validation</ExampleLabel>
+          <div className="example-label">Input validation</div>
           <TextInput placeholder="no validation" />
           <TextInput placeholder="required (shortcut)" required />
           <TextInput
@@ -238,7 +238,7 @@ class FormExample extends React.Component<
         </div>
         <br />
         <div className="textarea-examples">
-          <ExampleLabel>Textarea (with auto-resize)</ExampleLabel>
+          <div className="example-label">Textarea (with auto-resize)</div>
           <Textarea
             value="En un lugar de la Mancha..."
             // styleOuter={{ display: 'block' }}
@@ -252,11 +252,11 @@ class FormExample extends React.Component<
         </div>
         <br />
         <div>
-          <ExampleLabel>
+          <div className="example-label">
             Select: native, or with inline/dropdown ListPicker
             (keyboard-controlled, shortcuts, clipboard, one/two-stage,
             autoscroll)
-          </ExampleLabel>
+          </div>
           <div>
             <Select value="a" items={NORMAL_OPTIONS} required lang={lang} />
             <Select
@@ -338,10 +338,10 @@ class FormExample extends React.Component<
         </div>
         <br />
         <div>
-          <ExampleLabel>
+          <div className="example-label">
             DateInput: field-only, or with inline/dropdown DateTimePicker
             (keyboard-controlled, clipboard; local for date+time, UTC otherwise)
-          </ExampleLabel>
+          </div>
           <div>
             <DateInput onChange={onChange} lang={lang} style={{ width: 130 }} />&nbsp;&nbsp;
             <DateInput
@@ -534,10 +534,10 @@ class FormExample extends React.Component<
         </div>
         <br />
         <div>
-          <ExampleLabel>
+          <div className="example-label">
             ColorInput: with inline/dropdown ColorPicker (RGB/HSV, alpha,
             clipboard)
-          </ExampleLabel>
+          </div>
           <div style={flexContainer('row')}>
             <ColorInput
               value="dc5400aa"
@@ -569,7 +569,7 @@ class FormExample extends React.Component<
         </div>
         <br />
         <div>
-          <ExampleLabel>Imperative example</ExampleLabel>
+          <div className="example-label">Imperative example</div>
           <TextInput
             ref={this.refInput}
             value="Initial value"

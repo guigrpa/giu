@@ -91,7 +91,7 @@ class BaseTextarea extends React.Component<Props> {
     return (
       <div
         ref={this.registerOuterRef}
-        className={classnames('giu-textarea', this.props.classname)}
+        className={classnames('giu-textarea', this.props.className)}
         id={this.props.id}
       >
         <div
@@ -117,7 +117,7 @@ class BaseTextarea extends React.Component<Props> {
   renderMdl() {
     const { id, curValue, disabled, fFocused } = this.props;
     const otherProps = omit(this.props, FILTERED_OUT_PROPS_MDL);
-    const internalId = `giu-date-input-${id}`;
+    const internalId = id ? `giu-textarea-${id}` : undefined;
     return (
       <div
         ref={this.registerOuterRef}

@@ -64,14 +64,14 @@ class BaseCheckbox extends React.Component<Props> {
     if (!this.props.skipTheme && this.props.theme.id === 'mdl') {
       return this.renderMdl();
     }
-    const { disabled } = this.props;
+    const { id, disabled } = this.props;
     const inputProps = omit(this.props, FILTERED_OUT_PROPS);
-    const internalId = `giu-checkbox-${this.props.id}`;
+    const internalId = id ? `giu-checkbox-${id}` : undefined;
     return (
       <span
         ref={this.props.registerOuterRef}
         className={classnames('giu-checkbox', this.props.className)}
-        id={this.props.id}
+        id={id}
       >
         <input
           ref={this.props.registerFocusableRef}

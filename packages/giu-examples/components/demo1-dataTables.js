@@ -760,12 +760,12 @@ class AllExamples extends React.PureComponent<*, { fModal: boolean }> {
 
   render() {
     return (
-      <div style={exampleStyle}>
-        <ExampleLabel>
+      <div className="example">
+        <div className="example-label">
           DataTable (sort, filter, select/multi-select, fetch more,
           keyboard-controlled, clipboard, manual sort with drag-and-drop,
           LocalStorage persistence...)
-        </ExampleLabel>
+        </div>
         <p>
           DataTable is based on the <b>VirtualScroller</b> component, whose
           primary function is to render only visible rows. These rows can have

@@ -32,11 +32,9 @@ import {
   flexItem,
   AnimatedCounter,
   HeightMeasurer,
-  COLORS,
+  isDark,
 } from 'giu';
 import {
-  ExampleLabel,
-  exampleStyle,
   NORMAL_OPTIONS,
   TALL_OPTIONS,
   WIDE_OPTIONS,
@@ -75,6 +73,7 @@ const EVERYTHING = true;
 class App extends React.Component {
   state = {
     accentColor: 'rgb(76, 144, 87)',
+    accentColorFg: 'white',
   };
 
   // -----------------------------------------------
@@ -86,11 +85,96 @@ class App extends React.Component {
         out = (
           <div>
             <Floats />
-            Test<br />Test<br />Test<br />Test<br />Test<br />Test<br />Test<br />Test<br />Test<br />
-            Test<br />Test<br />Test<br />Test<br />Test<br />Test<br />Test<br />Test<br />Test<br />
-            Test<br />Test<br />Test<br />Test<br />Test<br />Test<br />Test<br />Test<br />Test<br />
-            Test<br />Test<br />Test<br />Test<br />Test<br />Test<br />Test<br />Test<br />Test<br />
-            Test<br />Test<br />Test<br />Test<br />Test<br />Test<br />Test<br />Test<br />Test<br />
+            Test
+            <br />
+            Test
+            <br />
+            Test
+            <br />
+            Test
+            <br />
+            Test
+            <br />
+            Test
+            <br />
+            Test
+            <br />
+            Test
+            <br />
+            Test
+            <br />
+            Test
+            <br />
+            Test
+            <br />
+            Test
+            <br />
+            Test
+            <br />
+            Test
+            <br />
+            Test
+            <br />
+            Test
+            <br />
+            Test
+            <br />
+            Test
+            <br />
+            Test
+            <br />
+            Test
+            <br />
+            Test
+            <br />
+            Test
+            <br />
+            Test
+            <br />
+            Test
+            <br />
+            Test
+            <br />
+            Test
+            <br />
+            Test
+            <br />
+            Test
+            <br />
+            Test
+            <br />
+            Test
+            <br />
+            Test
+            <br />
+            Test
+            <br />
+            Test
+            <br />
+            Test
+            <br />
+            Test
+            <br />
+            Test
+            <br />
+            Test
+            <br />
+            Test
+            <br />
+            Test
+            <br />
+            Test
+            <br />
+            Test
+            <br />
+            Test
+            <br />
+            Test
+            <br />
+            Test
+            <br />
+            Test
+            <br />
             <TextInput
               onChange={onChange}
               errors={['Must be numeric']}
@@ -98,11 +182,96 @@ class App extends React.Component {
               errorAlign="right"
             />
             <br />
-            Test<br />Test<br />Test<br />Test<br />Test<br />Test<br />Test<br />Test<br />Test<br />
-            Test<br />Test<br />Test<br />Test<br />Test<br />Test<br />Test<br />Test<br />Test<br />
-            Test<br />Test<br />Test<br />Test<br />Test<br />Test<br />Test<br />Test<br />Test<br />
-            Test<br />Test<br />Test<br />Test<br />Test<br />Test<br />Test<br />Test<br />Test<br />
-            Test<br />Test<br />Test<br />Test<br />Test<br />Test<br />Test<br />Test<br />Test<br />
+            Test
+            <br />
+            Test
+            <br />
+            Test
+            <br />
+            Test
+            <br />
+            Test
+            <br />
+            Test
+            <br />
+            Test
+            <br />
+            Test
+            <br />
+            Test
+            <br />
+            Test
+            <br />
+            Test
+            <br />
+            Test
+            <br />
+            Test
+            <br />
+            Test
+            <br />
+            Test
+            <br />
+            Test
+            <br />
+            Test
+            <br />
+            Test
+            <br />
+            Test
+            <br />
+            Test
+            <br />
+            Test
+            <br />
+            Test
+            <br />
+            Test
+            <br />
+            Test
+            <br />
+            Test
+            <br />
+            Test
+            <br />
+            Test
+            <br />
+            Test
+            <br />
+            Test
+            <br />
+            Test
+            <br />
+            Test
+            <br />
+            Test
+            <br />
+            Test
+            <br />
+            Test
+            <br />
+            Test
+            <br />
+            Test
+            <br />
+            Test
+            <br />
+            Test
+            <br />
+            Test
+            <br />
+            Test
+            <br />
+            Test
+            <br />
+            Test
+            <br />
+            Test
+            <br />
+            Test
+            <br />
+            Test
+            <br />
           </div>
         );
         break;
@@ -308,12 +477,12 @@ class App extends React.Component {
         break;
       default:
         out = (
-          <div style={style.outer}>
+          <div>
             <Modals />
             <Floats />
             <Notifications />
             <Hints />
-            <div style={{ padding: 10, fontSize: '1.8em', fontWeight: 'bold' }}>
+            <div className="title">
               <a target="_blank" href="http://github.com/guigrpa/giu">
                 Giu
               </a>{' '}
@@ -327,12 +496,13 @@ class App extends React.Component {
                 }}
                 accentColor={this.state.accentColor}
                 onChangeColor={(ev, accentColor) => {
-                  this.setState({ accentColor });
+                  const accentColorFg = isDark(accentColor) ? 'white' : 'black';
+                  this.setState({ accentColor, accentColorFg });
                 }}
               />
             </div>
-            <div style={flexContainer('row')}>
-              <div style={flexItem('1 0 500px')}>
+            <div className="main">
+              <div className="left">
                 {EVERYTHING && <NotificationExample />}
                 {EVERYTHING && <MessageExample />}
                 {EVERYTHING && <IconExample />}
@@ -345,23 +515,26 @@ class App extends React.Component {
                 {EVERYTHING && <ProgressExample />}
                 {EVERYTHING && <DataTableExample lang={lang} />}
               </div>
-              <div style={flexItem('1 0 500px')}>
+              <div className="right">
                 {EVERYTHING && <FormExample lang={lang} />}
                 {EVERYTHING && <FormExample2 />}
                 {EVERYTHING && <AnimatedCounterExample />}
                 {EVERYTHING && <HeightMeasurerExample />}
               </div>
             </div>
-            <div style={{ textAlign: 'right', padding: 10, fontSize: '1.2em' }}>
+            <div className="author">
               by{' '}
               <a target="_blank" href="http://github.com/guigrpa">
                 Guillermo Grau Panea
               </a>{' '}
               2016
             </div>
-            <style jsx global>{`body {
-              --color-accent-bg: ${this.state.accentColor}
-            }`}</style>
+            <style jsx global>{`
+              body {
+                --color-accent-bg: ${this.state.accentColor};
+                --color-accent-fg: ${this.state.accentColorFg};
+              }
+            `}</style>
           </div>
         );
         break;
@@ -390,11 +563,7 @@ const Configs = ({ lang, onChangeLang, accentColor, onChangeColor }) => (
       required
     />
     &nbsp;&nbsp; Theme color:{' '}
-    <ColorInput
-      id="theme-color"
-      value={accentColor}
-      onChange={onChangeColor}
-    />
+    <ColorInput id="theme-color" value={accentColor} onChange={onChangeColor} />
   </span>
 );
 
@@ -446,8 +615,8 @@ class NativeDateInput extends React.Component {
 }
 
 const NotificationExample = () => (
-  <div style={style.example}>
-    <ExampleLabel>Notification (embedded)</ExampleLabel>
+  <div className="example">
+    <div className="example-label">Notification (embedded)</div>
     <Notification
       icon="cog"
       iconSpin
@@ -459,15 +628,15 @@ const NotificationExample = () => (
 );
 
 const MessageExample = () => (
-  <div style={style.example}>
-    <ExampleLabel>LargeMessage</ExampleLabel>
+  <div className="example">
+    <div className="example-label">LargeMessage</div>
     <LargeMessage>No items found.</LargeMessage>
   </div>
 );
 
 const IconExample = () => (
-  <div style={style.example}>
-    <ExampleLabel>Icon</ExampleLabel>
+  <div className="example">
+    <div className="example-label">Icon</div>
     <Icon icon="heart" id="a" /> <Spinner /> <Icon icon="spinner" spin />{' '}
     <Icon icon="arrow-left" id="a" />{' '}
     <Icon icon="arrow-right" onClick={() => notify()} />{' '}
@@ -476,8 +645,8 @@ const IconExample = () => (
 );
 
 const ButtonExample = () => (
-  <div style={style.example}>
-    <ExampleLabel>Button</ExampleLabel>
+  <div className="example">
+    <div className="example-label">Button</div>
     <Button onClick={() => notify('Normal button pressed')}>
       Notify me!
     </Button>{' '}
@@ -491,52 +660,29 @@ const ButtonExample = () => (
 );
 
 const StyleUtilsExample = () => (
-  <div style={style.example}>
-    <ExampleLabel>Style utilities</ExampleLabel>
-    <div style={flexContainer('row')}>
-      <span>Flex left</span>
-      <FlexSpacer />
-      <span>Flex right</span>
+  <div className="example">
+    <div className="example-label">Style utilities</div>
+    <div className="giu-box-shadow" style={{ padding: 3 }}>
+      A box with a shadow
     </div>
-    <div style={flexContainer('row')}>
-      <span>Left</span>
-      <FlexSpacer />
-      <span>Center</span>
-      <FlexSpacer />
-      <span>Right</span>
-    </div>
-    <div className="giu-box-shadow" style={{ padding: 3 }}>A box with a shadow</div>
   </div>
 );
 
-const FlexSpacer = ({ children }) => (
-  <div style={flexItem('1')}>{children}</div>
-);
-
 const DropDownExample = ({ lang }) => (
-  <div style={style.example}>
-    <ExampleLabel>
+  <div className="example">
+    <div className="example-label">
       DropDownMenu (focusable, keyboard-controlled, embedded ListPicker)
-    </ExampleLabel>
-    <DropDownMenu
-      items={NORMAL_OPTIONS}
-      lang={lang}
-      onClickItem={onChangeJson}
-    >
+    </div>
+    <DropDownMenu items={NORMAL_OPTIONS} lang={lang} onClickItem={onChangeJson}>
       <Icon icon="bars" /> Menu
     </DropDownMenu>
-    <DropDownMenu
-      items={TALL_OPTIONS}
-      onClickItem={onChangeJson}
-      accentColor="darkgreen"
-    >
+    <DropDownMenu items={TALL_OPTIONS} onClickItem={onChangeJson}>
       <Icon icon="bullseye" /> Long menu
     </DropDownMenu>
     <DropDownMenu
       items={WIDE_OPTIONS}
       onClickItem={onChangeJson}
       floatAlign="right"
-      accentColor="darkblue"
     >
       <Icon icon="cube" /> Menu to the left
     </DropDownMenu>
@@ -544,8 +690,10 @@ const DropDownExample = ({ lang }) => (
 );
 
 const ScrollingExample = () => (
-  <div style={style.example}>
-    <ExampleLabel>Scrollable (with translateZ(0)) with floats</ExampleLabel>
+  <div className="example">
+    <div className="example-label">
+      Scrollable (with translateZ(0)) with floats
+    </div>
     <div className="inner" onScroll={floatReposition}>
       <DateInput placeholder="date" date time />
       <br />
@@ -591,8 +739,8 @@ class ProgressExample extends React.Component {
   }
   render() {
     return (
-      <div style={style.example}>
-        <ExampleLabel>Progress</ExampleLabel>
+      <div className="example">
+        <div className="example-label">Progress</div>
         <Progress value={this.state.value} />
         <Progress />
       </div>
@@ -601,21 +749,20 @@ class ProgressExample extends React.Component {
 }
 
 class AnimatedCounterExample extends React.Component {
-  state = {
-    value: 125,
-  };
+  state = { value: 125 };
 
   render() {
     return (
-      <div style={style.example}>
-        <ExampleLabel>Animated counter</ExampleLabel>
+      <div className="example">
+        <div className="example-label">Animated counter</div>
         <NumberInput ref="number" value={this.state.value} />{' '}
         <Button onClick={this.onSet}>Set</Button>{' '}
         <AnimatedCounter value={this.state.value} /> (or with custom formatter:{' '}
         <AnimatedCounter
           value={this.state.value}
           formatter={value => (value != null ? `${value.toFixed(2)} €` : '– €')}
-        />)
+        />
+        )
       </div>
     );
   }
@@ -629,8 +776,8 @@ class AnimatedCounterExample extends React.Component {
 }
 
 const HeightMeasurerExample = () => (
-  <div style={style.example}>
-    <ExampleLabel>HeightMeasurer</ExampleLabel>
+  <div className="example">
+    <div className="example-label">HeightMeasurer</div>
     <div style={flexContainer('column', { height: 150 })}>
       <div style={{ height: 30 }}>This takes 30 px</div>
       <div style={flexItem(1)}>
@@ -639,16 +786,6 @@ const HeightMeasurerExample = () => (
     </div>
   </div>
 );
-
-// -----------------------------------------------
-// Styles
-// -----------------------------------------------
-const style = {
-  outer: {
-    fontSize: 12,
-  },
-  example: exampleStyle,
-};
 
 // -----------------------------------------------
 // Public
@@ -679,22 +816,16 @@ class AppWrapper extends React.Component {
             href={`${baseUrl}/static/deps/typeface-gloria-hallelujah/index.css`}
           />
           <link
+            rel="stylesheet"
+            href={`${baseUrl}/static/stylesheets/common.css`}
+          />
+          <link
             rel="icon"
             type="image/ico"
             href={`${baseUrl}/static/favicon.ico`}
           />
         </Head>
         <App />
-        <style jsx global>{`
-          body {
-            font-family: 'Futura Std', Tahoma, sans-serif;
-            font-size: 12px;
-            padding: 10px;
-            margin: 0;
-            background: #e8f3ef;
-            // --color-accent-bg: gray;
-          }
-        `}</style>
       </div>
     );
   }

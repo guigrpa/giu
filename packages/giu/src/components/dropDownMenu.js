@@ -39,13 +39,16 @@ class DropDownMenu extends React.PureComponent<Props, State> {
 
   // ==========================================
   render() {
+    const { className, id } = this.props;
     return (
       <span
-        className={classnames('giu-drop-down-menu', this.props.className)}
+        className={classnames('giu-drop-down-menu', className)}
         id={this.props.id}
       >
         <Select
           ref={this.refSelect}
+          className={className ? `${className}-drop-down-menu` : undefined}
+          id={id ? `${id}-drop-down-menu` : undefined}
           type="dropDownPicker"
           items={this.props.items}
           lang={this.props.lang}

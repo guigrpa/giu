@@ -1,10 +1,20 @@
 # Roadmap
 
 * Use plain old CSS stylesheets (customisable!), instead of element CSS:
+    * Add the following rules to giu.css by default:
+.giu-float.giu-float-error-modal-input,
+.giu-float.giu-float-error-modal-input-drop-down-menu {
+  z-index: 53;
+}
+.giu-float.giu-float-modal-input,
+.giu-float.giu-float-modal-input-drop-down-menu {
+  z-index: 55;
+}
+
     * Clean up examples, using CSS
-        * Fix zIndex, esp. in modals
         * Fix field widths in datatable headers
         * Review MDL
+        * Also fix index.js
     * Check Flow errors
     * Remove flexContainer, flexItem if possible
 
