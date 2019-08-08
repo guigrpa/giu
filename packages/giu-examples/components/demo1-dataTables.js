@@ -247,13 +247,6 @@ const DATA_TABLE_ALT_LAYOUT_COLS = [
           <Textarea
             value={item.notes}
             onChange={(ev, value) => onChange(id, 'notes', value)}
-            style={{
-              color: 'inherit',
-              backgroundColor: 'inherit',
-            }}
-            // styleOuter={{
-            //   display: 'block',
-            // }}
             skipTheme
           />
         </div>
@@ -350,12 +343,27 @@ class DevelopmentExample extends React.Component<*, *> {
           allowSelect
           multipleSelection
           onChangeSelection={this.logArgs}
-          styleHeader={style.header}
-          styleRow={style.row}
           animated
           {...otherProps}
         />
         <style jsx global>{`
+          /* Header */
+          #datatable-dev .giu-data-table-header,
+          #datatable-dev-alt .giu-data-table-header {
+            color: white;
+            background-color: gray;
+            border-bottom: 1px solid gray;
+          }
+          #datatable-dev svg,
+          #datatable-dev-alt svg {
+            stroke: white;
+          }
+          /* Rows */
+          #datatable-dev .giu-data-table-row,
+          #datatable-dev-alt .giu-data-table-row {
+            border-bottom: 1px solid #ccc;
+          }
+          /* Columns */
           #datatable-dev .giu-data-table-col-id {
             flex: 0 0 40px;
           }
@@ -449,17 +457,6 @@ class DevelopmentExample extends React.Component<*, *> {
     console.log(...args);
   };
 }
-
-const style = {
-  header: {
-    color: 'white',
-    backgroundColor: 'gray',
-    borderBottom: '1px solid gray',
-  },
-  row: {
-    borderBottom: '1px solid #ccc',
-  },
-};
 
 // -----------------------------------------------
 // Example with custom sorting and pagination

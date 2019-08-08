@@ -6,9 +6,10 @@
         * Also fix index.js
 
         * Fix manual sorting in "CustomSortPaginateExample"
-        * Fix ghost image while dragging, with custom CSS
+        * Fix ghost image while dragging, with custom CSS. Also figure out about "sortableHandle"'s need to have inline styles. Try bumping sortable-hoc
     * Check Flow errors
     * Remove flexContainer, flexItem if possible
+    * [ ] Check DataTable behaviour on iOS, especially dragging
 
 * **Bugs**
     * `[Intervention] Unable to preventDefault inside passive event listener due to target being treated as passive. See <URL>` while mouse-wheeling in a Custom Select
@@ -27,7 +28,6 @@
 
 * [ ] Add copy&paste to RangePicker
 * [ ] _Bug_ ListPicker on Windows incorrectly aligns (vertically) items and shortcuts (it _is_ correct in the main doc page)
-* [ ] Check DataTable behaviour on iOS, especially dragging
 
 Long-term:
 
