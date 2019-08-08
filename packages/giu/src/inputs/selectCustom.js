@@ -16,7 +16,7 @@ import {
   unregisterShortcut,
 } from '../gral/keys';
 import type { Choice, KeyboardEventPars } from '../gral/types';
-import { isAncestorNode, memoize } from '../gral/helpers';
+import { isAncestorNode, memoize, prefixClasses } from '../gral/helpers';
 import Input from '../hocs/input';
 import type { InputHocPublicProps } from '../hocs/input';
 import { ListPicker, LIST_SEPARATOR_KEY } from './listPicker';
@@ -203,7 +203,7 @@ class BaseSelectCustom extends React.Component<Props> {
       const floatOptions = {
         className: classnames(
           'giu-float-select-custom',
-          className ? `giu-float-${className}` : undefined
+          prefixClasses(className, 'giu-float')
         ),
         id: id ? `giu-float-${id}` : undefined,
         position: floatPosition,

@@ -57,12 +57,3 @@ body {
 .giu-modal#modal-introduction .giu-modal-box {
   width: 500px;
 }
-
-.giu-float.giu-float-error-modal-input,
-.giu-float.giu-float-error-modal-input-drop-down-menu {
-  z-index: 53;
-}
-.giu-float.giu-float-modal-input,
-.giu-float.giu-float-modal-input-drop-down-menu {
-  z-index: 55;
-}

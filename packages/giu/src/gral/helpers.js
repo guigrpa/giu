@@ -197,6 +197,22 @@ const memoize = (fn: Function) => {
   };
 };
 
+const prefixClasses = (className, prefix) =>
+  className
+    ? className
+        .split(/\s+/)
+        .map(o => `${prefix}-${o}`)
+        .join(' ')
+    : undefined;
+
+const sufixClasses = (className, sufix) =>
+  className
+    ? className
+        .split(/\s+/)
+        .map(o => `${o}-${sufix}`)
+        .join(' ')
+    : undefined;
+
 // ==========================================
 // Public
 // ==========================================
@@ -214,6 +230,8 @@ export {
   simplifyString,
   isAncestorNode,
   memoize,
+  prefixClasses,
+  sufixClasses,
 
   // delay, waitUntil, isWaiting,
 };

@@ -4,7 +4,7 @@ import React from 'react';
 import { omit, set as timmSet, addDefaults } from 'timm';
 import classnames from 'classnames';
 import moment from '../vendor/moment';
-import { cancelEvent, stopPropagation } from '../gral/helpers';
+import { cancelEvent, stopPropagation, prefixClasses } from '../gral/helpers';
 import { KEYS, IS_IOS, IS_MOBILE_OR_TABLET } from '../gral/constants';
 import {
   dateTimeFormat,
@@ -396,7 +396,7 @@ class BaseDateInput extends React.Component<Props, State> {
       const floatOptions = {
         className: classnames(
           'giu-float-date-input',
-          className ? `giu-float-${className}` : undefined
+          prefixClasses(className, 'giu-float')
         ),
         id: id ? `giu-float-${id}` : undefined,
         position: floatPosition,

@@ -596,6 +596,16 @@ row is drawn above the modal, not below */
   font-family: var(--font-mdl);
 }
 
+/* Convention: use 'modal-input' as one of your input classes
+  if the input is in a modal. For nested modals, you'll have to
+  manage z-indexes yourself -- just follow the example */
+.giu-float.giu-float-error-modal-input {
+  z-index: 53;
+}
+.giu-float.giu-float-modal-input {
+  z-index: 55;
+}
+
 /* ======================== */
 /* Inputs */
 /* ======================== */

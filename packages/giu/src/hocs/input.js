@@ -5,7 +5,7 @@
 import * as React from 'react';
 import { omit, merge } from 'timm';
 import classnames from 'classnames';
-import { cancelEvent, stopPropagation } from '../gral/helpers';
+import { cancelEvent, stopPropagation, prefixClasses } from '../gral/helpers';
 import { IS_IOS } from '../gral/constants';
 import { scrollIntoView } from '../gral/visibility';
 import { isRequired } from '../gral/validators';
@@ -320,7 +320,7 @@ class Input extends React.PureComponent<Props> {
       const floatOptions = {
         className: classnames(
           'giu-float-error',
-          className ? `giu-float-error-${className}` : undefined
+          prefixClasses(className, 'giu-float-error')
         ),
         id: id ? `giu-float-error-${id}` : undefined,
         ...this.calcFloatPosition(),

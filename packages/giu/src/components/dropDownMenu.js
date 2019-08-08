@@ -47,7 +47,7 @@ class DropDownMenu extends React.PureComponent<Props, State> {
       >
         <Select
           ref={this.refSelect}
-          className={className ? `${className}-drop-down-menu` : undefined}
+          className={className}
           id={id ? `${id}-drop-down-menu` : undefined}
           type="dropDownPicker"
           items={this.props.items}

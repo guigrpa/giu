@@ -5,7 +5,7 @@ import tinycolor from 'tinycolor2';
 import classnames from 'classnames';
 import { KEYS, IS_IOS, IS_MOBILE_OR_TABLET } from '../gral/constants';
 import type { KeyboardEventPars } from '../gral/types';
-import { isAncestorNode } from '../gral/helpers';
+import { isAncestorNode, prefixClasses } from '../gral/helpers';
 import Input from '../hocs/input';
 import type { InputHocPublicProps } from '../hocs/input';
 import { floatAdd, floatDelete, floatUpdate } from '../components/floats';
@@ -146,7 +146,7 @@ class BaseColorInput extends React.Component<Props> {
       const floatOptions = {
         className: classnames(
           'giu-float-color-input',
-          className ? `giu-float-${className}` : undefined
+          prefixClasses(className, 'giu-float')
         ),
         id: id ? `giu-float-${id}` : undefined,
         position: floatPosition,
