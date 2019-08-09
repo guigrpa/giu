@@ -2,8 +2,6 @@
 
 * Use plain old CSS stylesheets (customisable!), instead of element CSS:
     * Clean up examples, using CSS
-        * Fix manual sorting in "CustomSortPaginateExample"
-
         * Also fix index.js
     * Check Flow errors
     * Remove flexContainer, flexItem if possible

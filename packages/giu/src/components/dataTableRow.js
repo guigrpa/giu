@@ -62,6 +62,7 @@ export type DataTableColumn = {
 // ===============================================================
 type DataTableHeaderProps = {
   cols: Array<DataTableColumn>,
+  dataTableId?: string,
   lang?: string, // just to force-refresh upon update
   commonCellProps?: Object,
   maxLabelLevel: number,
@@ -75,7 +76,10 @@ class DataTableHeader extends React.PureComponent<DataTableHeaderProps> {
   render() {
     return (
       <div
-        className="giu-data-table-header"
+        className={classnames(
+          'giu-data-table-header',
+          prefixClasses(this.props.dataTableId, 'giu-data-table-row')
+        )}
         style={style.headerOuter(this.props)}
       >
         {this.props.cols.map(this.renderColHeader, this)}
@@ -107,9 +111,9 @@ class DataTableHeader extends React.PureComponent<DataTableHeaderProps> {
         className={classnames(
           'giu-data-table-header-cell',
           'giu-data-table-cell',
+          { 'giu-data-table-cell-hidden': col.hidden },
           `giu-data-table-col-${attr}`,
-          `giu-data-table-header-cell-level-${col.labelLevel || 0}`,
-          { 'giu-data-table-cell-hidden': col.hidden }
+          `giu-data-table-header-cell-level-${col.labelLevel || 0}`
         )}
       >
         {labelLevel && this.renderCallOut(labelLevel)}
@@ -233,6 +237,7 @@ class DataTableRow extends React.PureComponent<DataTableRowProps> {
         key={attr}
         className={classnames(
           'giu-data-table-cell',
+          { 'giu-data-table-cell-hidden': col.hidden },
           `giu-data-table-col-${attr}`,
           col.className
         )}

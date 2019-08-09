@@ -895,26 +895,6 @@ const VariableHeightExample = () => {
 };
 
 // -----------------------------------------------
-// Example with uniform row heights
-// -----------------------------------------------
-// const UniformHeightsExample = () => {
-//   const itemsById = sampleDataTableItems(1000, 0);
-//   return (
-//     <DataTable
-//       itemsById={itemsById}
-//       cols={[
-//         { attr: 'id' },
-//         { attr: 'name', minWidth: 100, flexGrow: 1, style: style.cellWithEllipsis },
-//         { attr: 'phone', minWidth: 150, flexGrow: 1, style: style.cellWithEllipsis },
-//       ]}
-//       shownIds={Object.keys(itemsById)}
-//       height={100}
-//       uniformRowHeight
-//     />
-//   );
-// };
-
-// -----------------------------------------------
 // Public
 // -----------------------------------------------
 export default AllExamples;
