@@ -1,8 +1,6 @@
 # Roadmap
 
 * Use plain old CSS stylesheets (customisable!), instead of element CSS:
-    * iOS:
-        - DateInput in datatable, fix color of text in drop-down picker
     * Check Flow errors
 
 * Solve iOS bugs:

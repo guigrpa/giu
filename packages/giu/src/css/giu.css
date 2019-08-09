@@ -290,6 +290,8 @@ row is drawn above the modal, not below */
   width: 0;
   height: 0;
   z-index: 5;
+  background-color: white;
+  color: black;
 }
 
 .giu-float-inner {
@@ -823,6 +825,8 @@ row is drawn above the modal, not below */
   position: absolute;
   z-index: 5;
   max-height: 400px;
+  background-color: white;
+  color: black;
 }
 .giu-ios-float-wrapper-above {
   bottom: 100%;
