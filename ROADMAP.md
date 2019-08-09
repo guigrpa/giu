@@ -3,6 +3,9 @@
 * Use plain old CSS stylesheets (customisable!), instead of element CSS:
     * Clean up examples, using CSS
         * Also fix index.js
+    * Update marked
+    * Check in Firefox, Safari
+    * Check in iOS
     * Check Flow errors
     * Remove flexContainer, flexItem if possible
     * [ ] Check DataTable behaviour on iOS, especially dragging
