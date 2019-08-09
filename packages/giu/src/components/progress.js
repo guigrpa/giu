@@ -49,6 +49,7 @@ class Progress extends React.PureComponent<Props> {
       <progress
         className={classnames('giu-progress', this.props.className)}
         id={this.props.id}
+        value={this.props.value}
       />
     );
   }
@@ -63,6 +64,7 @@ class Progress extends React.PureComponent<Props> {
           this.props.className
         )}
         id={this.props.id}
+        value={this.props.value}
       />
     );
   }

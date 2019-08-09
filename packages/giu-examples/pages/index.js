@@ -280,7 +280,6 @@ class InputIntroAge extends React.Component {
           placeholder="age"
           required
           validators={[isGte(18)]}
-          style={{ width: 80 }}
         />{' '}
         <Button
           onClick={() =>
@@ -329,8 +328,7 @@ class InputTypes extends React.Component {
             : <NumberInput step="0.1" />
           </li>
           <li>
-            <a href="#dateinput">DateInput</a>:{' '}
-            <DateInput time seconds style={{ width: 220 }} />
+            <a href="#dateinput">DateInput</a>: <DateInput time seconds />
           </li>
           <li>
             <a href="#checkbox">Checkbox</a>:{' '}
@@ -370,24 +368,14 @@ class InputTypes extends React.Component {
             <a href="#textinput-passwordinput-numberinput-rangeinput-textarea">
               RangeInput
             </a>
-            :{' '}
-            <RangeInput
-              value="55"
-              min={0}
-              max={100}
-              step={5}
-              style={{ position: 'relative', top: 4 }}
-            />
+            : <RangeInput value="55" min={0} max={100} step={5} />
           </li>
           <li>
             <a href="#textinput-passwordinput-numberinput-rangeinput-textarea">
               Textarea
             </a>{' '}
             (auto-resizing):
-            <Textarea
-              placeholder="Write something really long..."
-              style={{ minHeight: '1.8em' }}
-            />
+            <Textarea placeholder="Write something really long..." />
           </li>
         </ul>
       </div>
@@ -482,7 +470,6 @@ const ValidationCustomValidator = () => (
         val =>
           val.toLowerCase() === 'unicorn' ? undefined : "must be a 'unicorn'",
       ]}
-      style={{ width: 250 }}
     />
     <TextInput
       placeholder="custom promise validator"
@@ -499,38 +486,9 @@ const ValidationCustomValidator = () => (
             )
           ),
       ]}
-      style={{ width: 250 }}
     />
   </CenteredFlex>
 );
-
-// class InputValidation extends React.Component {
-//   render() {
-//     return (
-//       <div>
-//         <p>And you can provide your own validators, synchronous or asynchronous (Promise):</p>
-//         <div style={{ textAlign: 'center' }}>
-//           <TextInput placeholder="custom sync validator"
-//             required validators={[
-//               o => (o.toLowerCase() === 'unicorn' ? undefined : 'must be \'unicorn\''),
-//             ]}
-//             style={{ width: 250 }}
-//           /><br />
-//           <TextInput placeholder="custom promise validator"
-//             required validators={[
-//               o => new Promise((resolve) =>
-//                 setTimeout(() =>
-//                   (o.toLowerCase() === 'unicorn' ? resolve(undefined) : resolve('checked the database; must be \'unicorn\''))
-//                 , 1000)
-//               ),
-//             ]}
-//             style={{ width: 250 }}
-//           />
-//         </div>
-//       </div>
-//     );
-//   }
-// }
 
 class ImperativeApi extends React.Component {
   refInput: any = React.createRef();
@@ -566,34 +524,16 @@ class ImperativeApi extends React.Component {
 
 const InputsSimple = () => (
   <div>
-    <CenteredFlex>
-      <div>
-        <TextInput placeholder="TextInput" />
-        <br />
-        <PasswordInput placeholder="PasswordInput" />
-        <br />
-        <NumberInput step="5" placeholder="NumberInput" />
-        <br />
-        <RangeInput
-          value={55}
-          min={0}
-          max={100}
-          step={5}
-          style={{ width: '100%', marginTop: 4 }}
-        />
-        <Textarea placeholder="Textarea" style={{ minHeight: 32 }} />
-      </div>
-      <div>
-        <RangeInput
-          value={55}
-          min={0}
-          max={100}
-          step={5}
-          vertical
-          style={{ height: 150, width: 25 }}
-        />
-      </div>
-    </CenteredFlex>
+    <Centered>
+      <TextInput placeholder="TextInput" />
+      <br />
+      <PasswordInput placeholder="PasswordInput" />
+      <br />
+      <NumberInput step="5" placeholder="NumberInput" />
+      <br />
+      <RangeInput value={55} min={0} max={100} step={5} />
+      <Textarea placeholder="Textarea" />
+    </Centered>
   </div>
 );
 
@@ -1029,7 +969,6 @@ class ModalDemo extends React.Component {
       children,
       buttons: [{ label: 'Back', onClick: modalPop, defaultButton: true }],
       onEsc: modalPop,
-      style: { width: 500 },
     });
   }
 }
@@ -1160,7 +1099,7 @@ class LargeMessages extends React.Component {
       default:
         break;
     }
-    return <LargeMessage style={{ minHeight: 110 }}>{el}</LargeMessage>;
+    return <LargeMessage>{el}</LargeMessage>;
   }
 }
 
