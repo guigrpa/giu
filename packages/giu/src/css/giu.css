@@ -264,7 +264,7 @@ row is drawn above the modal, not below */
 .giu-drop-down-menu-title {
   display: inline-block;
   cursor: pointer;
-  padding: 3px 6px;
+  padding: 2px 6px;
 }
 
 .giu-drop-down-menu-title.giu-drop-down-menu-title-selected {
