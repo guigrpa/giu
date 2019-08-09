@@ -5,6 +5,8 @@
 /* eslint-disable react/prefer-stateless-function */
 import React from 'react';
 import {
+  Icon,
+  Spinner,
   TextInput,
   PasswordInput,
   NumberInput,
@@ -17,6 +19,7 @@ import {
   Textarea,
   Select,
   Button,
+  DropDownMenu,
   isRequired,
   isEmail,
   isDate,
@@ -34,7 +37,7 @@ class FormExample extends React.Component<*, *> {
   state = { fixedDate: new Date() };
 
   render() {
-    const { lang } = this.props;
+    const { lang, paragraphExample } = this.props;
     return (
       <div className="example">
         <BasicInputs />
@@ -52,6 +55,8 @@ class FormExample extends React.Component<*, *> {
         <ColorInputs />
         <br />
         <ImperativeExample />
+        <br />
+        {paragraphExample && <ParagraphExample />}
       </div>
     );
   }
@@ -617,5 +622,28 @@ class ImperativeExample extends React.Component<*> {
     );
   }
 }
+
+const ParagraphExample = () => (
+  <div style={{ color: 'blue' }}>
+    <div className="example-label">Inputs in a paragraph</div>
+    <p>
+      Here is a text input <TextInput />, a date input <DateInput /> and{' '}
+      <Checkbox id="checkbox-in-a-paragraph" label="a checkbox" />. Now
+      let&apos;s see a native select <Select items={NORMAL_OPTIONS} /> and a
+      custom select: <Select items={NORMAL_OPTIONS} type="dropDownPicker" />.
+      Are all correctly baseline-aligned? Now we also check what happens if we
+      insert{' '}
+      <DropDownMenu items={NORMAL_OPTIONS}>
+        <b>a drop-down menu</b>
+      </DropDownMenu>{' '}
+      and a{' '}
+      <Button plain>
+        <b>plain button</b>
+      </Button>
+      , an <Icon icon="cog" /> icon or a <Spinner /> spinner. Finally, we add a
+      color input <ColorInput value="#11501388" />.
+    </p>
+  </div>
+);
 
 export default FormExample;

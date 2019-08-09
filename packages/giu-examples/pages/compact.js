@@ -516,7 +516,7 @@ class App extends React.Component {
                 {EVERYTHING && <DataTableExample lang={lang} />}
               </div>
               <div className="right">
-                {EVERYTHING && <FormExample lang={lang} />}
+                {EVERYTHING && <FormExample lang={lang} paragraphExample />}
                 {EVERYTHING && <FormExample2 />}
                 {EVERYTHING && <AnimatedCounterExample />}
                 {EVERYTHING && <HeightMeasurerExample />}
