@@ -313,17 +313,20 @@ class InputTypes extends React.Component {
           <li>
             <a href="#textinput-passwordinput-numberinput-rangeinput-textarea">
               TextInput
-            </a>: <TextInput />
+            </a>
+            : <TextInput />
           </li>
           <li>
             <a href="#textinput-passwordinput-numberinput-rangeinput-textarea">
               PasswordInput
-            </a>: <PasswordInput />
+            </a>
+            : <PasswordInput />
           </li>
           <li>
             <a href="#textinput-passwordinput-numberinput-rangeinput-textarea">
               NumberInput
-            </a>: <NumberInput step="0.1" />
+            </a>
+            : <NumberInput step="0.1" />
           </li>
           <li>
             <a href="#dateinput">DateInput</a>:{' '}
@@ -348,14 +351,17 @@ class InputTypes extends React.Component {
           <li>
             <a href="#radiogroup">RadioGroup</a>:
             <div>
-              <RadioGroup id="group-example-a" items={getExampleItems()} value="cherries" />
+              <RadioGroup
+                id="group-example-a"
+                items={getExampleItems()}
+                value="cherries"
+              />
             </div>
           </li>
           <li>
             <a href="#colorinput">ColorInput</a>:{' '}
-            <ColorInput value="aadc54ab" /> (<a href="#color-inputs">
-              more details
-            </a>)
+            <ColorInput value="aadc54ab" /> (
+            <a href="#color-inputs">more details</a>)
           </li>
           <li>
             <a href="#fileinput">FileInput</a>: <FileInput />
@@ -363,7 +369,8 @@ class InputTypes extends React.Component {
           <li>
             <a href="#textinput-passwordinput-numberinput-rangeinput-textarea">
               RangeInput
-            </a>:{' '}
+            </a>
+            :{' '}
             <RangeInput
               value="55"
               min={0}
@@ -651,7 +658,8 @@ class DateInputs extends React.Component {
           If you use{' '}
           <a href="https://github.com/moment/moment">
             <i>moment</i>
-          </a>, your date picker and date/time formats will be automatically
+          </a>
+          , your date picker and date/time formats will be automatically
           translated when you choose a different locale, e.g.{' '}
           <code>moment.locale('es')</code>:
         </p>
@@ -729,10 +737,12 @@ class DateInputs extends React.Component {
           one (with or without second hand) and a digital one
           {IS_IOS && (
             <span>
-              (<i>
+              (
+              <i>
                 note that, by default, Giu pickers are replaced by the native
                 HTML ones on iOS.
-              </i>)
+              </i>
+              )
             </span>
           )}
           :
@@ -766,30 +776,6 @@ class DateInputs extends React.Component {
             utc={false}
             seconds
             value={initialDate}
-            lang={lang}
-            todayName={todayName}
-          />
-        </CenteredFlex>
-
-        <p>Customise your picker&#39;s accent color:</p>
-
-        <CenteredFlex>
-          <DateInput
-            type="inlinePicker"
-            time
-            seconds
-            value={initialDate}
-            accentColor="olive"
-            lang={lang}
-            todayName={todayName}
-          />
-          <DateInput
-            type="inlinePicker"
-            time
-            seconds
-            analogTime={false}
-            value={initialDate}
-            accentColor="lightgreen"
             lang={lang}
             todayName={todayName}
           />
@@ -880,25 +866,6 @@ const Selects = () => (
       />
     </CenteredFlex>
 
-    <p>Customise your picker's accent color:</p>
-
-    <CenteredFlex>
-      <Select
-        type="inlinePicker"
-        items={getExampleItems({ fSeparator: true })}
-        value="blueberries"
-        required
-        accentColor="olive"
-      />
-      <Select
-        type="inlinePicker"
-        items={getExampleItems({ fSeparator: true })}
-        value="blueberries"
-        required
-        accentColor="lightgreen"
-      />
-    </CenteredFlex>
-
     <p>And this is what disabled Selects look like:</p>
 
     <CenteredFlex style={{ alignItems: 'flex-start' }}>
@@ -922,7 +889,11 @@ const Selects = () => (
 
 const RadioGroups = () => (
   <CenteredFlex>
-    <RadioGroup id="group-example-zzz" items={getExampleItems()} value="cherries" />
+    <RadioGroup
+      id="group-example-zzz"
+      items={getExampleItems()}
+      value="cherries"
+    />
   </CenteredFlex>
 );
 
@@ -943,13 +914,6 @@ const ColorInputs = () => (
         <ColorInput value="aa66be52" inlinePicker />
       </CenteredFlex>
     </div>
-
-    <p>Customise your picker's accent color:</p>
-
-    <CenteredFlex>
-      <ColorInput value="aabe5282" inlinePicker accentColor="olive" />
-      <ColorInput value="aabe5282" inlinePicker accentColor="lightgreen" />
-    </CenteredFlex>
 
     <p>And this is what disabled ColorInputs look like:</p>
 
@@ -990,7 +954,8 @@ class DropDownMenus extends React.Component {
             })
           }
         >
-          <Icon icon="shopping-basket" />&nbsp; Which fruit?
+          <Icon icon="shopping-basket" />
+          &nbsp; Which fruit?
         </DropDownMenu>
       </Centered>
     );
@@ -1002,7 +967,8 @@ class ModalDemo extends React.Component {
     return (
       <Centered>
         <Button onClick={() => this.addModal()}>
-          <Icon icon="comments" />&nbsp; Let&#39;s talk!
+          <Icon icon="comments" />
+          &nbsp; Let&#39;s talk!
         </Button>
       </Centered>
     );
@@ -1048,7 +1014,8 @@ class ModalDemo extends React.Component {
     const title = name ? `Nice to meet you, ${name}!` : 'Nice to meet you!';
     const children = (
       <div>
-        Modals can be scrolled:<br />
+        Modals can be scrolled:
+        <br />
         <br />
         <p>{LONG_TEXT}</p>
         <p>{LONG_TEXT}</p>
@@ -1102,7 +1069,8 @@ class HintDemo extends React.Component {
     return (
       <span ref="buttonShowHint">
         <Button onClick={() => hintShow('hintExample', true)}>
-          <Icon icon="hand-scissors-o" />&nbsp; Show me an example
+          <Icon icon="hand-scissors-o" />
+          &nbsp; Show me an example
         </Button>
       </span>
     );
@@ -1120,7 +1088,8 @@ const Buttons = ({ fIncludeDisabled }) => (
       }
     >
       <Icon icon="lightbulb-o" /> Inspire me!
-    </Button>&nbsp;&nbsp;
+    </Button>
+    &nbsp;&nbsp;
     <Button
       onClick={() =>
         createNotif({
@@ -1132,18 +1101,24 @@ const Buttons = ({ fIncludeDisabled }) => (
       plain
     >
       OK, thanks!
-    </Button>&nbsp;&nbsp;
+    </Button>
+    &nbsp;&nbsp;
     {fIncludeDisabled && <Button disabled>I&#39;m disabled</Button>}
   </Centered>
 );
 
 const Icons = () => (
   <Centered>
-    <Icon size="2x" icon="globe" />&nbsp;&nbsp;
-    <Icon size="2x" icon="group" />&nbsp;&nbsp;
-    <Icon size="2x" icon="hand-spock-o" />&nbsp;&nbsp;
-    <Icon size="2x" icon="music" />&nbsp;&nbsp;
-    <Icon size="2x" icon="cog" spin />&nbsp;&nbsp;
+    <Icon size="2x" icon="globe" />
+    &nbsp;&nbsp;
+    <Icon size="2x" icon="group" />
+    &nbsp;&nbsp;
+    <Icon size="2x" icon="hand-spock-o" />
+    &nbsp;&nbsp;
+    <Icon size="2x" icon="music" />
+    &nbsp;&nbsp;
+    <Icon size="2x" icon="cog" spin />
+    &nbsp;&nbsp;
     <Spinner size="2x" />
   </Centered>
 );

@@ -20,10 +20,10 @@ Online demos: [an extremely compact one](http://guigrpa.github.io/giu/compact/) 
     + Smart positioning of floating pickers (date and color inputs, drop-down menus, validation errors, etc.)
     + Ultra-customisable [date/time inputs](#dateinput)
     + Textarea with auto-resize
-    + Uniform, lightweight styles that can easily be overriden
+    + Uniform, lightweight styles that can easily be overriden via CSS
     * An extremely flexible [data table](#datatable) component
     + ... and a gorgeous [analog time picker](#dateinput)!
-- Simple theme settings: overall style (default vs. Material Design Lite), accent color...
+- Simple theme settings: overall style (default vs. Material Design Lite)...
 - Easy creation of [hint screens](#hint-screens) with dynamically-positioned labels and arrows
 - Lots of [helper functions](#helpers)
 
@@ -267,18 +267,14 @@ this.refAge.revert();
 * Float-related (for all inputs with floating pickers, e.g. Select, DateInput, ColorInput):
     * **floatPosition** *string(`above`|`below`)?*: if unspecified, a suitable position is selected algorithmically
     * **floatAlign** *string(`left`|`right`)? = `left`*: if unspecified, a suitable position is selected algorithmically
-    * **floatZ** *number? = 5*
 * Error-float-related:
     * **errorPosition** *string(`above`|`below`)?*: if unspecified, Giu chooses `below` except if `floatPosition` is specified (it then chooses the opposite position)
     * **errorAlign** *string(`left`|`right`)? = `left`*
-    * **errorZ** *number?*: if unspecified, Giu chooses a suitable z-index algorithmically
 
 
 ### TextInput, PasswordInput, NumberInput, RangeInput, Textarea
 
 [[[demo:inputs-simple]]]
-
-*Note: out of the box, Textarea resizes automatically as needed. You can limit its maximum height by adding a `style` prop: e.g. `style={{ maxHeight: 100 }}`*
 
 [[[./packages/giu/src/inputs/textNumberRangeInput.js]]]
 
@@ -290,7 +286,7 @@ this.refAge.revert();
 
 ### DateInput
 [[[*
-Shown below are some examples of DateInput, one of Giu's most versatile components: date/time/date-time modes, with or without drop-down pickers, inline pickers, custom accent color, digital/analogue time picker, disabled style... Not shown: keyboard navigation, clipboard events.
+Shown below are some examples of DateInput, one of Giu's most versatile components: date/time/date-time modes, with or without drop-down pickers, inline pickers, digital/analogue time picker, disabled style... Not shown: keyboard navigation, clipboard events.
 
 ![DateInput screenshots](https://raw.githubusercontent.com/guigrpa/giu/master/docsPrivate/DateInputs.png)
 
@@ -304,7 +300,7 @@ If you use [*moment*](https://github.com/moment/moment), your date picker and da
 
 ### Select
 [[[*
-Shown below are some examples of Select and its features: `native` and custom (`inlinePicker`|`dropDownPicker`) versions, keyboard shortcuts, custom accent color, disabled style. Not shown: keyboard navigation, clipboard events, automatic scrolling.
+Shown below are some examples of Select and its features: `native` and custom (`inlinePicker`|`dropDownPicker`) versions, keyboard shortcuts, disabled style. Not shown: keyboard navigation, clipboard events, automatic scrolling.
 
 ![Select screenshots](https://raw.githubusercontent.com/guigrpa/giu/master/docsPrivate/Selects2.png)
 
@@ -322,7 +318,7 @@ Shown below are some examples of Select and its features: `native` and custom (`
 
 ### ColorInput
 [[[*
-Shown below are some examples of ColorInput and its features: inline and drop-down versions, RGB and HSV pickers, transparency slider, custom accent color, disabled style. Not shown: clipboard events.
+Shown below are some examples of ColorInput and its features: inline and drop-down versions, RGB and HSV pickers, transparency slider, disabled style. Not shown: clipboard events.
 
 ![ColorInput screenshots](https://raw.githubusercontent.com/guigrpa/giu/master/docsPrivate/ColorInputs.png)
 ]]]

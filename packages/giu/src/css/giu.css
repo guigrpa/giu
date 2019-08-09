@@ -1080,6 +1080,7 @@ row is drawn above the modal, not below */
 /* ------------------------ */
 .giu-select-native {
   font-family: inherit;
+  font-size: inherit;
   font-weight: inherit;
   color: inherit;
 }
