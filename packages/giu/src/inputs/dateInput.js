@@ -231,8 +231,7 @@ class BaseDateInput extends React.Component<Props, State> {
     const { type } = this.props;
     if (type === 'native') return this.renderNativeField();
     if (type === 'inlinePicker') return this.renderInlinePicker();
-    if (IS_IOS && type === 'dropDownPicker') this.renderIosDropDownPicker();
-    return this.renderField({ root: true });
+    return this.renderField({});
   }
 
   renderNativeField() {
@@ -282,56 +281,44 @@ class BaseDateInput extends React.Component<Props, State> {
     );
   }
 
-  renderIosDropDownPicker() {
+  // ==========================================
+  renderField({ hidden }) {
+    if (!hidden && !this.props.skipTheme && this.props.theme.id === 'mdl') {
+      return this.renderFieldMdl();
+    }
+    const { placeholder, date, time, seconds } = this.props;
+    const otherProps = omit(this.props, FILTERED_OUT_PROPS);
     return (
       <span
         className={classnames('giu-date-input', this.props.className)}
         id={this.props.id}
       >
-        {this.renderField({ root: false })}
+        <input
+          ref={this.registerInputRef}
+          className={classnames('giu-input-reset', {
+            'giu-input-disabled': this.props.disabled,
+            'giu-hidden-field': hidden,
+            'giu-hidden-field-ios': hidden && IS_IOS,
+          })}
+          type="text"
+          value={this.props.curValue}
+          {...otherProps}
+          placeholder={placeholder || dateTimeFormat(date, time, seconds)}
+          onFocus={this.onFocus}
+          onBlur={this.onBlur}
+          onCopy={hidden ? this.props.onCopy : undefined}
+          onCut={hidden ? this.props.onCut : undefined}
+          onPaste={hidden ? this.props.onPaste : undefined}
+          onChange={this.props.onChange}
+          onKeyDown={this.onKeyDown}
+          tabIndex={this.props.disabled ? -1 : undefined}
+        />
         {this.renderFloatForIos()}
       </span>
     );
   }
 
-  // ==========================================
-  renderField({ hidden, root }) {
-    if (!hidden && !this.props.skipTheme && this.props.theme.id === 'mdl') {
-      return this.renderFieldMdl({ root });
-    }
-    const { placeholder, date, time, seconds } = this.props;
-    const otherProps = omit(this.props, FILTERED_OUT_PROPS);
-    return (
-      <input
-        ref={this.registerInputRef}
-        className={classnames(
-          'giu-input-reset',
-          {
-            'giu-date-input': root,
-            'giu-input-disabled': this.props.disabled,
-            'giu-hidden-field': hidden,
-            'giu-hidden-field-ios': hidden && IS_IOS,
-          },
-          root ? this.props.className : undefined
-        )}
-        id={root ? this.props.id : undefined}
-        type="text"
-        value={this.props.curValue}
-        {...otherProps}
-        placeholder={placeholder || dateTimeFormat(date, time, seconds)}
-        onFocus={this.onFocus}
-        onBlur={this.onBlur}
-        onCopy={hidden ? this.props.onCopy : undefined}
-        onCut={hidden ? this.props.onCut : undefined}
-        onPaste={hidden ? this.props.onPaste : undefined}
-        onChange={this.props.onChange}
-        onKeyDown={this.onKeyDown}
-        tabIndex={this.props.disabled ? -1 : undefined}
-      />
-    );
-  }
-
-  renderFieldMdl({ root }) {
+  renderFieldMdl() {
     const {
       id,
       curValue,
@@ -347,14 +334,13 @@ class BaseDateInput extends React.Component<Props, State> {
       <div
         ref={this.refMdl}
         className={classnames(
-          { 'giu-date-input': root },
-          'giu-date-input-mdl',
+          'giu-date-input giu-date-input-mdl',
           'mdl-textfield mdl-js-textfield mdl-textfield--floating-label',
           {
             'is-dirty': curValue !== '' || fFocused,
             disabled: this.props.disabled,
           },
-          root ? this.props.className : undefined
+          this.props.className
         )}
         id={id}
       >
@@ -374,6 +360,7 @@ class BaseDateInput extends React.Component<Props, State> {
         <label className="mdl-textfield__label" htmlFor={internalId}>
           {placeholder || dateTimeFormat(date, time, seconds)}
         </label>
+        {this.renderFloatForIos()}
       </div>
     );
   }
@@ -413,6 +400,8 @@ class BaseDateInput extends React.Component<Props, State> {
   }
 
   renderFloatForIos() {
+    if (!IS_IOS) return null;
+    if (this.props.type === 'onlyField') return null;
     if (!this.state.fFloat) return null;
     return (
       <IosFloatWrapper

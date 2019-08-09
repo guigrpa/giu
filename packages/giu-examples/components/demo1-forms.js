@@ -507,16 +507,16 @@ const DateInputs = ({ lang, date }) => (
       />
     </div>
     <style jsx global>{`
-      .date-row .giu-input:nth-child(1) .giu-date-input {
+      .date-row .giu-input:nth-child(1) input {
         width: 130px;
       }
-      .date-row .giu-input:nth-child(2) .giu-date-input {
+      .date-row .giu-input:nth-child(2) input {
         width: 180px;
       }
-      .date-row .giu-input:nth-child(3) .giu-date-input {
+      .date-row .giu-input:nth-child(3) input {
         width: 70px;
       }
-      .date-row .giu-input:nth-child(4) .giu-date-input {
+      .date-row .giu-input:nth-child(4) input {
         width: 70px;
       }
       .date-row > .giu-input {

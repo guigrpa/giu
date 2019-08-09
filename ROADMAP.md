@@ -1,9 +1,12 @@
 # Roadmap
 
 * Use plain old CSS stylesheets (customisable!), instead of element CSS:
-    * Check in iOS:
-        - DateInput with dropDownPicker
+    * iOS:
+        - DateInput in datatable, fix color of text in drop-down picker
     * Check Flow errors
+
+* Solve iOS bugs:
+    * Incorrect backdrop positioning (see Compact > Add modal)
 
 * **Bugs**
     * `[Intervention] Unable to preventDefault inside passive event listener due to target being treated as passive. See <URL>` while mouse-wheeling in a Custom Select
