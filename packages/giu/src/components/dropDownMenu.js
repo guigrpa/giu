@@ -2,6 +2,7 @@
 
 import React from 'react';
 import classnames from 'classnames';
+import type { FloatPosition, FloatAlign } from '../components/floats';
 import type { Choice } from '../gral/types';
 import Select from '../inputs/select';
 
@@ -25,6 +26,8 @@ type Props = {
     ev: SyntheticMouseEvent<*>, // `click` event
     val: any // the item's `value` (as specified in the `items` prop)
   ) => any,
+  floatPosition?: FloatPosition,
+  floatAlign?: FloatAlign,
 };
 /* -- END_DOCS -- */
 
@@ -54,6 +57,8 @@ class DropDownMenu extends React.PureComponent<Props, State> {
           lang={this.props.lang}
           onClickItem={this.onClickItem}
           onCloseFloat={this.closeMenu}
+          floatPosition={this.props.floatPosition}
+          floatAlign={this.props.floatAlign}
           onFocus={this.onFocus}
           onBlur={this.onBlur}
           required
