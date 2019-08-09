@@ -105,7 +105,7 @@ class BaseColorInput extends React.Component<Props> {
       curValue != null ? tinycolor(curValue).toRgbString() : 'transparent';
     return (
       // The `x` text keeps baselines aligned
-      <div
+      <span
         ref={this.registerTitleRef}
         className={classnames(
           'giu-input-reset giu-color-input',
@@ -120,10 +120,10 @@ class BaseColorInput extends React.Component<Props> {
         onClick={this.onClickTitle}
       >
         <span style={{ color: 'transparent' }}>x</span>
-        <div className="giu-color-input-swatch giu-transparency-tiles" />
-        <div className="giu-color-input-swatch" style={{ background }} />
+        <span className="giu-color-input-swatch giu-transparency-tiles" />
+        <span className="giu-color-input-swatch" style={{ background }} />
         {IS_IOS && this.renderFloatForIos()}
-      </div>
+      </span>
     );
   }
 

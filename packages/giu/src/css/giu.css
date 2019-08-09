@@ -669,6 +669,13 @@ row is drawn above the modal, not below */
   left: 16px;
 }
 
+.giu-checkbox-label {
+  font-family: inherit;
+  font-size: inherit;
+  font-weight: inherit;
+  color: inherit;
+}
+
 /* ------------------------ */
 /* ColorInput, ColorPicker */
 /* ------------------------ */
@@ -690,6 +697,7 @@ row is drawn above the modal, not below */
 }
 
 .giu-color-input-swatch {
+  display: block;
   position: absolute;
   top: 4px;
   right: 4px;
