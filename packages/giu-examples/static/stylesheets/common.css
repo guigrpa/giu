@@ -1,6 +1,6 @@
 body {
   font-family: 'Futura Std', Tahoma, sans-serif;
-  font-size: 12px;
+  font-size: 0.7rem;
   padding: 10px;
   margin: 0;
   background: #e8f3ef;
@@ -21,7 +21,7 @@ body {
 
 .title {
   padding: 10px;
-  font-size: 1.8em;
+  font-size: 1.8rem;
   font-weight: bold;
 }
 
@@ -40,5 +40,5 @@ body {
 .author {
   text-align: right;
   padding: 10px;
-  font-size: 1.2em;
+  font-size: 1.2rem;
 }

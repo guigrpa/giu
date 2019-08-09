@@ -22,8 +22,6 @@ import {
   Notification,
   notify as createNotif,
   Hints,
-  flexContainer,
-  flexItem,
   TextInput,
   ColorInput,
   COLORS,
