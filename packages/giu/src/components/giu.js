@@ -15,8 +15,8 @@ type Props = {
   children: any,
 };
 
-const Giu = ({ themeId: id, children }: Props) => {
-  let theme = { id };
+const Giu = ({ themeId, children }: Props) => {
+  let theme = { id: themeId };
   theme = addDefaults(theme, DEFAULT_THEME);
   return (
     <ThemeContext.Provider value={theme}>{children}</ThemeContext.Provider>
