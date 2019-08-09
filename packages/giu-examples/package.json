@@ -19,7 +19,7 @@
     "giu": "*",
     "highlight.js": "^9.11.0",
     "lodash": "^4.17.10",
-    "marked": "^0.5.0",
+    "marked": "^0.7.0",
     "material-design-lite": "^1.3.0",
     "moment": "^2.22.2",
     "next": "^9.0.3",
