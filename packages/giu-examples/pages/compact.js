@@ -673,19 +673,27 @@ const DropDownExample = ({ lang }) => (
     <div className="example-label">
       DropDownMenu (focusable, keyboard-controlled, embedded ListPicker)
     </div>
-    <DropDownMenu items={NORMAL_OPTIONS} lang={lang} onClickItem={onChangeJson}>
-      <Icon icon="bars" /> Menu
-    </DropDownMenu>
-    <DropDownMenu items={TALL_OPTIONS} onClickItem={onChangeJson}>
-      <Icon icon="bullseye" /> Long menu
-    </DropDownMenu>
-    <DropDownMenu
-      items={WIDE_OPTIONS}
-      onClickItem={onChangeJson}
-      floatAlign="right"
-    >
-      <Icon icon="cube" /> Menu to the left
-    </DropDownMenu>
+    <div style={{ display: 'flex' }}>
+      <DropDownMenu
+        items={NORMAL_OPTIONS}
+        lang={lang}
+        onClickItem={onChangeJson}
+      >
+        <Icon icon="bars" /> Menu
+      </DropDownMenu>
+      <DropDownMenu items={TALL_OPTIONS} onClickItem={onChangeJson}>
+        <Icon icon="bullseye" /> Long menu
+      </DropDownMenu>
+      <div className="giu-flex-space" />
+      <DropDownMenu
+        items={WIDE_OPTIONS}
+        onClickItem={onChangeJson}
+        floatPosition="above"
+        floatAlign="right"
+      >
+        <Icon icon="cube" /> Menu above and to the left
+      </DropDownMenu>
+    </div>
   </div>
 );
 
