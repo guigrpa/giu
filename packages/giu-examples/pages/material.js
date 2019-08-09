@@ -41,6 +41,7 @@ import ModalExample from '../components/demo1-modals';
 import HintExample from '../components/demo1-hints';
 import FormExample from '../components/demo1-forms';
 import FormExample2 from '../components/demo1-forms2';
+import 'giu/lib/css/reset.css';
 import 'giu/lib/css/giu.css';
 
 // Protect with try .. catch, since MDL assumes that it lives in the

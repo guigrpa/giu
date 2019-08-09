@@ -135,13 +135,11 @@ class BaseSelectCustom extends React.Component<Props> {
       ref: this.registerTitleRef,
       onClick: this.onClickTitle,
     });
-    return IS_IOS ? (
-      <span className="giu-select-custom-title-wrapper-for-ios">
+    return (
+      <React.Fragment>
         {elTitle}
         {this.renderFloatForIos()}
-      </span>
-    ) : (
-      elTitle
+      </React.Fragment>
     );
   }
 
@@ -179,7 +177,7 @@ class BaseSelectCustom extends React.Component<Props> {
           icon={caretIcon}
           skipTheme
         />
-        {IS_IOS && this.renderFloatForIos()}
+        {this.renderFloatForIos()}
       </span>
     );
   }
@@ -222,6 +220,7 @@ class BaseSelectCustom extends React.Component<Props> {
 
   renderFloatForIos() {
     if (!this.fFloat) return null;
+    if (!IS_IOS) return null;
     return (
       <IosFloatWrapper
         floatPosition={this.props.floatPosition}

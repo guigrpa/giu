@@ -1,12 +1,12 @@
 # Roadmap
 
 * Fix examples:
-    * Why do inputs show at a different font size than normal text in iOS?
+    * Safari: some inputs showing at different size (at least datetime pickers)
+    * Add inline textarea to inputs-in-paragraph example?
 
 --
 * Use plain old CSS stylesheets (customisable!), instead of element CSS:
     * Check Flow errors
-
 
 - Improve support for custom icon fonts (vertical alignment)
 - Update docs to indicate that moment is now optional
