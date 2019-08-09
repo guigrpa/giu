@@ -72,14 +72,14 @@ class DropDownMenu extends React.PureComponent<Props, State> {
 
   renderTitle() {
     return (
-      <div
+      <span
         className={classnames('giu-drop-down-menu-title', {
           'giu-drop-down-menu-title-selected': this.state.fFocused,
         })}
         onMouseDown={this.onMouseDownTitle}
       >
         {this.props.children}
-      </div>
+      </span>
     );
   }
 
