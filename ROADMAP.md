@@ -2,9 +2,11 @@
 
 * Use plain old CSS stylesheets (customisable!), instead of element CSS:
     * Check in Firefox, Safari
-    * Check in iOS
+        - Fix timepickerdigital in Firefox (shows horiz scrollbar)
+        -
+    * Check in iOS:
+        - DateInput with dropDownPicker
     * Check Flow errors
-    * [ ] Check DataTable behaviour on iOS, especially dragging
 
 * **Bugs**
     * `[Intervention] Unable to preventDefault inside passive event listener due to target being treated as passive. See <URL>` while mouse-wheeling in a Custom Select

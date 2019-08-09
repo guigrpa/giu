@@ -878,6 +878,12 @@ row is drawn above the modal, not below */
   align-items: center;
   border: 1px solid transparent;
 }
+/* Chrome-only */
+_::content,
+_:future,
+.giu-list-item {
+  padding: 3px 10px;
+}
 .giu-list-picker-two-stage .giu-list-item:hover {
   border-color: var(--color-accent-bg);
 }
@@ -927,9 +933,15 @@ row is drawn above the modal, not below */
 }
 
 .giu-date-time-picker .giu-list-item {
-  padding: 0px 6px;
+  padding: 0px 23px 0px 6px;
   height: 1.3em;
   cursor: pointer;
+}
+/* Chrome-only */
+_::content,
+_:future,
+.giu-date-time-picker .giu-list-item {
+  padding: 0px 6px;
 }
 
 /* Date-time picker */
