@@ -1,9 +1,6 @@
 # Roadmap
 
 * Use plain old CSS stylesheets (customisable!), instead of element CSS:
-    * Check in Firefox, Safari
-        - Fix timepickerdigital in Firefox (shows horiz scrollbar)
-        -
     * Check in iOS:
         - DateInput with dropDownPicker
     * Check Flow errors
