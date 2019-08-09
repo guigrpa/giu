@@ -2,7 +2,7 @@
 
 import React from 'react';
 import classnames from 'classnames';
-import type { FloatPosition, FloatAlign } from '../components/floats';
+import type { FloatPosition, FloatAlign } from './floats';
 import type { Choice } from '../gral/types';
 import Select from '../inputs/select';
 
