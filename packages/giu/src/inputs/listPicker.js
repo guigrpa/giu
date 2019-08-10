@@ -152,8 +152,6 @@ class ListPicker extends React.PureComponent<Props, State> {
           'giu-list-item-selected': curValue === itemValue,
           'giu-list-item-disabled': itemDisabled,
         })}
-        onMouseEnter={finalDisabled ? undefined : this.onHoverStart}
-        onMouseLeave={finalDisabled ? undefined : this.onHoverStop}
         onMouseDown={cancelEvent}
         onMouseUp={IS_IOS || finalDisabled ? undefined : this.onClickItem}
         onClick={IS_IOS && !finalDisabled ? this.onClickItem : undefined}

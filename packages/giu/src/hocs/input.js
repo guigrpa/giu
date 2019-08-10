@@ -72,7 +72,10 @@ type Props = {
   // Context
   theme: Theme, // passed through unchanged
 
-  // all others are passed through unchanged
+  // all others are passed through unchanged; we define here some,
+  // since they are used in the HOC
+  className?: string,
+  id?: string,
 };
 
 type ChildProps = {

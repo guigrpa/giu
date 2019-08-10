@@ -1,13 +1,8 @@
 # Roadmap
 
-* Fix examples:
-    * Safari: some inputs showing at different size (at least datetime pickers)
-    * Add inline textarea to inputs-in-paragraph example?
+* Publish prerelease, and test with Editorial (for instance)
 
 --
-* Use plain old CSS stylesheets (customisable!), instead of element CSS:
-    * Check Flow errors
-
 - Improve support for custom icon fonts (vertical alignment)
 - Update docs to indicate that moment is now optional
 

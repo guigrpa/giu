@@ -20,10 +20,10 @@ Online demos: [an extremely compact one](http://guigrpa.github.io/giu/compact/) 
     + Smart positioning of floating pickers (date and color inputs, drop-down menus, validation errors, etc.)
     + Ultra-customisable [date/time inputs](#dateinput)
     + Textarea with auto-resize
-    + Uniform, lightweight styles that can easily be overriden
+    + Uniform, lightweight styles that can easily be overriden via CSS
     * An extremely flexible [data table](#datatable) component
     + ... and a gorgeous [analog time picker](#dateinput)!
-- Simple theme settings: overall style (default vs. Material Design Lite), accent color...
+- Simple theme settings: overall style (default vs. Material Design Lite)...
 - Easy creation of [hint screens](#hint-screens) with dynamically-positioned labels and arrows
 - Lots of [helper functions](#helpers)
 
@@ -289,25 +289,22 @@ this.refAge.revert();
 * Float-related (for all inputs with floating pickers, e.g. Select, DateInput, ColorInput):
     * **floatPosition** *string(`above`|`below`)?*: if unspecified, a suitable position is selected algorithmically
     * **floatAlign** *string(`left`|`right`)? = `left`*: if unspecified, a suitable position is selected algorithmically
-    * **floatZ** *number? = 5*
 * Error-float-related:
     * **errorPosition** *string(`above`|`below`)?*: if unspecified, Giu chooses `below` except if `floatPosition` is specified (it then chooses the opposite position)
     * **errorAlign** *string(`left`|`right`)? = `left`*
-    * **errorZ** *number?*: if unspecified, Giu chooses a suitable z-index algorithmically
 
 
 ### TextInput, PasswordInput, NumberInput, RangeInput, Textarea
 
 
 
-*Note: out of the box, Textarea resizes automatically as needed. You can limit its maximum height by adding a `style` prop: e.g. `style={{ maxHeight: 100 }}`*
-
 Props:
 ```js
 type PublicProps = {
   ...$Exact<InputHocPublicProps>, // common to all inputs (check the docs!)
+  className?: string,
+  id?: string,
   disabled?: boolean,
-  style?: Object, // merged with the `input`/`textarea` style
   skipTheme?: boolean,
   vertical?: boolean, // only for RangeInput
   // all others are passed through to the `input` unchanged
@@ -322,18 +319,17 @@ Props:
 ```js
 type PublicProps = {
   ...$Exact<InputHocPublicProps>, // common to all inputs (check the docs!)
-  id?: string,
+  className?: string,
+  id: string,
   label?: React.Node, // React components to be included in the checkbox's `label` element
   disabled?: boolean,
-  styleLabel?: Object, // merged with the `label` style
   skipTheme?: boolean,
-  // all others are passed through to the `input` unchanged
 };
 ```
 
 ### DateInput
 
-Shown below are some examples of DateInput, one of Giu's most versatile components: date/time/date-time modes, with or without drop-down pickers, inline pickers, custom accent color, digital/analogue time picker, disabled style... Not shown: keyboard navigation, clipboard events.
+Shown below are some examples of DateInput, one of Giu's most versatile components: date/time/date-time modes, with or without drop-down pickers, inline pickers, digital/analogue time picker, disabled style... Not shown: keyboard navigation, clipboard events.
 
 ![DateInput screenshots](https://raw.githubusercontent.com/guigrpa/giu/master/docsPrivate/DateInputs.png)
 
@@ -347,6 +343,7 @@ Props:
 ```js
 type PublicProps = {
   ...$Exact<InputHocPublicProps>, // common to all inputs (check the docs!)
+  className?: string,
   id?: string,
   type?: PickerType, // see below (default: 'dropDownPicker')
   // Whether Giu should check for iOS in order to simplify certain components
@@ -369,11 +366,7 @@ type PublicProps = {
   lang?: string,
   floatPosition?: FloatPosition,
   floatAlign?: FloatAlign,
-  floatZ?: number,
-  style?: Object, // merged with the `input` style
-  styleOuter?: Object, // when `type === 'inlinePicker'`, merged with the outermost `span` style
   skipTheme?: boolean,
-  // all others are passed through to the `input` unchanged
 };
 
 type PickerType = 'native' | 'onlyField' | 'inlinePicker' | 'dropDownPicker';
@@ -381,7 +374,7 @@ type PickerType = 'native' | 'onlyField' | 'inlinePicker' | 'dropDownPicker';
 
 ### Select
 
-Shown below are some examples of Select and its features: `native` and custom (`inlinePicker`|`dropDownPicker`) versions, keyboard shortcuts, custom accent color, disabled style. Not shown: keyboard navigation, clipboard events, automatic scrolling.
+Shown below are some examples of Select and its features: `native` and custom (`inlinePicker`|`dropDownPicker`) versions, keyboard shortcuts, disabled style. Not shown: keyboard navigation, clipboard events, automatic scrolling.
 
 ![Select screenshots](https://raw.githubusercontent.com/guigrpa/giu/master/docsPrivate/Selects2.png)
 
@@ -394,6 +387,8 @@ Props:
 export type SelectProps = {
   // Both SelectCustom and SelectNative
   // ----------------------------------
+  className?: string,
+  id?: string,
   type: SelectPickerType, // see below (default: 'native')
   // Items with the following attributes:
   // - **value** *any*: any value that can be converted to JSON. Values should be unique
@@ -407,9 +402,6 @@ export type SelectProps = {
   // enabling this flag disables the addition of a `null` option to the `items` list
   required?: boolean,
   disabled?: boolean,
-  // Style is merged with the outermost `div` style (if `type` is `inlinePicker`),
-  // or with the `input` style (if `type` is `native`)
-  style?: Object,
 
   // SelectCustom only
   // -----------------
@@ -418,16 +410,10 @@ export type SelectProps = {
   onCloseFloat?: Function,
   floatPosition?: FloatPosition,
   floatAlign?: FloatAlign,
-  floatZ?: number,
-  styleTitle?: Object, // merged with the title span
   // When enabled, two different visual styles are applied
   // to an item depending on whether it is just *hovered* or also *selected*. If disabled,
   // a single style is used to highlight the selected or the hovered item
   twoStageStyle?: boolean,
-
-  // SelectNative only
-  // -----------------
-  // All other props are passed through to the `select` unchanged
 };
 
 export type SelectPickerType = 'native' | 'inlinePicker' | 'dropDownPicker';
@@ -455,6 +441,7 @@ Props:
 ```js
 type PublicProps = {
   ...$Exact<InputHocPublicProps>, // common to all inputs (check the docs!)
+  className?: string,
   id: string, // mandatory!
   items: Array<RadioChoice>,
   lang?: string, // current language (used just for force-render)
@@ -471,7 +458,7 @@ type RadioChoice = {
 
 ### ColorInput
 
-Shown below are some examples of ColorInput and its features: inline and drop-down versions, RGB and HSV pickers, transparency slider, custom accent color, disabled style. Not shown: clipboard events.
+Shown below are some examples of ColorInput and its features: inline and drop-down versions, RGB and HSV pickers, transparency slider, disabled style. Not shown: clipboard events.
 
 ![ColorInput screenshots](https://raw.githubusercontent.com/guigrpa/giu/master/docsPrivate/ColorInputs.png)
 
@@ -481,13 +468,14 @@ Props:
 ```js
 type PublicProps = {
   ...$Exact<InputHocPublicProps>, // common to all inputs (check the docs!)
+  className?: string,
+  id?: string,
   disabled?: boolean,
   // Whether the complete color picker should be inlined or appear as a dropdown when clicked
   inlinePicker?: boolean,
   onCloseFloat?: () => any,
   floatPosition?: FloatPosition,
   floatAlign?: FloatAlign,
-  floatZ?: number,
 };
 ```
 
@@ -499,11 +487,11 @@ Props:
 ```js
 type PublicProps = {
   ...$Exact<InputHocPublicProps>, // common to all inputs (check the docs!)
+  className?: string,
+  id?: string,
   children?: any, // React elements that will be shown inside the button(default: `Choose file…`)
   disabled?: boolean,
-  style?: Object, // will be merged with the outermost `span` element
   skipTheme?: boolean,
-  // all others are passed through unchanged
 };
 ```
 
@@ -533,6 +521,8 @@ in time (as a result of passed-down props or their own intrinsic state).
 type PublicProps = {
   // Basic
   // -----
+  className?: string,
+  id?: string,
   itemsById?: Object, // Rows, keyed by id (default: {})
   cols: Array<DataTableColumn>, // Column configuration objects
   lang?: string, // Used to force-refresh when language changes
@@ -606,9 +596,6 @@ type PublicProps = {
   rowHeight?: number, // Auto-calculated if unspecified
   uniformRowHeight?: boolean, // Are rows of the same height (even if unknown a priori)? (default: false)
   showHeader?: boolean, // (default: true)
-  style?: Object,
-  styleHeader?: Object,
-  styleRow?: Object,
   animated?: boolean,
 
   // For VirtualScroller specifically
@@ -623,6 +610,7 @@ type PublicProps = {
 ```js
 export type DataTableColumn = {
   attr: string, // column identifier, also used to get rawValues by default
+  className?: string, // custom classes to be added to the giu-data-table-cells
 
   // Label
   // -----
@@ -656,10 +644,6 @@ export type DataTableColumn = {
   // Appearance
   // ----------
   hidden?: boolean,
-  minWidth?: number,
-  flexGrow?: number,
-  flexShrink?: number,
-  style?: Object, // Mixed with each row/header cell's outer div
 };
 ```
 
@@ -672,7 +656,10 @@ export type DataTableColumn = {
 Props:
 
 ```js
-type PublicProps = {
+type Props = {
+  className?: string,
+  id?: string,
+
   // Items: similar to the Select component but including an `onClick` callback
   items: Array<Choice>,
 
@@ -683,10 +670,8 @@ type PublicProps = {
     ev: SyntheticMouseEvent<*>, // `click` event
     val: any // the item's `value` (as specified in the `items` prop)
   ) => any,
-  style?: Object, // will be merged with the menu title's `div` wrapper
-  styleListPicker?: Object, // will be merged with the list picker's outer `div`
-
-  // All other props are passed through to the Select input component
+  floatPosition?: FloatPosition,
+  floatAlign?: FloatAlign,
 };
 ```
 
@@ -718,7 +703,7 @@ class ModalExample extends React.Component {
     const deleteItem = () => { alert('deleted!'); modalPop(); }
     const buttons = [
       { label: 'Close', onClick: modalPop, defaultButton: true },
-      { label: 'Delete', onClick: deleteItem, style: { backgroundColor: 'red' } },
+      { label: 'Delete', onClick: deleteItem },
     ];
     modalPush({ children, buttons, onEsc: modalPop });
   }
@@ -735,6 +720,7 @@ API reference:
 
 ```js
 export type ModalPars = {|
+  className?: string,
   id?: string,
   title?: string, // modal title displayed to the user
   children?: any, // body of the modal
@@ -750,7 +736,6 @@ export type ModalPars = {|
   // merge with the modal's `div` style, e.g. to
   // fix a modal width or background color
   style?: Object,
-  zIndex?: number,
 |};
 
 export type ModalButton = {|
@@ -760,7 +745,6 @@ export type ModalButton = {|
   plain?: boolean,
   defaultButton?: boolean, // will be highlighted and automatically selected when RETURN is pressed
   onClick?: (ev: SyntheticEvent<*>) => any, // `click` handler for the button
-  style?: Object, // merged with the button's style
   accent?: boolean, // accent style (use it with MDL theme)
 |};
 ```
@@ -793,25 +777,21 @@ API reference:
   - **id** *string*: ID of the notification to be marked as retained
 * **notifDelete()**: deletes a notification:
   - **id** *string*: ID of the notification to be deleted
-* **notifDeleteByName()**: deletes a notification:
-  - **name** *string*: name of the notification to be deleted
 
 **`NotificationPars` definition:**
 
 ```js
 export type NotificationType = 'info' | 'success' | 'warn' | 'error';
 export type NotificationPars = {|
+  id?: string,
   sticky?: boolean, // never delete this notification
   timeOut?: number, // time [ms] after which it's deleted [default: 4000]
-  id?: string,
-  name?: string, // a user-provided name for the notification
   type?: NotificationType, // default: `info`
   icon?: string, // default: `exclamation`
   iconSpin?: boolean,
   title?: string, // highlighted text at the top of the notification
   msg?: string, // notification text
   onClick?: (ev: SyntheticEvent<*>) => any, // `click` handler
-  style?: Object, // merged with the outermost `div` style
   noStylePosition?: boolean,
   noStyleShadow?: boolean,
 |};
@@ -879,8 +859,6 @@ API reference:
 export type HintScreenPars = {|
   elements?: ElementsWrapper,
   closeLabel?: string, // label of the close button (default: 'Got it!')
-  zIndex?: number,
-  style?: Object,
 |};
 type ElementsWrapper = Array<Element> | (() => Array<Element>);
 type Element = HintArrowPars | HintLabelPars;
@@ -889,12 +867,12 @@ type Element = HintArrowPars | HintLabelPars;
 ```js
 export type HintLabelPars = {|
   type: 'LABEL',
+  className?: string,
+  id?: string,
   x: number,
   y: number,
   align?: AlignType, // (default: 'left')
   children?: any, // React elements that comprise the label
-  fontSize?: number, // will be initialised by the HintScreen
-  style?: Object,
 |};
 type AlignType = 'left' | 'right' | 'center';
 ```
@@ -902,13 +880,14 @@ type AlignType = 'left' | 'right' | 'center';
 ```js
 export type HintArrowPars = {
   type: 'ARROW',
+  className?: string,
+  id?: string,
   from: Point2, // coordinates, e.g. `{ x: 5, y: 10 }`
   to: Point2, // coordinates
   curveFactor?: number,
   arrowSize?: number,
   arrowAngle?: number,
   counterclockwise?: boolean,
-  style?: Object,
 };
 ```
 
@@ -923,11 +902,13 @@ An inconspicuous-looking button-in-a-`span`. Props:
 
 ```js
 type PublicProps = {
+  className?: string,
+  id?: string,
   plain?: boolean, // removes most button styles
   children?: any, // button contents (can include `Icon` components, etc.)
   onClick?: (ev: SyntheticMouseEvent<*>) => any,
+  onMouseDown?: (ev: SyntheticMouseEvent<*>) => any,
   disabled?: boolean,
-  style?: Object, // merged with the `span` style
   skipTheme?: boolean,
 
   // Additional props with `mdl` theme
@@ -935,9 +916,6 @@ type PublicProps = {
   primary?: boolean,
   accent?: boolean,
   fab?: boolean,
-  classNames?: Array<string>,
-
-  // All other props are passed through to the `span` element
 };
 ```
 
@@ -949,16 +927,16 @@ A wrapper for Font Awesome icons. Props:
 
 ```js
 type PublicProps = {
+  className?: string,
+  id?: string,
   icon: string, // e.g. `ambulance`, `cogs`...
   size?: 'lg' | '2x' | '3x' | '4x' | '5x',
   fixedWidth?: boolean,
   spin?: boolean,
   onClick?: (ev: SyntheticMouseEvent<*>) => any,
   disabled?: boolean,
-  style?: Object, // merged with the `i` element style
   skipTheme?: boolean,
-
-  // All other props are passed through to the `i` element
+  style?: Object, // use sparsely (CSS should cover you in most cases!)
 };
 ```
 
@@ -975,8 +953,6 @@ that kind of thing. Props:
 ```js
 type Props = {
   children?: any, // contents to be shown
-  style?: Object, // merged with the outermost `div` style
-  // All other props are passed through to the `div` element
 };
 ```
 
@@ -985,15 +961,12 @@ type Props = {
 
 
 A wrapper for the native HTML `progress` element (with 100% width).
-*All props are passed through to the `progress` element.
-Remember that an indeterminate progress bar will be shown if you
-don't specify the `value` prop (native HTML behaviour).*
 
 ```js
 type PublicProps = {
+  className?: string,
+  id?: string,
   value: any,
-  // All other props are passed through to the `progress` element
-  // (except in the `mdl` theme, in which no props are passed)
 };
 ```
 
@@ -1044,13 +1017,6 @@ Provides an inline style object for a Flex item.
 * **flex** *string|number*: value for the CSS `flex`/`-webkit-flex` attribute
 * **style?** *Object*: custom style (merged with the Flex style)
 * **Returns** *Object*: Flex item style
-
-**boxWithShadow()**
-
-Provides an inline style object for a slightly rounded shadowed box.
-
-* **style?** *Object*: custom style (merged with the base style)
-* **Returns** *Object*: inline style
 
 **isDark() / isLight()**
 

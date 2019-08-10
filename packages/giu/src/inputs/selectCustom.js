@@ -131,7 +131,7 @@ class BaseSelectCustom extends React.Component<Props> {
   }
 
   renderProvidedTitle() {
-    const elTitle = React.cloneElement(this.props.children, {
+    const elTitle = React.cloneElement((this.props.children: any), {
       ref: this.registerTitleRef,
       onClick: this.onClickTitle,
     });

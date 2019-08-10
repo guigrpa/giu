@@ -197,7 +197,7 @@ const memoize = (fn: Function) => {
   };
 };
 
-const prefixClasses = (className, prefix) =>
+const prefixClasses = (className: ?string, prefix: string) =>
   className
     ? className
         .split(/\s+/)
@@ -205,7 +205,7 @@ const prefixClasses = (className, prefix) =>
         .join(' ')
     : undefined;
 
-const sufixClasses = (className, sufix) =>
+const sufixClasses = (className: ?string, sufix: string) =>
   className
     ? className
         .split(/\s+/)
