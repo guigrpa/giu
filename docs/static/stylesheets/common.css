@@ -1,0 +1,44 @@
+body {
+  font-family: Tahoma, sans-serif;
+  font-size: 0.7rem;
+  padding: 10px;
+  margin: 0;
+  background: #e8f3ef;
+  /* --color-accent-bg: gray; */
+}
+
+.example {
+  margin: 5px;
+  padding: 10px;
+  border: 1px solid #ccc;
+  min-width: 400px;
+}
+
+.example-label {
+  font-weight: bold;
+  color: darkblue;
+}
+
+.title {
+  padding: 10px;
+  font-size: 1.8rem;
+  font-weight: bold;
+}
+
+.main {
+  display: flex;
+}
+
+.left {
+  flex: 1 0 500px;
+}
+
+.right {
+  flex: 1 0 500px;
+}
+
+.author {
+  text-align: right;
+  padding: 10px;
+  font-size: 1.2rem;
+}

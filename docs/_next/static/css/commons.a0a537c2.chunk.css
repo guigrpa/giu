@@ -1,0 +1,1378 @@
+/* ==================================== */
+/* Normalize.css 8.0.1 */
+/* ==================================== */
+html {
+  line-height: 1.15;
+  -webkit-text-size-adjust: 100%;
+}
+
+body {
+  margin: 0;
+}
+
+main {
+  display: block;
+}
+
+h1 {
+  font-size: 2em;
+  margin: 0.67em 0;
+}
+
+hr {
+  box-sizing: content-box;
+  height: 0;
+  overflow: visible;
+}
+
+pre {
+  font-family: monospace, monospace;
+  font-size: 1em;
+}
+
+a {
+  background-color: transparent;
+}
+
+abbr[title] {
+  border-bottom: none;
+  text-decoration: underline;
+  text-decoration: underline dotted;
+}
+
+b,
+strong {
+  font-weight: bolder;
+}
+
+code,
+kbd,
+samp {
+  font-family: monospace, monospace;
+  font-size: 1em;
+}
+
+small {
+  font-size: 80%;
+}
+
+sub,
+sup {
+  font-size: 75%;
+  line-height: 0;
+  position: relative;
+  vertical-align: baseline;
+}
+
+sub {
+  bottom: -0.25em;
+}
+
+sup {
+  top: -0.5em;
+}
+
+img {
+  border-style: none;
+}
+
+button,
+input,
+optgroup,
+select,
+textarea {
+  font-family: inherit;
+  font-size: 100%;
+  line-height: 1.15;
+  margin: 0;
+}
+
+button,
+input {
+  overflow: visible;
+}
+
+button,
+select {
+  text-transform: none;
+}
+
+button,
+[type='button'],
+[type='reset'],
+[type='submit'] {
+  -webkit-appearance: button;
+}
+
+button::-moz-focus-inner,
+[type='button']::-moz-focus-inner,
+[type='reset']::-moz-focus-inner,
+[type='submit']::-moz-focus-inner {
+  border-style: none;
+  padding: 0;
+}
+
+button:-moz-focusring,
+[type='button']:-moz-focusring,
+[type='reset']:-moz-focusring,
+[type='submit']:-moz-focusring {
+  outline: 1px dotted ButtonText;
+}
+
+fieldset {
+  padding: 0.35em 0.75em 0.625em;
+}
+
+legend {
+  box-sizing: border-box;
+  color: inherit;
+  display: table;
+  max-width: 100%;
+  padding: 0;
+  white-space: normal;
+}
+
+progress {
+  vertical-align: baseline;
+}
+
+textarea {
+  overflow: auto;
+}
+
+[type='checkbox'],
+[type='radio'] {
+  box-sizing: border-box;
+  padding: 0;
+}
+
+[type='number']::-webkit-inner-spin-button,
+[type='number']::-webkit-outer-spin-button {
+  height: auto;
+}
+
+[type='search'] {
+  -webkit-appearance: textfield;
+  outline-offset: -2px;
+}
+
+[type='search']::-webkit-search-decoration {
+  -webkit-appearance: none;
+}
+
+::-webkit-file-upload-button {
+  -webkit-appearance: button;
+  font: inherit;
+}
+
+details {
+  display: block;
+}
+
+summary {
+  display: list-item;
+}
+
+template {
+  display: none;
+}
+
+[hidden] {
+  display: none;
+}
+
+/* ======================== */
+/* General */
+/* ======================== */
+*,
+*:before,
+*:after {
+  -moz-box-sizing: border-box;
+  -webkit-box-sizing: border-box;
+  box-sizing: border-box;
+}
+
+html {
+  -webkit-text-size-adjust: none;
+}
+
+/* Allow tap/click events on `window` (or its non-anchor descendants)
+ to be detected by Giu components, e.g. to close floats */
+@media handheld {
+  * {
+    cursor: pointer;
+  }
+}
+@media screen and (max-width: 500px) {
+  * {
+    cursor: pointer;
+  }
+}
+
+body {
+  /* Text */
+  --color-dim: #999999;
+  /* Others */
+  --color-hint: white;
+  --color-line: #999999;
+  --color-line-dark: black;
+  --color-line-dim: #cccccc;
+  --color-input-bg: white;
+  --color-accent-bg: #6600cc;
+  --color-accent-fg: white;
+  /* Notifs */
+  --color-notif-info-bg: white;
+  --color-notif-info-fg: black;
+  --color-notif-success-bg: #51a351;
+  --color-notif-success-fg: white;
+  --color-notif-warn-bg: #f89406;
+  --color-notif-warn-fg: white;
+  --color-notif-error-bg: #bd362f;
+  --color-notif-error-fg: white;
+  /* Fonts */
+  --font-mdl: 'Roboto', 'Helvetica', 'Arial', sans-serif;
+}
+
+.giu-box-shadow {
+  background-color: white;
+  border-radius: 2px;
+  box-shadow: 0 3px 6px rgba(0, 0, 0, 0.16), 0 3px 6px rgba(0, 0, 0, 0.23);
+}
+
+.giu-flex-space {
+  flex: 1 0 0px;
+}
+
+.giu-ellipsis {
+  white-space: nowrap;
+  text-overflow: ellipsis;
+  overflow-x: hidden;
+}
+
+/* ======================== */
+/* Components */
+/* ======================== */
+/* ------------------------ */
+/* Backdrop */
+/* ------------------------ */
+.giu-backdrop {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  background-color: white;
+  animation: giu-appear 300ms ease-in-out;
+  opacity: 0.6;
+}
+
+.giu-backdrop.giu-backdrop-ios {
+  width: 110vw;
+  height: 110vh;
+}
+
+@keyframes giu-appear {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 0.6;
+  }
+}
+
+/* ------------------------ */
+/* Button */
+/* ------------------------ */
+.giu-button {
+  cursor: pointer;
+  user-select: none;
+}
+
+.giu-button.giu-button-with-border {
+  display: inline-block;
+  border: 1px solid var(--color-line);
+  border-radius: 5px;
+  padding: 1px 5px;
+}
+
+.giu-button.giu-button-disabled {
+  color: var(--color-dim);
+  cursor: default;
+  pointer-events: none;
+}
+
+/* ------------------------ */
+/* DataTable, VirtualScroller */
+/* ------------------------ */
+.giu-data-table {
+  max-width: 100%;
+  overflow-x: hidden;
+}
+
+/* Important transition, not only aesthetically. When a row's contents changes height
+and it is not shown because it is above the viewport, wheneve the user scrolls up
+to that row it will get rendered, report on its new height, and all of the subsequent
+rows will get repositioned. This should happen slowly to avoid confusing jumps
+while scrolling */
+.giu-data-table.giu-data-table-not-dragging.giu-data-table-animated
+  .giu-vertical-manager {
+  transition: top 300ms;
+}
+
+/* Just in case a DataTable lands on a Modal: make sure the dragged
+row is drawn above the modal, not below */
+.giu-data-table-dragged-row {
+  z-index: 50000;
+}
+
+.giu-virtual-scroller {
+  margin-top: 2px;
+  margin-bottom: 2px;
+}
+
+.giu-virtual-scroller .giu-virtual-scroller-sizer {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 1px;
+  opacity: 0;
+  z-index: -1;
+}
+
+.giu-data-table-drag-handle {
+  margin-left: 4px;
+  margin-right: 3px;
+}
+
+/* ------------------------ */
+/* DataTableHeader, DataTableRow */
+/* ------------------------ */
+.giu-data-table-header {
+  display: flex;
+  flex-direction: row;
+  padding-bottom: 2px;
+  border-bottom: 1px solid var(--color-line);
+}
+
+.giu-data-table-header-cell {
+  font-weight: bold;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+  position: relative;
+  top: 0;
+  left: 0;
+  overflow-x: hidden;
+}
+.giu-data-table-header-cell-level-1,
+.giu-data-table-header-cell-level-2,
+.giu-data-table-header-cell-level-3 {
+  left: 16px;
+  overflow-x: visible;
+}
+.giu-data-table-header-cell-level-1 {
+  top: -15px;
+}
+.giu-data-table-header-cell-level-2 {
+  top: -30px;
+}
+.giu-data-table-header-cell-level-3 {
+  top: -45px;
+}
+.giu-data-table-header-cell-label-clickable {
+  cursor: pointer;
+}
+
+.giu-data-table-header-callout {
+  position: absolute;
+  right: 100%;
+  top: 7px;
+  stroke: var(--color-line);
+  stroke-width: 1px;
+  fill: none;
+}
+
+.giu-data-table-header-sort-icon {
+  margin-left: 5px;
+}
+
+/* Row */
+.giu-data-table-row {
+  display: flex;
+  flex-direction: row;
+  padding-top: 1px;
+  padding-bottom: 1px;
+}
+
+.giu-data-table-row.giu-data-table-row-selected {
+  background-color: var(--color-accent-bg);
+  color: var(--color-accent-fg);
+}
+
+.giu-data-table-fetching-row {
+  margin-top: 1px;
+  margin-bottom: 2px;
+}
+
+.giu-data-table-cell {
+  padding-left: 2px;
+  padding-right: 2px;
+  flex: 1 1 0px;
+}
+.giu-data-table-cell.giu-data-table-cell-hidden {
+  display: none;
+}
+.giu-data-table-col-__SORT_MANUALLY__ {
+  flex: 0 0 30px;
+  max-width: 30px;
+}
+.giu-data-table-row.giu-data-table-row-selected input,
+.giu-data-table-row.giu-data-table-row-selected select,
+.giu-data-table-row.giu-data-table-row-selected textarea {
+  background-color: inherit;
+}
+
+/* Fix inputs in cells */
+.giu-data-table-cell .giu-input {
+  display: block;
+}
+.giu-data-table-cell .giu-input-reset,
+.giu-data-table-cell select {
+  width: 100%;
+}
+
+/* ------------------------ */
+/* DropDownMenu */
+/* ------------------------ */
+.giu-drop-down-menu {
+  display: inline-block;
+}
+
+.giu-drop-down-menu-title {
+  display: inline-block;
+  cursor: pointer;
+  padding: 2px 6px;
+}
+
+.giu-drop-down-menu-title.giu-drop-down-menu-title-selected {
+  background-color: var(--color-accent-bg);
+  color: var(--color-accent-fg);
+}
+
+/* ------------------------ */
+/* Floats */
+/* ------------------------ */
+.giu-floats {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 0;
+  height: 0;
+}
+
+.giu-float {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 0;
+  height: 0;
+  z-index: 5;
+  background-color: white;
+  color: black;
+}
+
+.giu-float-inner {
+  position: fixed;
+  opacity: 0.5;
+}
+
+.giu-float-error {
+  z-index: 3;
+}
+
+/* ------------------------ */
+/* FocusCapture */
+/* ------------------------ */
+.giu-hidden-field {
+  position: fixed;
+  opacity: 0;
+  width: 0;
+  height: 0;
+  padding: 0;
+  cursor: default;
+  pointer-events: none;
+  z-index: -80;
+  top: 8px;
+  left: 8px;
+}
+
+.giu-hidden-field.giu-hidden-field-ios {
+  position: absolute;
+  top: 0;
+  left: 0;
+}
+
+.giu-focus-capture-wrapper-for-ios {
+  position: relative;
+}
+
+/* ------------------------ */
+/* HintScreen, HintLabel */
+/* ------------------------ */
+.giu-hint-screen {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  z-index: 50;
+}
+
+.giu-hint-screen .giu-backdrop {
+  cursor: pointer;
+  background-color: black;
+}
+
+.giu-hint-screen-contents {
+  font-family: 'Gloria Hallelujah', sans-serif;
+  font-size: 20px;
+  color: var(--color-hint);
+}
+
+.giu-hint-screen-close {
+  position: fixed;
+  bottom: 20px;
+  right: 20px;
+  border: 1px solid var(--color-hint);
+  padding: 5px 25px;
+  border-radius: 8px;
+  cursor: pointer;
+}
+
+.giu-hint-arrows {
+  position: fixed;
+  width: 100vw;
+  height: 100vh;
+  stroke: var(--color-hint);
+  stroke-width: 2px;
+  fill: transparent;
+  pointer-events: none;
+}
+
+.giu-hint-label {
+  position: fixed;
+  width: 0;
+  pointer-events: none;
+}
+
+.giu-hint-label-inner {
+  position: absolute;
+  width: 200px;
+  margin-left: 8px;
+  margin-right: 8px;
+  line-height: 1.45;
+}
+
+.giu-hint-label-inner-left {
+  left: 0;
+  text-align: left;
+}
+.giu-hint-label-inner-right {
+  right: 0;
+  text-align: right;
+}
+.giu-hint-label-inner-center {
+  left: calc(-200px / 2);
+  text-align: center;
+}
+
+/* ------------------------ */
+/* Icon */
+/* ------------------------ */
+.giu-icon {
+  display: inline-block;
+  letter-spacing: normal;
+}
+
+.giu-icon.giu-icon-disabled {
+  color: var(--color-dim);
+}
+
+.giu-icon.giu-icon-clickable {
+  cursor: pointer;
+}
+
+.giu-icon.giu-icon-fixed-width {
+  width: 1.28571429em;
+  text-align: center;
+}
+
+.giu-icon {
+  font-size: 1em;
+}
+.giu-icon.giu-icon-lg {
+  font-size: 1.33333333em;
+}
+.giu-icon.giu-icon-2x {
+  font-size: 2em;
+}
+.giu-icon.giu-icon-3x {
+  font-size: 3em;
+}
+.giu-icon.giu-icon-4x {
+  font-size: 4em;
+}
+.giu-icon.giu-icon-5x {
+  font-size: 6em;
+}
+
+.giu-mdl-spinner {
+  width: 1em;
+  height: 1em;
+}
+.giu-mdl-spinner.giu-mdl-spinner-lg {
+  width: 1.33333333em;
+  height: 1.33333333em;
+}
+.giu-mdl-spinner.giu-mdl-spinner-2x {
+  width: 2em;
+  height: 2em;
+}
+.giu-mdl-spinner.giu-mdl-spinner-3x {
+  width: 3em;
+  height: 3em;
+}
+.giu-mdl-spinner.giu-mdl-spinner-4x {
+  width: 4em;
+  height: 4em;
+}
+.giu-mdl-spinner.giu-mdl-spinner-5x {
+  width: 6em;
+  height: 6em;
+}
+
+/* ------------------------ */
+/* LargeMessage */
+/* ------------------------ */
+.giu-large-message {
+  font-size: 1.4em;
+  font-weight: 700;
+  color: var(--color-dim);
+  padding: 0.8em;
+  text-align: center;
+}
+
+/* ------------------------ */
+/* Modal */
+/* ------------------------ */
+.giu-modal {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  z-index: 50;
+}
+
+.giu-modal-position {
+  display: flex;
+  position: fixed;
+  top: 5vh;
+  left: 0;
+  width: 100%;
+}
+
+.giu-modal-box {
+  max-height: 90vh;
+  overflow-y: auto;
+  padding: 20px;
+}
+
+.giu-modal-title {
+  margin-bottom: 10px;
+  padding-bottom: 10px;
+  font-weight: bold;
+  font-size: 1.5em;
+}
+
+.giu-modal-buttons {
+  display: flex;
+  margin-top: 10px;
+  padding-top: 10px;
+}
+
+.giu-modal-button.giu-modal-button-default {
+  border: 1px solid black;
+}
+.giu-modal-button.giu-modal-button-left {
+  margin-right: 5px;
+}
+.giu-modal-button.giu-modal-button-right {
+  margin-left: 5px;
+}
+
+/* ------------------------ */
+/* Notifications */
+/* ------------------------ */
+.giu-notifications {
+  position: fixed;
+  bottom: 20px;
+  right: 20px;
+  max-width: 350px;
+  z-index: 9000;
+}
+
+.giu-notification {
+  display: flex;
+  align-items: center;
+  overflow: hidden;
+  padding: 7px 13px;
+}
+.giu-notification.giu-notification-clickable {
+  cursor: pointer;
+}
+.giu-notification.giu-notification-mdl {
+  font-family: var(--font-mdl);
+}
+.giu-notification.giu-notification-default-position {
+  position: fixed;
+  bottom: 20px;
+  right: 20px;
+  max-width: 350px;
+}
+.giu-notification.giu-notification-clickable:hover {
+  filter: brightness(80%);
+}
+.giu-notification.giu-notification-info {
+  background-color: var(--color-notif-info-bg);
+  color: var(--color-notif-info-fg);
+}
+.giu-notification.giu-notification-success {
+  background-color: var(--color-notif-success-bg);
+  color: var(--color-notif-success-fg);
+}
+.giu-notification.giu-notification-warn {
+  background-color: var(--color-notif-warn-bg);
+  color: var(--color-notif-warn-fg);
+}
+.giu-notification.giu-notification-error {
+  background-color: var(--color-notif-error-bg);
+  color: var(--color-notif-error-fg);
+}
+
+.giu-notification-icon {
+  flex: 0 1 auto;
+  padding-right: 20px;
+}
+.giu-notification-body {
+  flex: 1 1 50px;
+}
+.giu-notification-title {
+  font-weight: bold;
+}
+.giu-notification-message {
+  word-wrap: break-word;
+  font-weight: normal;
+}
+
+/* ------------------------ */
+/* Progress */
+/* ------------------------ */
+.giu-progress {
+  width: 100%;
+}
+
+/* ======================== */
+/* Input HOC */
+/* ======================== */
+.giu-input {
+  position: relative;
+  display: inline-block;
+}
+
+.giu-error {
+  padding: 1px 3px;
+  background-color: var(--color-notif-error-bg);
+  color: var(--color-notif-error-fg);
+}
+
+.giu-error-modified {
+  background-color: var(--color-notif-warn-bg);
+  color: var(--color-notif-warn-fg);
+}
+
+.giu-error.giu-error-mdl {
+  font-family: var(--font-mdl);
+}
+
+/* Convention: use 'modal-input' as one of your input classes
+  if the input is in a modal. For nested modals, you'll have to
+  manage z-indexes yourself -- just follow the example */
+.giu-float.giu-float-error-modal-input {
+  z-index: 53;
+}
+.giu-float.giu-float-modal-input {
+  z-index: 55;
+}
+
+/* ======================== */
+/* Inputs */
+/* ======================== */
+.giu-input-reset {
+  background-color: var(--color-input-bg);
+  border: 1px solid var(--color-line);
+  font-family: inherit;
+  font-size: inherit;
+  font-weight: inherit;
+  color: inherit;
+}
+
+.giu-input-disabled {
+  background-color: transparent;
+  border: 1px solid var(--color-line-dim);
+  cursor: default;
+  pointer-events: none;
+}
+
+.giu-glow {
+  box-shadow: 0 0 5px rgba(81, 203, 238, 1);
+  border: 1px solid rgba(81, 203, 238, 1);
+}
+
+/* ------------------------ */
+/* Checkbox */
+/* ------------------------ */
+.giu-checkbox {
+  white-space: nowrap;
+}
+
+.giu-checkbox-mdl {
+  white-space: nowrap;
+  width: initial;
+  margin-right: 10px;
+}
+
+.giu-checkbox-mdl-label {
+  left: 16px;
+}
+
+.giu-checkbox-label {
+  font-family: inherit;
+  font-size: inherit;
+  font-weight: inherit;
+  color: inherit;
+}
+
+/* ------------------------ */
+/* ColorInput, ColorPicker */
+/* ------------------------ */
+/* General */
+.giu-transparency-tiles {
+  background-image: url('data:image/png;base64,R0lGODdhCgAKAPAAAOXl5f///ywAAAAACgAKAEACEIQdqXt9GxyETrI279OIgwIAOw==');
+}
+
+/* ColorInput */
+.giu-color-input {
+  display: inline-block;
+  position: relative;
+  cursor: pointer;
+  border: 1px solid var(--color-line);
+  padding: 2px 4px 6px 4px;
+  height: calc(10px + 2 * 4px + 2px);
+  width: calc(25px + 2 * 4px + 2px);
+  line-height: 1em;
+}
+
+.giu-color-input-swatch {
+  display: block;
+  position: absolute;
+  top: 4px;
+  right: 4px;
+  bottom: 4px;
+  left: 4px;
+  border-radius: 2px;
+}
+
+/* ColorPicker */
+.giu-color-picker {
+  display: flex;
+  padding: 6px;
+  --color-picker-width-slider: 10px;
+  --color-picker-radius-swatch: 6px;
+}
+
+.giu-color-picker-fill {
+  position: absolute;
+  top: 0;
+  right: 0;
+  bottom: 0;
+  left: 0;
+  border-radius: 2px;
+}
+
+.giu-color-picker-thumb-wrapper {
+  position: absolute;
+  pointer-events: none;
+  height: 0px;
+  width: 0px;
+}
+.giu-color-picker-thumb-1 {
+  position: absolute;
+  top: calc(0px - var(--color-picker-radius-swatch));
+  left: calc(0px - var(--color-picker-radius-swatch));
+  height: calc(2 * var(--color-picker-radius-swatch));
+  width: calc(2 * var(--color-picker-radius-swatch));
+  border-radius: var(--color-picker-radius-swatch);
+  border: 3px solid white;
+}
+.giu-color-picker-thumb-2 {
+  position: absolute;
+  top: calc(1px - var(--color-picker-radius-swatch));
+  left: calc(1px - var(--color-picker-radius-swatch));
+  height: calc(2 * (var(--color-picker-radius-swatch) - 1px));
+  width: calc(2 * (var(--color-picker-radius-swatch) - 1px));
+  border-radius: calc(var(--color-picker-radius-swatch) - 1px);
+  border: 1px solid black;
+}
+
+.giu-color-picker-main {
+  position: relative;
+  cursor: pointer;
+}
+
+.giu-color-picker-main .giu-color-picker-fill {
+  border-radius: 0;
+}
+
+.giu-color-picker-main-rgb {
+  background-image: url('data:image/png;base64,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');
+}
+
+.giu-color-picker-active-attr-slider {
+  position: relative;
+  margin-left: 5px;
+  margin-right: 5px;
+  cursor: pointer;
+}
+
+.giu-color-picker-control-column {
+  display: flex;
+  flex-direction: column;
+}
+
+.giu-color-picker-button {
+  flex: 1 1 0%;
+  padding: 3px;
+  text-align: center;
+  cursor: pointer;
+}
+.giu-color-picker-button.giu-color-picker-button-selected {
+  background-color: var(--color-accent-bg);
+  color: var(--color-accent-fg);
+}
+
+.giu-color-picker-mode-buttons {
+  display: flex;
+  border: 1px solid var(--color-accent-bg);
+}
+
+.giu-color-picker-color-attrs {
+  margin-top: 5px;
+  display: flex;
+  border: 1px solid var(--color-accent-bg);
+}
+
+.giu-color-picker-color-attr-name {
+  width: 40px;
+  pointer-events: none;
+}
+
+.giu-color-picker-alpha-slider {
+  margin-top: 5px;
+  position: relative;
+  height: var(--color-picker-width-slider);
+  cursor: pointer;
+}
+
+.giu-color-picker-labeled-swatch {
+  margin-top: 5px;
+  padding: 3px 0;
+  text-align: center;
+}
+
+.giu-color-picker-big-swatch {
+  flex: 1 1 0%;
+  margin-top: 5px;
+  position: relative;
+}
+
+/* ------------------------ */
+/* FileInput */
+/* ------------------------ */
+.giu-file-input {
+  border: 1px solid transparent;
+}
+
+/* ------------------------ */
+/* IosFloatWrapper */
+/* ------------------------ */
+.giu-ios-float-wrapper {
+  position: absolute;
+  z-index: 5;
+  max-height: 400px;
+  background-color: white;
+  color: black;
+}
+.giu-ios-float-wrapper-above {
+  bottom: 100%;
+}
+.giu-ios-float-wrapper-below {
+  top: 100%;
+}
+.giu-ios-float-wrapper-left {
+  left: 0;
+}
+.giu-ios-float-wrapper-right {
+  right: 0;
+}
+
+/* ------------------------ */
+/* ListPicker */
+/* ------------------------ */
+/* List */
+.giu-list-picker {
+  padding-top: 3px;
+  padding-bottom: 3px;
+  max-height: inherit;
+  overflow-y: auto;
+}
+
+.giu-list-picker.giu-input-disabled {
+  pointer-events: initial;
+}
+
+.giu-list-picker-empty {
+  padding: 3px 10px;
+  color: var(--color-dim);
+  cursor: not-allowed;
+}
+
+.giu-list-separator-wrapper {
+  padding-top: 3px;
+  padding-bottom: 3px;
+  height: 7px;
+  cursor: default;
+}
+.giu-list-separator {
+  border-top: 1px solid var(--color-line);
+  height: 1px;
+}
+
+/* Items */
+.giu-list-item {
+  cursor: default;
+  white-space: nowrap;
+  padding: 3px 25px 3px 10px;
+  display: flex;
+  align-items: center;
+  border: 1px solid transparent;
+}
+/* Chrome-only */
+_::content,
+_:future,
+.giu-list-item {
+  padding: 3px 10px;
+}
+.giu-list-picker-two-stage .giu-list-item:hover {
+  border-color: var(--color-accent-bg);
+}
+.giu-list-picker.giu-input-disabled .giu-list-item-selected,
+.giu-list-picker-two-stage .giu-list-item-selected,
+.giu-list-picker:not(.giu-list-picker-two-stage):hover .giu-list-item:hover,
+.giu-list-picker:not(:hover) .giu-list-item-selected {
+  background-color: var(--color-accent-bg);
+  color: var(--color-accent-fg);
+  border-color: var(--color-accent-bg);
+}
+.giu-list-picker.giu-input-disabled .giu-list-item,
+.giu-list-item-disabled {
+  pointer-events: none;
+}
+.giu-list-item-disabled {
+  color: var(--color-dim);
+}
+
+.giu-list-item-shortcut {
+  margin-left: 20px;
+}
+
+/* ------------------------ */
+/* DateInput, DateTimePicker, DatePicker, TimePicker */
+/* ------------------------ */
+/* Date input */
+.giu-date-input {
+  position: relative;
+}
+
+.giu-date-input-mdl {
+  width: 150px;
+}
+
+.giu-date-input-mdl.disabled {
+  cursor: default;
+  pointer-events: none;
+}
+
+.giu-date-time-picker .giu-list-picker {
+  margin-top: 3px;
+  margin-bottom: 3px;
+  padding: 0;
+  border: none;
+  max-height: 12.5em;
+}
+
+.giu-date-time-picker .giu-list-item {
+  padding: 0px 23px 0px 6px;
+  height: 1.3em;
+  cursor: pointer;
+}
+/* Chrome-only */
+_::content,
+_:future,
+.giu-date-time-picker .giu-list-item {
+  padding: 0px 6px;
+}
+
+/* Date-time picker */
+.giu-date-time-picker {
+  display: flex;
+  padding-top: 3px;
+  padding-bottom: 3px;
+  overflow-y: auto;
+}
+
+.giu-date-time-picker-separator {
+  margin-left: 4px;
+  margin-right: 2px;
+  width: 1px;
+  border-right: 1px solid var(--color-line);
+}
+
+/* Date picker */
+.giu-date-picker {
+  max-width: 16em;
+  padding: 3px;
+  --date-picker-row-height: 1.3em;
+  --date-picker-col-width: 2em;
+}
+
+.giu-date-picker-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+  height: var(--date-picker-row-height);
+}
+
+.giu-date-picker-month-change {
+  width: var(--date-picker-col-width);
+  text-align: center;
+}
+
+.giu-date-picker-month-name {
+  font-weight: bold;
+}
+
+.giu-date-picker-day-name {
+  width: var(--date-picker-col-width);
+  text-align: center;
+}
+
+.giu-date-picker-day {
+  width: var(--date-picker-col-width);
+  text-align: center;
+  border: 1px solid transparent;
+  cursor: pointer;
+}
+.giu-date-picker-day:hover {
+  border-color: var(--color-accent-bg);
+}
+.giu-date-picker-day.selected {
+  background-color: var(--color-accent-bg);
+  color: var(--color-accent-fg);
+  border-color: var(--color-accent-bg);
+}
+.giu-date-picker-day.disabled {
+  cursor: default;
+}
+.giu-date-picker-day.in-another-month {
+  color: var(--color-dim);
+}
+
+.giu-date-picker-today {
+  text-align: center;
+  cursor: pointer;
+  font-weight: bold;
+  height: var(--date-picker-row-height);
+}
+
+/* Time picker - analogue */
+.giu-time-picker-analog {
+  position: relative;
+  padding: 0px 3px;
+  margin-bottom: -3px;
+  border: none;
+}
+
+.giu-time-picker-analog svg {
+  stroke: var(--color-line-dark);
+  stroke-width: 1px;
+  fill: none;
+}
+
+.giu-time-picker-analog .giu-tick-major {
+  stroke-width: 2px;
+}
+
+.giu-time-picker-analog .giu-center-circle {
+  stroke-width: 2px;
+  fill: white;
+}
+
+.giu-time-picker-analog .giu-hand {
+  stroke-linecap: round;
+}
+.giu-time-picker-analog .giu-hand.giu-hand-hovered {
+  stroke-width: 4px;
+  stroke: var(--color-accent-bg);
+}
+.giu-time-picker-analog .giu-hand-hours,
+.giu-time-picker-analog .giu-hand-minutes {
+  stroke-width: 2px;
+}
+.giu-time-picker-analog .giu-hand.giu-hint {
+  stroke: var(--color-dim);
+}
+
+.giu-time-picker-analog .giu-hand-drag-area {
+  stroke: red;
+  stroke-width: 15px;
+  opacity: 0;
+  cursor: pointer;
+}
+
+.giu-time-picker-analog .giu-am-pm {
+  position: absolute;
+  top: 0;
+  left: 3px;
+  cursor: pointer;
+}
+.giu-time-picker-analog .giu-am-pm-disabled {
+  cursor: default;
+}
+
+/* ------------------------ */
+/* RadioGroup */
+/* ------------------------ */
+.giu-radio-group {
+  border: 1px solid transparent;
+}
+.giu-radio-group-disabled {
+  cursor: default;
+  pointer-events: none;
+}
+
+.giu-radio-group-label-extra {
+  margin-left: 20px;
+  cursor: default;
+}
+
+/* ------------------------ */
+/* SelectNative, SelectCustom */
+/* ------------------------ */
+.giu-select-native {
+  font-family: inherit;
+  font-size: inherit;
+  font-weight: inherit;
+  color: inherit;
+}
+
+.giu-select-custom {
+  display: inline-flex;
+  padding: 1px 2px;
+  min-width: 40px;
+  cursor: pointer;
+  position: relative;
+}
+
+.giu-select-custom-title-text {
+  flex: 1 0 0px;
+  overflow: hidden;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+}
+
+.giu-select-custom-caret {
+  margin-left: 15px;
+  margin-right: 3px;
+  margin-top: 1px;
+}
+.giu-select-custom-caret-disabled {
+  opacity: 0;
+}
+
+/* ------------------------ */
+/* Textarea
+/* ------------------------ */
+.giu-textarea {
+  position: relative;
+}
+
+.giu-textarea-wrapper {
+  display: block;
+}
+
+.giu-textarea-field {
+  display: block;
+  width: 100%;
+  line-height: inherit;
+  height: 1px; /* initial value; for sure < placeholder */
+  overflow: hidden;
+  cursor: text;
+  resize: none;
+  padding: 2px;
+}
+
+.giu-textarea-placeholder {
+  position: absolute;
+  top: 0;
+  left: 0;
+  height: auto;
+  opacity: 0;
+  border: 1px solid red;
+  color: red;
+  cursor: text;
+  white-space: pre-wrap;
+  z-index: -50;
+  /* If the user specifies a `maxHeight`, we don't want
+     the (hidden) text to overflow vertically */
+  overflow-y: hidden;
+}
+
+/* ------------------------ */
+/* TextInput, PasswordInput, NumberInput, RangeInput */
+/* ------------------------ */
+.giu-text-input-mdl,
+.giu-password-input-mdl,
+.giu-number-input-mdl,
+.giu-range-input-mdl {
+  width: 150px;
+}
+
+.giu-text-input-mdl.disabled,
+.giu-password-input-mdl.disabled,
+.giu-number-input-mdl.disabled,
+.giu-range-input-mdl.disabled {
+  cursor: default;
+  pointer-events: none;
+}
+
