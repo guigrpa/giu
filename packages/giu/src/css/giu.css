@@ -9,6 +9,10 @@
   box-sizing: border-box;
 }
 
+html {
+  -webkit-text-size-adjust: none;
+}
+
 /* Allow tap/click events on `window` (or its non-anchor descendants)
  to be detected by Giu components, e.g. to close floats */
 @media handheld {
