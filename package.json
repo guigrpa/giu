@@ -29,7 +29,7 @@
     "compileWatch": "cd packages/giu && yarn compileWatch",
     "buildExamples": "cd packages/giu-examples && yarn build",
     "start": "cd packages/giu-examples && yarn start",
-    "lint": "eslint packages || exit 0",
+    "lint": "eslint packages/giu || exit 0",
     "flow": "flow check || exit 0",
     "docs": "yarn docs:readme && yarn docs:copyExamples",
     "docs:readme": "extract-docs --template docsPrivate/templates/README.md --output README.md",
