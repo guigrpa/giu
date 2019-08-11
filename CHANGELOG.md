@@ -1,3 +1,5 @@
+## 0.18.0 (2019-8-11)
+
 * **Breaking**:
     * Move 99.99% of styles to **giu.css**, so that they can be fully configured by the user.
     * Remove `style` props.
