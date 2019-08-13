@@ -1,3 +1,6 @@
+* Add class name to datatable header and rows.
+* Add col class name to datatble header.
+
 ## 0.18.0 (2019-8-11)
 
 * **Breaking**:

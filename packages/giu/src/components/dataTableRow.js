@@ -115,7 +115,8 @@ class DataTableHeader extends React.PureComponent<DataTableHeaderProps> {
           'giu-data-table-cell',
           { 'giu-data-table-cell-hidden': col.hidden },
           `giu-data-table-col-${attr}`,
-          `giu-data-table-header-cell-level-${col.labelLevel || 0}`
+          `giu-data-table-header-cell-level-${col.labelLevel || 0}`,
+          col.className
         )}
       >
         {labelLevel && this.renderCallOut(labelLevel)}
