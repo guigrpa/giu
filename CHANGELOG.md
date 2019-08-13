@@ -1,3 +1,5 @@
+## 0.18.3 (2019-8-13)
+
 ## 0.18.2 (2019-8-13)
 
 * Fix vertical alignment of cells in datatable rows (baseline).
