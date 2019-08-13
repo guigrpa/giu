@@ -85,7 +85,7 @@ class DataTableHeader extends React.PureComponent<DataTableHeaderProps> {
       >
         <div
           className="giu-data-table-header-inner"
-          style={style.headerOuter(this.props)}
+          style={style.headerInner(this.props)}
         >
           {this.props.cols.map(this.renderColHeader, this)}
         </div>
@@ -280,7 +280,7 @@ const DataTableFetchingRow = () => (
 // Styles
 // ===============================================================
 const style = {
-  headerOuter: ({ maxLabelLevel, scrollbarWidth }) => ({
+  headerInner: ({ maxLabelLevel, scrollbarWidth }) => ({
     paddingRight: scrollbarWidth,
     paddingTop: 15 * maxLabelLevel,
   }),
