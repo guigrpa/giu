@@ -351,6 +351,7 @@ row is drawn above the modal, not below */
 .giu-data-table-header {
   display: flex;
   flex-direction: row;
+  padding-top: 2px;
   padding-bottom: 2px;
   border-bottom: 1px solid var(--color-line);
 }
@@ -399,7 +400,7 @@ row is drawn above the modal, not below */
 /* Row */
 .giu-data-table-row {
   display: flex;
-  flex-direction: row;
+  align-items: baseline;
   padding-top: 1px;
   padding-bottom: 1px;
 }
