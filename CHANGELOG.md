@@ -1,4 +1,5 @@
 * Fix vertical alignment of cells in datatable rows (baseline).
+* Make datatable header easier to customise
 
 ## 0.18.1 (2019-8-13)
 
