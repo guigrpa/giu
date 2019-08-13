@@ -1,3 +1,5 @@
+* Fix vertical alignment of cells in datatable rows (baseline).
+
 ## 0.18.1 (2019-8-13)
 
 * Add class name to datatable header and rows.

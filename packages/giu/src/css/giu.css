@@ -216,7 +216,7 @@ row is drawn above the modal, not below */
 /* Row */
 .giu-data-table-row {
   display: flex;
-  flex-direction: row;
+  align-items: baseline;
   padding-top: 1px;
   padding-bottom: 1px;
 }
