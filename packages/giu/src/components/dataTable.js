@@ -423,6 +423,7 @@ class DataTable extends React.PureComponent<Props> {
     return (
       <DataTableHeader
         cols={this.cols}
+        dataTableClassName={this.props.className}
         dataTableId={this.props.id}
         lang={this.props.lang} // to force-refresh when it changes
         commonCellProps={this.props.commonCellProps}

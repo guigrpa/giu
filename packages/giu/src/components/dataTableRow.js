@@ -63,6 +63,7 @@ export type DataTableColumn = {
 type DataTableHeaderProps = {
   cols: Array<DataTableColumn>,
   dataTableId?: string,
+  dataTableClassName?: string,
   lang?: string, // just to force-refresh upon update
   commonCellProps?: Object,
   maxLabelLevel: number,
@@ -78,7 +79,8 @@ class DataTableHeader extends React.PureComponent<DataTableHeaderProps> {
       <div
         className={classnames(
           'giu-data-table-header',
-          prefixClasses(this.props.dataTableId, 'giu-data-table-row')
+          prefixClasses(this.props.dataTableId, 'giu-data-table-row'),
+          prefixClasses(this.props.dataTableClassName, 'giu-data-table-row')
         )}
         style={style.headerOuter(this.props)}
       >
@@ -194,7 +196,8 @@ class DataTableRow extends React.PureComponent<DataTableRowProps> {
           'giu-data-table-row',
           { 'giu-data-table-row-selected': this.props.isItemSelected },
           `giu-data-table-row-${saneId}`,
-          prefixClasses(dataTableId, 'giu-data-table-row')
+          prefixClasses(dataTableId, 'giu-data-table-row'),
+          prefixClasses(this.props.dataTableClassName, 'giu-data-table-row')
         )}
         id={
           dataTableId
