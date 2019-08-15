@@ -665,6 +665,10 @@ row is drawn above the modal, not below */
   white-space: nowrap;
 }
 
+.giu-checkbox-input {
+  margin-right: 0.3em;
+}
+
 .giu-checkbox-mdl {
   white-space: nowrap;
   width: initial;
@@ -1098,6 +1102,10 @@ _:future,
 .giu-radio-group-disabled {
   cursor: default;
   pointer-events: none;
+}
+
+.giu-radio-group input[type='radio'] {
+  margin-right: 0.3em;
 }
 
 .giu-radio-group-label-extra {
