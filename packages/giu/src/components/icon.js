@@ -53,10 +53,10 @@ class Icon extends React.PureComponent<Props> {
 
   // ==========================================
   render() {
+    const { icon, disabled } = this.props;
     if (!this.props.skipTheme && this.props.theme.id === 'mdl') {
       return icon === SPINNER_ICON ? this.renderMdlSpinner() : this.renderMdl();
     }
-    const { icon, disabled } = this.props;
     const family = this.props.family || 'fa';
     return (
       <FontAwesomeIcon
