@@ -205,12 +205,24 @@ const DATA_TABLE_COLS = [
   },
   {
     attr: 'confirmed',
-    labelLevel: 1,
+    labelLevel: 2,
     label: () => (curLang === 'es' ? 'Confirmado' : 'Confirmed'),
     render: ({ item, id, attr, onChange }) => (
       <Checkbox
         value={item.confirmed}
         onChange={(ev, value) => onChange(id, attr, value)}
+        skipTheme
+      />
+    ),
+  },
+  {
+    attr: 'confirmed2',
+    labelLevel: 1,
+    label: () => (curLang === 'es' ? 'Confirmado 2' : 'Confirmed 2'),
+    render: ({ item, id, onChange }) => (
+      <Checkbox
+        value={item.confirmed}
+        onChange={(ev, value) => onChange(id, 'confirmed', value)}
         skipTheme
       />
     ),
@@ -373,7 +385,8 @@ class DevelopmentExample extends React.Component<*, *> {
           .giu-data-table-row-datatable-dev .giu-data-table-col-notes {
             flex: 1 0 100px;
           }
-          .giu-data-table-row-datatable-dev .giu-data-table-col-confirmed {
+          .giu-data-table-row-datatable-dev .giu-data-table-col-confirmed,
+          .giu-data-table-row-datatable-dev .giu-data-table-col-confirmed2 {
             flex: 0 0 30px;
             max-width: 30px;
           }
