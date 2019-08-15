@@ -1,3 +1,5 @@
+## 0.18.4 (2019-8-15)
+
 * Input: add `cleanUpOnChange`, `cleanUpOnValidate` props.
 
 ## 0.18.3 (2019-8-13)
