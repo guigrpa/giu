@@ -8,6 +8,9 @@ import marked from 'marked';
 import hljs from 'highlight.js';
 import { merge } from 'timm';
 import moment from 'moment';
+import { library as faLibrary } from '@fortawesome/fontawesome-svg-core';
+import { far as farIcons } from '@fortawesome/free-regular-svg-icons';
+import { fas as fasIcons } from '@fortawesome/free-solid-svg-icons';
 import {
   Select,
   DateInput,
@@ -47,6 +50,8 @@ import {
 } from 'giu';
 import 'giu/lib/css/reset.css';
 import 'giu/lib/css/giu.css';
+
+faLibrary.add(farIcons, fasIcons);
 
 let FontFaceObserver;
 try {
@@ -1229,7 +1234,7 @@ class AppWrapper extends React.Component {
           />
           <link
             rel="stylesheet"
-            href={`${baseUrl}/static/deps/font-awesome/css/font-awesome.min.css`}
+            href={`${baseUrl}/static/deps/@fortawesome/fontawesome-svg-core/styles.css`}
           />
           <link
             rel="stylesheet"

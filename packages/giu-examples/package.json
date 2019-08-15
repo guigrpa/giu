@@ -11,10 +11,12 @@
   },
   "_dependencies": "Hoisted (to avoid dep conflicts): moment, react, react-dom",
   "dependencies": {
+    "@fortawesome/fontawesome-svg-core": "^1.2.21",
+    "@fortawesome/free-regular-svg-icons": "^5.10.1",
+    "@fortawesome/free-solid-svg-icons": "^5.10.1",
     "@zeit/next-css": "^1.0.1",
     "express": "^4.15.2",
     "faker": "^4.1.0",
-    "font-awesome": "^4.7.0",
     "fontfaceobserver": "^2.0.13",
     "giu": "*",
     "highlight.js": "^9.11.0",

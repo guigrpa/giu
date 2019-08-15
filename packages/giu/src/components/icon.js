@@ -2,10 +2,14 @@
 
 import React from 'react';
 import classnames from 'classnames';
+import { config as faConfig } from '@fortawesome/fontawesome-svg-core';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { ThemeContext } from '../gral/themeContext';
 import type { Theme } from '../gral/themeContext';
 
-const SPINNER_ICON = 'circle-o-notch';
+faConfig.autoAddCss = false;
+
+const SPINNER_ICON = 'circle-notch';
 
 // ==========================================
 // Declaration
@@ -16,11 +20,12 @@ const SPINNER_ICON = 'circle-o-notch';
 type PublicProps = {
   className?: string,
   id?: string,
-  icon: string, // e.g. `ambulance`, `cogs`...
+  icon: string | [string, string], // e.g. `ambulance`, `cogs`...
   family?: string, // e.g. `fas`, `far`
   size?: 'lg' | '2x' | '3x' | '4x' | '5x',
   fixedWidth?: boolean,
   spin?: boolean,
+  pulse?: boolean,
   onClick?: (ev: SyntheticMouseEvent<*>) => any,
   disabled?: boolean,
   skipTheme?: boolean,
@@ -48,18 +53,42 @@ class Icon extends React.PureComponent<Props> {
 
   // ==========================================
   render() {
-    const isMdl = !this.props.skipTheme && this.props.theme.id === 'mdl';
-    const { icon, spin, disabled, size } = this.props;
-    if (isMdl && icon === SPINNER_ICON) return this.renderMdlSpinner();
+    if (!this.props.skipTheme && this.props.theme.id === 'mdl') {
+      return icon === SPINNER_ICON ? this.renderMdlSpinner() : this.renderMdl();
+    }
+    const { icon, disabled } = this.props;
     const family = this.props.family || 'fa';
+    return (
+      <FontAwesomeIcon
+        className={classnames(
+          'giu-icon',
+          {
+            'giu-icon-disabled': disabled,
+            'giu-icon-clickable': !disabled && this.props.onClick,
+          },
+          this.props.className
+        )}
+        id={this.props.id}
+        icon={family ? [family, icon] : icon}
+        size={this.props.size}
+        onClick={disabled ? undefined : this.props.onClick}
+        fixedWidth={this.props.fixedWidth}
+        spin={icon === SPINNER_ICON || this.props.spin}
+        pulse={this.props.pulse}
+        style={this.props.style}
+      />
+    );
+  }
+
+  renderMdl() {
+    const { icon, disabled, size } = this.props;
     return (
       <i
         className={classnames(
           'giu-icon',
           size ? `giu-icon-${size}` : undefined,
-          isMdl ? 'material-icons' : `${family} fa-${icon}`,
+          'material-icons',
           {
-            'fa-spin': !isMdl && (icon === SPINNER_ICON || spin),
             'giu-icon-disabled': disabled,
             'giu-icon-clickable': !disabled && this.props.onClick,
             'giu-icon-fixed-width': this.props.fixedWidth,
@@ -70,7 +99,7 @@ class Icon extends React.PureComponent<Props> {
         onClick={disabled ? undefined : this.props.onClick}
         style={this.props.style}
       >
-        {isMdl ? icon : null}
+        {icon}
       </i>
     );
   }

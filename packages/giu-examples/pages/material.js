@@ -366,10 +366,6 @@ class AppWrapper extends React.Component {
           />
           <link
             rel="stylesheet"
-            href={`${baseUrl}/static/deps/font-awesome/css/font-awesome.min.css`}
-          />
-          <link
-            rel="stylesheet"
             href={`${baseUrl}/static/deps/typeface-gloria-hallelujah/index.css`}
           />
           <link

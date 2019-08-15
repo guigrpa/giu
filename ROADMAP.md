@@ -2,7 +2,6 @@
 
 --
 - Add multiple selection for Select (at least for inline!)
-- Improve support for custom icon fonts (vertical alignment)
 - Update docs to indicate that moment is now optional
 
 - Allow radio groups to be set horizontally, and based on spans rather than divs
@@ -23,7 +22,6 @@
 * [ ] Think: how do we revert all fields in a datatable record? (try to update the example page `datatable.js`)
 * Use Portals?
 * Use Hooks?
-* [ ] Update Font Awesome (later)
 
 * [ ] Add copy&paste to RangePicker
 * [ ] _Bug_ ListPicker on Windows incorrectly aligns (vertically) items and shortcuts (it _is_ correct in the main doc page)

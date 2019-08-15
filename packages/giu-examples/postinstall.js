@@ -8,7 +8,12 @@ const libPath = lib => path.dirname(require.resolve(`${lib}/package.json`));
 
 let dstPath;
 
-const LIBS = ['font-awesome', 'typeface-gloria-hallelujah', 'typeface-roboto', 'material-design-lite'];
+const LIBS = [
+  '@fortawesome/fontawesome-svg-core',
+  'typeface-gloria-hallelujah',
+  'typeface-roboto',
+  'material-design-lite',
+];
 LIBS.forEach(lib => {
   dstPath = `./static/deps/${lib}`;
   fs.removeSync(dstPath);

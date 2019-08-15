@@ -6,6 +6,9 @@
 import React from 'react';
 import Head from 'next/head';
 import { set as timmSet, merge, omit } from 'timm';
+import { library as faLibrary } from '@fortawesome/fontawesome-svg-core';
+import { far as farIcons } from '@fortawesome/free-regular-svg-icons';
+import { fas as fasIcons } from '@fortawesome/free-solid-svg-icons';
 import {
   Floats,
   Notifications,
@@ -24,6 +27,8 @@ import {
 import faker from 'faker';
 import 'giu/lib/css/reset.css';
 import 'giu/lib/css/giu.css';
+
+faLibrary.add(farIcons, fasIcons);
 
 faker.seed(0);
 
@@ -618,7 +623,7 @@ class AppWrapper extends React.Component {
           />
           <link
             rel="stylesheet"
-            href={`${baseUrl}/static/deps/font-awesome/css/font-awesome.min.css`}
+            href={`${baseUrl}/static/deps/@fortawesome/fontawesome-svg-core/styles.css`}
           />
           <link
             rel="icon"

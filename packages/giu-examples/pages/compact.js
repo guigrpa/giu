@@ -5,6 +5,9 @@
 import React from 'react';
 import Head from 'next/head';
 import moment from 'moment';
+import { library as faLibrary } from '@fortawesome/fontawesome-svg-core';
+import { far as farIcons } from '@fortawesome/free-regular-svg-icons';
+import { fas as fasIcons } from '@fortawesome/free-solid-svg-icons';
 import {
   Giu,
   DateInput,
@@ -51,6 +54,8 @@ import FormExample from '../components/demo1-forms';
 import FormExample2 from '../components/demo1-forms2';
 import 'giu/lib/css/reset.css';
 import 'giu/lib/css/giu.css';
+
+faLibrary.add(farIcons, fasIcons);
 
 const { floor, random } = Math;
 const randomInt = (min, max) => min + floor(random() * (max - min + 1));
@@ -639,7 +644,7 @@ const IconExample = () => (
   <div className="example">
     <div className="example-label">Icon</div>
     <Icon icon="heart" id="a" /> <Spinner /> <Icon icon="spinner" spin />{' '}
-    <Icon icon="arrow-left" id="a" />{' '}
+    <Icon icon="spinner" pulse /> <Icon icon="arrow-left" id="a" />{' '}
     <Icon icon="arrow-right" onClick={() => notify()} />{' '}
     <Icon icon="arrow-down" disabled />
   </div>
@@ -818,7 +823,7 @@ class AppWrapper extends React.Component {
           />
           <link
             rel="stylesheet"
-            href={`${baseUrl}/static/deps/font-awesome/css/font-awesome.min.css`}
+            href={`${baseUrl}/static/deps/@fortawesome/fontawesome-svg-core/styles.css`}
           />
           <link
             rel="stylesheet"
