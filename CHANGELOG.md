@@ -1,3 +1,6 @@
+* **Breaking**:
+    * Migrate to Font Awesome v5 - see the examples for how to define your own icon library (choosing the icons you need from the 1500+ FA library) and using them with Giu.
+
 ## 0.18.5 (2019-8-15)
 
 * Icon: add `family` prop.
