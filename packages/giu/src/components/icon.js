@@ -8,6 +8,9 @@ import {
 } from '@fortawesome/fontawesome-svg-core';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import {
+  faBars,
+  faCircleNotch,
+  faTimes,
   faCaretDown,
   faCaretUp,
   faArrowLeft,
@@ -17,7 +20,15 @@ import { ThemeContext } from '../gral/themeContext';
 import type { Theme } from '../gral/themeContext';
 
 faConfig.autoAddCss = false;
-faLibrary.add(faCaretDown, faCaretUp, faArrowLeft, faArrowRight);
+faLibrary.add(
+  faBars,
+  faCircleNotch,
+  faTimes,
+  faCaretDown,
+  faCaretUp,
+  faArrowLeft,
+  faArrowRight
+);
 
 const SPINNER_ICON = 'circle-notch';
 
