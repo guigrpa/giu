@@ -1,8 +1,7 @@
 # Roadmap
 
-* Publish prerelease, and test with Editorial (for instance)
-
 --
+- Add multiple selection for Select (at least for inline!)
 - Improve support for custom icon fonts (vertical alignment)
 - Update docs to indicate that moment is now optional
 

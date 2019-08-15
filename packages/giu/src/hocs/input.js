@@ -60,6 +60,8 @@ export type InputHocPublicProps = {
   onChange?: (ev: SyntheticEvent<*>, extValue: any) => any,
   onFocus?: (ev: SyntheticEvent<*>) => any,
   onBlur?: (ev: SyntheticEvent<*>) => any,
+  cleanUpOnChange?: (extValue: any) => any,
+  cleanUpOnValidate?: (extValue: any) => any,
 };
 
 type Props = {
@@ -114,6 +116,8 @@ const HOC_PUBLIC_PROPS = [
   'onChange',
   'onFocus',
   'onBlur',
+  'cleanUpOnChange',
+  'cleanUpOnValidate',
 ];
 
 // Don't pass these HOC props to an <input>
@@ -187,7 +191,7 @@ class Input extends React.PureComponent<Props> {
   }
   async validate() {
     try {
-      this._validate();
+      await this._validate();
     } catch (err) {
       console.error(err); // eslint-disable-line
     }
@@ -382,12 +386,20 @@ class Input extends React.PureComponent<Props> {
     options: { fDontFocus?: boolean } = {}
   ) => {
     if (this.props.disabled) return;
-    const { onChange, hocOptions } = this.props;
-    const { valueAttr = 'value', toExternalValue = fnIdentity } = hocOptions;
+    const { onChange, cleanUpOnChange, hocOptions } = this.props;
+    const {
+      valueAttr = 'value',
+      toExternalValue = fnIdentity,
+      toInternalValue = fnIdentity,
+    } = hocOptions;
     let curValue = providedValue;
     if (curValue === undefined) {
       const currentTarget: any = ev.currentTarget; // eslint-disable-line
       curValue = currentTarget[valueAttr];
+    }
+    if (cleanUpOnChange) {
+      const extValue = cleanUpOnChange(toExternalValue(curValue, this.props));
+      curValue = toInternalValue(extValue, this.props);
     }
     this.setCurValue(curValue);
     if (onChange) onChange(ev, toExternalValue(curValue, this.props));
@@ -462,15 +474,38 @@ class Input extends React.PureComponent<Props> {
     this.forceUpdate();
   }
 
+  toInternalValue(externalValue, props) {
+    const fn = this.props.hocOptions.toInternalValue || fnIdentity;
+    return fn(externalValue, props);
+  }
+
+  toExternalValue(internalValue, props) {
+    const fn = this.props.hocOptions.toExternalValue || fnIdentity;
+    return fn(internalValue, props);
+  }
+
   _validate() {
+    const { cleanUpOnValidate } = this.props;
+    const { curValue: internalValue0 } = this;
+    let internalValue = internalValue0;
+
+    // Always clean up if user wants to
+    if (cleanUpOnValidate) {
+      const externalValue = cleanUpOnValidate(
+        this.toExternalValue(internalValue, this.props)
+      );
+      internalValue = this.toInternalValue(externalValue, this.props);
+      if (internalValue !== internalValue0) {
+        this.setCurValue(internalValue);
+        const { onChange } = this.props;
+        if (onChange) onChange(null, externalValue);
+      }
+    }
+
+    // Prepare validation
     if (this.props.noErrors) return Promise.resolve();
     const { validators: userValidators, hocOptions } = this.props;
-    const {
-      defaultValidators = {},
-      toExternalValue = fnIdentity,
-      isNull,
-      validatorContext,
-    } = hocOptions;
+    const { defaultValidators = {}, isNull, validatorContext } = hocOptions;
     let validators = defaultValidators;
     if (userValidators) {
       const extraValidators = {};
@@ -481,7 +516,6 @@ class Input extends React.PureComponent<Props> {
       });
       if (cnt) validators = merge(validators, extraValidators);
     }
-    const { curValue: internalValue } = this;
     const externalValue = toExternalValue(internalValue, this.props);
     const fRequired = this.props.required || validators.isRequired != null;
     const fIsNull = isNull(internalValue);
