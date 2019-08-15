@@ -17,6 +17,7 @@ type PublicProps = {
   className?: string,
   id?: string,
   icon: string, // e.g. `ambulance`, `cogs`...
+  family?: string, // e.g. `fas`, `far`
   size?: 'lg' | '2x' | '3x' | '4x' | '5x',
   fixedWidth?: boolean,
   spin?: boolean,
@@ -50,12 +51,13 @@ class Icon extends React.PureComponent<Props> {
     const isMdl = !this.props.skipTheme && this.props.theme.id === 'mdl';
     const { icon, spin, disabled, size } = this.props;
     if (isMdl && icon === SPINNER_ICON) return this.renderMdlSpinner();
+    const family = this.props.family || 'fa';
     return (
       <i
         className={classnames(
           'giu-icon',
           size ? `giu-icon-${size}` : undefined,
-          isMdl ? 'material-icons' : `fa fa-${icon}`,
+          isMdl ? 'material-icons' : `${family} fa-${icon}`,
           {
             'fa-spin': !isMdl && (icon === SPINNER_ICON || spin),
             'giu-icon-disabled': disabled,
