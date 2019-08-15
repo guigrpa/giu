@@ -172,19 +172,16 @@ class Input extends React.PureComponent<Props> {
   // Alternative to using the `onChange` prop (e.g. if we want to delegate
   // state handling to the input and only want to retrieve the value when submitting a form)
   getValue() {
-    const { toExternalValue = fnIdentity } = this.props.hocOptions;
-    return toExternalValue(this.curValue, this.props);
+    return this.toExternalValue(this.curValue, this.props);
   }
   // Modify the input's value without going through the `value` prop
   setValue(value) {
-    const { toInternalValue = fnIdentity } = this.props.hocOptions;
-    this.setCurValue(toInternalValue(value, this.props));
+    this.setCurValue(this.toInternalValue(value, this.props));
   }
   // Reset the input to the `value` prop
   revert() {
     this.resetErrors();
-    const { toInternalValue = fnIdentity } = this.props.hocOptions;
-    this.setCurValue(toInternalValue(this.props.value, this.props));
+    this.setCurValue(this.toInternalValue(this.props.value, this.props));
   }
   getErrors() {
     return this.errors;
@@ -217,8 +214,7 @@ class Input extends React.PureComponent<Props> {
   prepareRender() {
     const { value, errors } = this.props;
     if (!this.fInit || value !== this.prevExtValue) {
-      const { toInternalValue = fnIdentity } = this.props.hocOptions;
-      this.curValue = toInternalValue(value, this.props);
+      this.curValue = this.toInternalValue(value, this.props);
       this.prevExtValue = value;
       this.fDirtyErrorFloat = true;
     }
@@ -344,13 +340,12 @@ class Input extends React.PureComponent<Props> {
 
   renderErrors() {
     const { errors, curValue, lastValidatedValue } = this;
-    const { toInternalValue = fnIdentity } = this.props.hocOptions;
     // console.log(`Rendering; lastValidatedValue=${lastValidatedValue}, curValue=${curValue}, ` +
     //   `internal value for props.value=${toInternalValue(this.props.value, this.props)}`);
     const fModified =
       lastValidatedValue !== undefined
         ? curValue !== lastValidatedValue
-        : curValue !== toInternalValue(this.props.value, this.props);
+        : curValue !== this.toInternalValue(this.props.value, this.props);
     return (
       <div
         className={classnames('giu-error', {
@@ -387,22 +382,20 @@ class Input extends React.PureComponent<Props> {
   ) => {
     if (this.props.disabled) return;
     const { onChange, cleanUpOnChange, hocOptions } = this.props;
-    const {
-      valueAttr = 'value',
-      toExternalValue = fnIdentity,
-      toInternalValue = fnIdentity,
-    } = hocOptions;
+    const { valueAttr = 'value' } = hocOptions;
     let curValue = providedValue;
     if (curValue === undefined) {
       const currentTarget: any = ev.currentTarget; // eslint-disable-line
       curValue = currentTarget[valueAttr];
     }
     if (cleanUpOnChange) {
-      const extValue = cleanUpOnChange(toExternalValue(curValue, this.props));
-      curValue = toInternalValue(extValue, this.props);
+      const extValue = cleanUpOnChange(
+        this.toExternalValue(curValue, this.props)
+      );
+      curValue = this.toInternalValue(extValue, this.props);
     }
     this.setCurValue(curValue);
-    if (onChange) onChange(ev, toExternalValue(curValue, this.props));
+    if (onChange) onChange(ev, this.toExternalValue(curValue, this.props));
     if (!this.fFocused && !options.fDontFocus) {
       const { focusOnChange = true } = this.props;
       if (focusOnChange) this.focus();
@@ -516,7 +509,7 @@ class Input extends React.PureComponent<Props> {
       });
       if (cnt) validators = merge(validators, extraValidators);
     }
-    const externalValue = toExternalValue(internalValue, this.props);
+    const externalValue = this.toExternalValue(internalValue, this.props);
     const fRequired = this.props.required || validators.isRequired != null;
     const fIsNull = isNull(internalValue);
 
