@@ -204,7 +204,7 @@ row is drawn above the modal, not below */
 
 .giu-data-table-header-callout {
   position: absolute;
-  right: 100%;
+  left: -7px;
   top: 7px;
   stroke: var(--color-line);
   stroke-width: 1px;
