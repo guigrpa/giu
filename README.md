@@ -762,7 +762,7 @@ Here's an example on how you would create a notification:
 ```js
 import { notify, Button } from 'giu';
 const NotifExample = () =>
-  <Button onClick={() => notify({ msg: 'Idea!', icon: 'lightbulb-o' })}>
+  <Button onClick={() => notify({ msg: 'Idea!', icon: 'lightbulb' })}>
     Inspire me!
   </Button>;
 ```
@@ -929,11 +929,12 @@ A wrapper for Font Awesome icons. Props:
 type PublicProps = {
   className?: string,
   id?: string,
-  icon: string, // e.g. `ambulance`, `cogs`...
+  icon: string | [string, string], // e.g. `ambulance`, `cogs`...
   family?: string, // e.g. `fas`, `far`
   size?: 'lg' | '2x' | '3x' | '4x' | '5x',
   fixedWidth?: boolean,
   spin?: boolean,
+  pulse?: boolean,
   onClick?: (ev: SyntheticMouseEvent<*>) => any,
   disabled?: boolean,
   skipTheme?: boolean,

@@ -2,12 +2,22 @@
 
 import React from 'react';
 import classnames from 'classnames';
-import { config as faConfig } from '@fortawesome/fontawesome-svg-core';
+import {
+  config as faConfig,
+  library as faLibrary,
+} from '@fortawesome/fontawesome-svg-core';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import {
+  faCaretDown,
+  faCaretUp,
+  faArrowLeft,
+  faArrowRight,
+} from '@fortawesome/free-solid-svg-icons';
 import { ThemeContext } from '../gral/themeContext';
 import type { Theme } from '../gral/themeContext';
 
 faConfig.autoAddCss = false;
+faLibrary.add(faCaretDown, faCaretUp, faArrowLeft, faArrowRight);
 
 const SPINNER_ICON = 'circle-notch';
 

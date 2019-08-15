@@ -873,10 +873,10 @@ const ColorInputs = () => (
 const FileInputs = () => (
   <CenteredFlex>
     <FileInput>
-      <Icon icon="file-o" /> Choose a file...
+      <Icon icon="file" /> Choose a file...
     </FileInput>
     <FileInput disabled>
-      <Icon icon="file-o" /> Disabled FileInput
+      <Icon icon="file" /> Disabled FileInput
     </FileInput>
   </CenteredFlex>
 );
@@ -1014,7 +1014,7 @@ class HintDemo extends React.Component {
     return (
       <span ref="buttonShowHint">
         <Button onClick={() => hintShow('hintExample', true)}>
-          <Icon icon="hand-scissors-o" />
+          <Icon icon="hand-scissors" />
           &nbsp; Show me an example
         </Button>
       </span>
@@ -1032,7 +1032,7 @@ const Buttons = ({ fIncludeDisabled }) => (
         })
       }
     >
-      <Icon icon="lightbulb-o" /> Inspire me!
+      <Icon icon="lightbulb" /> Inspire me!
     </Button>
     &nbsp;&nbsp;
     <Button
@@ -1056,9 +1056,9 @@ const Icons = () => (
   <Centered>
     <Icon size="2x" icon="globe" />
     &nbsp;&nbsp;
-    <Icon size="2x" icon="group" />
+    <Icon size="2x" icon="users" />
     &nbsp;&nbsp;
-    <Icon size="2x" icon="hand-spock-o" />
+    <Icon size="2x" icon="hand-spock" />
     &nbsp;&nbsp;
     <Icon size="2x" icon="music" />
     &nbsp;&nbsp;

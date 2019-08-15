@@ -249,7 +249,7 @@ class Contents extends React.Component {
       <div style={style.controlStrip}>
         {!isEditing &&
           this.renderButton({
-            icon: 'remove',
+            icon: 'trash-alt',
             label: 'Delete...',
             disabled: !selectedIds.length,
             onClick: this.onDelete,
@@ -268,7 +268,7 @@ class Contents extends React.Component {
         <div style={style.separator} />
         {!isEditing &&
           this.renderButton({
-            icon: 'pencil',
+            icon: 'pencil-alt',
             label: 'Edit',
             disabled: selectedIds.length !== 1,
             onClick: this.onEdit,

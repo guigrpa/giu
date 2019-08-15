@@ -387,7 +387,7 @@ row is drawn above the modal, not below */
 
 .giu-data-table-header-callout {
   position: absolute;
-  right: 100%;
+  left: -7px;
   top: 7px;
   stroke: var(--color-line);
   stroke-width: 1px;
@@ -609,25 +609,6 @@ row is drawn above the modal, not below */
   text-align: center;
 }
 
-.giu-icon {
-  font-size: 1em;
-}
-.giu-icon.giu-icon-lg {
-  font-size: 1.33333333em;
-}
-.giu-icon.giu-icon-2x {
-  font-size: 2em;
-}
-.giu-icon.giu-icon-3x {
-  font-size: 3em;
-}
-.giu-icon.giu-icon-4x {
-  font-size: 4em;
-}
-.giu-icon.giu-icon-5x {
-  font-size: 6em;
-}
-
 .giu-mdl-spinner {
   width: 1em;
   height: 1em;
@@ -846,6 +827,10 @@ row is drawn above the modal, not below */
 /* ------------------------ */
 .giu-checkbox {
   white-space: nowrap;
+}
+
+.giu-checkbox-input {
+  margin-right: 0.3em;
 }
 
 .giu-checkbox-mdl {
@@ -1281,6 +1266,10 @@ _:future,
 .giu-radio-group-disabled {
   cursor: default;
   pointer-events: none;
+}
+
+.giu-radio-group input[type='radio'] {
+  margin-right: 0.3em;
 }
 
 .giu-radio-group-label-extra {

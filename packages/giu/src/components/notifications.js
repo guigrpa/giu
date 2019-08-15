@@ -19,7 +19,7 @@ Here's an example on how you would create a notification:
 ```js
 import { notify, Button } from 'giu';
 const NotifExample = () =>
-  <Button onClick={() => notify({ msg: 'Idea!', icon: 'lightbulb-o' })}>
+  <Button onClick={() => notify({ msg: 'Idea!', icon: 'lightbulb' })}>
     Inspire me!
   </Button>;
 ```
