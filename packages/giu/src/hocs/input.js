@@ -491,7 +491,7 @@ class Input extends React.PureComponent<Props> {
       if (internalValue !== internalValue0) {
         this.setCurValue(internalValue);
         const { onChange } = this.props;
-        if (onChange) onChange(null, externalValue);
+        if (onChange) onChange((null: any), externalValue);
       }
     }
 
