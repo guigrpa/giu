@@ -930,6 +930,7 @@ type PublicProps = {
   className?: string,
   id?: string,
   icon: string, // e.g. `ambulance`, `cogs`...
+  family?: string, // e.g. `fas`, `far`
   size?: 'lg' | '2x' | '3x' | '4x' | '5x',
   fixedWidth?: boolean,
   spin?: boolean,
