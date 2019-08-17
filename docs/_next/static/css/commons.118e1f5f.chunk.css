@@ -233,6 +233,11 @@ body {
   --font-mdl: 'Roboto', 'Helvetica', 'Arial', sans-serif;
 }
 
+input::placeholder,
+input::-webkit-input-placeholder {
+  color: lightgray;
+}
+
 .giu-box-shadow {
   background-color: white;
   border-radius: 2px;
