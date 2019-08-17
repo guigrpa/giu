@@ -1,3 +1,5 @@
+## 0.19.2 (2019-8-17)
+
 * Change input placeholder color.
 
 ## 0.19.1 (2019-8-15)
