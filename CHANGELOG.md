@@ -1,3 +1,5 @@
+* Manually include all icons we use (not the whole library).
+
 ## 0.19.2 (2019-8-17)
 
 * Change input placeholder color.
