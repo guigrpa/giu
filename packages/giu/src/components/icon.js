@@ -14,6 +14,7 @@ import { faCaretDown } from '@fortawesome/free-solid-svg-icons/faCaretDown';
 import { faCaretUp } from '@fortawesome/free-solid-svg-icons/faCaretUp';
 import { faArrowLeft } from '@fortawesome/free-solid-svg-icons/faArrowLeft';
 import { faArrowRight } from '@fortawesome/free-solid-svg-icons/faArrowRight';
+import { faExclamation } from '@fortawesome/free-solid-svg-icons/faExclamation';
 import { ThemeContext } from '../gral/themeContext';
 import type { Theme } from '../gral/themeContext';
 
@@ -25,7 +26,8 @@ faLibrary.add(
   faCaretDown,
   faCaretUp,
   faArrowLeft,
-  faArrowRight
+  faArrowRight,
+  faExclamation
 );
 
 const SPINNER_ICON = 'circle-notch';

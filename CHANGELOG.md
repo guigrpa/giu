@@ -1,3 +1,5 @@
+* Bundle missing icon, used in notifications.
+
 ## 0.19.3 (2019-10-2)
 
 * Manually include all icons we use (not the whole library).
