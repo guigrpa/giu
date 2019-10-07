@@ -1,3 +1,5 @@
+## 0.19.5 (2019-10-7)
+
 * Notification: add `iconFamily` prop.
 
 ## 0.19.4 (2019-10-5)
