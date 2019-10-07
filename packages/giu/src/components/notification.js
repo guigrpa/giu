@@ -49,7 +49,7 @@ class Notification extends React.PureComponent<Props, State> {
         <div className="giu-notification-icon">
           <Icon
             icon={icon}
-            iconFamily={this.props.iconFamily}
+            family={this.props.iconFamily}
             size="2x"
             spin={this.props.iconSpin}
           />

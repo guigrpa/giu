@@ -84,6 +84,7 @@ const DEFAULT_NOTIF_PARS = {
   timeOut: 4000,
   type: undefined,
   icon: undefined,
+  iconFamily: undefined,
   iconSpin: false,
   title: '',
   msg: '',
