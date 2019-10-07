@@ -47,7 +47,12 @@ class Notification extends React.PureComponent<Props, State> {
         onClick={this.props.onClick}
       >
         <div className="giu-notification-icon">
-          <Icon icon={icon} size="2x" spin={this.props.iconSpin} />
+          <Icon
+            icon={icon}
+            iconFamily={this.props.iconFamily}
+            size="2x"
+            spin={this.props.iconSpin}
+          />
         </div>
         <div className="giu-notification-body">
           <div className="giu-notification-title">{this.props.title}</div>

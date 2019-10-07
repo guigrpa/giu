@@ -1,3 +1,5 @@
+* Notification: add `iconFamily` prop.
+
 ## 0.19.4 (2019-10-5)
 
 * Bundle missing icon, used in notifications.
