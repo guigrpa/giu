@@ -788,6 +788,7 @@ export type NotificationPars = {|
   timeOut?: number, // time [ms] after which it's deleted [default: 4000]
   type?: NotificationType, // default: `info`
   icon?: string, // default: `exclamation`
+  iconFamily?: string,
   iconSpin?: boolean,
   title?: string, // highlighted text at the top of the notification
   msg?: string, // notification text
