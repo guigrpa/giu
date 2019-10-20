@@ -11,12 +11,13 @@ import { IS_IOS } from '../gral/constants';
 type Props = {
   className?: string,
   id?: string,
+  onClick?: Function,
 };
 
 // ==========================================
 // Component
 // ==========================================
-const Backdrop = ({ id, className }: Props) => (
+const Backdrop = ({ id, className, onClick }: Props) => (
   <div
     className={classnames(
       'giu-backdrop',
@@ -24,6 +25,7 @@ const Backdrop = ({ id, className }: Props) => (
       className
     )}
     id={id}
+    onClick={onClick}
     onWheel={cancelEvent}
     onTouchMove={cancelEvent}
   />

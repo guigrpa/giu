@@ -1,3 +1,5 @@
+* Modal: fix issue in which modal could not be discarded by clicking on backdrop.
+
 ## 0.19.6 (2019-10-7)
 
 ## 0.19.5 (2019-10-7)
