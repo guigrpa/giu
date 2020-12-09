@@ -588,7 +588,7 @@ class VirtualScroller extends React.PureComponent<Props> {
         return;
       }
       const numRowsToRender = this.calcNumRowsToRender(
-        scrollBottom - rowTopLast,
+        scrollBottom + EXTRA_RENDER_PIXELS - rowTopLast,
         maxRowsToRender
       );
       this.trimAndSetRenderInterval(idxFirst, idxLast + numRowsToRender);
@@ -596,13 +596,14 @@ class VirtualScroller extends React.PureComponent<Props> {
     }
 
     const numRowsToRender = this.calcNumRowsToRender(
-      scrollBottom - rowTopFirst,
+      scrollBottom + EXTRA_RENDER_PIXELS - rowTopFirst,
       maxRowsToRender
     );
     this.trimAndSetRenderInterval(idxFirst, idxFirst + numRowsToRender);
   }
 
-  calcNumRowsToRender(diffHeight: number, limit: number) {
+  calcNumRowsToRender(diffHeight0: number, limit: number) {
+    const diffHeight = Math.max(0, diffHeight0);
     const { minHeight, avgHeight } = this;
     let numRowsToRender;
     if (minHeight != null && minHeight !== Infinity) {

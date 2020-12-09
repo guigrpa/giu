@@ -1,3 +1,5 @@
+* VirtualScroller: fix incorrect calculation of row interval to be rendered.
+
 ## 0.19.7 (2019-10-20)
 
 * Modal: fix issue in which modal could not be discarded by clicking on backdrop.
