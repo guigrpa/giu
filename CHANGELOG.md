@@ -1,3 +1,5 @@
+## 0.19.8 (2020-12-9)
+
 * VirtualScroller: fix incorrect calculation of row interval to be rendered.
 
 ## 0.19.7 (2019-10-20)
