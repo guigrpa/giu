@@ -1,3 +1,5 @@
+## 0.20.0 (2020-12-13)
+
 * DataTable: add specific class names for first, last row.
 * DataTable: allow user to specify item(row)-specific class names (`getRowClassNames` prop).
 
