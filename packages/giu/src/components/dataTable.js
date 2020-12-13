@@ -492,9 +492,17 @@ class DataTable extends React.PureComponent<Props> {
     );
   }
 
-  getSpecificRowProps = (id: string) => ({
-    isItemSelected: this.selectedIds.indexOf(id) >= 0,
-  });
+  getSpecificRowProps = (id: string) => {
+    const { shownIds } = this.props;
+    const lenShownIds = shownIds.length;
+    const isFirst = lenShownIds && id === shownIds[0];
+    const isLast = lenShownIds && id === shownIds[lenShownIds - 1];
+    return {
+      isItemSelected: this.selectedIds.indexOf(id) >= 0,
+      isFirst,
+      isLast,
+    };
+  };
 
   // ==========================================
   // Event handlers

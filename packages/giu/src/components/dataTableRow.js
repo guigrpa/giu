@@ -176,6 +176,8 @@ type DataTableRowProps = {
   dataTableClassName?: string,
   dataTableId?: string,
   isItemSelected: boolean,
+  isFirst: boolean,
+  isLast: boolean,
   fSortedManually: boolean,
   disableDragging: boolean,
   commonCellProps?: Object,
@@ -199,7 +201,11 @@ class DataTableRow extends React.PureComponent<DataTableRowProps> {
       <div
         className={classnames(
           'giu-data-table-row',
-          { 'giu-data-table-row-selected': this.props.isItemSelected },
+          {
+            'giu-data-table-row-selected': this.props.isItemSelected,
+            'giu-data-table-row-first': this.props.isFirst,
+            'giu-data-table-row-last': this.props.isLast,
+          },
           `giu-data-table-row-${saneId}`,
           prefixClasses(dataTableId, 'giu-data-table-row'),
           prefixClasses(this.props.dataTableClassName, 'giu-data-table-row')
