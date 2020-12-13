@@ -1,3 +1,5 @@
+## 0.20.1 (2020-12-13)
+
 * **Bugfix**: DataTable: fix bug which prevented text selection (at least now it's possible when `allowSelect` (row selection) is false).
 
 ## 0.20.0 (2020-12-13)
