@@ -1,3 +1,6 @@
+* DataTable: add specific class names for first, last row.
+* DataTable: allow user to specify item(row)-specific class names (`getRowClassNames` prop).
+
 ## 0.19.8 (2020-12-9)
 
 * VirtualScroller: fix incorrect calculation of row interval to be rendered.

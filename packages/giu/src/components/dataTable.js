@@ -154,6 +154,7 @@ type PublicProps = {
   height?: number, // Body height (default: 200); set to -1 for 'whatever height is needed to show all rows'
   width?: number, // (default: default div block behaviour)
   rowHeight?: number, // Auto-calculated if unspecified
+  getRowClassNames?: ({ item: any, id: string }) => Array<string>,
   uniformRowHeight?: boolean, // Are rows of the same height (even if unknown a priori)? (default: false)
   showHeader?: boolean, // (default: true)
   animated?: boolean,
@@ -493,14 +494,18 @@ class DataTable extends React.PureComponent<Props> {
   }
 
   getSpecificRowProps = (id: string) => {
-    const { shownIds } = this.props;
+    const { itemsById, shownIds, getRowClassNames } = this.props;
     const lenShownIds = shownIds.length;
     const isFirst = lenShownIds && id === shownIds[0];
     const isLast = lenShownIds && id === shownIds[lenShownIds - 1];
+    const item = itemsById[id];
+    const rowClassNames =
+      item && getRowClassNames ? getRowClassNames({ item, id }) || [] : [];
     return {
       isItemSelected: this.selectedIds.indexOf(id) >= 0,
       isFirst,
       isLast,
+      rowClassNames,
     };
   };
 
