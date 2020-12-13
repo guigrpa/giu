@@ -522,11 +522,17 @@ class DataTable extends React.PureComponent<Props> {
     }
   };
 
-  // Except when clicking on an embedded focusable node, refocus on this table
-  // Prevent bubbling of click events; they may reach Modals
-  // on their way up and cause the element to blur.
+  // In general, prevent bubbling of click events; they may reach Modals
+  // on their way up and cause the DataTable to blur.
+  // There are two cases in which we don't do this:
+  // - When click is on a focusable node (we want it to have the focus)
+  // - When selection is not allowed; in this case, we don't need to
+  //   have the focus anyhow
+  // There is a case which is still not correctly handled: when row selection
+  // is allowed, this "stopPropagation()" prevents text selection.
   onClickOuter = (ev: SyntheticEvent<*>) => {
     if (!(ev.target instanceof Element)) return;
+    if (!this.props.allowSelect) return;
     const { tagName, disabled } = (ev.target: any);
     if (FOCUSABLE.indexOf(tagName.toLowerCase()) >= 0 && !disabled) return;
     this.focus();
