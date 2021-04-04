@@ -31,6 +31,8 @@ export { Select };
 export { LIST_SEPARATOR } from './inputs/selectCustom';
 export {
   TextInput,
+  EmailInput,
+  UrlInput,
   PasswordInput,
   NumberInput,
   RangeInput,

@@ -32,6 +32,8 @@ const CLASS_OPTIONS = {
     isNull: val => val === NULL_VALUE,
   },
 };
+CLASS_OPTIONS.email = CLASS_OPTIONS.text;
+CLASS_OPTIONS.url = CLASS_OPTIONS.text;
 
 // ==========================================
 // Declarations
@@ -207,8 +209,17 @@ function createClass(componentName, inputType) {
 // Public
 // ==========================================
 const TextInput = createClass('TextInput', 'text');
+const EmailInput = createClass('EmailInput', 'email');
+const UrlInput = createClass('UrlInput', 'url');
 const PasswordInput = createClass('PasswordInput', 'password');
 const NumberInput = createClass('NumberInput', 'number');
 const RangeInput = createClass('RangeInput', 'range');
 
-export { TextInput, PasswordInput, NumberInput, RangeInput };
+export {
+  TextInput,
+  EmailInput,
+  UrlInput,
+  PasswordInput,
+  NumberInput,
+  RangeInput,
+};
