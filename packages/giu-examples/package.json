@@ -24,7 +24,7 @@
     "marked": "^0.7.0",
     "material-design-lite": "^1.3.0",
     "moment": "^2.22.2",
-    "next": "^9.0.3",
+    "next": "^11.1.0",
     "prettier": "^1.14.2",
     "storyboard": "^3.1.4",
     "storyboard-preset-console": "^3.1.4",
