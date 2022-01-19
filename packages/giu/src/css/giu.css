@@ -918,6 +918,10 @@ _:future,
 /* ------------------------ */
 /* DateInput, DateTimePicker, DatePicker, TimePicker */
 /* ------------------------ */
+/* ::-webkit-calendar-picker-indicator {
+  margin-left: 0px;
+} */
+
 /* Date input */
 .giu-date-input {
   position: relative;
