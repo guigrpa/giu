@@ -56,8 +56,8 @@
     "flow-bin": "^0.104.0",
     "flow-copy-source": "^2.0.2",
     "moment": "^2.22.2",
-    "oao": "^1.5.1",
-    "prettier": "^1.14.2",
+    "oao": "^2.0.2",
+    "prettier": "^2.7.1",
     "react": "^16.4.2",
     "react-dom": "^16.4.2",
     "xxl": "1.2.0"

@@ -729,14 +729,6 @@
     "@babel/helper-regex" "^7.4.4"
     regexpu-core "^4.5.4"
 
-"@babel/polyfill@7.2.5":
-  version "7.2.5"
-  resolved "https://registry.npmjs.org/@babel/polyfill/-/polyfill-7.2.5.tgz#6c54b964f71ad27edddc567d065e57e87ed7fa7d"
-  integrity sha512-8Y/t3MWThtMLYr0YNC/Q76tqN1w30+b0uQMeFUYauG2UGTR19zyUtFrAzT23zNtBxPp+LbE5E/nwV/q/r3y6ug==
-  dependencies:
-    core-js "^2.5.7"
-    regenerator-runtime "^0.12.0"
-
 "@babel/preset-env@7.4.5":
   version "7.4.5"
   resolved "https://registry.npmjs.org/@babel/preset-env/-/preset-env-7.4.5.tgz#2fad7f62983d5af563b5f3139242755884998a58"
@@ -2120,7 +2112,7 @@ core-js@3:
   resolved "https://registry.npmjs.org/core-js/-/core-js-3.2.0.tgz#0a835fdf6aa677fff83a823a7b5276c9e7cebb76"
   integrity sha512-gybgLzmr7SQRSF6UzGYXducx4eE10ONQlyEnQoqiGPbmbn7zLkb73tPfc4YbZN0lvcTQwoLNPjq4RuCaCumGyQ==
 
-core-js@^2.4.0, core-js@^2.5.7, core-js@^2.6.5:
+core-js@^2.4.0, core-js@^2.6.5:
   version "2.6.9"
   resolved "https://registry.npmjs.org/core-js/-/core-js-2.6.9.tgz#6b4b214620c834152e179323727fc19741b084f2"
   integrity sha512-HOpZf6eXmnl7la+cUdMnLvUxKNqLUzJvgIziQ0DiF3JwSImNphIqdGqzj6hIKyX04MmV0poclQ7+wjWvxQyR2A==
@@ -4477,12 +4469,11 @@ number-is-nan@^1.0.0:
   resolved "https://registry.npmjs.org/number-is-nan/-/number-is-nan-1.0.1.tgz#097b602b53422a522c1afb8790318336941a011d"
   integrity sha1-CXtgK1NCKlIsGvuHkDGDNpQaAR0=
 
-oao@^1.5.1:
-  version "1.6.0"
-  resolved "https://registry.npmjs.org/oao/-/oao-1.6.0.tgz#917b62fa86ad948ead3ec70162cdf915d2edcc33"
-  integrity sha512-nNkOLuwuUgy2t7fH2brvgKc+EpXHfPDAzXX06CAWcktPNvFoljLHt5z4Em8N5j3+LT9r40Xoeu6PU7qOtEaxLQ==
+oao@^2.0.2:
+  version "2.0.2"
+  resolved "https://registry.yarnpkg.com/oao/-/oao-2.0.2.tgz#c837a49e17e01416a94d0255b69e9a79a568b94b"
+  integrity sha512-egjsgtePUdp6uRj7UfBL+t8a5OLBDpIo1RCIa1Lp9nA07Uhbwyuv0q7m+jRePlY/8QVHRz4/8wLU8nFfLVJPyg==
   dependencies:
-    "@babel/polyfill" "7.2.5"
     commander "2.19.0"
     execa "0.6.3"
     globby "6.1.0"
@@ -4491,12 +4482,12 @@ oao@^1.5.1:
     minimatch "^3.0.4"
     rimraf "2.6.3"
     semver "5.6.0"
-    shelljs "0.7.8"
+    shelljs "^0.8.4"
     split "1.0.1"
-    storyboard "3.1.4"
-    storyboard-listener-console "3.1.4"
-    storyboard-listener-console-parallel "3.1.4"
-    timm "1.6.1"
+    storyboard "^3.3.1"
+    storyboard-listener-console "^3.3.1"
+    storyboard-listener-console-parallel "^3.3.1"
+    timm "^1.6.2"
 
 object-assign@^4.0.1, object-assign@^4.1.0, object-assign@^4.1.1:
   version "4.1.1"
@@ -4962,10 +4953,10 @@ prelude-ls@~1.1.2:
   resolved "https://registry.npmjs.org/prelude-ls/-/prelude-ls-1.1.2.tgz#21932a549f5e52ffd9a827f570e04be62a97da54"
   integrity sha1-IZMqVJ9eUv/ZqCf1cOBL5iqX2lQ=
 
-prettier@^1.14.2:
-  version "1.18.2"
-  resolved "https://registry.npmjs.org/prettier/-/prettier-1.18.2.tgz#6823e7c5900017b4bd3acf46fe9ac4b4d7bda9ea"
-  integrity sha512-OeHeMc0JhFE9idD4ZdtNibzY0+TPHSpSSb9h8FqtP+YnoZZ1sl8Vc9b1sasjfymH3SonAF4QcA2+mzHPhMvIiw==
+prettier@^2.7.1:
+  version "2.7.1"
+  resolved "https://registry.yarnpkg.com/prettier/-/prettier-2.7.1.tgz#e235806850d057f97bb08368a4f7d899f7760c64"
+  integrity sha512-ujppO+MkdPqoVINuDFDRLClm7D78qbDt0/NR+wp5FqEZOoTNAjPHWj17QRhu7geIHJfcNhRk1XVQmF8Bp3ye+g==
 
 private@^0.1.6:
   version "0.1.8"
@@ -5272,11 +5263,6 @@ regenerator-runtime@^0.11.0:
   version "0.11.1"
   resolved "https://registry.npmjs.org/regenerator-runtime/-/regenerator-runtime-0.11.1.tgz#be05ad7f9bf7d22e056f9726cee5017fbf19e2e9"
   integrity sha512-MguG95oij0fC3QV3URf4V2SDYGJhJnJGqvIIgdECeODCT98wSWDAJ94SSuVpYQUoTcGUIL6L4yNB7j1DFFHSBg==
-
-regenerator-runtime@^0.12.0:
-  version "0.12.1"
-  resolved "https://registry.npmjs.org/regenerator-runtime/-/regenerator-runtime-0.12.1.tgz#fa1a71544764c036f8c49b13a08b2594c9f8a0de"
-  integrity sha512-odxIc1/vDlo4iZcfXqRYFj0vpXFNoGdKMAUieAlFYO6m/nl5e9KR/beGf41z4a1FI+aQgtjhuaSlDxQ0hmkrHg==
 
 regenerator-runtime@^0.13.2:
   version "0.13.3"
@@ -5621,10 +5607,10 @@ shell-quote@^1.6.1:
     array-reduce "~0.0.0"
     jsonify "~0.0.0"
 
-shelljs@0.7.8:
-  version "0.7.8"
-  resolved "https://registry.npmjs.org/shelljs/-/shelljs-0.7.8.tgz#decbcf874b0d1e5fb72e14b164a9683048e9acb3"
-  integrity sha1-3svPh0sNHl+3LhSxZKloMEjprLM=
+shelljs@^0.8.4:
+  version "0.8.5"
+  resolved "https://registry.yarnpkg.com/shelljs/-/shelljs-0.8.5.tgz#de055408d8361bed66c669d2f000538ced8ee20c"
+  integrity sha512-TiwcRcrkhHvbrZbnRcFYMLl30Dfov3HKqzp5tO5b4pt6G/SezKcYhmDg15zXVBswHmctSAQKznqNW2LO5tTDow==
   dependencies:
     glob "^7.0.0"
     interpret "^1.0.0"
@@ -5815,18 +5801,37 @@ storyboard-core@^3.1.1:
     timm "^1.6.1"
     uuid "^3.0.1"
 
-storyboard-listener-console-parallel@3.1.4:
-  version "3.1.4"
-  resolved "https://registry.npmjs.org/storyboard-listener-console-parallel/-/storyboard-listener-console-parallel-3.1.4.tgz#110d4582f4ab924c2ca5c56eb6a3c61fe4d162b3"
-  integrity sha512-VjgpN02DISKSNWNB9eSF3zhWA5nRINQITan/g/CuS45S7YqISKCP3+ztOLLDmfYvrmg6PrjahwLMq0GvQ37ZDA==
+storyboard-core@^3.3.2:
+  version "3.3.2"
+  resolved "https://registry.yarnpkg.com/storyboard-core/-/storyboard-core-3.3.2.tgz#90d5f13ed5f3b9668cb95ce778b5f44425339daf"
+  integrity sha512-fcACoTmGllEiK3Cfvv6xgrZmFym07SA8GJNRoVSTZhRfIplQQd8sx0nbrP7wTeMeZ7KUao5ucpflXjtm2ZV0FA==
+  dependencies:
+    chalk "1.x"
+    lodash "^4.17.10"
+    platform "1.3.3"
+    semver "^5.3.0"
+    timm "^1.6.1"
+    uuid "^3.0.1"
+
+storyboard-listener-console-parallel@^3.3.1:
+  version "3.3.2"
+  resolved "https://registry.yarnpkg.com/storyboard-listener-console-parallel/-/storyboard-listener-console-parallel-3.3.2.tgz#ed00230c90abb529e12ee11f657de56ebcfb2d0e"
+  integrity sha512-g59OmDSyIiHeGR8CkRF+Ne9fMDLWpJu9W6PJrKEzIt/eIX4UwIsb6T27wY//M+z+p2BBOKdvCLr/b1IJTfFsog==
   dependencies:
     terminal-kit "^0.26.1"
     timm "^1.6.1"
 
-storyboard-listener-console@3.1.4, storyboard-listener-console@^3.1.1:
+storyboard-listener-console@^3.1.1:
   version "3.1.4"
   resolved "https://registry.npmjs.org/storyboard-listener-console/-/storyboard-listener-console-3.1.4.tgz#165c23629721a0327b181d4b926bc2d9787eb661"
   integrity sha512-zP2x0XKXHXGYrz4/RS4kxMp/4JqEvREV3rdkfbb6uqGld9gPKNqAdRDLQPN7cJRycTipTt+qew7RFGDTIVSIVA==
+  dependencies:
+    timm "^1.6.1"
+
+storyboard-listener-console@^3.3.1:
+  version "3.3.2"
+  resolved "https://registry.yarnpkg.com/storyboard-listener-console/-/storyboard-listener-console-3.3.2.tgz#95c415992ea79ef22e8b1e5b0b9a5476362717ec"
+  integrity sha512-7o8C4KeJDzNsCRq/o6ydt97HBNEBeHCgY13R1h7OjPwEoyo3uBQrLMTQlue/q600u1th06wi+vAR6XjrmK6hPg==
   dependencies:
     timm "^1.6.1"
 
@@ -5837,12 +5842,19 @@ storyboard-preset-console@^3.1.1, storyboard-preset-console@^3.1.4:
   dependencies:
     storyboard-listener-console "^3.1.1"
 
-storyboard@3.1.4, storyboard@^3.1.1, storyboard@^3.1.4:
+storyboard@^3.1.1, storyboard@^3.1.4:
   version "3.1.4"
   resolved "https://registry.npmjs.org/storyboard/-/storyboard-3.1.4.tgz#f39a908f168541ffae2af6ed8a06f27e0eed12e2"
   integrity sha512-YkWhyz6IxvL/+kN9iMtcw3XVppqY/J8wBRDMpKxnkMniD/QKsKnHPMsxloob2B2+ONwASQPbzZkNXeyY2/kXwg==
   dependencies:
     storyboard-core "^3.1.1"
+
+storyboard@^3.3.1:
+  version "3.3.2"
+  resolved "https://registry.yarnpkg.com/storyboard/-/storyboard-3.3.2.tgz#a5ef868a6d8d86cbae1ce10c58e0795e846c6265"
+  integrity sha512-xEvgHaztj7QtpUriwgsDo1R/DrkXEWuyrBuGFER107FCrGW1IKRv6m01cS/TAbjhQ4aV3+ePmoWQ+vdbjr6lcg==
+  dependencies:
+    storyboard-core "^3.3.2"
 
 stream-browserify@^2.0.1:
   version "2.0.2"
@@ -6119,10 +6131,15 @@ timers-browserify@^2.0.4:
   dependencies:
     setimmediate "^1.0.4"
 
-timm@1.6.1, timm@^1.2.4, timm@^1.6.1:
+timm@^1.2.4, timm@^1.6.1:
   version "1.6.1"
   resolved "https://registry.npmjs.org/timm/-/timm-1.6.1.tgz#5f8aafc932248c76caf2c6af60542a32d3c30701"
   integrity sha512-hqDTYi/bWuDxL2i6T3v6nrvkAQ/1Bc060GSkVEQZp02zTSTB4CHSKsOkliequCftQaNRcjRqUZmpGWs5FfhrNg==
+
+timm@^1.6.2:
+  version "1.7.1"
+  resolved "https://registry.yarnpkg.com/timm/-/timm-1.7.1.tgz#96bab60c7d45b5a10a8a4d0f0117c6b7e5aff76f"
+  integrity sha512-IjZc9KIotudix8bMaBW6QvMuq64BrJWFs1+4V0lXwWGQZwH+LnX87doAYhem4caOEusRP9/g6jVDQmZ8XOk1nw==
 
 tinycolor2@1.4.1:
   version "1.4.1"
