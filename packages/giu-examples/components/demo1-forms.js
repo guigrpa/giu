@@ -33,7 +33,7 @@ import {
   onChangeJson,
 } from './demo1-common';
 
-class FormExample extends React.Component<*, *> {
+class FormExample extends React.Component {
   state = { fixedDate: new Date() };
 
   render() {
@@ -220,7 +220,7 @@ const InputValidation = ({ lang }) => (
       placeholder="custom sync validator"
       required
       validators={[
-        (o: string): ?string =>
+        (o) =>
           o.toLowerCase() === 'unicorn' ? undefined : "must be 'unicorn'",
       ]}
     />
@@ -228,7 +228,7 @@ const InputValidation = ({ lang }) => (
       placeholder="custom promise validator"
       required
       validators={[
-        (o: string): Promise<?string> =>
+        (o) =>
           new Promise(resolve =>
             setTimeout(
               () =>
@@ -554,10 +554,7 @@ const ColorInputs = () => (
   </div>
 );
 
-class TimePickerNow extends React.Component<
-  { lang: string },
-  { curDate: Object }
-> {
+class TimePickerNow extends React.Component {
   state = {
     curDate: new Date(),
   };
@@ -583,8 +580,8 @@ class TimePickerNow extends React.Component<
   }
 }
 
-class ImperativeExample extends React.Component<*> {
-  refInput: any = React.createRef();
+class ImperativeExample extends React.Component {
+  refInput = React.createRef();
 
   render() {
     return (

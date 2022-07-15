@@ -5,9 +5,6 @@
 import React from 'react';
 import Head from 'next/head';
 import moment from 'moment';
-import { library as faLibrary } from '@fortawesome/fontawesome-svg-core';
-import { far as farIcons } from '@fortawesome/free-regular-svg-icons';
-import { fas as fasIcons } from '@fortawesome/free-solid-svg-icons';
 import {
   Giu,
   DateInput,
@@ -52,14 +49,10 @@ import ModalExample from '../components/demo1-modals';
 import HintExample from '../components/demo1-hints';
 import FormExample from '../components/demo1-forms';
 import FormExample2 from '../components/demo1-forms2';
-import 'giu/lib/css/reset.css';
-import 'giu/lib/css/giu.css';
-
-faLibrary.add(farIcons, fasIcons);
 
 const { floor, random } = Math;
 const randomInt = (min, max) => min + floor(random() * (max - min + 1));
-const sample = (arr): any => arr[randomInt(0, arr.length - 1)];
+const sample = (arr) => arr[randomInt(0, arr.length - 1)];
 
 let cntNotif = 1;
 const notify = msg => {

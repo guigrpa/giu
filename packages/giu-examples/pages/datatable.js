@@ -6,9 +6,6 @@
 import React from 'react';
 import Head from 'next/head';
 import { set as timmSet, merge, omit } from 'timm';
-import { library as faLibrary } from '@fortawesome/fontawesome-svg-core';
-import { far as farIcons } from '@fortawesome/free-regular-svg-icons';
-import { fas as fasIcons } from '@fortawesome/free-solid-svg-icons';
 import {
   Floats,
   Notifications,
@@ -25,10 +22,6 @@ import {
   Spinner,
 } from 'giu';
 import faker from 'faker';
-import 'giu/lib/css/reset.css';
-import 'giu/lib/css/giu.css';
-
-faLibrary.add(farIcons, fasIcons);
 
 faker.seed(0);
 

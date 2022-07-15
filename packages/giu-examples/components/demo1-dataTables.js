@@ -24,7 +24,6 @@ import {
   flexItem,
   notify,
 } from 'giu';
-import type { DataTableColumn } from 'giu/lib/components/dataTableRow';
 
 faker.seed(0);
 
@@ -38,11 +37,7 @@ const USER_TYPES = [
 // -----------------------------------------------
 // Index
 // -----------------------------------------------
-class AllExamples extends React.PureComponent<*, { fModal: boolean }> {
-  itemsById: Object;
-  shownIds: Array<string>;
-  cols: Array<DataTableColumn>;
-
+class AllExamples extends React.PureComponent {
   constructor() {
     super();
     this.state = { fModal: false };
@@ -284,10 +279,7 @@ const FetchRowComponent = () => (
   </div>
 );
 
-class DevelopmentExample extends React.Component<*, *> {
-  commonCellProps: Object;
-  selectedIds: Array<string>;
-
+class DevelopmentExample extends React.Component {
   constructor() {
     super();
     const numItems = 0;
@@ -488,14 +480,7 @@ const COLS = [
   { attr: 'phone', className: 'giu-ellipsis' },
 ];
 
-class CustomSortPaginateExample extends React.Component<
-  *,
-  { sortBy: ?string, page: number }
-> {
-  itemsById: Object;
-  numPages: number;
-  shownIds: Array<string>;
-
+class CustomSortPaginateExample extends React.Component {
   constructor() {
     super();
     this.itemsById = sampleDataTableItems(NUM_ITEMS, 0);
@@ -654,10 +639,7 @@ const COLLECT_FIELDS_ON_SUBMIT = [
   'phone',
 ];
 
-class EditAndValidateExample extends React.Component<*, *> {
-  commonCellProps: Object;
-  inputRefs: Object;
-
+class EditAndValidateExample extends React.Component {
   constructor() {
     super();
     this.state = {

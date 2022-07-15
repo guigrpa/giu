@@ -4,15 +4,10 @@
 
 import React from 'react';
 import { NumberInput, isLte, Button, Select, notify, ThemeContext } from 'giu';
-import type { Theme } from 'giu/lib/gral/themeContext';
 import { NORMAL_OPTIONS } from './demo1-common';
 
-class FormExample extends React.Component<
-  { theme: Theme },
-  { a: any, b: any, c: any }
-> {
-  refs: any;
-  state: Object = { a: null, b: 4, c: null };
+class FormExample extends React.Component {
+  state = { a: null, b: 4, c: null };
 
   render() {
     return (
@@ -67,7 +62,7 @@ class FormExample extends React.Component<
     );
   }
 
-  onSubmit = (suffix: string) => async () => {
+  onSubmit = (suffix) => async () => {
     try {
       const [a, b, c] = await Promise.all([
         this.refs[`a${suffix}`].validateAndGetValue(),
@@ -92,7 +87,7 @@ class FormExample extends React.Component<
 }
 
 // ==========================================
-const ThemedFormExample = (props: Object) => (
+const ThemedFormExample = (props) => (
   <ThemeContext.Consumer>
     {theme => <FormExample {...props} theme={theme} />}
   </ThemeContext.Consumer>

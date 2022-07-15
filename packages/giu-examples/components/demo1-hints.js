@@ -15,7 +15,7 @@ import {
 } from 'giu';
 import { ExampleLabel, exampleStyle } from './demo1-common';
 
-class HintExample extends React.Component<{}, { fEmbeddedHint: boolean }> {
+class HintExample extends React.Component {
   state = { fEmbeddedHint: false };
 
   componentDidMount() {
