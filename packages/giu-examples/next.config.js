@@ -1,7 +1,7 @@
 const withCSS = require('@zeit/next-css');
 
 const config = {
-  exportTrailingSlash: true,
+  trailingSlash: true,
   assetPrefix: process.env.BASE_URL ? `${process.env.BASE_URL}/` : '',
   exportPathMap: () => ({
     '/': { page: '/' },
