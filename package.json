@@ -55,7 +55,7 @@
     "extract-docs": "^1.6.1",
     "flow-bin": "^0.104.0",
     "flow-copy-source": "^2.0.2",
-    "moment": "^2.22.2",
+    "moment": "^2.29.4",
     "oao": "^2.0.2",
     "prettier": "^2.7.1",
     "react": "^16.4.2",
