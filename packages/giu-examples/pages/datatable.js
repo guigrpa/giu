@@ -623,12 +623,12 @@ class AppWrapper extends React.Component {
           />
           <link
             rel="stylesheet"
-            href={`${baseUrl}/static/deps/@fortawesome/fontawesome-svg-core/styles.css`}
+            href={`${baseUrl}/deps/@fortawesome/fontawesome-svg-core/styles.css`}
           />
           <link
             rel="icon"
             type="image/ico"
-            href={`${baseUrl}/static/favicon.ico`}
+            href={`${baseUrl}/favicon.ico`}
           />
         </Head>
         <App />

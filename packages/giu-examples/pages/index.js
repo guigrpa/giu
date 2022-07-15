@@ -1234,11 +1234,11 @@ class AppWrapper extends React.Component {
           />
           <link
             rel="stylesheet"
-            href={`${baseUrl}/static/deps/@fortawesome/fontawesome-svg-core/styles.css`}
+            href={`${baseUrl}/deps/@fortawesome/fontawesome-svg-core/styles.css`}
           />
           <link
             rel="stylesheet"
-            href={`${baseUrl}/static/deps/typeface-gloria-hallelujah/index.css`}
+            href={`${baseUrl}/deps/typeface-gloria-hallelujah/index.css`}
           />
           <link
             href="https://fonts.googleapis.com/css?family=Open+Sans:400,700"
@@ -1247,16 +1247,16 @@ class AppWrapper extends React.Component {
           />
           <link
             rel="stylesheet"
-            href={`${baseUrl}/static/stylesheets/normalize.css`}
+            href={`${baseUrl}/stylesheets/normalize.css`}
           />
           <link
             rel="stylesheet"
-            href={`${baseUrl}/static/stylesheets/index.css`}
+            href={`${baseUrl}/stylesheets/index.css`}
           />
           <link
             rel="icon"
             type="image/ico"
-            href={`${baseUrl}/static/favicon.ico`}
+            href={`${baseUrl}/favicon.ico`}
           />
         </Head>
         <App md={this.props.readmeMarkdown} />

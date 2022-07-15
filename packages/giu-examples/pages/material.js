@@ -366,15 +366,15 @@ class AppWrapper extends React.Component {
           />
           <link
             rel="stylesheet"
-            href={`${baseUrl}/static/deps/typeface-gloria-hallelujah/index.css`}
+            href={`${baseUrl}/deps/typeface-gloria-hallelujah/index.css`}
           />
           <link
             rel="stylesheet"
-            href={`${baseUrl}/static/deps/typeface-roboto/index.css`}
+            href={`${baseUrl}/deps/typeface-roboto/index.css`}
           />
           <link
             rel="stylesheet"
-            href={`${baseUrl}/static/deps/material-design-lite/material.min.css`}
+            href={`${baseUrl}/deps/material-design-lite/material.min.css`}
           />
           <link
             rel="stylesheet"
@@ -382,12 +382,12 @@ class AppWrapper extends React.Component {
           />
           <link
             rel="stylesheet"
-            href={`${baseUrl}/static/stylesheets/common.css`}
+            href={`${baseUrl}/stylesheets/common.css`}
           />
           <link
             rel="icon"
             type="image/ico"
-            href={`${baseUrl}/static/favicon.ico`}
+            href={`${baseUrl}/favicon.ico`}
           />
         </Head>
         <App />

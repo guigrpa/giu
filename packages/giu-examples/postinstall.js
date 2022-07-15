@@ -15,7 +15,7 @@ const LIBS = [
   'material-design-lite',
 ];
 LIBS.forEach(lib => {
-  dstPath = `./static/deps/${lib}`;
+  dstPath = `./public/deps/${lib}`;
   fs.removeSync(dstPath);
   fs.copySync(libPath(lib), dstPath, { dereference: true });
 });
