@@ -59,13 +59,13 @@ const reducer: Reducer<State, Action> = (state0 = INITIAL_STATE, action) => {
   }
   if (action.type === 'NOTIF_RETAIN') {
     const { id } = action;
-    const idx = state.findIndex(o => o.id === id);
+    const idx = state.findIndex((o) => o.id === id);
     if (idx >= 0) state = updateIn(state, [idx, 'retained'], () => true);
     return state;
   }
   if (action.type === 'NOTIF_DELETE') {
     const { id } = action;
-    const idx = state.findIndex(o => o.id === id);
+    const idx = state.findIndex((o) => o.id === id);
     if (idx >= 0 && !(action.fAuto && state[idx].retained)) {
       state = removeAt(state, idx);
     }
@@ -173,7 +173,7 @@ class Notifications extends React.PureComponent<Props> {
     if (!(ev.currentTarget instanceof Element)) return;
     const { id } = ev.currentTarget;
     const notifs = this.props.notifs || store.getState();
-    const notif = notifs.find(o => o.id === id);
+    const notif = notifs.find((o) => o.id === id);
     if (notif && notif.onClick) notif.onClick(ev);
     store.dispatch(actions.notifDelete(id));
   };

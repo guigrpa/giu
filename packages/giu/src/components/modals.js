@@ -132,7 +132,7 @@ class Modals extends React.PureComponent<Props> {
         {modals.map((props, idx) => (
           <Modal
             key={props.id}
-            ref={c => {
+            ref={(c) => {
               this.refModals[idx] = c;
             }}
             {...props}

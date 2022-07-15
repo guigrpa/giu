@@ -43,7 +43,7 @@ const toExternalValue = (str, props) => {
   const mom = displayToMoment(str, props);
   return mom !== null ? mom.toDate() : null;
 };
-const isNull = val => val === NULL_VALUE;
+const isNull = (val) => val === NULL_VALUE;
 
 const momentToDisplay = (mom, props) => {
   if (mom == null) return NULL_VALUE;
@@ -319,15 +319,8 @@ class BaseDateInput extends React.Component<Props, State> {
   }
 
   renderFieldMdl() {
-    const {
-      id,
-      curValue,
-      placeholder,
-      date,
-      time,
-      seconds,
-      fFocused,
-    } = this.props;
+    const { id, curValue, placeholder, date, time, seconds, fFocused } =
+      this.props;
     const otherProps = omit(this.props, FILTERED_OUT_PROPS_MDL);
     const internalId = id ? `giu-date-input-${id}` : undefined;
     return (
@@ -439,12 +432,12 @@ class BaseDateInput extends React.Component<Props, State> {
   }
 
   // ==========================================
-  registerInputRef = c => {
+  registerInputRef = (c) => {
     this.refInput = c;
     this.props.registerFocusableRef(c);
   };
 
-  onMouseDown = ev => {
+  onMouseDown = (ev) => {
     cancelEvent(ev);
     if (!this.props.fFocused && this.refInput) this.refInput.focus();
   };
@@ -452,21 +445,21 @@ class BaseDateInput extends React.Component<Props, State> {
   // Cancel bubbling of click events; they may reach Modals
   // on their way up and cause the element to blur.
   // Allow free propagation if the element is disabled.
-  onClick = ev => {
+  onClick = (ev) => {
     if (!this.props.disabled) stopPropagation(ev);
   };
 
-  onFocus = ev => {
+  onFocus = (ev) => {
     this.setState({ fFloat: true });
     this.props.onFocus(ev);
   };
 
-  onBlur = ev => {
+  onBlur = (ev) => {
     this.setState({ fFloat: false });
     this.props.onBlur(ev);
   };
 
-  onKeyDown = ev => {
+  onKeyDown = (ev) => {
     const { type } = this.props;
     if (type === 'onlyField') return;
     const { which } = ev;

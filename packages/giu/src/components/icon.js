@@ -145,7 +145,7 @@ class Icon extends React.PureComponent<Props> {
 // ==========================================
 const ThemedIcon = (props: PublicProps) => (
   <ThemeContext.Consumer>
-    {theme => <Icon {...props} theme={theme} />}
+    {(theme) => <Icon {...props} theme={theme} />}
   </ThemeContext.Consumer>
 );
 

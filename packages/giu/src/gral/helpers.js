@@ -13,7 +13,7 @@ Especially useful for ES6-style React components.
 * **fnNames** *Array<string>*: list of method names
 -- */
 function bindAll(self: Object, fnNames: Array<string>) {
-  fnNames.forEach(name => {
+  fnNames.forEach((name) => {
     /* eslint-disable no-param-reassign */
     self[name] = self[name].bind(self);
     /* eslint-enable no-param-reassign */
@@ -159,10 +159,7 @@ const COMBINING_CODEPOINTS = /[\u0300-\u036F]/g;
 function simplifyString(str: string): string {
   if (str == null) return str;
   if (!str.normalize) return str;
-  return str
-    .normalize('NFKD')
-    .replace(COMBINING_CODEPOINTS, '')
-    .toLowerCase();
+  return str.normalize('NFKD').replace(COMBINING_CODEPOINTS, '').toLowerCase();
 }
 
 function isAncestorNode(ancestor: ?Node, descendant: ?Node): boolean {
@@ -201,7 +198,7 @@ const prefixClasses = (className: ?string, prefix: string) =>
   className
     ? className
         .split(/\s+/)
-        .map(o => `${prefix}-${o}`)
+        .map((o) => `${prefix}-${o}`)
         .join(' ')
     : undefined;
 
@@ -209,7 +206,7 @@ const sufixClasses = (className: ?string, sufix: string) =>
   className
     ? className
         .split(/\s+/)
-        .map(o => `${o}-${sufix}`)
+        .map((o) => `${o}-${sufix}`)
         .join(' ')
     : undefined;
 

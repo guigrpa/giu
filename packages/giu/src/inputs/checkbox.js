@@ -7,9 +7,9 @@ import Input, { INPUT_HOC_INVALID_HTML_PROPS } from '../hocs/input';
 import type { InputHocPublicProps } from '../hocs/input';
 import type { Theme } from '../gral/themeContext';
 
-const toInternalValue = val => (val != null ? val : false);
-const toExternalValue = val => val;
-const isNull = val => val == null;
+const toInternalValue = (val) => (val != null ? val : false);
+const toExternalValue = (val) => val;
+const isNull = (val) => val == null;
 
 // ==========================================
 // Declarations
@@ -120,7 +120,7 @@ class BaseCheckbox extends React.Component<Props> {
   }
 
   // ==========================================
-  registerOuterRefMdl = c => {
+  registerOuterRefMdl = (c) => {
     this.refCheckbox = c;
     const { registerOuterRef } = this.props;
     if (registerOuterRef) registerOuterRef(c);
@@ -136,7 +136,7 @@ const hocOptions = {
   valueAttr: 'checked',
   className: 'giu-checkbox-wrapper',
 };
-const render = props => <BaseCheckbox {...props} />;
+const render = (props) => <BaseCheckbox {...props} />;
 // $FlowFixMe
 const Checkbox = React.forwardRef((publicProps: PublicProps, ref) => (
   <Input hocOptions={hocOptions} render={render} {...publicProps} ref={ref} />

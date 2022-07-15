@@ -465,7 +465,7 @@ class DataTable extends React.PureComponent<Props> {
 
     return (
       <SortableVirtualScroller
-        ref={c => {
+        ref={(c) => {
           this.refVirtualScroller = c;
         }}
         itemsById={this.props.itemsById}
@@ -560,7 +560,7 @@ class DataTable extends React.PureComponent<Props> {
     } else if (sortDescending) {
       this.changeSort(null, false);
     } else {
-      const colSpec = this.cols.find(o => o.attr === attr);
+      const colSpec = this.cols.find((o) => o.attr === attr);
       let fSortableDescending = colSpec ? colSpec.sortableDescending : true;
       if (fSortableDescending == null) fSortableDescending = true;
       if (fSortableDescending) {
@@ -651,11 +651,11 @@ class DataTable extends React.PureComponent<Props> {
       const { itemsById, cols } = this.props;
       const { selectedIds } = this;
       const allRowValues = {};
-      selectedIds.forEach(id => {
+      selectedIds.forEach((id) => {
         const rowValues = {};
         const item = itemsById[id];
         if (!item) return;
-        cols.forEach(col => {
+        cols.forEach((col) => {
           const { attr } = col;
           rowValues[attr] = col.rawValue ? col.rawValue(item) : item[attr];
         });
@@ -764,7 +764,7 @@ class DataTable extends React.PureComponent<Props> {
     if (!needle) return ids;
     needle = simplifyString(needle);
     const { itemsById, neverFilterIds } = this.props;
-    const cols = this.cols.filter(col => col.filterable !== false);
+    const cols = this.cols.filter((col) => col.filterable !== false);
     const numCols = cols.length;
     const filteredIds = [];
     for (let i = 0; i < ids.length; i++) {
@@ -860,10 +860,10 @@ class DataTable extends React.PureComponent<Props> {
     const { sortBy, sortDescending } = this;
     const { itemsById } = this.props;
     if (!sortBy) return ids;
-    const col = this.cols.find(o => o.attr === sortBy);
+    const col = this.cols.find((o) => o.attr === sortBy);
     if (!col) return ids;
     const getSortValue =
-      col.sortValue || col.rawValue || (item => item[sortBy]);
+      col.sortValue || col.rawValue || ((item) => item[sortBy]);
     const sortValues = {};
     for (let i = 0; i < ids.length; i++) {
       const id = ids[i];

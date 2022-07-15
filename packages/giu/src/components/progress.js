@@ -81,7 +81,7 @@ class Progress extends React.PureComponent<Props> {
 // ==========================================
 const ThemedProgress = (props: PublicProps) => (
   <ThemeContext.Consumer>
-    {theme => <Progress {...props} theme={theme} />}
+    {(theme) => <Progress {...props} theme={theme} />}
   </ThemeContext.Consumer>
 );
 

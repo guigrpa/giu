@@ -12,7 +12,7 @@ const SIZE = 190;
 const ALPHA_SLIDER_SIZE = 100;
 const SLIDER_WIDTH = 10;
 
-const hueBg = h => tinycolor({ h, s: 1, v: 1 }).toHexString();
+const hueBg = (h) => tinycolor({ h, s: 1, v: 1 }).toHexString();
 const clamp = (x, min, max) => Math.min(Math.max(x, min), max);
 
 const normalize = (x, attr) => {
@@ -71,8 +71,8 @@ const GRADIENTS = {
   r: 'linear-gradient(to bottom, #ff0000 0%, #000000 100%)',
   g: 'linear-gradient(to bottom, #00ff00 0%, #000000 100%)',
   b: 'linear-gradient(to bottom, #0000ff 0%, #000000 100%)',
-  v: h => `linear-gradient(to bottom, ${hueBg(h)} 0%, #000 100%)`,
-  s: h => `linear-gradient(to bottom, ${hueBg(h)} 0%, #bbb 100%)`,
+  v: (h) => `linear-gradient(to bottom, ${hueBg(h)} 0%, #000 100%)`,
+  s: (h) => `linear-gradient(to bottom, ${hueBg(h)} 0%, #bbb 100%)`,
   alpha: ({ r, g, b }) =>
     `linear-gradient(to right, rgba(${r}, ${g}, ${b}, 0), rgb(${r}, ${g}, ${b}))`,
 };
@@ -261,7 +261,7 @@ class ColorPicker extends React.PureComponent<Props, State> {
   // ------------------------------------------
   renderControls() {
     const { mode, activeAttr } = this.state;
-    const colorAttrs = mode.split('').map(colorAttr => {
+    const colorAttrs = mode.split('').map((colorAttr) => {
       return (
         <div
           key={colorAttr}
@@ -460,7 +460,7 @@ const style = {
       opacity: fHigh ? normAttr : 1 - normAttr,
     };
   },
-  mainHBackground: h => ({ background: hueBg(h) }),
+  mainHBackground: (h) => ({ background: hueBg(h) }),
   mainHLightLeft: { background: GRADIENTS.lightLeft },
   mainHDarkBottom: { background: GRADIENTS.darkBottom },
   mainSV: (attr, normAttr, fHigh) => {

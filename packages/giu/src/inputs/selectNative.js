@@ -9,9 +9,9 @@ import type { InputHocPublicProps } from '../hocs/input';
 import { LIST_SEPARATOR_KEY } from './listPicker';
 import type { SelectProps } from './selectTypes';
 
-const toInternalValue = val =>
+const toInternalValue = (val) =>
   val != null ? JSON.stringify(val) : NULL_STRING;
-const toExternalValue = val => {
+const toExternalValue = (val) => {
   if (val === NULL_STRING) return null;
   try {
     return JSON.parse(val);
@@ -21,7 +21,7 @@ const toExternalValue = val => {
     return null;
   }
 };
-const isNull = val => val === NULL_STRING;
+const isNull = (val) => val === NULL_STRING;
 
 // ==========================================
 // Declarations
@@ -58,17 +58,11 @@ const FILTERED_OUT_PROPS = [
 // ==========================================
 class BaseSelectNative extends React.Component<Props> {
   render() {
-    const {
-      curValue,
-      items,
-      lang,
-      required,
-      disabled,
-      registerFocusableRef,
-    } = this.props;
+    const { curValue, items, lang, required, disabled, registerFocusableRef } =
+      this.props;
     const finalItems = [];
     if (!required) finalItems.push({ value: NULL_STRING, label: '' });
-    items.forEach(option => {
+    items.forEach((option) => {
       if (option.label !== LIST_SEPARATOR_KEY) finalItems.push(option);
     });
     const otherProps = omit(this.props, FILTERED_OUT_PROPS);
@@ -85,7 +79,7 @@ class BaseSelectNative extends React.Component<Props> {
         {...otherProps}
         tabIndex={disabled ? -1 : undefined}
       >
-        {finalItems.map(o => {
+        {finalItems.map((o) => {
           const value =
             o.value === NULL_STRING ? o.value : toInternalValue(o.value);
           const label = typeof o.label === 'function' ? o.label(lang) : o.label;
@@ -108,7 +102,7 @@ const hocOptions = {
   isNull,
   className: 'giu-select-native-wrapper',
 };
-const render = props => <BaseSelectNative {...props} />;
+const render = (props) => <BaseSelectNative {...props} />;
 // $FlowFixMe
 const SelectNative = React.forwardRef((publicProps: PublicProps, ref) => (
   <Input hocOptions={hocOptions} render={render} {...publicProps} ref={ref} />

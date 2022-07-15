@@ -102,7 +102,7 @@ class Modal extends React.PureComponent<Props> {
           onScroll={floatReposition}
         >
           <FocusCapture
-            registerRef={c => {
+            registerRef={(c) => {
               this.refFocusCapture = c;
             }}
             autoFocus
@@ -134,9 +134,9 @@ class Modal extends React.PureComponent<Props> {
   renderButtons(buttons: Array<ModalButton>) {
     return (
       <div className="giu-modal-buttons">
-        {buttons.filter(o => !!o.left).map(this.renderButton)}
+        {buttons.filter((o) => !!o.left).map(this.renderButton)}
         <div className="giu-flex-space" />
-        {buttons.filter(o => !o.left).map(this.renderButton)}
+        {buttons.filter((o) => !o.left).map(this.renderButton)}
       </div>
     );
   }
@@ -159,8 +159,8 @@ class Modal extends React.PureComponent<Props> {
           btn.plain != null
             ? btn.plain
             : isMdl && !btn.defaultButton
-              ? true
-              : undefined
+            ? true
+            : undefined
         }
         accent={btn.accent}
       >
@@ -212,7 +212,7 @@ class Modal extends React.PureComponent<Props> {
 // $FlowFixMe
 const ThemedModal = React.forwardRef((props, ref) => (
   <ThemeContext.Consumer>
-    {theme => <Modal {...props} theme={theme} ref={ref} />}
+    {(theme) => <Modal {...props} theme={theme} ref={ref} />}
   </ThemeContext.Consumer>
 ));
 

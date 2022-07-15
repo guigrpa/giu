@@ -75,7 +75,7 @@ class Notification extends React.PureComponent<Props, State> {
 // ==========================================
 const ThemedNotification = (props: PublicProps) => (
   <ThemeContext.Consumer>
-    {theme => <Notification {...props} theme={theme} />}
+    {(theme) => <Notification {...props} theme={theme} />}
   </ThemeContext.Consumer>
 );
 

@@ -15,7 +15,7 @@ Waits for a given number of milliseconds.
 * **Returns** *Promise<void>*: resolves when the delay expires.
 -- */
 const delay = (ms: number): Promise<void> =>
-  new Promise(resolve => {
+  new Promise((resolve) => {
     setTimeout(resolve, ms);
   });
 

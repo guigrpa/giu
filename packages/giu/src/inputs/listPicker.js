@@ -144,7 +144,7 @@ class ListPicker extends React.PureComponent<Props, State> {
     return (
       <div
         key={itemValue}
-        ref={c => {
+        ref={(c) => {
           this.refItems[idx] = c;
         }}
         id={itemValue}
@@ -167,7 +167,7 @@ class ListPicker extends React.PureComponent<Props, State> {
     return (
       <div
         key={`separator_${idx}`}
-        ref={c => {
+        ref={(c) => {
           this.refItems[idx] = c;
         }}
         className="giu-list-separator-wrapper"
@@ -179,7 +179,7 @@ class ListPicker extends React.PureComponent<Props, State> {
 
   renderKeys(shortcuts: ?Array<KeyboardShortcut>) {
     if (!shortcuts) return null;
-    const desc = shortcuts.map(o => o.description).join(', ');
+    const desc = shortcuts.map((o) => o.description).join(', ');
     if (!desc) return null;
     return <span className="giu-list-item-shortcut">{desc}</span>;
   }
@@ -223,7 +223,7 @@ class ListPicker extends React.PureComponent<Props, State> {
 
   getCurIdx() {
     const { curValue, items } = this.props;
-    return items.findIndex(item => item.value === curValue);
+    return items.findIndex((item) => item.value === curValue);
   }
 
   scrollSelectedIntoView(options?: ScrollIntoViewOptions) {

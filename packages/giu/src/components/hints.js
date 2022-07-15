@@ -90,7 +90,7 @@ function initStore() {
 const reducer: Reducer<State, Action> = (state0 = INITIAL_STATE, action) => {
   let state = state0;
   if (action.type === 'HINT_DEFINE') {
-    state = updateIn(state, ['catalogue'], catalogue =>
+    state = updateIn(state, ['catalogue'], (catalogue) =>
       timmSet(catalogue, action.id, action.pars)
     );
     return state;
@@ -142,14 +142,13 @@ const actions = {
     localSet('hints.fDisableAll', fDisableAll);
     localSet('hints.disabled', disabled);
   },
-  hintShow: (id: string, force?: boolean = false) => (
-    dispatch: Function,
-    getState: Function
-  ) => {
-    dispatch({ type: 'HINT_SHOW', id, force });
-    const { disabled } = getState();
-    localSet('hints.disabled', disabled);
-  },
+  hintShow:
+    (id: string, force?: boolean = false) =>
+    (dispatch: Function, getState: Function) => {
+      dispatch({ type: 'HINT_SHOW', id, force });
+      const { disabled } = getState();
+      localSet('hints.disabled', disabled);
+    },
   hintHide: () => ({ type: 'HINT_HIDE' }),
 };
 

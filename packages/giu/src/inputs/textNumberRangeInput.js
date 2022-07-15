@@ -11,25 +11,25 @@ import type { InputHocPublicProps } from '../hocs/input';
 const NULL_VALUE = '';
 const CLASS_OPTIONS = {
   text: {
-    toInternalValue: val => (val != null ? val : NULL_VALUE),
-    toExternalValue: val => (val !== NULL_VALUE ? val : null),
-    isNull: val => val === NULL_VALUE,
+    toInternalValue: (val) => (val != null ? val : NULL_VALUE),
+    toExternalValue: (val) => (val !== NULL_VALUE ? val : null),
+    isNull: (val) => val === NULL_VALUE,
   },
   password: {
-    toInternalValue: val => (val != null ? val : NULL_VALUE),
-    toExternalValue: val => (val !== NULL_VALUE ? val : null),
-    isNull: val => val === NULL_VALUE,
+    toInternalValue: (val) => (val != null ? val : NULL_VALUE),
+    toExternalValue: (val) => (val !== NULL_VALUE ? val : null),
+    isNull: (val) => val === NULL_VALUE,
   },
   number: {
-    toInternalValue: val => (val != null ? String(val) : NULL_VALUE),
-    toExternalValue: val => (val !== NULL_VALUE ? Number(val) : null),
-    isNull: val => val === NULL_VALUE,
+    toInternalValue: (val) => (val != null ? String(val) : NULL_VALUE),
+    toExternalValue: (val) => (val !== NULL_VALUE ? Number(val) : null),
+    isNull: (val) => val === NULL_VALUE,
     defaultValidators: { isNumber: isNumber() },
   },
   range: {
-    toInternalValue: val => (val != null ? String(val) : NULL_VALUE),
-    toExternalValue: val => (val !== NULL_VALUE ? Number(val) : null),
-    isNull: val => val === NULL_VALUE,
+    toInternalValue: (val) => (val != null ? String(val) : NULL_VALUE),
+    toExternalValue: (val) => (val !== NULL_VALUE ? Number(val) : null),
+    isNull: (val) => val === NULL_VALUE,
   },
 };
 CLASS_OPTIONS.email = CLASS_OPTIONS.text;
@@ -129,13 +129,8 @@ function createClass(componentName, inputType) {
 
     renderMdl() {
       if (inputType === 'range') return this.renderMdlSlider();
-      const {
-        id,
-        curValue,
-        disabled,
-        registerFocusableRef,
-        fFocused,
-      } = this.props;
+      const { id, curValue, disabled, registerFocusableRef, fFocused } =
+        this.props;
       const otherProps = omit(this.props, FILTERED_OUT_PROPS_MDL);
       const internalId = id ? `giu-${inputType}-input-${id}` : undefined;
       return (
@@ -196,7 +191,7 @@ function createClass(componentName, inputType) {
     ...CLASS_OPTIONS[inputType],
     className: `giu-${inputType}-input-wrapper`,
   };
-  const render = props => <BaseKlass {...props} />;
+  const render = (props) => <BaseKlass {...props} />;
   // $FlowFixMe
   const Klass = React.forwardRef((publicProps: PublicProps, ref) => (
     <Input hocOptions={hocOptions} render={render} {...publicProps} ref={ref} />

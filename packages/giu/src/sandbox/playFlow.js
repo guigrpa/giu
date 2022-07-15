@@ -29,7 +29,7 @@ type Hoc<DP, P> = {
   (a: StatelessComponent<P>): any, // FIXME
 };
 
-const hoc: Hoc<*, *> = ComposedComponent => (ComposedComponent: any);
+const hoc: Hoc<*, *> = (ComposedComponent) => (ComposedComponent: any);
 
 // =======================================
 // Examples

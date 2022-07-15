@@ -95,7 +95,7 @@ class DropDownMenu extends React.PureComponent<Props, State> {
   // and run the `onClickItem` prop.
   onClickItem = (ev: SyntheticMouseEvent<*>, value: any) => {
     const { items, onClickItem } = this.props;
-    items.forEach(item => {
+    items.forEach((item) => {
       if (item.value === value && item.onClick) item.onClick(ev);
     });
     onClickItem && onClickItem(ev, value);

@@ -10,7 +10,7 @@ import type { Theme } from '../gral/themeContext';
 import Button from '../components/button';
 import Icon from '../components/icon';
 
-const isNull = val => val == null;
+const isNull = (val) => val == null;
 
 // ==========================================
 // Declarations
@@ -120,7 +120,7 @@ class BaseFileInput extends React.Component<Props> {
   }
 
   // ==========================================
-  registerInputRef = c => {
+  registerInputRef = (c) => {
     this.refInput = c;
     this.props.registerFocusableRef(c);
   };
@@ -128,12 +128,12 @@ class BaseFileInput extends React.Component<Props> {
   onClickButton = () => {
     if (this.refInput) this.refInput.click();
   };
-  onClickClear = ev => {
+  onClickClear = (ev) => {
     this.cntCleared += 1; // make sure we get a new file input (it has memory!)
     this.props.onChange(ev, null);
   };
 
-  onChange = ev => {
+  onChange = (ev) => {
     const { files } = ev.target;
     if (!files || !files.length) return;
     this.props.onChange(ev, files);

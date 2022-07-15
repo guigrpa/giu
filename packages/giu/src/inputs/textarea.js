@@ -11,11 +11,11 @@ import Input, { INPUT_HOC_INVALID_HTML_PROPS } from '../hocs/input';
 import type { InputHocPublicProps } from '../hocs/input';
 
 const NULL_VALUE = '';
-const toInternalValue = val => (val != null ? val : NULL_VALUE);
-const toExternalValue = val => (val !== NULL_VALUE ? val : null);
-const isNull = val => val === NULL_VALUE;
+const toInternalValue = (val) => (val != null ? val : NULL_VALUE);
+const toExternalValue = (val) => (val !== NULL_VALUE ? val : null);
+const isNull = (val) => val === NULL_VALUE;
 
-const getPlaceholderText = val => {
+const getPlaceholderText = (val) => {
   const lines = val.split('\n');
   const out = !lines[lines.length - 1].length ? `${val}x` : val;
   return out;
@@ -147,12 +147,12 @@ class BaseTextarea extends React.Component<Props> {
   }
 
   // ==========================================
-  registerOuterRef = c => {
+  registerOuterRef = (c) => {
     this.refOuter = c;
     this.props.registerOuterRef(c);
   };
 
-  registerInputRef = c => {
+  registerInputRef = (c) => {
     this.refInput = c;
     this.props.registerFocusableRef(c);
   };
@@ -172,7 +172,7 @@ class BaseTextarea extends React.Component<Props> {
 
   // shift-enter should not insert a new line (it should be bubbled up);
   // enter (with no modifier) should insert a new line (and not bubble)
-  onKeyDown = ev => {
+  onKeyDown = (ev) => {
     if (ev.which === KEYS.return) {
       if (isAnyModifierPressed(ev)) {
         preventDefault(ev);
@@ -191,7 +191,7 @@ const hocOptions = {
   isNull,
   className: 'giu-textarea-wrapper',
 };
-const render = props => <BaseTextarea {...props} />;
+const render = (props) => <BaseTextarea {...props} />;
 // $FlowFixMe
 const Textarea = React.forwardRef((publicProps: PublicProps, ref) => (
   <Input hocOptions={hocOptions} render={render} {...publicProps} ref={ref} />

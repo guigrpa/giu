@@ -13,9 +13,9 @@ import type { FloatPosition, FloatAlign } from '../components/floats';
 import ColorPicker from './colorPicker';
 import IosFloatWrapper from './iosFloatWrapper';
 
-const toInternalValue = val => val;
-const toExternalValue = val => val;
-const isNull = val => val == null;
+const toInternalValue = (val) => val;
+const toExternalValue = (val) => val;
+const isNull = (val) => val == null;
 
 const MANAGE_FOCUS_AUTONOMOUSLY = IS_MOBILE_OR_TABLET;
 
@@ -197,12 +197,12 @@ class BaseColorInput extends React.Component<Props> {
   }
 
   // ==========================================
-  registerTitleRef = c => {
+  registerTitleRef = (c) => {
     this.refTitle = c;
     this.props.registerOuterRef(c);
   };
 
-  registerPickerRef = c => {
+  registerPickerRef = (c) => {
     this.refPicker = c;
   };
 

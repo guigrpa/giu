@@ -103,7 +103,7 @@ class Button extends React.PureComponent<Props> {
 // ==========================================
 const ThemedButton = (props: PublicProps) => (
   <ThemeContext.Consumer>
-    {theme => <Button {...props} theme={theme} />}
+    {(theme) => <Button {...props} theme={theme} />}
   </ThemeContext.Consumer>
 );
 

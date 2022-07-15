@@ -30,9 +30,9 @@ const LIST_SEPARATOR = {
   label: LIST_SEPARATOR_KEY,
 };
 
-const toInternalValue = val =>
+const toInternalValue = (val) =>
   val != null ? JSON.stringify(val) : NULL_STRING;
-const toExternalValue = val => {
+const toExternalValue = (val) => {
   if (val === NULL_STRING) return null;
   try {
     return JSON.parse(val);
@@ -42,7 +42,7 @@ const toExternalValue = val => {
     return null;
   }
 };
-const isNull = val => val === NULL_STRING;
+const isNull = (val) => val === NULL_STRING;
 
 const MANAGE_FOCUS_AUTONOMOUSLY = IS_MOBILE_OR_TABLET;
 
@@ -147,7 +147,7 @@ class BaseSelectCustom extends React.Component<Props> {
     const { curValue, lang, disabled } = this.props;
     let label = UNICODE.nbsp;
     if (curValue !== NULL_STRING) {
-      const item = this.items.find(o => o.value === curValue);
+      const item = this.items.find((o) => o.value === curValue);
       if (item) {
         label =
           typeof item.label === 'function' ? item.label(lang) : item.label;
@@ -253,7 +253,7 @@ class BaseSelectCustom extends React.Component<Props> {
   }
 
   // ==========================================
-  registerTitleRef = c => {
+  registerTitleRef = (c) => {
     this.refTitle = c;
     this.props.registerOuterRef(c);
   };
@@ -325,10 +325,10 @@ class BaseSelectCustom extends React.Component<Props> {
   });
 
   registerShortcuts() {
-    this.items.forEach(item => {
+    this.items.forEach((item) => {
       if (!item.shortcuts) return;
-      item.shortcuts.forEach(shortcut => {
-        registerShortcut(shortcut, ev => {
+      item.shortcuts.forEach((shortcut) => {
+        registerShortcut(shortcut, (ev) => {
           this.props.onChange(ev, item.value);
           this.onClickItem(ev, item.value);
         });
@@ -337,7 +337,7 @@ class BaseSelectCustom extends React.Component<Props> {
   }
 
   unregisterShortcuts() {
-    this.items.forEach(item => {
+    this.items.forEach((item) => {
       if (item.shortcuts) item.shortcuts.forEach(unregisterShortcut);
     });
   }

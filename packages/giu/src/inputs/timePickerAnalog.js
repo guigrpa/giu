@@ -15,7 +15,7 @@ const atan2 = Math.atan2;
 const round = Math.round;
 const sign =
   Math.sign ||
-  (o => {
+  ((o) => {
     if (o > 0) return 1;
     if (o < 0) return -1;
     return 0;
@@ -145,7 +145,7 @@ class TimePickerAnalog extends React.PureComponent<Props, State> {
     const { curValue, seconds } = this.props;
     const { dragging, hovering } = this.state;
     const hands = [];
-    HAND_NAMES.forEach(name => {
+    HAND_NAMES.forEach((name) => {
       if (name === 'seconds' && !seconds) return;
       if (curValue) {
         const fHovered = hovering === name && !dragging;

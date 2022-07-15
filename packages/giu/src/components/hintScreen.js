@@ -63,7 +63,7 @@ class HintScreen extends React.PureComponent<Props> {
 
   renderArrows(elements: Array<Element>) {
     const arrows: Array<HintArrowPars> = (elements.filter(
-      o => o.type === 'ARROW'
+      (o) => o.type === 'ARROW'
     ): Array<any>);
     if (!arrows || !arrows.length) return null;
     return (
@@ -77,7 +77,7 @@ class HintScreen extends React.PureComponent<Props> {
 
   renderLabels(elements: Array<Element>): ?Array<*> {
     const labels: Array<HintLabelPars> = (elements.filter(
-      o => o.type === 'LABEL'
+      (o) => o.type === 'LABEL'
     ): Array<any>);
     if (!labels || !labels.length) return null;
     return labels.map((label, idx) => <HintLabel key={idx} {...label} />);

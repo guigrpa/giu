@@ -413,7 +413,7 @@ class VirtualScroller extends React.PureComponent<Props> {
     return (
       <VerticalManager
         key={id}
-        registerOuterRef={c => {
+        registerOuterRef={(c) => {
           this.refItems[id] = c;
         }}
         id={id}
@@ -452,7 +452,7 @@ class VirtualScroller extends React.PureComponent<Props> {
       return;
     }
     if (prevCachedHeight == null) {
-      this.pendingHeights = this.pendingHeights.filter(o => o !== id);
+      this.pendingHeights = this.pendingHeights.filter((o) => o !== id);
     }
     this.cachedHeights[id] = height;
     if (!this.pendingHeights.length) {
@@ -667,7 +667,7 @@ const style = {
     overflowY: height >= 0 ? 'auto' : undefined,
     overflowX: 'hidden',
   }),
-  sizer: height => ({ height: height || undefined }),
+  sizer: (height) => ({ height: height || undefined }),
 };
 
 // ===============================================================

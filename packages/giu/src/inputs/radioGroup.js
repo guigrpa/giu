@@ -9,9 +9,9 @@ import { LIST_SEPARATOR_KEY } from './listPicker';
 import Input from '../hocs/input';
 import type { InputHocPublicProps } from '../hocs/input';
 
-const toInternalValue = val =>
+const toInternalValue = (val) =>
   val != null ? JSON.stringify(val) : NULL_STRING;
-const toExternalValue = val => {
+const toExternalValue = (val) => {
   if (val === NULL_STRING) return null;
   try {
     return JSON.parse(val);
@@ -21,7 +21,7 @@ const toExternalValue = val => {
     return null;
   }
 };
-const isNull = val => val === NULL_STRING;
+const isNull = (val) => val === NULL_STRING;
 
 // ==========================================
 // Declarations
@@ -110,14 +110,14 @@ class BaseRadioGroup extends React.Component<Props> {
   };
 
   // ==========================================
-  onClickItem = idx => ev => {
+  onClickItem = (idx) => (ev) => {
     const item = this.items[idx];
     if (!item) return;
     this.props.onChange(ev, item.value);
   };
 
   // ==========================================
-  prepareItems = memoize(rawItems => {
+  prepareItems = memoize((rawItems) => {
     const items = [];
     for (let i = 0; i < rawItems.length; i++) {
       const rawItem = rawItems[i];
@@ -137,7 +137,7 @@ const hocOptions = {
   fIncludeFocusCapture: !IS_IOS,
   className: 'giu-radio-group-wrapper',
 };
-const render = props => <BaseRadioGroup {...props} />;
+const render = (props) => <BaseRadioGroup {...props} />;
 // $FlowFixMe
 const RadioGroup = React.forwardRef((publicProps: PublicProps, ref) => (
   <Input hocOptions={hocOptions} render={render} {...publicProps} ref={ref} />

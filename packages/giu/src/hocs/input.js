@@ -527,7 +527,7 @@ class Input extends React.PureComponent<Props> {
 
       // Otherwise, collect all validator errors (skipping `isRequired`)
     } else {
-      Object.keys(validators).forEach(id => {
+      Object.keys(validators).forEach((id) => {
         if (id === 'isRequired') return;
         const validator: Validator = validators[id];
         const validate =
@@ -541,8 +541,8 @@ class Input extends React.PureComponent<Props> {
     }
 
     // When all promises have resolved, change the current state
-    return Promise.all(pErrors).then(validationErrors0 => {
-      const validationErrors = validationErrors0.filter(o => o != null);
+    return Promise.all(pErrors).then((validationErrors0) => {
+      const validationErrors = validationErrors0.filter((o) => o != null);
       const prevLastValidatedValue = this.lastValidatedValue;
       this.lastValidatedValue = internalValue;
       if (
@@ -586,7 +586,7 @@ class Input extends React.PureComponent<Props> {
 // $FlowFixMe
 const ThemedInput = React.forwardRef((props, ref) => (
   <ThemeContext.Consumer>
-    {theme => <Input {...props} theme={theme} ref={ref} />}
+    {(theme) => <Input {...props} theme={theme} ref={ref} />}
   </ThemeContext.Consumer>
 ));
 

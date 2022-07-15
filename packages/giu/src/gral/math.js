@@ -41,8 +41,8 @@ const vectorRotate = (V: Point2, radians: number): Point2 => {
   };
 };
 
-const radToDeg = (radians: number): number => radians / Math.PI * 180;
-const degToRad = (deg: number): number => deg / 180 * Math.PI;
+const radToDeg = (radians: number): number => (radians / Math.PI) * 180;
+const degToRad = (deg: number): number => (deg / 180) * Math.PI;
 
 // ==========================================
 // Public

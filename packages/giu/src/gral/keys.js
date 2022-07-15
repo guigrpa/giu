@@ -33,13 +33,13 @@ function createShortcut(keySpec: string): KeyboardShortcut {
   shortcut.metaKey = false;
   shortcut.ctrlKey = false;
   shortcut.shiftKey = false;
-  shortcut.keyCodes = keySpec.split('+').map(extName0 => {
+  shortcut.keyCodes = keySpec.split('+').map((extName0) => {
     let extName = extName0;
     if (extName === 'mod') extName = IS_MAC ? 'command' : 'ctrl';
     return keycode(extName);
   });
-  shortcut.keyNames = shortcut.keyCodes.map(keyCode => keycode(keyCode));
-  shortcut.keyNames.forEach(keyName => {
+  shortcut.keyNames = shortcut.keyCodes.map((keyCode) => keycode(keyCode));
+  shortcut.keyNames.forEach((keyName) => {
     switch (keyName) {
       case 'alt':
         shortcut.altKey = true;
@@ -60,7 +60,7 @@ function createShortcut(keySpec: string): KeyboardShortcut {
     }
   });
   shortcut.description = shortcut.keyNames
-    .map(keyName => {
+    .map((keyName) => {
       let c;
       switch (keyName) {
         case 'alt':

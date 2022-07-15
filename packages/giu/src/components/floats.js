@@ -57,13 +57,13 @@ const reducer: Reducer<State, Action> = (state0 = INITIAL_STATE, action) => {
   }
   if (action.type === 'FLOAT_DELETE') {
     const { id } = action;
-    const idx = state.floats.findIndex(o => o.id === id);
+    const idx = state.floats.findIndex((o) => o.id === id);
     if (idx >= 0) state = timmSet(state, 'floats', removeAt(state.floats, idx));
     return state;
   }
   if (action.type === 'FLOAT_UPDATE') {
     const { id } = action;
-    const idx = state.floats.findIndex(o => o.id === id);
+    const idx = state.floats.findIndex((o) => o.id === id);
     if (idx >= 0) state = mergeIn(state, ['floats', idx], action.pars);
     return state;
   }
@@ -197,7 +197,7 @@ class Floats extends React.PureComponent<Props> {
         onMouseDown={cancelEvent}
       >
         <div
-          ref={c => {
+          ref={(c) => {
             this.refFloats[idx] = c;
           }}
           className={classnames('giu-float-inner', {
@@ -307,7 +307,7 @@ class Floats extends React.PureComponent<Props> {
     }
 
     // Apply style
-    Object.keys(styleAttrs).forEach(attr => {
+    Object.keys(styleAttrs).forEach((attr) => {
       ref.style[attr] = styleAttrs[attr];
     });
     ref.style.opacity = 1;
