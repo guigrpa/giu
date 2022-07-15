@@ -15,7 +15,7 @@
     "node": ">=6"
   },
   "peerDependencies": {
-    "moment": "^2.22.2",
+    "moment": "^2.29.4",
     "react": "^16.4.2",
     "react-dom": "^16.4.2",
     "@fortawesome/free-brands-svg-icons": "^5.10.1",
@@ -25,15 +25,15 @@
   "dependencies": {
     "@fortawesome/fontawesome-svg-core": "^1.2.21",
     "@fortawesome/react-fontawesome": "^0.1.4",
-    "classnames": "^2.2.6",
+    "classnames": "^2.3.1",
     "core-js": "3",
     "filesize": "^4.1.2",
-    "keycode": "^2.2.0",
-    "lodash": "^4.17.10",
+    "keycode": "^2.2.1",
+    "lodash": "^4.17.21",
     "react-sortable-hoc": "^1.9.1",
-    "redux": "^4.0.0",
-    "redux-thunk": "^2.3.0",
-    "timm": "^1.6.1",
+    "redux": "^4.2.0",
+    "redux-thunk": "^2.4.1",
+    "timm": "^1.7.1",
     "tinycolor2": "1.4.1"
   },
   "devDependencies": {
