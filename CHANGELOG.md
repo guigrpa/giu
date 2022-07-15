@@ -1,3 +1,5 @@
+* Bump many dependencies, notably FontAwesome.
+
 ## 0.21.0 (2021-4-4)
 
 * Add `EmailInput`, `UrlInput`.
